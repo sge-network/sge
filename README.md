@@ -35,7 +35,7 @@ Sge could be installed by two ways - downloading binary from releases page or bu
 ### Download from releases page
 * Download from release required binary
 
-* Check sha256 hash summ
+* Check sha256 hash sum
 
 * Place sged into /usr/local/sbin
 ```shell
@@ -69,7 +69,7 @@ make install
 ```shell
 nano /etc/systemd/system/sged.service
 ```
-Plase following contents(working dir may be changed as needed)
+Please following contents(working dir may be changed as needed)
 ```
 [Unit]
 Description=Sge Network node
@@ -116,9 +116,9 @@ sged start
 
 ## Netowrk Compatibility Matrix
 
-| Version | Mainnet | TestNET      | SDK Version |
-|:-------:|:-------:|:------------:|:-----------:|
-|  v0.0.1 |    ✗    |      ✓       |   v0.45.4   |
+| Version | Mainnet | Testnet | SDK Version |
+|:-------:|:-------:|:-------:|:-----------:|
+|  v0.0.1 |    ✗    |    ✓    |   v0.45.4   |
 
 
 ## Active Networks
