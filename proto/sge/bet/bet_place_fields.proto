@@ -1,0 +1,18 @@
+syntax = "proto3";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+// PlaceBetFields contains necessary fields which come in BetPlacement and BetSlipPlacement TX requests
+message BetPlaceFields {
+  // uid is the unique uuid assigned to bet
+  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
+
+  // amount is the wagger amount
+  string amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+
+  // ticket is a signed string containing important info such as `oddsValue`
+  string ticket = 3;
+}

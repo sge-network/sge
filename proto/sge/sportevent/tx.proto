@@ -1,0 +1,43 @@
+syntax = "proto3";
+package sgenetwork.sge.sportevent;
+
+import "gogoproto/gogo.proto";
+import "sge/sportevent/sport_event.proto";
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/sge-network/sge/x/sportevent/types";
+
+// Msg defines the Msg service.
+service Msg {
+  rpc AddEvent(MsgAddEvent) returns (MsgSportResponse);
+  rpc ResolveEvent(MsgResolveEvent) returns (MsgSportResponse);
+  rpc UpdateEvent(MsgUpdateEvent) returns (MsgSportResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgAddEvent {
+  string creator = 1;
+  string ticket = 2;
+}
+
+// common response for all the transactions call (batch transactions)
+message MsgSportResponse {
+  repeated string success_events = 1;
+  repeated FailedEvent failed_events = 2;
+}
+
+message FailedEvent {
+  string id = 1 [(gogoproto.customname) = "ID" ,(gogoproto.jsontag) = "id", json_name = "id"];
+  string err = 2;
+}
+
+message MsgResolveEvent {
+  string creator = 1;
+  string ticket = 2;
+}
+
+
+message MsgUpdateEvent {
+  string creator = 1;
+  string ticket = 2;
+}

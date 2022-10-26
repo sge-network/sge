@@ -1,0 +1,16 @@
+<!-- docs/_sidebar.md -->
+
+* [About SGE Network](../../README.md)
+* [Modules](README.md)
+  * [Bet](specs/bet/01_Overview.md)
+    * [Overview](specs/bet/01_Overview.md)
+    * [Concepts](specs/bet/02_Concepts.md)
+    * [Accounts](specs/bet/03_Accounts.md)
+    * [State](specs/bet/04_State.md)
+    * [State Transitions](specs/bet/05_State_Transitions.md)
+    * [Messages](specs/bet/06_Messages.md)
+    * [Events](specs/bet/07_Events.md)
+  * [DVM](specs/DVM/01_Overview.md)
+  * [Mint](specs/Mint/01_Overview.md)
+  * [Sport Event](specs/SportEvent/01_Overview.md)
+  * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)

@@ -1,0 +1,23 @@
+syntax = "proto3";
+package sgenetwork.sge.dvm;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/sge-network/sge/x/dvm/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc Mutation(MsgMutation) returns (MsgMutationResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgMutation {
+  string creator = 1;
+  string txs = 2;
+}
+
+message MsgMutationResponse {
+  bool success = 1;
+}
+
+// this line is used by starport scaffolding # proto/tx/message

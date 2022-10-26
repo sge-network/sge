@@ -1,0 +1,22 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+// BetOdds is an odds of a sportevent user can place a bet on it.
+message BetOdds {
+    // uid is Universal Unique Identifier
+    // Optional | Unique | uuid-v4 or code
+    string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
+
+    // bet_event_uid is the parent, used for fast retrieving.
+    // ? Required | NonUnique | -
+    // in Create and Update must be Omitted.
+    string sport_event_uid = 2 [(gogoproto.customname) = "SportEventUID" ,(gogoproto.jsontag) = "sport_event_uid", json_name = "sport_event_uid"];
+
+    // value of the Odd
+    // Required | NonUnique | "1.286"
+    // the double value is not good for the B.C. since we are going to relay on this value, it may face roundoff error or being truncated.
+    string value = 3;
+}

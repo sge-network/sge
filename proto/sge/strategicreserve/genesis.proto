@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sgenetwork.sge.strategicreserve;
+
+import "gogoproto/gogo.proto";
+
+import "sge/strategicreserve/params.proto";
+import "sge/strategicreserve/reserver.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
+
+// GenesisState defines the strategicreserve module's genesis state.
+message GenesisState {
+  Reserver reserver = 1 [(gogoproto.nullable) = false];
+  Params params = 2 [(gogoproto.nullable) = false];
+}

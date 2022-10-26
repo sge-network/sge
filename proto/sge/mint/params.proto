@@ -1,0 +1,26 @@
+syntax = "proto3";
+package sgenetwork.sge.mint;
+
+import "gogoproto/gogo.proto";
+import "sge/mint/phase.proto";
+
+option go_package = "github.com/sge-network/sge/x/mint/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  // type of coin to mint
+  string mint_denom = 1;
+  // expected blocks per year
+  int64 blocks_per_year = 2 [(gogoproto.moretags) = "yaml:\"blocks_per_year\""];
+
+  // phases
+  repeated Phase phases = 3 [(gogoproto.moretags) = "yaml:\"phases\"", (gogoproto.nullable) = false];
+
+  string exclude_amount = 4 [
+    (gogoproto.moretags)   = "yaml:\"exclude_amount\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false
+  ];
+}

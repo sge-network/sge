@@ -1,0 +1,15 @@
+[Unit]
+Description=Cosmos sge node
+After=network.target
+
+[Service]
+Type=simple
+User={{ user_name }}
+WorkingDirectory={{ working_directory }}
+ExecStart=/usr/bin/sged start
+Restart=on-failure
+RestartSec=10
+LimitNOFILE=40960
+
+[Install]
+WantedBy=multi-user.target
