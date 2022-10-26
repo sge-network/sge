@@ -1,0 +1,49 @@
+syntax = "proto3";
+package sgenetwork.sge.strategicreserve;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+
+import "sge/strategicreserve/params.proto";
+import "sge/strategicreserve/reserver.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sgenetwork/sge/strategicreserve/params";
+  }
+
+  // Reserver returns the Reserver value.
+  rpc Reserver(QueryReserverRequest) returns (QueryReserverResponse) {
+    option (google.api.http).get = "/sgenetwork/sge/strategicreserve/reserver";
+  }
+
+  // this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryReserverRequest is the request type for the Query/Inflation RPC method.
+message QueryReserverRequest {}
+
+// QueryReserverResponse is the response type for the Query/Inflation RPC
+// method.
+message QueryReserverResponse {
+  // inflation is the current minting inflation value.
+  Reserver reserver = 1;
+}
+
+
+
+// this line is used by starport scaffolding # 3

@@ -1,0 +1,249 @@
+package types
+
+import (
+	"testing"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/testutil/sample"
+	"github.com/stretchr/testify/require"
+)
+
+func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name string
+		msg  MsgPlaceBet
+		err  error
+	}{
+		{
+			name: "invalid creator",
+			msg: MsgPlaceBet{
+				Creator: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "valid bet message",
+			msg: MsgPlaceBet{
+				Creator: sample.AccAddress(),
+				Bet: &BetPlaceFields{
+					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+					Amount: sdk.NewInt(int64(10)),
+					Ticket: "Ticket",
+				},
+			},
+		},
+		{
+			name: "invalid bet UID",
+			msg: MsgPlaceBet{
+				Creator: sample.AccAddress(),
+				Bet: &BetPlaceFields{
+					UID: "Invalid UID",
+				},
+			},
+			err: ErrInvalidBetUID,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.msg.ValidateBasic()
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestMsgPlaceBetSlip_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name string
+		msg  MsgPlaceBetSlip
+		err  error
+	}{
+		{
+			name: "invalid creator",
+			msg: MsgPlaceBetSlip{
+				Creator: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "empty bet message",
+			msg: MsgPlaceBetSlip{
+				Creator: sample.AccAddress(),
+				Bets:    make([]*BetPlaceFields, 1),
+			},
+			err: ErrEmptyBetListRequest,
+		}, {
+			name: "valid",
+			msg: MsgPlaceBetSlip{
+				Creator: sample.AccAddress(),
+				Bets:    []*BetPlaceFields{{}},
+			},
+		}, {
+			name: "empty bet slice",
+			msg: MsgPlaceBetSlip{
+				Creator: sample.AccAddress(),
+				Bets:    make([]*BetPlaceFields, 0),
+			},
+			err: ErrEmptyBetListRequest,
+		}, {
+			name: "notallowed bet slice size",
+			msg: MsgPlaceBetSlip{
+				Creator: sample.AccAddress(),
+				Bets:    make([]*BetPlaceFields, BetPlacementThreshold+1),
+			},
+			err: ErrTooManyBets,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.msg.ValidateBasic()
+			if tt.err != nil {
+				require.ErrorIs(t, tt.err, err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestMsgSettleBet_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name string
+		msg  MsgSettleBet
+		err  error
+	}{
+		{
+			name: "invalid creator",
+			msg: MsgSettleBet{
+				Creator: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "valid message",
+			msg: MsgSettleBet{
+				Creator: sample.AccAddress(),
+				BetUID:  "6e31c60f-2025-48ce-ae79-1dc110f16355",
+			},
+		}, {
+			name: "empty bet UID",
+			msg: MsgSettleBet{
+				Creator: sample.AccAddress(),
+				BetUID:  "",
+			},
+			err: ErrInvalidBetUID,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.msg.ValidateBasic()
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestMsgSettleBetBulk_ValidateBasic(t *testing.T) {
+	tests := []struct {
+		name string
+		msg  MsgSettleBetBulk
+		err  error
+	}{
+		{
+			name: "invalid creator",
+			msg: MsgSettleBetBulk{
+				Creator: "invalid_address",
+			},
+			err: sdkerrors.ErrInvalidAddress,
+		}, {
+			name: "empty UIDs",
+			msg: MsgSettleBetBulk{
+				Creator: sample.AccAddress(),
+				BetUIDs: make([]string, 1),
+			},
+			err: ErrEmptyUidsList,
+		}, {
+			name: "valid",
+			msg: MsgSettleBetBulk{
+				Creator: sample.AccAddress(),
+				BetUIDs: []string{"uid"},
+			},
+		}, {
+			name: "empty UID slice",
+			msg: MsgSettleBetBulk{
+				Creator: sample.AccAddress(),
+				BetUIDs: make([]string, 0),
+			},
+			err: ErrEmptyUidsList,
+		}, {
+			name: "notallowed UID slice size",
+			msg: MsgSettleBetBulk{
+				Creator: sample.AccAddress(),
+				BetUIDs: make([]string, SettlementUIDsThreshold+1),
+			},
+			err: ErrTooManyUids,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.msg.ValidateBasic()
+			if tt.err != nil {
+				require.ErrorIs(t, err, tt.err)
+				return
+			}
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestNewBet(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		inputBet := &BetPlaceFields{
+			UID:    "betUid",
+			Ticket: "ticket",
+			Amount: sdk.NewInt(int64(10)),
+		}
+		creator := "creator"
+		inputBetOdds := &BetOdds{
+			UID:           "Oddsuid",
+			SportEventUID: "sportEventUid",
+			Value:         "1000",
+		}
+		oddsValueDec, err := sdk.NewDecFromStr(inputBetOdds.Value)
+		require.Nil(t, err)
+
+		expectedBet := &Bet{
+			UID:           inputBet.UID,
+			Creator:       creator,
+			SportEventUID: inputBetOdds.SportEventUID,
+			OddsUID:       inputBetOdds.UID,
+			OddsValue:     oddsValueDec,
+			Amount:        inputBet.Amount,
+			Ticket:        inputBet.Ticket,
+		}
+		res, err := NewBet(creator, inputBet, inputBetOdds)
+		require.Equal(t, expectedBet, res)
+		require.Nil(t, err)
+	})
+
+	t.Run("wrong odds value", func(t *testing.T) {
+		inputBet := &BetPlaceFields{
+			UID:    "betUid",
+			Ticket: "ticket",
+			Amount: sdk.NewInt(int64(10)),
+		}
+		creator := "creator"
+		inputBetOdds := &BetOdds{
+			UID:           "Oddsuid",
+			SportEventUID: "sportEventUid",
+			Value:         "invalidOddsValue",
+		}
+		res, err := NewBet(creator, inputBet, inputBetOdds)
+		require.Nil(t, res)
+		require.ErrorIs(t, ErrInConvertingOddsToDec, err)
+	})
+}

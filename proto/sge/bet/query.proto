@@ -1,0 +1,45 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "sge/bet/params.proto";
+import "sge/bet/bet.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+// Query defines the gRPC querier service.
+service Query {
+	// Queries a Bet by uid.
+	rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
+		option (google.api.http).get = "/sge-network/sge/bet/bet/{uid}";
+	}
+
+	// Queries a list of Bet items.
+	rpc ListAllBet(QueryListBetAllRequest) returns (QueryListBetAllResponse) {
+		option (google.api.http).get = "/sge-network/sge/bet/bet";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+message QueryBetRequest {
+	  string uid = 1 [(gogoproto.jsontag) = "uid", json_name = "uid"];
+}
+
+message QueryBetResponse {
+	Bet bet = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryListBetAllRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryListBetAllResponse {
+	repeated Bet bet = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

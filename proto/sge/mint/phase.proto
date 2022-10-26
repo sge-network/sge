@@ -1,0 +1,24 @@
+syntax = "proto3";
+package sgenetwork.sge.mint;
+
+import "gogoproto/gogo.proto";
+
+
+option go_package = "github.com/sge-network/sge/x/mint/types";
+
+// Params defines the phase parameters for the module.
+message Phase {
+  option (gogoproto.goproto_stringer) = false;
+
+  // the phase inflation rate
+  string inflation = 1  [
+    (gogoproto.moretags) = "yaml:\"inflation\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false];
+  // total coefficient from the beginning
+  string year_coefficient = 2 [
+    (gogoproto.moretags) = "yaml:\"year_coefficient\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false];
+
+}
