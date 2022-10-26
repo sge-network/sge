@@ -174,3 +174,6 @@ killall sged
 ```shell
 sged version
 ```
+
+### Documentation
+For the most up to date documentation please visit [Gitbook](https://six-sigma-sports.gitbook.io/documentation/)
