@@ -114,7 +114,7 @@ Select network to join
 sged start
 ```
 
-## Netowrk Compatibility Matrix
+## Network Compatibility Matrix
 
 | Version | Mainnet | TestNET      | SDK Version |
 |:-------:|:-------:|:------------:|:-----------:|
