@@ -41,18 +41,13 @@ func NewKeeper(
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
-	// Ensures that the `sr_pool`,  `bet_reserve` and `winnings_collector`
-	// module accounts are set
+	// Ensures that the `sr_pool`, and `bet_reserve` module accounts are set
 	if addr := expectedKeepers.AccountKeeper.GetModuleAddress(types.SRPoolName); addr == nil {
 		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.SRPoolName))
 	}
 
 	if addr := expectedKeepers.AccountKeeper.GetModuleAddress(types.BetReserveName); addr == nil {
 		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.BetReserveName))
-	}
-
-	if addr := expectedKeepers.AccountKeeper.GetModuleAddress(types.WinningsCollectorName); addr == nil {
-		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.WinningsCollectorName))
 	}
 
 	return &Keeper{

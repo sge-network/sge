@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -71,7 +69,7 @@ func (k msgServer) AddEvent(goCtx context.Context, msg *types.MsgAddEvent) (*typ
 // validateEventAdd validates individual event acceptability
 func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) error {
 
-	if err := validateEventTS(event); err != nil {
+	if err := validateEventTS(ctx, event); err != nil {
 		return err
 	}
 
@@ -126,8 +124,8 @@ func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) er
 	return nil
 }
 
-func validateEventTS(event *types.SportEvent) error {
-	if event.EndTS <= uint64(time.Now().Unix()) {
+func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
+	if event.EndTS <= uint64(ctx.BlockTime().Unix()) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport event")
 	}
 

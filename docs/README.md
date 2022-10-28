@@ -1,6 +1,7 @@
 # SGE Network
 
-The Sports, Gaming & Entertainment Network (SGE Network), is a blockchain designed to support the future of sports betting & related gaming by leveraging the modular Cosmos design. We believe the future will be heavily shaped by many of the values driving the recent wave of crypto and blockchain development: transparency, increased decentralization, and utility that benefits all stakeholders, especially the userbase.
+The Sports, Gaming & Entertainment Network (SGE Network), is a blockchain 
+designed to support the future of sports betting & related gaming by leveraging the modular Cosmos design. We believe the future will be heavily shaped by many of the values driving the recent wave of crypto and blockchain development: transparency, increased decentralization, and utility that benefits all stakeholders, especially the user-base.
 
 Utilizing a sovereign blockchain uniquely enables: 
 - An adaptable framework to design custom applications.
@@ -35,7 +36,7 @@ Sge could be installed by two ways - downloading binary from releases page or bu
 ### Download from releases page
 * Download from release required binary
 
-* Check sha256 hash summ
+* Check sha256 hash sum
 
 * Place sged into /usr/local/sbin
 ```shell
@@ -69,7 +70,7 @@ make install
 ```shell
 nano /etc/systemd/system/sged.service
 ```
-Plase following contents(working dir may be changed as needed)
+Please following contents(working dir may be changed as needed)
 ```
 [Unit]
 Description=Sge Network node
@@ -104,7 +105,7 @@ or
 * [Install](#installation-steps) sge application
 * Initialize node
 ```shell
-sged init [NODE_NAME]
+sged init {{NODE_NAME}} --chain-id sge-network-1
 ```
 Select network to join
 * Replace `${HOME}/.sge/config/genesis.json` with the genesis file of the chain.
@@ -114,7 +115,7 @@ Select network to join
 sged start
 ```
 
-## Netowrk Compatibility Matrix
+## Network Compatibility Matrix
 
 | Version | Mainnet | TestNET      | SDK Version |
 |:-------:|:-------:|:------------:|:-----------:|
@@ -138,7 +139,7 @@ wget https://github.com/sge-network/networks/blob/master/sge-network-1/genesis.j
 ```
 Verify genesis hash sum
 ```shell
-sha256 ~/.sged/config/genesis.json
+sha256sum ~/.sged/config/genesis.json
 ```
 Correct sha256 sum for sge-network-1 is - 2bea72699f9c1afd6217f7e76f14f07c1fbe849d090fc37cd008a42d14d5d30c
 Genesis file sha sum is published in according repository.

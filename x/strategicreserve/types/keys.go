@@ -28,10 +28,6 @@ const (
 
 	// BetReserveName defines the account name for storing bet amount
 	BetReserveName = "bet_reserve"
-
-	// WinningsCollectorName defines the account for the storing the
-	// winnings of the house from bet events
-	WinningsCollectorName = "winnings_collector"
 )
 
 // prefixes
@@ -39,9 +35,4 @@ var (
 	// PayoutLockPrefix defines the prefix for the KV-Store partition
 	// which stores the locks for paying out the funds to the user
 	PayoutLockPrefix = []byte{0x01}
-
-	// DailyCapPrefix defines the prefix for the KV-Store partition
-	// which stores the current_filled_capacity for the corresponding
-	// day_id
-	DailyCapPrefix = []byte{0x02}
 )

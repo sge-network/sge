@@ -22,7 +22,6 @@ func TestProcessBetPlacement(t *testing.T) {
 		betAmount     sdk.Int
 		extraPayout   sdk.Int
 		uniqueLock    string
-		endTs         uint64
 		err           error
 	}{
 		{
@@ -32,28 +31,16 @@ func TestProcessBetPlacement(t *testing.T) {
 			betAmount:     sdk.NewIntFromUint64(99),
 			extraPayout:   sdk.NewIntFromUint64(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
-			endTs:         9999999999,
 			err:           nil,
 		},
 		{
-			desc:          "Failure! Lock already exists in either payout store",
+			desc:          "Failure! Lock already exists in payout store",
 			bettorAddress: user.Address,
 			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
 			betAmount:     sdk.NewIntFromUint64(99),
 			extraPayout:   sdk.NewIntFromUint64(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
-			endTs:         9999999999,
 			err:           types.ErrLockAlreadyExists,
-		},
-		{
-			desc:          "Failure! Invalid timestamp",
-			bettorAddress: user.Address,
-			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
-			betAmount:     sdk.NewIntFromUint64(99),
-			extraPayout:   sdk.NewIntFromUint64(198),
-			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7s",
-			endTs:         9,
-			err:           types.ErrInvalidEndTimestamp,
 		},
 		{
 			desc:          "Failure! Insufficient user balance",
@@ -62,7 +49,6 @@ func TestProcessBetPlacement(t *testing.T) {
 			betAmount:     sdk.NewIntFromUint64(45000000000000),
 			extraPayout:   sdk.NewIntFromUint64(9000000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7l",
-			endTs:         9999999999,
 			err:           types.ErrInsufficientUserBalance,
 		},
 	}
@@ -80,7 +66,7 @@ func TestProcessBetPlacement(t *testing.T) {
 			k.SetPayoutLock(ctx, "32932b20-8737-490b-b00b-8c16eccd8e7x")
 
 			err := k.ProcessBetPlacement(ctx, tc.bettorAddress, tc.betFee, tc.betAmount,
-				tc.extraPayout, tc.uniqueLock, tc.endTs)
+				tc.extraPayout, tc.uniqueLock)
 			if tc.err != nil {
 				require.True(t, errors.Is(tc.err, err))
 				return
@@ -331,14 +317,14 @@ func TestTransferFundsFromUserToModule(t *testing.T) {
 			desc:          "Success! Funds transferred from user to module account",
 			address:       user.Address,
 			amount:        sdk.NewInt(450),
-			moduleAccName: types.WinningsCollectorName,
+			moduleAccName: types.SRPoolName,
 			err:           nil,
 		},
 		{
 			desc:          "Failure! Insufficient user balance",
 			address:       user.Address,
 			amount:        sdk.NewInt(45000000000000000),
-			moduleAccName: types.WinningsCollectorName,
+			moduleAccName: types.SRPoolName,
 			err:           sdkerrors.Wrapf(types.ErrInsufficientUserBalance, user.Address.String()),
 		},
 	}

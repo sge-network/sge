@@ -37,7 +37,7 @@ var (
 	ErrInSRPlacementProcessing    = sdkerrors.Register(ModuleName, 2027, "internal error in processing bet placement in SR")
 	ErrSportEventStatusNotPending = sdkerrors.Register(ModuleName, 2028, "can not place bet on this sport event any more")
 	ErrEndTSIsPassed              = sdkerrors.Register(ModuleName, 2029, "the sport event is expired")
-	ErrOddsUIDNotExist            = sdkerrors.Register(ModuleName, 2030, "sport event does not have this odds UID")
+	ErrOddsUIDNotExist            = sdkerrors.Register(ModuleName, 0, "sport event does not have this odds UID")
 	ErrSportEventIsAborted        = sdkerrors.Register(ModuleName, 2031, "sport event is aborted")
 	ErrInvalidCreatorAddr         = sdkerrors.Register(ModuleName, 2032, "can not cretae an AccAddress from creator")
 	ErrInSRRefund                 = sdkerrors.Register(ModuleName, 2033, "internal error in refunding user in SR")

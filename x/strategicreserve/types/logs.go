@@ -14,12 +14,8 @@ const (
 	// less than the required amount
 	LogErrInsufficientLockedAmountInSrPool = "Locked amount in the SR_Pool is insufficient. Locked amount: %s usge, Required amount: %s usge"
 
-	// LogErrInsufficientBalanceInModuleAccount is logged when module account has
-	// insufficient balance
-	LogErrInsufficientBalanceInModuleAccount = "%s module account has insufficient balance. Balance: %s usge, Required amount: %s usge"
-
 	// LogErrFromBankModule is logged when an error is returned from the bank module
-	// while trying to tranfer funds
+	// while trying to transfer funds
 	LogErrFromBankModule = "Funds transfer failed from the bank module with error: %s"
 
 	// LogErrPayoutLockDoesnotExist is logged when the payout lock doesn't exist
@@ -28,24 +24,12 @@ const (
 	// LogErrLockAlreadyExists is logged when locks already exists
 	LogErrLockAlreadyExists = "lock already exists for the lock: %s"
 
-	// LogErrInFetchingDailyCap is logged when current filled capacity could not be
-	// fetched from the DailyCapStore
-	LogErrInFetchingDailyCap = "Could not fetch current filled capacity for dayID: %s"
-
-	// LogErrDailyCapReached is logged when the daily capacity has been reached for
-	// a dayID and no more bets can be accepted for that day
-	LogErrDailyCapReached = "Daily capacity is reached for dayID: %s"
-
-	// LogErrInvalidEndTimestamp is logged when the end timestamp of the sports
-	// event is invalid
-	LogErrInvalidEndTimestamp = "End timestamp %d is invalid"
-
 	// LogErrTransferOfFundsFailed is logged when funds transfer gets failed
 	LogErrTransferOfFundsFailed = "Transfer of %s usge from %s to %s failed with error: %s"
 
 	// ─── INFO LOGS ─────────────────────────────────────────────────────────
 
-	// LogInfoFundsTransferred is logged when the funds is transferred
+	// LogInfoFundsTransferred is logged when the funds are transferred
 	// to the required account successfully
 	LogInfoFundsTransferred = "transferred %s usge from %s to %s"
 

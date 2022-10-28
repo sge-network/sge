@@ -31,11 +31,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	if betReserveAcc == nil {
 		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.BetReserveName))
 	}
-
-	winningsCollectorAcc := k.GetWinningsCollectorAcc(ctx)
-	if winningsCollectorAcc == nil {
-		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.WinningsCollectorName))
-	}
 }
 
 // ExportGenesis returns the capability module's exported genesis.
