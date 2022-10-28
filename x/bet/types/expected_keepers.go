@@ -29,8 +29,8 @@ type SporteventKeeper interface {
 // StrategicreserveKeeper defines the expected interface needed to unlock fund and pay out
 type StrategicreserveKeeper interface {
 	ProcessBetPlacement(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betFee sdk.Coin, betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string,
-		endTs uint64) error
+		betFee sdk.Coin, betAmount sdk.Int, extraPayout sdk.Int,
+		uniqueLock string) error
 
 	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress,
 		betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error

@@ -173,18 +173,17 @@ var (
 
 	// module account permissions
 	mAccPerms = map[string][]string{
-		authtypes.FeeCollectorName:                        nil,
-		distrtypes.ModuleName:                             nil,
-		icatypes.ModuleName:                               nil,
-		minttypes.ModuleName:                              {authtypes.Minter},
-		stakingtypes.BondedPoolName:                       {authtypes.Burner, authtypes.Staking},
-		stakingtypes.NotBondedPoolName:                    {authtypes.Burner, authtypes.Staking},
-		govtypes.ModuleName:                               {authtypes.Burner},
-		ibctransfertypes.ModuleName:                       {authtypes.Minter, authtypes.Burner},
-		strategicreservemoduletypes.SRPoolName:            nil,
-		strategicreservemoduletypes.BetReserveName:        nil,
-		strategicreservemoduletypes.WinningsCollectorName: nil,
-		betmoduletypes.ModuleName:                         nil,
+		authtypes.FeeCollectorName:                 nil,
+		distrtypes.ModuleName:                      nil,
+		icatypes.ModuleName:                        nil,
+		minttypes.ModuleName:                       {authtypes.Minter},
+		stakingtypes.BondedPoolName:                {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:             {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                        {authtypes.Burner},
+		ibctransfertypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
+		strategicreservemoduletypes.SRPoolName:     nil,
+		strategicreservemoduletypes.BetReserveName: nil,
+		betmoduletypes.ModuleName:                  nil,
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )

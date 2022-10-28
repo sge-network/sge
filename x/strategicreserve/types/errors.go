@@ -16,8 +16,5 @@ var (
 	ErrFromBankModule                     = sdkerrors.Register(ModuleName, 1104, "Error returned from Bank Module: %s")
 	ErrPayoutLockDoesnotExist             = sdkerrors.Register(ModuleName, 1105, "Payout lock for bet uid %s does not exist")
 	ErrLockAlreadyExists                  = sdkerrors.Register(ModuleName, 1106, "Conflict, lock already exists")
-	ErrInFetchingDailyCap                 = sdkerrors.Register(ModuleName, 1107, "Unable to fetch current filled capacity for day: %s")
-	ErrDailyCapReached                    = sdkerrors.Register(ModuleName, 1108, "Daily Capacity reached for day: %s. Cannot accept further bets.")
-	ErrInvalidEndTimestamp                = sdkerrors.Register(ModuleName, 1109, "End timestamp of the sports event is invalid")
 	ErrDuplicateSenderAndRecipientModule  = sdkerrors.Register(ModuleName, 1114, "sender and receiver module names cannot be same")
 )

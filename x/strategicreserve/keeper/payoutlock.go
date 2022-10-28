@@ -7,7 +7,7 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// getPayoutLock ckecks if payout lock exists
+// getPayoutLock checks if payout lock exists
 func (k Keeper) payoutLockExists(ctx sdk.Context, uniqueLock string) bool {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PayoutLockPrefix)
 	return store.Has(utils.StrBytes(uniqueLock))

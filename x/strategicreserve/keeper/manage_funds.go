@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/app/params"
@@ -14,7 +12,7 @@ import (
 // ProcessBetPlacement transfers the bet fee from the bettor's account
 // to the bet module account and the bet amount from the given bettor's
 // account to the `bet_reserve` account of SR and locks the extra
-// payout in the `sr_pool` account of SR.
+// payout (or SR's contribution) in the `sr_pool` account of SR.
 // payout = bet amount * odds value
 // extra payout = payout - bet amount
 func (k Keeper) ProcessBetPlacement(
@@ -24,21 +22,13 @@ func (k Keeper) ProcessBetPlacement(
 	betAmount sdk.Int,
 	extraPayout sdk.Int,
 	uniqueLock string,
-	endTs uint64,
 ) error {
 
 	// If lock exists, return error
-	// Lock already exists means the bet is already placed for the given bet-uid.
+	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, uniqueLock) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrLockAlreadyExists, uniqueLock))
 		return types.ErrLockAlreadyExists
-	}
-
-	// For a valid `endTs`, `dayID` can never be negative
-	dayID := getDayID(endTs)
-	if dayID.IsNegative() {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInvalidEndTimestamp, endTs))
-		return types.ErrInvalidEndTimestamp
 	}
 
 	reserver := k.GetReserver(ctx)
@@ -78,6 +68,7 @@ func (k Keeper) ProcessBetPlacement(
 	k.setPayoutLock(ctx, uniqueLock)
 
 	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoBetAccepted, betAmount.String()))
+
 	return nil
 }
 
@@ -97,7 +88,8 @@ func (k Keeper) BettorWins(
 
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist, uniqueLock))
+		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist,
+			uniqueLock))
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
@@ -114,8 +106,8 @@ func (k Keeper) BettorWins(
 	err := k.transferFundsFromModuleToModule(ctx, types.SRPoolName,
 		types.BetReserveName, extraPayout)
 	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, extraPayout,
-			types.SRPoolName, types.BetReserveName, err))
+		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed,
+			extraPayout, types.SRPoolName, types.BetReserveName, err))
 		return err
 	}
 
@@ -142,7 +134,7 @@ func (k Keeper) BettorWins(
 }
 
 // BettorLoses unlocks the extra payout in the `sr_pool`. It transfers the
-// bet amount (house winnings) from the `bet_reserve` to the `winnings_collector`
+// bet amount (house winnings) from the `bet_reserve` to the `sr_pool`
 // module account of SR. It should be called when the bettor loses the bet.
 // payout = bet amount * odds value
 // extra payout = payout - bet amount
@@ -155,25 +147,25 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
-	// Transfer bet amount from `bet_reserve` to `winnings_collector` module
+	// Transfer bet amount from `bet_reserve` to `sr_pool` module
 	// account of the SR
 	err := k.transferFundsFromModuleToModule(ctx, types.BetReserveName,
-		types.WinningsCollectorName, betAmount)
+		types.SRPoolName, betAmount)
 	if err != nil {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betAmount,
-			types.BetReserveName, types.WinningsCollectorName, err))
+			types.BetReserveName, types.SRPoolName, err))
 		return err
 	}
 
 	reserver := k.GetReserver(ctx)
 	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(extraPayout),
-		reserver.SrPool.UnlockedAmount.Add(extraPayout))
+		reserver.SrPool.UnlockedAmount.Add(betAmount.Add(extraPayout)))
 
 	// Delete lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
 
 	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoHouseReceivedWinnings, betAmount,
-		types.WinningsCollectorName))
+		types.SRPoolName))
 	return nil
 }
 
@@ -331,45 +323,4 @@ func (k Keeper) transferFundsFromModuleToModule(ctx sdk.Context,
 	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoFundsTransferred, amount,
 		senderModule, recipientModule))
 	return nil
-}
-
-// AcceptRewards gets rewards from module account and transfer to SRPool module account
-func (k Keeper) AcceptRewards(ctx sdk.Context, senderModuleAccName string,
-	rewardAmount sdk.Int) error {
-
-	err := k.transferFundsFromModuleToModule(ctx, senderModuleAccName,
-		types.SRPoolName, rewardAmount)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, rewardAmount,
-			senderModuleAccName, types.SRPoolName, err))
-		return err
-	}
-
-	reserver := k.GetReserver(ctx)
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount,
-		reserver.SrPool.UnlockedAmount.Add(rewardAmount))
-
-	return nil
-}
-
-// getDayID returns the dayID for the end timestamp passed
-func getDayID(timestamp uint64) sdk.Int {
-	currentEpochTime := sdk.NewInt(time.Now().Unix())
-
-	// Difference in current time and the passed timestamp
-	diff := sdk.NewIntFromUint64(timestamp).Sub(currentEpochTime)
-
-	// If difference is zero or negative, return -1
-	if diff.IsNegative() || diff.IsZero() {
-		return sdk.OneInt().Neg()
-	}
-
-	// block_generation_time = 6 seconds (approx.)
-	// one_day = 24 * 60 * 60 seconds = 86,400 seconds
-	// blocks_per_day = one_day / block_generation_time
-	//     = 86400s / 6s = 14,400 blocks per day (approx.)
-	blocksPerDay := sdk.NewInt(14400)
-
-	// dayID = diff / blocksPerDay
-	return diff.Quo(blocksPerDay)
 }

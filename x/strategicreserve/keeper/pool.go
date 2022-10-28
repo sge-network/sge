@@ -12,11 +12,6 @@ func (k Keeper) GetBetReserveAcc(ctx sdk.Context) authtypes.ModuleAccountI {
 	return k.accountKeeper.GetModuleAccount(ctx, types.BetReserveName)
 }
 
-// GetWinningsCollectorAcc returns the `winnings_collector` module account
-func (k Keeper) GetWinningsCollectorAcc(ctx sdk.Context) authtypes.ModuleAccountI {
-	return k.accountKeeper.GetModuleAccount(ctx, types.WinningsCollectorName)
-}
-
 // GetSRPoolAcc returns the `sr_pool` module account
 func (k Keeper) GetSRPoolAcc(ctx sdk.Context) authtypes.ModuleAccountI {
 	return k.accountKeeper.GetModuleAccount(ctx, types.SRPoolName)

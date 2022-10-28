@@ -175,11 +175,6 @@ func GetTestObjectsWithOptions(options SimappOptions) (*TestApp, sdk.Context, er
 		return &TestApp{}, sdk.Context{}, err
 	}
 
-	err = SetModuleAccountCoins(&ctx, tApp.BankKeeper, strategicreservetypes.WinningsCollectorName, 20000)
-	if err != nil {
-		return &TestApp{}, sdk.Context{}, err
-	}
-
 	return tApp, ctx, nil
 }
 
