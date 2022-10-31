@@ -25,7 +25,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Status of the Bet.
+//Status of the Bet.
 type Bet_Status int32
 
 const (
@@ -73,7 +73,7 @@ func (Bet_Status) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{0, 0}
 }
 
-// Result of the bet.
+//Result of the bet.
 type Bet_Result int32
 
 const (

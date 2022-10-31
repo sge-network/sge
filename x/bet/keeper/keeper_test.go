@@ -16,8 +16,15 @@ import (
 
 var (
 	testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
-	testOddsUID       = "6db09053-2901-4110-8fb5-c14e21f8d666"
-	testEventOddsUIDs = []string{testOddsUID, "7db09053-2901-4110-8fb5-c14e21f8d777"}
+	testOddsUID1      = "6db09053-2901-4110-8fb5-c14e21f8d666"
+	testOddsUID2      = "5e31c60f-2025-48ce-ae79-1dc110f16358"
+	testOddsUID3      = "6e31c60f-2025-48ce-ae79-1dc110f16354"
+	testEventOddsUIDs = []string{testOddsUID1, testOddsUID2}
+	testActiveBetOdds = []*types.BetOdds{
+		{UID: testOddsUID1, SportEventUID: testSportEventUID, Value: "4.20"},
+		{UID: testOddsUID2, SportEventUID: testSportEventUID, Value: "4.00"},
+		{UID: testOddsUID3, SportEventUID: testSportEventUID, Value: "1.70"},
+	}
 	testCreator       string
 	testBet           *types.MsgPlaceBet
 	testAddSportEvent *sporteventtypes.MsgAddEvent
@@ -66,11 +73,11 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
 	testPlaceBetClaim := jwt.MapClaims{
-		"sport_event_uid": testSportEventUID,
-		"value":           sdk.NewDec(10),
-		"uid":             testOddsUID,
-		"exp":             9999999999,
-		"iat":             7777777777,
+		"value":    sdk.NewDec(10),
+		"odds_uid": testOddsUID1,
+		"exp":      9999999999,
+		"iat":      7777777777,
+		"odds":     testActiveBetOdds,
 	}
 	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
 	require.Nil(t, err)
@@ -99,4 +106,17 @@ func TestLogger(t *testing.T) {
 	require.NotNil(t, logger)
 
 	logger.Debug("test log")
+}
+
+func defaultTotalStats() map[string]*sporteventtypes.TotalOddsStats {
+	totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
+	totalOddsStat["odds1"] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat["odds2"] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	return totalOddsStat
 }

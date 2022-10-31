@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/app/params"
@@ -68,7 +69,6 @@ func (k Keeper) ProcessBetPlacement(
 	k.setPayoutLock(ctx, uniqueLock)
 
 	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoBetAccepted, betAmount.String()))
-
 	return nil
 }
 

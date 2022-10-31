@@ -8,8 +8,7 @@ import (
 )
 
 // PlaceBet stores a new bet in KVStore
-func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
-
+func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types.BetOdds) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
@@ -24,24 +23,33 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 		return types.ErrOddsUIDNotExist
 	}
 
-	// modify the bet fee and subtracted amount
-	setBetFee(bet, sportevent.BetConstraints.BetFee)
-
-	// calculate payout
-	payout := calculatePayout(bet)
-
+	// check minimum bet amount allowed
 	if bet.Amount.LT(sportevent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
 
-	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, payout); err != nil {
+	vig := calculateVig(activeBetOdds)
+
+	if vig.IsNegative() || vig.GT(sportevent.BetConstraints.MaxVig) || vig.LT(sportevent.BetConstraints.MinVig) {
+		return types.ErrVigIsOutOfRange
+	}
+
+	// modify the bet fee and subtracted amount
+	setBetFee(bet, sportevent.BetConstraints.BetFee)
+
+	// calculate extraPayout
+	extraPayout := calculateExtraPayout(bet)
+
+	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, bet.OddsUID, bet.Amount, extraPayout); err != nil {
 		return sdkerrors.Wrapf(types.ErrInAddAmountToSportEvent, "%s", err)
 	}
 
 	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
-		bet.BetFee, bet.Amount, payout, bet.UID)
+		bet.BetFee, bet.Amount, extraPayout, bet.UID)
 	if err != nil {
-		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, payout.Neg()); err != nil {
+		// bet placement was not successful so we need to update the total bet amount and payout statistics in the
+		// sport event bet constraints
+		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, bet.OddsUID, bet.Amount.Neg(), extraPayout.Neg()); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSubAmountFromSportEvent, "%s", err)
 		}
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
@@ -114,6 +122,18 @@ func oddsExists(betOddsID string, sporteventOddsUIDs []string) bool {
 		}
 	}
 	return false
+}
+
+// calculates vig according to the active odds
+func calculateVig(odds []*types.BetOdds) sdk.Dec {
+	total := sdk.NewDec(0)
+	for _, o := range odds {
+		oVal := sdk.MustNewDecFromStr(o.Value)
+		oValPerc := sdk.NewDec(100).Quo(oVal)
+		total = total.Add(oValPerc)
+	}
+
+	return total.Sub(sdk.NewDec(types.MaxOddsValueSum))
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer

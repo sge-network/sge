@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -94,18 +95,37 @@ func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) er
 
 	params := k.GetParams(ctx)
 
-	//init all Bet constraints if nil
-	if event.BetConstraints == nil {
-		event.BetConstraints = &types.EventBetConstraints{
-			MaxBetCap:          params.EventMaxBetCap,
-			MinAmount:          params.EventMinBetAmount,
-			BetFee:             params.EventMinBetFee,
-			CurrentTotalAmount: sdk.NewInt(0),
-		}
+	if initBetConstraints(event, params) {
 		return nil
 	}
 
-	//init individual params if any one of them is nil
+	if err := validateBetConstraints(event, &params); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func initBetConstraints(event *types.SportEvent, params types.Params) bool {
+	// init all Bet constraints if nil
+	if event.BetConstraints == nil {
+		event.BetConstraints = &types.EventBetConstraints{
+			MaxBetCap:      params.EventMaxBetCap,
+			MinAmount:      params.EventMinBetAmount,
+			BetFee:         params.EventMinBetFee,
+			MinVig:         sdk.NewDec(types.DefaultMinVig),
+			MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+			MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+			TotalOddsStats: map[string]*types.TotalOddsStats{},
+			TotalStats: &types.TotalStats{
+				BetAmount: sdk.NewInt(0),
+				HouseLoss: sdk.NewInt(0),
+			},
+		}
+		return true
+	}
+
+	// init individual params if any one of them is nil
 	if event.BetConstraints.BetFee.IsNil() {
 		event.BetConstraints.BetFee = params.EventMinBetFee
 	}
@@ -115,13 +135,21 @@ func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) er
 	if event.BetConstraints.MinAmount.IsNil() {
 		event.BetConstraints.MinAmount = params.EventMinBetAmount
 	}
-	event.BetConstraints.CurrentTotalAmount = sdk.NewInt(0)
-
-	if err := validateBetConstraints(event, &params); err != nil {
-		return err
+	if event.BetConstraints.MinVig.IsNil() {
+		event.BetConstraints.MinVig = params.EventMinVig
 	}
-
-	return nil
+	if event.BetConstraints.MaxVig.IsNil() {
+		event.BetConstraints.MaxVig = params.EventMaxVig
+	}
+	if event.BetConstraints.MaxLoss.IsNil() {
+		event.BetConstraints.MaxLoss = params.EventMaxLoss
+	}
+	event.BetConstraints.TotalOddsStats = map[string]*types.TotalOddsStats{}
+	event.BetConstraints.TotalStats = &types.TotalStats{
+		BetAmount: sdk.NewInt(0),
+		HouseLoss: sdk.NewInt(0),
+	}
+	return false
 }
 
 func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
@@ -159,6 +187,18 @@ func validateBetConstraints(event *types.SportEvent, params *types.Params) error
 
 	if event.BetConstraints.MinAmount.GTE(event.BetConstraints.MaxBetCap) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "min bet amount cannot be greater than or equals to to max bet capacity")
+	}
+
+	if event.BetConstraints.MaxLoss.GT(params.EventMaxLoss) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "max loss cannot be greater than the systems limit")
+	}
+
+	if event.BetConstraints.MaxVig.GT(params.EventMaxVig) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "max vig cannot be greater than the systems limit")
+	}
+
+	if event.BetConstraints.MinVig.LT(params.EventMinVig) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "min vig cannot be smaller than the systems limit")
 	}
 
 	return nil

@@ -17,6 +17,18 @@ func Test_ValidateCreationEvent(t *testing.T) {
 	t1 := time.Now()
 	params := k.GetParams(wctx)
 
+	testEventOddsUIDs := []string{uuid.NewString(), uuid.NewString()}
+
+	totalOddsStat := make(map[string]*types.TotalOddsStats)
+	totalOddsStat[testEventOddsUIDs[0]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat[testEventOddsUIDs[1]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+
 	tests := []struct {
 		name string
 		msg  types.SportEvent
@@ -29,7 +41,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 			},
 		}, {
 			name: "same timestamp",
@@ -53,7 +65,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      "invalid uuid",
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -97,7 +109,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:        uint64(t1.Add(time.Minute).Unix()),
 				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs:       testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{MinAmount: sdk.NewInt(-5)},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -109,7 +121,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:        uint64(t1.Add(time.Minute).Unix()),
 				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs:       testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5))},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -121,7 +133,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:        uint64(t1.Add(time.Minute).Unix()),
 				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs:       testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{MaxBetCap: params.EventMaxBetCap.Add(sdk.NewInt(5))},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -133,7 +145,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:        uint64(t1.Add(time.Minute).Unix()),
 				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs:       testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{MaxBetCap: sdk.NewInt(-5)},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -145,7 +157,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:        uint64(t1.Add(time.Minute).Unix()),
 				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs:       testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMaxBetCap},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -157,13 +169,75 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
+				BetConstraints: &types.EventBetConstraints{
+					MinAmount:      params.EventMinBetAmount,
+					BetFee:         params.EventMinBetFee,
+					MaxBetCap:      params.EventMaxBetCap,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
+				},
+			},
+		},
+		{
+			name: "max loss, greater than event param",
+			msg: types.SportEvent{
+				Creator:  sample.AccAddress(),
+				StartTS:  uint64(t1.Add(time.Minute).Unix()),
+				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:      uuid.NewString(),
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount,
 					BetFee:    params.EventMinBetFee,
 					MaxBetCap: params.EventMaxBetCap,
+					MaxLoss:   sdk.NewInt(types.DefaultMaxEventLoss).Add(sdk.NewInt(1)),
 				},
 			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "max vig, greater than event param max vig limit",
+			msg: types.SportEvent{
+				Creator:  sample.AccAddress(),
+				StartTS:  uint64(t1.Add(time.Minute).Unix()),
+				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:      uuid.NewString(),
+				OddsUIDs: testEventOddsUIDs,
+				BetConstraints: &types.EventBetConstraints{
+					MinAmount: params.EventMinBetAmount,
+					BetFee:    params.EventMinBetFee,
+					MaxBetCap: params.EventMaxBetCap,
+					MaxLoss:   sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:    sdk.NewDec(types.DefaultMaxVig).Add(sdk.NewDec(1)),
+				},
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "min vig, smaller than event param min vig limit",
+			msg: types.SportEvent{
+				Creator:  sample.AccAddress(),
+				StartTS:  uint64(t1.Add(time.Minute).Unix()),
+				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:      uuid.NewString(),
+				OddsUIDs: testEventOddsUIDs,
+				BetConstraints: &types.EventBetConstraints{
+					MinAmount: params.EventMinBetAmount,
+					BetFee:    params.EventMinBetFee,
+					MaxBetCap: params.EventMaxBetCap,
+					MaxLoss:   sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:    sdk.NewDec(types.DefaultMaxVig),
+					MinVig:    sdk.NewDec(types.DefaultMinVig).Sub(sdk.NewDec(1)),
+				},
+			},
+			err: sdkerrors.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -181,6 +255,18 @@ func Test_ValidateCreationEvent(t *testing.T) {
 func Test_ValidateResolveEvent(t *testing.T) {
 	k, _, _, _ := setupMsgServerAndKeeper(t)
 	t1 := time.Now()
+
+	testEventOddsUIDs := []string{uuid.NewString(), uuid.NewString()}
+
+	totalOddsStat := make(map[string]*types.TotalOddsStats)
+	totalOddsStat[testEventOddsUIDs[0]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat[testEventOddsUIDs[1]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
 
 	tests := []struct {
 		name string
@@ -282,6 +368,18 @@ func Test_UpdateEvent(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
 	params := k.GetParams(wctx)
 
+	testEventOddsUIDs := []string{uuid.NewString(), uuid.NewString()}
+
+	totalOddsStat := make(map[string]*types.TotalOddsStats)
+	totalOddsStat[testEventOddsUIDs[0]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat[testEventOddsUIDs[1]] = &types.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+
 	t1 := time.Now()
 	tests := []struct {
 		name string
@@ -296,7 +394,7 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 			},
 		},
 		{
@@ -323,10 +421,18 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
-					MinAmount: sdk.NewInt(-5),
-					BetFee:    params.EventMinBetFee,
+					MinAmount:      sdk.NewInt(-5),
+					BetFee:         params.EventMinBetFee,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -338,10 +444,18 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
-					BetFee:    params.EventMinBetFee,
+					MinAmount:      params.EventMinBetAmount.Sub(sdk.NewInt(5)),
+					BetFee:         params.EventMinBetFee,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -353,11 +467,19 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
-					MaxBetCap: params.EventMaxBetCap.Add(sdk.NewInt(5)),
-					BetFee:    params.EventMinBetFee,
-					MinAmount: params.EventMinBetAmount,
+					MaxBetCap:      params.EventMaxBetCap.Add(sdk.NewInt(5)),
+					BetFee:         params.EventMinBetFee,
+					MinAmount:      params.EventMinBetAmount,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -369,11 +491,19 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(-5),
-					BetFee:    params.EventMinBetFee,
-					MinAmount: params.EventMinBetAmount,
+					MaxBetCap:      sdk.NewInt(-5),
+					BetFee:         params.EventMinBetFee,
+					MinAmount:      params.EventMinBetAmount,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -385,11 +515,19 @@ func Test_UpdateEvent(t *testing.T) {
 				StartTS:  uint64(t1.Add(time.Minute).Unix()),
 				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				OddsUIDs: testEventOddsUIDs,
 				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMaxBetCap,
-					BetFee:    params.EventMinBetFee,
-					MaxBetCap: params.EventMaxBetCap,
+					MinAmount:      params.EventMaxBetCap,
+					BetFee:         params.EventMinBetFee,
+					MaxBetCap:      params.EventMaxBetCap,
+					MaxLoss:        sdk.NewInt(types.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(types.DefaultMaxVig),
+					MinVig:         sdk.NewDec(types.DefaultMinVig),
+					TotalOddsStats: totalOddsStat,
+					TotalStats: &types.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,

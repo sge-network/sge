@@ -1,0 +1,14 @@
+Q: How this pipeline works?
+A:
+  A CI/CD pipeline automates your software delivery process. The pipeline builds code, runs tests (CI), and safely deploys a new version of the application (CD). Automated pipelines remove manual errors, provide standardized feedback loops to developers, and enable fast product iterations
+
+
+Q: How to revert back in case of bug
+A: You can use the "git revert ..." command
+
+
+Q: Where are storing all the build artefacts and images etc
+A:
+  Images are stored in the Github registry
+  Build artefacts are stored for 1 day in a temporary way
+  Realeases and attached binaries are stored in the Release section of Github

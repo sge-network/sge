@@ -17,7 +17,7 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 		return nil, types.ErrDuplicateUID
 	}
 
-	ticketData := &types.BetOdds{}
+	ticketData := &types.BetPlacementTicketPayload{}
 	err := k.dvmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
@@ -27,12 +27,17 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 		return nil, err
 	}
 
-	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData)
+	selectedOdds := types.ExtractSelectedOddsFromTicket(ticketData)
+	if selectedOdds == nil {
+		return nil, sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err)
+	}
+
+	bet, err := types.NewBet(msg.Creator, msg.Bet, selectedOdds)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
+	if err := k.Keeper.PlaceBet(ctx, bet, ticketData.Odds); err != nil {
 		return nil, err
 	}
 	return &types.MsgPlaceBetResponse{}, nil
@@ -60,7 +65,7 @@ func (k msgServer) PlaceBetSlip(goCtx context.Context, msg *types.MsgPlaceBetSli
 			continue
 		}
 
-		ticketData := &types.BetOdds{}
+		ticketData := &types.BetPlacementTicketPayload{}
 		err := k.dvmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), betFields.Ticket, &ticketData)
 		if err != nil {
 			failureBetUIDsErrorMap[betFields.UID] = err.Error()
@@ -72,12 +77,17 @@ func (k msgServer) PlaceBetSlip(goCtx context.Context, msg *types.MsgPlaceBetSli
 			continue
 		}
 
-		bet, err := types.NewBet(msg.Creator, betFields, ticketData)
+		selectedOdds := types.ExtractSelectedOddsFromTicket(ticketData)
+		if selectedOdds == nil {
+			return nil, sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err)
+		}
+
+		bet, err := types.NewBet(msg.Creator, betFields, selectedOdds)
 		if err != nil {
 			return nil, err
 		}
 
-		if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
+		if err := k.Keeper.PlaceBet(ctx, bet, ticketData.Odds); err != nil {
 			failureBetUIDsErrorMap[bet.UID] = err.Error()
 			continue
 		}
