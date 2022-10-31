@@ -11,12 +11,8 @@ import (
 const (
 	// TypeMsgPlaceBet is type of message MsgPlaceBet
 	TypeMsgPlaceBet = "place_bet"
-	// TypeMsgPlaceBetSlip is type of message MsgPlaceBetSlip
-	TypeMsgPlaceBetSlip = "place_bet_slip"
 	// TypeMsgSettleBet is type of message MsgSettleBet
 	TypeMsgSettleBet = "settle_bet"
-	// TypeMsgSettleBetBulk is type of message MsgSettleBetBulk
-	TypeMsgSettleBetBulk = "settle_bet_bulk"
 
 	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
 	SettlementUIDsThreshold = 10
@@ -77,71 +73,6 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 	return nil
 }
 
-var _ sdk.Msg = &MsgPlaceBetSlip{}
-
-// NewMsgPlaceBetSlip returns a MsgPlaceBetSlip using given data
-func NewMsgPlaceBetSlip(creator string, bets []*BetPlaceFields) *MsgPlaceBetSlip {
-	return &MsgPlaceBetSlip{
-		Creator: creator,
-		Bets:    bets,
-	}
-}
-
-// Route returns the module's message router key.
-func (msg *MsgPlaceBetSlip) Route() string {
-	return RouterKey
-}
-
-// Type returns type of its message
-func (msg *MsgPlaceBetSlip) Type() string {
-	return TypeMsgPlaceBetSlip
-}
-
-// GetSigners returns the signers of its message
-func (msg *MsgPlaceBetSlip) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-// GetSignBytes returns sortJson form of its message
-func (msg *MsgPlaceBetSlip) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-// ValidateBasic does some validate checks on its message
-func (msg *MsgPlaceBetSlip) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, ErrTextInvalidCreator, err)
-	}
-	// If the length of msgs.Bets is zero
-	if len(msg.Bets) == 0 {
-		return ErrEmptyBetListRequest
-	}
-
-	// If the length of msgs.Bets is more than the threshold
-	if len(msg.Bets) > BetPlacementThreshold {
-		return ErrTooManyBets
-	}
-
-	allNil := true
-	for _, bet := range msg.Bets {
-		if bet != nil {
-			allNil = false
-			break
-		}
-	}
-	if allNil {
-		return ErrEmptyBetListRequest
-	}
-
-	return nil
-}
-
 var _ sdk.Msg = &MsgSettleBet{}
 
 // NewMsgSettleBet returns a MsgSettleBet using given data
@@ -186,67 +117,6 @@ func (msg *MsgSettleBet) ValidateBasic() error {
 
 	if !IsValidUID(msg.BetUID) {
 		return ErrInvalidBetUID
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgSettleBetBulk{}
-
-// NewMsgSettleBetBulk returns a MsgSettleBetBulk using given data
-func NewMsgSettleBetBulk(creator string, betUIDs []string) *MsgSettleBetBulk {
-	return &MsgSettleBetBulk{
-		Creator: creator,
-		BetUIDs: betUIDs,
-	}
-}
-
-// Route returns the module's message router key.
-func (msg *MsgSettleBetBulk) Route() string {
-	return RouterKey
-}
-
-// Type returns type of its message
-func (msg *MsgSettleBetBulk) Type() string {
-	return TypeMsgSettleBetBulk
-}
-
-// GetSigners returns the signers of its message
-func (msg *MsgSettleBetBulk) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-// GetSignBytes returns sortJson form of its message
-func (msg *MsgSettleBetBulk) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-// ValidateBasic does some validate checks on its message
-func (msg *MsgSettleBetBulk) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, ErrTextInvalidCreator, err)
-	}
-	if len(msg.BetUIDs) == 0 {
-		return ErrEmptyUidsList
-	}
-	if len(msg.BetUIDs) > SettlementUIDsThreshold {
-		return ErrTooManyUids
-	}
-
-	allNil := true
-	for _, betUID := range msg.BetUIDs {
-		if betUID != "" {
-			allNil = false
-			break
-		}
-	}
-	if allNil {
-		return ErrEmptyUidsList
 	}
 	return nil
 }

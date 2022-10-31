@@ -1,9 +1,6 @@
 package cli
 
 import (
-	"encoding/json"
-	"strings"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -55,41 +52,6 @@ func CmdPlaceBet() *cobra.Command {
 	return cmd
 }
 
-// CmdPlaceBetSlip implements a command to place and store multiple bets
-func CmdPlaceBetSlip() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "place-bet-slip [bets]",
-		Short: "Place multiple bets (for each bet: uid, amount, ticket)",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBets := args[0]
-			bets := []*types.BetPlaceFields{}
-			err = json.Unmarshal([]byte(argBets), &bets)
-			if err != nil {
-				return err
-			}
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgPlaceBetSlip(
-				clientCtx.GetFromAddress().String(),
-				bets,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
 // CmdSettleBet implements a command to settle a bet
 func CmdSettleBet() *cobra.Command {
 	cmd := &cobra.Command{
@@ -107,41 +69,6 @@ func CmdSettleBet() *cobra.Command {
 			msg := types.NewMsgSettleBet(
 				clientCtx.GetFromAddress().String(),
 				argBetUID,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdSettleBetBulk implements a command to settle multiple bets
-func CmdSettleBetBulk() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "settle-bet-bulk [bet-uids]",
-		Short: "Settle multiple bets",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetUIDs := args[0]
-			argBetUIDs = strings.ReplaceAll(argBetUIDs, " ", "")
-			betUIDs := []string{}
-			if argBetUIDs != "" {
-				betUIDs = strings.Split(argBetUIDs, ",")
-			}
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgSettleBetBulk(
-				clientCtx.GetFromAddress().String(),
-				betUIDs,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

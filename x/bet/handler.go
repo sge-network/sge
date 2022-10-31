@@ -20,14 +20,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgPlaceBet:
 			res, err := msgServer.PlaceBet(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgPlaceBetSlip:
-			res, err := msgServer.PlaceBetSlip(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgSettleBet:
 			res, err := msgServer.SettleBet(sdk.WrapSDKContext(ctx), msg)
-			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgSettleBetBulk:
-			res, err := msgServer.SettleBetBulk(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 			// this line is used by starport scaffolding # 1
 		default:

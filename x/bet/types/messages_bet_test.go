@@ -55,59 +55,6 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgPlaceBetSlip_ValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  MsgPlaceBetSlip
-		err  error
-	}{
-		{
-			name: "invalid creator",
-			msg: MsgPlaceBetSlip{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "empty bet message",
-			msg: MsgPlaceBetSlip{
-				Creator: sample.AccAddress(),
-				Bets:    make([]*BetPlaceFields, 1),
-			},
-			err: ErrEmptyBetListRequest,
-		}, {
-			name: "valid",
-			msg: MsgPlaceBetSlip{
-				Creator: sample.AccAddress(),
-				Bets:    []*BetPlaceFields{{}},
-			},
-		}, {
-			name: "empty bet slice",
-			msg: MsgPlaceBetSlip{
-				Creator: sample.AccAddress(),
-				Bets:    make([]*BetPlaceFields, 0),
-			},
-			err: ErrEmptyBetListRequest,
-		}, {
-			name: "notallowed bet slice size",
-			msg: MsgPlaceBetSlip{
-				Creator: sample.AccAddress(),
-				Bets:    make([]*BetPlaceFields, BetPlacementThreshold+1),
-			},
-			err: ErrTooManyBets,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, tt.err, err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
-}
-
 func TestMsgSettleBet_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
@@ -133,59 +80,6 @@ func TestMsgSettleBet_ValidateBasic(t *testing.T) {
 				BetUID:  "",
 			},
 			err: ErrInvalidBetUID,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
-}
-
-func TestMsgSettleBetBulk_ValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  MsgSettleBetBulk
-		err  error
-	}{
-		{
-			name: "invalid creator",
-			msg: MsgSettleBetBulk{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "empty UIDs",
-			msg: MsgSettleBetBulk{
-				Creator: sample.AccAddress(),
-				BetUIDs: make([]string, 1),
-			},
-			err: ErrEmptyUidsList,
-		}, {
-			name: "valid",
-			msg: MsgSettleBetBulk{
-				Creator: sample.AccAddress(),
-				BetUIDs: []string{"uid"},
-			},
-		}, {
-			name: "empty UID slice",
-			msg: MsgSettleBetBulk{
-				Creator: sample.AccAddress(),
-				BetUIDs: make([]string, 0),
-			},
-			err: ErrEmptyUidsList,
-		}, {
-			name: "notallowed UID slice size",
-			msg: MsgSettleBetBulk{
-				Creator: sample.AccAddress(),
-				BetUIDs: make([]string, SettlementUIDsThreshold+1),
-			},
-			err: ErrTooManyUids,
 		},
 	}
 	for _, tt := range tests {
