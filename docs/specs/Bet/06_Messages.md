@@ -17,16 +17,22 @@ message MsgPlaceBet {
   // creator is the bettor address
   string creator = 1;
 
+  // bet is the info of bet to place
+  BetPlaceFields bet = 2;
+}
+
+// PlaceBetFields contains necessary fields which come in BetPlacement and BetSlipPlacement TX requests
+message BetPlaceFields {
   // uid is the unique uuid assigned to bet
-  string uid = 2;
+  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
 
   // amount is the wagger amount
-  string amount = 3 [
+  string amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 
   // ticket is a signed string containing important info such as `oddsValue`
-  string ticket = 4;
+  string ticket = 3;
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request

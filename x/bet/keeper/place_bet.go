@@ -60,30 +60,9 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet)
-
-	// emit events
-	emitPlacementEvent(ctx, bet)
-
 	return nil
 }
 
-func emitPlacementEvent(ctx sdk.Context, bet *types.Bet) {
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.TypeMsgPlaceBet,
-			sdk.NewAttribute(types.AttributeKeyBetCreator, bet.Creator),
-			sdk.NewAttribute(types.AttributeKeyBetUID, bet.UID),
-			sdk.NewAttribute(types.AttributeKeySportEventUID, bet.SportEventUID),
-			sdk.NewAttribute(sdk.AttributeKeyAmount, bet.Amount.String()),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeyAction, types.TypeMsgPlaceBet),
-			sdk.NewAttribute(sdk.AttributeKeySender, bet.Creator),
-		),
-	})
-}
 
 // getSportEvent returns sport event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {

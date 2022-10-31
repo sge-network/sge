@@ -6,10 +6,10 @@ The Strategic Reserve module emits the following events
 
 |  Type  |  Attribute Key  |  Attribute Value  |
 |:-------------:|:---------------:|:---------------:|
-| place_bet 	| creator 	|           	|
+| place_bet 	| creator  	|           	|
 | place_bet 	| bet_uid  	|             	|
-| place_bet 	| sport_event_uid |         |
-| place_bet 	| amount  	|             	|
+| place_bet 	| status    |  successful / failed |
+| place_bet 	| error_message|           	|
 | message      	| module  	|  bet      	|
 | message       | action   	| place_bet     |
 | message      	| sender    |         	    |
@@ -22,7 +22,8 @@ The Strategic Reserve module emits the following events
 |:-------------:|:---------------:|:---------------:|
 | settle_bet 	| bet_creator|           	|
 | settle_bet 	| bet_uid  	 |             	|
-| settle_bet 	| sport_event_uid |         |
+| settle_bet 	| status     |  successful / failed |
+| settle_bet 	| error_message|            |
 | message      	| module  	 |  bet      	|
 | message       | action   	 | settle_bet   |
 | message      	| sender     |         	    |

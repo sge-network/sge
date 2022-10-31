@@ -47,9 +47,6 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 		bet.Status = types.Bet_STATUS_SETTLED
 
 		k.SetBet(ctx, bet)
-
-		emitSettlementEvent(ctx, &bet)
-
 		return nil
 	}
 
@@ -64,28 +61,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 
 	// store bet in the module state
 	k.SetBet(ctx, bet)
-
-	// emit events
-	emitSettlementEvent(ctx, &bet)
-
 	return nil
-}
-
-func emitSettlementEvent(ctx sdk.Context, bet *types.Bet) {
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.TypeMsgSettleBet,
-			sdk.NewAttribute(types.AttributeKeyBetCreator, bet.Creator),
-			sdk.NewAttribute(types.AttributeKeyBetUID, bet.UID),
-			sdk.NewAttribute(types.AttributeKeySportEventUID, bet.SportEventUID),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeyAction, types.TypeMsgSettleBet),
-			sdk.NewAttribute(sdk.AttributeKeySender, bet.Creator),
-		),
-	})
 }
 
 // checkBetStatus checks status of bet. It returns an error if
