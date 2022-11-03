@@ -57,12 +57,12 @@ git clone https://github.com/sge-network/sge.git
 ```
 * Checkout release tag
 ```shell
+cd sge
 git fetch --tags
 git checkout [vX.X.X]
 ```
 * Install
 ```shell
-cd sge
 go mod tidy
 make install
 ```
