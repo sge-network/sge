@@ -9,10 +9,6 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-type resoveEventInput struct {
-	Events []types.ResolutionEvent `json:"events"`
-}
-
 // ResolveEvent accepts ticket containing multiple resolution events and return batch response after processing
 func (k msgServer) ResolveEvent(goCtx context.Context, msg *types.MsgResolveEvent) (*types.SportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
@@ -71,20 +67,17 @@ func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (
 }
 
 func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionEvent) error {
-	winnerOddUids := make(map[string][]byte, len(event.WinnerOddsUIDs))
-
 	if event.Status == types.SportEventStatus_STATUS_RESULT_DECLARED {
 		if event.ResolutionTS < sportEvent.StartTS {
 			return types.ErrResolutionTimeLessTnStart
 		}
 
 		validWinnerOdds := true
-		for key := range event.WinnerOddsUIDs {
-			if !utils.StrSliceContains(sportEvent.OddsUIDs, key) {
+		for _, wid := range event.WinnerOddsUIDs {
+			if !utils.StrSliceContains(sportEvent.OddsUIDs, wid) {
 				validWinnerOdds = false
 				break
 			}
-			winnerOddUids[key] = nil
 		}
 
 		if !validWinnerOdds {
@@ -92,7 +85,6 @@ func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionE
 		}
 	}
 
-	event.WinnerOddsUIDs = winnerOddUids
 	return nil
 }
 
@@ -115,8 +107,8 @@ func validateResolutionEvent(event types.ResolutionEvent) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough winner odds for the sports event")
 	}
 
-	for key := range event.WinnerOddsUIDs {
-		if !utils.IsValidUID(key) {
+	for _, wid := range event.WinnerOddsUIDs {
+		if !utils.IsValidUID(wid) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "odds-uid passed is invalid")
 		}
 	}

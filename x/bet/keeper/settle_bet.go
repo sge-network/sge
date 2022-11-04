@@ -86,7 +86,14 @@ func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) err
 		return types.ErrResultNotDeclared
 	}
 
-	_, exist := sportEvent.WinnerOddsUIDs[bet.OddsUID]
+	var exist bool
+	for _, wid := range sportEvent.WinnerOddsUIDs {
+		if wid == bet.OddsUID {
+			exist = true
+			break
+		}
+	}
+
 	if exist {
 		// bet is winner
 		bet.Result = types.Bet_RESULT_WON
