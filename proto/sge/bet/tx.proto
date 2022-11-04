@@ -26,7 +26,10 @@ message MsgPlaceBet {
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
-message MsgPlaceBetResponse {}
+message MsgPlaceBetResponse {
+  string error = 1;
+  BetPlaceFields bet = 2;
+}
 
 // MsgSettleBet defines a message to settle the given bet
 message MsgSettleBet {
@@ -39,4 +42,6 @@ message MsgSettleBet {
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
 message MsgSettleBetResponse {
+  string error = 1;
+  string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }

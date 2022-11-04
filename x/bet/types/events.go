@@ -14,16 +14,4 @@ const (
 
 	// AttributeValueCategory is the event attribute for category as module name
 	AttributeValueCategory = ModuleName
-
-	// AttributeKeyStatus is the event attribute for status of bet-related tx
-	AttributeKeyStatus = "status"
-
-	// AttributeKeyErrorMessage is the event attribute for the error message of bet-related tx if applicable
-	AttributeKeyErrorMessage = "error_message"
-
-	// AttributeValueStatusSuccessful indicates successful status of tx
-	AttributeValueStatusSuccessful = "successful"
-
-	// AttributeValueStatusFailed indicates failed status of tx
-	AttributeValueStatusFailed = "failed"
 )

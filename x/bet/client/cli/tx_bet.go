@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"strconv"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -12,15 +14,21 @@ import (
 // CmdPlaceBet implements a command to place and store a single bet
 func CmdPlaceBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "place-bet [uid] [amount] [ticket]",
+		Use:   "place-bet [uid] [amount] [odds_type] [ticket]",
 		Short: "Place a new bet",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			// Get value arguments
 			uid := args[0]
 			argAmount := args[1]
-			argTicket := args[2]
+			argOddsType := args[2]
+			argTicket := args[3]
+
+			oddsType, err := strconv.ParseInt(argOddsType, 10, 32)
+			if err != nil {
+				return types.ErrInvalidOddsType
+			}
 
 			argAmountCosmosInt, ok := sdk.NewIntFromString(argAmount)
 			if !ok {
@@ -35,9 +43,10 @@ func CmdPlaceBet() *cobra.Command {
 			msg := types.NewMsgPlaceBet(
 				clientCtx.GetFromAddress().String(),
 				types.BetPlaceFields{
-					UID:    uid,
-					Amount: argAmountCosmosInt,
-					Ticket: argTicket,
+					UID:      uid,
+					Amount:   argAmountCosmosInt,
+					OddsType: types.BetPlaceFields_OddsType(oddsType),
+					Ticket:   argTicket,
 				},
 			)
 			if err := msg.ValidateBasic(); err != nil {

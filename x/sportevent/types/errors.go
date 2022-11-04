@@ -21,4 +21,6 @@ var (
 	ErrInVerification            = sdkerrors.Register(ModuleName, 3012, "error in verification process")
 	ErrResolutionTimeLessTnStart = sdkerrors.Register(ModuleName, 3013, "resolution time cannot be less than start")
 	ErrDuplicateEventsExist      = sdkerrors.Register(ModuleName, 30014, "duplicate events provided")
+	ErrOddsStatsNotFound         = sdkerrors.Register(ModuleName, 30015, "odds stats not found")
+	ErrEventMaxLossExceeded      = sdkerrors.Register(ModuleName, 30016, "max loss of the event exceeded")
 )

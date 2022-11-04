@@ -57,7 +57,6 @@ func SimulateMsgPlaceBet(
 	}
 }
 
-
 // SimulateMsgSettleBet returns an Operation function to run a state machine transition
 func SimulateMsgSettleBet(
 	ak types.AccountKeeper,

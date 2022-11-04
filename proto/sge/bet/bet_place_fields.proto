@@ -15,4 +15,21 @@ message BetPlaceFields {
 
   // ticket is a signed string containing important info such as `oddsValue`
   string ticket = 3;
+
+  // odds_type is the type of odds used has chosen
+  OddsType odds_type = 4;
+
+  enum OddsType {
+    // Invalid odd type
+    ODD_TYPE_INVALID = 0;
+
+    // Decimal odds type
+    ODD_TYPE_DECIMAL = 1;
+
+    // Fractional odds type
+    ODD_TYPE_FRACTIONAL = 2;
+
+    // American odds type
+    ODD_TYPE_AMERICAN = 3;
+  }
 }

@@ -17,6 +17,10 @@ func BetFieldsValidation(bet *BetPlaceFields) error {
 		return ErrInvalidAmount
 	}
 
+	if bet.OddsType < 1 || bet.OddsType > 3 {
+		return ErrInvalidOddsType
+	}
+
 	if bet.Ticket == "" || strings.Contains(bet.Ticket, " ") {
 		return ErrInvalidTicket
 	}
@@ -27,27 +31,32 @@ func BetFieldsValidation(bet *BetPlaceFields) error {
 }
 
 // TicketFieldsValidation validates fields of the given ticketData
-func TicketFieldsValidation(ticketData *BetOdds) error {
+func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 
-	if !IsValidUID(ticketData.SportEventUID) {
-		return ErrInvalidSportEventUID
+	for _, o := range ticketData.Odds {
+
+		if !IsValidUID(o.SportEventUID) {
+			return ErrInvalidSportEventUID
+		}
+
+		if !IsValidUID(o.UID) {
+			return ErrInvalidOddsUID
+		}
+
+		if o.Value == "" {
+			return ErrInvalidOddsValue
+		}
+
+		ticketOddsValue, err := sdk.NewDecFromStr(o.Value)
+		if err != nil {
+			return sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
+		}
+
+		if ticketOddsValue.IsNil() || ticketOddsValue.LTE(sdk.OneDec()) {
+			return ErrInvalidOddsValue
+		}
+
 	}
 
-	if !IsValidUID(ticketData.UID) {
-		return ErrInvalidOddsUID
-	}
-
-	if ticketData.Value == "" {
-		return ErrInvalidOddsValue
-	}
-
-	ticketOddsValue, err := sdk.NewDecFromStr(ticketData.Value)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
-	}
-
-	if ticketOddsValue.IsNil() || ticketOddsValue.LTE(sdk.OneDec()) {
-		return ErrInvalidOddsValue
-	}
 	return nil
 }

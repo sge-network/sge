@@ -16,6 +16,16 @@ func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	addSportEvent(t, tApp, ctx)
 
+	totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
+	totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+
 	tcs := []struct {
 		desc             string
 		betUID           string
@@ -49,7 +59,7 @@ func TestSettleBet(t *testing.T) {
 				OddsValue:     sdk.NewDec(10),
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 
 				Verified: true,
@@ -73,7 +83,7 @@ func TestSettleBet(t *testing.T) {
 				OddsValue:     sdk.NewDec(10),
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
@@ -91,9 +101,9 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     sdk.NewDec(10),
-				Amount:        sdk.NewInt(500),
+				Amount:        sdk.NewInt(300),
 				Creator:       testCreator,
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
@@ -113,7 +123,7 @@ func TestSettleBet(t *testing.T) {
 				OddsValue:     sdk.NewDec(10),
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
@@ -134,7 +144,7 @@ func TestSettleBet(t *testing.T) {
 				OddsValue:     sdk.NewDec(10),
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 
 				Result: types.Bet_RESULT_WON,
@@ -165,9 +175,17 @@ func TestSettleBet(t *testing.T) {
 					Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 					Active:   true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
-						MaxBetCap: sdk.NewInt(10000000000000),
-						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						MaxBetCap:      sdk.NewInt(10000000000000),
+						MinAmount:      sdk.NewInt(1),
+						BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+						MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+						MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+						TotalOddsStats: totalOddsStat,
+						TotalStats: &sporteventtypes.TotalStats{
+							HouseLoss: sdk.NewInt(0),
+							BetAmount: sdk.NewInt(0),
+						},
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)

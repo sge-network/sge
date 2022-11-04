@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
@@ -8,40 +10,53 @@ import (
 )
 
 // PlaceBet stores a new bet in KVStore
-func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
-
+func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types.BetOdds) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
 	}
 
-	sportevent, err := k.getSportEvent(ctx, bet.SportEventUID)
+	sportEvent, err := k.getSportEvent(ctx, bet.SportEventUID)
 	if err != nil {
 		return err
 	}
 
-	if !oddsExists(bet.OddsUID, sportevent.OddsUIDs) {
+	// check if odds is valid
+	if !oddsExists(bet.OddsUID, sportEvent.OddsUIDs) {
 		return types.ErrOddsUIDNotExist
 	}
 
-	// modify the bet fee and subtracted amount
-	setBetFee(bet, sportevent.BetConstraints.BetFee)
-
-	// calculate payout
-	payout := calculatePayout(bet)
-
-	if bet.Amount.LT(sportevent.BetConstraints.MinAmount) {
+	// check minimum bet amount allowed
+	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
 
-	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, payout); err != nil {
+	// calculate vig and validate min and max vig satisfaction
+	vig := types.CalculateVig(activeBetOdds)
+	if vig.IsNegative() ||
+		vig.GT(sportEvent.BetConstraints.MaxVig) ||
+		vig.LT(sportEvent.BetConstraints.MinVig) {
+		return sdkerrors.Wrapf(types.ErrVigIsOutOfRange, "accepted range is %s - %s",
+			sportEvent.BetConstraints.MinVig,
+			sportEvent.BetConstraints.MaxVig)
+	}
+
+	// modify the bet fee and subtracted amount
+	setBetFee(bet, sportEvent.BetConstraints.BetFee)
+
+	// calculate extraPayout
+	extraPayout := calculateExtraPayout(bet)
+
+	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent, bet.OddsUID, bet.Amount, extraPayout); err != nil {
 		return sdkerrors.Wrapf(types.ErrInAddAmountToSportEvent, "%s", err)
 	}
 
 	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
-		bet.BetFee, bet.Amount, payout, bet.UID)
+		bet.BetFee, bet.Amount, extraPayout, bet.UID)
 	if err != nil {
-		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, bet.SportEventUID, payout.Neg()); err != nil {
+		// bet placement was not successful so we need to update the total bet amount and payout statistics in the
+		// sport event bet constraints
+		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent, bet.OddsUID, bet.Amount.Neg(), extraPayout.Neg()); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSubAmountFromSportEvent, "%s", err)
 		}
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
@@ -63,7 +78,6 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	return nil
 }
 
-
 // getSportEvent returns sport event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
 	sportevent, found := k.sporteventKeeper.GetSportEvent(ctx, sportEventID)
@@ -79,7 +93,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
-	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {
+	if sportevent.EndTS < uint64(time.Now().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
 	return sportevent, nil

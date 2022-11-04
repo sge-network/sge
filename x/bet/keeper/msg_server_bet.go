@@ -14,49 +14,72 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	// Check if the value already exists
 	_, isFound := k.GetBet(ctx, msg.Bet.UID)
 	if isFound {
-		emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusFailed, types.ErrDuplicateUID.Error())
-		return &types.MsgPlaceBetResponse{}, nil
+		return &types.MsgPlaceBetResponse{
+				Error: types.ErrDuplicateUID.Error(),
+				Bet:   msg.Bet},
+			types.ErrDuplicateUID
 	}
 
-	ticketData := &types.BetOdds{}
+	ticketData := &types.BetPlacementTicketPayload{}
 	err := k.dvmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
 	if err != nil {
-		emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusFailed, sdkerrors.Wrapf(types.ErrInVerification, "%s", err).Error())
-		return &types.MsgPlaceBetResponse{}, nil
+		return &types.MsgPlaceBetResponse{
+				Error: sdkerrors.Wrapf(types.ErrInVerification, "%s", err).Error(),
+				Bet:   msg.Bet},
+			sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
 	if err = types.TicketFieldsValidation(ticketData); err != nil {
-		emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusFailed, err.Error())
-		return &types.MsgPlaceBetResponse{}, nil
+		return &types.MsgPlaceBetResponse{
+				Error: err.Error(),
+				Bet:   msg.Bet},
+			err
 	}
 
-	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData)
+	selectedOdds := types.ExtractSelectedOddsFromTicket(ticketData)
+	if selectedOdds == nil {
+		return &types.MsgPlaceBetResponse{
+				Error: sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err).Error(),
+				Bet:   msg.Bet},
+			sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err)
+	}
+
+	bet, err := types.NewBet(msg.Creator, msg.Bet, selectedOdds)
 	if err != nil {
-		emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusFailed, err.Error())
-		return &types.MsgPlaceBetResponse{}, nil
+		return &types.MsgPlaceBetResponse{
+				Error: err.Error(),
+				Bet:   msg.Bet},
+			err
 	}
 
-	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
-		emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusFailed, err.Error())
-		return &types.MsgPlaceBetResponse{}, nil
+	if err := k.Keeper.PlaceBet(ctx, bet, ticketData.Odds); err != nil {
+		return &types.MsgPlaceBetResponse{
+				Error: err.Error(),
+				Bet:   msg.Bet},
+			err
 	}
 
-	emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator, types.AttributeValueStatusSuccessful, "")
-	return &types.MsgPlaceBetResponse{}, nil
+	emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator)
+	return &types.MsgPlaceBetResponse{
+			Error: "",
+			Bet:   msg.Bet},
+		nil
 }
 
 func (k msgServer) SettleBet(goCtx context.Context, msg *types.MsgSettleBet) (*types.MsgSettleBetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := k.Keeper.SettleBet(ctx, msg.BetUID); err != nil {
-		emitBetEvent(ctx, types.TypeMsgSettleBet, msg.BetUID, msg.Creator, types.AttributeValueStatusFailed, err.Error())
-		return &types.MsgSettleBetResponse{}, nil
+		return &types.MsgSettleBetResponse{
+			Error:  err.Error(),
+			BetUID: msg.BetUID,
+		}, err
 	}
-	emitBetEvent(ctx, types.TypeMsgSettleBet, msg.BetUID, msg.Creator, types.AttributeValueStatusSuccessful, "")
+	emitBetEvent(ctx, types.TypeMsgSettleBet, msg.BetUID, msg.Creator)
 	return &types.MsgSettleBetResponse{}, nil
 }
 
-func emitBetEvent(ctx sdk.Context, msgType string, betUid string, betCreator string, status string, errorMsg string) {
+func emitBetEvent(ctx sdk.Context, msgType string, betUid string, betCreator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			msgType,
@@ -68,8 +91,6 @@ func emitBetEvent(ctx sdk.Context, msgType string, betUid string, betCreator str
 			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
 			sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
 			sdk.NewAttribute(sdk.AttributeKeySender, betCreator),
-			sdk.NewAttribute(types.AttributeKeyStatus, status),
-			sdk.NewAttribute(types.AttributeKeyErrorMessage, errorMsg),
 		),
 	})
 }

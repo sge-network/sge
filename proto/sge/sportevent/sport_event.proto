@@ -49,7 +49,39 @@ message EventBetConstraints {
   cosmos.base.v1beta1.Coin bet_fee = 3
   [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false];
 
-  string current_total_amount = 4[
+  string max_loss = 4[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+
+  string max_vig = 5[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false];
+
+  string min_vig = 6[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable)   = false];
+
+  map<string, TotalOddsStats> total_odds_stats = 7;
+
+  TotalStats total_stats = 8;
+}
+
+message TotalOddsStats {
+  string extra_payout = 1[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+
+  string bet_amount = 2[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+}
+
+message TotalStats {
+  string house_loss = 1[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+
+  string bet_amount = 2[
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 }

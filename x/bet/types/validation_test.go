@@ -79,6 +79,7 @@ func TestBetFieldsValidation(t *testing.T) {
 }
 
 func TestTicketFieldsValidation(t *testing.T) {
+
 	tcs := []struct {
 		desc    string
 		betOdds *BetOdds
@@ -139,7 +140,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := TicketFieldsValidation(tc.betOdds)
+
+			err := TicketFieldsValidation(&BetPlacementTicketPayload{
+				OddsUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Odds:    []*BetOdds{tc.betOdds},
+			})
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
