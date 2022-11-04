@@ -15,6 +15,7 @@ import (
 
 func TestPlaceBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
+
 	tcs := []struct {
 		desc       string
 		bet        *types.Bet
@@ -44,9 +45,17 @@ func TestPlaceBet(t *testing.T) {
 				UID:    "uid_inactive",
 				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -63,9 +72,17 @@ func TestPlaceBet(t *testing.T) {
 				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -83,9 +100,17 @@ func TestPlaceBet(t *testing.T) {
 				EndTS:  000000000,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -104,9 +129,17 @@ func TestPlaceBet(t *testing.T) {
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -128,9 +161,17 @@ func TestPlaceBet(t *testing.T) {
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1000),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1000),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -152,9 +193,17 @@ func TestPlaceBet(t *testing.T) {
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(10000000000000),
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxBetCap:      sdk.NewInt(10000000000000),
+					MinAmount:      sdk.NewInt(1),
+					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+					TotalOddsStats: defaultTotalStats(),
+					TotalStats: &sporteventtypes.TotalStats{
+						HouseLoss: sdk.NewInt(0),
+						BetAmount: sdk.NewInt(0),
+					},
 				},
 			},
 			bet: &types.Bet{
@@ -173,7 +222,7 @@ func TestPlaceBet(t *testing.T) {
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
 			}
-			err := k.PlaceBet(ctx, tc.bet)
+			err := k.PlaceBet(ctx, tc.bet, testActiveBetOdds)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

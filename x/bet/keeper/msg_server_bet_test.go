@@ -53,12 +53,19 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
+		activeOdds := make([]*types.BetOdds, len(testActiveBetOdds))
+		for i, v := range testActiveBetOdds {
+			shallow := *v
+			activeOdds[i] = &shallow
+		}
+
+		activeOdds[0].SportEventUID = ""
 		placeBetClaim := jwt.MapClaims{
-			"sport_event_uid": "",
-			"value":           sdk.NewDec(10),
-			"uid":             testOddsUID,
-			"exp":             9999999999,
-			"iat":             1111111111,
+			"value":    sdk.NewDec(10),
+			"odds_uid": testOddsUID1,
+			"exp":      9999999999,
+			"iat":      1111111111,
+			"odds":     activeOdds,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -80,11 +87,11 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("No matching sportEvent", func(t *testing.T) {
 		placeBetClaim := jwt.MapClaims{
-			"sport_event_uid": testSportEventUID,
-			"value":           sdk.NewDec(10),
-			"uid":             testOddsUID,
-			"exp":             9999999999,
-			"iat":             1111111111,
+			"value":    sdk.NewDec(10),
+			"odds_uid": testOddsUID1,
+			"exp":      9999999999,
+			"iat":      1111111111,
+			"odds":     testActiveBetOdds,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -105,11 +112,11 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		placeBetClaim := jwt.MapClaims{
-			"sport_event_uid": testSportEventUID,
-			"value":           sdk.NewDec(10),
-			"uid":             testOddsUID,
-			"exp":             9999999999,
-			"iat":             1111111111,
+			"value":    sdk.NewDec(10),
+			"odds_uid": testOddsUID1,
+			"exp":      9999999999,
+			"iat":      1111111111,
+			"odds":     testActiveBetOdds,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -124,6 +131,16 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
+		totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
+		totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
+			ExtraPayout: sdk.NewInt(0),
+			BetAmount:   sdk.NewInt(0),
+		}
+		totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
+			ExtraPayout: sdk.NewInt(0),
+			BetAmount:   sdk.NewInt(0),
+		}
+
 		sportEventItem := sporteventtypes.SportEvent{
 			UID:      testSportEventUID,
 			Creator:  testCreator,
@@ -133,9 +150,17 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 			Active:   true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
-				MaxBetCap: sdk.NewInt(10000000000000),
-				MinAmount: sdk.NewInt(1),
-				BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+				MaxBetCap:      sdk.NewInt(10000000000000),
+				MinAmount:      sdk.NewInt(1),
+				BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+				MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+				MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+				MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+				TotalOddsStats: totalOddsStat,
+				TotalStats: &sporteventtypes.TotalStats{
+					HouseLoss: sdk.NewInt(0),
+					BetAmount: sdk.NewInt(0),
+				},
 			},
 		}
 
@@ -148,103 +173,6 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, inputBet.Creator, rst.Creator)
 	})
-}
-
-func TestBetMsgServerPlaceBetSlip(t *testing.T) {
-	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-	var err error
-
-	bets := []*types.Bet{
-		{
-			UID: "duplicateUID", // error: duplicate UID
-		},
-		{
-			UID: "", // error: empty UID
-		},
-		{
-			UID:    "7e31c60f-2025-48ce-ae79-1dc110f16356",
-			Amount: sdk.NewInt(int64(10)),
-			Ticket: "invalidTicket", // err in verifying ticket
-		},
-		{
-			UID:           "7e31c60f-2025-48ce-ae79-1dc110f16356",
-			SportEventUID: "invalidUID", // error: ErrInvalidSportEventUID
-			OddsUID:       "7e31c60f-2025-48ce-ae79-1dc110f16358",
-			OddsValue:     sdk.NewDec(int64(10)),
-			Amount:        sdk.NewInt(int64(10)),
-		},
-		{
-			UID:           "5e31c60f-2025-48ce-ae79-1dc110f16356",
-			SportEventUID: "5e31c60f-2025-48ce-ae79-1dc110f16357", //error: no matching sport event
-			OddsUID:       "5e31c60f-2025-48ce-ae79-1dc110f16358",
-			OddsValue:     sdk.NewDec(int64(10)),
-			Amount:        sdk.NewInt(int64(10)),
-		},
-		{
-			UID:           "6e31c60f-2025-48ce-ae79-1dc110f16356",
-			SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355", // no error
-			OddsUID:       "6e31c60f-2025-48ce-ae79-1dc110f16354",
-			OddsValue:     sdk.NewDec(int64(10)),
-			Amount:        sdk.NewInt(int64(10)),
-		},
-	}
-	inputBets := &types.MsgPlaceBetSlip{
-		Creator: creator.Address.String(),
-		Bets:    []*types.BetPlaceFields{},
-	}
-	for _, bet := range bets {
-		placeBetTicket := bet.Ticket
-		if placeBetTicket == "" {
-			placeBetClaim := jwt.MapClaims{
-				"sport_event_uid": bet.SportEventUID,
-				"value":           bet.OddsValue,
-				"uid":             bet.OddsUID,
-				"exp":             9999999999,
-				"iat":             1111111111,
-			}
-			placeBetTicket, err = createJwtTicket(placeBetClaim)
-			require.Nil(t, err)
-		}
-		inputBets.Bets = append(inputBets.Bets, &types.BetPlaceFields{
-			UID:    bet.UID,
-			Amount: bet.Amount,
-			Ticket: placeBetTicket,
-		})
-
-	}
-
-	sportEventItem := sporteventtypes.SportEvent{
-		UID:      bets[5].SportEventUID,
-		EndTS:    99999999999,
-		OddsUIDs: []string{"odds1", "6e31c60f-2025-48ce-ae79-1dc110f16354"},
-		Active:   true,
-		BetConstraints: &sporteventtypes.EventBetConstraints{
-			MaxBetCap: sdk.NewInt(10000000000000),
-			MinAmount: sdk.NewInt(1),
-			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-		},
-	}
-	tApp.SporteventKeeper.SetSportEvent(ctx, sportEventItem)
-	k.SetBet(ctx, *bets[0])
-	expected := &types.MsgPlaceBetSlipResponse{
-		SuccessfulBetUIDsList: []string{inputBets.Bets[5].UID},
-		FailedBetUIDsErrorMap: map[string]string{
-			inputBets.Bets[0].UID: types.ErrDuplicateUID.Error(),
-			inputBets.Bets[1].UID: types.ErrInvalidBetUID.Error(),
-			//inputBets.Bets[2].UID: an specific error should be defined in DVM
-			inputBets.Bets[3].UID: types.ErrInvalidSportEventUID.Error(),
-			inputBets.Bets[4].UID: types.ErrNoMatchingSportEvent.Error(),
-		},
-	}
-	resp, err := msgk.PlaceBetSlip(wctx, inputBets)
-	require.NoError(t, err)
-	require.Equal(t, expected, resp)
-	rst, found := k.GetBet(ctx,
-		inputBets.Bets[5].UID,
-	)
-	require.True(t, found)
-	require.Equal(t, inputBets.Creator, rst.Creator)
 }
 
 func TestBetMsgServerSettleBet(t *testing.T) {
@@ -270,7 +198,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				OddsValue:     sdk.NewDec(10),
 				Amount:        sdk.NewInt(500),
 				Creator:       creator.Address.String(),
-				OddsUID:       testOddsUID,
+				OddsUID:       testOddsUID1,
 				Ticket:        "Ticket",
 
 				Result: types.Bet_RESULT_WON,
@@ -281,12 +209,20 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				StartTS:  1111111111,
 				EndTS:    9999999999,
 				OddsUIDs: testEventOddsUIDs,
-
-				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status:   sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
 
+	totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
+	totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
+	totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
+		ExtraPayout: sdk.NewInt(0),
+		BetAmount:   sdk.NewInt(0),
+	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
 			betUID := uuid.NewString()
@@ -301,9 +237,17 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 					Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 					Active:   true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
-						MaxBetCap: sdk.NewInt(10000000000000),
-						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						MaxBetCap:      sdk.NewInt(10000000000000),
+						MinAmount:      sdk.NewInt(1),
+						BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
+						MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
+						MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
+						TotalOddsStats: totalOddsStat,
+						TotalStats: &sporteventtypes.TotalStats{
+							HouseLoss: sdk.NewInt(0),
+							BetAmount: sdk.NewInt(0),
+						},
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
@@ -332,62 +276,4 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			require.Equal(t, expectedResp, res)
 		})
 	}
-}
-
-func TestBetMsgServerSettleBetBulk(t *testing.T) {
-	tApp, _, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-	var err error
-
-	inputMsg := &types.MsgSettleBetBulk{
-		Creator: creator.Address.String(),
-		BetUIDs: []string{
-			"InvalidUID",
-			uuid.NewString(),
-		},
-	}
-	resetSportEvent := sporteventtypes.SportEvent{
-		UID:      testSportEventUID,
-		Creator:  testCreator,
-		StartTS:  1111111111,
-		EndTS:    9999999999,
-		OddsUIDs: testEventOddsUIDs,
-		Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-		Active:   true,
-		BetConstraints: &sporteventtypes.EventBetConstraints{
-			MaxBetCap: sdk.NewInt(10000000000000),
-			MinAmount: sdk.NewInt(1),
-			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-		},
-	}
-	updateSportEvent := &sporteventtypes.SportEvent{
-		UID:      testSportEventUID,
-		Creator:  testCreator,
-		StartTS:  1111111111,
-		EndTS:    9999999999,
-		OddsUIDs: testEventOddsUIDs,
-		Active:   true,
-		BetConstraints: &sporteventtypes.EventBetConstraints{
-			MaxBetCap: sdk.NewInt(10000000000000),
-			MinAmount: sdk.NewInt(1),
-			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-		},
-
-		Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
-	}
-
-	tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
-	placeTestBet(ctx, t, tApp, inputMsg.BetUIDs[1])
-	tApp.SporteventKeeper.SetSportEvent(ctx, *updateSportEvent)
-
-	expected := &types.MsgSettleBetBulkResponse{
-		SuccessfulBetUIDsList: []string{inputMsg.BetUIDs[1]},
-		FailedBetUIDsErrorMap: map[string]string{
-			inputMsg.BetUIDs[0]: types.ErrInvalidBetUID.Error(),
-		},
-	}
-
-	resp, err := msgk.SettleBetBulk(wctx, inputMsg)
-	require.NoError(t, err)
-	require.Equal(t, expected, resp)
 }

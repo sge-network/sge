@@ -342,7 +342,7 @@ func (m *QuerySportEventListByUIDsRequest) GetUids() []string {
 	return nil
 }
 
-// provide response for the batch fetch call, failed events would only contain the id (by default assumption is of not exist id)
+//provide response for the batch fetch call, failed events would only contain the id (by default assumption is of not exist id)
 type QuerySportEventListByUIDsResponse struct {
 	SportEvents  []SportEvent `protobuf:"bytes,1,rep,name=sportEvents,proto3" json:"sportEvents"`
 	FailedEvents []string     `protobuf:"bytes,2,rep,name=failedEvents,proto3" json:"failedEvents,omitempty"`

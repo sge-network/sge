@@ -85,6 +85,8 @@ func (m *MsgPlaceBet) GetBet() *BetPlaceFields {
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
 type MsgPlaceBetResponse struct {
+	Error string          `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	Bet   *BetPlaceFields `protobuf:"bytes,2,opt,name=bet,proto3" json:"bet,omitempty"`
 }
 
 func (m *MsgPlaceBetResponse) Reset()         { *m = MsgPlaceBetResponse{} }
@@ -120,112 +122,16 @@ func (m *MsgPlaceBetResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgPlaceBetResponse proto.InternalMessageInfo
 
-// MsgPlaceBetSlip defines a message to place multiple bets with the given data
-type MsgPlaceBetSlip struct {
-	// creator is the bettor address
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// bets is an array of bets info to place
-	Bets []*BetPlaceFields `protobuf:"bytes,2,rep,name=bets,proto3" json:"bets,omitempty"`
-}
-
-func (m *MsgPlaceBetSlip) Reset()         { *m = MsgPlaceBetSlip{} }
-func (m *MsgPlaceBetSlip) String() string { return proto.CompactTextString(m) }
-func (*MsgPlaceBetSlip) ProtoMessage()    {}
-func (*MsgPlaceBetSlip) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{2}
-}
-func (m *MsgPlaceBetSlip) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgPlaceBetSlip) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgPlaceBetSlip.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgPlaceBetSlip) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPlaceBetSlip.Merge(m, src)
-}
-func (m *MsgPlaceBetSlip) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgPlaceBetSlip) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPlaceBetSlip.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgPlaceBetSlip proto.InternalMessageInfo
-
-func (m *MsgPlaceBetSlip) GetCreator() string {
+func (m *MsgPlaceBetResponse) GetError() string {
 	if m != nil {
-		return m.Creator
+		return m.Error
 	}
 	return ""
 }
 
-func (m *MsgPlaceBetSlip) GetBets() []*BetPlaceFields {
+func (m *MsgPlaceBetResponse) GetBet() *BetPlaceFields {
 	if m != nil {
-		return m.Bets
-	}
-	return nil
-}
-
-// MsgPlaceBetSlipResponse is the returning value in the response of MsgPlaceBetSlip request
-type MsgPlaceBetSlipResponse struct {
-	// successful_bet_uids_list is an array of successful bet UIDs to place
-	SuccessfulBetUIDsList []string `protobuf:"bytes,1,rep,name=successful_bet_uids_list,proto3" json:"successful_bet_uids_list"`
-	// failed_bet_uids_error_map is an map of failed bet UIDs to place alongside their failure messages
-	FailedBetUIDsErrorMap map[string]string `protobuf:"bytes,2,rep,name=failed_bet_uids_error_map,proto3" json:"failed_bet_uids_error_map" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-}
-
-func (m *MsgPlaceBetSlipResponse) Reset()         { *m = MsgPlaceBetSlipResponse{} }
-func (m *MsgPlaceBetSlipResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgPlaceBetSlipResponse) ProtoMessage()    {}
-func (*MsgPlaceBetSlipResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{3}
-}
-func (m *MsgPlaceBetSlipResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgPlaceBetSlipResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgPlaceBetSlipResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgPlaceBetSlipResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPlaceBetSlipResponse.Merge(m, src)
-}
-func (m *MsgPlaceBetSlipResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgPlaceBetSlipResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPlaceBetSlipResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgPlaceBetSlipResponse proto.InternalMessageInfo
-
-func (m *MsgPlaceBetSlipResponse) GetSuccessfulBetUIDsList() []string {
-	if m != nil {
-		return m.SuccessfulBetUIDsList
-	}
-	return nil
-}
-
-func (m *MsgPlaceBetSlipResponse) GetFailedBetUIDsErrorMap() map[string]string {
-	if m != nil {
-		return m.FailedBetUIDsErrorMap
+		return m.Bet
 	}
 	return nil
 }
@@ -242,7 +148,7 @@ func (m *MsgSettleBet) Reset()         { *m = MsgSettleBet{} }
 func (m *MsgSettleBet) String() string { return proto.CompactTextString(m) }
 func (*MsgSettleBet) ProtoMessage()    {}
 func (*MsgSettleBet) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{4}
+	return fileDescriptor_38b4167f68c2a7f8, []int{2}
 }
 func (m *MsgSettleBet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -287,13 +193,15 @@ func (m *MsgSettleBet) GetBetUID() string {
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
 type MsgSettleBetResponse struct {
+	Error  string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	BetUID string `protobuf:"bytes,2,opt,name=bet_uid,proto3" json:"bet_uid"`
 }
 
 func (m *MsgSettleBetResponse) Reset()         { *m = MsgSettleBetResponse{} }
 func (m *MsgSettleBetResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSettleBetResponse) ProtoMessage()    {}
 func (*MsgSettleBetResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{5}
+	return fileDescriptor_38b4167f68c2a7f8, []int{3}
 }
 func (m *MsgSettleBetResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -322,171 +230,53 @@ func (m *MsgSettleBetResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgSettleBetResponse proto.InternalMessageInfo
 
-// MsgSettleBetBulk defines a message to settle multiple given bets
-type MsgSettleBetBulk struct {
-	// creator is the bettor address
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// bet_uids is an array of uuid of the bets to settle
-	BetUIDs []string `protobuf:"bytes,2,rep,name=bet_uids,proto3" json:"bet_uids"`
-}
-
-func (m *MsgSettleBetBulk) Reset()         { *m = MsgSettleBetBulk{} }
-func (m *MsgSettleBetBulk) String() string { return proto.CompactTextString(m) }
-func (*MsgSettleBetBulk) ProtoMessage()    {}
-func (*MsgSettleBetBulk) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{6}
-}
-func (m *MsgSettleBetBulk) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSettleBetBulk) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSettleBetBulk.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSettleBetBulk) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSettleBetBulk.Merge(m, src)
-}
-func (m *MsgSettleBetBulk) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSettleBetBulk) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSettleBetBulk.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSettleBetBulk proto.InternalMessageInfo
-
-func (m *MsgSettleBetBulk) GetCreator() string {
+func (m *MsgSettleBetResponse) GetError() string {
 	if m != nil {
-		return m.Creator
+		return m.Error
 	}
 	return ""
 }
 
-func (m *MsgSettleBetBulk) GetBetUIDs() []string {
+func (m *MsgSettleBetResponse) GetBetUID() string {
 	if m != nil {
-		return m.BetUIDs
+		return m.BetUID
 	}
-	return nil
-}
-
-// MsgSettleBetBulkResponse is the returning value in the response of MsgSettleBetBulk request
-type MsgSettleBetBulkResponse struct {
-	// successful_bet_uids_list is an array of successful bet UIDs to place
-	SuccessfulBetUIDsList []string `protobuf:"bytes,1,rep,name=successful_bet_uids_list,proto3" json:"successful_bet_uids_list"`
-	// failed_bet_uids_error_map is an map of failed bet UIDs to place alongside their failure messages
-	FailedBetUIDsErrorMap map[string]string `protobuf:"bytes,2,rep,name=failed_bet_uids_error_map,proto3" json:"failed_bet_uids_error_map" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-}
-
-func (m *MsgSettleBetBulkResponse) Reset()         { *m = MsgSettleBetBulkResponse{} }
-func (m *MsgSettleBetBulkResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgSettleBetBulkResponse) ProtoMessage()    {}
-func (*MsgSettleBetBulkResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_38b4167f68c2a7f8, []int{7}
-}
-func (m *MsgSettleBetBulkResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgSettleBetBulkResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgSettleBetBulkResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgSettleBetBulkResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSettleBetBulkResponse.Merge(m, src)
-}
-func (m *MsgSettleBetBulkResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgSettleBetBulkResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSettleBetBulkResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgSettleBetBulkResponse proto.InternalMessageInfo
-
-func (m *MsgSettleBetBulkResponse) GetSuccessfulBetUIDsList() []string {
-	if m != nil {
-		return m.SuccessfulBetUIDsList
-	}
-	return nil
-}
-
-func (m *MsgSettleBetBulkResponse) GetFailedBetUIDsErrorMap() map[string]string {
-	if m != nil {
-		return m.FailedBetUIDsErrorMap
-	}
-	return nil
+	return ""
 }
 
 func init() {
 	proto.RegisterType((*MsgPlaceBet)(nil), "sgenetwork.sge.bet.MsgPlaceBet")
 	proto.RegisterType((*MsgPlaceBetResponse)(nil), "sgenetwork.sge.bet.MsgPlaceBetResponse")
-	proto.RegisterType((*MsgPlaceBetSlip)(nil), "sgenetwork.sge.bet.MsgPlaceBetSlip")
-	proto.RegisterType((*MsgPlaceBetSlipResponse)(nil), "sgenetwork.sge.bet.MsgPlaceBetSlipResponse")
-	proto.RegisterMapType((map[string]string)(nil), "sgenetwork.sge.bet.MsgPlaceBetSlipResponse.FailedBetUidsErrorMapEntry")
 	proto.RegisterType((*MsgSettleBet)(nil), "sgenetwork.sge.bet.MsgSettleBet")
 	proto.RegisterType((*MsgSettleBetResponse)(nil), "sgenetwork.sge.bet.MsgSettleBetResponse")
-	proto.RegisterType((*MsgSettleBetBulk)(nil), "sgenetwork.sge.bet.MsgSettleBetBulk")
-	proto.RegisterType((*MsgSettleBetBulkResponse)(nil), "sgenetwork.sge.bet.MsgSettleBetBulkResponse")
-	proto.RegisterMapType((map[string]string)(nil), "sgenetwork.sge.bet.MsgSettleBetBulkResponse.FailedBetUidsErrorMapEntry")
 }
 
 func init() { proto.RegisterFile("sge/bet/tx.proto", fileDescriptor_38b4167f68c2a7f8) }
 
 var fileDescriptor_38b4167f68c2a7f8 = []byte{
-	// 595 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x55, 0xc1, 0x6e, 0xd3, 0x4c,
-	0x10, 0xae, 0xe3, 0xff, 0x6f, 0x9b, 0x69, 0x51, 0x2b, 0xd3, 0x52, 0xe3, 0x83, 0x1d, 0x5c, 0x04,
-	0x91, 0x00, 0x5b, 0x6a, 0x05, 0x42, 0x9c, 0x90, 0xd5, 0x06, 0x8a, 0x88, 0x54, 0x39, 0x20, 0x04,
-	0x97, 0x60, 0x3b, 0x13, 0x63, 0xc5, 0x8d, 0x8d, 0x77, 0x0d, 0xcd, 0x5b, 0x70, 0x41, 0xbc, 0x0c,
-	0xdc, 0x39, 0xf6, 0xc8, 0xc9, 0x42, 0xce, 0x2d, 0xaf, 0xc0, 0x05, 0xd9, 0x8e, 0x9d, 0xb4, 0xd4,
-	0x4d, 0x7a, 0x42, 0xdc, 0x66, 0xf7, 0x9b, 0xfd, 0x66, 0x66, 0xe7, 0x9b, 0x5d, 0x58, 0x27, 0x36,
-	0xaa, 0x26, 0x52, 0x95, 0x1e, 0x2b, 0x7e, 0xe0, 0x51, 0x8f, 0xe3, 0x88, 0x8d, 0x7d, 0xa4, 0x1f,
-	0xbd, 0xa0, 0xa7, 0x10, 0x1b, 0x15, 0x13, 0xa9, 0xb0, 0x61, 0x7b, 0xb6, 0x97, 0xc2, 0x6a, 0x62,
-	0x65, 0x9e, 0x82, 0x98, 0x9f, 0x35, 0x91, 0xb6, 0x7d, 0xd7, 0xb0, 0xb0, 0xdd, 0x75, 0xd0, 0xed,
-	0x90, 0x0c, 0x97, 0x9f, 0xc1, 0x4a, 0x93, 0xd8, 0x87, 0x09, 0xa0, 0x21, 0xe5, 0x78, 0x58, 0xb2,
-	0x02, 0x34, 0xa8, 0x17, 0xf0, 0x4c, 0x8d, 0xa9, 0x57, 0xf5, 0x7c, 0xc9, 0xdd, 0x00, 0xd6, 0x44,
-	0xca, 0x57, 0x6a, 0x4c, 0x7d, 0x65, 0x67, 0x4d, 0xd1, 0x90, 0xa6, 0x87, 0x1a, 0x29, 0x99, 0x9e,
-	0x60, 0xf2, 0x26, 0x5c, 0x9d, 0xe2, 0xd2, 0x91, 0xf8, 0x5e, 0x9f, 0xa0, 0x7c, 0x08, 0x6b, 0x53,
-	0xdb, 0x2d, 0xd7, 0xf1, 0x2f, 0x08, 0xb3, 0x0d, 0xff, 0x99, 0x48, 0x09, 0x5f, 0xa9, 0xb1, 0xe7,
-	0xc5, 0x49, 0x41, 0xf9, 0x33, 0x0b, 0x5b, 0x67, 0x28, 0xf3, 0x68, 0xdc, 0x7b, 0xe0, 0x49, 0x68,
-	0x59, 0x48, 0x48, 0x37, 0x74, 0xdb, 0x49, 0xd5, 0xa1, 0xd3, 0x21, 0x6d, 0xd7, 0x21, 0x94, 0x67,
-	0x6a, 0x6c, 0xbd, 0xaa, 0xdd, 0x8f, 0x23, 0x69, 0xb3, 0x55, 0xf8, 0x68, 0x48, 0x5f, 0x1e, 0xec,
-	0x91, 0xe7, 0x0e, 0xa1, 0xa3, 0x48, 0x2a, 0x3d, 0xac, 0x97, 0x22, 0xdc, 0x57, 0x06, 0xae, 0x77,
-	0x0d, 0xc7, 0xc5, 0xce, 0x04, 0xc0, 0x20, 0xf0, 0x82, 0xf6, 0x91, 0xe1, 0x8f, 0x2b, 0x69, 0x28,
-	0x7f, 0xb6, 0x4c, 0x29, 0xa9, 0x41, 0x69, 0xa4, 0x64, 0x49, 0x62, 0x4e, 0x87, 0xec, 0x27, 0x4c,
-	0x4d, 0xc3, 0xdf, 0xef, 0xd3, 0x60, 0xa0, 0x3d, 0x48, 0x92, 0x9f, 0xe0, 0x07, 0x7b, 0x05, 0x3e,
-	0x8a, 0xa4, 0xf2, 0x2c, 0xf4, 0x72, 0x48, 0x78, 0x0a, 0x42, 0x79, 0x40, 0x6e, 0x1d, 0xd8, 0x1e,
-	0x0e, 0xc6, 0x6d, 0x4a, 0x4c, 0x6e, 0x03, 0xfe, 0xff, 0x60, 0xb8, 0x21, 0xa6, 0x5a, 0xa8, 0xea,
-	0xd9, 0xe2, 0x51, 0xe5, 0x21, 0x23, 0xbf, 0x86, 0xd5, 0x26, 0xb1, 0x5b, 0x48, 0xa9, 0x3b, 0x43,
-	0x4d, 0x2a, 0x2c, 0x8d, 0x33, 0xc9, 0x58, 0xb4, 0xcd, 0x38, 0x92, 0x16, 0xb3, 0x8a, 0x46, 0x91,
-	0x94, 0x83, 0x7a, 0x6e, 0xc8, 0xd7, 0x60, 0x63, 0x9a, 0xba, 0x10, 0x97, 0x01, 0xeb, 0xd3, 0xfb,
-	0x5a, 0xe8, 0xf6, 0x2e, 0x08, 0xbb, 0x0b, 0xcb, 0xf9, 0x05, 0xa4, 0x7d, 0xa9, 0x6a, 0x5b, 0x71,
-	0x24, 0x2d, 0x8d, 0x6f, 0x72, 0x14, 0x49, 0x05, 0xac, 0x17, 0x96, 0xfc, 0x85, 0x05, 0xfe, 0x6c,
-	0x8c, 0xbf, 0x29, 0xb7, 0x6f, 0x73, 0xc8, 0xed, 0x49, 0x89, 0xdc, 0xce, 0x2d, 0xe2, 0x5f, 0xd5,
-	0xdb, 0xce, 0xaf, 0x0a, 0xb0, 0x4d, 0x62, 0x73, 0x2f, 0x60, 0xb9, 0x78, 0xc1, 0xa4, 0x19, 0x83,
-	0x26, 0xdc, 0x9e, 0xe1, 0x50, 0xb4, 0xf6, 0x2d, 0xac, 0x9e, 0x7a, 0xb4, 0xb6, 0xe7, 0x18, 0x61,
-	0xe1, 0xce, 0x25, 0xe6, 0x9c, 0x7b, 0x05, 0xd5, 0xc9, 0xb0, 0xd4, 0x66, 0xb5, 0x4c, 0xa8, 0xcf,
-	0xf2, 0x28, 0x88, 0x2d, 0xb8, 0x72, 0x7a, 0x24, 0x6e, 0xce, 0xa3, 0x07, 0xe1, 0xee, 0x65, 0x54,
-	0xa3, 0x3d, 0xfe, 0x1e, 0x8b, 0xcc, 0x49, 0x2c, 0x32, 0x3f, 0x63, 0x91, 0xf9, 0x34, 0x14, 0x17,
-	0x4e, 0x86, 0xe2, 0xc2, 0x8f, 0xa1, 0xb8, 0xf0, 0xe6, 0x96, 0xed, 0xd0, 0x77, 0xa1, 0xa9, 0x58,
-	0xde, 0x91, 0x4a, 0x6c, 0xbc, 0x37, 0xa6, 0x4c, 0x6c, 0xf5, 0x38, 0xfb, 0xc9, 0x06, 0x3e, 0x12,
-	0x73, 0x31, 0xfd, 0x83, 0x76, 0x7f, 0x07, 0x00, 0x00, 0xff, 0xff, 0xc0, 0xe6, 0xbd, 0x63, 0xe1,
-	0x06, 0x00, 0x00,
+	// 344 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0xc1, 0x4a, 0xc3, 0x40,
+	0x10, 0x86, 0xbb, 0x16, 0x5b, 0x3b, 0x15, 0x94, 0x58, 0xa1, 0xe4, 0xb0, 0xad, 0x3d, 0x68, 0x2f,
+	0x6e, 0xa0, 0xbe, 0x80, 0x04, 0x11, 0x14, 0x2a, 0x12, 0x15, 0x51, 0x90, 0xd2, 0xb4, 0xe3, 0x5a,
+	0xac, 0xdd, 0x90, 0x9d, 0x62, 0x7d, 0x0b, 0x1f, 0xc6, 0x87, 0xf0, 0xd8, 0xa3, 0xa7, 0x22, 0xe9,
+	0xcd, 0xa7, 0x90, 0x24, 0x26, 0x16, 0x44, 0xa2, 0xb7, 0x19, 0xfe, 0x7f, 0x3e, 0x66, 0xff, 0x1d,
+	0x58, 0xd7, 0x12, 0x2d, 0x17, 0xc9, 0xa2, 0x89, 0xf0, 0x7c, 0x45, 0xca, 0x30, 0xb4, 0xc4, 0x11,
+	0xd2, 0xa3, 0xf2, 0xef, 0x85, 0x96, 0x28, 0x5c, 0x24, 0xb3, 0x22, 0x95, 0x54, 0x91, 0x6c, 0x85,
+	0x55, 0xec, 0x34, 0x79, 0x32, 0xeb, 0x22, 0x75, 0xbc, 0x61, 0xb7, 0x87, 0x9d, 0xdb, 0x01, 0x0e,
+	0xfb, 0x3a, 0xd6, 0x1b, 0xc7, 0x50, 0x6e, 0x6b, 0x79, 0x1a, 0x0a, 0x36, 0x92, 0x51, 0x85, 0x62,
+	0xcf, 0xc7, 0x2e, 0x29, 0xbf, 0xca, 0xea, 0xac, 0x59, 0x72, 0x92, 0xd6, 0xd8, 0x82, 0xbc, 0x8b,
+	0x54, 0x5d, 0xaa, 0xb3, 0x66, 0xb9, 0xb5, 0x26, 0x6c, 0xa4, 0x68, 0xe8, 0x30, 0x82, 0x39, 0xa1,
+	0xd6, 0x38, 0x81, 0x8d, 0x05, 0x96, 0x83, 0xda, 0x53, 0x23, 0x8d, 0x46, 0x05, 0x96, 0xd1, 0xf7,
+	0x53, 0x62, 0xdc, 0xfc, 0x85, 0x77, 0x05, 0xab, 0x6d, 0x2d, 0xcf, 0x90, 0x68, 0x98, 0xb1, 0x9c,
+	0x05, 0xc5, 0xf0, 0x7d, 0xe3, 0x41, 0x3f, 0x02, 0x96, 0xec, 0xcd, 0x60, 0x56, 0x2b, 0xd8, 0x48,
+	0x17, 0x47, 0x07, 0x1f, 0xb3, 0x5a, 0x22, 0x3a, 0x49, 0xd1, 0xb8, 0x81, 0xca, 0x22, 0x3a, 0x63,
+	0xd7, 0xff, 0xe2, 0x5b, 0x2f, 0x0c, 0xf2, 0x6d, 0x2d, 0x8d, 0x73, 0x58, 0x49, 0xa3, 0xad, 0x89,
+	0x9f, 0x9f, 0x26, 0x16, 0xf2, 0x32, 0x77, 0x32, 0x0c, 0xe9, 0x92, 0x97, 0x50, 0xfa, 0x0e, 0xa5,
+	0xfe, 0xcb, 0x54, 0xea, 0x30, 0x9b, 0x59, 0x8e, 0x04, 0x6c, 0xef, 0xbf, 0x06, 0x9c, 0x4d, 0x03,
+	0xce, 0xde, 0x03, 0xce, 0x9e, 0xe7, 0x3c, 0x37, 0x9d, 0xf3, 0xdc, 0xdb, 0x9c, 0xe7, 0xae, 0xb7,
+	0xe5, 0x80, 0xee, 0xc6, 0xae, 0xe8, 0xa9, 0x07, 0x4b, 0x4b, 0xdc, 0xfd, 0xc2, 0x85, 0xb5, 0x35,
+	0x89, 0x6f, 0xf3, 0xc9, 0x43, 0xed, 0x16, 0xa2, 0xab, 0xda, 0xfb, 0x0c, 0x00, 0x00, 0xff, 0xff,
+	0x24, 0x94, 0xed, 0x80, 0xb3, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -503,12 +293,8 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	// PlaceBet defines a method to place a bet with the given data
 	PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.CallOption) (*MsgPlaceBetResponse, error)
-	// PlaceBetSlip defines a method to place multiple bets with the given data
-	PlaceBetSlip(ctx context.Context, in *MsgPlaceBetSlip, opts ...grpc.CallOption) (*MsgPlaceBetSlipResponse, error)
 	// SettleBet defines a method to settle the given bet
 	SettleBet(ctx context.Context, in *MsgSettleBet, opts ...grpc.CallOption) (*MsgSettleBetResponse, error)
-	// SettleBetBulk defines a method to settle multiple given bets
-	SettleBetBulk(ctx context.Context, in *MsgSettleBetBulk, opts ...grpc.CallOption) (*MsgSettleBetBulkResponse, error)
 }
 
 type msgClient struct {
@@ -528,27 +314,9 @@ func (c *msgClient) PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.
 	return out, nil
 }
 
-func (c *msgClient) PlaceBetSlip(ctx context.Context, in *MsgPlaceBetSlip, opts ...grpc.CallOption) (*MsgPlaceBetSlipResponse, error) {
-	out := new(MsgPlaceBetSlipResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/PlaceBetSlip", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *msgClient) SettleBet(ctx context.Context, in *MsgSettleBet, opts ...grpc.CallOption) (*MsgSettleBetResponse, error) {
 	out := new(MsgSettleBetResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/SettleBet", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *msgClient) SettleBetBulk(ctx context.Context, in *MsgSettleBetBulk, opts ...grpc.CallOption) (*MsgSettleBetBulkResponse, error) {
-	out := new(MsgSettleBetBulkResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/SettleBetBulk", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -559,12 +327,8 @@ func (c *msgClient) SettleBetBulk(ctx context.Context, in *MsgSettleBetBulk, opt
 type MsgServer interface {
 	// PlaceBet defines a method to place a bet with the given data
 	PlaceBet(context.Context, *MsgPlaceBet) (*MsgPlaceBetResponse, error)
-	// PlaceBetSlip defines a method to place multiple bets with the given data
-	PlaceBetSlip(context.Context, *MsgPlaceBetSlip) (*MsgPlaceBetSlipResponse, error)
 	// SettleBet defines a method to settle the given bet
 	SettleBet(context.Context, *MsgSettleBet) (*MsgSettleBetResponse, error)
-	// SettleBetBulk defines a method to settle multiple given bets
-	SettleBetBulk(context.Context, *MsgSettleBetBulk) (*MsgSettleBetBulkResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -574,14 +338,8 @@ type UnimplementedMsgServer struct {
 func (*UnimplementedMsgServer) PlaceBet(ctx context.Context, req *MsgPlaceBet) (*MsgPlaceBetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PlaceBet not implemented")
 }
-func (*UnimplementedMsgServer) PlaceBetSlip(ctx context.Context, req *MsgPlaceBetSlip) (*MsgPlaceBetSlipResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PlaceBetSlip not implemented")
-}
 func (*UnimplementedMsgServer) SettleBet(ctx context.Context, req *MsgSettleBet) (*MsgSettleBetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SettleBet not implemented")
-}
-func (*UnimplementedMsgServer) SettleBetBulk(ctx context.Context, req *MsgSettleBetBulk) (*MsgSettleBetBulkResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SettleBetBulk not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -606,24 +364,6 @@ func _Msg_PlaceBet_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_PlaceBetSlip_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgPlaceBetSlip)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).PlaceBetSlip(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/sgenetwork.sge.bet.Msg/PlaceBetSlip",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).PlaceBetSlip(ctx, req.(*MsgPlaceBetSlip))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Msg_SettleBet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(MsgSettleBet)
 	if err := dec(in); err != nil {
@@ -642,24 +382,6 @@ func _Msg_SettleBet_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SettleBetBulk_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSettleBetBulk)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).SettleBetBulk(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/sgenetwork.sge.bet.Msg/SettleBetBulk",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SettleBetBulk(ctx, req.(*MsgSettleBetBulk))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "sgenetwork.sge.bet.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -669,16 +391,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_PlaceBet_Handler,
 		},
 		{
-			MethodName: "PlaceBetSlip",
-			Handler:    _Msg_PlaceBetSlip_Handler,
-		},
-		{
 			MethodName: "SettleBet",
 			Handler:    _Msg_SettleBet_Handler,
-		},
-		{
-			MethodName: "SettleBetBulk",
-			Handler:    _Msg_SettleBetBulk_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -747,100 +461,24 @@ func (m *MsgPlaceBetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgPlaceBetSlip) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgPlaceBetSlip) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgPlaceBetSlip) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Bets) > 0 {
-		for iNdEx := len(m.Bets) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Bets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTx(dAtA, i, uint64(size))
+	if m.Bet != nil {
+		{
+			size, err := m.Bet.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
 			}
-			i--
-			dAtA[i] = 0x12
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
 		}
+		i--
+		dAtA[i] = 0x12
 	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+	if len(m.Error) > 0 {
+		i -= len(m.Error)
+		copy(dAtA[i:], m.Error)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Error)))
 		i--
 		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgPlaceBetSlipResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgPlaceBetSlipResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgPlaceBetSlipResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.FailedBetUIDsErrorMap) > 0 {
-		for k := range m.FailedBetUIDsErrorMap {
-			v := m.FailedBetUIDsErrorMap[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = encodeVarintTx(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = encodeVarintTx(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = encodeVarintTx(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x12
-		}
-	}
-	if len(m.SuccessfulBetUIDsList) > 0 {
-		for iNdEx := len(m.SuccessfulBetUIDsList) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.SuccessfulBetUIDsList[iNdEx])
-			copy(dAtA[i:], m.SuccessfulBetUIDsList[iNdEx])
-			i = encodeVarintTx(dAtA, i, uint64(len(m.SuccessfulBetUIDsList[iNdEx])))
-			i--
-			dAtA[i] = 0xa
-		}
 	}
 	return len(dAtA) - i, nil
 }
@@ -902,95 +540,19 @@ func (m *MsgSettleBetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSettleBetBulk) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
+	if len(m.BetUID) > 0 {
+		i -= len(m.BetUID)
+		copy(dAtA[i:], m.BetUID)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.BetUID)))
+		i--
+		dAtA[i] = 0x12
 	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSettleBetBulk) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSettleBetBulk) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.BetUIDs) > 0 {
-		for iNdEx := len(m.BetUIDs) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.BetUIDs[iNdEx])
-			copy(dAtA[i:], m.BetUIDs[iNdEx])
-			i = encodeVarintTx(dAtA, i, uint64(len(m.BetUIDs[iNdEx])))
-			i--
-			dAtA[i] = 0x12
-		}
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+	if len(m.Error) > 0 {
+		i -= len(m.Error)
+		copy(dAtA[i:], m.Error)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Error)))
 		i--
 		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgSettleBetBulkResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgSettleBetBulkResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgSettleBetBulkResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.FailedBetUIDsErrorMap) > 0 {
-		for k := range m.FailedBetUIDsErrorMap {
-			v := m.FailedBetUIDsErrorMap[k]
-			baseI := i
-			i -= len(v)
-			copy(dAtA[i:], v)
-			i = encodeVarintTx(dAtA, i, uint64(len(v)))
-			i--
-			dAtA[i] = 0x12
-			i -= len(k)
-			copy(dAtA[i:], k)
-			i = encodeVarintTx(dAtA, i, uint64(len(k)))
-			i--
-			dAtA[i] = 0xa
-			i = encodeVarintTx(dAtA, i, uint64(baseI-i))
-			i--
-			dAtA[i] = 0x12
-		}
-	}
-	if len(m.SuccessfulBetUIDsList) > 0 {
-		for iNdEx := len(m.SuccessfulBetUIDsList) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.SuccessfulBetUIDsList[iNdEx])
-			copy(dAtA[i:], m.SuccessfulBetUIDsList[iNdEx])
-			i = encodeVarintTx(dAtA, i, uint64(len(m.SuccessfulBetUIDsList[iNdEx])))
-			i--
-			dAtA[i] = 0xa
-		}
 	}
 	return len(dAtA) - i, nil
 }
@@ -1029,47 +591,13 @@ func (m *MsgPlaceBetResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	return n
-}
-
-func (m *MsgPlaceBetSlip) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
+	l = len(m.Error)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if len(m.Bets) > 0 {
-		for _, e := range m.Bets {
-			l = e.Size()
-			n += 1 + l + sovTx(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *MsgPlaceBetSlipResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.SuccessfulBetUIDsList) > 0 {
-		for _, s := range m.SuccessfulBetUIDsList {
-			l = len(s)
-			n += 1 + l + sovTx(uint64(l))
-		}
-	}
-	if len(m.FailedBetUIDsErrorMap) > 0 {
-		for k, v := range m.FailedBetUIDsErrorMap {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + sovTx(uint64(len(k))) + 1 + len(v) + sovTx(uint64(len(v)))
-			n += mapEntrySize + 1 + sovTx(uint64(mapEntrySize))
-		}
+	if m.Bet != nil {
+		l = m.Bet.Size()
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
@@ -1097,47 +625,13 @@ func (m *MsgSettleBetResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	return n
-}
-
-func (m *MsgSettleBetBulk) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
+	l = len(m.Error)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if len(m.BetUIDs) > 0 {
-		for _, s := range m.BetUIDs {
-			l = len(s)
-			n += 1 + l + sovTx(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *MsgSettleBetBulkResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.SuccessfulBetUIDsList) > 0 {
-		for _, s := range m.SuccessfulBetUIDsList {
-			l = len(s)
-			n += 1 + l + sovTx(uint64(l))
-		}
-	}
-	if len(m.FailedBetUIDsErrorMap) > 0 {
-		for k, v := range m.FailedBetUIDsErrorMap {
-			_ = k
-			_ = v
-			mapEntrySize := 1 + len(k) + sovTx(uint64(len(k))) + 1 + len(v) + sovTx(uint64(len(v)))
-			n += mapEntrySize + 1 + sovTx(uint64(mapEntrySize))
-		}
+	l = len(m.BetUID)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
@@ -1295,59 +789,9 @@ func (m *MsgPlaceBetResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgPlaceBetResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgPlaceBetSlip) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPlaceBetSlip: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPlaceBetSlip: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1375,11 +819,11 @@ func (m *MsgPlaceBetSlip) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
+			m.Error = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Bets", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -1406,219 +850,12 @@ func (m *MsgPlaceBetSlip) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Bets = append(m.Bets, &BetPlaceFields{})
-			if err := m.Bets[len(m.Bets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if m.Bet == nil {
+				m.Bet = &BetPlaceFields{}
+			}
+			if err := m.Bet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgPlaceBetSlipResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPlaceBetSlipResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPlaceBetSlipResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SuccessfulBetUIDsList", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.SuccessfulBetUIDsList = append(m.SuccessfulBetUIDsList, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FailedBetUIDsErrorMap", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.FailedBetUIDsErrorMap == nil {
-				m.FailedBetUIDsErrorMap = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowTx
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowTx
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return ErrInvalidLengthTx
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return ErrInvalidLengthTx
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowTx
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return ErrInvalidLengthTx
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return ErrInvalidLengthTx
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := skipTx(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return ErrInvalidLengthTx
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.FailedBetUIDsErrorMap[mapkey] = mapvalue
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1784,59 +1021,9 @@ func (m *MsgSettleBetResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgSettleBetResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgSettleBetBulk) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSettleBetBulk: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSettleBetBulk: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Error", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1864,11 +1051,11 @@ func (m *MsgSettleBetBulk) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
+			m.Error = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BetUIDs", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BetUID", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1896,216 +1083,7 @@ func (m *MsgSettleBetBulk) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BetUIDs = append(m.BetUIDs, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgSettleBetBulkResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSettleBetBulkResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSettleBetBulkResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field SuccessfulBetUIDsList", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.SuccessfulBetUIDsList = append(m.SuccessfulBetUIDsList, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FailedBetUIDsErrorMap", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.FailedBetUIDsErrorMap == nil {
-				m.FailedBetUIDsErrorMap = make(map[string]string)
-			}
-			var mapkey string
-			var mapvalue string
-			for iNdEx < postIndex {
-				entryPreIndex := iNdEx
-				var wire uint64
-				for shift := uint(0); ; shift += 7 {
-					if shift >= 64 {
-						return ErrIntOverflowTx
-					}
-					if iNdEx >= l {
-						return io.ErrUnexpectedEOF
-					}
-					b := dAtA[iNdEx]
-					iNdEx++
-					wire |= uint64(b&0x7F) << shift
-					if b < 0x80 {
-						break
-					}
-				}
-				fieldNum := int32(wire >> 3)
-				if fieldNum == 1 {
-					var stringLenmapkey uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowTx
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapkey |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapkey := int(stringLenmapkey)
-					if intStringLenmapkey < 0 {
-						return ErrInvalidLengthTx
-					}
-					postStringIndexmapkey := iNdEx + intStringLenmapkey
-					if postStringIndexmapkey < 0 {
-						return ErrInvalidLengthTx
-					}
-					if postStringIndexmapkey > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapkey = string(dAtA[iNdEx:postStringIndexmapkey])
-					iNdEx = postStringIndexmapkey
-				} else if fieldNum == 2 {
-					var stringLenmapvalue uint64
-					for shift := uint(0); ; shift += 7 {
-						if shift >= 64 {
-							return ErrIntOverflowTx
-						}
-						if iNdEx >= l {
-							return io.ErrUnexpectedEOF
-						}
-						b := dAtA[iNdEx]
-						iNdEx++
-						stringLenmapvalue |= uint64(b&0x7F) << shift
-						if b < 0x80 {
-							break
-						}
-					}
-					intStringLenmapvalue := int(stringLenmapvalue)
-					if intStringLenmapvalue < 0 {
-						return ErrInvalidLengthTx
-					}
-					postStringIndexmapvalue := iNdEx + intStringLenmapvalue
-					if postStringIndexmapvalue < 0 {
-						return ErrInvalidLengthTx
-					}
-					if postStringIndexmapvalue > l {
-						return io.ErrUnexpectedEOF
-					}
-					mapvalue = string(dAtA[iNdEx:postStringIndexmapvalue])
-					iNdEx = postStringIndexmapvalue
-				} else {
-					iNdEx = entryPreIndex
-					skippy, err := skipTx(dAtA[iNdEx:])
-					if err != nil {
-						return err
-					}
-					if (skippy < 0) || (iNdEx+skippy) < 0 {
-						return ErrInvalidLengthTx
-					}
-					if (iNdEx + skippy) > postIndex {
-						return io.ErrUnexpectedEOF
-					}
-					iNdEx += skippy
-				}
-			}
-			m.FailedBetUIDsErrorMap[mapkey] = mapvalue
+			m.BetUID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

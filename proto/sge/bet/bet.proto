@@ -47,7 +47,25 @@ message Bet {
   // creator is the bettor address
   string creator = 11;
 
+  // created_at is bet placement timestamp
   int64 created_at = 12;
+
+  // odds_type is the type of odds used has chosen
+  OddsType odds_type = 13;
+
+  enum OddsType {
+    // Invalid odd type
+    ODD_TYPE_INVALID = 0;
+
+    // Decimal odds type
+    ODD_TYPE_DECIMAL = 1;
+
+    // Fractional odds type
+    ODD_TYPE_FRACTIONAL = 2;
+
+    // American odds type
+    ODD_TYPE_AMERICAN = 3;
+  }
 
   //Status of the Bet.
   enum Status {

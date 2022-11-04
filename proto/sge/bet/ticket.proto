@@ -1,0 +1,15 @@
+
+syntax = "proto3";
+package sgenetwork.sge.bet;
+import "gogoproto/gogo.proto";
+import "sge/bet/bet_odds.proto";
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+message BetPlacementTicketPayload {
+    // OddsUID is the selected odds id
+    string OddsUID = 1 [(gogoproto.customname) = "OddsUID" ,(gogoproto.jsontag) = "odds_uid", json_name = "odds_uid"];
+
+    // Odds is a list of odds at the bet placement time
+    repeated BetOdds odds = 2;
+}

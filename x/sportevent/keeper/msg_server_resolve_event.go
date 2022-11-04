@@ -14,58 +14,42 @@ type resoveEventInput struct {
 }
 
 // ResolveEvent accepts ticket containing multiple resolution events and return batch response after processing
-func (k msgServer) ResolveEvent(goCtx context.Context, msg *types.MsgResolveEvent) (*types.MsgSportResponse, error) {
+func (k msgServer) ResolveEvent(goCtx context.Context, msg *types.MsgResolveEvent) (*types.SportResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	var resolvedEvent resoveEventInput
+	var resolvedEvent types.ResolutionEvent
 	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolvedEvent)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	success, failed := k.processEvents(ctx, &resolvedEvent)
+	if err := k.processEvents(ctx, &resolvedEvent); err != nil {
+		return nil, sdkerrors.Wrap(err, "process resolution event")
+	}
 
-	response := &types.MsgSportResponse{
-		SuccessEvents: success,
-		FailedEvents:  failed,
+	sportEvent, _ := k.getSportEvent(ctx, resolvedEvent)
+	response := &types.SportResponse{
+		Data: &sportEvent,
 	}
 	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response, msg.Creator)
 	return response, nil
 }
 
-func (k msgServer) processEvents(ctx sdk.Context, resolvedEvent *resoveEventInput) ([]string, []*types.FailedEvent) {
-	success := make([]string, 0, len(resolvedEvent.Events))
-	failed := make([]*types.FailedEvent, 0)
-
-	for _, event := range resolvedEvent.Events {
-		sportEvent, err := k.getSportEvent(ctx, event)
-		if err != nil {
-			failed = append(failed, &types.FailedEvent{
-				ID:  event.UID,
-				Err: err.Error(),
-			})
-			continue
-		}
-
-		if err := extractWinnerOddsIDs(&sportEvent, &event); err != nil {
-			failed = append(failed, &types.FailedEvent{
-				ID:  event.UID,
-				Err: err.Error(),
-			})
-			continue
-		}
-
-		if err := k.Keeper.ResolveSportEvents(ctx, []types.ResolutionEvent{event}); err != nil {
-			failed = append(failed, &types.FailedEvent{
-				ID:  event.UID,
-				Err: err.Error(),
-			})
-			continue
-		}
-		success = append(success, sportEvent.UID)
+func (k msgServer) processEvents(ctx sdk.Context, resolvedEvent *types.ResolutionEvent) error {
+	sportEvent, err := k.getSportEvent(ctx, *resolvedEvent)
+	if err != nil {
+		return sdkerrors.Wrap(err, "getting sport event")
 	}
 
-	return success, failed
+	if err := extractWinnerOddsIDs(&sportEvent, resolvedEvent); err != nil {
+		return sdkerrors.Wrap(err, "extract winner odds id")
+	}
+
+	if err := k.Keeper.ResolveSportEvents(ctx, resolvedEvent); err != nil {
+		return sdkerrors.Wrap(err, "resolve sport event")
+	}
+
+	return nil
 }
 
 func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (types.SportEvent, error) {

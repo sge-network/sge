@@ -1,8 +1,7 @@
 package cli
 
 import (
-	"encoding/json"
-	"strings"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -15,15 +14,21 @@ import (
 // CmdPlaceBet implements a command to place and store a single bet
 func CmdPlaceBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "place-bet [uid] [amount] [ticket]",
+		Use:   "place-bet [uid] [amount] [odds_type] [ticket]",
 		Short: "Place a new bet",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
 			// Get value arguments
 			uid := args[0]
 			argAmount := args[1]
-			argTicket := args[2]
+			argOddsType := args[2]
+			argTicket := args[3]
+
+			oddsType, err := strconv.ParseInt(argOddsType, 10, 32)
+			if err != nil {
+				return types.ErrInvalidOddsType
+			}
 
 			argAmountCosmosInt, ok := sdk.NewIntFromString(argAmount)
 			if !ok {
@@ -38,45 +43,11 @@ func CmdPlaceBet() *cobra.Command {
 			msg := types.NewMsgPlaceBet(
 				clientCtx.GetFromAddress().String(),
 				types.BetPlaceFields{
-					UID:    uid,
-					Amount: argAmountCosmosInt,
-					Ticket: argTicket,
+					UID:      uid,
+					Amount:   argAmountCosmosInt,
+					OddsType: types.BetPlaceFields_OddsType(oddsType),
+					Ticket:   argTicket,
 				},
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdPlaceBetSlip implements a command to place and store multiple bets
-func CmdPlaceBetSlip() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "place-bet-slip [bets]",
-		Short: "Place multiple bets (for each bet: uid, amount, ticket)",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBets := args[0]
-			bets := []*types.BetPlaceFields{}
-			err = json.Unmarshal([]byte(argBets), &bets)
-			if err != nil {
-				return err
-			}
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgPlaceBetSlip(
-				clientCtx.GetFromAddress().String(),
-				bets,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -107,41 +78,6 @@ func CmdSettleBet() *cobra.Command {
 			msg := types.NewMsgSettleBet(
 				clientCtx.GetFromAddress().String(),
 				argBetUID,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdSettleBetBulk implements a command to settle multiple bets
-func CmdSettleBetBulk() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "settle-bet-bulk [bet-uids]",
-		Short: "Settle multiple bets",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetUIDs := args[0]
-			argBetUIDs = strings.ReplaceAll(argBetUIDs, " ", "")
-			betUIDs := []string{}
-			if argBetUIDs != "" {
-				betUIDs = strings.Split(argBetUIDs, ",")
-			}
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgSettleBetBulk(
-				clientCtx.GetFromAddress().String(),
-				betUIDs,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

@@ -12,14 +12,8 @@ service Msg {
   // PlaceBet defines a method to place a bet with the given data
   rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
 
-  // PlaceBetSlip defines a method to place multiple bets with the given data
-  rpc PlaceBetSlip(MsgPlaceBetSlip) returns (MsgPlaceBetSlipResponse);
-
   // SettleBet defines a method to settle the given bet
   rpc SettleBet(MsgSettleBet) returns (MsgSettleBetResponse);
-
-  // SettleBetBulk defines a method to settle multiple given bets
-  rpc SettleBetBulk(MsgSettleBetBulk) returns (MsgSettleBetBulkResponse);
 }
 
 // MsgPlaceBet defines a message to place a bet with the given data
@@ -32,24 +26,9 @@ message MsgPlaceBet {
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
-message MsgPlaceBetResponse {}
-
-// MsgPlaceBetSlip defines a message to place multiple bets with the given data
-message MsgPlaceBetSlip {
-  // creator is the bettor address
-  string creator = 1;
-
-  // bets is an array of bets info to place
-  repeated BetPlaceFields bets = 2;
-}
-
-// MsgPlaceBetSlipResponse is the returning value in the response of MsgPlaceBetSlip request
-message MsgPlaceBetSlipResponse {
-  // successful_bet_uids_list is an array of successful bet UIDs to place
-  repeated string successful_bet_uids_list = 1 [(gogoproto.customname) = "SuccessfulBetUIDsList" ,(gogoproto.jsontag) = "successful_bet_uids_list", json_name = "successful_bet_uids_list"];
-
-  // failed_bet_uids_error_map is an map of failed bet UIDs to place alongside their failure messages
-  map<string, string> failed_bet_uids_error_map = 2 [(gogoproto.customname) = "FailedBetUIDsErrorMap" ,(gogoproto.jsontag) = "failed_bet_uids_error_map", json_name = "failed_bet_uids_error_map"];
+message MsgPlaceBetResponse {
+  string error = 1;
+  BetPlaceFields bet = 2;
 }
 
 // MsgSettleBet defines a message to settle the given bet
@@ -63,22 +42,6 @@ message MsgSettleBet {
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
 message MsgSettleBetResponse {
-}
-
-// MsgSettleBetBulk defines a message to settle multiple given bets
-message MsgSettleBetBulk {
-  // creator is the bettor address
-  string creator = 1;
-
-  // bet_uids is an array of uuid of the bets to settle
-  repeated string bet_uids = 2 [(gogoproto.customname) = "BetUIDs" ,(gogoproto.jsontag) = "bet_uids", json_name = "bet_uids"];
-}
-
-// MsgSettleBetBulkResponse is the returning value in the response of MsgSettleBetBulk request
-message MsgSettleBetBulkResponse {
-  // successful_bet_uids_list is an array of successful bet UIDs to place
-  repeated string successful_bet_uids_list = 1 [(gogoproto.customname) = "SuccessfulBetUIDsList" ,(gogoproto.jsontag) = "successful_bet_uids_list", json_name = "successful_bet_uids_list"];
-
-  // failed_bet_uids_error_map is an map of failed bet UIDs to place alongside their failure messages
-  map<string, string> failed_bet_uids_error_map = 2 [(gogoproto.customname) = "FailedBetUIDsErrorMap" ,(gogoproto.jsontag) = "failed_bet_uids_error_map", json_name = "failed_bet_uids_error_map"];
+  string error = 1;
+  string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }
