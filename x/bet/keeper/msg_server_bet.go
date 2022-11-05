@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
@@ -42,6 +41,13 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 				Error: sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err).Error(),
 				Bet:   msg.Bet},
 			sdkerrors.Wrapf(types.ErrOddsDataNotFound, "%s", err)
+	}
+
+	// Kyc validation is done only when the KYC is required
+	if ticketData.KycData.KycRequired {
+		if !KycValidation(msg.Creator, ticketData) {
+			return nil, sdkerrors.Wrapf(types.ErrUserKycFailed, "%s", msg.Creator)
+		}
 	}
 
 	bet, err := types.NewBet(msg.Creator, msg.Bet, selectedOdds)
