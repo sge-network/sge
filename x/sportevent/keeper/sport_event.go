@@ -84,20 +84,18 @@ func (k Keeper) ResolveSportEvents(ctx sdk.Context, resolutionEvent *types.Resol
 func (k Keeper) AddExtraPayoutToEvent(ctx sdk.Context, sportEvent types.SportEvent, oddsUID string, betAmount, extraPayout sdk.Int) error {
 
 	// calculate and validate house loss
-	houseLoss := calculateHouseLoss(&sportEvent, oddsUID, extraPayout)
+	houseLoss := calculateHouseLoss(&sportEvent, oddsUID, extraPayout, betAmount)
 	if houseLoss.GT(sportEvent.BetConstraints.MaxLoss) {
 		return sdkerrors.Wrapf(types.ErrEventMaxLossExceeded, "%s %s", sportEvent.UID, oddsUID)
 	}
 
-	// calculate new total statistics
-	totalStats := sportEvent.BetConstraints.TotalStats
-	totalStats.HouseLoss = houseLoss
-	totalStats.BetAmount = totalStats.BetAmount.Add(betAmount)
-	if totalStats.BetAmount.GT(sportEvent.BetConstraints.MaxBetCap) {
+	// update new total statistics
+	sportEvent.BetConstraints.TotalStats.BetAmount = sportEvent.BetConstraints.TotalStats.BetAmount.Add(betAmount)
+	if sportEvent.BetConstraints.TotalStats.BetAmount.GT(sportEvent.BetConstraints.MaxBetCap) {
 		return types.ErrMaxBetCapExceeded
 	}
 
-	// update odds stats
+	// update new odds statistics
 	var stats *types.TotalOddsStats
 	if totalOddsStats, exist := sportEvent.BetConstraints.TotalOddsStats[oddsUID]; exist {
 		totalOddsStats.BetAmount = totalOddsStats.BetAmount.Add(betAmount)
@@ -110,6 +108,9 @@ func (k Keeper) AddExtraPayoutToEvent(ctx sdk.Context, sportEvent types.SportEve
 		}
 	}
 	sportEvent.BetConstraints.TotalOddsStats[oddsUID] = stats
+
+	// set house loss statistics
+	sportEvent.BetConstraints.TotalStats.HouseLoss = houseLoss
 
 	k.SetSportEvent(ctx, sportEvent)
 
@@ -133,10 +134,8 @@ func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.Spor
 }
 
 // returns maximum amount of loss of the house according to the wining of each odds in the list
-func calculateHouseLoss(sportevent *types.SportEvent, selectedOddsUID string, extraPayout sdk.Int) sdk.Int {
-
-	maxLoss := sdk.NewInt(0)
-
+func calculateHouseLoss(sportevent *types.SportEvent, selectedOddsUID string, extraPayout sdk.Int, betAmount sdk.Int) sdk.Int {
+	maxLoss := sdk.NewInt(-9223372036854775808)
 	for _, oddsID := range sportevent.OddsUIDs {
 		totalOddsStat, found := sportevent.BetConstraints.TotalOddsStats[oddsID]
 		if !found {
@@ -145,23 +144,22 @@ func calculateHouseLoss(sportevent *types.SportEvent, selectedOddsUID string, ex
 				BetAmount:   sdk.ZeroInt(),
 			}
 		}
-
-		houseLoss := totalOddsStat.ExtraPayout.
-			Add(totalOddsStat.BetAmount).
-			Sub(sportevent.BetConstraints.TotalStats.BetAmount)
-
+		var houseLoss sdk.Int
 		if oddsID == selectedOddsUID {
-			houseLoss.Add(extraPayout)
-		}
-
-		if houseLoss.IsNegative() {
-			houseLoss = sdk.ZeroInt()
+			houseLoss = totalOddsStat.ExtraPayout.
+				Add(extraPayout).
+				Sub(sportevent.BetConstraints.TotalStats.BetAmount).
+				Add(totalOddsStat.BetAmount)
+		} else {
+			houseLoss = totalOddsStat.ExtraPayout.
+				Sub(sportevent.BetConstraints.TotalStats.BetAmount).
+				Add(totalOddsStat.BetAmount).
+				Sub(betAmount)
 		}
 
 		if houseLoss.GT(maxLoss) {
 			maxLoss = houseLoss
 		}
 	}
-
 	return maxLoss
 }
