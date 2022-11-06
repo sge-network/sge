@@ -24,6 +24,11 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 		return types.ErrOddsUIDNotExist
 	}
 
+	// check if provided active odds are valid
+	if err := allActiveOddsExist(activeBetOdds, bet.SportEventUID, sportEvent.OddsUIDs); err != nil {
+		return err
+	}
+
 	// check minimum bet amount allowed
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
@@ -86,6 +91,37 @@ func oddExists(betOddsID string, oddsUIDs []string) bool {
 		}
 	}
 	return false
+}
+
+// allActiveOddsExist checks if all provided odds UIDs in activeBetOddss are related to the SportEventUID and are present in the sporteventOddsUIDs
+func allActiveOddsExist(activeBetOdds []*types.BetOdds, SportEventUID string, sporteventOddsUIDs []string) error {
+	alreadyProvidedOdds := make(map[string]struct{})
+	providedSporteventOdds := make(map[string]struct{})
+	for _, odds := range activeBetOdds {
+		if _, ok := alreadyProvidedOdds[odds.UID]; ok {
+			return types.ErrDuplicateActiveOddsUIDs
+		}
+		alreadyProvidedOdds[odds.UID] = struct{}{}
+		if odds.SportEventUID != SportEventUID {
+			return types.ErrActiveOddsUIDsNotValid
+		}
+	}
+outerLoop:
+	for _, providedOdds := range activeBetOdds {
+		for _, sporteventOddsUID := range sporteventOddsUIDs {
+			if providedOdds.UID == sporteventOddsUID {
+				providedSporteventOdds[sporteventOddsUID] = struct{}{}
+				continue outerLoop
+			}
+		}
+		return types.ErrActiveOddsUIDsNotValid
+	}
+	for _, eventOdds := range sporteventOddsUIDs {
+		if _, ok := providedSporteventOdds[eventOdds]; !ok {
+			return types.ErrNotAllActiveOddsUIDs
+		}
+	}
+	return nil
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer
