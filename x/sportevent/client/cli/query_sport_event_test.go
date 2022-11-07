@@ -30,7 +30,7 @@ func networkWithSportEventObjects(t *testing.T, n int) (*network.Network, []type
 	for i := 0; i < n; i++ {
 		sportEvent := types.SportEvent{
 			UID:            strconv.Itoa(i),
-			WinnerOddsUIDs: map[string][]byte{},
+			WinnerOddsUIDs: make([]string, 0),
 		}
 		nullify.Fill(&sportEvent)
 		state.SportEventList = append(state.SportEventList, sportEvent)

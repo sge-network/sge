@@ -192,7 +192,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 		}, {
@@ -200,7 +200,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   0,
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -210,7 +210,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            "invalid uid",
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -229,7 +229,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{"invalid winner odds": nil},
+				WinnerOddsUIDs: []string{"invalid winner odds"},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -239,7 +239,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         0,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -249,7 +249,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         5,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -259,7 +259,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         1,
 			},
 			err: sdkerrors.ErrInvalidRequest,
