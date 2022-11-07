@@ -2,8 +2,6 @@ package keeper
 
 import (
 	"context"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/sportevent/types"
@@ -43,14 +41,8 @@ func (k msgServer) UpdateEvent(goCtx context.Context, msg *types.MsgUpdateEvent)
 		StartTS:        updateEvent.StartTS,
 		EndTS:          updateEvent.EndTS,
 		BetConstraints: &types.EventBetConstraints{
-			MaxBetCap:      updateEvent.BetConstraints.MaxBetCap,
-			MinAmount:      updateEvent.BetConstraints.MinAmount,
-			BetFee:         updateEvent.BetConstraints.BetFee,
-			MaxLoss:        updateEvent.BetConstraints.MaxLoss,
-			MaxVig:         updateEvent.BetConstraints.MaxVig,
-			MinVig:         updateEvent.BetConstraints.MinVig,
-			TotalOddsStats: sportEvent.BetConstraints.TotalOddsStats,
-			TotalStats:     sportEvent.BetConstraints.TotalStats,
+			MinAmount: updateEvent.BetConstraints.MinAmount,
+			BetFee:    updateEvent.BetConstraints.BetFee,
 		},
 		Active: updateEvent.Active,
 	}
@@ -66,7 +58,7 @@ func (k msgServer) UpdateEvent(goCtx context.Context, msg *types.MsgUpdateEvent)
 
 // validateEventUpdate validates individual event acceptability
 func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent types.SportEvent) error {
-	if event.EndTS <= uint64(time.Now().Unix()) {
+	if event.EndTS <= uint64(ctx.BlockTime().Unix()) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport event")
 	}
 
@@ -96,24 +88,6 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event min bet amount is less than threshold")
 	}
 
-	if event.BetConstraints.MaxBetCap.IsNegative() {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event max bet can not be negative")
-	}
-	if event.BetConstraints.MaxBetCap.GT(params.EventMaxBetCap) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event max bet cap is greater than threshold")
-	}
-	if event.BetConstraints.MinAmount.GTE(event.BetConstraints.MaxBetCap) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "min bet amount cannot be greater than or equals to to max bet capacity")
-	}
-	if event.BetConstraints.MaxLoss.GT(params.EventMaxLoss) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "max loss cannot be greater than the systems limit")
-	}
-	if event.BetConstraints.MaxVig.GT(params.EventMaxVig) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "max vig cannot be greater than the systems limit")
-	}
-	if event.BetConstraints.MinVig.LT(params.EventMinVig) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "min vig cannot be smaller than the systems limit")
-	}
 	return nil
 }
 
@@ -122,20 +96,7 @@ func initEventConstrains(event, previousEvent types.SportEvent) {
 	if event.BetConstraints.BetFee.IsNil() {
 		event.BetConstraints.BetFee = previousEvent.BetConstraints.BetFee
 	}
-	if event.BetConstraints.MaxBetCap.IsNil() {
-		event.BetConstraints.MaxBetCap = previousEvent.BetConstraints.MaxBetCap
-	}
 	if event.BetConstraints.MinAmount.IsNil() {
 		event.BetConstraints.MinAmount = previousEvent.BetConstraints.MinAmount
 	}
-	if event.BetConstraints.MinVig.IsNil() {
-		event.BetConstraints.MinVig = previousEvent.BetConstraints.MinVig
-	}
-	if event.BetConstraints.MaxVig.IsNil() {
-		event.BetConstraints.MaxVig = previousEvent.BetConstraints.MaxVig
-	}
-	if event.BetConstraints.MaxLoss.IsNil() {
-		event.BetConstraints.MaxLoss = previousEvent.BetConstraints.MaxLoss
-	}
-
 }

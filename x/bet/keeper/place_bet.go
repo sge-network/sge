@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
@@ -10,7 +8,7 @@ import (
 )
 
 // PlaceBet stores a new bet in KVStore
-func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types.BetOdds) error {
+func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
@@ -26,24 +24,9 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types
 		return types.ErrOddsUIDNotExist
 	}
 
-	// check if provided active odds are valid
-	if err := allActiveOddsExist(activeBetOdds, bet.SportEventUID, sportEvent.OddsUIDs); err != nil {
-		return err
-	}
-
 	// check minimum bet amount allowed
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
-	}
-
-	// calculate vig and validate min and max vig satisfaction
-	vig := types.CalculateVig(activeBetOdds)
-	if vig.IsNegative() ||
-		vig.GT(sportEvent.BetConstraints.MaxVig) ||
-		vig.LT(sportEvent.BetConstraints.MinVig) {
-		return sdkerrors.Wrapf(types.ErrVigIsOutOfRange, "accepted range is %s - %s",
-			sportEvent.BetConstraints.MinVig,
-			sportEvent.BetConstraints.MaxVig)
 	}
 
 	// modify the bet fee and subtracted amount
@@ -52,18 +35,9 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types
 	// calculate extraPayout
 	extraPayout := calculateExtraPayout(bet)
 
-	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent, bet.OddsUID, bet.Amount, extraPayout); err != nil {
-		return sdkerrors.Wrapf(types.ErrInAddAmountToSportEvent, "%s", err)
-	}
-
 	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
 		bet.BetFee, bet.Amount, extraPayout, bet.UID)
 	if err != nil {
-		// bet placement was not successful so we need to update the total bet amount and payout statistics in the
-		// sport event bet constraints
-		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent, bet.OddsUID, bet.Amount.Neg(), extraPayout.Neg()); err != nil {
-			return sdkerrors.Wrapf(types.ErrInSubAmountFromSportEvent, "%s", err)
-		}
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
 	}
 
@@ -98,7 +72,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
-	if sportevent.EndTS < uint64(time.Now().Unix()) {
+	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
 	return sportevent, nil
@@ -112,37 +86,6 @@ func selectedOddsExists(betOddsID string, sporteventOddsUIDs []string) bool {
 		}
 	}
 	return false
-}
-
-// allActiveOddsExist checks if all provided odds UIDs in activeBetOddss are related to the SportEventUID and are present in the sporteventOddsUIDs
-func allActiveOddsExist(activeBetOdds []*types.BetOdds, SportEventUID string, sporteventOddsUIDs []string) error {
-	alreadyProvidedOdds := make(map[string]struct{})
-	providedSporteventOdds := make(map[string]struct{})
-	for _, odds := range activeBetOdds {
-		if _, ok := alreadyProvidedOdds[odds.UID]; ok {
-			return types.ErrDuplicateActiveOddsUIDs
-		}
-		alreadyProvidedOdds[odds.UID] = struct{}{}
-		if odds.SportEventUID != SportEventUID {
-			return types.ErrActiveOddsUIDsNotValid
-		}
-	}
-outerLoop:
-	for _, providedOdds := range activeBetOdds {
-		for _, sporteventOddsUID := range sporteventOddsUIDs {
-			if providedOdds.UID == sporteventOddsUID {
-				providedSporteventOdds[sporteventOddsUID] = struct{}{}
-				continue outerLoop
-			}
-		}
-		return types.ErrActiveOddsUIDsNotValid
-	}
-	for _, eventOdds := range sporteventOddsUIDs {
-		if _, ok := providedSporteventOdds[eventOdds]; !ok {
-			return types.ErrNotAllActiveOddsUIDs
-		}
-	}
-	return nil
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer
