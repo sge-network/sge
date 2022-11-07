@@ -10,10 +10,4 @@ const (
 
 	// JWTSeparator is the separator character between JWT ticket parts
 	JWTSeparator = "."
-
-	// DefaultTimeWeight is the default weight of the time for JWT ticket expiration
-	DefaultTimeWeight = 1
-
-	// ValidJWTLength is the valid length of JWT ticket content
-	ValidJWTLength = 256
 )

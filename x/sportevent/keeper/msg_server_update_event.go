@@ -7,8 +7,8 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// UpdateEvent accepts ticket containing multiple update events and return batch response after processing
-func (k msgServer) UpdateEvent(goCtx context.Context, msg *types.MsgUpdateEvent) (*types.SportResponse, error) {
+// UpdateSportEvent accepts ticket containing multiple update events and return batch response after processing
+func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEvent) (*types.SportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updateEvent types.SportEvent
@@ -49,7 +49,7 @@ func (k msgServer) UpdateEvent(goCtx context.Context, msg *types.MsgUpdateEvent)
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, sportEvent)
 
-	response := &types.SportResponse{
+	response := &types.SportEventResponse{
 		Data: &sportEvent,
 	}
 	emitTransactionEvent(ctx, types.TypeMsgUpdateSportEvents, response, msg.Creator)
@@ -91,12 +91,13 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 	return nil
 }
 
-func initEventConstrains(event, previousEvent types.SportEvent) {
+func initEventConstrains(event, eventParam types.SportEvent) {
 	//init individual params if any one of them is nil
 	if event.BetConstraints.BetFee.IsNil() {
-		event.BetConstraints.BetFee = previousEvent.BetConstraints.BetFee
+		event.BetConstraints.BetFee = eventParam.BetConstraints.BetFee
 	}
 	if event.BetConstraints.MinAmount.IsNil() {
-		event.BetConstraints.MinAmount = previousEvent.BetConstraints.MinAmount
+		event.BetConstraints.MinAmount = eventParam.BetConstraints.MinAmount
+
 	}
 }

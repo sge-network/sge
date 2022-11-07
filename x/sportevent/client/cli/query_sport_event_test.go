@@ -118,7 +118,7 @@ func TestQuerySportEventCLI(t *testing.T) {
 			step := 2
 			for i := 0; i < len(objs); i += step {
 				args := request(nil, uint64(i), uint64(step), false)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvent(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 				require.NoError(t, err)
 				var resp types.QuerySportEventListAllResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
@@ -134,7 +134,7 @@ func TestQuerySportEventCLI(t *testing.T) {
 			var next []byte
 			for i := 0; i < len(objs); i += step {
 				args := request(next, 0, uint64(step), false)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvent(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 				require.NoError(t, err)
 				var resp types.QuerySportEventListAllResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
@@ -148,7 +148,7 @@ func TestQuerySportEventCLI(t *testing.T) {
 		})
 		t.Run("Total", func(t *testing.T) {
 			args := request(nil, 0, uint64(len(objs)), true)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvent(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 			require.NoError(t, err)
 			var resp types.QuerySportEventListAllResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))

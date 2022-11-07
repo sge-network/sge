@@ -25,7 +25,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	// load the public keys
-	keys, found := k.GetPublicKeysAll(ctx)
+	keys, found := k.GetPublicKeys(ctx)
 	if found {
 		genesis.PublicKeys = &keys
 	}

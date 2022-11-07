@@ -12,8 +12,9 @@ import (
 // CmdListBet implements a command to return all bets
 func CmdListBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-all-bet",
-		Short: "list all bet",
+		Use:   "bets",
+		Short: "get list of bets",
+		Long:  "Get list of bets in paginated response.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -47,7 +48,8 @@ func CmdListBet() *cobra.Command {
 func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bet [uid]",
-		Short: "shows a bet",
+		Short: "bet details by id",
+		Long:  "Get bet details by id.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)

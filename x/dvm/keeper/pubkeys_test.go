@@ -44,7 +44,7 @@ func TestQueryPublicKeys(t *testing.T) {
 	require.Nil(t, err)
 	require.Equal(t, true, resp.Success)
 
-	l, found := k.GetPublicKeysAll(ctx)
+	l, found := k.GetPublicKeys(ctx)
 	require.True(t, found)
 	require.Greater(t, len(l.List), 0)
 }

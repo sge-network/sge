@@ -22,15 +22,13 @@ service Query {
 
 	// Queries a list of SportEvent items.
 	rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/sport_event";
+		option (google.api.http).get = "/sge-network/sge/sportevent/sport_events";
 	}
 
-	// Queries a list of SportEventListByUIDs items.
+	// Queries a list of SportEventsByUIDs items.
 	rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest) returns (QuerySportEventsByUIDsResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/batch_get_sport_events/{uids}";
+		option (google.api.http).get = "/sge-network/sge/sportevent/get_sport_events_by_uids/{uids}";
 	}
-
-// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -59,15 +57,15 @@ message QuerySportEventsResponse {
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// provide multiple uids (sport event ids) for the batch fetch transaction
+// Query list of SportEvents by Uids
 message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [(gogoproto.jsontag) = "uids", json_name = "uids"];
 }
 
-//provide response for the batch fetch call, failed events would only contain the id (by default assumption is of not exist id)
+//provide response for the batch fetch call, failed events would only contain the id
+// Default assumption is of uid not exist in chain
 message QuerySportEventsByUIDsResponse {
 	repeated SportEvent sportEvents = 1 [(gogoproto.nullable) = false];
 	repeated string failedEvents = 2;
 }
 
-// this line is used by starport scaffolding # 3

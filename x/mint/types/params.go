@@ -43,14 +43,14 @@ var (
 	KeyMintDenom = []byte("MintDenom")
 	// KeyBlocksPerYear is the blocks per year param key
 	KeyBlocksPerYear = []byte("BlocksPerYear")
-	// KeyPhases is the inlflation phases param key
+	// KeyPhases is the inflation phases param key
 	KeyPhases = []byte("Phases")
 	// KeyExcludeAmount is the excluded amount from inflation calculation param key
 	KeyExcludeAmount = []byte("ExcludeAmount")
 )
 
 var (
-	// DefaultExcludeAmount is the default value for the exclude amount
+	// DefaultExcludeAmount is the default value for exclude amount
 	DefaultExcludeAmount = sdk.NewInt(int64(0))
 
 	// DefaultPhases is the default value for inflation phases

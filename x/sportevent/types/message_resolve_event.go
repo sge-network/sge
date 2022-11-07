@@ -7,28 +7,28 @@ import (
 
 const typeMsgResolveEvent = "resolve_event"
 
-var _ sdk.Msg = &MsgResolveEvent{}
+var _ sdk.Msg = &MsgResolveSportEvent{}
 
 // NewMsgResolveEvent accepts the params to create new resolution body
-func NewMsgResolveEvent(creator, ticket string) *MsgResolveEvent {
-	return &MsgResolveEvent{
+func NewMsgResolveEvent(creator, ticket string) *MsgResolveSportEvent {
+	return &MsgResolveSportEvent{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgResolveEvent) Route() string {
+func (msg *MsgResolveSportEvent) Route() string {
 	return RouterKey
 }
 
 // Type return the resolve event type
-func (msg *MsgResolveEvent) Type() string {
+func (msg *MsgResolveSportEvent) Type() string {
 	return typeMsgResolveEvent
 }
 
 // GetSigners return the creators address
-func (msg *MsgResolveEvent) GetSigners() []sdk.AccAddress {
+func (msg *MsgResolveSportEvent) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -37,13 +37,13 @@ func (msg *MsgResolveEvent) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgResolveEvent) GetSignBytes() []byte {
+func (msg *MsgResolveSportEvent) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input resolution event
-func (msg *MsgResolveEvent) ValidateBasic() error {
+func (msg *MsgResolveSportEvent) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

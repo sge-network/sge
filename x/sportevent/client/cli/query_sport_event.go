@@ -13,11 +13,12 @@ import (
 
 var _ = strconv.Itoa(0)
 
-// CmdListSportEvent implements a command to return all sport events
-func CmdListSportEvent() *cobra.Command {
+// CmdListSportEvents implements a command to return all sport events
+func CmdListSportEvents() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-sport-event",
-		Short: "list all sport events",
+		Use:   "sportevents",
+		Short: "list sport events",
+		Long:  "Get list of sport events in paginated response.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -50,8 +51,9 @@ func CmdListSportEvent() *cobra.Command {
 // CmdShowSportEvent implements a command to return a specific sport events based on its UID
 func CmdShowSportEvent() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-sport-event [uid]",
-		Short: "shows a sport event",
+		Use:   "sport-event [uid]",
+		Short: "get sport event",
+		Long:  "Get sport event details by uid.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -81,8 +83,9 @@ func CmdShowSportEvent() *cobra.Command {
 // CmdSportEventListByUIDs returns command object for querying sport events by uid list
 func CmdSportEventListByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-sport-events-by-uids [uid]",
-		Short: "Query sport events by UIDs",
+		Use:   "sport-events [uid]",
+		Short: "Query sport events list by UIDs",
+		Long:  "Get list of sport events by list of uids.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqUID := strings.Split(args[0], listSeparator)
