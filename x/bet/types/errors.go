@@ -51,7 +51,6 @@ var (
 	ErrOddsMaxLossExceeded        = sdkerrors.Register(ModuleName, 2041, "odds loss is in max state")
 	ErrOddsDataNotFound           = sdkerrors.Register(ModuleName, 2042, "odds not exist in ticket payload")
 	ErrInvalidOddsType            = sdkerrors.Register(ModuleName, 2043, "valid odds type should be provided, 1 for Decimal, 2 for Fractional, 3 for American")
-	ErrActiveOddsUIDsNotValid     = sdkerrors.Register(ModuleName, 2044, "all provided active odds UIDs in ticket should be related to the same sport event and valid")
-	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 2045, "KYC Validation failed the bettor")
+	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 2044, "KYC Validation failed the bettor")
 	ErrTextInvalidCreator         = "invalid creator address (%s)"
 )

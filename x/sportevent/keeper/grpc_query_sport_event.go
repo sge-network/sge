@@ -27,7 +27,6 @@ func (k Keeper) SportEventAll(c context.Context, req *types.QuerySportEventListA
 		if err := k.cdc.Unmarshal(value, &sportEvent); err != nil {
 			return err
 		}
-		types.InitSportEventConstraints(&sportEvent)
 
 		sportEvents = append(sportEvents, sportEvent)
 		return nil

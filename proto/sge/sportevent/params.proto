@@ -17,37 +17,10 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false
   ];
-
-  // this would be required to set a default overall max bet capacity for sport event
-  string event_max_bet_cap = 2 [
-    (gogoproto.moretags)   = "yaml:\"event_max_bet_cap\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
-  ];
-
   // this would be required to set a default min bet fee for a sport event
   string event_min_bet_fee = 3 [
     (gogoproto.moretags)   = "yaml:\"event_min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable)   = false
   ];
-
-  string event_max_loss = 4 [
-    (gogoproto.moretags)   = "yaml:\"event_max_loss\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
-  ];
-
-  string event_max_vig = 5 [
-    (gogoproto.moretags)   = "yaml:\"event_max_vig\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
-
-  string event_min_vig = 6 [
-    (gogoproto.moretags)   = "yaml:\"event_min_vig\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
-
 }
