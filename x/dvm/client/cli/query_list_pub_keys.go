@@ -26,9 +26,9 @@ func CmdPubKeysList() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryListPubKeyAllRequest{}
+			params := &types.QueryPubKeysRequest{}
 
-			res, err := queryClient.ListPubKeys(cmd.Context(), params)
+			res, err := queryClient.PubKeys(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

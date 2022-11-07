@@ -24,11 +24,11 @@ func CmdListBet() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryListBetAllRequest{
+			params := &types.QueryBetsRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ListAllBet(context.Background(), params)
+			res, err := queryClient.Bets(context.Background(), params)
 			if err != nil {
 				return err
 			}

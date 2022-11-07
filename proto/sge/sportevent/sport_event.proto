@@ -20,7 +20,7 @@ message SportEvent {
   bool active = 10;
 }
 
-enum SportEventStatus { //todo what are the states, where the should be checked?
+enum SportEventStatus {
   STATUS_PENDING = 0;
   STATUS_INVALID = 1;
   STATUS_CANCELLED = 2;

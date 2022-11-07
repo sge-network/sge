@@ -1,0 +1,55 @@
+version: 1
+accounts:
+  - name: treasury
+    coins: ["9000000000000usge"]
+  - name: seed
+    coins: ["1000000000000usge"]
+validators:
+  - name: treasury
+    bonded: "1000000000000usge"
+genesis:
+  app_state:
+    bank:
+      balances:
+        - address: "sge1kypq29kggkextekt869pwpfukj6lsw38c8a43w"
+          coins: [{"denom": "usge", "amount": "500000000000"}]
+      supply:
+        - denom: "usge"
+          amount: "500000000000"
+    staking:
+      params:
+        bond_denom: "usge"
+    crisis:
+      constant_fee:
+        denom: "usge"
+        amount: "1000"
+    dvm:
+      publicKeys:
+        list: ["-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzoP3SVo1tUEhd+cF/zw+8XxtOScdJyD7T3QqKzpC9x0=\n-----END PUBLIC KEY-----"]
+    gov:
+      deposit_params:
+        min_deposit: [{ amount: "1", denom: "usge" }]
+
+      voting_params:
+        voting_period: "30s"
+    mint:
+      minter:
+        phase_provisions: "100000000000000.000000000000000000"
+        inflation: "0.1"
+        phase_step: "1"
+        truncated_tokens: "0"
+      params:
+        mint_denom: "usge"
+        blocks_per_year: "100"
+        phases:
+          [
+            { inflation: "0.100000000000000000", year_coefficient: "1" },
+          ]
+        exclude_amount: "500000000000"
+    strategicreserve:
+      params:
+        committee_members: []
+    sportevent:
+      params:
+        event_min_bet_amount: "1000000"
+        event_min_bet_fee: {"denom": "usge", "amount": "100000"}

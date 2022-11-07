@@ -4,7 +4,6 @@ package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
 import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -12,5 +11,4 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   repeated Bet bet_list = 2 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # genesis/proto/state
 }

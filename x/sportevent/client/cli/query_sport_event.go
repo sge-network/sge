@@ -28,11 +28,11 @@ func CmdListSportEvent() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QuerySportEventListAllRequest{
+			params := &types.QuerySportEventsRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.SportEventAll(context.Background(), params)
+			res, err := queryClient.SportEvents(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -94,12 +94,12 @@ func CmdSportEventListByUIDs() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QuerySportEventListByUIDsRequest{
+			params := &types.QuerySportEventsByUIDsRequest{
 
 				Uids: reqUID,
 			}
 
-			res, err := queryClient.SportEventListByUIDs(cmd.Context(), params)
+			res, err := queryClient.SportEventsByUIDs(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

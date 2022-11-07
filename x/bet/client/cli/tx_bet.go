@@ -42,7 +42,7 @@ func CmdPlaceBet() *cobra.Command {
 
 			msg := types.NewMsgPlaceBet(
 				clientCtx.GetFromAddress().String(),
-				types.BetPlaceFields{
+				types.PlaceBetFields{
 					UID:      uid,
 					Amount:   argAmountCosmosInt,
 					OddsType: types.OddsType(oddsType),

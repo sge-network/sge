@@ -31,17 +31,17 @@ type Bet_Status int32
 const (
 	//the unknown status
 	Bet_STATUS_INVALID Bet_Status = 0
-	//placed bet placed and waiting for result
+	//bet is placed
 	Bet_STATUS_PLACED Bet_Status = 1
-	//canceled by Bettor
+	//bet is canceled by Bettor
 	Bet_STATUS_CANCELLED Bet_Status = 2
-	//there was an abort because of force like match canceled or system.
+	//bet is aborted
 	Bet_STATUS_ABORTED Bet_Status = 3
-	//pending for any reason like DVM , see BetEventStatus on this case.
+	//pending for getting placed
 	Bet_STATUS_PENDING Bet_Status = 4
-	//the result of the bet is decelerated.
+	//bet result is declared
 	Bet_STATUS_RESULT_DECLARED Bet_Status = 5
-	//the bet is settled.
+	//the bet is settled
 	Bet_STATUS_SETTLED Bet_Status = 6
 )
 
@@ -79,11 +79,11 @@ type Bet_Result int32
 const (
 	//the invalid or unknown
 	Bet_RESULT_INVALID Bet_Result = 0
-	// the result is not decelerated yet.
+	// bet result is pending
 	Bet_RESULT_PENDING Bet_Result = 1
-	// bet is won
+	// bet won by the bettor
 	Bet_RESULT_WON Bet_Result = 2
-	// bet is lost
+	// bet lost by the bettor
 	Bet_RESULT_LOST Bet_Result = 3
 	// bet is draw
 	Bet_RESULT_DRAW Bet_Result = 4
@@ -120,19 +120,19 @@ func (Bet_Result) EnumDescriptor() ([]byte, []int) {
 type Bet struct {
 	// uid is the unique uuid assigned to bet
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// sport_event_uid is the unique uuid of te sportevent on which bet is placed
+	// sport_event_uid is the unique uuid of the sportevent on which bet is placed
 	SportEventUID string `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
 	// odds_uid is the unique uuid of the odds on which bet is placed
 	OddsUID string `protobuf:"bytes,3,opt,name=odds_uid,proto3" json:"odds_uid"`
 	// odds_value is the odds on which bet is placed
 	OddsValue github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,4,opt,name=odds_value,json=oddsValue,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"odds_value"`
-	// amount is the wagger amount deducted by betting fee
+	// amount is the wager amount
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
 	// betFee is the betting fee
 	BetFee types.Coin `protobuf:"bytes,6,opt,name=bet_fee,json=betFee,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coin" json:"bet_fee"`
 	// status is the status of the bet, such as `pending` or `settled`
 	Status Bet_Status `protobuf:"varint,7,opt,name=status,proto3,enum=sgenetwork.sge.bet.Bet_Status" json:"status,omitempty"`
-	// result is the result of bet, sunch as `won` or `lost`
+	// result is the result of bet, such as `won` or `lost`
 	Result Bet_Result `protobuf:"varint,8,opt,name=result,proto3,enum=sgenetwork.sge.bet.Bet_Result" json:"result,omitempty"`
 	// verified shows bet is verified or not
 	Verified bool `protobuf:"varint,9,opt,name=verified,proto3" json:"verified,omitempty"`
@@ -142,7 +142,7 @@ type Bet struct {
 	Creator string `protobuf:"bytes,11,opt,name=creator,proto3" json:"creator,omitempty"`
 	// created_at is bet placement timestamp
 	CreatedAt int64 `protobuf:"varint,12,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// odds_type is the type of odds used has chosen
+	// odds_type is the type of odds user chose such as decimal, fractional
 	OddsType OddsType `protobuf:"varint,13,opt,name=odds_type,json=oddsType,proto3,enum=sgenetwork.sge.bet.OddsType" json:"odds_type,omitempty"`
 }
 
