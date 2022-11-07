@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"strings"
+	gtime "time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt/v4"
@@ -132,6 +133,8 @@ func (t *ticket) initFromValue() error {
 	if t.clm.ExpiresAt == nil {
 		return ErrExpirationRequired
 	}
+	gt := gtime.Unix(t.clm.ExpiresAt.Unix(), 0)
+	t.exp = *time.NewWeightedTime(gt, DefaultTimeWeight)
 
 	return nil
 }
