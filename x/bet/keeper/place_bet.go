@@ -26,11 +26,6 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types
 		return types.ErrOddsUIDNotExist
 	}
 
-	// check if provided active odds are valid
-	if !allActiveOddsExist(activeBetOdds, bet.SportEventUID, sportEvent.OddsUIDs) {
-		return types.ErrActiveOddsUIDsNotValid
-	}
-
 	// check minimum bet amount allowed
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
@@ -102,25 +97,6 @@ func selectedOddsExists(betOddsID string, sporteventOddsUIDs []string) bool {
 		}
 	}
 	return false
-}
-
-// allActiveOddsExist checks if all provided odds UIDs in activeBetOddss are related to the SportEventUID and are present in the sporteventOddsUIDs
-func allActiveOddsExist(activeBetOdds []*types.BetOdds, SportEventUID string, sporteventOddsUIDs []string) bool {
-	for _, odds := range activeBetOdds {
-		if odds.SportEventUID != SportEventUID {
-			return false
-		}
-	}
-outerLoop:
-	for _, providedOdds := range activeBetOdds {
-		for _, sporteventOddsUID := range sporteventOddsUIDs {
-			if providedOdds.UID == sporteventOddsUID {
-				continue outerLoop
-			}
-		}
-		return false
-	}
-	return true
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer
