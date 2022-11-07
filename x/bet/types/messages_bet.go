@@ -153,15 +153,6 @@ func NewBet(creator string, bet *BetPlaceFields, odds *BetOdds) (*Bet, error) {
 		OddsValue:     ticketOddsValue,
 		Amount:        bet.Amount,
 		Ticket:        bet.Ticket,
-		OddsType:      Bet_OddsType(bet.OddsType),
+		OddsType:      OddsType(bet.OddsType),
 	}, nil
-}
-
-func ExtractSelectedOddsFromTicket(ticketData *BetPlacementTicketPayload) *BetOdds {
-	for _, o := range ticketData.Odds {
-		if o.UID == ticketData.OddsUID {
-			return o
-		}
-	}
-	return nil
 }

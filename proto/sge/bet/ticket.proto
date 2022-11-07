@@ -3,22 +3,17 @@ syntax = "proto3";
 package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
 import "sge/bet/bet_odds.proto";
+import "sge/bet/kyc.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
+// BetPlacementTicketPayload indicates data of bet placement ticket
 message BetPlacementTicketPayload {
-    // OddsUID is the selected odds id
-    string OddsUID = 1 [(gogoproto.customname) = "OddsUID" ,(gogoproto.jsontag) = "odds_uid", json_name = "odds_uid"];
+  
+  // selected_odds is the user-selected odds to place bet on it
+  BetOdds selected_odds = 2;
 
-    // Odds is a list of odds at the bet placement time
-    repeated BetOdds odds = 2;
-
-    // kyc_data contains the details of user KYC
-    KycDataPayload kyc_data = 3;
+  // kyc_data contains the details of user KYC
+  KycDataPayload kyc_data = 3;
 }
 
-message KycDataPayload{
-  bool kyc_required = 1;
-  bool kyc_approved = 2;
-  string kyc_id = 3;
-}

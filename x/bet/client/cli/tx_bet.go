@@ -45,7 +45,7 @@ func CmdPlaceBet() *cobra.Command {
 				types.BetPlaceFields{
 					UID:      uid,
 					Amount:   argAmountCosmosInt,
-					OddsType: types.BetPlaceFields_OddsType(oddsType),
+					OddsType: types.OddsType(oddsType),
 					Ticket:   argTicket,
 				},
 			)

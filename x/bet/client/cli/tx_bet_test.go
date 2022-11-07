@@ -32,33 +32,37 @@ func TestTXBetCLI(t *testing.T) {
 
 	t.Run("Place bet", func(t *testing.T) {
 		for _, tc := range []struct {
-			desc   string
-			uid    string
-			amount string
-			ticket string
+			desc     string
+			uid      string
+			amount   string
+			oddsType string
+			ticket   string
 
 			err  error
 			code uint32
 		}{
 			{
-				uid:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				amount: "555",
-				ticket: "ticket",
+				uid:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				amount:   "555",
+				oddsType: "1",
+				ticket:   "ticket",
 
 				desc: "valid",
 			},
 			{
-				uid:    "invalidUID",
-				amount: "555",
-				ticket: "ticket",
+				uid:      "invalidUID",
+				amount:   "555",
+				oddsType: "2",
+				ticket:   "ticket",
 
 				desc: "validation failed",
 				err:  fmt.Errorf("any error"),
 			},
 			{
-				uid:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				amount: "invalidAmount",
-				ticket: "ticket",
+				uid:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				amount:   "invalidAmount",
+				oddsType: "1",
+				ticket:   "ticket",
 
 				desc: "invalid amuont",
 				err:  fmt.Errorf("any error"),
@@ -69,6 +73,7 @@ func TestTXBetCLI(t *testing.T) {
 				args := []string{
 					tc.uid,
 					tc.amount,
+					tc.oddsType,
 					tc.ticket,
 				}
 				args = append(args, commonArgs...)

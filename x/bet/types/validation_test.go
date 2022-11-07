@@ -19,6 +19,7 @@ func TestBetFieldsValidation(t *testing.T) {
 				UID:    " ",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
+				OddsType: 1,
 			},
 			err: ErrInvalidBetUID,
 		},
@@ -28,6 +29,7 @@ func TestBetFieldsValidation(t *testing.T) {
 				UID:    "invalidUID",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
+				OddsType: 1,
 			},
 			err: ErrInvalidBetUID,
 		},
@@ -37,6 +39,7 @@ func TestBetFieldsValidation(t *testing.T) {
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(-1)),
 				Ticket: "Ticket",
+				OddsType: 1,
 			},
 			err: ErrInvalidAmount,
 		},
@@ -45,6 +48,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			bet: &BetPlaceFields{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Ticket: "Ticket",
+				OddsType: 1,
 			},
 			err: ErrInvalidAmount,
 		},
@@ -54,8 +58,18 @@ func TestBetFieldsValidation(t *testing.T) {
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: " ",
+				OddsType: 1,
 			},
 			err: ErrInvalidTicket,
+		},
+		{
+			desc: "space in ticket",
+			bet: &BetPlaceFields{
+				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount: sdk.NewInt(int64(10)),
+				Ticket: " ",
+			},
+			err: ErrInvalidOddsType,
 		},
 		{
 			desc: "valid message",
@@ -63,6 +77,7 @@ func TestBetFieldsValidation(t *testing.T) {
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
+				OddsType: 1,
 			},
 		},
 	}

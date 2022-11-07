@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "gogoproto/gogo.proto";
+import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -17,19 +18,5 @@ message BetPlaceFields {
   string ticket = 3;
 
   // odds_type is the type of odds used has chosen
-  OddsType odds_type = 4;
-
-  enum OddsType {
-    // Invalid odd type
-    ODD_TYPE_INVALID = 0;
-
-    // Decimal odds type
-    ODD_TYPE_DECIMAL = 1;
-
-    // Fractional odds type
-    ODD_TYPE_FRACTIONAL = 2;
-
-    // American odds type
-    ODD_TYPE_AMERICAN = 3;
-  }
+  sgenetwork.sge.bet.OddsType odds_type = 4;
 }
