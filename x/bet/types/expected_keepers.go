@@ -23,7 +23,7 @@ type BankKeeper interface {
 // SporteventKeeper defines the expected interface needed to get sportEvents from KVStore
 type SporteventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
-	AddExtraPayoutToEvent(ctx sdk.Context, sportEvent sporteventtypes.SportEvent, oddUID string, betAmount, extraPayout sdk.Int) error
+	AddExtraPayoutToEvent(ctx sdk.Context, sportEventUID string, extraPayout sdk.Int) error
 }
 
 // StrategicreserveKeeper defines the expected interface needed to unlock fund and pay out

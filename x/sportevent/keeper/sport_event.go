@@ -2,7 +2,6 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/sportevent/types"
 )
@@ -23,8 +22,6 @@ func (k Keeper) GetSportEvent(ctx sdk.Context, sportEventUID string) (val types.
 	}
 
 	k.cdc.MustUnmarshal(b, &val)
-
-	types.InitSportEventConstraints(&val)
 
 	return val, true
 }
@@ -53,7 +50,6 @@ func (k Keeper) GetSportEventAll(ctx sdk.Context) (list []types.SportEvent, err 
 	for ; iterator.Valid(); iterator.Next() {
 		var val types.SportEvent
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		types.InitSportEventConstraints(&val)
 		list = append(list, val)
 	}
 
@@ -81,37 +77,20 @@ func (k Keeper) ResolveSportEvents(ctx sdk.Context, resolutionEvent *types.Resol
 }
 
 // AddExtraPayoutToEvent update current total amount of payouts for a sport event
-func (k Keeper) AddExtraPayoutToEvent(ctx sdk.Context, sportEvent types.SportEvent, oddsUID string, betAmount, extraPayout sdk.Int) error {
-
-	// calculate and validate house loss
-	houseLoss := calculateHouseLoss(&sportEvent, oddsUID, extraPayout, betAmount)
-	if houseLoss.GT(sportEvent.BetConstraints.MaxLoss) {
-		return sdkerrors.Wrapf(types.ErrEventMaxLossExceeded, "%s %s", sportEvent.UID, oddsUID)
+func (k Keeper) AddExtraPayoutToEvent(ctx sdk.Context, sportEventUID string, amount sdk.Int) error {
+	sportEvent, found := k.GetSportEvent(ctx, sportEventUID)
+	if !found {
+		return types.ErrNoMatchingSportEvent
 	}
 
-	// update new total statistics
-	sportEvent.BetConstraints.TotalStats.BetAmount = sportEvent.BetConstraints.TotalStats.BetAmount.Add(betAmount)
-	if sportEvent.BetConstraints.TotalStats.BetAmount.GT(sportEvent.BetConstraints.MaxBetCap) {
+	// calculate new total payout
+	newAmount := sportEvent.BetConstraints.CurrentTotalAmount.Add(amount)
+	if newAmount.GT(sportEvent.BetConstraints.MaxBetCap) {
 		return types.ErrMaxBetCapExceeded
 	}
 
-	// update new odds statistics
-	var stats *types.TotalOddsStats
-	if totalOddsStats, exist := sportEvent.BetConstraints.TotalOddsStats[oddsUID]; exist {
-		totalOddsStats.BetAmount = totalOddsStats.BetAmount.Add(betAmount)
-		totalOddsStats.ExtraPayout = totalOddsStats.ExtraPayout.Add(extraPayout)
-		stats = totalOddsStats
-	} else {
-		stats = &types.TotalOddsStats{
-			BetAmount:   betAmount,
-			ExtraPayout: extraPayout,
-		}
-	}
-	sportEvent.BetConstraints.TotalOddsStats[oddsUID] = stats
-
-	// set house loss statistics
-	sportEvent.BetConstraints.TotalStats.HouseLoss = houseLoss
-
+	// update bet constraints of sport event in module state
+	sportEvent.BetConstraints.CurrentTotalAmount = newAmount
 	k.SetSportEvent(ctx, sportEvent)
 
 	return nil
@@ -131,35 +110,4 @@ func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.Spor
 			sdk.NewAttribute(sdk.AttributeKeySender, creator),
 		),
 	})
-}
-
-// returns maximum amount of loss of the house according to the wining of each odds in the list
-func calculateHouseLoss(sportevent *types.SportEvent, selectedOddsUID string, extraPayout sdk.Int, betAmount sdk.Int) sdk.Int {
-	maxLoss := sdk.NewInt(-9223372036854775808)
-	for _, oddsID := range sportevent.OddsUIDs {
-		totalOddsStat, found := sportevent.BetConstraints.TotalOddsStats[oddsID]
-		if !found {
-			totalOddsStat = &types.TotalOddsStats{
-				ExtraPayout: sdk.ZeroInt(),
-				BetAmount:   sdk.ZeroInt(),
-			}
-		}
-		var houseLoss sdk.Int
-		if oddsID == selectedOddsUID {
-			houseLoss = totalOddsStat.ExtraPayout.
-				Add(extraPayout).
-				Sub(sportevent.BetConstraints.TotalStats.BetAmount).
-				Add(totalOddsStat.BetAmount)
-		} else {
-			houseLoss = totalOddsStat.ExtraPayout.
-				Sub(sportevent.BetConstraints.TotalStats.BetAmount).
-				Add(totalOddsStat.BetAmount).
-				Sub(betAmount)
-		}
-
-		if houseLoss.GT(maxLoss) {
-			maxLoss = houseLoss
-		}
-	}
-	return maxLoss
 }

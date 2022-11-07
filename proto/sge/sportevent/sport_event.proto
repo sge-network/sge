@@ -53,35 +53,7 @@ message EventBetConstraints {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 
-  string max_vig = 5[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
-
-  string min_vig = 6[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
-
-  map<string, TotalOddsStats> total_odds_stats = 7;
-
-  TotalStats total_stats = 8;
-}
-
-message TotalOddsStats {
-  string extra_payout = 1[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
-
-  string bet_amount = 2[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
-}
-
-message TotalStats {
-  string house_loss = 1[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
-
-  string bet_amount = 2[
+  string current_total_amount = 5[
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 }

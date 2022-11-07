@@ -38,16 +38,4 @@ message Params {
     (gogoproto.nullable)   = false
   ];
 
-  string event_max_vig = 5 [
-    (gogoproto.moretags)   = "yaml:\"event_max_vig\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
-
-  string event_min_vig = 6 [
-    (gogoproto.moretags)   = "yaml:\"event_min_vig\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
-  ];
-
 }
