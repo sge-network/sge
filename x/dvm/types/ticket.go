@@ -4,8 +4,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"strings"
-	gtime "time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/tendermint/tendermint/types/time"
 )
@@ -21,6 +21,9 @@ type Ticket interface {
 
 	// Consensus verifies that 2/3 of given public keys signed the ticket.
 	Consensus(pubKeys ...string) error
+
+	// IsValid verifies that the thicket is not expired yet.
+	IsValid(ctx sdk.Context) error
 }
 
 // ticket is the Ticket implementer.
@@ -98,6 +101,16 @@ func (t *ticket) Consensus(pubKeys ...string) error {
 	return ErrInvalidSignature
 }
 
+func (t *ticket) IsValid(ctx sdk.Context) error {
+
+	//validate the expiration
+	if !t.exp.Time.After(ctx.BlockTime()) {
+		return ErrTicketExpired
+	}
+
+	return nil
+}
+
 // initFromValue initializes the ticket from the raw value.few validation happening over this process.
 func (t *ticket) initFromValue() error {
 	var err error
@@ -118,13 +131,6 @@ func (t *ticket) initFromValue() error {
 
 	if t.clm.ExpiresAt == nil {
 		return ErrExpirationRequired
-	}
-	gt := gtime.Unix(t.clm.ExpiresAt.Unix(), 0)
-	t.exp = *time.NewWeightedTime(gt, DefaultTimeWeight)
-
-	//validate the expiration
-	if !t.exp.Time.After(time.Now()) {
-		return ErrTicketExpired
 	}
 
 	return nil

@@ -18,6 +18,12 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 		return err
 	}
 
+	// check the expiration of ticket
+	err = t.IsValid(ctx)
+	if err != nil {
+		return err
+	}
+
 	// get pub keys from KV-Store
 	keys, found := k.GetPublicKeysAll(ctx)
 	if !found {
@@ -39,6 +45,12 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 
 	// construct new ticket object from string ticket
 	ticket, err := types.NewTicket(ticketStr)
+	if err != nil {
+		return err
+	}
+
+	// check the expiration of ticket
+	err = ticket.IsValid(ctx)
 	if err != nil {
 		return err
 	}

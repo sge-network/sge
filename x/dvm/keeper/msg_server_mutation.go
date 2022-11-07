@@ -26,6 +26,11 @@ func (k msgServer) Mutation(goCtx context.Context, msg *types.MsgMutation) (*typ
 	if err != nil {
 		return nil, err
 	}
+	// check the expiration of ticket
+	err = ticket.IsValid(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	err = ticket.Consensus(keys.List...)
 	if err != nil {
