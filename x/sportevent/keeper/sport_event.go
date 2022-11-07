@@ -76,26 +76,6 @@ func (k Keeper) ResolveSportEvents(ctx sdk.Context, resolutionEvent *types.Resol
 	return nil
 }
 
-// AddExtraPayoutToEvent update current total amount of payouts for a sport event
-func (k Keeper) AddExtraPayoutToEvent(ctx sdk.Context, sportEventUID string, amount sdk.Int) error {
-	sportEvent, found := k.GetSportEvent(ctx, sportEventUID)
-	if !found {
-		return types.ErrNoMatchingSportEvent
-	}
-
-	// calculate new total payout
-	newAmount := sportEvent.BetConstraints.CurrentTotalAmount.Add(amount)
-	if newAmount.GT(sportEvent.BetConstraints.MaxBetCap) {
-		return types.ErrMaxBetCapExceeded
-	}
-
-	// update bet constraints of sport event in module state
-	sportEvent.BetConstraints.CurrentTotalAmount = newAmount
-	k.SetSportEvent(ctx, sportEvent)
-
-	return nil
-}
-
 func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.SportResponse, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(

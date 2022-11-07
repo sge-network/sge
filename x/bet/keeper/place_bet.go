@@ -37,18 +37,9 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types
 	// calculate extraPayout
 	extraPayout := calculateExtraPayout(bet)
 
-	if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent.UID, extraPayout); err != nil {
-		return sdkerrors.Wrapf(types.ErrInAddAmountToSportEvent, "%s", err)
-	}
-
 	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
 		bet.BetFee, bet.Amount, extraPayout, bet.UID)
 	if err != nil {
-		// bet placement was not successful so we need to update the total bet amount and payout statistics in the
-		// sport event bet constraints
-		if err := k.sporteventKeeper.AddExtraPayoutToEvent(ctx, sportEvent.UID, extraPayout.Neg()); err != nil {
-			return sdkerrors.Wrapf(types.ErrInSubAmountFromSportEvent, "%s", err)
-		}
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
 	}
 
