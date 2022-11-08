@@ -29,7 +29,7 @@ func SimulateMsgPlaceBet(
 		i := r.Int()
 		msg := &types.MsgPlaceBet{
 			Creator: simAccount.Address.String(),
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID: strconv.Itoa(i),
 			},
 		}

@@ -10,7 +10,7 @@ func (k Keeper) GetReserver(ctx sdk.Context) (reserver types.Reserver) {
 	store := ctx.KVStore(k.storeKey)
 	b := store.Get(types.ReserverKey)
 	if b == nil {
-		panic(ErrTextNilReserver)
+		panic(types.ErrTextNilReserver)
 	}
 
 	k.cdc.MustUnmarshal(b, &reserver)

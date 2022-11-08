@@ -43,7 +43,7 @@ func (msg *MsgMutation) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// ValidateBasic does some validate checks on its message
+// ValidateBasic performs basic validations on its message
 func (msg *MsgMutation) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {

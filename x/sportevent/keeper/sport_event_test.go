@@ -91,7 +91,7 @@ func TestSportEventGetAll(t *testing.T) {
 func TestResolveSportEvents(t *testing.T) {
 	t.Run("NilInput", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
-		err := k.ResolveSportEvents(ctx, nil)
+		err := k.ResolveSportEvent(ctx, nil)
 		require.Nil(t, err)
 	})
 
@@ -102,7 +102,7 @@ func TestResolveSportEvents(t *testing.T) {
 				UID: "NotExistUid",
 			},
 		}
-		err := k.ResolveSportEvents(ctx, resEventsIn)
+		err := k.ResolveSportEvent(ctx, resEventsIn)
 		require.Equal(t, types.ErrNoMatchingSportEvent, err)
 	})
 
@@ -120,7 +120,7 @@ func TestResolveSportEvents(t *testing.T) {
 				UID: item.UID,
 			},
 		}
-		err := k.ResolveSportEvents(ctx, resEventsIn)
+		err := k.ResolveSportEvent(ctx, resEventsIn)
 		require.Equal(t, types.ErrCanNotBeAltered, err)
 	})
 
@@ -141,7 +141,7 @@ func TestResolveSportEvents(t *testing.T) {
 				Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
 			},
 		}
-		err := k.ResolveSportEvents(ctx, resEventsIn)
+		err := k.ResolveSportEvent(ctx, resEventsIn)
 		require.Nil(t, err)
 		val, found := k.GetSportEvent(ctx, item.UID)
 		require.True(t, found)

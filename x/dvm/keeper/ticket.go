@@ -25,7 +25,7 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 	}
 
 	// get pub keys from KV-Store
-	keys, found := k.GetPublicKeysAll(ctx)
+	keys, found := k.GetPublicKeys(ctx)
 	if !found {
 		return types.ErrNoPublicKeysFound
 	}
@@ -56,7 +56,7 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 	}
 
 	// get pub keys from module state
-	keys, found := k.GetPublicKeysAll(ctx)
+	keys, found := k.GetPublicKeys(ctx)
 
 	if !found {
 		return types.ErrNoPublicKeysFound

@@ -31,7 +31,6 @@ func (gs GenesisState) Validate() error {
 		}
 		sportEventUIDMap[uid] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }

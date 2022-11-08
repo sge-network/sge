@@ -13,8 +13,8 @@ func (k Keeper) SetPublicKeys(ctx sdk.Context, ks types.PublicKeys) {
 	store.Set([]byte{0}, b)
 }
 
-// GetPublicKeysAll is the helper functions for this keeper to query the list of public keys.
-func (k *Keeper) GetPublicKeysAll(ctx sdk.Context) (keys types.PublicKeys, found bool) {
+// GetPublicKeys is the helper functions for this keeper to query the list of public keys.
+func (k *Keeper) GetPublicKeys(ctx sdk.Context) (keys types.PublicKeys, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PubKeysListKey)
 
 	b := store.Get([]byte{0})

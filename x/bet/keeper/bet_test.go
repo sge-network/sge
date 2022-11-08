@@ -59,7 +59,7 @@ func TestBetGetAll(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNBet(k, ctx, 10)
 
-	bets, err := k.GetBetAll(ctx)
+	bets, err := k.GetBets(ctx)
 	require.NoError(t, err)
 	require.ElementsMatch(t,
 		nullify.Fill(items),

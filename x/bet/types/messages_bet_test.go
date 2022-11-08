@@ -26,9 +26,10 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 			msg: MsgPlaceBet{
 				Creator: sample.AccAddress(),
 				Bet: &BetPlaceFields{
-					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-					Amount: sdk.NewInt(int64(10)),
-					Ticket: "Ticket",
+					UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+					Amount:   sdk.NewInt(int64(10)),
+					Ticket:   "Ticket",
+					OddsType: 1,
 				},
 			},
 		},

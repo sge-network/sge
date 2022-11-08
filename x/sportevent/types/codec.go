@@ -11,9 +11,9 @@ import (
 
 // RegisterCodec registers module codec to the app codec
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgAddEvent{}, "sportevent/AddEvent", nil)
-	cdc.RegisterConcrete(&MsgResolveEvent{}, "sportevent/ResolveEvent", nil)
-	cdc.RegisterConcrete(&MsgUpdateEvent{}, "sportevent/UpdateEvent", nil)
+	cdc.RegisterConcrete(&MsgAddSportEvent{}, "sportevent/AddSportEvent", nil)
+	cdc.RegisterConcrete(&MsgResolveSportEvent{}, "sportevent/ResolveSportEvent", nil)
+	cdc.RegisterConcrete(&MsgUpdateSportEvent{}, "sportevent/UpdateSportEvent", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -21,13 +21,13 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil))
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgAddEvent{},
+		&MsgAddSportEvent{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgResolveEvent{},
+		&MsgResolveSportEvent{},
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgUpdateEvent{},
+		&MsgUpdateSportEvent{},
 	)
 	// this line is used by starport scaffolding # 3
 

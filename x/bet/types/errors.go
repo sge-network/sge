@@ -49,8 +49,10 @@ var (
 	ErrVigIsOutOfRange            = sdkerrors.Register(ModuleName, 2039, "vig is out of valid range")
 	ErrEventMaxLossExceeded       = sdkerrors.Register(ModuleName, 2040, "event loss is in max state")
 	ErrOddsMaxLossExceeded        = sdkerrors.Register(ModuleName, 2041, "odds loss is in max state")
-	ErrOddsDataNotFound           = sdkerrors.Register(ModuleName, 2042, "odds not exist in ticket payload")
+	ErrOddsDataNotFound           = sdkerrors.Register(ModuleName, 2042, "odds does not exist in ticket payload")
 	ErrInvalidOddsType            = sdkerrors.Register(ModuleName, 2043, "valid odds type should be provided, 1 for Decimal, 2 for Fractional, 3 for American")
-	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 2044, "KYC Validation failed the bettor")
+	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 2044, "the bettor failed the KYC Validation")
+	ErrNoKycField                 = sdkerrors.Register(ModuleName, 2045, "KYC field does not exist in ticket payload")
+	ErrNoKycIdField               = sdkerrors.Register(ModuleName, 2046, "KYC ID does not exist in KYC part of ticket payload")
 	ErrTextInvalidCreator         = "invalid creator address (%s)"
 )

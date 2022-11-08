@@ -17,10 +17,11 @@ func TestPlaceBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	tcs := []struct {
-		desc       string
-		bet        *types.Bet
-		err        error
-		sportEvent *sporteventtypes.SportEvent
+		desc          string
+		bet           *types.Bet
+		err           error
+		sportEvent    *sporteventtypes.SportEvent
+		activeBetOdds []*types.BetOdds
 	}{
 		{
 			desc: "invalid creator address",
@@ -142,6 +143,10 @@ func TestPlaceBet(t *testing.T) {
 					},
 				},
 			},
+			activeBetOdds: []*types.BetOdds{
+				{UID: "odds1", SportEventUID: "uid_oddsNotexist", Value: "2.52"},
+				{UID: "odds2", SportEventUID: "uid_oddsNotexist", Value: "1.50"},
+			},
 			bet: &types.Bet{
 				UID:           "betUID",
 				SportEventUID: "uid_oddsNotexist",
@@ -173,6 +178,10 @@ func TestPlaceBet(t *testing.T) {
 						BetAmount: sdk.NewInt(0),
 					},
 				},
+			},
+			activeBetOdds: []*types.BetOdds{
+				{UID: "odds1", SportEventUID: "uid_lowBetAmount", Value: "2.52"},
+				{UID: "odds2", SportEventUID: "uid_lowBetAmount", Value: "1.50"},
 			},
 			bet: &types.Bet{
 				UID:           "betUID",
@@ -206,6 +215,10 @@ func TestPlaceBet(t *testing.T) {
 					},
 				},
 			},
+			activeBetOdds: []*types.BetOdds{
+				{UID: "odds1", SportEventUID: "uid_success", Value: "2.52"},
+				{UID: "odds2", SportEventUID: "uid_success", Value: "1.50"},
+			},
 			bet: &types.Bet{
 				UID:           "betUID",
 				SportEventUID: "uid_success",
@@ -222,7 +235,7 @@ func TestPlaceBet(t *testing.T) {
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
 			}
-			err := k.PlaceBet(ctx, tc.bet, testActiveBetOdds)
+			err := k.PlaceBet(ctx, tc.bet, tc.activeBetOdds)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

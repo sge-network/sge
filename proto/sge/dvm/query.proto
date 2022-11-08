@@ -5,7 +5,6 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/dvm/params.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
@@ -13,14 +12,12 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/sge-network/sge/dvm/params";
+    option (google.api.http).get = "/sge/dvm/params";
   }
-  // Queries a list of PubKeysList items.
-	rpc ListPubKeys(QueryListPubKeyAllRequest) returns (QueryListPubKeyAllResponse) {
-		option (google.api.http).get = "/sge-network/sge/dvm/pub_keys_list";
+  // Queries a list of PubKeys items.
+	rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
+		option (google.api.http).get = "/sge/dvm/pub_keys";
 	}
-
-// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -32,11 +29,10 @@ message QueryParamsResponse {
   Params params = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryListPubKeyAllRequest {
+message QueryPubKeysRequest {
 }
 
-message QueryListPubKeyAllResponse {
+message QueryPubKeysResponse {
   repeated string list = 1;
 }
 
-// this line is used by starport scaffolding # 3

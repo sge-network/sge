@@ -56,8 +56,8 @@ func (k Keeper) GetSportEventAll(ctx sdk.Context) (list []types.SportEvent, err 
 	return
 }
 
-// ResolveSportEvents updates a sport event with its resolution
-func (k Keeper) ResolveSportEvents(ctx sdk.Context, resolutionEvent *types.ResolutionEvent) error {
+// ResolveSportEvent updates a sport event with its resolution
+func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.ResolutionEvent) error {
 	storedEvent, found := k.GetSportEvent(ctx, resolutionEvent.UID)
 	if !found {
 		return types.ErrNoMatchingSportEvent
@@ -67,16 +67,19 @@ func (k Keeper) ResolveSportEvents(ctx sdk.Context, resolutionEvent *types.Resol
 		return types.ErrCanNotBeAltered
 	}
 
+	if resolutionEvent.Status == types.SportEventStatus_STATUS_RESULT_DECLARED {
+		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
+	}
+
 	storedEvent.Active = false
 	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
-	storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
 	storedEvent.Status = resolutionEvent.Status
 
 	k.SetSportEvent(ctx, storedEvent)
 	return nil
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.SportResponse, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.SportEventResponse, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,

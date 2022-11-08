@@ -1,0 +1,18 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+enum OddsType {
+    // Invalid odd type
+    ODD_TYPE_INVALID = 0;
+
+    // Decimal odds type
+    ODD_TYPE_DECIMAL = 1;
+
+    // Fractional odds type
+    ODD_TYPE_FRACTIONAL = 2;
+
+    // American odds type
+    ODD_TYPE_AMERICAN = 3;
+  }

@@ -60,12 +60,18 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		activeOdds[0].SportEventUID = ""
+		testKyc := &types.KycDataPayload{
+			KycRequired: true,
+			KycApproved: true,
+			KycId:       creator.Address.String(),
+		}
 		placeBetClaim := jwt.MapClaims{
 			"value":    sdk.NewDec(10),
 			"odds_uid": testOddsUID1,
 			"exp":      9999999999,
 			"iat":      1111111111,
 			"odds":     activeOdds,
+			"kyc_data": testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -86,12 +92,18 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("No matching sportEvent", func(t *testing.T) {
+		testKyc := &types.KycDataPayload{
+			KycRequired: true,
+			KycApproved: true,
+			KycId:       creator.Address.String(),
+		}
 		placeBetClaim := jwt.MapClaims{
 			"value":    sdk.NewDec(10),
 			"odds_uid": testOddsUID1,
 			"exp":      9999999999,
 			"iat":      1111111111,
 			"odds":     testActiveBetOdds,
+			"kyc_data": testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -111,12 +123,18 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
+		testKyc := &types.KycDataPayload{
+			KycRequired: true,
+			KycApproved: true,
+			KycId:       creator.Address.String(),
+		}
 		placeBetClaim := jwt.MapClaims{
 			"value":    sdk.NewDec(10),
 			"odds_uid": testOddsUID1,
 			"exp":      9999999999,
 			"iat":      1111111111,
 			"odds":     testActiveBetOdds,
+			"kyc_data": testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -269,7 +287,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			res, err := msgk.SettleBet(wctx, inputMsg)
 			if tc.err != nil {
 				require.Equal(t, tc.err, err)
-				require.Nil(t, res)
+				require.Equal(t, &types.MsgSettleBetResponse{Error: tc.err.Error(), BetUID: betUID}, res)
 				return
 			}
 			require.NoError(t, err)

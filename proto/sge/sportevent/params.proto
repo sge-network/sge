@@ -11,7 +11,7 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // this would be required to set a default overall max bet capacity for sport event
+  // this would be required to set a default minimum bet amount for sport event
   string event_min_bet_amount = 1 [
     (gogoproto.moretags)   = "yaml:\"event_min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",

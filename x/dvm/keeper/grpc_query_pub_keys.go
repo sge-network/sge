@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ListPubKeys returns list of the public keys
-func (k Keeper) ListPubKeys(goCtx context.Context, req *types.QueryListPubKeyAllRequest) (*types.QueryListPubKeyAllResponse, error) {
+// PubKeys returns list of the public keys
+func (k Keeper) PubKeys(goCtx context.Context, req *types.QueryPubKeysRequest) (*types.QueryPubKeysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, types.ErrTextInvalidRequest)
 	}
@@ -18,11 +18,11 @@ func (k Keeper) ListPubKeys(goCtx context.Context, req *types.QueryListPubKeyAll
 
 	// Process the query
 
-	res, found := k.GetPublicKeysAll(ctx)
+	res, found := k.GetPublicKeys(ctx)
 
 	if !found {
 		return nil, types.ErrNoPublicKeysFound
 	}
 
-	return &types.QueryListPubKeyAllResponse{List: res.List}, nil
+	return &types.QueryPubKeysResponse{List: res.List}, nil
 }

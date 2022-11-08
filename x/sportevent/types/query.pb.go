@@ -201,22 +201,22 @@ func (m *QuerySportEventResponse) GetSportEvent() SportEvent {
 	return SportEvent{}
 }
 
-type QuerySportEventListAllRequest struct {
+type QuerySportEventsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QuerySportEventListAllRequest) Reset()         { *m = QuerySportEventListAllRequest{} }
-func (m *QuerySportEventListAllRequest) String() string { return proto.CompactTextString(m) }
-func (*QuerySportEventListAllRequest) ProtoMessage()    {}
-func (*QuerySportEventListAllRequest) Descriptor() ([]byte, []int) {
+func (m *QuerySportEventsRequest) Reset()         { *m = QuerySportEventsRequest{} }
+func (m *QuerySportEventsRequest) String() string { return proto.CompactTextString(m) }
+func (*QuerySportEventsRequest) ProtoMessage()    {}
+func (*QuerySportEventsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_45776640ee419e76, []int{4}
 }
-func (m *QuerySportEventListAllRequest) XXX_Unmarshal(b []byte) error {
+func (m *QuerySportEventsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySportEventListAllRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QuerySportEventsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySportEventListAllRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QuerySportEventsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -226,42 +226,42 @@ func (m *QuerySportEventListAllRequest) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QuerySportEventListAllRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySportEventListAllRequest.Merge(m, src)
+func (m *QuerySportEventsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySportEventsRequest.Merge(m, src)
 }
-func (m *QuerySportEventListAllRequest) XXX_Size() int {
+func (m *QuerySportEventsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySportEventListAllRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySportEventListAllRequest.DiscardUnknown(m)
+func (m *QuerySportEventsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySportEventsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySportEventListAllRequest proto.InternalMessageInfo
+var xxx_messageInfo_QuerySportEventsRequest proto.InternalMessageInfo
 
-func (m *QuerySportEventListAllRequest) GetPagination() *query.PageRequest {
+func (m *QuerySportEventsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QuerySportEventListAllResponse struct {
+type QuerySportEventsResponse struct {
 	SportEvent []SportEvent        `protobuf:"bytes,1,rep,name=sportEvent,proto3" json:"sportEvent"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QuerySportEventListAllResponse) Reset()         { *m = QuerySportEventListAllResponse{} }
-func (m *QuerySportEventListAllResponse) String() string { return proto.CompactTextString(m) }
-func (*QuerySportEventListAllResponse) ProtoMessage()    {}
-func (*QuerySportEventListAllResponse) Descriptor() ([]byte, []int) {
+func (m *QuerySportEventsResponse) Reset()         { *m = QuerySportEventsResponse{} }
+func (m *QuerySportEventsResponse) String() string { return proto.CompactTextString(m) }
+func (*QuerySportEventsResponse) ProtoMessage()    {}
+func (*QuerySportEventsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_45776640ee419e76, []int{5}
 }
-func (m *QuerySportEventListAllResponse) XXX_Unmarshal(b []byte) error {
+func (m *QuerySportEventsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySportEventListAllResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QuerySportEventsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySportEventListAllResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QuerySportEventsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -271,49 +271,49 @@ func (m *QuerySportEventListAllResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *QuerySportEventListAllResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySportEventListAllResponse.Merge(m, src)
+func (m *QuerySportEventsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySportEventsResponse.Merge(m, src)
 }
-func (m *QuerySportEventListAllResponse) XXX_Size() int {
+func (m *QuerySportEventsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySportEventListAllResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySportEventListAllResponse.DiscardUnknown(m)
+func (m *QuerySportEventsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySportEventsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySportEventListAllResponse proto.InternalMessageInfo
+var xxx_messageInfo_QuerySportEventsResponse proto.InternalMessageInfo
 
-func (m *QuerySportEventListAllResponse) GetSportEvent() []SportEvent {
+func (m *QuerySportEventsResponse) GetSportEvent() []SportEvent {
 	if m != nil {
 		return m.SportEvent
 	}
 	return nil
 }
 
-func (m *QuerySportEventListAllResponse) GetPagination() *query.PageResponse {
+func (m *QuerySportEventsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// provide multiple uids (sport event ids) for the batch fetch transaction
-type QuerySportEventListByUIDsRequest struct {
+// Query list of SportEvents by Uids
+type QuerySportEventsByUIDsRequest struct {
 	Uids []string `protobuf:"bytes,1,rep,name=uids,proto3" json:"uids"`
 }
 
-func (m *QuerySportEventListByUIDsRequest) Reset()         { *m = QuerySportEventListByUIDsRequest{} }
-func (m *QuerySportEventListByUIDsRequest) String() string { return proto.CompactTextString(m) }
-func (*QuerySportEventListByUIDsRequest) ProtoMessage()    {}
-func (*QuerySportEventListByUIDsRequest) Descriptor() ([]byte, []int) {
+func (m *QuerySportEventsByUIDsRequest) Reset()         { *m = QuerySportEventsByUIDsRequest{} }
+func (m *QuerySportEventsByUIDsRequest) String() string { return proto.CompactTextString(m) }
+func (*QuerySportEventsByUIDsRequest) ProtoMessage()    {}
+func (*QuerySportEventsByUIDsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_45776640ee419e76, []int{6}
 }
-func (m *QuerySportEventListByUIDsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QuerySportEventsByUIDsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySportEventListByUIDsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QuerySportEventsByUIDsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySportEventListByUIDsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QuerySportEventsByUIDsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -323,43 +323,44 @@ func (m *QuerySportEventListByUIDsRequest) XXX_Marshal(b []byte, deterministic b
 		return b[:n], nil
 	}
 }
-func (m *QuerySportEventListByUIDsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySportEventListByUIDsRequest.Merge(m, src)
+func (m *QuerySportEventsByUIDsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySportEventsByUIDsRequest.Merge(m, src)
 }
-func (m *QuerySportEventListByUIDsRequest) XXX_Size() int {
+func (m *QuerySportEventsByUIDsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySportEventListByUIDsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySportEventListByUIDsRequest.DiscardUnknown(m)
+func (m *QuerySportEventsByUIDsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySportEventsByUIDsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySportEventListByUIDsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QuerySportEventsByUIDsRequest proto.InternalMessageInfo
 
-func (m *QuerySportEventListByUIDsRequest) GetUids() []string {
+func (m *QuerySportEventsByUIDsRequest) GetUids() []string {
 	if m != nil {
 		return m.Uids
 	}
 	return nil
 }
 
-//provide response for the batch fetch call, failed events would only contain the id (by default assumption is of not exist id)
-type QuerySportEventListByUIDsResponse struct {
+//provide response for the batch fetch call, failed events would only contain the id
+// Default assumption is of uid not exist in chain
+type QuerySportEventsByUIDsResponse struct {
 	SportEvents  []SportEvent `protobuf:"bytes,1,rep,name=sportEvents,proto3" json:"sportEvents"`
 	FailedEvents []string     `protobuf:"bytes,2,rep,name=failedEvents,proto3" json:"failedEvents,omitempty"`
 }
 
-func (m *QuerySportEventListByUIDsResponse) Reset()         { *m = QuerySportEventListByUIDsResponse{} }
-func (m *QuerySportEventListByUIDsResponse) String() string { return proto.CompactTextString(m) }
-func (*QuerySportEventListByUIDsResponse) ProtoMessage()    {}
-func (*QuerySportEventListByUIDsResponse) Descriptor() ([]byte, []int) {
+func (m *QuerySportEventsByUIDsResponse) Reset()         { *m = QuerySportEventsByUIDsResponse{} }
+func (m *QuerySportEventsByUIDsResponse) String() string { return proto.CompactTextString(m) }
+func (*QuerySportEventsByUIDsResponse) ProtoMessage()    {}
+func (*QuerySportEventsByUIDsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_45776640ee419e76, []int{7}
 }
-func (m *QuerySportEventListByUIDsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QuerySportEventsByUIDsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QuerySportEventListByUIDsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QuerySportEventsByUIDsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QuerySportEventListByUIDsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QuerySportEventsByUIDsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -369,26 +370,26 @@ func (m *QuerySportEventListByUIDsResponse) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *QuerySportEventListByUIDsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QuerySportEventListByUIDsResponse.Merge(m, src)
+func (m *QuerySportEventsByUIDsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySportEventsByUIDsResponse.Merge(m, src)
 }
-func (m *QuerySportEventListByUIDsResponse) XXX_Size() int {
+func (m *QuerySportEventsByUIDsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QuerySportEventListByUIDsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QuerySportEventListByUIDsResponse.DiscardUnknown(m)
+func (m *QuerySportEventsByUIDsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySportEventsByUIDsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QuerySportEventListByUIDsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QuerySportEventsByUIDsResponse proto.InternalMessageInfo
 
-func (m *QuerySportEventListByUIDsResponse) GetSportEvents() []SportEvent {
+func (m *QuerySportEventsByUIDsResponse) GetSportEvents() []SportEvent {
 	if m != nil {
 		return m.SportEvents
 	}
 	return nil
 }
 
-func (m *QuerySportEventListByUIDsResponse) GetFailedEvents() []string {
+func (m *QuerySportEventsByUIDsResponse) GetFailedEvents() []string {
 	if m != nil {
 		return m.FailedEvents
 	}
@@ -400,56 +401,55 @@ func init() {
 	proto.RegisterType((*QueryParamsResponse)(nil), "sgenetwork.sge.sportevent.QueryParamsResponse")
 	proto.RegisterType((*QuerySportEventRequest)(nil), "sgenetwork.sge.sportevent.QuerySportEventRequest")
 	proto.RegisterType((*QuerySportEventResponse)(nil), "sgenetwork.sge.sportevent.QuerySportEventResponse")
-	proto.RegisterType((*QuerySportEventListAllRequest)(nil), "sgenetwork.sge.sportevent.QuerySportEventListAllRequest")
-	proto.RegisterType((*QuerySportEventListAllResponse)(nil), "sgenetwork.sge.sportevent.QuerySportEventListAllResponse")
-	proto.RegisterType((*QuerySportEventListByUIDsRequest)(nil), "sgenetwork.sge.sportevent.QuerySportEventListByUIDsRequest")
-	proto.RegisterType((*QuerySportEventListByUIDsResponse)(nil), "sgenetwork.sge.sportevent.QuerySportEventListByUIDsResponse")
+	proto.RegisterType((*QuerySportEventsRequest)(nil), "sgenetwork.sge.sportevent.QuerySportEventsRequest")
+	proto.RegisterType((*QuerySportEventsResponse)(nil), "sgenetwork.sge.sportevent.QuerySportEventsResponse")
+	proto.RegisterType((*QuerySportEventsByUIDsRequest)(nil), "sgenetwork.sge.sportevent.QuerySportEventsByUIDsRequest")
+	proto.RegisterType((*QuerySportEventsByUIDsResponse)(nil), "sgenetwork.sge.sportevent.QuerySportEventsByUIDsResponse")
 }
 
 func init() { proto.RegisterFile("sge/sportevent/query.proto", fileDescriptor_45776640ee419e76) }
 
 var fileDescriptor_45776640ee419e76 = []byte{
-	// 627 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x95, 0xcb, 0x6e, 0xd3, 0x4e,
-	0x14, 0xc6, 0xe3, 0xde, 0xf4, 0xef, 0xe9, 0x1f, 0x09, 0x0d, 0x15, 0x17, 0x53, 0xdc, 0xd6, 0x08,
-	0x4a, 0x2b, 0xc5, 0xa3, 0x16, 0x21, 0x51, 0x15, 0x09, 0x12, 0x01, 0x15, 0x02, 0xa4, 0x62, 0x04,
-	0x0b, 0x36, 0x91, 0x93, 0x4c, 0xa7, 0x16, 0x8e, 0xc7, 0xcd, 0x8c, 0x0b, 0x11, 0xea, 0x86, 0x27,
-	0x40, 0x20, 0xf1, 0x10, 0xec, 0xe1, 0x19, 0xba, 0xac, 0x04, 0x8b, 0xae, 0x2a, 0x94, 0xb0, 0xe2,
-	0x29, 0x90, 0xc7, 0x13, 0x6c, 0xe7, 0xd6, 0x34, 0x6c, 0xa2, 0xc9, 0xf8, 0x7c, 0xe7, 0xfb, 0x7d,
-	0x99, 0x39, 0x31, 0xe8, 0x9c, 0x12, 0xcc, 0x03, 0x56, 0x17, 0x64, 0x8f, 0xf8, 0x02, 0xef, 0x86,
-	0xa4, 0xde, 0xb0, 0x82, 0x3a, 0x13, 0x0c, 0x5d, 0xe2, 0x94, 0xf8, 0x44, 0xbc, 0x61, 0xf5, 0xd7,
-	0x16, 0xa7, 0xc4, 0x4a, 0xca, 0xf4, 0x59, 0xca, 0x28, 0x93, 0x55, 0x38, 0x5a, 0xc5, 0x02, 0x7d,
-	0x8e, 0x32, 0x46, 0x3d, 0x82, 0x9d, 0xc0, 0xc5, 0x8e, 0xef, 0x33, 0xe1, 0x08, 0x97, 0xf9, 0x5c,
-	0x3d, 0x5d, 0xa9, 0x30, 0x5e, 0x63, 0x1c, 0x97, 0x1d, 0x4e, 0x62, 0x1f, 0xbc, 0xb7, 0x5a, 0x26,
-	0xc2, 0x59, 0xc5, 0x81, 0x43, 0x5d, 0x5f, 0x16, 0xab, 0xda, 0xcb, 0x1d, 0x58, 0x81, 0x53, 0x77,
-	0x6a, 0xed, 0x46, 0x0b, 0x1d, 0x0f, 0xe5, 0xb2, 0x24, 0xd7, 0x71, 0x85, 0x39, 0x0b, 0xe8, 0x59,
-	0x64, 0xb0, 0x25, 0x65, 0x36, 0xd9, 0x0d, 0x09, 0x17, 0xe6, 0x4b, 0x38, 0x97, 0xd9, 0xe5, 0x01,
-	0xf3, 0x39, 0x41, 0x77, 0x61, 0x2a, 0x6e, 0x7f, 0x51, 0x5b, 0xd0, 0x6e, 0xcc, 0xac, 0x2d, 0x5a,
-	0x7d, 0x73, 0x5b, 0xb1, 0xb4, 0x38, 0x71, 0x70, 0x3c, 0x9f, 0xb3, 0x95, 0xcc, 0x5c, 0x81, 0xf3,
-	0xb2, 0xef, 0xf3, 0xa8, 0xee, 0x41, 0x54, 0xa7, 0x1c, 0xd1, 0x59, 0x18, 0x0f, 0xdd, 0xaa, 0xec,
-	0x3b, 0x6d, 0x47, 0x4b, 0x73, 0x1b, 0x2e, 0x74, 0xd5, 0x2a, 0x8e, 0xc7, 0x00, 0xfc, 0xef, 0xae,
-	0x62, 0xb9, 0x36, 0x80, 0x25, 0x69, 0xa1, 0x78, 0x52, 0x72, 0x93, 0xc2, 0x95, 0x0e, 0x9f, 0x27,
-	0x2e, 0x17, 0x05, 0xcf, 0x6b, 0xa3, 0x3d, 0x04, 0x48, 0x7e, 0x75, 0xe5, 0x76, 0xdd, 0x8a, 0x8f,
-	0xc8, 0x8a, 0x8e, 0xc8, 0x8a, 0xaf, 0x82, 0x3a, 0x22, 0x6b, 0xcb, 0xa1, 0x44, 0x69, 0xed, 0x94,
-	0xd2, 0xfc, 0xa6, 0x81, 0xd1, 0xcf, 0xa9, 0x4f, 0xb0, 0xf1, 0x7f, 0x08, 0x86, 0x36, 0x33, 0xdc,
-	0x63, 0x92, 0x7b, 0xe9, 0x44, 0xee, 0x98, 0x24, 0x03, 0x7e, 0x0f, 0x16, 0x7a, 0x70, 0x17, 0x1b,
-	0x2f, 0x1e, 0xdd, 0x6f, 0xdf, 0x18, 0x34, 0x07, 0x13, 0xa1, 0x5b, 0xe5, 0x92, 0x79, 0xba, 0xf8,
-	0xdf, 0xef, 0xe3, 0x79, 0xf9, 0xdd, 0x96, 0x9f, 0xe6, 0x67, 0x0d, 0x16, 0x07, 0xb4, 0x50, 0xe9,
-	0x9f, 0xc2, 0x4c, 0x82, 0xcf, 0x47, 0x89, 0x9f, 0xd6, 0x23, 0x13, 0xfe, 0xdf, 0x76, 0x5c, 0x8f,
-	0x54, 0x55, 0xbf, 0xb1, 0x08, 0xcd, 0xce, 0xec, 0xad, 0x1d, 0x4d, 0xc2, 0xa4, 0x04, 0x43, 0x1f,
-	0x35, 0x98, 0x8a, 0xef, 0x2c, 0xca, 0x0f, 0xb0, 0xec, 0x1e, 0x16, 0xdd, 0x1a, 0xb6, 0x3c, 0x8e,
-	0x69, 0x2e, 0xbf, 0xff, 0xfe, 0xeb, 0xd3, 0xd8, 0x55, 0xb4, 0x88, 0x13, 0x1d, 0xee, 0x39, 0xc5,
-	0xe8, 0x8b, 0x06, 0x90, 0x84, 0x44, 0xab, 0x27, 0x39, 0x75, 0xcd, 0x95, 0xbe, 0x76, 0x1a, 0x89,
-	0x02, 0xbc, 0x25, 0x01, 0x31, 0xca, 0x47, 0x54, 0xf9, 0x3e, 0x84, 0xa9, 0xbf, 0x12, 0xfc, 0x2e,
-	0x74, 0xab, 0xfb, 0xe8, 0xab, 0x06, 0x67, 0x92, 0x6e, 0x05, 0xcf, 0x43, 0xb7, 0x87, 0x37, 0xcf,
-	0xce, 0x9c, 0xbe, 0x3e, 0x82, 0x52, 0xd1, 0x63, 0x49, 0xbf, 0x8c, 0x96, 0x86, 0xa4, 0x47, 0x3f,
-	0x34, 0x98, 0xed, 0x75, 0x2f, 0xd1, 0xc6, 0xe9, 0x20, 0x32, 0x03, 0xa1, 0xdf, 0x19, 0x4d, 0xac,
-	0x42, 0x14, 0x64, 0x88, 0x0d, 0xb4, 0x3e, 0x28, 0x44, 0xd9, 0x11, 0x95, 0x9d, 0x12, 0x25, 0xa2,
-	0x94, 0x8a, 0xc3, 0xe5, 0x69, 0xf0, 0xfd, 0xe2, 0xe6, 0x41, 0xd3, 0xd0, 0x0e, 0x9b, 0x86, 0xf6,
-	0xb3, 0x69, 0x68, 0x1f, 0x5a, 0x46, 0xee, 0xb0, 0x65, 0xe4, 0x8e, 0x5a, 0x46, 0xee, 0x55, 0x9e,
-	0xba, 0x62, 0x27, 0x2c, 0x5b, 0x15, 0x56, 0xeb, 0x6a, 0xff, 0x36, 0x6d, 0x20, 0x1a, 0x01, 0xe1,
-	0xe5, 0x29, 0xf9, 0xa6, 0xb8, 0xf9, 0x27, 0x00, 0x00, 0xff, 0xff, 0xb6, 0x82, 0x19, 0xe1, 0x01,
-	0x07, 0x00, 0x00,
+	// 609 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x94, 0x41, 0x6b, 0x13, 0x41,
+	0x14, 0xc7, 0x33, 0x69, 0x1b, 0xec, 0x8b, 0x07, 0x1d, 0x4b, 0x9b, 0xae, 0xed, 0xa6, 0x2e, 0x54,
+	0xa5, 0x98, 0x59, 0x92, 0x7a, 0xd0, 0x83, 0x08, 0x41, 0x2d, 0x22, 0x42, 0x5d, 0xd1, 0x83, 0x97,
+	0x30, 0x69, 0xa6, 0xeb, 0x62, 0xb3, 0xb3, 0xcd, 0xec, 0x56, 0x83, 0xf4, 0xe2, 0x49, 0x6f, 0x42,
+	0xce, 0x7e, 0x07, 0x3f, 0x81, 0xe7, 0x1e, 0x0b, 0x5e, 0x3c, 0x15, 0x49, 0x3c, 0xf9, 0x29, 0x64,
+	0x67, 0xa6, 0xc9, 0x26, 0x4b, 0x52, 0xd3, 0x5e, 0xc2, 0x64, 0xf6, 0xfd, 0xdf, 0xff, 0xf7, 0xde,
+	0xcc, 0x1b, 0x30, 0x84, 0xcb, 0x6c, 0x11, 0xf0, 0x56, 0xc8, 0x0e, 0x98, 0x1f, 0xda, 0xfb, 0x11,
+	0x6b, 0xb5, 0x49, 0xd0, 0xe2, 0x21, 0xc7, 0xcb, 0xc2, 0x65, 0x3e, 0x0b, 0xdf, 0xf3, 0xd6, 0x3b,
+	0x22, 0x5c, 0x46, 0x06, 0x61, 0xc6, 0x82, 0xcb, 0x5d, 0x2e, 0xa3, 0xec, 0x78, 0xa5, 0x04, 0xc6,
+	0x8a, 0xcb, 0xb9, 0xbb, 0xc7, 0x6c, 0x1a, 0x78, 0x36, 0xf5, 0x7d, 0x1e, 0xd2, 0xd0, 0xe3, 0xbe,
+	0xd0, 0x5f, 0x37, 0x76, 0xb8, 0x68, 0x72, 0x61, 0xd7, 0xa9, 0x60, 0xca, 0xc7, 0x3e, 0x28, 0xd7,
+	0x59, 0x48, 0xcb, 0x76, 0x40, 0x5d, 0xcf, 0x97, 0xc1, 0x3a, 0xf6, 0xfa, 0x08, 0x56, 0x40, 0x5b,
+	0xb4, 0x79, 0x9a, 0x68, 0x6d, 0xe4, 0xa3, 0x5c, 0xd6, 0xe4, 0x5a, 0x45, 0x58, 0x0b, 0x80, 0x5f,
+	0xc4, 0x06, 0xdb, 0x52, 0xe6, 0xb0, 0xfd, 0x88, 0x89, 0xd0, 0x7a, 0x0d, 0xd7, 0x86, 0x76, 0x45,
+	0xc0, 0x7d, 0xc1, 0xf0, 0x43, 0xc8, 0xa9, 0xf4, 0x05, 0xb4, 0x86, 0x6e, 0xe7, 0x2b, 0x37, 0xc8,
+	0xd8, 0xba, 0x89, 0x92, 0x56, 0x67, 0x8f, 0x4e, 0x8a, 0x19, 0x47, 0xcb, 0xac, 0x0d, 0x58, 0x94,
+	0x79, 0x5f, 0xc6, 0x71, 0x8f, 0xe3, 0x38, 0xed, 0x88, 0xaf, 0xc0, 0x4c, 0xe4, 0x35, 0x64, 0xde,
+	0x79, 0x27, 0x5e, 0x5a, 0xbb, 0xb0, 0x94, 0x8a, 0xd5, 0x1c, 0xcf, 0x00, 0x44, 0x7f, 0x57, 0xb3,
+	0xac, 0x4f, 0x60, 0x19, 0xa4, 0xd0, 0x3c, 0x09, 0xb9, 0x45, 0x53, 0x3e, 0xa7, 0x6d, 0xc0, 0x4f,
+	0x00, 0x06, 0xfd, 0xd6, 0x3e, 0x37, 0x89, 0x3a, 0x1c, 0x12, 0x1f, 0x0e, 0x51, 0x97, 0x40, 0x1f,
+	0x0e, 0xd9, 0xa6, 0x2e, 0xd3, 0x5a, 0x27, 0xa1, 0xb4, 0xbe, 0x23, 0x28, 0xa4, 0x3d, 0xc6, 0x14,
+	0x33, 0x73, 0x81, 0x62, 0xf0, 0xd6, 0x10, 0x71, 0x56, 0x12, 0xdf, 0x3a, 0x93, 0x58, 0x91, 0x0c,
+	0x21, 0x3f, 0x80, 0xd5, 0x51, 0xe2, 0x6a, 0xfb, 0xd5, 0xd3, 0x47, 0xfd, 0xde, 0xac, 0xc0, 0x6c,
+	0xe4, 0x35, 0x84, 0x04, 0x9e, 0xaf, 0x5e, 0xfa, 0x7b, 0x52, 0x94, 0xff, 0x1d, 0xf9, 0x6b, 0x75,
+	0x10, 0x98, 0xe3, 0xf4, 0xba, 0xee, 0xe7, 0x90, 0x1f, 0x80, 0x8b, 0xf3, 0x14, 0x9e, 0xd4, 0x63,
+	0x0b, 0x2e, 0xef, 0x52, 0x6f, 0x8f, 0x35, 0x74, 0xbe, 0x6c, 0xcc, 0xe5, 0x0c, 0xed, 0x55, 0xbe,
+	0xcc, 0xc1, 0x9c, 0xa4, 0xc2, 0x9f, 0x11, 0xe4, 0xd4, 0x0d, 0xc5, 0xa5, 0x09, 0x96, 0xe9, 0xd1,
+	0x30, 0xc8, 0xff, 0x86, 0xab, 0x32, 0xad, 0xe2, 0xa7, 0x9f, 0x7f, 0x3a, 0xd9, 0x65, 0xbc, 0x64,
+	0xf7, 0x67, 0xb1, 0x94, 0x9c, 0x54, 0xdc, 0x41, 0x00, 0x83, 0xd2, 0x70, 0xf9, 0xac, 0xfc, 0xa9,
+	0xd9, 0x31, 0x2a, 0xd3, 0x48, 0x34, 0x96, 0x29, 0xb1, 0x0a, 0x78, 0x31, 0x85, 0xf5, 0x31, 0xf2,
+	0x1a, 0x87, 0xf8, 0x1b, 0x82, 0x7c, 0xe2, 0xec, 0xf0, 0x14, 0x1e, 0xfd, 0x56, 0x6d, 0x4e, 0xa5,
+	0xd1, 0x60, 0xeb, 0x12, 0xac, 0x88, 0x57, 0x53, 0x60, 0x89, 0xc7, 0x4b, 0xe0, 0x1f, 0x08, 0xae,
+	0xa6, 0xee, 0x16, 0xbe, 0x37, 0x85, 0xe3, 0xd0, 0x75, 0x36, 0xee, 0x9f, 0x43, 0xa9, 0x89, 0xef,
+	0x4a, 0x62, 0x82, 0xef, 0x4c, 0x24, 0xae, 0xd5, 0xdb, 0xb5, 0x78, 0x34, 0x64, 0x7f, 0xc5, 0x61,
+	0x75, 0xeb, 0xa8, 0x6b, 0xa2, 0xe3, 0xae, 0x89, 0x7e, 0x77, 0x4d, 0xf4, 0xb5, 0x67, 0x66, 0x8e,
+	0x7b, 0x66, 0xe6, 0x57, 0xcf, 0xcc, 0xbc, 0x29, 0xb9, 0x5e, 0xf8, 0x36, 0xaa, 0x93, 0x1d, 0xde,
+	0x8c, 0x33, 0x96, 0x34, 0x95, 0xcc, 0xfe, 0x21, 0xf9, 0x9a, 0x87, 0xed, 0x80, 0x89, 0x7a, 0x4e,
+	0x3e, 0xe4, 0x9b, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0x37, 0x04, 0xc8, 0x58, 0xa0, 0x06, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -469,9 +469,9 @@ type QueryClient interface {
 	// Queries a SportEvent by uid.
 	SportEvent(ctx context.Context, in *QuerySportEventRequest, opts ...grpc.CallOption) (*QuerySportEventResponse, error)
 	// Queries a list of SportEvent items.
-	SportEventAll(ctx context.Context, in *QuerySportEventListAllRequest, opts ...grpc.CallOption) (*QuerySportEventListAllResponse, error)
-	// Queries a list of SportEventListByUIDs items.
-	SportEventListByUIDs(ctx context.Context, in *QuerySportEventListByUIDsRequest, opts ...grpc.CallOption) (*QuerySportEventListByUIDsResponse, error)
+	SportEvents(ctx context.Context, in *QuerySportEventsRequest, opts ...grpc.CallOption) (*QuerySportEventsResponse, error)
+	// Queries a list of SportEventsByUIDs items.
+	SportEventsByUIDs(ctx context.Context, in *QuerySportEventsByUIDsRequest, opts ...grpc.CallOption) (*QuerySportEventsByUIDsResponse, error)
 }
 
 type queryClient struct {
@@ -500,18 +500,18 @@ func (c *queryClient) SportEvent(ctx context.Context, in *QuerySportEventRequest
 	return out, nil
 }
 
-func (c *queryClient) SportEventAll(ctx context.Context, in *QuerySportEventListAllRequest, opts ...grpc.CallOption) (*QuerySportEventListAllResponse, error) {
-	out := new(QuerySportEventListAllResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Query/SportEventAll", in, out, opts...)
+func (c *queryClient) SportEvents(ctx context.Context, in *QuerySportEventsRequest, opts ...grpc.CallOption) (*QuerySportEventsResponse, error) {
+	out := new(QuerySportEventsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Query/SportEvents", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) SportEventListByUIDs(ctx context.Context, in *QuerySportEventListByUIDsRequest, opts ...grpc.CallOption) (*QuerySportEventListByUIDsResponse, error) {
-	out := new(QuerySportEventListByUIDsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Query/SportEventListByUIDs", in, out, opts...)
+func (c *queryClient) SportEventsByUIDs(ctx context.Context, in *QuerySportEventsByUIDsRequest, opts ...grpc.CallOption) (*QuerySportEventsByUIDsResponse, error) {
+	out := new(QuerySportEventsByUIDsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Query/SportEventsByUIDs", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -525,9 +525,9 @@ type QueryServer interface {
 	// Queries a SportEvent by uid.
 	SportEvent(context.Context, *QuerySportEventRequest) (*QuerySportEventResponse, error)
 	// Queries a list of SportEvent items.
-	SportEventAll(context.Context, *QuerySportEventListAllRequest) (*QuerySportEventListAllResponse, error)
-	// Queries a list of SportEventListByUIDs items.
-	SportEventListByUIDs(context.Context, *QuerySportEventListByUIDsRequest) (*QuerySportEventListByUIDsResponse, error)
+	SportEvents(context.Context, *QuerySportEventsRequest) (*QuerySportEventsResponse, error)
+	// Queries a list of SportEventsByUIDs items.
+	SportEventsByUIDs(context.Context, *QuerySportEventsByUIDsRequest) (*QuerySportEventsByUIDsResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -540,11 +540,11 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 func (*UnimplementedQueryServer) SportEvent(ctx context.Context, req *QuerySportEventRequest) (*QuerySportEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SportEvent not implemented")
 }
-func (*UnimplementedQueryServer) SportEventAll(ctx context.Context, req *QuerySportEventListAllRequest) (*QuerySportEventListAllResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SportEventAll not implemented")
+func (*UnimplementedQueryServer) SportEvents(ctx context.Context, req *QuerySportEventsRequest) (*QuerySportEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SportEvents not implemented")
 }
-func (*UnimplementedQueryServer) SportEventListByUIDs(ctx context.Context, req *QuerySportEventListByUIDsRequest) (*QuerySportEventListByUIDsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SportEventListByUIDs not implemented")
+func (*UnimplementedQueryServer) SportEventsByUIDs(ctx context.Context, req *QuerySportEventsByUIDsRequest) (*QuerySportEventsByUIDsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SportEventsByUIDs not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -587,38 +587,38 @@ func _Query_SportEvent_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_SportEventAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuerySportEventListAllRequest)
+func _Query_SportEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySportEventsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).SportEventAll(ctx, in)
+		return srv.(QueryServer).SportEvents(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.sportevent.Query/SportEventAll",
+		FullMethod: "/sgenetwork.sge.sportevent.Query/SportEvents",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).SportEventAll(ctx, req.(*QuerySportEventListAllRequest))
+		return srv.(QueryServer).SportEvents(ctx, req.(*QuerySportEventsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_SportEventListByUIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QuerySportEventListByUIDsRequest)
+func _Query_SportEventsByUIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySportEventsByUIDsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).SportEventListByUIDs(ctx, in)
+		return srv.(QueryServer).SportEventsByUIDs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.sportevent.Query/SportEventListByUIDs",
+		FullMethod: "/sgenetwork.sge.sportevent.Query/SportEventsByUIDs",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).SportEventListByUIDs(ctx, req.(*QuerySportEventListByUIDsRequest))
+		return srv.(QueryServer).SportEventsByUIDs(ctx, req.(*QuerySportEventsByUIDsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -636,12 +636,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_SportEvent_Handler,
 		},
 		{
-			MethodName: "SportEventAll",
-			Handler:    _Query_SportEventAll_Handler,
+			MethodName: "SportEvents",
+			Handler:    _Query_SportEvents_Handler,
 		},
 		{
-			MethodName: "SportEventListByUIDs",
-			Handler:    _Query_SportEventListByUIDs_Handler,
+			MethodName: "SportEventsByUIDs",
+			Handler:    _Query_SportEventsByUIDs_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -767,7 +767,7 @@ func (m *QuerySportEventResponse) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySportEventListAllRequest) Marshal() (dAtA []byte, err error) {
+func (m *QuerySportEventsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -777,12 +777,12 @@ func (m *QuerySportEventListAllRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySportEventListAllRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QuerySportEventsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySportEventListAllRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QuerySportEventsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -802,7 +802,7 @@ func (m *QuerySportEventListAllRequest) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySportEventListAllResponse) Marshal() (dAtA []byte, err error) {
+func (m *QuerySportEventsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -812,12 +812,12 @@ func (m *QuerySportEventListAllResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySportEventListAllResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QuerySportEventsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySportEventListAllResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QuerySportEventsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -851,7 +851,7 @@ func (m *QuerySportEventListAllResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySportEventListByUIDsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QuerySportEventsByUIDsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -861,12 +861,12 @@ func (m *QuerySportEventListByUIDsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySportEventListByUIDsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QuerySportEventsByUIDsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySportEventListByUIDsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QuerySportEventsByUIDsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -883,7 +883,7 @@ func (m *QuerySportEventListByUIDsRequest) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
-func (m *QuerySportEventListByUIDsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QuerySportEventsByUIDsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -893,12 +893,12 @@ func (m *QuerySportEventListByUIDsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QuerySportEventListByUIDsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QuerySportEventsByUIDsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QuerySportEventListByUIDsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QuerySportEventsByUIDsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -984,7 +984,7 @@ func (m *QuerySportEventResponse) Size() (n int) {
 	return n
 }
 
-func (m *QuerySportEventListAllRequest) Size() (n int) {
+func (m *QuerySportEventsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -997,7 +997,7 @@ func (m *QuerySportEventListAllRequest) Size() (n int) {
 	return n
 }
 
-func (m *QuerySportEventListAllResponse) Size() (n int) {
+func (m *QuerySportEventsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1016,7 +1016,7 @@ func (m *QuerySportEventListAllResponse) Size() (n int) {
 	return n
 }
 
-func (m *QuerySportEventListByUIDsRequest) Size() (n int) {
+func (m *QuerySportEventsByUIDsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1031,7 +1031,7 @@ func (m *QuerySportEventListByUIDsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QuerySportEventListByUIDsResponse) Size() (n int) {
+func (m *QuerySportEventsByUIDsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1356,7 +1356,7 @@ func (m *QuerySportEventResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySportEventListAllRequest) Unmarshal(dAtA []byte) error {
+func (m *QuerySportEventsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1379,10 +1379,10 @@ func (m *QuerySportEventListAllRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySportEventListAllRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QuerySportEventsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySportEventListAllRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QuerySportEventsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1442,7 +1442,7 @@ func (m *QuerySportEventListAllRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySportEventListAllResponse) Unmarshal(dAtA []byte) error {
+func (m *QuerySportEventsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1465,10 +1465,10 @@ func (m *QuerySportEventListAllResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySportEventListAllResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QuerySportEventsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySportEventListAllResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QuerySportEventsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1562,7 +1562,7 @@ func (m *QuerySportEventListAllResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySportEventListByUIDsRequest) Unmarshal(dAtA []byte) error {
+func (m *QuerySportEventsByUIDsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1585,10 +1585,10 @@ func (m *QuerySportEventListByUIDsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySportEventListByUIDsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QuerySportEventsByUIDsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySportEventListByUIDsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QuerySportEventsByUIDsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1644,7 +1644,7 @@ func (m *QuerySportEventListByUIDsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QuerySportEventListByUIDsResponse) Unmarshal(dAtA []byte) error {
+func (m *QuerySportEventsByUIDsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1667,10 +1667,10 @@ func (m *QuerySportEventListByUIDsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QuerySportEventListByUIDsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QuerySportEventsByUIDsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QuerySportEventListByUIDsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QuerySportEventsByUIDsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

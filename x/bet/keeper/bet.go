@@ -28,8 +28,8 @@ func (k Keeper) GetBet(ctx sdk.Context, uid string) (val types.Bet, found bool) 
 	return val, true
 }
 
-// GetBetAll returns all bets
-func (k Keeper) GetBetAll(ctx sdk.Context) (list []types.Bet, err error) {
+// GetBets returns list of bets
+func (k Keeper) GetBets(ctx sdk.Context) (list []types.Bet, err error) {
 	store := k.getBetStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 

@@ -4,7 +4,6 @@ package sgenetwork.sge.mint;
 import "gogoproto/gogo.proto";
 import "sge/mint/params.proto";
 import "sge/mint/minter.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/sge-network/sge/x/mint/types";
 
@@ -14,5 +13,4 @@ message GenesisState {
   Minter minter = 1 [(gogoproto.nullable) = false];
 
   Params params = 2 [(gogoproto.nullable) = false];
-  // this line is used by starport scaffolding # genesis/proto/state
 }

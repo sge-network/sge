@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 
@@ -19,7 +20,7 @@ var (
 	testOddsUID1      = "6db09053-2901-4110-8fb5-c14e21f8d666"
 	testOddsUID2      = "5e31c60f-2025-48ce-ae79-1dc110f16358"
 	testOddsUID3      = "6e31c60f-2025-48ce-ae79-1dc110f16354"
-	testEventOddsUIDs = []string{testOddsUID1, testOddsUID2}
+	testEventOddsUIDs = []string{testOddsUID1, testOddsUID2, testOddsUID3}
 	testActiveBetOdds = []*types.BetOdds{
 		{UID: testOddsUID1, SportEventUID: testSportEventUID, Value: "4.20"},
 		{UID: testOddsUID2, SportEventUID: testSportEventUID, Value: "4.00"},
@@ -47,12 +48,12 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddSportEventClaim := jwt.MapClaims{
-		"uid":      testSportEventUID,
-		"startTS":  1111111111,
-		"endTS":    9999999999,
-		"oddsUIDs": testEventOddsUIDs,
-		"exp":      9999999999,
-		"iat":      7777777777,
+		"uid":       testSportEventUID,
+		"start_ts":  1111111111,
+		"end_ts":    uint64(time.Now().Unix()) + 1000,
+		"odds_uids": testEventOddsUIDs,
+		"exp":       9999999999,
+		"iat":       7777777777,
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
@@ -72,12 +73,18 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
+	testKyc := &types.KycDataPayload{
+		KycRequired: true,
+		KycApproved: true,
+		KycId:       testCreator,
+	}
 	testPlaceBetClaim := jwt.MapClaims{
 		"value":    sdk.NewDec(10),
 		"odds_uid": testOddsUID1,
 		"exp":      9999999999,
 		"iat":      7777777777,
 		"odds":     testActiveBetOdds,
+		"kyc_data": testKyc,
 	}
 	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
 	require.Nil(t, err)
@@ -85,9 +92,10 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	testBet = &types.MsgPlaceBet{
 		Creator: testCreator,
 		Bet: &types.BetPlaceFields{
-			UID:    betUID,
-			Amount: sdk.NewInt(500),
-			Ticket: testPlaceBetTicket,
+			UID:      betUID,
+			Amount:   sdk.NewInt(500),
+			Ticket:   testPlaceBetTicket,
+			OddsType: 1,
 		},
 	}
 	resPlaceBet, err := betSrv.PlaceBet(wctx, testBet)

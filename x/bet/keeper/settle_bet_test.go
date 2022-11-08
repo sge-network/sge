@@ -270,7 +270,7 @@ func TestResolveBetResult(t *testing.T) {
 			desc: "won",
 			sportEvent: sporteventtypes.SportEvent{
 				Status:         sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
-				WinnerOddsUIDs: map[string][]byte{"oddsUID": nil},
+				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet: &types.Bet{
 				OddsUID: "oddsUID",
@@ -281,7 +281,7 @@ func TestResolveBetResult(t *testing.T) {
 			desc: "lost",
 			sportEvent: sporteventtypes.SportEvent{
 				Status:         sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
-				WinnerOddsUIDs: map[string][]byte{"oddsUID": nil},
+				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet:    &types.Bet{},
 			result: types.Bet_RESULT_LOST,

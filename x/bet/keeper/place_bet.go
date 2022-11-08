@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
@@ -10,7 +8,7 @@ import (
 )
 
 // PlaceBet stores a new bet in KVStore
-func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types.BetOdds) error {
+func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
@@ -22,7 +20,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet, activeBetOdds []*types
 	}
 
 	// check if selected odds is valid
-	if !selectedOddsExists(bet.OddsUID, sportEvent.OddsUIDs) {
+	if !oddExists(bet.OddsUID, sportEvent.OddsUIDs) {
 		return types.ErrOddsUIDNotExist
 	}
 
@@ -74,16 +72,16 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
-	if sportevent.EndTS < uint64(time.Now().Unix()) {
+	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
 	return sportevent, nil
 }
 
-// selectedOddsExists checks if bet odds id is present in the sport event odds uids
-func selectedOddsExists(betOddsID string, sporteventOddsUIDs []string) bool {
-	for _, oddsUID := range sporteventOddsUIDs {
-		if betOddsID == oddsUID {
+// oddExists checks if bet odds id is present in the sport event list of odds uids
+func oddExists(betOddsID string, oddsUIDs []string) bool {
+	for _, uid := range oddsUIDs {
+		if betOddsID == uid {
 			return true
 		}
 	}
