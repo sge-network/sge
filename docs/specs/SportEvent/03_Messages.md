@@ -9,20 +9,20 @@ The Sportevent module exposes the following services:
 ```proto
 // Msg defines the Msg service.
 service Msg {
-  rpc AddEvent(MsgAddEvent) returns (MsgSportResponse);
-  rpc ResolveEvent(MsgResolveEvent) returns (MsgSportResponse);
-  rpc UpdateEvent(MsgUpdateEvent) returns (MsgSportResponse);
+    rpc AddSportEvent(MsgAddSportEvent) returns (SportEventResponse);
+    rpc ResolveSportEvent(MsgResolveSportEvent) returns (SportEventResponse);
+    rpc UpdateSportEvent(MsgUpdateSportEvent) returns (SportEventResponse);
 }
 ```
 
 ---
 
-## **MsgAddEvent**
+## **MsgAddSportEvent**
 
 This message is used to add one or more new sportevent to the chain
 
 ```proto
-message MsgAddEvent {
+message MsgAddSportEvent {
   string creator = 1;
   string ticket = 2;
 }
@@ -30,12 +30,12 @@ message MsgAddEvent {
 
 ---
 
-## **MsgResolveEvent**
+## **MsgResolveSportEvent**
 
 This message is used to resolve one or more already existent events on the chain
 
 ```proto
-message MsgResolveEvent {
+message MsgResolveSportEvent {
   string creator = 1;
   string ticket = 2;
 }
@@ -43,12 +43,12 @@ message MsgResolveEvent {
 
 ---
 
-## **MsgUpdateEvent**
+## **MsgUpdateSportEvent**
 
 This message is used to update one or more already existent events on the chain
 
 ```proto
-message MsgResolveEvent {
+message MsgUpdateSportEvent {
   string creator = 1;
   string ticket = 2;
 }
@@ -56,20 +56,14 @@ message MsgResolveEvent {
 
 ---
 
-## **MsgSportResponse**
+## **SportEventResponse**
 
 This is the common response to all the messages
 
 ```proto
-// common response for all the transactions call (batch transactions)
-message MsgSportResponse {
-  repeated string successEvents = 1;
-  repeated FailedEvent failedEvents = 2;
+// SportEvent response for all the transactions call
+message SportEventResponse {
+  string error = 1[(gogoproto.nullable) = true];
+  SportEvent data = 2[(gogoproto.nullable) = true];
 }
-
-message FailedEvent {
-  string id = 1;
-  string err = 2;
-}
-
 ```
