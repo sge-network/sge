@@ -20,7 +20,7 @@ message MsgPlaceBet {
   // creator is the bettor address
   string creator = 1;
 
-  // PlaceBetFields contains bet fields
+  // bet is the info of bet to place
   PlaceBetFields bet = 2;
 }
 

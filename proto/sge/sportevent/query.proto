@@ -62,7 +62,8 @@ message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [(gogoproto.jsontag) = "uids", json_name = "uids"];
 }
 
-// Fetch sport events by uids response
+//provide response for the batch fetch call, failed events would only contain the id
+// Default assumption is of uid not exist in chain
 message QuerySportEventsByUIDsResponse {
 	repeated SportEvent sportEvents = 1 [(gogoproto.nullable) = false];
 	repeated string failedEvents = 2;
