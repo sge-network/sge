@@ -33,10 +33,16 @@ message BetPlaceFields {
 
   // ticket is a signed string containing important info such as `oddsValue`
   string ticket = 3;
+  
+  // odds_type is the type of odds used has chosen
+  sgenetwork.sge.bet.OddsType odds_type = 4;
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
-message MsgPlaceBetResponse {}
+message MsgPlaceBetResponse {
+    string error = 1;
+    BetPlaceFields bet = 2;
+}
 ```
 
 ### **Failure cases**
@@ -86,6 +92,8 @@ message MsgSettleBet {
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
 message MsgSettleBetResponse {
+    string error = 1;
+    string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }
 ```
 

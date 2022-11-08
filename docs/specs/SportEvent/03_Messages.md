@@ -9,9 +9,9 @@ The Sportevent module exposes the following services:
 ```proto
 // Msg defines the Msg service.
 service Msg {
-  rpc AddEvent(MsgAddEvent) returns (MsgSportResponse);
-  rpc ResolveEvent(MsgResolveEvent) returns (MsgSportResponse);
-  rpc UpdateEvent(MsgUpdateEvent) returns (MsgSportResponse);
+  rpc AddEvent(MsgAddEvent) returns (SportResponse);
+  rpc ResolveEvent(MsgResolveEvent) returns (SportResponse);
+  rpc UpdateEvent(MsgUpdateEvent) returns (SportResponse);
 }
 ```
 
@@ -56,20 +56,15 @@ message MsgResolveEvent {
 
 ---
 
-## **MsgSportResponse**
+## **SportResponse**
 
 This is the common response to all the messages
 
 ```proto
 // common response for all the transactions call (batch transactions)
-message MsgSportResponse {
-  repeated string successEvents = 1;
-  repeated FailedEvent failedEvents = 2;
-}
-
-message FailedEvent {
-  string id = 1;
-  string err = 2;
+message SportResponse {
+  string error = 1[(gogoproto.nullable) = true];
+  SportEvent data = 2[(gogoproto.nullable) = true];
 }
 
 ```
