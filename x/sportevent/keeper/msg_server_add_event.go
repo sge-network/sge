@@ -8,8 +8,8 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// AddEvent accepts ticket containing multiple creation events and return batch response after processing
-func (k msgServer) AddEvent(goCtx context.Context, msg *types.MsgAddEvent) (*types.SportResponse, error) {
+// AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
+func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.SportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var sportData types.SportEvent
@@ -17,7 +17,7 @@ func (k msgServer) AddEvent(goCtx context.Context, msg *types.MsgAddEvent) (*typ
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	if err := k.validateEventAdd(ctx, &sportData); err != nil {
+	if err := k.validateAddEvent(ctx, &sportData); err != nil {
 		return nil, sdkerrors.Wrap(err, "validate add event")
 	}
 
@@ -29,7 +29,7 @@ func (k msgServer) AddEvent(goCtx context.Context, msg *types.MsgAddEvent) (*typ
 	sportData.Creator = msg.Creator
 	k.Keeper.SetSportEvent(ctx, sportData)
 
-	response := &types.SportResponse{
+	response := &types.SportEventResponse{
 		Error: "",
 		Data:  &sportData,
 	}
@@ -38,8 +38,8 @@ func (k msgServer) AddEvent(goCtx context.Context, msg *types.MsgAddEvent) (*typ
 	return response, nil
 }
 
-// validateEventAdd validates individual event acceptability
-func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) error {
+// validateAddEvent validates individual event acceptability
+func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) error {
 
 	if err := validateEventTS(ctx, event); err != nil {
 		return err

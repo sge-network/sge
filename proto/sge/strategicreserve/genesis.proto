@@ -5,7 +5,6 @@ import "gogoproto/gogo.proto";
 
 import "sge/strategicreserve/params.proto";
 import "sge/strategicreserve/reserver.proto";
-// this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 

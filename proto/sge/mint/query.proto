@@ -5,15 +5,14 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/mint/params.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/sge-network/sge/x/mint/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // Parameters queries the parameters of the module.
+  // Params queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/sgenetwork/sge/mint/params";
+    option (google.api.http).get = "/sge/mint/params";
   }
 
   // Inflation returns the current minting inflation value.
@@ -35,7 +34,6 @@ service Query {
   rpc EndPhaseStatus(QueryEndPhaseStatusRequest) returns (QueryEndPhaseStatusResponse) {
     option (google.api.http).get = "/cosmos/mint/v1beta1/endphase_status";
   }
-  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -90,4 +88,3 @@ message QueryEndPhaseStatusResponse {
   bool isInEndPhase = 1;
 }
 
-// this line is used by starport scaffolding # 3

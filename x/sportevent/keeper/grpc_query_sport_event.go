@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// SportEventAll returns all the sport events
-func (k Keeper) SportEventAll(c context.Context, req *types.QuerySportEventListAllRequest) (*types.QuerySportEventListAllResponse, error) {
+// SportEvents returns all the sport events
+func (k Keeper) SportEvents(c context.Context, req *types.QuerySportEventsRequest) (*types.QuerySportEventsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -36,7 +36,7 @@ func (k Keeper) SportEventAll(c context.Context, req *types.QuerySportEventListA
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QuerySportEventListAllResponse{SportEvent: sportEvents, Pagination: pageRes}, nil
+	return &types.QuerySportEventsResponse{SportEvent: sportEvents, Pagination: pageRes}, nil
 }
 
 // SportEvent returns a specific sport events by its UID
@@ -57,8 +57,8 @@ func (k Keeper) SportEvent(c context.Context, req *types.QuerySportEventRequest)
 	return &types.QuerySportEventResponse{SportEvent: val}, nil
 }
 
-// SportEventListByUIDs return success events and failed events id only back to the caller
-func (k Keeper) SportEventListByUIDs(goCtx context.Context, req *types.QuerySportEventListByUIDsRequest) (*types.QuerySportEventListByUIDsResponse, error) {
+// SportEventsByUIDs return success events and failed events id only back to the caller
+func (k Keeper) SportEventsByUIDs(goCtx context.Context, req *types.QuerySportEventsByUIDsRequest) (*types.QuerySportEventsByUIDsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -76,7 +76,7 @@ func (k Keeper) SportEventListByUIDs(goCtx context.Context, req *types.QuerySpor
 		success = append(success, val)
 	}
 
-	return &types.QuerySportEventListByUIDsResponse{
+	return &types.QuerySportEventsByUIDsResponse{
 		SportEvents:  success,
 		FailedEvents: failed,
 	}, nil

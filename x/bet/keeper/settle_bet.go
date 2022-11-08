@@ -65,7 +65,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 }
 
 // checkBetStatus checks status of bet. It returns an error if
-// bet is canceled or settled alredy
+// bet is canceled or settled already
 func checkBetStatus(betstatus types.Bet_Status) error {
 
 	switch betstatus {
@@ -95,13 +95,13 @@ func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) err
 	}
 
 	if exist {
-		// bet is winner
+		// bettor is winner
 		bet.Result = types.Bet_RESULT_WON
 		bet.Status = types.Bet_STATUS_RESULT_DECLARED
 		return nil
 	}
 
-	// bet is loser
+	// bettor is loser
 	bet.Result = types.Bet_RESULT_LOST
 	bet.Status = types.Bet_STATUS_RESULT_DECLARED
 	return nil

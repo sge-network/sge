@@ -6,32 +6,29 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/sportevent/params.proto";
 import "sge/sportevent/sport_event.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Query defines the gRPC querier service.
 service Query {
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-	option (google.api.http).get = "/sgenetwork/sge/sportevent/params";
+	option (google.api.http).get = "/sge/sport-event/params";
 	}
 	// Queries a SportEvent by uid.
 	rpc SportEvent(QuerySportEventRequest) returns (QuerySportEventResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/sport_event/{uid}";
+		option (google.api.http).get = "/sge/sport-event/{uid}";
 	}
 
 	// Queries a list of SportEvent items.
-	rpc SportEventAll(QuerySportEventListAllRequest) returns (QuerySportEventListAllResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/sport_event";
+	rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
+		option (google.api.http).get = "/sge/sport-event/sport_events";
 	}
 
-	// Queries a list of SportEventListByUIDs items.
-	rpc SportEventListByUIDs(QuerySportEventListByUIDsRequest) returns (QuerySportEventListByUIDsResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/batch_get_sport_events/{uids}";
+	// Queries a list of SportEventsByUIDs items.
+	rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest) returns (QuerySportEventsByUIDsResponse) {
+		option (google.api.http).get = "/sge/sport-event/sport_events_by_uids/{uids}";
 	}
-
-// this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -51,24 +48,23 @@ message QuerySportEventResponse {
 	SportEvent sportEvent = 1 [(gogoproto.nullable) = false];
 }
 
-message QuerySportEventListAllRequest {
+message QuerySportEventsRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QuerySportEventListAllResponse {
+message QuerySportEventsResponse {
 	repeated SportEvent sportEvent = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// provide multiple uids (sport event ids) for the batch fetch transaction
-message QuerySportEventListByUIDsRequest {
+// Query list of SportEvents by Uids
+message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [(gogoproto.jsontag) = "uids", json_name = "uids"];
 }
 
-//provide response for the batch fetch call, failed events would only contain the id (by default assumption is of not exist id)
-message QuerySportEventListByUIDsResponse {
+// Fetch sport events by uids response
+message QuerySportEventsByUIDsResponse {
 	repeated SportEvent sportEvents = 1 [(gogoproto.nullable) = false];
 	repeated string failedEvents = 2;
 }
 
-// this line is used by starport scaffolding # 3

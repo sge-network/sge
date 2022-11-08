@@ -1,8 +1,7 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
-import "sge/bet/bet_place_fields.proto";
-// this line is used by starport scaffolding # proto/tx/import
+import "sge/bet/place_bet_fields.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -21,14 +20,14 @@ message MsgPlaceBet {
   // creator is the bettor address
   string creator = 1;
 
-  // bet is the info of bet to place
-  BetPlaceFields bet = 2;
+  // PlaceBetFields contains bet fields
+  PlaceBetFields bet = 2;
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
 message MsgPlaceBetResponse {
   string error = 1;
-  BetPlaceFields bet = 2;
+  PlaceBetFields bet = 2;
 }
 
 // MsgSettleBet defines a message to settle the given bet

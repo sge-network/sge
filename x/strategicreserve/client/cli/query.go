@@ -2,15 +2,9 @@ package cli
 
 import (
 	"fmt"
-	// "strings"
-
-	"github.com/spf13/cobra"
-
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
-	// sdk "github.com/cosmos/cosmos-sdk/types"
-
 	"github.com/sge-network/sge/x/strategicreserve/types"
+	"github.com/spf13/cobra"
 )
 
 // GetQueryCmd returns the cli query commands for this module
@@ -28,7 +22,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		CmdQueryParams(),
 		GetCmdQueryReserver(),
 	)
-	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

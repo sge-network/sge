@@ -8,28 +8,28 @@ import (
 // typeMsgUpdateEvent is the event name of update event
 const typeMsgUpdateEvent = "update_event"
 
-var _ sdk.Msg = &MsgUpdateEvent{}
+var _ sdk.Msg = &MsgUpdateSportEvent{}
 
 // NewMsgUpdateEvent accepts the params to create new update body
-func NewMsgUpdateEvent(creator, ticket string) *MsgUpdateEvent {
-	return &MsgUpdateEvent{
+func NewMsgUpdateEvent(creator, ticket string) *MsgUpdateSportEvent {
+	return &MsgUpdateSportEvent{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgUpdateEvent) Route() string {
+func (msg *MsgUpdateSportEvent) Route() string {
 	return RouterKey
 }
 
 // Type return the update event type
-func (msg *MsgUpdateEvent) Type() string {
+func (msg *MsgUpdateSportEvent) Type() string {
 	return typeMsgUpdateEvent
 }
 
 // GetSigners return the creators address
-func (msg *MsgUpdateEvent) GetSigners() []sdk.AccAddress {
+func (msg *MsgUpdateSportEvent) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -38,13 +38,13 @@ func (msg *MsgUpdateEvent) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgUpdateEvent) GetSignBytes() []byte {
+func (msg *MsgUpdateSportEvent) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input update event
-func (msg *MsgUpdateEvent) ValidateBasic() error {
+func (msg *MsgUpdateSportEvent) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

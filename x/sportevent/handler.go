@@ -18,16 +18,15 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		_ = ctx
 
 		switch msg := msg.(type) {
-		case *types.MsgAddEvent:
-			res, err := msgServer.AddEvent(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgAddSportEvent:
+			res, err := msgServer.AddSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgResolveEvent:
-			res, err := msgServer.ResolveEvent(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgResolveSportEvent:
+			res, err := msgServer.ResolveSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgUpdateEvent:
-			res, err := msgServer.UpdateEvent(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgUpdateSportEvent:
+			res, err := msgServer.UpdateSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-			// this line is used by starport scaffolding # 1
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

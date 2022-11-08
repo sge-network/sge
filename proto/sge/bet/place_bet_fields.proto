@@ -4,12 +4,12 @@ import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// PlaceBetFields contains necessary fields which come in BetPlacement and BetSlipPlacement TX requests
-message BetPlaceFields {
+// PlaceBetFields contains necessary fields which come in Place Bet Tx request
+message PlaceBetFields {
   // uid is the unique uuid assigned to bet
   string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
 
-  // amount is the wagger amount
+  // amount is the wager amount
   string amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
@@ -17,6 +17,6 @@ message BetPlaceFields {
   // ticket is a signed string containing important info such as `oddsValue`
   string ticket = 3;
 
-  // odds_type is the type of odds used has chosen
+  // odds_type is the type of odds bettor choose such as decimal, fraction
   sgenetwork.sge.bet.OddsType odds_type = 4;
 }

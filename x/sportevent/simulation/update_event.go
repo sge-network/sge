@@ -19,12 +19,12 @@ func SimulateMsgUpdateEvent(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgUpdateEvent{
+		msg := &types.MsgUpdateSportEvent{
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the UpdateEvent simulation
+		// TODO: Handling the UpdateSportEvent simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "UpdateEvent simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "UpdateSportEvent simulation not implemented"), nil, nil
 	}
 }

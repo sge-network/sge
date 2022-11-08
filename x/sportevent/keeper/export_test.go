@@ -15,7 +15,7 @@ func (k KeeperTest) ValidateResolutionEvent(event types.ResolutionEvent) error {
 
 func (k KeeperTest) MsgServerValidateCreationEvent(ctx sdk.Context, event types.SportEvent) error {
 	msgSrv := &msgServer{Keeper: k}
-	return msgSrv.validateEventAdd(ctx, &event)
+	return msgSrv.validateAddEvent(ctx, &event)
 }
 
 func (k KeeperTest) MsgServerValidateUpdateEvent(ctx sdk.Context, event, previousEvent types.SportEvent) error {

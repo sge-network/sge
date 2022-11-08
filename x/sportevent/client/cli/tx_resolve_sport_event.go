@@ -15,8 +15,9 @@ var _ = strconv.Itoa(0)
 // CmdResolveEvent registers the resolve-event command
 func CmdResolveEvent() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "resolve-event [ticket]",
-		Short: "set resolusion of an event",
+		Use:   "resolve-sport-event [ticket]",
+		Short: "set resolution of an event",
+		Long:  "Resolve a sport event with ticket.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)

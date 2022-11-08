@@ -3,37 +3,34 @@ package sgenetwork.sge.sportevent;
 
 import "gogoproto/gogo.proto";
 import "sge/sportevent/sport_event.proto";
-// this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc AddEvent(MsgAddEvent) returns (SportResponse);
-  rpc ResolveEvent(MsgResolveEvent) returns (SportResponse);
-  rpc UpdateEvent(MsgUpdateEvent) returns (SportResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
+  rpc AddSportEvent(MsgAddSportEvent) returns (SportEventResponse);
+  rpc ResolveSportEvent(MsgResolveSportEvent) returns (SportEventResponse);
+  rpc UpdateSportEvent(MsgUpdateSportEvent) returns (SportEventResponse);
 }
 
-message MsgAddEvent {
+message MsgAddSportEvent {
   string creator = 1;
   string ticket = 2;
 }
 
-// common response for all the transactions call (batch transactions)
-
-message SportResponse {
+// SportEvent response for all the transactions call
+message SportEventResponse {
   string error = 1[(gogoproto.nullable) = true];
   SportEvent data = 2[(gogoproto.nullable) = true];
 }
 
-message MsgResolveEvent {
+message MsgResolveSportEvent {
   string creator = 1;
   string ticket = 2;
 }
 
 
-message MsgUpdateEvent {
+message MsgUpdateSportEvent {
   string creator = 1;
   string ticket = 2;
 }

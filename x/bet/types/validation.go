@@ -8,7 +8,7 @@ import (
 )
 
 // BetFieldsValidation validates fields of the given bet
-func BetFieldsValidation(bet *BetPlaceFields) error {
+func BetFieldsValidation(bet *PlaceBetFields) error {
 	if !IsValidUID(bet.UID) {
 		return ErrInvalidBetUID
 	}
@@ -24,8 +24,6 @@ func BetFieldsValidation(bet *BetPlaceFields) error {
 	if bet.Ticket == "" || strings.Contains(bet.Ticket, " ") {
 		return ErrInvalidTicket
 	}
-
-	// regexp check of ticket will reside here if requested
 
 	return nil
 }

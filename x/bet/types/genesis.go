@@ -6,15 +6,14 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-// DefaultUID is the default capability global uid
+// DefaultUID is the default  global uid
 const DefaultUID uint64 = 1
 
-// DefaultGenesis returns the default Capability genesis state
+// DefaultGenesis returns the default  genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		BetList: []Bet{},
-		// this line is used by starport scaffolding # genesis/types/default
-		Params: DefaultParams(),
+		Params:  DefaultParams(),
 	}
 }
 
@@ -31,7 +30,6 @@ func (gs GenesisState) Validate() error {
 		}
 		betUIDMap[uid] = struct{}{}
 	}
-	// this line is used by starport scaffolding # genesis/types/validate
 
 	return gs.Params.Validate()
 }
