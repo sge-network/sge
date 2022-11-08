@@ -25,7 +25,7 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 			name: "valid bet message",
 			msg: MsgPlaceBet{
 				Creator: sample.AccAddress(),
-				Bet: &BetPlaceFields{
+				Bet: &PlaceBetFields{
 					UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 					Amount:   sdk.NewInt(int64(10)),
 					Ticket:   "Ticket",
@@ -37,7 +37,7 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 			name: "invalid bet UID",
 			msg: MsgPlaceBet{
 				Creator: sample.AccAddress(),
-				Bet: &BetPlaceFields{
+				Bet: &PlaceBetFields{
 					UID: "Invalid UID",
 				},
 			},
@@ -97,7 +97,7 @@ func TestMsgSettleBet_ValidateBasic(t *testing.T) {
 
 func TestNewBet(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		inputBet := &BetPlaceFields{
+		inputBet := &PlaceBetFields{
 			UID:    "betUid",
 			Ticket: "ticket",
 			Amount: sdk.NewInt(int64(10)),
@@ -126,7 +126,7 @@ func TestNewBet(t *testing.T) {
 	})
 
 	t.Run("wrong odds value", func(t *testing.T) {
-		inputBet := &BetPlaceFields{
+		inputBet := &PlaceBetFields{
 			UID:    "betUid",
 			Ticket: "ticket",
 			Amount: sdk.NewInt(int64(10)),
