@@ -8,7 +8,7 @@ import (
 )
 
 // BetFieldsValidation validates fields of the given bet
-func BetFieldsValidation(bet *BetPlaceFields) error {
+func BetFieldsValidation(bet *PlaceBetFields) error {
 	if !IsValidUID(bet.UID) {
 		return ErrInvalidBetUID
 	}

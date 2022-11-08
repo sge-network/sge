@@ -15,7 +15,8 @@ import (
 func CmdPlaceBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "place-bet [uid] [amount] [odds_type] [ticket]",
-		Short: "Place a new bet",
+		Short: "Place bet",
+		Long:  "Place bet uuid, amount, odds type and ticket required.",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 
@@ -42,7 +43,7 @@ func CmdPlaceBet() *cobra.Command {
 
 			msg := types.NewMsgPlaceBet(
 				clientCtx.GetFromAddress().String(),
-				types.BetPlaceFields{
+				types.PlaceBetFields{
 					UID:      uid,
 					Amount:   argAmountCosmosInt,
 					OddsType: types.OddsType(oddsType),

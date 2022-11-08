@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -14,15 +13,13 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 service Query {
 	// Queries a Bet by uid.
 	rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
-		option (google.api.http).get = "/sge-network/sge/bet/bet/{uid}";
+		option (google.api.http).get = "/sge/bet/{uid}";
 	}
 
 	// Queries a list of Bet items.
-	rpc ListAllBet(QueryListBetAllRequest) returns (QueryListBetAllResponse) {
-		option (google.api.http).get = "/sge-network/sge/bet/bet";
+	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
+		option (google.api.http).get = "/sge/bets";
 	}
-
-// this line is used by starport scaffolding # 2
 }
 
 message QueryBetRequest {
@@ -33,13 +30,12 @@ message QueryBetResponse {
 	Bet bet = 1 [(gogoproto.nullable) = false];
 }
 
-message QueryListBetAllRequest {
+message QueryBetsRequest {
 	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-message QueryListBetAllResponse {
+message QueryBetsResponse {
 	repeated Bet bet = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// this line is used by starport scaffolding # 3

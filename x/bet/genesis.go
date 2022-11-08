@@ -23,7 +23,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	var err error
-	genesis.BetList, err = k.GetBetAll(ctx)
+	genesis.BetList, err = k.GetBets(ctx)
 
 	if err != nil {
 		panic(err)

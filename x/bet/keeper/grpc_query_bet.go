@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ListAllBet returns all bets
-func (k Keeper) ListAllBet(c context.Context, req *types.QueryListBetAllRequest) (*types.QueryListBetAllResponse, error) {
+// Bets returns all bets
+func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.QueryBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -36,7 +36,7 @@ func (k Keeper) ListAllBet(c context.Context, req *types.QueryListBetAllRequest)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryListBetAllResponse{Bet: bets, Pagination: pageRes}, nil
+	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
 // Bet returns a specific bet by its UID

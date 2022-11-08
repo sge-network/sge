@@ -16,13 +16,18 @@ type mutationModifications struct {
 // Mutation is the main transaction of DVM to add or delete the keys to the chain.
 func (k msgServer) Mutation(goCtx context.Context, msg *types.MsgMutation) (*types.MsgMutationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	keys, found := k.GetPublicKeysAll(ctx)
+	keys, found := k.GetPublicKeys(ctx)
 
 	if !found {
 		return nil, types.ErrNoPublicKeysFound
 	}
 
 	ticket, err := types.NewTicket(msg.Txs)
+	if err != nil {
+		return nil, err
+	}
+	// check the expiration of ticket
+	err = ticket.IsValid(ctx)
 	if err != nil {
 		return nil, err
 	}

@@ -9,8 +9,8 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// ResolveEvent accepts ticket containing multiple resolution events and return batch response after processing
-func (k msgServer) ResolveEvent(goCtx context.Context, msg *types.MsgResolveEvent) (*types.SportResponse, error) {
+// ResolveSportEvent accepts ticket containing multiple resolution events and return batch response after processing
+func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.SportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolvedEvent types.ResolutionEvent
@@ -24,7 +24,7 @@ func (k msgServer) ResolveEvent(goCtx context.Context, msg *types.MsgResolveEven
 	}
 
 	sportEvent, _ := k.getSportEvent(ctx, resolvedEvent)
-	response := &types.SportResponse{
+	response := &types.SportEventResponse{
 		Data: &sportEvent,
 	}
 	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response, msg.Creator)
@@ -41,7 +41,7 @@ func (k msgServer) processEvents(ctx sdk.Context, resolvedEvent *types.Resolutio
 		return sdkerrors.Wrap(err, "extract winner odds id")
 	}
 
-	if err := k.Keeper.ResolveSportEvents(ctx, resolvedEvent); err != nil {
+	if err := k.Keeper.ResolveSportEvent(ctx, resolvedEvent); err != nil {
 		return sdkerrors.Wrap(err, "resolve sport event")
 	}
 

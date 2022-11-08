@@ -13,12 +13,12 @@ func TestPubKeysList(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 
 	t.Run("valid", func(t *testing.T) {
-		resp, err := k.ListPubKeys(wctx, &types.QueryListPubKeyAllRequest{})
+		resp, err := k.PubKeys(wctx, &types.QueryPubKeysRequest{})
 		require.Nil(t, err)
 		_ = resp
 	})
 	t.Run("error", func(t *testing.T) {
-		resp, err := k.ListPubKeys(wctx, nil)
+		resp, err := k.PubKeys(wctx, nil)
 		require.Error(t, err)
 		_ = resp
 	})

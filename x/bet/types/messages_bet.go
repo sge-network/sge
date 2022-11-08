@@ -25,7 +25,7 @@ var _ sdk.Msg = &MsgPlaceBet{}
 // NewMsgPlaceBet returns a MsgPlaceBet using given data
 func NewMsgPlaceBet(
 	creator string,
-	bet BetPlaceFields,
+	bet PlaceBetFields,
 
 ) *MsgPlaceBet {
 	return &MsgPlaceBet{
@@ -140,7 +140,7 @@ func IsValidUID(uid string) bool {
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, bet *BetPlaceFields, odds *BetOdds) (*Bet, error) {
+func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
 	ticketOddsValue, err := sdk.NewDecFromStr(odds.Value)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)

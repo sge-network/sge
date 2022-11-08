@@ -6,7 +6,6 @@ import "google/api/annotations.proto";
 
 import "sge/strategicreserve/params.proto";
 import "sge/strategicreserve/reserver.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
@@ -14,15 +13,14 @@ option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/sgenetwork/sge/strategicreserve/params";
+    option (google.api.http).get = "/sge/strategic-reserve/params";
   }
 
   // Reserver returns the Reserver value.
   rpc Reserver(QueryReserverRequest) returns (QueryReserverResponse) {
-    option (google.api.http).get = "/sgenetwork/sge/strategicreserve/reserver";
+    option (google.api.http).get = "/sge/strategic-reserve/reserver";
   }
 
-  // this line is used by starport scaffolding # 2
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -44,6 +42,3 @@ message QueryReserverResponse {
   Reserver reserver = 1;
 }
 
-
-
-// this line is used by starport scaffolding # 3

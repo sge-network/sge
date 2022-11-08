@@ -8,7 +8,6 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 // Msg defines the Msg service.
 service Msg {
       rpc Mutation(MsgMutation) returns (MsgMutationResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgMutation {
@@ -20,4 +19,3 @@ message MsgMutationResponse {
   bool success = 1;
 }
 
-// this line is used by starport scaffolding # proto/tx/message

@@ -6,6 +6,7 @@ import (
 	"strings"
 	gtime "time"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/tendermint/tendermint/types/time"
 )
@@ -15,12 +16,15 @@ type Ticket interface {
 	// Unmarshal unmarshals the information of the ticket to the v. v must be a pointer.
 	Unmarshal(v interface{}) error
 
-	// Verify verifies the ticket signature with the given public keys. if the ticket verifies with any
-	// of the keys, then return nil else return tyeps.ErrInvalidSignature
+	// Verify verifies the ticket signature with the given public keys. If the ticket is verified by any
+	// of the keys, then return nil else return invalid signature error
 	Verify(pubKeys ...string) error
 
-	// Consensus verifies that 2/3 of given public keys signed the ticket.
+	// Consensus verifies that 2/3 of given public keys have verified the ticket
 	Consensus(pubKeys ...string) error
+
+	// IsValid verifies that the ticket is not expired yet.
+	IsValid(ctx sdk.Context) error
 }
 
 // ticket is the Ticket implementer.
@@ -48,7 +52,7 @@ func NewTicket(ticketStr string) (Ticket, error) {
 	return &t, nil
 }
 
-// Unmarshal unmarshals the information of the ticket to the v. v must be a pointer.
+// Unmarshal the information of the ticket to the v. v must be a pointer.
 func (t *ticket) Unmarshal(v interface{}) error {
 	// data = json.Unmarshal(base64.Decode(payload))
 
@@ -65,8 +69,8 @@ func (t *ticket) Unmarshal(v interface{}) error {
 	return nil
 }
 
-// Verify verifies the ticket signature with the given public keys.
-// If the ticket verifies with any of the keys, then return nil else return tyeps.ErrInvalidSignature
+// Verify verifies the ticket signature with the given public keys. If the ticket is verified by any
+// of the keys, then return nil else return invalid signature error
 func (t *ticket) Verify(pubKeys ...string) error {
 	for _, v := range pubKeys {
 		_, err := t.verifyWithKey(v)
@@ -80,8 +84,8 @@ func (t *ticket) Verify(pubKeys ...string) error {
 	return ErrInvalidSignature
 }
 
-// Consensus verifies that 2/3 of given public keys signed the ticket.
-// consensus mechanism will reside in this fuction if requested
+// Consensus verifies that 2/3 of given public keys verify the ticket.
+// consensus mechanism will reside in this function if requested
 func (t *ticket) Consensus(pubKeys ...string) error {
 	if len(pubKeys) == 0 {
 		return nil
@@ -96,6 +100,16 @@ func (t *ticket) Consensus(pubKeys ...string) error {
 		}
 	}
 	return ErrInvalidSignature
+}
+
+func (t *ticket) IsValid(ctx sdk.Context) error {
+
+	//validate the expiration
+	if !t.exp.Time.After(ctx.BlockTime()) {
+		return ErrTicketExpired
+	}
+
+	return nil
 }
 
 // initFromValue initializes the ticket from the raw value.few validation happening over this process.
@@ -122,16 +136,10 @@ func (t *ticket) initFromValue() error {
 	gt := gtime.Unix(t.clm.ExpiresAt.Unix(), 0)
 	t.exp = *time.NewWeightedTime(gt, DefaultTimeWeight)
 
-	//validate the expiration
-	if !t.exp.Time.After(time.Now()) {
-		return ErrTicketExpired
-	}
-
 	return nil
 }
 
 // verifyWithKey verify a Ticket with the key
-// ?- is any Performance improvement possible?
 func (t *ticket) verifyWithKey(key string) (bool, error) {
 	for _, s := range t.signatures {
 		token := t.header + "." + t.payload + "." + s
