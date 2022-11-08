@@ -28,7 +28,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		betItem := types.Bet{UID: "betUID"}
 		inputMsg := &types.MsgPlaceBet{
 			Creator: creator.Address.String(),
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID: betItem.UID,
 			},
 		}
@@ -41,7 +41,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	t.Run("Error in verifying ticket", func(t *testing.T) {
 		inputBet := &types.MsgPlaceBet{
 			Creator: creator.Address.String(),
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: "wrongTicket",
@@ -53,25 +53,19 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
-		activeOdds := make([]*types.BetOdds, len(testActiveBetOdds))
-		for i, v := range testActiveBetOdds {
-			shallow := *v
-			activeOdds[i] = &shallow
-		}
+		selectedBetOdds := *testSelectedBetOdds
 
-		activeOdds[0].SportEventUID = ""
+		selectedBetOdds.SportEventUID = ""
 		testKyc := &types.KycDataPayload{
 			KycRequired: true,
 			KycApproved: true,
 			KycId:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
-			"value":    sdk.NewDec(10),
-			"odds_uid": testOddsUID1,
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"odds":     activeOdds,
-			"kyc_data": testKyc,
+			"exp":           9999999999,
+			"iat":           1111111111,
+			"selected_odds": selectedBetOdds,
+			"kyc_data":      testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -80,7 +74,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 			Creator: creator.Address.String(),
 
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: placeBetTicket,
@@ -98,12 +92,10 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			KycId:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
-			"value":    sdk.NewDec(10),
-			"odds_uid": testOddsUID1,
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"odds":     testActiveBetOdds,
-			"kyc_data": testKyc,
+			"exp":           9999999999,
+			"iat":           1111111111,
+			"selected_odds": testSelectedBetOdds,
+			"kyc_data":      testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -111,7 +103,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		inputBet := &types.MsgPlaceBet{
 			Creator: creator.Address.String(),
 
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: placeBetTicket,
@@ -129,12 +121,10 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			KycId:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
-			"value":    sdk.NewDec(10),
-			"odds_uid": testOddsUID1,
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"odds":     testActiveBetOdds,
-			"kyc_data": testKyc,
+			"exp":           9999999999,
+			"iat":           1111111111,
+			"selected_odds": testSelectedBetOdds,
+			"kyc_data":      testKyc,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -142,43 +132,24 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		inputBet := &types.MsgPlaceBet{
 
 			Creator: creator.Address.String(),
-			Bet: &types.BetPlaceFields{
+			Bet: &types.PlaceBetFields{
 				UID:    "BetUID_2",
 				Amount: sdk.NewInt(500),
 				Ticket: placeBetTicket,
 			},
 		}
 
-		totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
-		totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
-			ExtraPayout: sdk.NewInt(0),
-			BetAmount:   sdk.NewInt(0),
-		}
-		totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
-			ExtraPayout: sdk.NewInt(0),
-			BetAmount:   sdk.NewInt(0),
-		}
-
 		sportEventItem := sporteventtypes.SportEvent{
 			UID:      testSportEventUID,
 			Creator:  testCreator,
 			StartTS:  1111111111,
-			EndTS:    9999999999,
+			EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 			OddsUIDs: testEventOddsUIDs,
 			Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 			Active:   true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
-				MaxBetCap:      sdk.NewInt(10000000000000),
-				MinAmount:      sdk.NewInt(1),
-				BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-				MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-				MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-				MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-				TotalOddsStats: totalOddsStat,
-				TotalStats: &sporteventtypes.TotalStats{
-					HouseLoss: sdk.NewInt(0),
-					BetAmount: sdk.NewInt(0),
-				},
+				MinAmount: sdk.NewInt(1),
+				BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 			},
 		}
 
@@ -225,22 +196,13 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				UID:      testSportEventUID,
 				Creator:  creator.Address.String(),
 				StartTS:  1111111111,
-				EndTS:    9999999999,
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: testEventOddsUIDs,
 				Status:   sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
 
-	totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
-	totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
-		ExtraPayout: sdk.NewInt(0),
-		BetAmount:   sdk.NewInt(0),
-	}
-	totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
-		ExtraPayout: sdk.NewInt(0),
-		BetAmount:   sdk.NewInt(0),
-	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
 			betUID := uuid.NewString()
@@ -250,22 +212,13 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 					UID:      testSportEventUID,
 					Creator:  creator.Address.String(),
 					StartTS:  1111111111,
-					EndTS:    9999999999,
+					EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 					OddsUIDs: testEventOddsUIDs,
 					Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 					Active:   true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
-						MaxBetCap:      sdk.NewInt(10000000000000),
-						MinAmount:      sdk.NewInt(1),
-						BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-						MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-						MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-						MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-						TotalOddsStats: totalOddsStat,
-						TotalStats: &sporteventtypes.TotalStats{
-							HouseLoss: sdk.NewInt(0),
-							BetAmount: sdk.NewInt(0),
-						},
+						MinAmount: sdk.NewInt(1),
+						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)

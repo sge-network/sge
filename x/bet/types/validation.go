@@ -25,8 +25,6 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 		return ErrInvalidTicket
 	}
 
-	// regexp check of ticket will reside here if requested
-
 	return nil
 }
 

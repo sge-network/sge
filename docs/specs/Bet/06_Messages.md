@@ -18,25 +18,31 @@ message MsgPlaceBet {
   string creator = 1;
 
   // bet is the info of bet to place
-  BetPlaceFields bet = 2;
+  PlaceBetFields bet = 2;
 }
 
-// PlaceBetFields contains necessary fields which come in BetPlacement and BetSlipPlacement TX requests
-message BetPlaceFields {
+// PlaceBetFields contains necessary fields which come in Place Bet Tx request
+message PlaceBetFields {
   // uid is the unique uuid assigned to bet
   string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
 
-  // amount is the wagger amount
+  // amount is the wager amount
   string amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 
   // ticket is a signed string containing important info such as `oddsValue`
   string ticket = 3;
+
+  // odds_type is the type of odds bettor choose such as decimal, fraction
+  sgenetwork.sge.bet.OddsType odds_type = 4;
 }
 
 // MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
-message MsgPlaceBetResponse {}
+message MsgPlaceBetResponse {
+    string error = 1;
+    PlaceBetFields bet = 2;
+}
 ```
 
 ### **Failure cases**
@@ -49,7 +55,7 @@ The transaction will fail if:
   - Empty or invalid ticket (containing space)
 - Provided bet UID is already set
 - Empty or invalid odds UID in ticket
-- Empty, non positive or invalid odds value in ticket
+- Empty, negative or invalid odds value in ticket
 - Empty or invalid sport event UID in ticket
 - There is no any sport event with the given sportEventUID
 - Sport event is not active for accepting bet (it's not active or status in not `PENDING`)
@@ -81,11 +87,13 @@ message MsgSettleBet {
   string creator = 1;
 
   // bet_uid is the unique uuid of the bet to settle
-  string bet_uid = 2;
+  string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
 message MsgSettleBetResponse {
+    string error = 1;
+    string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }
 ```
 
