@@ -10,61 +10,61 @@ import (
 func TestBetFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc string
-		bet  *BetPlaceFields
+		bet  *PlaceBetFields
 		err  error
 	}{
 		{
 			desc: "space in UID",
-			bet: &BetPlaceFields{
-				UID:    " ",
-				Amount: sdk.NewInt(int64(10)),
-				Ticket: "Ticket",
+			bet: &PlaceBetFields{
+				UID:      " ",
+				Amount:   sdk.NewInt(int64(10)),
+				Ticket:   "Ticket",
 				OddsType: 1,
 			},
 			err: ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid UID",
-			bet: &BetPlaceFields{
-				UID:    "invalidUID",
-				Amount: sdk.NewInt(int64(10)),
-				Ticket: "Ticket",
+			bet: &PlaceBetFields{
+				UID:      "invalidUID",
+				Amount:   sdk.NewInt(int64(10)),
+				Ticket:   "Ticket",
 				OddsType: 1,
 			},
 			err: ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid amount",
-			bet: &BetPlaceFields{
-				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(-1)),
-				Ticket: "Ticket",
+			bet: &PlaceBetFields{
+				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount:   sdk.NewInt(int64(-1)),
+				Ticket:   "Ticket",
 				OddsType: 1,
 			},
 			err: ErrInvalidAmount,
 		},
 		{
 			desc: "empty amount",
-			bet: &BetPlaceFields{
-				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Ticket: "Ticket",
+			bet: &PlaceBetFields{
+				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Ticket:   "Ticket",
 				OddsType: 1,
 			},
 			err: ErrInvalidAmount,
 		},
 		{
 			desc: "space in ticket",
-			bet: &BetPlaceFields{
-				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(10)),
-				Ticket: " ",
+			bet: &PlaceBetFields{
+				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount:   sdk.NewInt(int64(10)),
+				Ticket:   " ",
 				OddsType: 1,
 			},
 			err: ErrInvalidTicket,
 		},
 		{
 			desc: "space in ticket",
-			bet: &BetPlaceFields{
+			bet: &PlaceBetFields{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: " ",
@@ -73,10 +73,10 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "valid message",
-			bet: &BetPlaceFields{
-				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(10)),
-				Ticket: "Ticket",
+			bet: &PlaceBetFields{
+				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount:   sdk.NewInt(int64(10)),
+				Ticket:   "Ticket",
 				OddsType: 1,
 			},
 		},
@@ -98,6 +98,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc    string
 		betOdds *BetOdds
+		kyc     *KycDataPayload
 		err     error
 	}{
 		{
@@ -106,6 +107,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           " ",
 				Value:         "10",
+			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
 			},
 			err: ErrInvalidOddsUID,
 		},
@@ -116,6 +122,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
+			},
 			err: ErrInvalidSportEventUID,
 		},
 		{
@@ -123,6 +134,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 			betOdds: &BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
+			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
 			},
 			err: ErrInvalidOddsValue,
 		},
@@ -133,6 +149,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "invalidOdds",
 			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
+			},
 			err: ErrInConvertingOddsToDec,
 		},
 		{
@@ -142,7 +163,35 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "0",
 			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
+			},
 			err: ErrInvalidOddsValue,
+		},
+		{
+			desc: "no kyc",
+			betOdds: &BetOdds{
+				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:         "10",
+			},
+			err: ErrNoKycField,
+		},
+		{
+			desc: "no kyc ID field",
+			betOdds: &BetOdds{
+				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:         "10",
+			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "",
+			},
+			err: ErrNoKycIdField,
 		},
 		{
 			desc: "valid message",
@@ -151,14 +200,19 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
+			kyc: &KycDataPayload{
+				KycRequired: true,
+				KycApproved: true,
+				KycId:       "creator",
+			},
 		},
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
 
 			err := TicketFieldsValidation(&BetPlacementTicketPayload{
-				OddsUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Odds:    []*BetOdds{tc.betOdds},
+				SelectedOdds: tc.betOdds,
+				KycData:      tc.kyc,
 			})
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

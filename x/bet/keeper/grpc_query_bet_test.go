@@ -74,8 +74,8 @@ func TestBetQueryPaginated(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNBet(k, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryListBetAllRequest {
-		return &types.QueryListBetAllRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsRequest {
+		return &types.QueryBetsRequest{
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

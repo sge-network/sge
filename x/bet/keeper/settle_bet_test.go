@@ -16,16 +16,6 @@ func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	addSportEvent(t, tApp, ctx)
 
-	totalOddsStat := make(map[string]*sporteventtypes.TotalOddsStats)
-	totalOddsStat[testEventOddsUIDs[0]] = &sporteventtypes.TotalOddsStats{
-		ExtraPayout: sdk.NewInt(0),
-		BetAmount:   sdk.NewInt(0),
-	}
-	totalOddsStat[testEventOddsUIDs[1]] = &sporteventtypes.TotalOddsStats{
-		ExtraPayout: sdk.NewInt(0),
-		BetAmount:   sdk.NewInt(0),
-	}
-
 	tcs := []struct {
 		desc             string
 		betUID           string
@@ -90,7 +80,7 @@ func TestSettleBet(t *testing.T) {
 				UID:      testSportEventUID,
 				Creator:  testCreator,
 				StartTS:  1111111111,
-				EndTS:    9999999999,
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: testEventOddsUIDs,
 
 				Status: sporteventtypes.SportEventStatus_STATUS_ABORTED,
@@ -110,7 +100,7 @@ func TestSettleBet(t *testing.T) {
 				UID:      testSportEventUID,
 				Creator:  testCreator,
 				StartTS:  1111111111,
-				EndTS:    9999999999,
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: testEventOddsUIDs,
 
 				Status: sporteventtypes.SportEventStatus_STATUS_CANCELLED,
@@ -130,7 +120,7 @@ func TestSettleBet(t *testing.T) {
 				UID:      testSportEventUID,
 				Creator:  testCreator,
 				StartTS:  1111111111,
-				EndTS:    9999999999,
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: testEventOddsUIDs,
 
 				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
@@ -153,7 +143,7 @@ func TestSettleBet(t *testing.T) {
 				UID:      testSportEventUID,
 				Creator:  testCreator,
 				StartTS:  1111111111,
-				EndTS:    9999999999,
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: testEventOddsUIDs,
 
 				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
@@ -170,22 +160,13 @@ func TestSettleBet(t *testing.T) {
 					UID:      testSportEventUID,
 					Creator:  testCreator,
 					StartTS:  1111111111,
-					EndTS:    9999999999,
+					EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 					OddsUIDs: testEventOddsUIDs,
 					Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
 					Active:   true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
-						MaxBetCap:      sdk.NewInt(10000000000000),
 						MinAmount:      sdk.NewInt(1),
 						BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-						MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-						MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-						MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-						TotalOddsStats: totalOddsStat,
-						TotalStats: &sporteventtypes.TotalStats{
-							HouseLoss: sdk.NewInt(0),
-							BetAmount: sdk.NewInt(0),
-						},
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
