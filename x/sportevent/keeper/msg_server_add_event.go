@@ -65,10 +65,7 @@ func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) er
 	}
 
 	params := k.GetParams(ctx)
-
-	if initBetConstraints(event, params) {
-		return nil
-	}
+	initBetConstraints(event, params)
 
 	if err := validateBetConstraints(event, &params); err != nil {
 		return err
@@ -77,14 +74,14 @@ func (k msgServer) validateEventAdd(ctx sdk.Context, event *types.SportEvent) er
 	return nil
 }
 
-func initBetConstraints(event *types.SportEvent, params types.Params) bool {
+func initBetConstraints(event *types.SportEvent, params types.Params) {
 	// init all Bet constraints if nil
 	if event.BetConstraints == nil {
 		event.BetConstraints = &types.EventBetConstraints{
 			MinAmount: params.EventMinBetAmount,
 			BetFee:    params.EventMinBetFee,
 		}
-		return true
+		return
 	}
 
 	// init individual params if any one of them is nil
@@ -94,7 +91,6 @@ func initBetConstraints(event *types.SportEvent, params types.Params) bool {
 	if event.BetConstraints.MinAmount.IsNil() {
 		event.BetConstraints.MinAmount = params.EventMinBetAmount
 	}
-	return false
 }
 
 func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
@@ -110,6 +106,7 @@ func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
 }
 
 func validateBetConstraints(event *types.SportEvent, params *types.Params) error {
+	//check the validity constraints as there is no GT method on coin type
 	if !(event.BetConstraints.BetFee.IsLT(params.EventMinBetFee) || event.BetConstraints.BetFee.IsEqual(params.EventMinBetFee)) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event bet fee is out of threshold limit")
 	}
