@@ -12,7 +12,7 @@ option go_package = "github.com/sge-network/sge/x/mint/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/sgenetwork/sge/mint/params";
+    option (google.api.http).get = "/sge/mint/params";
   }
 
   // Inflation returns the current minting inflation value.

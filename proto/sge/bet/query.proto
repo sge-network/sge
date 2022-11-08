@@ -13,12 +13,12 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 service Query {
 	// Queries a Bet by uid.
 	rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
-		option (google.api.http).get = "/sge-network/sge/bet/bet/{uid}";
+		option (google.api.http).get = "/sge/bet/{uid}";
 	}
 
 	// Queries a list of Bet items.
 	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
-		option (google.api.http).get = "/sge-network/sge/bet/bet";
+		option (google.api.http).get = "/sge/bets";
 	}
 }
 

@@ -12,11 +12,11 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-    option (google.api.http).get = "/sge-network/sge/dvm/params";
+    option (google.api.http).get = "/sge/dvm/params";
   }
   // Queries a list of PubKeys items.
 	rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
-		option (google.api.http).get = "/sge-network/sge/dvm/pub_keys_list";
+		option (google.api.http).get = "/sge/dvm/pub_keys";
 	}
 }
 

@@ -13,21 +13,21 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 service Query {
 	// Parameters queries the parameters of the module.
 	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-	option (google.api.http).get = "/sgenetwork/sge/sportevent/params";
+	option (google.api.http).get = "/sge/sport-event/params";
 	}
 	// Queries a SportEvent by uid.
 	rpc SportEvent(QuerySportEventRequest) returns (QuerySportEventResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/sport_event/{uid}";
+		option (google.api.http).get = "/sge/sport-event/{uid}";
 	}
 
 	// Queries a list of SportEvent items.
 	rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/sport_events";
+		option (google.api.http).get = "/sge/sport-event/sport_events";
 	}
 
 	// Queries a list of SportEventsByUIDs items.
 	rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest) returns (QuerySportEventsByUIDsResponse) {
-		option (google.api.http).get = "/sge-network/sge/sportevent/get_sport_events_by_uids/{uids}";
+		option (google.api.http).get = "/sge/sport-event/sport_events_by_uids/{uids}";
 	}
 }
 

@@ -418,13 +418,13 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sgenetwork", "sge", "sportevent", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "sport-event", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_SportEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "sportevent", "sport_event", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEvent_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "sport-event", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_SportEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "sportevent", "sport_events"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEvents_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "sport-event", "sport_events"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_SportEventsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "sportevent", "get_sport_events_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SportEventsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "sport-event", "sport_events_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
