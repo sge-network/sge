@@ -116,8 +116,6 @@ import (
 	dvmmodulekeeper "github.com/sge-network/sge/x/dvm/keeper"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
 
-	// this line is used by starport scaffolding # stargate/app/moduleImport
-
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -168,7 +166,6 @@ var (
 		sporteventmodule.AppModuleBasic{},
 		strategicreservemodule.AppModuleBasic{},
 		dvmmodule.AppModuleBasic{},
-		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
 	// module account permissions
@@ -184,7 +181,6 @@ var (
 		strategicreservemoduletypes.SRPoolName:     nil,
 		strategicreservemoduletypes.BetReserveName: nil,
 		betmoduletypes.ModuleName:                  nil,
-		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
 
@@ -248,7 +244,6 @@ type SgeApp struct { // nolint: golint
 	SporteventKeeper sporteventmodulekeeper.Keeper
 	BetKeeper        betmodulekeeper.Keeper
 	DVMKeeper        dvmmodulekeeper.Keeper
-	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// the module manager
 	mm *module.Manager
@@ -291,7 +286,6 @@ func NewSgeApp(
 		betmoduletypes.StoreKey,
 		sporteventmoduletypes.StoreKey,
 		dvmmoduletypes.StoreKey,
-		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -527,13 +521,11 @@ func NewSgeApp(
 	)
 	betModule := betmodule.NewAppModule(appCodec, app.BetKeeper, app.AccountKeeper, app.BankKeeper, app.SporteventKeeper, app.StrategicreserveKeeper, app.DVMKeeper)
 
-	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 
-	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	/****  Module Options ****/
@@ -575,7 +567,6 @@ func NewSgeApp(
 		sporteventModule,
 		strategicreserveModule,
 		dvmModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -607,7 +598,6 @@ func NewSgeApp(
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -634,7 +624,6 @@ func NewSgeApp(
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -666,7 +655,6 @@ func NewSgeApp(
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
-		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
 	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
@@ -697,7 +685,6 @@ func NewSgeApp(
 		sporteventModule,
 		strategicreserveModule,
 		dvmModule,
-		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
 	app.sm.RegisterStoreDecoders()
@@ -741,7 +728,7 @@ func NewSgeApp(
 // Sge. It is useful for tests and clients who do not want to construct the
 // full sge application
 func MakeCodecs() (codec.Codec,
-	// nolint
+// nolint
 	*codec.LegacyAmino) {
 	config := MakeEncodingConfig()
 	return config.Marshaler, config.Amino
@@ -895,7 +882,7 @@ func GetMaccPerms() map[string][]string {
 
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec,
-	// nolint
+// nolint
 	legacyAmino *codec.LegacyAmino,
 	key, tkey sdk.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
@@ -915,7 +902,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(sporteventmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
-	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
 }

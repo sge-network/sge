@@ -11,7 +11,7 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Query defines the gRPC querier service.
 service Query {
-	// Parameters queries the parameters of the module.
+	// Params queries the parameters of the module.
 	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
 	option (google.api.http).get = "/sge/sport-event/params";
 	}
@@ -62,8 +62,7 @@ message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [(gogoproto.jsontag) = "uids", json_name = "uids"];
 }
 
-//provide response for the batch fetch call, failed events would only contain the id
-// Default assumption is of uid not exist in chain
+// Fetch sport events by uids response
 message QuerySportEventsByUIDsResponse {
 	repeated SportEvent sportEvents = 1 [(gogoproto.nullable) = false];
 	repeated string failedEvents = 2;

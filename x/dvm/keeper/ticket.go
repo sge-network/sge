@@ -62,7 +62,7 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 		return types.ErrNoPublicKeysFound
 	}
 
-	// validate the t by the keys
+	// validate ticket by the keys
 	err = ticket.Verify(keys.List...)
 	if err != nil {
 		return err

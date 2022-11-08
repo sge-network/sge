@@ -26,7 +26,6 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdQueryPhaseProvisions(),
 		GetCmdQueryEndPhaseStatus(),
 	)
-	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

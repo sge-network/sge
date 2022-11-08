@@ -45,7 +45,6 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 	db := tmdb.NewMemDB()
 	encCdc := app.MakeEncodingConfig()
 	appInstance := app.NewSgeApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, "", invCheckPeriod, encCdc,
-		// this line is used by starport scaffolding # stargate/testutil/appArgument
 		simapp.EmptyAppOptions{})
 	if withGenesis {
 		return &TestApp{SgeApp: *appInstance}, app.NewDefaultGenesisState()

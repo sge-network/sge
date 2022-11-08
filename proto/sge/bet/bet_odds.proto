@@ -10,7 +10,7 @@ message BetOdds {
     // Optional | Unique | uuid-v4 or code
     string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
 
-    // bet_event_uid is the parent, used for fast retrieving.
+    // sport_event_uid is the parent, used for fast retrieving.
     // ? Required | NonUnique | -
     string sport_event_uid = 2 [(gogoproto.customname) = "SportEventUID" ,(gogoproto.jsontag) = "sport_event_uid", json_name = "sport_event_uid"];
 

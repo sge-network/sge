@@ -36,8 +36,6 @@ const (
 	opWeightMsgUpdateEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateEvent int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -58,7 +56,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 				UID:     "1",
 			},
 		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&sporteventGenesis)
 }
@@ -113,8 +110,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgUpdateEvent,
 		sporteventsimulation.SimulateMsgUpdateEvent(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
-
-	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
 }
