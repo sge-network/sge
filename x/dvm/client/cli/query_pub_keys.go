@@ -14,7 +14,7 @@ var _ = strconv.Itoa(0)
 // CmdPubKeysList returns a command object instance for querying the public keys
 func CmdPubKeysList() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-pubkeys",
+		Use:   "pubkeys",
 		Short: "Query public keys list",
 		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

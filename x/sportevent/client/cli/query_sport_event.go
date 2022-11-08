@@ -16,7 +16,7 @@ var _ = strconv.Itoa(0)
 // CmdListSportEvents implements a command to return all sport events
 func CmdListSportEvents() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "sportevents",
+		Use:   "sport-events",
 		Short: "list sport events",
 		Long:  "Get list of sport events in paginated response.",
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -83,7 +83,7 @@ func CmdShowSportEvent() *cobra.Command {
 // CmdSportEventListByUIDs returns command object for querying sport events by uid list
 func CmdSportEventListByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "sport-events [uid]",
+		Use:   "sport-events-by-uids [uid]",
 		Short: "Query sport events list by UIDs",
 		Long:  "Get list of sport events by list of uids.",
 		Args:  cobra.ExactArgs(1),
