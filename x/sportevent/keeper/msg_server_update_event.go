@@ -76,7 +76,7 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 	//init individual params if any one of them is nil
 	initEventConstrains(event, previousEvent)
 
-	//check the validity constraints
+	//check the validity constraints as there is no GT method on coin type
 	if !(event.BetConstraints.BetFee.IsLT(params.EventMinBetFee) || event.BetConstraints.BetFee.IsEqual(params.EventMinBetFee)) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event bet fee is out of threshold limit")
 	}
