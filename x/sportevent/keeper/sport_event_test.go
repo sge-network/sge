@@ -89,20 +89,12 @@ func TestSportEventGetAll(t *testing.T) {
 }
 
 func TestResolveSportEvents(t *testing.T) {
-	t.Run("NilInput", func(t *testing.T) {
-		k, ctx := setupKeeper(t)
-		err := k.ResolveSportEvent(ctx, nil)
-		require.Nil(t, err)
-	})
-
 	t.Run("NotFound", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
-		resEventsIn := []types.ResolutionEvent{
-			{
-				UID: "NotExistUid",
-			},
+		resEventsIn := types.ResolutionEvent{
+			UID: "NotExistUid",
 		}
-		err := k.ResolveSportEvent(ctx, resEventsIn)
+		err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrNoMatchingSportEvent, err)
 	})
 
@@ -115,12 +107,11 @@ func TestResolveSportEvents(t *testing.T) {
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := []types.ResolutionEvent{
-			{
-				UID: item.UID,
-			},
+		resEventsIn := types.ResolutionEvent{
+			UID: item.UID,
 		}
-		err := k.ResolveSportEvent(ctx, resEventsIn)
+
+		err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrCanNotBeAltered, err)
 	})
 
@@ -133,21 +124,19 @@ func TestResolveSportEvents(t *testing.T) {
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := []types.ResolutionEvent{
-			{
-				UID:            item.UID,
-				ResolutionTS:   123456,
-				WinnerOddsUIDs: map[string][]byte{"oddsUID1": {}, "oddsUID2": {}},
-				Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
-			},
+		resEventsIn := types.ResolutionEvent{
+			UID:            item.UID,
+			ResolutionTS:   123456,
+			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
+			Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
 		}
-		err := k.ResolveSportEvent(ctx, resEventsIn)
+		err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Nil(t, err)
 		val, found := k.GetSportEvent(ctx, item.UID)
 		require.True(t, found)
-		require.Equal(t, resEventsIn[0].ResolutionTS, val.ResolutionTS)
-		require.Equal(t, resEventsIn[0].WinnerOddsUIDs, val.WinnerOddsUIDs)
-		require.Equal(t, resEventsIn[0].Status, val.Status)
+		require.Equal(t, resEventsIn.ResolutionTS, val.ResolutionTS)
+		require.Equal(t, resEventsIn.WinnerOddsUIDs, val.WinnerOddsUIDs)
+		require.Equal(t, resEventsIn.Status, val.Status)
 	})
 }
 
