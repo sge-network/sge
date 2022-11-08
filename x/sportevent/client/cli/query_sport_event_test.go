@@ -30,7 +30,7 @@ func networkWithSportEventObjects(t *testing.T, n int) (*network.Network, []type
 	for i := 0; i < n; i++ {
 		sportEvent := types.SportEvent{
 			UID:            strconv.Itoa(i),
-			WinnerOddsUIDs: map[string][]byte{},
+			WinnerOddsUIDs: []string{},
 		}
 		nullify.Fill(&sportEvent)
 		state.SportEventList = append(state.SportEventList, sportEvent)
@@ -120,9 +120,8 @@ func TestQuerySportEventCLI(t *testing.T) {
 				args := request(nil, uint64(i), uint64(step), false)
 				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 				require.NoError(t, err)
-				var resp types.QuerySportEventListAllResponse
+				var resp types.QuerySportEventResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.LessOrEqual(t, len(resp.SportEvent), step)
 				require.Subset(t,
 					nullify.Fill(objs),
 					nullify.Fill(resp.SportEvent),
@@ -136,24 +135,21 @@ func TestQuerySportEventCLI(t *testing.T) {
 				args := request(next, 0, uint64(step), false)
 				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 				require.NoError(t, err)
-				var resp types.QuerySportEventListAllResponse
+				var resp types.QuerySportEventResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-				require.LessOrEqual(t, len(resp.SportEvent), step)
 				require.Subset(t,
 					nullify.Fill(objs),
 					nullify.Fill(resp.SportEvent),
 				)
-				next = resp.Pagination.NextKey
 			}
 		})
 		t.Run("Total", func(t *testing.T) {
 			args := request(nil, 0, uint64(len(objs)), true)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListSportEvents(), args)
 			require.NoError(t, err)
-			var resp types.QuerySportEventListAllResponse
+			var resp types.QuerySportEventResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.NoError(t, err)
-			require.Equal(t, len(objs), int(resp.Pagination.Total))
 			require.ElementsMatch(t,
 				nullify.Fill(objs),
 				nullify.Fill(resp.SportEvent),

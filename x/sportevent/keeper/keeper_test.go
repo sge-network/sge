@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
@@ -14,7 +15,7 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, s
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, &tApp.SporteventKeeper, ctx
+	return tApp, &tApp.SporteventKeeper, ctx.WithBlockTime(time.Now())
 }
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {

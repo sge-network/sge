@@ -115,42 +115,6 @@ func Test_ValidateCreationEvent(t *testing.T) {
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "invalid max bet cap, more than required",
-			msg: types.SportEvent{
-				Creator:        sample.AccAddress(),
-				StartTS:        uint64(t1.Add(time.Minute).Unix()),
-				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{MaxBetCap: params.EventMaxBetCap.Add(sdk.NewInt(5))},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid max bet cap, negative",
-			msg: types.SportEvent{
-				Creator:        sample.AccAddress(),
-				StartTS:        uint64(t1.Add(time.Minute).Unix()),
-				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{MaxBetCap: sdk.NewInt(-5)},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min amount, greater than max bet cap",
-			msg: types.SportEvent{
-				Creator:        sample.AccAddress(),
-				StartTS:        uint64(t1.Add(time.Minute).Unix()),
-				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMaxBetCap},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
 			name: "valid request, with bet constraint",
 			msg: types.SportEvent{
 				Creator:  sample.AccAddress(),
@@ -161,7 +125,6 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount,
 					BetFee:    params.EventMinBetFee,
-					MaxBetCap: params.EventMaxBetCap,
 				},
 			},
 		},
@@ -192,7 +155,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 		}, {
@@ -200,7 +163,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   0,
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -210,7 +173,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            "invalid uid",
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -229,7 +192,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{"invalid winner odds": nil},
+				WinnerOddsUIDs: []string{"invalid winner odds"},
 				Status:         4,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -239,7 +202,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         0,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -249,7 +212,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         5,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -259,7 +222,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: map[string][]byte{uuid.NewString(): nil},
+				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         1,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -342,54 +305,6 @@ func Test_UpdateEvent(t *testing.T) {
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
 					BetFee:    params.EventMinBetFee,
-				},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid max bet cap, more than required",
-			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{
-					MaxBetCap: params.EventMaxBetCap.Add(sdk.NewInt(5)),
-					BetFee:    params.EventMinBetFee,
-					MinAmount: params.EventMinBetAmount,
-				},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid max bet cap, negative",
-			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{
-					MaxBetCap: sdk.NewInt(-5),
-					BetFee:    params.EventMinBetFee,
-					MinAmount: params.EventMinBetAmount,
-				},
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min amount, greater than max bet cap",
-			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMaxBetCap,
-					BetFee:    params.EventMinBetFee,
-					MaxBetCap: params.EventMaxBetCap,
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
