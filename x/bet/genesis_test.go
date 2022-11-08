@@ -22,7 +22,6 @@ func TestGenesis(t *testing.T) {
 				UID: "1",
 			},
 		},
-		// this line is used by starport scaffolding # genesis/test/state
 	}
 
 	tApp, ctx, err := simappUtil.GetTestObjects()
@@ -36,5 +35,5 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.BetList, got.BetList)
-	// this line is used by starport scaffolding # genesis/test/assert
+
 }

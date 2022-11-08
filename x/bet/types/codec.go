@@ -5,7 +5,6 @@ import (
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	// this line is used by starport scaffolding # 1
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
@@ -13,7 +12,7 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPlaceBet{}, "bet/PlaceBet", nil)
 	cdc.RegisterConcrete(&MsgSettleBet{}, "bet/SettleBet", nil)
-	// this line is used by starport scaffolding # 2
+
 }
 
 // RegisterInterfaces registers the module interface types
@@ -22,7 +21,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgPlaceBet{},
 		&MsgSettleBet{},
 	)
-	// this line is used by starport scaffolding # 3
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
