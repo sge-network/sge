@@ -2,7 +2,6 @@ package keeper_test
 
 import (
 	"testing"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -46,17 +45,8 @@ func TestPlaceBet(t *testing.T) {
 				UID:    "uid_inactive",
 				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			bet: &types.Bet{
@@ -73,17 +63,8 @@ func TestPlaceBet(t *testing.T) {
 				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			bet: &types.Bet{
@@ -101,17 +82,8 @@ func TestPlaceBet(t *testing.T) {
 				EndTS:  000000000,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			bet: &types.Bet{
@@ -126,21 +98,12 @@ func TestPlaceBet(t *testing.T) {
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:      "uid_oddsNotexist",
 				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(time.Now().Add(time.Hour).Unix()),
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -162,21 +125,12 @@ func TestPlaceBet(t *testing.T) {
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:      "uid_lowBetAmount",
 				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(time.Now().Add(time.Hour).Unix()),
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1000),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1000),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -198,21 +152,12 @@ func TestPlaceBet(t *testing.T) {
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:      "uid_success",
 				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(time.Now().Add(time.Hour).Unix()),
+				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
 				OddsUIDs: []string{"odds1", "odds2"},
 				Active:   true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
-					MaxBetCap:      sdk.NewInt(10000000000000),
-					MinAmount:      sdk.NewInt(1),
-					BetFee:         sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
-					MaxLoss:        sdk.NewInt(sporteventtypes.DefaultMaxEventLoss),
-					MaxVig:         sdk.NewDec(sporteventtypes.DefaultMaxVig),
-					MinVig:         sdk.NewDec(sporteventtypes.DefaultMinVig),
-					TotalOddsStats: defaultTotalStats(),
-					TotalStats: &sporteventtypes.TotalStats{
-						HouseLoss: sdk.NewInt(0),
-						BetAmount: sdk.NewInt(0),
-					},
+					MinAmount: sdk.NewInt(1),
+					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -235,7 +180,7 @@ func TestPlaceBet(t *testing.T) {
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
 			}
-			err := k.PlaceBet(ctx, tc.bet, tc.activeBetOdds)
+			err := k.PlaceBet(ctx, tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

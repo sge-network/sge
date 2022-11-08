@@ -70,7 +70,7 @@ func TestCmdPubKeysList(t *testing.T) {
 					require.Error(t, stat.Err(), "")
 				} else {
 					require.NoError(t, err)
-					var resp types.QueryListPubKeyAllResponse
+					var resp types.QueryPubKeysResponse
 					require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 					require.True(t, len(resp.List) > 0)
 					t.Log(resp.List)
