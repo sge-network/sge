@@ -28,7 +28,7 @@ type BetOdds struct {
 	// uid is Universal Unique Identifier
 	// Optional | Unique | uuid-v4 or code
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// bet_event_uid is the parent, used for fast retrieving.
+	// sport_event_uid is the parent, used for fast retrieving.
 	// ? Required | NonUnique | -
 	SportEventUID string `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
 	// value of the Odd in decimal odd type
