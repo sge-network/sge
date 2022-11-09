@@ -192,7 +192,7 @@ func (app *SgeApp) resetUnboundingdelegationCreationHeight(ctx sdk.Context) {
 func (app *SgeApp) resetValidatorsBondHeights(ctx sdk.Context, applyAllowedAddrs bool, allowedAddrsMap map[string]bool) {
 	// Iterate through validators by power descending, reset bond heights, and
 	// update bond intra-tx counters.
-	store := ctx.KVStore(app.keys[stakingtypes.StoreKey])
+	store := ctx.KVStore(app.AppKeepers.GetKey(stakingtypes.StoreKey))
 	iter := sdk.KVStoreReversePrefixIterator(store, stakingtypes.ValidatorsKey)
 	counter := int16(0)
 
