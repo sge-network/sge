@@ -32,7 +32,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgPlaceBet struct {
 	// creator is the bettor address
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// bet is the info of bet to place
+	// PlaceBetFields contains bet fields
 	Bet *PlaceBetFields `protobuf:"bytes,2,opt,name=bet,proto3" json:"bet,omitempty"`
 }
 
