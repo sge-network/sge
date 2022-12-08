@@ -2,6 +2,7 @@ package app
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/params"
 )
 
 const (
@@ -20,14 +21,6 @@ var (
 	ConsNodeAddressPrefix = AccountAddressPrefix + "valcons"
 	// ConsNodePubKeyPrefix used for generating consensus node public key
 	ConsNodePubKeyPrefix = AccountAddressPrefix + "valconspub"
-	// CoinType is the SGE coin type as defined in SLIP44 (https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
-	CoinType uint32 = 909
-	// Purpose is the purpose of the BIP44
-	Purpose uint32 = 44
-	// FullFundraiserPath is the parts of the BIP44 HD path that are fixed by
-	// what we used during the SGE fundraiser.
-	// More info (https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki)
-	FullFundraiserPath = "m/44'/909'/0'/0/0"
 )
 
 // SetConfig sets prefixes configuration
@@ -36,9 +29,15 @@ func SetConfig() {
 	config.SetBech32PrefixForAccount(AccountAddressPrefix, AccountPubKeyPrefix)
 	config.SetBech32PrefixForValidator(ValidatorAddressPrefix, ValidatorPubKeyPrefix)
 	config.SetBech32PrefixForConsensusNode(ConsNodeAddressPrefix, ConsNodePubKeyPrefix)
-	config.SetCoinType(CoinType)
-	config.SetPurpose(Purpose)
-	// nolint
-	config.SetFullFundraiserPath(FullFundraiserPath)
+
+	err := sdk.RegisterDenom(params.HumanCoinUnit, sdk.OneDec())
+	if err != nil {
+		panic(err)
+	}
+	err = sdk.RegisterDenom(params.BaseCoinUnit, sdk.NewDecWithPrec(1, params.SGEExponent))
+	if err != nil {
+		panic(err)
+	}
+
 	config.Seal()
 }
