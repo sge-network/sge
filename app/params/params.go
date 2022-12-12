@@ -2,7 +2,14 @@ package params
 
 // App Parameters
 const (
-	DefaultBondDenom = "usge"
+	// HumanCoinUnit is human readable representation of the coin name
+	HumanCoinUnit = "sge"
+	// BaseCoinUnit is the actual name of coin used in transaction
+	BaseCoinUnit = "usge"
+	// SGEExponent is the exponential digits of the coin
+	SGEExponent = 6
+	// DefaultBondDenom is the default staking denom of application
+	DefaultBondDenom = BaseCoinUnit
 )
 
 // Simulation parameter constants
