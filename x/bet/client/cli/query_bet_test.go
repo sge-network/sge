@@ -46,7 +46,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	return network.New(t, cfg), state.BetList
 }
 
-func TestShowBet(t *testing.T) {
+func TestQueryBet(t *testing.T) {
 	net, objs := networkWithBetObjects(t, 5)
 
 	t.Run("ShowBet", func(t *testing.T) {

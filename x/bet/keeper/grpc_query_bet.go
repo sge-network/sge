@@ -49,7 +49,7 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	count := len(req.GetUids())
-	if count > types.MaxQueriableBetsCount {
+	if count > types.MaxAllowedQueryBetsCount {
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 

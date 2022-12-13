@@ -55,6 +55,6 @@ var (
 	ErrUserKycFailed                = sdkerrors.Register(ModuleName, 2044, "the bettor failed the KYC Validation")
 	ErrNoKycField                   = sdkerrors.Register(ModuleName, 2045, "KYC field does not exist in ticket payload")
 	ErrNoKycIdField                 = sdkerrors.Register(ModuleName, 2046, "KYC ID does not exist in KYC part of ticket payload")
-	ErrCanNotQueryLargeNumberOfBets = sdkerrors.Register(ModuleName, 2047, "can not query more than "+cast.ToString(MaxQueriableBetsCount))
+	ErrCanNotQueryLargeNumberOfBets = sdkerrors.Register(ModuleName, 2047, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
 	ErrTextInvalidCreator           = "invalid creator address (%s)"
 )
