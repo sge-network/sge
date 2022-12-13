@@ -20,10 +20,15 @@ service Query {
 	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
 		option (google.api.http).get = "/sge/bets";
 	}
+
+	// Queries a list of Bet items filtered by uid list.
+	rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
+		option (google.api.http).get = "/sge/bets_by_uids/{uids}";
+	}
 }
 
 message QueryBetRequest {
-	  string uid = 1 [(gogoproto.jsontag) = "uid", json_name = "uid"];
+	string uid = 1 [(gogoproto.jsontag) = "uid", json_name = "uid"];
 }
 
 message QueryBetResponse {
@@ -37,5 +42,14 @@ message QueryBetsRequest {
 message QueryBetsResponse {
 	repeated Bet bet = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryBetsByUIDsRequest {
+	repeated string uids = 2 [(gogoproto.jsontag) = "uids", json_name = "uids"];
+}
+
+message QueryBetsByUIDsResponse {
+	repeated Bet bets = 1 [(gogoproto.nullable) = false];
+	repeated string not_found_events = 2;
 }
 
