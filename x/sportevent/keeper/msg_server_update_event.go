@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/sportevent/types"
@@ -33,7 +35,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 
 	sportEvent = types.SportEvent{
 		UID:            sportEvent.UID,
-		OddsUIDs:       sportEvent.OddsUIDs,
+		Odds:           sportEvent.Odds,
 		WinnerOddsUIDs: sportEvent.WinnerOddsUIDs,
 		Status:         sportEvent.Status,
 		ResolutionTS:   sportEvent.ResolutionTS,
@@ -44,7 +46,8 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 			MinAmount: updateEvent.BetConstraints.MinAmount,
 			BetFee:    updateEvent.BetConstraints.BetFee,
 		},
-		Active: updateEvent.Active,
+		Active:  updateEvent.Active,
+		Details: sportEvent.Details,
 	}
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, sportEvent)
@@ -75,6 +78,18 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 
 	//init individual params if any one of them is nil
 	initEventConstrains(event, previousEvent)
+
+	// check sport event details
+	if strings.TrimSpace(event.Details) == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for the sport event")
+	}
+
+	// check odds details
+	for _, o := range event.Odds {
+		if o.Details == "" {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for odds with uuid %s", o.UID)
+		}
+	}
 
 	//check the validity constraints as there is no GT method on coin type
 	if !(event.BetConstraints.BetFee.IsLT(params.EventMinBetFee) || event.BetConstraints.BetFee.IsEqual(params.EventMinBetFee)) {

@@ -74,8 +74,13 @@ func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionE
 
 		validWinnerOdds := true
 		for _, wid := range event.WinnerOddsUIDs {
-			if !utils.StrSliceContains(sportEvent.OddsUIDs, wid) {
-				validWinnerOdds = false
+			validWinnerOdds = false
+			for _, o := range sportEvent.Odds {
+				if o.UID == wid {
+					validWinnerOdds = true
+				}
+			}
+			if !validWinnerOdds {
 				break
 			}
 		}

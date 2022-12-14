@@ -25,11 +25,15 @@ func Test_ValidateCreationEvent(t *testing.T) {
 		{
 			name: "valid request",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
+				Details: "Winner of x:y",
 			},
 		}, {
 			name: "same timestamp",
@@ -49,55 +53,69 @@ func Test_ValidateCreationEvent(t *testing.T) {
 		}, {
 			name: "invalid uid",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      "invalid uuid",
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     "invalid uuid",
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "few odds than required",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odd id",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), "invalid id"},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: "invalid id", Details: "invalid odds"},
+				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "duplicate odds id",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{"8779cf93-925c-4818-bc81-13c359e0deb8", "8779cf93-925c-4818-bc81-13c359e0deb8"},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Details: "Odds 1"},
+					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Details: "invalid odds"},
+				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid min amount, negative",
 			msg: types.SportEvent{
-				Creator:        sample.AccAddress(),
-				StartTS:        uint64(t1.Add(time.Minute).Unix()),
-				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 				BetConstraints: &types.EventBetConstraints{MinAmount: sdk.NewInt(-5)},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -105,11 +123,14 @@ func Test_ValidateCreationEvent(t *testing.T) {
 		{
 			name: "invalid min amount, less than required",
 			msg: types.SportEvent{
-				Creator:        sample.AccAddress(),
-				StartTS:        uint64(t1.Add(time.Minute).Unix()),
-				EndTS:          uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:            uuid.NewString(),
-				OddsUIDs:       []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5))},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -117,15 +138,19 @@ func Test_ValidateCreationEvent(t *testing.T) {
 		{
 			name: "valid request, with bet constraint",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount,
 					BetFee:    params.EventMinBetFee,
 				},
+				Details: "Winner of x:y",
 			},
 		},
 	}
@@ -255,11 +280,14 @@ func Test_UpdateEvent(t *testing.T) {
 		{
 			name: "valid request",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 			},
 		},
 		{
@@ -282,11 +310,14 @@ func Test_UpdateEvent(t *testing.T) {
 		{
 			name: "invalid min amount, negative",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: sdk.NewInt(-5),
 					BetFee:    params.EventMinBetFee,
@@ -297,11 +328,14 @@ func Test_UpdateEvent(t *testing.T) {
 		{
 			name: "invalid min amount, less than required",
 			msg: types.SportEvent{
-				Creator:  sample.AccAddress(),
-				StartTS:  uint64(t1.Add(time.Minute).Unix()),
-				EndTS:    uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:      uuid.NewString(),
-				OddsUIDs: []string{uuid.NewString(), uuid.NewString()},
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
 					BetFee:    params.EventMinBetFee,

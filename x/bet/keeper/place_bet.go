@@ -20,7 +20,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check if selected odds is valid
-	if !oddExists(bet.OddsUID, sportEvent.OddsUIDs) {
+	if !oddExists(bet.OddsUID, sportEvent.Odds) {
 		return types.ErrOddsUIDNotExist
 	}
 
@@ -79,9 +79,9 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 }
 
 // oddExists checks if bet odds id is present in the sport event list of odds uids
-func oddExists(betOddsID string, oddsUIDs []string) bool {
-	for _, uid := range oddsUIDs {
-		if betOddsID == uid {
+func oddExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
+	for _, o := range odds {
+		if betOddsID == o.UID {
 			return true
 		}
 	}
