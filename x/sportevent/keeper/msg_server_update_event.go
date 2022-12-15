@@ -84,10 +84,17 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for the sport event")
 	}
 
+	if len(event.Details) > types.MaxAllowedCharactersForDetails {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
+	}
+
 	// check odds details
 	for _, o := range event.Odds {
 		if o.Details == "" {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for odds with uuid %s", o.UID)
+		}
+		if len(o.Details) > types.MaxAllowedCharactersForDetails {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
 		}
 	}
 

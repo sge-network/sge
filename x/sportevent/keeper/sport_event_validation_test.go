@@ -153,6 +153,24 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				Details: "Winner of x:y",
 			},
 		},
+		{
+			name: "large details",
+			msg: types.SportEvent{
+				Creator: sample.AccAddress(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				UID:     uuid.NewString(),
+				Odds: []*types.Odds{
+					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Details: "Odds 2"},
+				},
+				Details: `Winner of x:y is the final winner of the game, 
+				it is obvious the winner is not the champion yet but if it happens, 
+				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift. 
+				attention! this detail will not be stored in the chain because it's definitely a scam.`,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

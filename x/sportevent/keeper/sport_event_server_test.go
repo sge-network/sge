@@ -226,6 +226,7 @@ func Test_msgServer_ResolveEventResponse(t *testing.T) {
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdd)
 		assert.Nil(t, response)
 	})
+
 }
 
 func Test_msgServer_UpdateEvent(t *testing.T) {
