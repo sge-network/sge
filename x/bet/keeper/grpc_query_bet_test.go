@@ -124,3 +124,54 @@ func TestBetQueryPaginated(t *testing.T) {
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest))
 	})
 }
+
+func TestBetByUIDsQuery(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	wctx := sdk.WrapSDKContext(ctx)
+	msgs := createNBet(k, ctx, 2)
+	for _, tc := range []struct {
+		desc     string
+		request  *types.QueryBetsByUIDsRequest
+		response *types.QueryBetsByUIDsResponse
+		err      error
+	}{
+		{
+			desc: "First",
+			request: &types.QueryBetsByUIDsRequest{
+				Uids: []string{msgs[0].UID},
+			},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[0]}},
+		},
+		{
+			desc: "Second",
+			request: &types.QueryBetsByUIDsRequest{
+				Uids: []string{msgs[1].UID},
+			},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[1]}},
+		},
+		{
+			desc: "NotFound",
+			request: &types.QueryBetsByUIDsRequest{
+				Uids: []string{"100000"},
+			},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundEvents: []string{"100000"}},
+		},
+		{
+			desc: "InvalidRequest",
+			err:  status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest),
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			response, err := k.BetsByUIDs(wctx, tc.request)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t,
+					nullify.Fill(tc.response),
+					nullify.Fill(response),
+				)
+			}
+		})
+	}
+}
