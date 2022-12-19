@@ -6,4 +6,8 @@ const (
 
 	// vigCalculationCoefficient is used for vig calculation
 	vigCalculationCoefficient = 100
+
+	// MaxQueriableBetsCount is maximum allowed count of bets that
+	// can be filtered by uid list
+	MaxAllowedQueryBetsCount = 10
 )
