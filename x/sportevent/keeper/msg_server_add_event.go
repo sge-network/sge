@@ -55,20 +55,20 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough odds for the event")
 	}
 
-	if strings.TrimSpace(event.Details) == "" {
+	if strings.TrimSpace(event.Meta) == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for the sport event")
 	}
 
-	if len(event.Details) > types.MaxAllowedCharactersForDetails {
+	if len(event.Meta) > types.MaxAllowedCharactersForDetails {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
 	}
 
 	oddsSet := make(map[string]types.Odds, len(event.Odds))
 	for _, o := range event.Odds {
-		if o.Details == "" {
+		if o.Meta == "" {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for odds with uuid %s", o.UID)
 		}
-		if len(o.Details) > types.MaxAllowedCharactersForDetails {
+		if len(o.Meta) > types.MaxAllowedCharactersForDetails {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
 		}
 		if !utils.IsValidUID(o.UID) {

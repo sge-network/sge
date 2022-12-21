@@ -20,9 +20,9 @@ var (
 	testOddsUID2      = "5e31c60f-2025-48ce-ae79-1dc110f16358"
 	testOddsUID3      = "6e31c60f-2025-48ce-ae79-1dc110f16354"
 	testEventOdds     = []*sporteventtypes.Odds{
-		{UID: testOddsUID1, Details: "Odds 1"},
-		{UID: testOddsUID2, Details: "Odds 2"},
-		{UID: testOddsUID3, Details: "Odds 3"},
+		{UID: testOddsUID1, Meta: "Odds 1"},
+		{UID: testOddsUID2, Meta: "Odds 2"},
+		{UID: testOddsUID3, Meta: "Odds 3"},
 	}
 	testSelectedBetOdds = &types.BetOdds{
 		UID:           testOddsUID1,

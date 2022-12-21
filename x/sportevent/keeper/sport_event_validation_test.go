@@ -30,10 +30,10 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Details: "Winner of x:y",
+				Meta: "Winner of x:y",
 			},
 		}, {
 			name: "same timestamp",
@@ -58,8 +58,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     "invalid uuid",
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -72,7 +72,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -85,8 +85,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: "invalid id", Details: "invalid odds"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: "invalid id", Meta: "invalid odds"},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -99,8 +99,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Details: "Odds 1"},
-					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Details: "invalid odds"},
+					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Meta: "Odds 1"},
+					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Meta: "invalid odds"},
 				},
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -113,8 +113,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 				BetConstraints: &types.EventBetConstraints{MinAmount: sdk.NewInt(-5)},
 			},
@@ -128,8 +128,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5))},
 			},
@@ -143,14 +143,14 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount,
 					BetFee:    params.EventMinBetFee,
 				},
-				Details: "Winner of x:y",
+				Meta: "Winner of x:y",
 			},
 		},
 		{
@@ -161,10 +161,10 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Details: `Winner of x:y is the final winner of the game, 
+				Meta: `Winner of x:y is the final winner of the game, 
 				it is obvious the winner is not the champion yet but if it happens, 
 				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift. 
 				attention! this detail will not be stored in the chain because it's definitely a scam.`,
@@ -303,8 +303,8 @@ func Test_UpdateEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 			},
 		},
@@ -333,8 +333,8 @@ func Test_UpdateEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: sdk.NewInt(-5),
@@ -351,8 +351,8 @@ func Test_UpdateEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Details: "Odds 1"},
-					{UID: uuid.NewString(), Details: "Odds 2"},
+					{UID: uuid.NewString(), Meta: "Odds 1"},
+					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),

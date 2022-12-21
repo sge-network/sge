@@ -19,7 +19,7 @@ message SportEvent {
   string creator = 8;
   EventBetConstraints betConstraints = 9;
   bool active = 10;
-  string details = 11;
+  string meta = 11;
 }
 
 enum SportEventStatus {

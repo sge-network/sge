@@ -115,7 +115,7 @@ func Test_msgServer_AddEventResponse(t *testing.T) {
 			"uid":      u1,
 			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
 			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds":     []types.Odds{{UID: uuid.NewString(), Details: "odds 1"}, {UID: uuid.NewString(), Details: "odds 2"}},
+			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
 			"exp":      9999999999,
 			"iat":      1111111111,
 			"details":  "Winner of x:y",
