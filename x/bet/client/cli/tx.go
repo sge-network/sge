@@ -10,6 +10,8 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 )
 
+const listSeparator = ","
+
 // GetTxCmd returns the transaction commands for this module
 func GetTxCmd() *cobra.Command {
 	cmd := &cobra.Command{
