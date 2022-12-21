@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"testing"
 	"time"
+
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
@@ -111,12 +112,13 @@ func Test_msgServer_AddEventResponse(t *testing.T) {
 
 	t.Run("pre existing uid", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
-			"uid":       u1,
-			"start_ts":  uint64(time.Now().Add(time.Minute).Unix()),
-			"end_ts":    uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds_uids": []string{uuid.NewString(), uuid.NewString()},
-			"exp":       9999999999,
-			"iat":       1111111111,
+			"uid":      u1,
+			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
+			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
+			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
+			"exp":      9999999999,
+			"iat":      1111111111,
+			"details":  "Winner of x:y",
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
@@ -224,6 +226,7 @@ func Test_msgServer_ResolveEventResponse(t *testing.T) {
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdd)
 		assert.Nil(t, response)
 	})
+
 }
 
 func Test_msgServer_UpdateEvent(t *testing.T) {

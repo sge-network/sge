@@ -140,13 +140,13 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		sportEventItem := sporteventtypes.SportEvent{
-			UID:      testSportEventUID,
-			Creator:  testCreator,
-			StartTS:  1111111111,
-			EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-			OddsUIDs: testEventOddsUIDs,
-			Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-			Active:   true,
+			UID:     testSportEventUID,
+			Creator: testCreator,
+			StartTS: 1111111111,
+			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+			Odds:    testEventOdds,
+			Status:  sporteventtypes.SportEventStatus_STATUS_PENDING,
+			Active:  true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
@@ -193,12 +193,12 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				Result: types.Bet_RESULT_WON,
 			},
 			sportEvent: &sporteventtypes.SportEvent{
-				UID:      testSportEventUID,
-				Creator:  creator.Address.String(),
-				StartTS:  1111111111,
-				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-				OddsUIDs: testEventOddsUIDs,
-				Status:   sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				UID:     testSportEventUID,
+				Creator: creator.Address.String(),
+				StartTS: 1111111111,
+				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:    testEventOdds,
+				Status:  sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
@@ -209,13 +209,13 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 
 			if tc.bet != nil {
 				resetSportEvent := sporteventtypes.SportEvent{
-					UID:      testSportEventUID,
-					Creator:  creator.Address.String(),
-					StartTS:  1111111111,
-					EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-					OddsUIDs: testEventOddsUIDs,
-					Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-					Active:   true,
+					UID:     testSportEventUID,
+					Creator: creator.Address.String(),
+					StartTS: 1111111111,
+					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+					Odds:    testEventOdds,
+					Status:  sporteventtypes.SportEventStatus_STATUS_PENDING,
+					Active:  true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
 						MinAmount: sdk.NewInt(1),
 						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),

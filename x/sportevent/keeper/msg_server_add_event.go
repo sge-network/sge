@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -49,19 +51,33 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
 	}
 
-	if len(event.OddsUIDs) < 2 {
+	if len(event.Odds) < 2 {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough odds for the event")
 	}
 
-	oddsSet := make(map[string]struct{}, len(event.OddsUIDs))
-	for _, oddsUID := range event.OddsUIDs {
-		if !utils.IsValidUID(oddsUID) {
+	if strings.TrimSpace(event.Meta) == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for the sport event")
+	}
+
+	if len(event.Meta) > types.MaxAllowedCharactersForDetails {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
+	}
+
+	oddsSet := make(map[string]types.Odds, len(event.Odds))
+	for _, o := range event.Odds {
+		if o.Meta == "" {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for odds with uuid %s", o.UID)
+		}
+		if len(o.Meta) > types.MaxAllowedCharactersForDetails {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
+		}
+		if !utils.IsValidUID(o.UID) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "odds-uid passed is invalid")
 		}
-		if _, exist := oddsSet[oddsUID]; exist {
+		if _, exist := oddsSet[o.UID]; exist {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "duplicate odds-uid in request")
 		}
-		oddsSet[oddsUID] = struct{}{}
+		oddsSet[o.UID] = types.Odds{}
 	}
 
 	params := k.GetParams(ctx)

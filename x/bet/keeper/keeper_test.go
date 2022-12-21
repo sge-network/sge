@@ -15,11 +15,15 @@ import (
 )
 
 var (
-	testSportEventUID   = "5db09053-2901-4110-8fb5-c14e21f8d555"
-	testOddsUID1        = "6db09053-2901-4110-8fb5-c14e21f8d666"
-	testOddsUID2        = "5e31c60f-2025-48ce-ae79-1dc110f16358"
-	testOddsUID3        = "6e31c60f-2025-48ce-ae79-1dc110f16354"
-	testEventOddsUIDs   = []string{testOddsUID1, testOddsUID2, testOddsUID3}
+	testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
+	testOddsUID1      = "6db09053-2901-4110-8fb5-c14e21f8d666"
+	testOddsUID2      = "5e31c60f-2025-48ce-ae79-1dc110f16358"
+	testOddsUID3      = "6e31c60f-2025-48ce-ae79-1dc110f16354"
+	testEventOdds     = []*sporteventtypes.Odds{
+		{UID: testOddsUID1, Meta: "Odds 1"},
+		{UID: testOddsUID2, Meta: "Odds 2"},
+		{UID: testOddsUID3, Meta: "Odds 3"},
+	}
 	testSelectedBetOdds = &types.BetOdds{
 		UID:           testOddsUID1,
 		SportEventUID: testSportEventUID,
@@ -47,12 +51,13 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddSportEventClaim := jwt.MapClaims{
-		"uid":       testSportEventUID,
-		"start_ts":  1111111111,
-		"end_ts":    uint64(ctx.BlockTime().Unix()) + 1000,
-		"odds_uids": testEventOddsUIDs,
-		"exp":       9999999999,
-		"iat":       7777777777,
+		"uid":      testSportEventUID,
+		"start_ts": 1111111111,
+		"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
+		"odds":     testEventOdds,
+		"exp":      9999999999,
+		"iat":      7777777777,
+		"details":  "Winner of x:y",
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)

@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/sportevent/types"
@@ -33,7 +35,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 
 	sportEvent = types.SportEvent{
 		UID:            sportEvent.UID,
-		OddsUIDs:       sportEvent.OddsUIDs,
+		Odds:           sportEvent.Odds,
 		WinnerOddsUIDs: sportEvent.WinnerOddsUIDs,
 		Status:         sportEvent.Status,
 		ResolutionTS:   sportEvent.ResolutionTS,
@@ -45,6 +47,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 			BetFee:    updateEvent.BetConstraints.BetFee,
 		},
 		Active: updateEvent.Active,
+		Meta:   sportEvent.Meta,
 	}
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, sportEvent)
@@ -75,6 +78,25 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 
 	//init individual params if any one of them is nil
 	initEventConstrains(event, previousEvent)
+
+	// check sport event details
+	if strings.TrimSpace(event.Meta) == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for the sport event")
+	}
+
+	if len(event.Meta) > types.MaxAllowedCharactersForDetails {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
+	}
+
+	// check odds details
+	for _, o := range event.Odds {
+		if o.Meta == "" {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details is mandatory for odds with uuid %s", o.UID)
+		}
+		if len(o.Meta) > types.MaxAllowedCharactersForDetails {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "details length should be less than %d characters", types.MaxAllowedCharactersForDetails)
+		}
+	}
 
 	//check the validity constraints as there is no GT method on coin type
 	if !(event.BetConstraints.BetFee.IsLT(params.EventMinBetFee) || event.BetConstraints.BetFee.IsEqual(params.EventMinBetFee)) {
