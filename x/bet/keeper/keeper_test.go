@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 
@@ -32,6 +33,15 @@ var (
 	testCreator       string
 	testBet           *types.MsgPlaceBet
 	testAddSportEvent *sporteventtypes.MsgAddSportEvent
+
+	testSportEvent = sporteventtypes.SportEvent{
+		UID:     testSportEventUID,
+		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		StartTS: 1111111111,
+		EndTS:   uint64(time.Now().Unix()) + 5000,
+		Odds:    testEventOdds,
+		Status:  sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+	}
 )
 
 func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
@@ -57,7 +67,7 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 		"odds":     testEventOdds,
 		"exp":      9999999999,
 		"iat":      7777777777,
-		"details":  "Winner of x:y",
+		"meta":     "Winner of x:y",
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
