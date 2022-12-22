@@ -118,7 +118,7 @@ func Test_msgServer_AddEventResponse(t *testing.T) {
 			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
 			"exp":      9999999999,
 			"iat":      1111111111,
-			"details":  "Winner of x:y",
+			"meta":     "Winner of x:y",
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)

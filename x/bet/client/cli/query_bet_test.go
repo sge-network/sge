@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -17,8 +18,10 @@ import (
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/client/cli"
 	"github.com/sge-network/sge/x/bet/types"
+	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
 
 // Prevent strconv unused error
@@ -27,15 +30,41 @@ var _ = strconv.IntSize
 func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) {
 	t.Helper()
 	cfg := network.DefaultConfig()
+
+	// sport event module state
+	sportEventState := sporteventtypes.GenesisState{}
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[sporteventtypes.ModuleName], &sportEventState))
+
+	sportEvent := sporteventtypes.SportEvent{
+		UID:     "5db09053-2901-4110-8fb5-c14e21f8d555",
+		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		StartTS: 1111111111,
+		EndTS:   uint64(time.Now().Unix()) + 5000,
+		Odds: []*sporteventtypes.Odds{
+			{UID: "6db09053-2901-4110-8fb5-c14e21f8d666", Meta: "Odds 1"},
+			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
+			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
+		},
+		Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+	}
+	nullify.Fill(&sportEvent)
+	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}
+
+	sportEventBuf, err := cfg.Codec.MarshalJSON(&sportEventState)
+	require.NoError(t, err)
+	cfg.GenesisState[sporteventtypes.ModuleName] = sportEventBuf
+
+	// bet module state
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			UID:       strconv.Itoa(i),
-			OddsValue: sdk.NewDec(10),
-			Amount:    sdk.NewInt(10),
-			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+			UID:           strconv.Itoa(i),
+			SportEventUID: sportEvent.UID,
+			OddsValue:     sdk.NewDec(10),
+			Amount:        sdk.NewInt(10),
+			BetFee:        sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 		}
 		nullify.Fill(&bet)
 		state.BetList = append(state.BetList, bet)
@@ -43,6 +72,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
+
 	return network.New(t, cfg), state.BetList
 }
 
