@@ -1,6 +1,10 @@
 package types
 
-import "encoding/binary"
+import (
+	"encoding/binary"
+
+	"github.com/sge-network/sge/utils"
+)
 
 var _ binary.ByteOrder
 
@@ -24,4 +28,18 @@ const (
 var (
 	// BetListPrefix is the prefix to retrieve all Bet
 	BetListPrefix = []byte{0x00}
+
+	// BetIDListPrefix is the prefix to retrieve all Bet IDs
+	BetIDListPrefix = []byte{0x01}
+
+	// BetStatsKey is the key for the bet statistics
+	BetStatsKey = []byte{0x03}
 )
+
+func BetListByCreatorKey(creator string) []byte {
+	return utils.StrBytes(creator)
+}
+
+func BetListByIDKey(creator string, id uint64) []byte {
+	return append(utils.StrBytes(creator), utils.Uint64ToBytes(id)...)
+}

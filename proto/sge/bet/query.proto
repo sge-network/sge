@@ -23,7 +23,8 @@ service Query {
 }
 
 message QueryBetRequest {
-	  string uid = 1 [(gogoproto.jsontag) = "uid", json_name = "uid"];
+	string creator = 1;
+	string uid = 2 [(gogoproto.jsontag) = "uid", json_name = "uid"];
 }
 
 message QueryBetResponse {

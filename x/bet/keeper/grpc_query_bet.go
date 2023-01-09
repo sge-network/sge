@@ -46,9 +46,15 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
+	uid2ID, found := k.GetBetID(ctx, req.Uid)
+	if !found {
+		return nil, status.Error(codes.NotFound, "not found")
+	}
+
 	val, found := k.GetBet(
 		ctx,
-		req.Uid,
+		req.Creator,
+		uid2ID.ID,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")

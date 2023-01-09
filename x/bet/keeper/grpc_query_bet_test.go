@@ -31,14 +31,16 @@ func TestBetQuerySingle(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryBetRequest{
-				Uid: msgs[0].UID,
+				Creator: testCreator,
+				Uid:     msgs[0].UID,
 			},
 			response: &types.QueryBetResponse{Bet: msgs[0]},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryBetRequest{
-				Uid: msgs[1].UID,
+				Creator: testCreator,
+				Uid:     msgs[1].UID,
 			},
 			response: &types.QueryBetResponse{Bet: msgs[1]},
 		},
@@ -118,6 +120,42 @@ func TestBetQueryPaginated(t *testing.T) {
 			nullify.Fill(msgs),
 			nullify.Fill(resp.Bet),
 		)
+	})
+	t.Run("InvalidRequest", func(t *testing.T) {
+		_, err := k.Bets(wctx, nil)
+		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest))
+	})
+}
+
+// TestBetQueryPaginatedReverse test if IDs are sorted reveresely
+func TestBetQueryPaginatedReverse(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	wctx := sdk.WrapSDKContext(ctx)
+	msgs := createNBet(k, ctx, 100)
+
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsRequest {
+		return &types.QueryBetsRequest{
+			Pagination: &query.PageRequest{
+				Key:        next,
+				Offset:     offset,
+				Limit:      limit,
+				CountTotal: total,
+				Reverse:    true,
+			},
+		}
+	}
+	t.Run("Sorted", func(t *testing.T) {
+		resp, err := k.Bets(wctx, request(nil, 0, 0, true))
+		require.NoError(t, err)
+		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+
+		lastBetID := resp.Pagination.Total + 1
+		for _, b := range resp.Bet {
+			uuid2ID, found := k.GetBetID(ctx, b.UID)
+			require.True(t, found)
+			require.Less(t, uuid2ID.ID, lastBetID)
+			lastBetID = uuid2ID.ID
+		}
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
 		_, err := k.Bets(wctx, nil)

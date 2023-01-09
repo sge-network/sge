@@ -8,6 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/google/uuid"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -31,14 +33,19 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			UID:       strconv.Itoa(i),
+			Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+			UID:       uuid.NewString(),
 			OddsValue: sdk.NewDec(10),
 			Amount:    sdk.NewInt(10),
 			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 		}
 		nullify.Fill(&bet)
 		state.BetList = append(state.BetList, bet)
+		state.Uid2IdList = append(state.Uid2IdList, types.UID2ID{UID: bet.UID, ID: uint64(i + 1)})
+
 	}
+	state.Stats = types.BetStats{Count: 5}
+
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
@@ -54,23 +61,26 @@ func TestShowBet(t *testing.T) {
 			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 		}
 		for _, tc := range []struct {
-			desc string
-			uid  string
+			desc    string
+			uid     string
+			creator string
 
 			args []string
 			err  error
 			obj  types.Bet
 		}{
 			{
-				desc: "found",
-				uid:  objs[0].UID,
+				desc:    "found",
+				creator: simappUtil.TestParamUsers["user1"].Address.String(),
+				uid:     objs[0].UID,
 
 				args: common,
 				obj:  objs[0],
 			},
 			{
-				desc: "not found",
-				uid:  strconv.Itoa(100000),
+				desc:    "not found",
+				creator: "",
+				uid:     strconv.Itoa(100000),
 
 				args: common,
 				err:  status.Error(codes.NotFound, "not found"),
@@ -79,6 +89,7 @@ func TestShowBet(t *testing.T) {
 			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
+					tc.creator,
 					tc.uid,
 				}
 				args = append(args, tc.args...)

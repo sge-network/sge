@@ -12,7 +12,7 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetBet(ctx, msg.Bet.UID)
+	_, isFound := k.GetBetID(ctx, msg.Bet.UID)
 	if isFound {
 		return &types.MsgPlaceBetResponse{
 				Error: types.ErrDuplicateUID.Error(),
@@ -68,7 +68,7 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 func (k msgServer) SettleBet(goCtx context.Context, msg *types.MsgSettleBet) (*types.MsgSettleBetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if err := k.Keeper.SettleBet(ctx, msg.BetUID); err != nil {
+	if err := k.Keeper.SettleBet(ctx, msg.BettorAddress, msg.BetUID); err != nil {
 		return &types.MsgSettleBetResponse{
 			Error:  err.Error(),
 			BetUID: msg.BetUID,

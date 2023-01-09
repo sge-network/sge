@@ -47,19 +47,21 @@ func CmdListBet() *cobra.Command {
 // CmdShowBet implements a command to return a specific bet
 func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bet [uid]",
-		Short: "bet details by id",
-		Long:  "Get bet details by id.",
-		Args:  cobra.ExactArgs(1),
+		Use:   "bet [creator] [uid]",
+		Short: "bet details of bettor by uid",
+		Long:  "Get bet details by bettor address adn uid.",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argUID := args[0]
+			argCreator := args[0]
+			argUID := args[1]
 
 			params := &types.QueryBetRequest{
-				Uid: argUID,
+				Creator: argCreator,
+				Uid:     argUID,
 			}
 
 			res, err := queryClient.Bet(context.Background(), params)

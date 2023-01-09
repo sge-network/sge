@@ -8,6 +8,7 @@ import (
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/nullify"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
@@ -17,14 +18,16 @@ import (
 var _ = strconv.IntSize
 
 func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
+	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	items := make([]types.Bet, n)
 	for i := range items {
 		items[i].UID = strconv.Itoa(i)
+		items[i].Creator = testCreator
 		items[i].OddsValue = sdk.NewDec(10)
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
 
-		keeper.SetBet(ctx, items[i])
+		keeper.SetBet(ctx, items[i], uint64(i+1))
 	}
 	return items
 }
@@ -32,9 +35,11 @@ func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
 func TestBetGet(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNBet(k, ctx, 10)
+	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 
 	rst, found := k.GetBet(ctx,
-		"NotExistUid",
+		testCreator,
+		10000,
 	)
 	var expectedResp types.Bet
 	require.False(t, found)
@@ -43,9 +48,10 @@ func TestBetGet(t *testing.T) {
 		nullify.Fill(&rst),
 	)
 
-	for _, item := range items {
+	for i, item := range items {
 		rst, found := k.GetBet(ctx,
-			item.UID,
+			testCreator,
+			uint64(i+1),
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -60,6 +66,26 @@ func TestBetGetAll(t *testing.T) {
 	items := createNBet(k, ctx, 10)
 
 	bets, err := k.GetBets(ctx)
+	require.NoError(t, err)
+	require.ElementsMatch(t,
+		nullify.Fill(items),
+		nullify.Fill(bets),
+	)
+}
+
+// TestSortBetGetAll checks if incremental id is genereted correctly
+func TestSortBetGetAll(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	items := createNBet(k, ctx, 10000)
+
+	bets, err := k.GetBets(ctx)
+	lastBetID := uint64(0)
+	for _, b := range bets {
+		uuid2ID, found := k.GetBetID(ctx, b.UID)
+		require.True(t, found)
+		require.Greater(t, uuid2ID.ID, lastBetID)
+		lastBetID = uuid2ID.ID
+	}
 	require.NoError(t, err)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
