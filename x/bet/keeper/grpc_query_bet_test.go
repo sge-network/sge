@@ -164,6 +164,98 @@ func TestBetQueryPaginatedReverse(t *testing.T) {
 	})
 }
 
+func TestBetsByCreatorQueryPaginated(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	wctx := sdk.WrapSDKContext(ctx)
+	msgs := createNBet(k, ctx, 5)
+
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsByCreatorRequest {
+		return &types.QueryBetsByCreatorRequest{
+			Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+			Pagination: &query.PageRequest{
+				Key:        next,
+				Offset:     offset,
+				Limit:      limit,
+				CountTotal: total,
+			},
+		}
+	}
+	t.Run("ByOffset", func(t *testing.T) {
+		step := 2
+		for i := 0; i < len(msgs); i += step {
+			resp, err := k.BetsByCreator(wctx, request(nil, uint64(i), uint64(step), false))
+			require.NoError(t, err)
+			require.LessOrEqual(t, len(resp.Bet), step)
+			require.Subset(t,
+				nullify.Fill(msgs),
+				nullify.Fill(resp.Bet),
+			)
+		}
+	})
+	t.Run("ByKey", func(t *testing.T) {
+		step := 2
+		var next []byte
+		for i := 0; i < len(msgs); i += step {
+			resp, err := k.BetsByCreator(wctx, request(next, 0, uint64(step), false))
+			require.NoError(t, err)
+			require.LessOrEqual(t, len(resp.Bet), step)
+			require.Subset(t,
+				nullify.Fill(msgs),
+				nullify.Fill(resp.Bet),
+			)
+			next = resp.Pagination.NextKey
+		}
+	})
+	t.Run("Total", func(t *testing.T) {
+		resp, err := k.BetsByCreator(wctx, request(nil, 0, 0, true))
+		require.NoError(t, err)
+		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+		require.ElementsMatch(t,
+			nullify.Fill(msgs),
+			nullify.Fill(resp.Bet),
+		)
+	})
+	t.Run("InvalidRequest", func(t *testing.T) {
+		_, err := k.Bets(wctx, nil)
+		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest))
+	})
+}
+
+func TestBetByCreatorQueryPaginatedReverse(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	wctx := sdk.WrapSDKContext(ctx)
+	msgs := createNBet(k, ctx, 100)
+
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsByCreatorRequest {
+		return &types.QueryBetsByCreatorRequest{
+			Pagination: &query.PageRequest{
+				Key:        next,
+				Offset:     offset,
+				Limit:      limit,
+				CountTotal: total,
+				Reverse:    true,
+			},
+		}
+	}
+	t.Run("Sorted", func(t *testing.T) {
+		resp, err := k.BetsByCreator(wctx, request(nil, 0, 0, true))
+		require.NoError(t, err)
+		require.Equal(t, len(msgs), int(resp.Pagination.Total))
+
+		lastBetID := resp.Pagination.Total + 1
+		for _, b := range resp.Bet {
+			uuid2ID, found := k.GetBetID(ctx, b.UID)
+			require.True(t, found)
+			require.Less(t, uuid2ID.ID, lastBetID)
+			lastBetID = uuid2ID.ID
+		}
+	})
+	t.Run("InvalidRequest", func(t *testing.T) {
+		_, err := k.Bets(wctx, nil)
+		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest))
+	})
+}
+
 func TestBetByUIDsQuery(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)

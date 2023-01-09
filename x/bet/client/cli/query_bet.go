@@ -45,6 +45,45 @@ func CmdListBet() *cobra.Command {
 	return cmd
 }
 
+// CmdListBetByCreator implements a command to return all bets of a certain creator address
+func CmdListBetByCreator() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "bets [creator]",
+		Short: "get list of bets of a creator address",
+		Long:  "Get list of bets of a creator address in paginated response.",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			argCreator := args[0]
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryBetsByCreatorRequest{
+				Creator:    argCreator,
+				Pagination: pageReq,
+			}
+
+			res, err := queryClient.BetsByCreator(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 // CmdListBetByUIDs returns command object for querying bets by uid list
 func CmdListBetByUIDs() *cobra.Command {
 	cmd := &cobra.Command{

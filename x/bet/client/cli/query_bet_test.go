@@ -10,7 +10,6 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -34,7 +33,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+			Creator:   testAddress,
 			UID:       uuid.NewString(),
 			OddsValue: sdk.NewDec(10),
 			Amount:    sdk.NewInt(10),
@@ -72,7 +71,7 @@ func TestQueryBet(t *testing.T) {
 		}{
 			{
 				desc:    "found",
-				creator: simappUtil.TestParamUsers["user1"].Address.String(),
+				creator: testAddress,
 				uid:     objs[0].UID,
 
 				args: common,
@@ -177,6 +176,71 @@ func TestQueryBet(t *testing.T) {
 		})
 	})
 
+	t.Run("ListBetByCreator", func(t *testing.T) {
+		ctx := net.Validators[0].ClientCtx
+		request := func(next []byte, offset, limit uint64, total bool) []string {
+			args := []string{
+				testAddress,
+				fmt.Sprintf("--%s=json", tmcli.OutputFlag),
+			}
+			if next == nil {
+				args = append(args, fmt.Sprintf("--%s=%d", flags.FlagOffset, offset))
+			} else {
+				args = append(args, fmt.Sprintf("--%s=%s", flags.FlagPageKey, next))
+			}
+			args = append(args, fmt.Sprintf("--%s=%d", flags.FlagLimit, limit))
+			if total {
+				args = append(args, fmt.Sprintf("--%s", flags.FlagCountTotal))
+			}
+			return args
+		}
+		t.Run("ByOffset", func(t *testing.T) {
+			step := 2
+			for i := 0; i < len(objs); i += step {
+				args := request(nil, uint64(i), uint64(step), false)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBetByCreator(), args)
+				require.NoError(t, err)
+				var resp types.QueryBetsResponse
+				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.LessOrEqual(t, len(resp.Bet), step)
+				require.Subset(t,
+					nullify.Fill(objs),
+					nullify.Fill(resp.Bet),
+				)
+			}
+		})
+		t.Run("ByKey", func(t *testing.T) {
+			step := 2
+			var next []byte
+			for i := 0; i < len(objs); i += step {
+				args := request(next, 0, uint64(step), false)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBetByCreator(), args)
+				require.NoError(t, err)
+				var resp types.QueryBetsResponse
+				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.LessOrEqual(t, len(resp.Bet), step)
+				require.Subset(t,
+					nullify.Fill(objs),
+					nullify.Fill(resp.Bet),
+				)
+				next = resp.Pagination.NextKey
+			}
+		})
+		t.Run("Total", func(t *testing.T) {
+			args := request(nil, 0, uint64(len(objs)), true)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBetByCreator(), args)
+			require.NoError(t, err)
+			var resp types.QueryBetsResponse
+			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, err)
+			require.Equal(t, len(objs), int(resp.Pagination.Total))
+			require.ElementsMatch(t,
+				nullify.Fill(objs),
+				nullify.Fill(resp.Bet),
+			)
+		})
+	})
+
 	t.Run("ListBetByUIDs", func(t *testing.T) {
 		ctx := net.Validators[0].ClientCtx
 		common := []string{
@@ -184,7 +248,7 @@ func TestQueryBet(t *testing.T) {
 		}
 		var items []string
 		for _, v := range objs {
-			items = append(items, simappUtil.TestParamUsers["user1"].Address.String()+":"+v.UID)
+			items = append(items, testAddress+":"+v.UID)
 		}
 
 		for _, tc := range []struct {

@@ -16,7 +16,12 @@ service Query {
 		option (google.api.http).get = "/sge/bet/{creator}/{uid}";
 	}
 
-	// Queries a list of Bet items.
+	// Queries list of Bet items of a certain creator.
+	rpc BetsByCreator(QueryBetsByCreatorRequest) returns (QueryBetsResponse) {
+		option (google.api.http).get = "/sge/bets_by_creator/{creator}";
+	}
+
+	// Queries list of Bet items.
 	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
 		option (google.api.http).get = "/sge/bets";
 	}
@@ -54,3 +59,7 @@ message QueryBetsByUIDsResponse {
 	repeated string not_found_events = 2;
 }
 
+message QueryBetsByCreatorRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+	string creator = 2;
+}

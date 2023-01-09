@@ -37,7 +37,7 @@ var (
 )
 
 func BetListByCreatorKey(creator string) []byte {
-	return utils.StrBytes(creator)
+	return append(BetListPrefix, utils.StrBytes(creator)...)
 }
 
 func BetListByIDKey(creator string, id uint64) []byte {

@@ -18,8 +18,9 @@ import (
 var _ = strconv.IntSize
 
 func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	items := make([]types.Bet, n)
+	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+
 	for i := range items {
 		items[i].UID = strconv.Itoa(i)
 		items[i].Creator = testCreator

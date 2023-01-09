@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/sge-network/sge/consts"
@@ -21,6 +22,34 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 	ctx := sdk.UnwrapSDKContext(c)
 
 	betStore := k.getBetStore(ctx)
+
+	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
+		var bet types.Bet
+		if err := k.cdc.Unmarshal(value, &bet); err != nil {
+			return err
+		}
+
+		bets = append(bets, bet)
+		return nil
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
+}
+
+// Betsreturns all bets
+func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+
+	var bets []types.Bet
+	ctx := sdk.UnwrapSDKContext(c)
+
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorKey(req.Creator))
 
 	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
 		var bet types.Bet
