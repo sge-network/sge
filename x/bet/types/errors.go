@@ -4,6 +4,7 @@ package types
 
 import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 )
 
 // x/bet module sentinel errors
@@ -55,5 +56,6 @@ var (
 	ErrNoKycField                     = sdkerrors.Register(ModuleName, 2045, "KYC field does not exist in ticket payload")
 	ErrNoKycIdField                   = sdkerrors.Register(ModuleName, 2046, "KYC ID does not exist in KYC part of ticket payload")
 	ErrBettorAddressNotEqualToCreator = sdkerrors.Register(ModuleName, 2047, "provided bettor address is not equal to bet owner")
+	ErrCanNotQueryLargeNumberOfBets   = sdkerrors.Register(ModuleName, 2048, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
 	ErrTextInvalidCreator             = "invalid creator address (%s)"
 )

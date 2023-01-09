@@ -96,11 +96,14 @@ func TestPlaceBet(t *testing.T) {
 		{
 			desc: "not exist odds",
 			sportEvent: &sporteventtypes.SportEvent{
-				UID:      "uid_oddsNotexist",
-				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-				OddsUIDs: []string{"odds1", "odds2"},
-				Active:   true,
+				UID:    "uid_oddsNotexist",
+				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds: []*sporteventtypes.Odds{
+					{UID: "odds1"},
+					{UID: "odds2"},
+				},
+				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
@@ -123,11 +126,14 @@ func TestPlaceBet(t *testing.T) {
 		{
 			desc: "low bet amount",
 			sportEvent: &sporteventtypes.SportEvent{
-				UID:      "uid_lowBetAmount",
-				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-				OddsUIDs: []string{"odds1", "odds2"},
-				Active:   true,
+				UID:    "uid_lowBetAmount",
+				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds: []*sporteventtypes.Odds{
+					{UID: "odds1"},
+					{UID: "odds2"},
+				},
+				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1000),
 					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
@@ -150,11 +156,14 @@ func TestPlaceBet(t *testing.T) {
 		{
 			desc: "success",
 			sportEvent: &sporteventtypes.SportEvent{
-				UID:      "uid_success",
-				Status:   sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:    uint64(ctx.BlockTime().Unix()) + 1000,
-				OddsUIDs: []string{"odds1", "odds2"},
-				Active:   true,
+				UID:    "uid_success",
+				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds: []*sporteventtypes.Odds{
+					{UID: "odds1"},
+					{UID: "odds2"},
+				},
+				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),

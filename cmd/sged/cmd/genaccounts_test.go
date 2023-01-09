@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/sge-network/sge/app"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/cmd/sged/cmd"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/stretchr/testify/require"
@@ -31,7 +31,7 @@ func TestSampleCMD(t *testing.T) {
 	ctx := val.ClientCtx
 	sec := hd.Secp256k1
 
-	keyInfo, _, err := ctx.Keyring.NewMnemonic("genUser1", keyring.English, app.FullFundraiserPath, "", sec)
+	keyInfo, _, err := ctx.Keyring.NewMnemonic("genUser1", keyring.English, sdk.FullFundraiserPath, "", sec)
 	require.NoError(t, err)
 
 	userHomeDir, err := os.UserHomeDir()

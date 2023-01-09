@@ -3,6 +3,7 @@ package cli_test
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -52,7 +53,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	return network.New(t, cfg), state.BetList
 }
 
-func TestShowBet(t *testing.T) {
+func TestQueryBet(t *testing.T) {
 	net, objs := networkWithBetObjects(t, 5)
 
 	t.Run("ShowBet", func(t *testing.T) {
@@ -174,5 +175,56 @@ func TestShowBet(t *testing.T) {
 				nullify.Fill(resp.Bet),
 			)
 		})
+	})
+
+	t.Run("ListBetByUIDs", func(t *testing.T) {
+		ctx := net.Validators[0].ClientCtx
+		common := []string{
+			fmt.Sprintf("--%s=json", tmcli.OutputFlag),
+		}
+		var items []string
+		for _, v := range objs {
+			items = append(items, simappUtil.TestParamUsers["user1"].Address.String()+":"+v.UID)
+		}
+
+		for _, tc := range []struct {
+			desc  string
+			items []string
+
+			args []string
+			err  error
+			obj  []types.Bet
+		}{
+			{
+				desc:  "found",
+				items: items,
+
+				args: common,
+				obj:  objs,
+			},
+		} {
+			tc := tc
+			t.Run(tc.desc, func(t *testing.T) {
+				args := []string{
+					strings.Join(tc.items, ","),
+				}
+				args = append(args, tc.args...)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBetByUIDs(), args)
+				if tc.err != nil {
+					stat, ok := status.FromError(tc.err)
+					require.True(t, ok)
+					require.ErrorIs(t, stat.Err(), tc.err)
+				} else {
+					require.NoError(t, err)
+					var resp types.QueryBetsByUIDsResponse
+					require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+					require.NotNil(t, resp.Bets)
+					require.Equal(t,
+						nullify.Fill(&tc.obj),
+						nullify.Fill(&resp.Bets),
+					)
+				}
+			})
+		}
 	})
 }

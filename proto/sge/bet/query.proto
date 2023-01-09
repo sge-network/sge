@@ -13,12 +13,17 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 service Query {
 	// Queries a Bet by uid.
 	rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
-		option (google.api.http).get = "/sge/bet/{uid}";
+		option (google.api.http).get = "/sge/bet/{creator}/{uid}";
 	}
 
 	// Queries a list of Bet items.
 	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
 		option (google.api.http).get = "/sge/bets";
+	}
+
+	// Queries a list of Bet items filtered by uid list.
+	rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
+		option (google.api.http).get = "/sge/bets_by_uids";
 	}
 }
 
@@ -38,5 +43,14 @@ message QueryBetsRequest {
 message QueryBetsResponse {
 	repeated Bet bet = 1 [(gogoproto.nullable) = false];
 	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryBetsByUIDsRequest {
+	repeated QueryBetRequest items = 1 [(gogoproto.jsontag) = "items", json_name = "items"];
+}
+
+message QueryBetsByUIDsResponse {
+	repeated Bet bets = 1 [(gogoproto.nullable) = false];
+	repeated string not_found_events = 2;
 }
 
