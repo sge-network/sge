@@ -57,7 +57,7 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 		"odds":     testEventOdds,
 		"exp":      9999999999,
 		"iat":      7777777777,
-		"details":  "Winner of x:y",
+		"meta":     "Winner of x:y",
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)

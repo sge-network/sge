@@ -34,7 +34,7 @@ func SimulateMsgPlaceBet(
 			},
 		}
 
-		_, found := k.GetBet(ctx, msg.Bet.UID)
+		_, found := k.GetBet(ctx, simAccount.Address.String(), 1)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Bet already exist"), nil, nil
 		}

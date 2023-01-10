@@ -37,6 +37,9 @@ message MsgSettleBet {
 
   // bet_uid is the unique uuid of the bet to settle
   string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
+
+  // bettor_address si sthe bec32 address of the bettor
+  string bettor_address = 3;
 }
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request

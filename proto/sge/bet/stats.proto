@@ -1,0 +1,11 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+message BetStats {
+
+  // count is the total count of bets
+  uint64 count = 1;
+
+}
