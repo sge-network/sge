@@ -133,7 +133,7 @@ func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bet [creator] [uid]",
 		Short: "bet details of bettor by uid",
-		Long:  "Get bet details by bettor address adn uid.",
+		Long:  "Get bet details by bettor address and uid.",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)

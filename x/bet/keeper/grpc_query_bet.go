@@ -40,7 +40,7 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
-// Betsreturns all bets
+// Bets returns all bets of certain creator sort-able by pagination attributes
 func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)

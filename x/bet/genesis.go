@@ -10,10 +10,6 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 
-	for _, elem := range genState.Uid2IdList {
-		k.SetBetID(ctx, elem)
-	}
-
 	k.SetBetStats(ctx, genState.Stats)
 
 	// Set all the bet
