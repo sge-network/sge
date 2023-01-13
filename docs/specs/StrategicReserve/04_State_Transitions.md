@@ -42,7 +42,7 @@ When this  is processed:
 - Transfer the bet amount (house winnings) from the `bet_reserve` to the `sr_pool`
   module account of SR
 
-- Unlock the extra payout or SR's contribution in the `sr_pool` by modifying
+- Unlock the payout profit or SR's contribution in the `sr_pool` by modifying
   the `locked_amount` and `unlocked_amount` params
 
 ---

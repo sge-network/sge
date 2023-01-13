@@ -33,7 +33,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
 			UID:       strconv.Itoa(i),
-			OddsValue: sdk.NewDec(10),
+			OddsValue: "10",
 			Amount:    sdk.NewInt(10),
 			BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 		}

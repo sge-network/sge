@@ -18,17 +18,15 @@ message Bet {
   string odds_uid = 3 [(gogoproto.customname) = "OddsUID" ,(gogoproto.jsontag) = "odds_uid", json_name = "odds_uid"];
 
   // odds_value is the odds on which bet is placed
-  string odds_value = 4[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
+  string odds_value = 4;
 
   // amount is the wager amount
-  string amount = 5[
+  string amount = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false];
 
   // betFee is the betting fee
-  cosmos.base.v1beta1.Coin bet_fee = 6[
+  cosmos.base.v1beta1.Coin bet_fee = 6 [
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false];
 

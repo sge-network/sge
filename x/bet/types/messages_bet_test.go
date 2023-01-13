@@ -108,15 +108,13 @@ func TestNewBet(t *testing.T) {
 			SportEventUID: "sportEventUid",
 			Value:         "1000",
 		}
-		oddsValueDec, err := sdk.NewDecFromStr(inputBetOdds.Value)
-		require.Nil(t, err)
 
 		expectedBet := &Bet{
 			UID:           inputBet.UID,
 			Creator:       creator,
 			SportEventUID: inputBetOdds.SportEventUID,
 			OddsUID:       inputBetOdds.UID,
-			OddsValue:     oddsValueDec,
+			OddsValue:     inputBetOdds.Value,
 			Amount:        inputBet.Amount,
 			Ticket:        inputBet.Ticket,
 		}

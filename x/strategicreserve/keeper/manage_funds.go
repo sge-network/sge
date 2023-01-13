@@ -2,25 +2,26 @@ package keeper
 
 import (
 	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/app/params"
-	bet "github.com/sge-network/sge/x/bet/types"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // ProcessBetPlacement transfers the bet fee from the bettor's account
 // to the bet module account and the bet amount from the given bettor's
-// account to the `bet_reserve` account of SR and locks the extra
-// payout (or SR's contribution) in the `sr_pool` account of SR.
+// account to the `bet_reserve` account of SR and locks the payout
+// profit (or SR's contribution) in the `sr_pool` account of SR.
 // payout = bet amount * odds value
-// extra payout = payout - bet amount
+// payout profit = payout - bet amount
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
 	betFee sdk.Coin,
 	betAmount sdk.Int,
-	extraPayout sdk.Int,
+	payoutProfit sdk.Int,
 	uniqueLock string,
 ) error {
 
@@ -37,18 +38,18 @@ func (k Keeper) ProcessBetPlacement(
 	// NOTE: This check may result in completely emptying the SR pool.
 	// replacement of SR pool capacity calculation to minimise risking
 	// the SR pool due to payout. Risk management should also be done here if requested.
-	if reserver.SrPool.UnlockedAmount.LT(extraPayout) {
+	if reserver.SrPool.UnlockedAmount.LT(payoutProfit) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientUnlockedAmountInSrPool,
-			reserver.SrPool.UnlockedAmount, extraPayout))
+			reserver.SrPool.UnlockedAmount, payoutProfit))
 		return types.ErrInsufficientUnlockedAmountInSrPool
 	}
 
 	// Transfer bet fee from bettor to the `bet` module account
-	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bet.ModuleName,
+	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName,
 		betFee.Amount)
 	if err != nil {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betFee,
-			bettorAddress, bet.ModuleName, err.Error()))
+			bettorAddress, bettypes.ModuleName, err.Error()))
 		return err
 	}
 
@@ -61,8 +62,8 @@ func (k Keeper) ProcessBetPlacement(
 		return err
 	}
 
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Add(extraPayout),
-		reserver.SrPool.UnlockedAmount.Sub(extraPayout))
+	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Add(payoutProfit),
+		reserver.SrPool.UnlockedAmount.Sub(payoutProfit))
 
 	// Create a unique lock in the Payout Store for the bet
 	k.setPayoutLock(ctx, uniqueLock)
@@ -73,16 +74,16 @@ func (k Keeper) ProcessBetPlacement(
 }
 
 // BettorWins pays the payout to the bettor from the `bet_reserve`
-// of the SR. Also, it transfers the extra payout locked in the
+// of the SR. Also, it transfers the payout profit locked in the
 // `sr_pool` to the `bet_reserve`. It should be called when the
 // bettor wins the bet.
 // payout = bet amount * odds value
-// extra payout = payout - bet amount
+// payout profit = payout - bet amount
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
 	betAmount sdk.Int,
-	extraPayout sdk.Int,
+	payoutProfit sdk.Int,
 	uniqueLock string,
 ) error {
 
@@ -96,25 +97,25 @@ func (k Keeper) BettorWins(
 	reserver := k.GetReserver(ctx)
 
 	// If SR locked amount has insufficient balance, return error
-	if reserver.SrPool.LockedAmount.LT(extraPayout) {
+	if reserver.SrPool.LockedAmount.LT(payoutProfit) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientLockedAmountInSrPool,
-			reserver.SrPool.LockedAmount, extraPayout))
+			reserver.SrPool.LockedAmount, payoutProfit))
 		return types.ErrInsufficientLockedAmountInSrPool
 	}
 
-	// Transfer extra payout from `sr_pool` to `bet_reserve` account
+	// Transfer payout profit from `sr_pool` to `bet_reserve` account
 	err := k.transferFundsFromModuleToModule(ctx, types.SRPoolName,
-		types.BetReserveName, extraPayout)
+		types.BetReserveName, payoutProfit)
 	if err != nil {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed,
-			extraPayout, types.SRPoolName, types.BetReserveName, err))
+			payoutProfit, types.SRPoolName, types.BetReserveName, err))
 		return err
 	}
 
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(extraPayout),
+	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
 		reserver.SrPool.UnlockedAmount)
 
-	payout := betAmount.Add(extraPayout)
+	payout := betAmount.Add(payoutProfit)
 
 	// Transfer payout from the `bet_reserve` account to bettor
 	err = k.transferFundsFromModuleToUser(ctx, types.BetReserveName, bettorAddress,
@@ -133,13 +134,13 @@ func (k Keeper) BettorWins(
 	return nil
 }
 
-// BettorLoses unlocks the extra payout in the `sr_pool`. It transfers the
+// BettorLoses unlocks the payout profit in the `sr_pool`. It transfers the
 // bet amount (house winnings) from the `bet_reserve` to the `sr_pool`
 // module account of SR. It should be called when the bettor loses the bet.
 // payout = bet amount * odds value
-// extra payout = payout - bet amount
+// payout profit = payout - bet amount
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error {
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error {
 
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -158,8 +159,8 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 	}
 
 	reserver := k.GetReserver(ctx)
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(extraPayout),
-		reserver.SrPool.UnlockedAmount.Add(betAmount.Add(extraPayout)))
+	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
+		reserver.SrPool.UnlockedAmount.Add(betAmount.Add(payoutProfit)))
 
 	// Delete lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
@@ -174,9 +175,9 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 // It should be called when a sports event is cancelled or aborted
 // and the bet amount needs to be refunded back to the bettor.
 // payout = bet amount * odds value
-// extra payout = payout - bet amount
+// payout profit = payout - bet amount
 func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
-	betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error {
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error {
 
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -187,9 +188,9 @@ func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
 	reserver := k.GetReserver(ctx)
 
 	// If SR locked amount has insufficient balance, return error
-	if reserver.SrPool.LockedAmount.LT(extraPayout) {
+	if reserver.SrPool.LockedAmount.LT(payoutProfit) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientLockedAmountInSrPool,
-			reserver.SrPool.LockedAmount, extraPayout))
+			reserver.SrPool.LockedAmount, payoutProfit))
 		return types.ErrInsufficientLockedAmountInSrPool
 	}
 
@@ -202,8 +203,8 @@ func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
 		return err
 	}
 
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(extraPayout),
-		reserver.SrPool.UnlockedAmount.Add(extraPayout))
+	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
+		reserver.SrPool.UnlockedAmount.Add(payoutProfit))
 
 	// Delete the lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)

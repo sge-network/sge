@@ -46,7 +46,8 @@ func TestSettleBet(t *testing.T) {
 			desc: "failed in checking status",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -70,7 +71,8 @@ func TestSettleBet(t *testing.T) {
 			desc: "sport event is aborted",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -90,7 +92,8 @@ func TestSettleBet(t *testing.T) {
 			desc: "sport event is canceled",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(300),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -110,7 +113,8 @@ func TestSettleBet(t *testing.T) {
 			desc: "result is not declared",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -131,7 +135,8 @@ func TestSettleBet(t *testing.T) {
 			desc: "success",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
