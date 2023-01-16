@@ -23,9 +23,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type OddsType int32
 
 const (
-	// Invalid odd type (European)
+	// Invalid odd type
 	OddsType_ODD_TYPE_INVALID OddsType = 0
-	// Decimal odds type
+	// Decimal odds type (European)
 	OddsType_ODD_TYPE_DECIMAL OddsType = 1
 	// Fractional odds type (British)
 	OddsType_ODD_TYPE_FRACTIONAL OddsType = 2
