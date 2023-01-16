@@ -142,7 +142,7 @@ type MsgSettleBet struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// bet_uid is the unique uuid of the bet to settle
 	BetUID string `protobuf:"bytes,2,opt,name=bet_uid,proto3" json:"bet_uid"`
-	// bettor_address si sthe bec32 address of the bettor
+	// bettor_address is sthe bec32 address of the bettor
 	BettorAddress string `protobuf:"bytes,3,opt,name=bettor_address,json=bettorAddress,proto3" json:"bettor_address,omitempty"`
 }
 

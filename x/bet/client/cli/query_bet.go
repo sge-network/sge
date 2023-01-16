@@ -48,8 +48,8 @@ func CmdListBet() *cobra.Command {
 // CmdListBetByCreator implements a command to return all bets of a certain creator address
 func CmdListBetByCreator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bets [creator]",
-		Short: "get list of bets of a creator address",
+		Use:   "bets-by-creator [creator]",
+		Short: "get list of bets of a bet-creator-address",
 		Long:  "Get list of bets of a creator address in paginated response.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -88,8 +88,8 @@ func CmdListBetByCreator() *cobra.Command {
 func CmdListBetByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bets-by-uids [creator:uid]",
-		Short: "Query bets list of bettor by UIDs",
-		Long:  "Get list of bets by list of the bettor of uids.",
+		Short: "Query bets list of bettor by creator:UID list",
+		Long:  "Get list of bets creator:UID comma separated list ex: \"address1:uid1,address2:uid2\" .",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqItems := strings.Split(args[0], listSeparator)
@@ -132,8 +132,8 @@ func CmdListBetByUIDs() *cobra.Command {
 func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bet [creator] [uid]",
-		Short: "bet details of bettor by uid",
-		Long:  "Get bet details by bettor address and uid.",
+		Short: "bet details by bet-creator-address and uid",
+		Long:  "Get bet details by bet-creator-address address and uid.",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)

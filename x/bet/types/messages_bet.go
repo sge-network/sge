@@ -76,10 +76,11 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 var _ sdk.Msg = &MsgSettleBet{}
 
 // NewMsgSettleBet returns a MsgSettleBet using given data
-func NewMsgSettleBet(creator string, betUID string) *MsgSettleBet {
+func NewMsgSettleBet(creator, bettorAddress, betUID string) *MsgSettleBet {
 	return &MsgSettleBet{
-		Creator: creator,
-		BetUID:  betUID,
+		Creator:       creator,
+		BettorAddress: bettorAddress,
+		BetUID:        betUID,
 	}
 }
 

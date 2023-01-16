@@ -438,7 +438,7 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Queries a Bet by uid.
 	Bet(ctx context.Context, in *QueryBetRequest, opts ...grpc.CallOption) (*QueryBetResponse, error)
-	// Queries list of Bet items of a certain creator.
+	// Queries list of Bet items of a certain creator sorted by timestamp.
 	BetsByCreator(ctx context.Context, in *QueryBetsByCreatorRequest, opts ...grpc.CallOption) (*QueryBetsResponse, error)
 	// Queries list of Bet items.
 	Bets(ctx context.Context, in *QueryBetsRequest, opts ...grpc.CallOption) (*QueryBetsResponse, error)
@@ -494,7 +494,7 @@ func (c *queryClient) BetsByUIDs(ctx context.Context, in *QueryBetsByUIDsRequest
 type QueryServer interface {
 	// Queries a Bet by uid.
 	Bet(context.Context, *QueryBetRequest) (*QueryBetResponse, error)
-	// Queries list of Bet items of a certain creator.
+	// Queries list of Bet items of a certain creator sorted by timestamp.
 	BetsByCreator(context.Context, *QueryBetsByCreatorRequest) (*QueryBetsResponse, error)
 	// Queries list of Bet items.
 	Bets(context.Context, *QueryBetsRequest) (*QueryBetsResponse, error)
