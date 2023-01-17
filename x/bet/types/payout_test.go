@@ -78,21 +78,21 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			oddsValue: "5/2",
 			betAmount: defaultBetAmount,
 
-			expVal: 150,
+			expVal: 250,
 		},
 		{
 			desc:      "negative outcome",
 			oddsValue: "2/7",
 			betAmount: defaultBetAmount,
 
-			expVal: -72,
+			expVal: 29,
 		},
 		{
 			desc:      "same",
 			oddsValue: "1/1",
 			betAmount: defaultBetAmount,
 
-			expVal: 0,
+			expVal: defaultBetAmount,
 		},
 		{
 			desc:      "zero base",
@@ -174,14 +174,14 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 			oddsValue: "+150",
 			betAmount: defaultBetAmount,
 
-			expVal: 50,
+			expVal: 150,
 		},
 		{
 			desc:      "lower",
 			oddsValue: "-150",
 			betAmount: defaultBetAmount,
 
-			expVal: -34,
+			expVal: 67,
 		},
 		{
 			desc:      "same",

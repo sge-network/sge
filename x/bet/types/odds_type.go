@@ -36,7 +36,7 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, 
 	payout := oddsDecVal.MulInt(amount)
 
 	// get the integer part of the payout
-	return payout.TruncateInt(), nil
+	return payout.RoundInt(), nil
 }
 
 // fractionalOdds is the type to define OddsTypeI interface
@@ -77,10 +77,10 @@ func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.In
 	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
 
 	// calculate payout
-	payout := amount.ToDec().Mul(coefficient)
+	payout := amount.ToDec().Add(amount.ToDec().Mul(coefficient))
 
 	// get the integer part of the payout
-	return payout.TruncateInt(), nil
+	return payout.RoundInt(), nil
 }
 
 // moneylineOdds is the type to define OddsTypeI interface
@@ -109,12 +109,12 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int
 	var payout sdk.Dec
 	if oddsValue.IsPositive() {
 		// bet amount should be multiplied by the coefficient
-		payout = amount.ToDec().Mul(coefficient)
+		payout = amount.ToDec().Add(amount.ToDec().Mul(coefficient))
 	} else {
 		// bet amount should be devided by the coefficient
-		payout = amount.ToDec().Quo(coefficient)
+		payout = amount.ToDec().Add(amount.ToDec().Quo(coefficient))
 	}
 
 	// get the integer part of the payout
-	return payout.TruncateInt(), nil
+	return payout.RoundInt(), nil
 }
