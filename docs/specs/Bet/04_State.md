@@ -1,14 +1,17 @@
 # **State**
 
-
 ## **KVStore**
-State in bet module is defined by its KVStore. This KVStore has only a single partitions:
 
-1. A partition for all bets
+State in bet module is defined by its KVStore. This KVStore has three prefixes:
+
+1. Store for all bets of a certain creator, using this pattern, blockchain is able to return list of all bets, bets of a certain creator and a single bet. The key prefix is created dynamically using this combination: `BetListPrefix`+`{Creator Address}`+`{Secuancial ID}`
+
+2. Store for the map of BetID and BetUID. this helps to get corresponding ID of the bet by issuing the UID. The keys are UIDs of bets and the values are sequencial generated IDs by blockchain.
+3. Store for the Bet statistics that contains the count of the total bets used to create next sequencial BetID.
 
 The bet model in the Proto files is as below:
 
-```
+```proto
 message Bet {
 
   // uid is the unique uuid assigned to bet
@@ -104,4 +107,22 @@ message Bet {
     RESULT_ABORTED = 5;
   }
 }
+
+message UID2ID {
+
+  // uid is the unique uuid assigned to bet
+  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
+
+  // id is the unique uuid assigned to bet
+  uint64 id = 2 [(gogoproto.customname) = "ID" ,(gogoproto.jsontag) = "id", json_name = "id"];
+
+}
+
+message BetStats {
+
+  // count is the total count of bets
+  uint64 count = 1;
+
+}
+
 ```
