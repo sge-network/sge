@@ -90,7 +90,7 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 
 	sportEvent, found := k.sporteventKeeper.GetSportEvent(ctx, val.SportEventUID)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "corrsponding sport event with id %s not found", val.SportEventUID)
+		return nil, status.Errorf(codes.NotFound, "corresponding sport event with id %s not found", val.SportEventUID)
 	}
 
 	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
