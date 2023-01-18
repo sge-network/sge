@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var defaultBetAmount = int64(100)
+var defaultBetAmount = int64(35625789)
 
 func TestCalculateDecimalPayout(t *testing.T) {
 
@@ -25,21 +25,22 @@ func TestCalculateDecimalPayout(t *testing.T) {
 			oddsValue: "1.55",
 			betAmount: defaultBetAmount,
 
-			expVal: 55,
+			expVal: 19594184,
 		},
-		{
-			desc:      "negative",
-			oddsValue: "0.75",
-			betAmount: defaultBetAmount,
 
-			expVal: -25,
-		},
 		{
 			desc:      "same",
 			oddsValue: "1",
 			betAmount: defaultBetAmount,
 
 			expVal: 0,
+		},
+		{
+			desc:      "negative",
+			oddsValue: "0.75",
+			betAmount: defaultBetAmount,
+
+			err: types.ErrDecimalOddsCanNotBeLessThanOne,
 		},
 		{
 			desc:      "negative input",
@@ -78,14 +79,28 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			oddsValue: "5/2",
 			betAmount: defaultBetAmount,
 
-			expVal: 250,
+			expVal: 89064473,
+		},
+		{
+			desc:      "positive outcome",
+			oddsValue: "7/2",
+			betAmount: defaultBetAmount,
+
+			expVal: 124690261,
 		},
 		{
 			desc:      "negative outcome",
 			oddsValue: "2/7",
 			betAmount: defaultBetAmount,
 
-			expVal: 29,
+			expVal: 10178797,
+		},
+		{
+			desc:      "negative outcome",
+			oddsValue: "1/17",
+			betAmount: defaultBetAmount,
+
+			expVal: 2095635,
 		},
 		{
 			desc:      "same",
@@ -174,14 +189,35 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 			oddsValue: "+150",
 			betAmount: defaultBetAmount,
 
-			expVal: 150,
+			expVal: 53438683,
 		},
 		{
 			desc:      "lower",
-			oddsValue: "-150",
+			oddsValue: "-450",
 			betAmount: defaultBetAmount,
 
-			expVal: 67,
+			expVal: 7916842,
+		},
+		{
+			desc:      "lower",
+			oddsValue: "-426",
+			betAmount: defaultBetAmount,
+
+			expVal: 8362861,
+		},
+		{
+			desc:      "lower",
+			oddsValue: "+450",
+			betAmount: defaultBetAmount,
+
+			expVal: 160316051,
+		},
+		{
+			desc:      "lower",
+			oddsValue: "+426",
+			betAmount: defaultBetAmount,
+
+			expVal: 151765861,
 		},
 		{
 			desc:      "same",

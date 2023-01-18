@@ -26,7 +26,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		if id == 0 {
 			// this means the imported genesis is broken because there is no corresponding
 			// id mapped to the uid
-			panic(fmt.Errorf(types.ErrInitGenesisFailedBecauseOfMissingBetID, elem.UID))
+			panic(fmt.Errorf(types.ErrTextInitGenesisFailedBecauseOfMissingBetID, elem.UID))
 		}
 
 		k.SetBet(ctx, elem, id)
