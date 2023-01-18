@@ -45,15 +45,54 @@ func CmdListBet() *cobra.Command {
 	return cmd
 }
 
+// CmdListBetByCreator implements a command to return all bets of a certain creator address
+func CmdListBetByCreator() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "bets-by-creator [creator]",
+		Short: "get list of bets of a bet-creator-address",
+		Long:  "Get list of bets of a creator address in paginated response.",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			argCreator := args[0]
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryBetsByCreatorRequest{
+				Creator:    argCreator,
+				Pagination: pageReq,
+			}
+
+			res, err := queryClient.BetsByCreator(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 // CmdListBetByUIDs returns command object for querying bets by uid list
 func CmdListBetByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bets-by-uids [uid]",
-		Short: "Query bets list by UIDs",
-		Long:  "Get list of bets by list of uids.",
+		Use:   "bets-by-uids [creator:uid]",
+		Short: "Query bets list of bettor by creator:UID list",
+		Long:  "Get list of bets creator:UID comma separated list ex: \"address1:uid1,address2:uid2\" .",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqUIDs := strings.Split(args[0], listSeparator)
+			reqItems := strings.Split(args[0], listSeparator)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -62,8 +101,17 @@ func CmdListBetByUIDs() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
+			var items []*types.QueryBetRequest
+			for _, val := range reqItems {
+				pair := strings.Split(val, mapSeparator)
+				items = append(items, &types.QueryBetRequest{
+					Creator: pair[0],
+					Uid:     pair[1],
+				})
+			}
+
 			params := &types.QueryBetsByUIDsRequest{
-				Uids: reqUIDs,
+				Items: items,
 			}
 
 			res, err := queryClient.BetsByUIDs(cmd.Context(), params)
@@ -83,19 +131,21 @@ func CmdListBetByUIDs() *cobra.Command {
 // CmdShowBet implements a command to return a specific bet
 func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "bet [uid]",
-		Short: "bet details by id",
-		Long:  "Get bet details by id.",
-		Args:  cobra.ExactArgs(1),
+		Use:   "bet [creator] [uid]",
+		Short: "bet details by bet-creator-address and uid",
+		Long:  "Get bet details by bet-creator-address address and uid.",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argUID := args[0]
+			argCreator := args[0]
+			argUID := args[1]
 
 			params := &types.QueryBetRequest{
-				Uid: argUID,
+				Creator: argCreator,
+				Uid:     argUID,
 			}
 
 			res, err := queryClient.Bet(context.Background(), params)

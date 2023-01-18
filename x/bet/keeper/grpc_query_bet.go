@@ -3,10 +3,10 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/bet/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -40,6 +40,34 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
+// Bets returns all bets of certain creator sort-able by pagination attributes
+func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+
+	var bets []types.Bet
+	ctx := sdk.UnwrapSDKContext(c)
+
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorKey(req.Creator))
+
+	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
+		var bet types.Bet
+		if err := k.cdc.Unmarshal(value, &bet); err != nil {
+			return err
+		}
+
+		bets = append(bets, bet)
+		return nil
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
+}
+
 // Bets returns bets with selected uids
 func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest) (*types.QueryBetsByUIDsResponse, error) {
 	if req == nil {
@@ -48,21 +76,28 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 
 	ctx := sdk.UnwrapSDKContext(c)
 
-	count := len(req.GetUids())
+	count := len(req.GetItems())
 	if count > types.MaxAllowedQueryBetsCount {
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 
-	req.Uids = utils.RemoveDuplicateStrs(req.Uids)
+	req.Items = RemoveDuplicateUIDs(req.Items)
 
 	foundBets := make([]types.Bet, 0, count)
 	notFoundBets := make([]string, 0)
-	for _, id := range req.GetUids() {
-		val, found := k.GetBet(ctx, id)
+	for _, item := range req.GetItems() {
+		uid2ID, found := k.GetBetID(ctx, item.Uid)
 		if !found {
-			notFoundBets = append(notFoundBets, id)
+			notFoundBets = append(notFoundBets, item.Uid)
 			continue
 		}
+
+		val, found := k.GetBet(ctx, item.Creator, uid2ID.ID)
+		if !found {
+			notFoundBets = append(notFoundBets, item.Uid)
+			continue
+		}
+
 		foundBets = append(foundBets, val)
 	}
 
@@ -80,13 +115,40 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
+	uid2ID, found := k.GetBetID(ctx, req.Uid)
+	if !found {
+		return nil, status.Error(codes.NotFound, "not found")
+	}
+
 	val, found := k.GetBet(
 		ctx,
-		req.Uid,
+		req.Creator,
+		uid2ID.ID,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryBetResponse{Bet: val}, nil
+	sportEvent, found := k.sporteventKeeper.GetSportEvent(ctx, val.SportEventUID)
+	if !found {
+		return nil, status.Errorf(codes.NotFound, "corresponding sport event with id %s not found", val.SportEventUID)
+	}
+
+	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
+}
+
+// RemoveDuplicateUIDs retuns input array without duplicates
+func RemoveDuplicateUIDs(strSlice []*types.QueryBetRequest) (list []*types.QueryBetRequest) {
+	keys := make(map[string]bool)
+
+	// If the key(values of the slice) is not equal
+	// to the already present value in new slice (list)
+	// then we append it. else we jump on another element.
+	for _, entry := range strSlice {
+		if _, value := keys[entry.Uid]; !value {
+			keys[entry.Uid] = true
+			list = append(list, entry)
+		}
+	}
+	return
 }

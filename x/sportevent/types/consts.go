@@ -1,4 +1,4 @@
 package types
 
-// MaxAllowedCharactersForDetails is maximum allowed characters count for sport event and odds details
-const MaxAllowedCharactersForDetails = 256
+// MaxAllowedCharactersForMeta is maximum allowed characters count for sport event and odds metadata
+const MaxAllowedCharactersForMeta = 256

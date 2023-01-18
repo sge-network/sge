@@ -8,13 +8,18 @@ import (
 )
 
 // SettleBet settles a single bet and updates it in KVStore
-func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
+func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) error {
 
 	if !types.IsValidUID(betUID) {
 		return types.ErrInvalidBetUID
 	}
 
-	bet, found := k.GetBet(ctx, betUID)
+	uid2ID, found := k.GetBetID(ctx, betUID)
+	if !found {
+		return types.ErrNoMatchingBet
+	}
+
+	bet, found := k.GetBet(ctx, bettorAddressStr, uid2ID.ID)
 	if !found {
 		return types.ErrNoMatchingBet
 	}
@@ -22,6 +27,10 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+	}
+
+	if bet.Creator != bettorAddressStr {
+		return types.ErrBettorAddressNotEqualToCreator
 	}
 
 	if err := checkBetStatus(bet.Status); err != nil {
@@ -50,7 +59,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 
 		bet.Status = types.Bet_STATUS_SETTLED
 
-		k.SetBet(ctx, bet)
+		k.SetBet(ctx, bet, uid2ID.ID)
 		return nil
 	}
 
@@ -64,7 +73,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, betUID string) error {
 	}
 
 	// store bet in the module state
-	k.SetBet(ctx, bet)
+	k.SetBet(ctx, bet, uid2ID.ID)
 	return nil
 }
 

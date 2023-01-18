@@ -55,8 +55,12 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 
 	bet.CreatedAt = ctx.BlockTime().Unix()
 
+	stats := k.GetBetStats(ctx)
+	stats.Count += 1
+
 	// store bet in the module state
-	k.SetBet(ctx, *bet)
+	k.SetBet(ctx, *bet, stats.Count)
+	k.SetBetStats(ctx, stats)
 
 	return nil
 }

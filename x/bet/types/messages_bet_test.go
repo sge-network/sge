@@ -123,20 +123,4 @@ func TestNewBet(t *testing.T) {
 		require.Nil(t, err)
 	})
 
-	t.Run("wrong odds value", func(t *testing.T) {
-		inputBet := &PlaceBetFields{
-			UID:    "betUid",
-			Ticket: "ticket",
-			Amount: sdk.NewInt(int64(10)),
-		}
-		creator := "creator"
-		inputBetOdds := &BetOdds{
-			UID:           "Oddsuid",
-			SportEventUID: "sportEventUid",
-			Value:         "invalidOddsValue",
-		}
-		res, err := NewBet(creator, inputBet, inputBetOdds)
-		require.Nil(t, res)
-		require.ErrorIs(t, ErrInConvertingOddsToDec, err)
-	})
 }

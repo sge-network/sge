@@ -65,11 +65,12 @@ func CmdPlaceBet() *cobra.Command {
 // CmdSettleBet implements a command to settle a bet
 func CmdSettleBet() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "settle-bet [bet-uid]",
+		Use:   "settle-bet [bet-creator-address] [bet-uid]",
 		Short: "Settle a bet",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetUID := args[0]
+			argBetCreator := args[0]
+			argBetUID := args[1]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -78,6 +79,7 @@ func CmdSettleBet() *cobra.Command {
 
 			msg := types.NewMsgSettleBet(
 				clientCtx.GetFromAddress().String(),
+				argBetCreator,
 				argBetUID,
 			)
 			if err := msg.ValidateBasic(); err != nil {
