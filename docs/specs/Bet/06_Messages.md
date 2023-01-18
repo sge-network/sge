@@ -72,7 +72,7 @@ The transaction will fail if:
 - The sport event does not contain the selected odds
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
-- There is an error in AddExtraPayoutToEvent in sportEvent module
+- There is an error in AddPayoutProfitToEvent in sportEvent module
 - There is an error in ProcessBetPlacement in SR module
 
 ### **What Happens if bet fails**

@@ -133,9 +133,10 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
-				UID:    "BetUID_2",
-				Amount: sdk.NewInt(500),
-				Ticket: placeBetTicket,
+				UID:      "BetUID_2",
+				Amount:   sdk.NewInt(500),
+				OddsType: types.OddsType_ODD_TYPE_DECIMAL,
+				Ticket:   placeBetTicket,
 			},
 		}
 
@@ -209,7 +210,8 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			desc: "success",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
-				OddsValue:     sdk.NewDec(10),
+				OddsValue:     "10",
+				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       creator.Address.String(),
 				OddsUID:       testOddsUID1,

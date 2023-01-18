@@ -48,7 +48,11 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		sportEvent.Status == sporteventtypes.SportEventStatus_STATUS_CANCELLED {
 		bet.Result = types.Bet_RESULT_ABORTED
 
-		payout := calculateExtraPayout(&bet)
+		payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+		if err != nil {
+			return err
+		}
+
 		if err := k.strategicreserveKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payout, bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRRefund, "%s", err)
 		}
@@ -125,7 +129,10 @@ func (k Keeper) settle(ctx sdk.Context, bet *types.Bet) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
 	}
 
-	payout := calculateExtraPayout(bet)
+	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	if err != nil {
+		return err
+	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
 		if err := k.strategicreserveKeeper.BettorLoses(ctx, bettorAddress, bet.Amount,

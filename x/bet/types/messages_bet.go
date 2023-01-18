@@ -142,16 +142,13 @@ func IsValidUID(uid string) bool {
 
 // NewBet creates and returns a new bet from given message
 func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
-	ticketOddsValue, err := sdk.NewDecFromStr(odds.Value)
-	if err != nil {
-		return nil, sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
-	}
+
 	return &Bet{
 		Creator:       creator,
 		UID:           bet.UID,
 		SportEventUID: odds.SportEventUID,
 		OddsUID:       odds.UID,
-		OddsValue:     ticketOddsValue,
+		OddsValue:     odds.Value,
 		Amount:        bet.Amount,
 		Ticket:        bet.Ticket,
 		OddsType:      OddsType(bet.OddsType),

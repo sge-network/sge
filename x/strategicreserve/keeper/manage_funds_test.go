@@ -20,7 +20,7 @@ func TestProcessBetPlacement(t *testing.T) {
 		bettorAddress sdk.AccAddress
 		betFee        sdk.Coin
 		betAmount     sdk.Int
-		extraPayout   sdk.Int
+		payoutProfit  sdk.Int
 		uniqueLock    string
 		err           error
 	}{
@@ -29,7 +29,7 @@ func TestProcessBetPlacement(t *testing.T) {
 			bettorAddress: user.Address,
 			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
 			betAmount:     sdk.NewIntFromUint64(99),
-			extraPayout:   sdk.NewIntFromUint64(198),
+			payoutProfit:  sdk.NewIntFromUint64(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           nil,
 		},
@@ -38,7 +38,7 @@ func TestProcessBetPlacement(t *testing.T) {
 			bettorAddress: user.Address,
 			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
 			betAmount:     sdk.NewIntFromUint64(99),
-			extraPayout:   sdk.NewIntFromUint64(198),
+			payoutProfit:  sdk.NewIntFromUint64(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           types.ErrLockAlreadyExists,
 		},
@@ -47,7 +47,7 @@ func TestProcessBetPlacement(t *testing.T) {
 			bettorAddress: user.Address,
 			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
 			betAmount:     sdk.NewIntFromUint64(45000000000000),
-			extraPayout:   sdk.NewIntFromUint64(9000000),
+			payoutProfit:  sdk.NewIntFromUint64(9000000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7l",
 			err:           types.ErrInsufficientUserBalance,
 		},
@@ -66,7 +66,7 @@ func TestProcessBetPlacement(t *testing.T) {
 			k.SetPayoutLock(ctx, "32932b20-8737-490b-b00b-8c16eccd8e7x")
 
 			err := k.ProcessBetPlacement(ctx, tc.bettorAddress, tc.betFee, tc.betAmount,
-				tc.extraPayout, tc.uniqueLock)
+				tc.payoutProfit, tc.uniqueLock)
 			if tc.err != nil {
 				require.True(t, errors.Is(tc.err, err))
 				return
@@ -84,7 +84,7 @@ func TestBettorWins(t *testing.T) {
 		desc          string
 		bettorAddress sdk.AccAddress
 		betAmount     sdk.Int
-		extraPayout   sdk.Int
+		payoutProfit  sdk.Int
 		uniqueLock    string
 		err           error
 	}{
@@ -92,7 +92,7 @@ func TestBettorWins(t *testing.T) {
 			desc:          "Success! Payout done",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(45),
-			extraPayout:   sdk.NewIntFromUint64(90),
+			payoutProfit:  sdk.NewIntFromUint64(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7p",
 			err:           nil,
 		},
@@ -100,7 +100,7 @@ func TestBettorWins(t *testing.T) {
 			desc:          "Failure! Payout lock does not exist in the payout store",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(45),
-			extraPayout:   sdk.NewIntFromUint64(90),
+			payoutProfit:  sdk.NewIntFromUint64(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           types.ErrPayoutLockDoesnotExist,
 		},
@@ -108,7 +108,7 @@ func TestBettorWins(t *testing.T) {
 			desc:          "Failure! SR locked amount has insufficient balance",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(50),
-			extraPayout:   sdk.NewIntFromUint64(5000),
+			payoutProfit:  sdk.NewIntFromUint64(5000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7p",
 			err:           types.ErrInsufficientLockedAmountInSrPool,
 		},
@@ -127,7 +127,7 @@ func TestBettorWins(t *testing.T) {
 			k.SetReserver(ctx, reserver)
 
 			err := k.BettorWins(ctx, tc.bettorAddress, tc.betAmount,
-				tc.extraPayout, tc.uniqueLock)
+				tc.payoutProfit, tc.uniqueLock)
 			if tc.err != nil {
 				require.True(t, errors.Is(tc.err, err))
 				return
@@ -142,36 +142,36 @@ func TestBettorLoses(t *testing.T) {
 	user := simappUtil.TestParamUsers["user1"]
 
 	tcs := []struct {
-		desc        string
-		address     sdk.AccAddress
-		betAmount   sdk.Int
-		extraPayout sdk.Int
-		uniqueLock  string
-		err         error
+		desc         string
+		address      sdk.AccAddress
+		betAmount    sdk.Int
+		payoutProfit sdk.Int
+		uniqueLock   string
+		err          error
 	}{
 		{
-			desc:        "Success! Payout done",
-			address:     user.Address,
-			betAmount:   sdk.NewIntFromUint64(45),
-			extraPayout: sdk.NewIntFromUint64(90),
-			uniqueLock:  "32932b20-8737-490b-b00b-8c16eccd8e7f",
-			err:         nil,
+			desc:         "Success! Payout done",
+			address:      user.Address,
+			betAmount:    sdk.NewIntFromUint64(45),
+			payoutProfit: sdk.NewIntFromUint64(90),
+			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7f",
+			err:          nil,
 		},
 		{
-			desc:        "Failure! Payout lock does not exist",
-			address:     user.Address,
-			betAmount:   sdk.NewIntFromUint64(45),
-			extraPayout: sdk.NewIntFromUint64(90),
-			uniqueLock:  "32932b20-8737-490b-b00b-8c16eccd8e7x",
-			err:         sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, "32932b20-8737-490b-b00b-8c16eccd8e7x"),
+			desc:         "Failure! Payout lock does not exist",
+			address:      user.Address,
+			betAmount:    sdk.NewIntFromUint64(45),
+			payoutProfit: sdk.NewIntFromUint64(90),
+			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7x",
+			err:          sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, "32932b20-8737-490b-b00b-8c16eccd8e7x"),
 		},
 		{
-			desc:        "Failure! Insufficient balance in Bet Reserve Account",
-			address:     user.Address,
-			betAmount:   sdk.NewIntFromUint64(5000),
-			extraPayout: sdk.NewIntFromUint64(5000),
-			uniqueLock:  "32932b20-8737-490b-b00b-8c16eccd8e7f",
-			err:         types.ErrInsufficientBalanceInModuleAccount,
+			desc:         "Failure! Insufficient balance in Bet Reserve Account",
+			address:      user.Address,
+			betAmount:    sdk.NewIntFromUint64(5000),
+			payoutProfit: sdk.NewIntFromUint64(5000),
+			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7f",
+			err:          types.ErrInsufficientBalanceInModuleAccount,
 		},
 	}
 
@@ -188,7 +188,7 @@ func TestBettorLoses(t *testing.T) {
 			k.SetReserver(ctx, reserver)
 
 			err := k.BettorLoses(ctx, tc.address, tc.betAmount,
-				tc.extraPayout, tc.uniqueLock)
+				tc.payoutProfit, tc.uniqueLock)
 			if tc.err != nil {
 				require.True(t, errors.Is(tc.err, err))
 				return
@@ -206,7 +206,7 @@ func TestRefundBettor(t *testing.T) {
 		desc          string
 		bettorAddress sdk.AccAddress
 		betAmount     sdk.Int
-		extraPayout   sdk.Int
+		payoutProfit  sdk.Int
 		uniqueLock    string
 		err           error
 	}{
@@ -214,7 +214,7 @@ func TestRefundBettor(t *testing.T) {
 			desc:          "Success! Bettor is refunded",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(45),
-			extraPayout:   sdk.NewIntFromUint64(90),
+			payoutProfit:  sdk.NewIntFromUint64(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           nil,
 		},
@@ -222,7 +222,7 @@ func TestRefundBettor(t *testing.T) {
 			desc:          "Failure! Payout lock does not exist",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(45),
-			extraPayout:   sdk.NewIntFromUint64(90),
+			payoutProfit:  sdk.NewIntFromUint64(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, "32932b20-8737-490b-b00b-8c16eccd8e7x"),
 		},
@@ -230,7 +230,7 @@ func TestRefundBettor(t *testing.T) {
 			desc:          "Failure! Insufficient balance in Bet Reserve Account",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(5000),
-			extraPayout:   sdk.NewIntFromUint64(5000),
+			payoutProfit:  sdk.NewIntFromUint64(5000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, types.BetReserveName),
 		},
@@ -238,7 +238,7 @@ func TestRefundBettor(t *testing.T) {
 			desc:          "Failure! Insufficient balance in SR Locked Amount",
 			bettorAddress: user.Address,
 			betAmount:     sdk.NewIntFromUint64(5000),
-			extraPayout:   sdk.NewIntFromUint64(6001),
+			payoutProfit:  sdk.NewIntFromUint64(6001),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           types.ErrInsufficientLockedAmountInSrPool,
 		},
@@ -258,7 +258,7 @@ func TestRefundBettor(t *testing.T) {
 			k.SetReserver(ctx, reserver)
 
 			err := k.RefundBettor(ctx, tc.bettorAddress, tc.betAmount,
-				tc.extraPayout, tc.uniqueLock)
+				tc.payoutProfit, tc.uniqueLock)
 			if tc.err != nil {
 				require.True(t, errors.Is(tc.err, err))
 				return

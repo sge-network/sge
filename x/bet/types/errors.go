@@ -55,8 +55,14 @@ var (
 	ErrUserKycFailed                          = sdkerrors.Register(ModuleName, 2044, "the bettor failed the KYC Validation")
 	ErrNoKycField                             = sdkerrors.Register(ModuleName, 2045, "KYC field does not exist in ticket payload")
 	ErrNoKycIdField                           = sdkerrors.Register(ModuleName, 2046, "KYC ID does not exist in KYC part of ticket payload")
-	ErrBettorAddressNotEqualToCreator         = sdkerrors.Register(ModuleName, 2047, "provided bettor address is not equal to bet owner")
-	ErrCanNotQueryLargeNumberOfBets           = sdkerrors.Register(ModuleName, 2048, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
+	ErrCanNotQueryLargeNumberOfBets           = sdkerrors.Register(ModuleName, 2047, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
+	ErrUnknownOddsType                        = sdkerrors.Register(ModuleName, 2048, "unknown odds type")
+	ErrDecimalOddsCanNotBeNegative            = sdkerrors.Register(ModuleName, 2049, "decimal odds value can not bet negative")
+	ErrFractionalOddsCanNotBeNegativeOrZero   = sdkerrors.Register(ModuleName, 2050, "fractional odds numbers can not be negative")
+	ErrMoneylineOddsCanNotBeZero              = sdkerrors.Register(ModuleName, 2051, "moneyline odds can not be zero")
+	ErrFractionalOddsIncorrectFormat          = sdkerrors.Register(ModuleName, 2052, "incorrect format of fractional odds")
+	ErrInConvertingOddsToInt                  = sdkerrors.Register(ModuleName, 2053, "internal error in converting odds value from string to sdk.Int")
+	ErrBettorAddressNotEqualToCreator         = sdkerrors.Register(ModuleName, 2054, "provided bettor address is not equal to bet owner")
 	ErrTextInvalidCreator                     = "invalid creator address (%s)"
 	ErrInitGenesisFailedBecauseOfMissingBetID = "no bet id found for the bet with uuid (%s)"
 )

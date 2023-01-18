@@ -25,7 +25,8 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 	for i := range items {
 		items[i].UID = strconv.Itoa(i)
 		items[i].Creator = testCreator
-		items[i].OddsValue = sdk.NewDec(10)
+		items[i].OddsValue = "10"
+		items[i].OddsType = types.OddsType_ODD_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
 		items[i].SportEventUID = testSportEventUID

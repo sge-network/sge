@@ -64,7 +64,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			Creator:       testAddress,
 			UID:           uuid.NewString(),
 			SportEventUID: sportEvent.UID,
-			OddsValue:     sdk.NewDec(10),
+			OddsValue:     "10",
 			Amount:        sdk.NewInt(10),
 			BetFee:        sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 		}

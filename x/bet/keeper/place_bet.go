@@ -29,14 +29,17 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 		return types.ErrBetAmountIsLow
 	}
 
+	// calculate payoutProfit
+	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	if err != nil {
+		return err
+	}
+
 	// modify the bet fee and subtracted amount
 	setBetFee(bet, sportEvent.BetConstraints.BetFee)
 
-	// calculate extraPayout
-	extraPayout := calculateExtraPayout(bet)
-
 	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
-		bet.BetFee, bet.Amount, extraPayout, bet.UID)
+		bet.BetFee, bet.Amount, payoutProfit, bet.UID)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
 	}
