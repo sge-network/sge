@@ -20,9 +20,9 @@ import (
 var _ = strconv.IntSize
 
 func TestBetQuerySingle(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 2)
+	msgs := createNBet(tApp, k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryBetRequest
@@ -35,7 +35,7 @@ func TestBetQuerySingle(t *testing.T) {
 				Creator: testCreator,
 				Uid:     msgs[0].UID,
 			},
-			response: &types.QueryBetResponse{Bet: msgs[0]},
+			response: &types.QueryBetResponse{Bet: msgs[0], SportEvent: testSportEvent},
 		},
 		{
 			desc: "Second",
@@ -43,7 +43,7 @@ func TestBetQuerySingle(t *testing.T) {
 				Creator: testCreator,
 				Uid:     msgs[1].UID,
 			},
-			response: &types.QueryBetResponse{Bet: msgs[1]},
+			response: &types.QueryBetResponse{Bet: msgs[1], SportEvent: testSportEvent},
 		},
 		{
 			desc: "KeyNotFound",
@@ -73,9 +73,9 @@ func TestBetQuerySingle(t *testing.T) {
 }
 
 func TestBetQueryPaginated(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 5)
+	msgs := createNBet(tApp, k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsRequest {
 		return &types.QueryBetsRequest{
@@ -130,9 +130,9 @@ func TestBetQueryPaginated(t *testing.T) {
 
 // TestBetQueryPaginatedReverse test if IDs are sorted reveresely
 func TestBetQueryPaginatedReverse(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 100)
+	msgs := createNBet(tApp, k, ctx, 100)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsRequest {
 		return &types.QueryBetsRequest{
@@ -165,9 +165,9 @@ func TestBetQueryPaginatedReverse(t *testing.T) {
 }
 
 func TestBetsByCreatorQueryPaginated(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 5)
+	msgs := createNBet(tApp, k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsByCreatorRequest {
 		return &types.QueryBetsByCreatorRequest{
@@ -222,9 +222,9 @@ func TestBetsByCreatorQueryPaginated(t *testing.T) {
 }
 
 func TestBetByCreatorQueryPaginatedReverse(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 100)
+	msgs := createNBet(tApp, k, ctx, 100)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsByCreatorRequest {
 		return &types.QueryBetsByCreatorRequest{
@@ -257,9 +257,9 @@ func TestBetByCreatorQueryPaginatedReverse(t *testing.T) {
 }
 
 func TestBetByUIDsQuery(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNBet(k, ctx, 2)
+	msgs := createNBet(tApp, k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryBetsByUIDsRequest

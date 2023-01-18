@@ -129,7 +129,12 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryBetResponse{Bet: val}, nil
+	sportEvent, found := k.sporteventKeeper.GetSportEvent(ctx, val.SportEventUID)
+	if !found {
+		return nil, status.Errorf(codes.NotFound, "corresponding sport event with id %s not found", val.SportEventUID)
+	}
+
+	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
 }
 
 // RemoveDuplicateUIDs retuns input array without duplicates

@@ -10,6 +10,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/sge-network/sge/x/sportevent/types"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -83,7 +84,8 @@ func (m *QueryBetRequest) GetUid() string {
 }
 
 type QueryBetResponse struct {
-	Bet Bet `protobuf:"bytes,1,opt,name=bet,proto3" json:"bet"`
+	Bet        Bet              `protobuf:"bytes,1,opt,name=bet,proto3" json:"bet"`
+	SportEvent types.SportEvent `protobuf:"bytes,2,opt,name=sportEvent,proto3" json:"sportEvent"`
 }
 
 func (m *QueryBetResponse) Reset()         { *m = QueryBetResponse{} }
@@ -124,6 +126,13 @@ func (m *QueryBetResponse) GetBet() Bet {
 		return m.Bet
 	}
 	return Bet{}
+}
+
+func (m *QueryBetResponse) GetSportEvent() types.SportEvent {
+	if m != nil {
+		return m.SportEvent
+	}
+	return types.SportEvent{}
 }
 
 type QueryBetsRequest struct {
@@ -678,6 +687,16 @@ func (m *QueryBetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	{
+		size, err := m.SportEvent.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
+	{
 		size, err := m.Bet.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
@@ -934,6 +953,8 @@ func (m *QueryBetResponse) Size() (n int) {
 	var l int
 	_ = l
 	l = m.Bet.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.SportEvent.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -1202,6 +1223,39 @@ func (m *QueryBetResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Bet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SportEvent", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SportEvent.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
