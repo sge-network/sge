@@ -4,14 +4,7 @@
 
 The minter is a space for holding the current phase and inflation information.
 
-```
-syntax = "proto3";
-package sgenetwork.sge.mint;
-
-option go_package = "github.com/sge-network/sge/x/mint/types";
-
-import "gogoproto/gogo.proto";
-
+```proto
 // Minter represents the minting state.
 message Minter {
   // current annual inflation rate
@@ -54,15 +47,7 @@ Minting params are held in the global params store.
 
 4. Exclude Amount: This parameter defines the number of tokens that will not incur inflation.
 
-```
-syntax = "proto3";
-package sgenetwork.sge.mint;
-
-import "gogoproto/gogo.proto";
-import "sge/mint/phase.proto";
-
-option go_package = "github.com/sge-network/sge/x/mint/types";
-
+```proto
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
@@ -83,15 +68,7 @@ message Params {
 }
 ```
 
-```
-syntax = "proto3";
-package sgenetwork.sge.mint;
-
-import "gogoproto/gogo.proto";
-
-
-option go_package = "github.com/sge-network/sge/x/mint/types";
-
+```proto
 // Params defines the phase parameters for the module.
 message Phase {
   option (gogoproto.goproto_stringer) = false;

@@ -13,20 +13,22 @@ When this is processed:
 - If the sport-event does not already exist, a new sport event should be
   created with the given data and will be added to the `sportevent module's KVStore`. Like this:
 
-```
+```go
 newEvent := &type.SportEvent{
-	Uid            : <string>
-	StartTS        : <uint64>
-	EndTS          : <uint64>
-	OddsUIDs       : <[]string>
-	WinnerOddsUIDs : <map[string][]byte>
-	Status         : <SportEventStatus>
-	ResolutionTS   : <uint64>
-	Creator        : <string>
-	BetConstraints : <*EventBetConstraints>
-	Active         : <bool>
+ Uid            : <string>
+ StartTS        : <uint64>
+ EndTS          : <uint64>
+ Odds           : <[]*Odds>
+ WinnerOddsUIDs : <map[string][]byte>
+ Status         : <SportEventStatus>
+ ResolutionTS   : <uint64>
+ Creator        : <string>
+ BetConstraints : <*EventBetConstraints>
+ Active         : <bool>
+ Meta           : <string>
 }
 ```
+
 ---
 
 ## **Update SportEvent**
@@ -34,6 +36,7 @@ newEvent := &type.SportEvent{
 When this is processed:
 
 For each event:
+
 - Validate the creator address and validate the ticket format
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket
@@ -49,6 +52,7 @@ For each event:
 When this is processed:
 
 For each event:
+
 - Validate the creator address and validate the ticket format
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket
@@ -57,12 +61,12 @@ For each event:
   ```status == types.SportEventStatus_STATUS_PENDING```
 - Then resolve the sport-event
 
-```
+```go
 resolvedEvent := types.ResolutionEvent{
-	Uid            : <string>
-	ResolutionTs   : <uint64>
-	WinnerOddsUIDs : <map>[string][]byte
-	Status         : <SportEventStatus>
+ Uid            : <string>
+ ResolutionTs   : <uint64>
+ WinnerOddsUIDs : <map>[string][]byte
+ Status         : <SportEventStatus>
 }
 ```
 

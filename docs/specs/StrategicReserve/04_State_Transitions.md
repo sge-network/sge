@@ -13,9 +13,9 @@ When this is processed:
 - Update the `locked_amount` and `unlocked_amount` params by locking the
   SR's contribution in the SR Pool
 
-- The bet amount is kept in the `bet reserve` module account of the SR
+- The bet amount is kept in the `bet_reserve` module account of the SR
 
-- The bet fee is stored in the `betting-fees` module account of the bet module
+- The bet fee is stored in the module account of the bet module
 
 ---
 
@@ -27,7 +27,7 @@ When this  is processed:
 
 - Unlock the corresponding locked amount in the SR
 
-- Transfer funds from the SR pool and the `bet reserve` to the user
+- Transfer funds from the SR pool and the `bet_reserve` to the user
 
 - Modify `locked_amount` and `unlocked_amount` params
 

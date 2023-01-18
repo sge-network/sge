@@ -2,7 +2,7 @@
 
 ## **Bet Constraints**
 
-```
+```proto
 // Bet constraints parent group for a sport event
 message EventBetConstraints {
   string min_amount = 2[
@@ -25,34 +25,37 @@ granular control of different categories of event. We can modify here following:
 ---
 
 ## **Sport Event**
-```
+
+```proto
 // the internal keeper representation of sport event
 message SportEvent {
   string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
   uint64 start_ts = 2 [(gogoproto.customname) = "StartTS" ,(gogoproto.jsontag) = "start_ts", json_name = "start_ts"];
   uint64 end_ts = 3 [(gogoproto.customname) = "EndTS", (gogoproto.jsontag) = "end_ts", json_name = "end_ts"];
-  repeated string odds_uids = 4 [(gogoproto.customname) = "OddsUIDs", (gogoproto.jsontag) = "odds_uids", json_name = "odds_uids"];
+  repeated Odds odds = 4;
   repeated string winner_odds_uids = 5 [(gogoproto.customname) = "WinnerOddsUIDs", (gogoproto.jsontag) = "winner_odds_uids", json_name = "winner_odds_uids"];
   SportEventStatus status = 6;
   uint64 resolution_ts = 7 [(gogoproto.customname) = "ResolutionTS", (gogoproto.jsontag) = "resolution_ts", json_name = "resolution_ts"];
   string creator = 8;
   EventBetConstraints betConstraints = 9;
   bool active = 10;
+  string meta = 11;
 }
 ```
+
 **Uid**: unique event Id.
 
-**StartTs**:Time when this event will start
+**StartTS**:Time when this event will start
 
-**EndTs**: Time when this event will be over
+**EndTS**: Time when this event will be over
 
-**OddsUids**: Array of all the associated **_odds_** with this event ex: (uid_win_event, uid_draw_event, uid_loose_event)
+**Odds**: Array of all the associated values of type ***Odds*** with this event.
 
-**WinnerOddsUids**: Array of all the Odds Uids which won this event, this would be a **_subset_** of the above provided OddsUidsArray
+**WinnerOddsUids**: Array of all the Odds Uids which won this event, this would be a ***subset*** of the above provided OddsUidsArray
 
 **Status**: current state of the event.
 
-**ResolutionTs**: Time when the event came to a resolution i.e. we received a resolution request for an event
+**ResolutionTS**: Time when the event came to a resolution i.e. we received a resolution request for an event
 
 **Creator**: Account responsible to create this event
 
@@ -60,17 +63,19 @@ message SportEvent {
 
 **Active**: This is a toggle field which marks if the event is active(open to take or accepts bets)
 
+**Meta**: Human-Readable data of the event.
+
 ---
 
 ## **SportEventStatus**
 
-```
+```go
 (
-	SportEventStatus_STATUS_PENDING         SportEventStatus = 0
-	SportEventStatus_STATUS_INVALID         SportEventStatus = 1
-	SportEventStatus_STATUS_CANCELLED       SportEventStatus = 2
-	SportEventStatus_STATUS_ABORTED         SportEventStatus = 3
-	SportEventStatus_STATUS_RESULT_DECLARED SportEventStatus = 4
+ SportEventStatus_STATUS_PENDING         SportEventStatus = 0
+ SportEventStatus_STATUS_INVALID         SportEventStatus = 1
+ SportEventStatus_STATUS_CANCELLED       SportEventStatus = 2
+ SportEventStatus_STATUS_ABORTED         SportEventStatus = 3
+ SportEventStatus_STATUS_RESULT_DECLARED SportEventStatus = 4
 )
 ```
 
@@ -82,12 +87,13 @@ message SportEvent {
 
 ## **ResolutionEvent**
 
-```
+```go
 type ResolutionEvent struct {
-	UID            string            `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	ResolutionTS   uint64            `protobuf:"varint,2,opt,name=resolution_ts,proto3" json:"resolution_ts"`
-	WinnerOddsUIDs []string `protobuf:"bytes,3,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Status         SportEventStatus  `protobuf:"varint,4,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
+ UID            string            `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
+ ResolutionTS   uint64            `protobuf:"varint,2,opt,name=resolution_ts,proto3" json:"resolution_ts"`
+ WinnerOddsUIDs []string `protobuf:"bytes,3,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+ Status         SportEventStatus  `protobuf:"varint,4,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
 }
 ```
+
 ---

@@ -42,3 +42,5 @@ Supported Odds Types:
 - ***Moneyline(American):*** Calculated as:
   - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `100 + 100 * |+150/100| = 250`.
   - Negative odds value: `bet_amount + (bet_amount / |oddsValue/100|)` ex. `100 + 100 / |-150/100| ~ 167`.
+
+> Note: The calculated payout amounts are rounded values, so we have a small portion of lost benefits/payouts.
