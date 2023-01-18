@@ -18,7 +18,7 @@ service Query {
 
 	// Queries list of Bet items of a certain creator sorted by timestamp.
 	rpc BetsByCreator(QueryBetsByCreatorRequest) returns (QueryBetsResponse) {
-		option (google.api.http).get = "/sge/bets_by_creator/{creator}";
+		option (google.api.http).get = "/sge/creator/{creator}/bets";
 	}
 
 	// Queries list of Bet items.
