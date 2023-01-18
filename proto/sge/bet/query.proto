@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
+import "sge/sportevent/sport_event.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -33,6 +34,7 @@ message QueryBetRequest {
 
 message QueryBetResponse {
 	Bet bet = 1 [(gogoproto.nullable) = false];
+	sgenetwork.sge.sportevent.SportEvent sportEvent = 2 [(gogoproto.nullable) = false];
 }
 
 message QueryBetsRequest {

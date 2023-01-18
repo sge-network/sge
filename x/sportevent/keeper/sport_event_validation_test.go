@@ -154,7 +154,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 			},
 		},
 		{
-			name: "large details",
+			name: "large meta",
 			msg: types.SportEvent{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),

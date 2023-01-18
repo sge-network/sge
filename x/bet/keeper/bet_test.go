@@ -8,6 +8,7 @@ import (
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/nullify"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
@@ -16,13 +17,17 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
+func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Context, n int) []types.Bet {
 	items := make([]types.Bet, n)
+
+	tApp.SporteventKeeper.SetSportEvent(ctx, testSportEvent)
+
 	for i := range items {
 		items[i].UID = strconv.Itoa(i)
 		items[i].OddsValue = sdk.NewDec(10)
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
+		items[i].SportEventUID = testSportEventUID
 
 		keeper.SetBet(ctx, items[i])
 	}
@@ -30,8 +35,8 @@ func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
 }
 
 func TestBetGet(t *testing.T) {
-	k, ctx := setupKeeper(t)
-	items := createNBet(k, ctx, 10)
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNBet(tApp, k, ctx, 10)
 
 	rst, found := k.GetBet(ctx,
 		"NotExistUid",
@@ -56,8 +61,8 @@ func TestBetGet(t *testing.T) {
 }
 
 func TestBetGetAll(t *testing.T) {
-	k, ctx := setupKeeper(t)
-	items := createNBet(k, ctx, 10)
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNBet(tApp, k, ctx, 10)
 
 	bets, err := k.GetBets(ctx)
 	require.NoError(t, err)
