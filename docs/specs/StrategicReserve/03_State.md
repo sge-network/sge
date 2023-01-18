@@ -1,11 +1,10 @@
 # **State**
 
-
 ## **Params**
 
 1. `committee_members`: This field will be used to store the list of eligible addresses who can influence the SR via voting. (To be implemented in later phases)
 
-```
+```proto
 // Params defines the parameters for the Strategic Reserve module.
 message Params{
     option (gogoproto.equal) = true;
@@ -19,9 +18,10 @@ message Params{
 ---
 
 ## **Reserver**
+
 The reserver keeps track of the current state of the Strategic reserve, that is the amount of tokens available for accepting bets
 
-```
+```proto
 // Reserver defines the parameters for the StrategicReserve module.
 message Reserver {
   option (gogoproto.equal) = true;
@@ -31,7 +31,7 @@ message Reserver {
 }
 ```
 
-```
+```proto
 // SRPool defines the locked amount and the unlocked amount in the SR Pool Account.
 message SRPool {
   option (gogoproto.equal) = true;

@@ -5,11 +5,6 @@ In this section, we describe the processing of the DVM messages.
 ## **MsgMutation**
 
 ```proto
-syntax = "proto3";
-package sgenetwork.sge.dvm;
-
-option go_package = "github.com/sge-network/sge/x/dvm/types";
-
 // Msg defines the Msg service.
 service Msg {
       rpc Mutation(MsgMutation) returns (MsgMutationResponse);
