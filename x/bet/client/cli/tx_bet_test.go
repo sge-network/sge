@@ -115,6 +115,7 @@ func TestTXBetCLI(t *testing.T) {
 			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
+					ctx.GetFromAddress().String(),
 					tc.betUID,
 				}
 				args = append(args, commonArgs...)

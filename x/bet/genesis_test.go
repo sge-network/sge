@@ -22,6 +22,19 @@ func TestGenesis(t *testing.T) {
 				UID: "1",
 			},
 		},
+		Uid2IdList: []types.UID2ID{
+			{
+				UID: "0",
+				ID:  1,
+			},
+			{
+				UID: "1",
+				ID:  2,
+			},
+		},
+		Stats: types.BetStats{
+			Count: 2,
+		},
 	}
 
 	tApp, ctx, err := simappUtil.GetTestObjects()

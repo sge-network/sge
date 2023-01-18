@@ -7,6 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/app/params"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 	"github.com/stretchr/testify/require"
@@ -14,6 +15,7 @@ import (
 
 func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
+	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	addSportEvent(t, tApp, ctx)
 
 	tcs := []struct {
@@ -172,7 +174,7 @@ func TestSettleBet(t *testing.T) {
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID)
-				k.SetBet(ctx, *tc.bet)
+				k.SetBet(ctx, *tc.bet, 1)
 			}
 			if tc.updateSportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.updateSportEvent)
@@ -180,7 +182,12 @@ func TestSettleBet(t *testing.T) {
 			if tc.betUID != "" {
 				betUID = tc.betUID
 			}
-			err := k.SettleBet(ctx, betUID)
+			if tc.bet == nil {
+				tc.bet = &types.Bet{
+					Creator: "",
+				}
+			}
+			err := k.SettleBet(ctx, tc.bet.Creator, betUID)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

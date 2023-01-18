@@ -79,7 +79,7 @@ func (k msgServer) validateEventUpdate(ctx sdk.Context, event, previousEvent typ
 	//init individual params if any one of them is nil
 	initEventConstrains(event, previousEvent)
 
-	// check sport event meta
+	// check sport event metadata
 	if strings.TrimSpace(event.Meta) == "" {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta is mandatory for the sport event")
 	}

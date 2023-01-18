@@ -33,7 +33,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
-		k.SetBet(ctx, betItem)
+		k.SetBet(ctx, betItem, 1)
 		_, err := msgk.PlaceBet(wctx, inputMsg)
 		require.ErrorIs(t, types.ErrDuplicateUID, err)
 	})
@@ -157,10 +157,35 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		_, err = msgk.PlaceBet(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found := k.GetBet(ctx,
-			inputBet.Bet.UID,
+			creator.Address.String(),
+			1,
 		)
 		require.True(t, found)
 		require.Equal(t, inputBet.Creator, rst.Creator)
+
+		uid2ID, found := k.GetBetID(ctx, inputBet.Bet.UID)
+		require.True(t, found)
+		require.Equal(t, types.UID2ID{UID: inputBet.Bet.UID, ID: 1}, uid2ID)
+
+		stats := k.GetBetStats(ctx)
+		require.Equal(t, types.BetStats{Count: 1}, stats)
+
+		inputBet.Bet.UID = "BetUID_3"
+		_, err = msgk.PlaceBet(wctx, inputBet)
+		require.NoError(t, err)
+		rst, found = k.GetBet(ctx,
+			creator.Address.String(),
+			2,
+		)
+		require.True(t, found)
+		require.Equal(t, inputBet.Creator, rst.Creator)
+
+		uid2ID, found = k.GetBetID(ctx, inputBet.Bet.UID)
+		require.True(t, found)
+		require.Equal(t, types.UID2ID{UID: inputBet.Bet.UID, ID: 2}, uid2ID)
+
+		stats = k.GetBetStats(ctx)
+		require.Equal(t, types.BetStats{Count: 2}, stats)
 	})
 }
 
@@ -224,7 +249,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID)
-				k.SetBet(ctx, *tc.bet)
+				k.SetBet(ctx, *tc.bet, 1)
 			}
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
@@ -233,8 +258,9 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				betUID = tc.betUID
 			}
 			inputMsg := &types.MsgSettleBet{
-				Creator: creator.Address.String(),
-				BetUID:  betUID,
+				Creator:       creator.Address.String(),
+				BettorAddress: creator.Address.String(),
+				BetUID:        betUID,
 			}
 			expectedResp := &types.MsgSettleBetResponse{}
 			res, err := msgk.SettleBet(wctx, inputMsg)

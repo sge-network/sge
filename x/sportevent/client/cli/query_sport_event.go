@@ -53,7 +53,7 @@ func CmdShowSportEvent() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sport-event [uid]",
 		Short: "get sport event",
-		Long:  "Get sport event details by uid.",
+		Long:  "Get sport event meta by uid.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
