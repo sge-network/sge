@@ -82,10 +82,6 @@ func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.In
 	// this helps not to lost precision in the division
 	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
 
-	// TODO: decice to decrease the precision or not
-	// decrease coefficient to prevent calculation error
-	// coefficient = utils.DecreaseDecPrecision(coefficient, payOutCaclulationPrecision)
-
 	// calculate payout
 	payout := amount.ToDec().Add(amount.ToDec().Mul(coefficient))
 
@@ -120,10 +116,6 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int
 	} else {
 		coefficient = sdk.NewDec(100).QuoInt(oddsValue).Abs()
 	}
-
-	// TODO: decice to decrease the precision or not
-	// decrease coefficient to prevent calculation error
-	// coefficient = utils.DecreaseDecPrecision(coefficient, payOutCaclulationPrecision)
 
 	// bet amount should be multiplied by the coefficient
 	payout = amount.ToDec().Add(amount.ToDec().Mul(coefficient))
