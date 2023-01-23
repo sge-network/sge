@@ -6,6 +6,8 @@ Bet module is tasked with placement and settlement of the bets. the user can pla
 > Bet amount can not be less than a minimum amount which is defined for each sport event. A module parameter is used for this purpose.
 > Also, a betting fee has been defined for each sport event, A module parameter is used for this purpose.
 
+---
+
 Before accepting bet some validation should take place:
 
 - Sport event level validation:
@@ -33,14 +35,18 @@ When a user is raising a transaction to place a bet, the creator of the transact
 
 > Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Strategic Reserve to bettor's account.
 
-Supported Odds Types:
+## Supported Odds Types
 
-> Note: Let bet_amount be 100
+> Note: Let bet_amount be 3564819
 
-- ***Decimal(European):*** Calculated as `bet_amount * oddsValue` ex. `100 * 1.5 = 150`.
-- ***Fractional(British):*** Calculated as `bet_amount +  (bet_amount * fraction)` ex. `100 + 100 * 5/2 = 350`.
+- ***Decimal(European):*** Calculated as `bet_amount * oddsValue` ex. `3564819 * 1.29 = 4598616.51`.
+- ***Fractional(British):*** Calculated as `bet_amount +  (bet_amount * fraction)` ex. `3564819 + (3564819 * 2/7) = 4583338.71`.
 - ***Moneyline(American):*** Calculated as:
-  - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `100 + 100 * |+150/100| = 250`.
-  - Negative odds value: `bet_amount + (bet_amount / |oddsValue/100|)` ex. `100 + 100 / |-150/100| ~ 167`.
+  - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `3564819 + 3564819 * |+350/100| = 16041685.50`.
+  - Negative odds value: `bet_amount + (bet_amount * |100/oddsValue|)` ex. `3564819 + 3564819 * |100/-350| = 4583338.71`.
 
-> Note: The calculated payout amounts are rounded values, so we have a small portion of lost benefits/payouts.
+### Precision
+
+Some of the Online Calculators round the division result to two-digit precision in Fractional and Moneyline calculations. In other words, these online calculators try to convert Moneyline and Fractional odds to Decimal odds and then calculate the payout according to the calculated rounded decimal value. This approach makes a big difference in the resulting payout. SGE-Network is accepting bets with usge that may have a high value in the market. For this kind of value, it is better to have a high-precision calculation in the blockchain code.
+
+> Note: The final calculated payout amounts are rounded to 2 digit float values, so we have a small portion of lost benefits/payouts.
