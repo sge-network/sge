@@ -32,7 +32,7 @@ func calculatePayout(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Int
 		oType = new(moneylineOdds)
 
 	default:
-		return sdk.ZeroInt(), ErrUnknownOddsType
+		return sdk.ZeroInt(), ErrInvalidOddsType
 
 	}
 

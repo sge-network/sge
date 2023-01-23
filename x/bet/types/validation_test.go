@@ -134,41 +134,14 @@ func TestTicketFieldsValidation(t *testing.T) {
 			betOdds: &BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:         "",
 			},
 			kyc: &KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "creator",
 			},
-			err: ErrInvalidOddsValue,
-		},
-		{
-			desc: "invalid odds value",
-			betOdds: &BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "invalidOdds",
-			},
-			kyc: &KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
-			},
-			err: ErrInConvertingOddsToDec,
-		},
-		{
-			desc: "odds value less than 1",
-			betOdds: &BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "0",
-			},
-			kyc: &KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
-			},
-			err: ErrInvalidOddsValue,
+			err: ErrEmptyOddsValue,
 		},
 		{
 			desc: "no kyc",

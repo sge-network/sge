@@ -2,9 +2,6 @@ package types
 
 import (
 	"strings"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // BetFieldsValidation validates fields of the given bet
@@ -17,7 +14,8 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 		return ErrInvalidAmount
 	}
 
-	if bet.OddsType < 1 || bet.OddsType > 3 {
+	if bet.OddsType < OddsType_ODD_TYPE_DECIMAL ||
+		bet.OddsType > OddsType_ODD_TYPE_MONEYLINE {
 		return ErrInvalidOddsType
 	}
 
@@ -47,17 +45,8 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 		return ErrInvalidOddsUID
 	}
 
-	if ticketData.SelectedOdds.Value == "" {
-		return ErrInvalidOddsValue
-	}
-
-	ticketOddsValue, err := sdk.NewDecFromStr(ticketData.SelectedOdds.Value)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
-	}
-
-	if ticketOddsValue.IsNil() || ticketOddsValue.LTE(sdk.OneDec()) {
-		return ErrInvalidOddsValue
+	if len(strings.TrimSpace(ticketData.SelectedOdds.Value)) == 0 {
+		return ErrEmptyOddsValue
 	}
 
 	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
