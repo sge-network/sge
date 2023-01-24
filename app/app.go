@@ -87,11 +87,10 @@ func init() {
 // SgeApp extends an ABCI application, but with most of its parameters exported.
 // They are exported for convenience in creating helper functions, as object
 // capabilities aren't needed for testing.
-type SgeApp struct { // nolint: golint
+type SgeApp struct {
 	*baseapp.BaseApp
 	keepers.AppKeepers
 
-	// nolint
 	cdc               *codec.LegacyAmino
 	appCodec          codec.Codec
 	interfaceRegistry types.InterfaceRegistry
@@ -119,7 +118,6 @@ func NewSgeApp(
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *SgeApp {
-
 	appCodec := encodingConfig.Marshaler
 	cdc := encodingConfig.Amino
 	interfaceRegistry := encodingConfig.InterfaceRegistry
@@ -226,8 +224,8 @@ func NewSgeApp(
 // Sge. It is useful for tests and clients who do not want to construct the
 // full sge application
 func MakeCodecs() (codec.Codec,
-	// nolint
-	*codec.LegacyAmino) {
+	*codec.LegacyAmino,
+) {
 	config := MakeEncodingConfig()
 	return config.Marshaler, config.Amino
 }
@@ -279,7 +277,6 @@ func (app *SgeApp) ModuleAccountAddrs() map[string]bool {
 //
 // NOTE: This is solely to be used for testing purposes as it may be desirable
 // for modules to register their own custom testing types.
-// nolint
 func (app *SgeApp) LegacyAmino() *codec.LegacyAmino {
 	return app.cdc
 }

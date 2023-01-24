@@ -19,7 +19,6 @@ func CmdPlaceBet() *cobra.Command {
 		Long:  "Place bet uuid, amount, odds type and ticket required.",
 		Args:  cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-
 			// Get value arguments
 			uid := args[0]
 			argAmount := args[1]

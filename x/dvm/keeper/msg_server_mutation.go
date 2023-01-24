@@ -37,7 +37,7 @@ func (k msgServer) Mutation(goCtx context.Context, msg *types.MsgMutation) (*typ
 		return nil, err
 	}
 
-	var request = mutationModifications{}
+	request := mutationModifications{}
 	err = ticket.Unmarshal(&request)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,6 @@ func (k msgServer) Mutation(goCtx context.Context, msg *types.MsgMutation) (*typ
 
 // mutateList verifies and adds the Addition Keys and remove the deletion keys from the list of public Keys.
 func mutateList(ks *types.PublicKeys, modifs mutationModifications) error {
-
 	// populate map of keys
 	mKeys := make(map[string]string)
 	for _, v := range ks.List {
@@ -63,14 +62,13 @@ func mutateList(ks *types.PublicKeys, modifs mutationModifications) error {
 	}
 
 	for _, v := range modifs.Additions {
-
 		// check if pem content is a valid ED25516 key
 		P, err := jwt.ParseEdPublicKeyFromPEM([]byte(v))
 		if err != nil {
 			return err
 		}
 		_ = P
-		//add the key to the list
+
 		mKeys[v] = ""
 	}
 
@@ -78,7 +76,7 @@ func mutateList(ks *types.PublicKeys, modifs mutationModifications) error {
 		delete(mKeys, v)
 	}
 
-	var res = []string{}
+	res := []string{}
 	for key := range mKeys {
 		res = append(res, key)
 	}

@@ -48,5 +48,4 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.BetList, got.BetList)
-
 }

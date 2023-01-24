@@ -18,7 +18,6 @@ type decimalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by decimal odds calculations
 func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error) {
-
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
@@ -95,7 +94,7 @@ type moneylineOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
 func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error) {
-	// moneyline odds value sould be integer
+	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
 		return sdk.ZeroInt(),

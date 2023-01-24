@@ -98,7 +98,6 @@ func CmdSportEventListByUIDs() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QuerySportEventsByUIDsRequest{
-
 				Uids: reqUID,
 			}
 

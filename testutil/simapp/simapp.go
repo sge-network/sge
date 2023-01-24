@@ -157,7 +157,6 @@ func GetTestObjectsWithOptions(options SimappOptions) (*TestApp, sdk.Context, er
 	// Create the context
 	ctx := tApp.NewContext(true, tmproto.Header{Height: tApp.LastBlockHeight()})
 
-	//set minter params
 	setMinterParams(tApp, ctx)
 
 	if err := generateSimappAccountCoins(&ctx, tApp); err != nil {
@@ -294,7 +293,6 @@ func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abc
 		panic(err)
 	}
 	pk1, err := codectypes.NewAnyWithValue(valConsPk2)
-
 	if err != nil {
 		panic(err)
 	}

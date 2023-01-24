@@ -35,4 +35,3 @@ message QueryPubKeysRequest {
 message QueryPubKeysResponse {
   repeated string list = 1;
 }
-

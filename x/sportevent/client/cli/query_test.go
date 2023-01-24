@@ -37,7 +37,7 @@ func TestGetQueryCmd(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			require.True(t, strings.HasPrefix(string(res.Bytes()[:]), "Querying commands for the sportevent module"))
+			require.True(t, strings.HasPrefix(string(res.Bytes()), "Querying commands for the sportevent module"))
 		})
 	}
 }

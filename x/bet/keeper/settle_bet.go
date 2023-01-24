@@ -9,7 +9,6 @@ import (
 
 // SettleBet settles a single bet and updates it in KVStore
 func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) error {
-
 	if !types.IsValidUID(betUID) {
 		return types.ErrInvalidBetUID
 	}
@@ -80,7 +79,6 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 // checkBetStatus checks status of bet. It returns an error if
 // bet is canceled or settled already
 func checkBetStatus(betstatus types.Bet_Status) error {
-
 	switch betstatus {
 	case types.Bet_STATUS_SETTLED:
 		return types.ErrBetIsSettled
@@ -93,7 +91,6 @@ func checkBetStatus(betstatus types.Bet_Status) error {
 
 // ResolveBetResult determines the result of the given bet, it can be lost or won.
 func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) error {
-
 	// check if sport event result is declared or not
 	if sportEvent.Status != sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED {
 		return types.ErrResultNotDeclared
@@ -123,7 +120,6 @@ func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) err
 // settle settles a bet by calling strategicReserve functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
 func (k Keeper) settle(ctx sdk.Context, bet *types.Bet) error {
-
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
@@ -140,7 +136,6 @@ func (k Keeper) settle(ctx sdk.Context, bet *types.Bet) error {
 			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
-
 	} else if bet.Result == types.Bet_RESULT_WON {
 		if err := k.strategicreserveKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)

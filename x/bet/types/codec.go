@@ -12,7 +12,6 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPlaceBet{}, "bet/PlaceBet", nil)
 	cdc.RegisterConcrete(&MsgSettleBet{}, "bet/SettleBet", nil)
-
 }
 
 // RegisterInterfaces registers the module interface types

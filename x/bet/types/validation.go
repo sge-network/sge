@@ -28,7 +28,6 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 
 // TicketFieldsValidation validates fields of the given ticketData
 func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
-
 	if ticketData.SelectedOdds == nil {
 		return ErrOddsDataNotFound
 	}

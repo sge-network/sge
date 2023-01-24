@@ -50,6 +50,7 @@ func TestIsPhaseEndPhase(t *testing.T) {
 func TestParamKeyTable(t *testing.T) {
 	types.ParamKeyTable()
 }
+
 func TestParamSetPairs(t *testing.T) {
 	params := types.DefaultParams()
 	patamSetPairs := params.ParamSetPairs()

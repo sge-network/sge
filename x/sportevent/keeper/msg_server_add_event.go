@@ -42,7 +42,6 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 
 // validateAddEvent validates individual event acceptability
 func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) error {
-
 	if err := validateEventTS(ctx, event); err != nil {
 		return err
 	}
@@ -122,7 +121,6 @@ func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
 }
 
 func validateBetConstraints(event *types.SportEvent, params *types.Params) error {
-	//check the validity constraints as there is no GT method on coin type
 	if !(event.BetConstraints.BetFee.IsLT(params.EventMinBetFee) || event.BetConstraints.BetFee.IsEqual(params.EventMinBetFee)) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event bet fee is out of threshold limit")
 	}

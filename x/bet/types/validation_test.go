@@ -94,7 +94,6 @@ func TestBetFieldsValidation(t *testing.T) {
 }
 
 func TestTicketFieldsValidation(t *testing.T) {
-
 	tcs := []struct {
 		desc    string
 		betOdds *BetOdds
@@ -182,7 +181,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-
 			err := TicketFieldsValidation(&BetPlacementTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
