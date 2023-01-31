@@ -12,6 +12,6 @@ type EncodingConfig struct {
 	InterfaceRegistry types.InterfaceRegistry
 	Marshaler         codec.Codec
 	TxConfig          client.TxConfig
-	// nolint
+
 	Amino *codec.LegacyAmino
 }

@@ -23,7 +23,6 @@ var (
 	_ = baseapp.Paramspace
 )
 
-// nolint
 const (
 	opWeightMsgAddEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
@@ -67,7 +66,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 

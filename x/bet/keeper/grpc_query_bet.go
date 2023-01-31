@@ -32,7 +32,6 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 		bets = append(bets, bet)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -60,7 +59,6 @@ func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRe
 		bets = append(bets, bet)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -105,7 +103,6 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 		Bets:           foundBets,
 		NotFoundEvents: notFoundBets,
 	}, nil
-
 }
 
 // Bet returns a specific bet by its UID
@@ -137,7 +134,7 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
 }
 
-// RemoveDuplicateUIDs retuns input array without duplicates
+// RemoveDuplicateUIDs returns input array without duplicates
 func RemoveDuplicateUIDs(strSlice []*types.QueryBetRequest) (list []*types.QueryBetRequest) {
 	keys := make(map[string]bool)
 

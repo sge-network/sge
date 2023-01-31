@@ -31,7 +31,6 @@ func (k Keeper) SportEvents(c context.Context, req *types.QuerySportEventsReques
 		sportEvents = append(sportEvents, sportEvent)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

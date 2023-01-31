@@ -11,7 +11,6 @@ import (
 var defaultBetAmount = int64(35625789)
 
 func TestCalculateDecimalPayout(t *testing.T) {
-
 	tcs := []struct {
 		desc      string
 		oddsValue string
@@ -65,7 +64,6 @@ func TestCalculateDecimalPayout(t *testing.T) {
 }
 
 func TestCalculateFractionalPayout(t *testing.T) {
-
 	tcs := []struct {
 		desc      string
 		oddsValue string
@@ -171,11 +169,9 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func TestCalculateMoneylinePayout(t *testing.T) {
-
 	tcs := []struct {
 		desc      string
 		oddsValue string
@@ -244,7 +240,6 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 				require.NoError(t, err)
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payout), "expected: %d, actual: %d", tc.expVal, payout.Int64())
 			}
-
 		})
 	}
 }

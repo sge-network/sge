@@ -5,9 +5,8 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 	"encoding/pem"
-	"time"
-
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"

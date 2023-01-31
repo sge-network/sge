@@ -26,7 +26,6 @@ var _ sdk.Msg = &MsgPlaceBet{}
 func NewMsgPlaceBet(
 	creator string,
 	bet PlaceBetFields,
-
 ) *MsgPlaceBet {
 	return &MsgPlaceBet{
 		Creator: creator,
@@ -142,7 +141,6 @@ func IsValidUID(uid string) bool {
 
 // NewBet creates and returns a new bet from given message
 func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
-
 	return &Bet{
 		Creator:       creator,
 		UID:           bet.UID,

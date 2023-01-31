@@ -13,10 +13,8 @@ import (
 	minttypes "github.com/sge-network/sge/x/mint/types"
 )
 
-var (
-	// PKs is a slice of public keys for test
-	PKs = CreateTestPubKeys(500)
-)
+// PKs is a slice of public keys for test
+var PKs = CreateTestPubKeys(500)
 
 type generateAccountStrategy func(int) []sdk.AccAddress
 

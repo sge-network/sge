@@ -1,7 +1,6 @@
 package types
 
 // strategic reserve module event types
-// nolint
 const (
 	// AttributeKeyNewShares is the event attribute for new shares
 	AttributeKeyNewShares = "new_shares"

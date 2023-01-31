@@ -59,7 +59,6 @@ func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (
 	}
 
 	if sportEvent.Status != types.SportEventStatus_STATUS_PENDING {
-
 		return types.SportEvent{}, types.ErrEventIsNotPending
 	}
 
