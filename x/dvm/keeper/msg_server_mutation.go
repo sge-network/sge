@@ -69,6 +69,7 @@ func mutateList(ks *types.PublicKeys, modifs mutationModifications) error {
 		}
 		_ = P
 
+		// add the key to the list
 		mKeys[v] = ""
 	}
 

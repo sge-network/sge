@@ -29,19 +29,19 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type Bet_Status int32
 
 const (
-	//the unknown status
+	// the unknown status
 	Bet_STATUS_INVALID Bet_Status = 0
-	//bet is placed
+	// bet is placed
 	Bet_STATUS_PLACED Bet_Status = 1
-	//bet is canceled by Bettor
+	// bet is canceled by Bettor
 	Bet_STATUS_CANCELLED Bet_Status = 2
-	//bet is aborted
+	// bet is aborted
 	Bet_STATUS_ABORTED Bet_Status = 3
-	//pending for getting placed
+	// pending for getting placed
 	Bet_STATUS_PENDING Bet_Status = 4
-	//bet result is declared
+	// bet result is declared
 	Bet_STATUS_RESULT_DECLARED Bet_Status = 5
-	//the bet is settled
+	// the bet is settled
 	Bet_STATUS_SETTLED Bet_Status = 6
 )
 
@@ -77,7 +77,7 @@ func (Bet_Status) EnumDescriptor() ([]byte, []int) {
 type Bet_Result int32
 
 const (
-	//the invalid or unknown
+	// the invalid or unknown
 	Bet_RESULT_INVALID Bet_Result = 0
 	// bet result is pending
 	Bet_RESULT_PENDING Bet_Result = 1

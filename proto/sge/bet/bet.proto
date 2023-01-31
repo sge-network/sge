@@ -52,35 +52,35 @@ message Bet {
   // odds_type is the type of odds user chose such as decimal, fractional
   sgenetwork.sge.bet.OddsType odds_type = 13;
 
-  //Status of the Bet.
+  // Status of the Bet.
   enum Status {
 
-    //the unknown status
+    // the unknown status
     STATUS_INVALID = 0;
 
-    //bet is placed
+    // bet is placed
     STATUS_PLACED = 1;
 
-    //bet is canceled by Bettor
+    // bet is canceled by Bettor
     STATUS_CANCELLED = 2;
 
-    //bet is aborted
+    // bet is aborted
     STATUS_ABORTED = 3;
 
-    //pending for getting placed
+    // pending for getting placed
     STATUS_PENDING = 4;
 
-    //bet result is declared
+    // bet result is declared
     STATUS_RESULT_DECLARED = 5;
 
-    //the bet is settled
+    // the bet is settled
     STATUS_SETTLED = 6;
   }
 
-  //Result of the bet.
+  // Result of the bet.
   enum Result {
 
-    //the invalid or unknown
+    // the invalid or unknown
     RESULT_INVALID = 0;
 
     // bet result is pending
