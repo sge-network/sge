@@ -10,11 +10,6 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-func setupMsgServer(t testing.TB) (types.MsgServer, sdk.Context, context.Context) {
-	_, _, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	return msgk, ctx, wctx
-}
-
 func setupMsgServerAndKeeper(t testing.TB) (*keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
 	_, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
 	return k, msgk, ctx, wctx

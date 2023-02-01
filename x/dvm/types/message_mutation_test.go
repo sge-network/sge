@@ -1,28 +1,29 @@
-package types
+package types_test
 
 import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMsgMutation_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgMutation
+		msg  types.MsgMutation
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgMutation{
+			msg: types.MsgMutation{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgMutation{
+			msg: types.MsgMutation{
 				Creator: sample.AccAddress(),
 			},
 		},

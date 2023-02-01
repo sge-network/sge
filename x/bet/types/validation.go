@@ -49,7 +49,7 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 	}
 
 	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
-		return ErrNoKycIdField
+		return ErrNoKycIDField
 	}
 
 	return nil

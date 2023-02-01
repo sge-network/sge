@@ -24,6 +24,7 @@ var (
 )
 
 const (
+	//nolint:gosec
 	opWeightMsgMutation = "op_weight_msg_mutation"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgMutation int = 100

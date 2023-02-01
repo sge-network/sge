@@ -1,6 +1,8 @@
 package simapp
 
 import (
+	"crypto/ed25519"
+	"crypto/rand"
 	"crypto/x509"
 	"encoding/json"
 	"encoding/pem"
@@ -35,8 +37,8 @@ type TestApp struct {
 	app.SgeApp
 }
 
-// SimappOptions defines options related to simapp initialization
-type SimappOptions struct {
+// Options defines options related to simapp initialization
+type Options struct {
 	CreateGenesisValidators bool
 }
 
@@ -76,7 +78,7 @@ func Setup(isCheckTx bool) *TestApp {
 }
 
 // SetupWithGenesisAccounts sets up the genesis accounts for testing
-func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options SimappOptions, balances ...banktypes.Balance) *TestApp {
+func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Options, balances ...banktypes.Balance) *TestApp {
 	appInstance, genesisState := setup(true, 0)
 
 	authGenesis := authtypes.NewGenesisState(authtypes.DefaultParams(), genAccs)
@@ -102,6 +104,7 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Simapp
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
 	{
+		TestDVMPublicKey, TestDVMPrivateKey, _ = ed25519.GenerateKey(rand.Reader)
 		bs, err := x509.MarshalPKIXPublicKey(TestDVMPublicKey)
 		if err != nil {
 			panic(err)
@@ -137,13 +140,13 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Simapp
 // GetTestObjects gets the test objects and ingredients for testing phase start with default options
 func GetTestObjects() (*TestApp, sdk.Context, error) {
 	// return
-	return GetTestObjectsWithOptions(SimappOptions{
+	return GetTestObjectsWithOptions(Options{
 		CreateGenesisValidators: true,
 	})
 }
 
 // GetTestObjectsWithOptions gets the test objects and ingredients for testing phase start with custom options
-func GetTestObjectsWithOptions(options SimappOptions) (*TestApp, sdk.Context, error) {
+func GetTestObjectsWithOptions(options Options) (*TestApp, sdk.Context, error) {
 	generateSimappUsers()
 
 	// Initialize test app by genesis account

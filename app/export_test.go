@@ -10,7 +10,7 @@ import (
 
 func TestExport(t *testing.T) {
 	tObjs, _, err := simappUtil.GetTestObjectsWithOptions(
-		simappUtil.SimappOptions{
+		simappUtil.Options{
 			CreateGenesisValidators: false,
 		},
 	)

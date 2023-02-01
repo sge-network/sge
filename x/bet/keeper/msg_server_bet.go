@@ -84,12 +84,12 @@ func (k msgServer) SettleBet(goCtx context.Context, msg *types.MsgSettleBet) (*t
 	return &types.MsgSettleBetResponse{}, nil
 }
 
-func emitBetEvent(ctx sdk.Context, msgType string, betUid string, betCreator string) {
+func emitBetEvent(ctx sdk.Context, msgType string, betUID string, betCreator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			msgType,
 			sdk.NewAttribute(types.AttributeKeyBetCreator, betCreator),
-			sdk.NewAttribute(types.AttributeKeyBetUID, betUid),
+			sdk.NewAttribute(types.AttributeKeyBetUID, betUID),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

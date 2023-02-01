@@ -24,14 +24,17 @@ var (
 )
 
 const (
+	//nolint:gosec
 	opWeightMsgAddEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddEvent int = 100
 
+	//nolint:gosec
 	opWeightMsgResolveEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResolveEvent int = 100
 
+	//nolint:gosec
 	opWeightMsgUpdateEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateEvent int = 100

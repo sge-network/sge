@@ -48,8 +48,8 @@ func TestBetGet(t *testing.T) {
 	var expectedResp types.Bet
 	require.False(t, found)
 	require.Equal(t,
-		nullify.Fill(&expectedResp),
-		nullify.Fill(&rst),
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
 	)
 
 	for i, item := range items {
@@ -59,8 +59,8 @@ func TestBetGet(t *testing.T) {
 		)
 		require.True(t, found)
 		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
+			nullify.Fill(item),
+			nullify.Fill(rst),
 		)
 	}
 }
