@@ -15,3 +15,4 @@
     * [State Transitions](specs/House/04_State_Transitions.md)
     * [Messages](specs/House/05_Messages.md)
     * [Events](specs/House/06_Events.md)
+  * [Order Book](specs/OrderBook/01_Overview.md)

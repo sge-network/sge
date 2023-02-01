@@ -16,3 +16,4 @@
     * [Events](specs/StrategicReserve/06_Events.md)
     * [Parameters](specs/StrategicReserve/07_Parameters.md)
   * [House](specs/House/01_Overview.md)
+  * [Order Book](specs/OrderBook/01_Overview.md)
