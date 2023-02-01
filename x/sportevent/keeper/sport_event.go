@@ -63,11 +63,11 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.Resolu
 		return types.ErrNoMatchingSportEvent
 	}
 
-	if storedEvent.Status != types.SportEventStatus_STATUS_PENDING {
+	if storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
 		return types.ErrCanNotBeAltered
 	}
 
-	if resolutionEvent.Status == types.SportEventStatus_STATUS_RESULT_DECLARED {
+	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
 	}
 
@@ -79,11 +79,11 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.Resolu
 	return nil
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, response *types.SportEventResponse, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, uid, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,
-			sdk.NewAttribute(types.AttributeKeySportEventsSuccessUID, response.Data.UID),
+			sdk.NewAttribute(types.AttributeKeySportEventsSuccessUID, uid),
 			sdk.NewAttribute(types.AttributeKeyEventsCreator, creator),
 		),
 		sdk.NewEvent(

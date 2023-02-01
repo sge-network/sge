@@ -10,7 +10,7 @@ import (
 )
 
 // UpdateSportEvent accepts ticket containing multiple update events and return batch response after processing
-func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEvent) (*types.SportEventResponse, error) {
+func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEventRequest) (*types.MsgUpdateSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updateEvent types.SportEvent
@@ -29,7 +29,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	}
 
 	// if the status is still pending so it is failed
-	if sportEvent.Status != types.SportEventStatus_STATUS_PENDING {
+	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
 		return nil, types.ErrCanNotBeAltered
 	}
 
@@ -52,10 +52,10 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, sportEvent)
 
-	response := &types.SportEventResponse{
+	response := &types.MsgUpdateSportEventResponse{
 		Data: &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgUpdateSportEvents, response, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgUpdateSportEvents, response.Data.UID, msg.Creator)
 	return response, nil
 }
 

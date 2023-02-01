@@ -33,37 +33,45 @@ service Query {
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
+  // params hold all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
+// QuerySportEventRequest is the request type for the Query/{uid} RPC method.
 message QuerySportEventRequest { string uid = 1; }
 
+// QuerySportEventRequest is the response type for the Query/{uid} RPC method.
 message QuerySportEventResponse {
-  SportEvent sportEvent = 1 [ (gogoproto.nullable) = false ];
+  SportEvent sport_event = 1 [ (gogoproto.nullable) = false ];
 }
 
+// QuerySportEventsRequest is the request type for the Query/sport_events RPC
+// method.
 message QuerySportEventsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
+// QuerySportEventsResponse is the response type for the Query/sport_events RPC
+// method.
 message QuerySportEventsResponse {
-  repeated SportEvent sportEvent = 1 [ (gogoproto.nullable) = false ];
+  repeated SportEvent sport_event = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// Query list of SportEvents by Uids
+// QuerySportEventsByUIDsRequest is the request type for the
+// Query/sposport_events_by_uids  RPC method.
 message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [ (gogoproto.jsontag) = "uids", json_name = "uids" ];
 }
 
-// Fetch sport events by uids response
+// QuerySportEventsByUIDsResponse is the response type for the
+// Query/sposport_events_by_uids  RPC method.
 message QuerySportEventsByUIDsResponse {
-  repeated SportEvent sportEvents = 1 [ (gogoproto.nullable) = false ];
-  repeated string failedEvents = 2;
+  repeated SportEvent sport_events = 1 [ (gogoproto.nullable) = false ];
+  repeated string failed_events = 2;
 }

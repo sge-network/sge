@@ -3,7 +3,6 @@ package sgenetwork.sge.mint;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/mint/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/mint/types";
@@ -66,8 +65,8 @@ message QueryPhaseStepRequest {}
 // QueryPhaseStepResponse is the response type for the Query/Inflation RPC
 // method.
 message QueryPhaseStepResponse {
-  // inflation is the current minting inflation value.
-  int32 PhaseStep = 1;
+  // PhaseStep is the current phase number of the blockchain.
+  int32 phase_step = 1;
 }
 
 // QueryPhaseProvisionsRequest is the request type for the
@@ -91,6 +90,6 @@ message QueryEndPhaseStatusRequest {}
 // QueryEndPhaseStatusResponse is the response type for the Query/Inflation RPC
 // method.
 message QueryEndPhaseStatusResponse {
-  // inflation is the current minting inflation value.
-  bool isInEndPhase = 1;
+  // IsInEndPhase is true if there is no more valid phase in the mint parameters
+  bool is_in_end_phase = 1;
 }

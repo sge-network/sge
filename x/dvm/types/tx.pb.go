@@ -27,6 +27,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgMutation is the type of request for modification of public keys
 type MsgMutation struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Txs     string `protobuf:"bytes,2,opt,name=txs,proto3" json:"txs,omitempty"`
@@ -79,6 +80,7 @@ func (m *MsgMutation) GetTxs() string {
 	return ""
 }
 
+// MsgMutationResponse is the type of response for modification of public keys
 type MsgMutationResponse struct {
 	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 }
@@ -161,6 +163,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// PlaceBet defines a method to modify the allowed public keys
 	Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.CallOption) (*MsgMutationResponse, error)
 }
 
@@ -183,6 +186,7 @@ func (c *msgClient) Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// PlaceBet defines a method to modify the allowed public keys
 	Mutation(context.Context, *MsgMutation) (*MsgMutationResponse, error)
 }
 

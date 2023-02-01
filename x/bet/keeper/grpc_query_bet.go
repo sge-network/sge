@@ -40,7 +40,7 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 }
 
 // Bets returns all bets of certain creator sort-able by pagination attributes
-func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsResponse, error) {
+func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsByCreatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -63,7 +63,7 @@ func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRe
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
+	return &types.QueryBetsByCreatorResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
 // Bets returns bets with selected uids

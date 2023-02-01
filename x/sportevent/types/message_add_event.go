@@ -7,28 +7,28 @@ import (
 
 const typeMsgAddEvent = "add_event"
 
-var _ sdk.Msg = &MsgAddSportEvent{}
+var _ sdk.Msg = &MsgAddSportEventRequest{}
 
 // NewMsgAddEvent creates the new input for adding an event to blockchain
-func NewMsgAddEvent(creator string, ticket string) *MsgAddSportEvent {
-	return &MsgAddSportEvent{
+func NewMsgAddEvent(creator string, ticket string) *MsgAddSportEventRequest {
+	return &MsgAddSportEventRequest{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgAddSportEvent) Route() string {
+func (msg *MsgAddSportEventRequest) Route() string {
 	return RouterKey
 }
 
 // Type returns the msg add event type
-func (msg *MsgAddSportEvent) Type() string {
+func (msg *MsgAddSportEventRequest) Type() string {
 	return typeMsgAddEvent
 }
 
 // GetSigners return the creators address
-func (msg *MsgAddSportEvent) GetSigners() []sdk.AccAddress {
+func (msg *MsgAddSportEventRequest) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -37,13 +37,13 @@ func (msg *MsgAddSportEvent) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgAddSportEvent) GetSignBytes() []byte {
+func (msg *MsgAddSportEventRequest) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input creation event
-func (msg *MsgAddSportEvent) ValidateBasic() error {
+func (msg *MsgAddSportEventRequest) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

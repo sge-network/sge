@@ -22,8 +22,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// BetStats is the type of statistics of the betting in the blockchain state
 type BetStats struct {
-	// count is the total count of bets
+	// Count is the total count of bets
 	Count uint64 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
 }
 

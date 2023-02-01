@@ -103,7 +103,7 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_CANCELLED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
 		}
 		k.SetSportEvent(ctx, item)
 
@@ -120,7 +120,7 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_PENDING,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 		}
 		k.SetSportEvent(ctx, item)
 
@@ -128,7 +128,7 @@ func TestResolveSportEvents(t *testing.T) {
 			UID:            item.UID,
 			ResolutionTS:   123456,
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
-			Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
+			Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 		}
 		err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Nil(t, err)

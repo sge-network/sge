@@ -4,7 +4,6 @@ package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
 import "sge/sportevent/sport_event.proto";
 
@@ -18,7 +17,8 @@ service Query {
   }
 
   // Queries list of Bet items of a certain creator sorted by timestamp.
-  rpc BetsByCreator(QueryBetsByCreatorRequest) returns (QueryBetsResponse) {
+  rpc BetsByCreator(QueryBetsByCreatorRequest)
+      returns (QueryBetsByCreatorResponse) {
     option (google.api.http).get = "/sge/creator/{creator}/bets";
   }
 
@@ -33,37 +33,53 @@ service Query {
   }
 }
 
+// QueryBetRequest is request type for single bet query
 message QueryBetRequest {
   string creator = 1;
   string uid = 2 [ (gogoproto.jsontag) = "uid", json_name = "uid" ];
 }
 
+// QueryBetResponse is response type for single bet query
 message QueryBetResponse {
   Bet bet = 1 [ (gogoproto.nullable) = false ];
-  sgenetwork.sge.sportevent.SportEvent sportEvent = 2
+  sgenetwork.sge.sportevent.SportEvent sport_event = 2
       [ (gogoproto.nullable) = false ];
 }
 
+// QueryBetsRequest is request type for bets list query
 message QueryBetsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
+// QueryBetsResponse is response type for bets list query
 message QueryBetsResponse {
   repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
+// QueryBetsByUIDsRequest is request type for bets list of certain UID list
+// input
 message QueryBetsByUIDsRequest {
   repeated QueryBetRequest items = 1
       [ (gogoproto.jsontag) = "items", json_name = "items" ];
 }
 
+// QueryBetsByUIDsResponse is response type for bets list of certain UID list
+// input
 message QueryBetsByUIDsResponse {
   repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
   repeated string not_found_events = 2;
 }
 
+// QueryBetsByUIDsResponse is request type for bets list of all bets of a bettor
 message QueryBetsByCreatorRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string creator = 2;
+}
+
+// QueryBetsByCreatorResponse is response type for bets list of all bets of a
+// bettor
+message QueryBetsByCreatorResponse {
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

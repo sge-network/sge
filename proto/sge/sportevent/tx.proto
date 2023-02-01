@@ -8,28 +8,61 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc AddSportEvent(MsgAddSportEvent) returns (SportEventResponse);
-  rpc ResolveSportEvent(MsgResolveSportEvent) returns (SportEventResponse);
-  rpc UpdateSportEvent(MsgUpdateSportEvent) returns (SportEventResponse);
+  // AddSportEvent defines a method to add sport-event with the given data
+  rpc AddSportEvent(MsgAddSportEventRequest) returns (MsgAddSportEventResponse);
+  // ResolveSportEvent defines a method to resolve sport-event
+  rpc ResolveSportEvent(MsgResolveSportEventRequest)
+      returns (MsgResolveSportEventResponse);
+  // UpdateSportEvent defines a method to update a sport-event
+  rpc UpdateSportEvent(MsgUpdateSportEventRequest)
+      returns (MsgUpdateSportEventResponse);
 }
 
-message MsgAddSportEvent {
+// MsgAddSportEventRequest is the message type for adding sport-event into state
+message MsgAddSportEventRequest {
+  // Creator is the address of creator account of sport-event
   string creator = 1;
+  // Ticket is the jwt ticked data
   string ticket = 2;
 }
 
-// SportEvent response for all the transactions call
-message SportEventResponse {
+// MsgAddSportEventResponse response for adding sport-event
+message MsgAddSportEventResponse {
+  // Error contains error if adding a sport-event face any issues
   string error = 1 [ (gogoproto.nullable) = true ];
+  // Data is the data of sport-event
   SportEvent data = 2 [ (gogoproto.nullable) = true ];
 }
 
-message MsgResolveSportEvent {
+// MsgResolveSportEventRequest is the message type for resolving a sport-event
+message MsgResolveSportEventRequest {
+  // Creator is the address of creator account of sport-event
   string creator = 1;
+  // Ticket is the jwt ticked data
   string ticket = 2;
 }
 
-message MsgUpdateSportEvent {
+// MsgResolveSportEventResponse response for resolving a sport-event
+message MsgResolveSportEventResponse {
+  // Error contains error if adding a sport-event face any issues
+  string error = 1 [ (gogoproto.nullable) = true ];
+  // Data is the data of sport-event
+  SportEvent data = 2 [ (gogoproto.nullable) = true ];
+}
+
+// MsgUpdateSportEventRequest is the message type for updating sport-event data
+// in the state
+message MsgUpdateSportEventRequest {
+  // Creator is the address of creator account of sport-event
   string creator = 1;
+  // Ticket is the jwt ticked data
   string ticket = 2;
+}
+
+// MsgUpdateSportEventResponse response for updating a sport-event
+message MsgUpdateSportEventResponse {
+  // Error contains error if adding a sport-event face any issues
+  string error = 1 [ (gogoproto.nullable) = true ];
+  // Data is the data of sport-event
+  SportEvent data = 2 [ (gogoproto.nullable) = true ];
 }

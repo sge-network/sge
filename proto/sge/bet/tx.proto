@@ -51,7 +51,9 @@ message MsgSettleBet {
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet
 // request
 message MsgSettleBetResponse {
+  // Error contains any error while settlement
   string error = 1;
+  // BetUID is the uuid of the bet to be settled
   string bet_uid = 2 [
     (gogoproto.customname) = "BetUID",
     (gogoproto.jsontag) = "bet_uid",

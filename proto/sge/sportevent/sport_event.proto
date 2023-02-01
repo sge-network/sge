@@ -7,75 +7,103 @@ import "sge/sportevent/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// the internal keeper representation of sport event
+// SportEvent the representation of the sport event to be stored in sport-event
+// state
 message SportEvent {
+  // UID is the uuid of the sport-event
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
+  // StartTS is the start timestamp of the sport-event
   uint64 start_ts = 2 [
     (gogoproto.customname) = "StartTS",
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
+  // EndTS is the end timestamp of the sport-event
   uint64 end_ts = 3 [
     (gogoproto.customname) = "EndTS",
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
+  // Odds is the list of odds of the sport-event
   repeated Odds odds = 4;
+  // WinnerOddsUIDs is the list of winner odds uuid
   repeated string winner_odds_uids = 5 [
     (gogoproto.customname) = "WinnerOddsUIDs",
     (gogoproto.jsontag) = "winner_odds_uids",
     json_name = "winner_odds_uids"
   ];
+  // Status is the current status of the sport-event
   SportEventStatus status = 6;
+  // ResolutionTS is the timestamp of respolution of sport-event
   uint64 resolution_ts = 7 [
     (gogoproto.customname) = "ResolutionTS",
     (gogoproto.jsontag) = "resolution_ts",
     json_name = "resolution_ts"
   ];
+  // Creator is the address of creator of sport-event
   string creator = 8;
-  EventBetConstraints betConstraints = 9;
+  // BetConstraints holds the constraints of sport-event to accept bets
+  EventBetConstraints bet_constraints = 9;
+  // Active is the status of active or inactive sport-event
   bool active = 10;
+  // Meta contains human-readable metadata of the sport-event
   string meta = 11;
 }
 
+// SportEventStatus is the sport event status enumeration
 enum SportEventStatus {
-  STATUS_PENDING = 0;
-  STATUS_INVALID = 1;
-  STATUS_CANCELLED = 2;
-  STATUS_ABORTED = 3;
-  STATUS_RESULT_DECLARED = 4;
+  // event is pending
+  SPORT_EVENT_STATUS_UNSPECIFIED = 0;
+  // invalid event
+  SPORT_EVENT_STATUS_INVALID = 1;
+  // event cancelled
+  SPORT_EVENT_STATUS_CANCELLED = 2;
+  // event aborted
+  SPORT_EVENT_STATUS_ABORTED = 3;
+  // result of the event is declared
+  SPORT_EVENT_STATUS_RESULT_DECLARED = 4;
 }
 
+// ResolutionEvent is type of resolution for sport-event
 message ResolutionEvent {
+  // UID is the uuid of sport-event
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
+
+  // ResolutionTS is the resolution timestamp of event
   uint64 resolution_ts = 2 [
     (gogoproto.customname) = "ResolutionTS",
     (gogoproto.jsontag) = "resolution_ts",
     json_name = "resolution_ts"
   ];
+
+  // WinnerOddsUIDs is the uuid list of winner odds
   repeated string winner_odds_uids = 3 [
     (gogoproto.customname) = "WinnerOddsUIDs",
     (gogoproto.jsontag) = "winner_odds_uids",
     json_name = "winner_odds_uids"
   ];
+
+  // Status is the status of resolution
   SportEventStatus status = 4;
 }
 
 // Bet constraints parent group for a sport event
 message EventBetConstraints {
+  // MinAmount is the minimum allowed bet amount for a sport-event
   string min_amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
+  // BetFee is the fee that bettor needs to pay to bet on the sport-event
   cosmos.base.v1beta1.Coin bet_fee = 3 [
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false

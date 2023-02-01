@@ -26,13 +26,14 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Minter represents the minting state.
 type Minter struct {
-	// current annual inflation rate
+	// Inflation is the current annual inflation rate
 	Inflation github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=inflation,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"inflation"`
-	// phase step is the index of phases slice + 1
+	// PhaseStep is the index of phases slice + 1
 	PhaseStep int32 `protobuf:"varint,2,opt,name=phase_step,json=phaseStep,proto3" json:"phase_step,omitempty"`
-	// current phase expected provisions
+	// PhaseProvisions is current phase expected provisions
 	PhaseProvisions github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=phase_provisions,json=phaseProvisions,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"phase_provisions" yaml:"phase_provisions"`
-	// returns current truncated tokens because of Dec to Int conversion in the minting
+	// TruncatedTokens holds current truncated tokens because of Dec to Int
+	// conversion in the minting
 	TruncatedTokens github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,4,opt,name=truncated_tokens,json=truncatedTokens,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"truncated_tokens"`
 }
 

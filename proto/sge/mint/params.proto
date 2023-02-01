@@ -6,7 +6,7 @@ import "sge/mint/phase.proto";
 
 option go_package = "github.com/sge-network/sge/x/mint/types";
 
-// Params defines the parameters for the module.
+// Params define the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
 

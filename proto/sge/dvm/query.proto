@@ -3,7 +3,6 @@ package sgenetwork.sge.dvm;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/dvm/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
@@ -29,6 +28,8 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
+// QueryPubKeysRequest is the request type for public keys list query
 message QueryPubKeysRequest {}
 
+// QueryPubKeysResponse is the response type for public keys list query
 message QueryPubKeysResponse { repeated string list = 1; }

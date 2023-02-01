@@ -32,7 +32,7 @@ var (
 	}
 	testCreator       string
 	testBet           *types.MsgPlaceBet
-	testAddSportEvent *sporteventtypes.MsgAddSportEvent
+	testAddSportEvent *sporteventtypes.MsgAddSportEventRequest
 
 	testSportEvent = sporteventtypes.SportEvent{
 		UID:     testSportEventUID,
@@ -40,7 +40,7 @@ var (
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds:    testEventOdds,
-		Status:  sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+		Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 	}
 )
 
@@ -71,7 +71,7 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
 
-	testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
+	testAddSportEvent = &sporteventtypes.MsgAddSportEventRequest{
 		Creator: testCreator,
 		Ticket:  testAddSportEventTicket,
 	}

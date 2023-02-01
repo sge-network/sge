@@ -11,7 +11,7 @@ import (
 )
 
 // AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
-func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.SportEventResponse, error) {
+func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEventRequest) (*types.MsgAddSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var sportData types.SportEvent
@@ -31,11 +31,11 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 	sportData.Creator = msg.Creator
 	k.Keeper.SetSportEvent(ctx, sportData)
 
-	response := &types.SportEventResponse{
+	response := &types.MsgAddSportEventResponse{
 		Error: "",
 		Data:  &sportData,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, msg.Creator)
 
 	return response, nil
 }

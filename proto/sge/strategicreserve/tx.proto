@@ -1,10 +1,6 @@
 syntax = "proto3";
 package sgenetwork.sge.strategicreserve;
 
-import "gogoproto/gogo.proto";
-
-import "cosmos/base/v1beta1/coin.proto";
-
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
 // Msg defines the Msg service.

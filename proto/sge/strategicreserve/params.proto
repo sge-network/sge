@@ -10,6 +10,7 @@ message Params {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
+  // CommitteeMembers hold the list of committee members
   repeated string committee_members = 1
       [ (gogoproto.moretags) = "yaml:\"committee_members\"" ];
 }

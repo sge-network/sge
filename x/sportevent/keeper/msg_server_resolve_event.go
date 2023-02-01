@@ -10,7 +10,7 @@ import (
 )
 
 // ResolveSportEvent accepts ticket containing multiple resolution events and return batch response after processing
-func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.SportEventResponse, error) {
+func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEventRequest) (*types.MsgResolveSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolvedEvent types.ResolutionEvent
@@ -24,10 +24,10 @@ func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolv
 	}
 
 	sportEvent, _ := k.getSportEvent(ctx, resolvedEvent)
-	response := &types.SportEventResponse{
+	response := &types.MsgResolveSportEventResponse{
 		Data: &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response.Data.UID, msg.Creator)
 	return response, nil
 }
 
@@ -58,7 +58,7 @@ func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (
 		return types.SportEvent{}, types.ErrEventNotFound
 	}
 
-	if sportEvent.Status != types.SportEventStatus_STATUS_PENDING {
+	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
 		return types.SportEvent{}, types.ErrEventIsNotPending
 	}
 
@@ -66,7 +66,7 @@ func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (
 }
 
 func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionEvent) error {
-	if event.Status == types.SportEventStatus_STATUS_RESULT_DECLARED {
+	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		if event.ResolutionTS < sportEvent.StartTS {
 			return types.ErrResolutionTimeLessTnStart
 		}
@@ -95,7 +95,7 @@ func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionE
 // validateResolutionEvent validates individual event acceptability
 func validateResolutionEvent(event types.ResolutionEvent) error {
 	// NOTE: Will have discussion for this in future, according to real scenerios
-	if event.Status == types.SportEventStatus_STATUS_PENDING || event.Status == types.SportEventStatus_STATUS_INVALID {
+	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED || event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_INVALID {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
 
@@ -107,7 +107,7 @@ func validateResolutionEvent(event types.ResolutionEvent) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
 	}
 
-	if event.Status == types.SportEventStatus_STATUS_RESULT_DECLARED && len(event.WinnerOddsUIDs) < 1 {
+	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED && len(event.WinnerOddsUIDs) < 1 {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough winner odds for the sports event")
 	}
 
