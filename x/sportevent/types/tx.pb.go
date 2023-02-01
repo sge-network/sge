@@ -248,8 +248,8 @@ func (m *MsgResolveSportEventResponse) GetData() *SportEvent {
 	return nil
 }
 
-// MsgUpdateSportEventRequest is the message type for updating sport-event data in the
-// state
+// MsgUpdateSportEventRequest is the message type for updating sport-event data
+// in the state
 type MsgUpdateSportEventRequest struct {
 	// Creator is the address of creator account of sport-event
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`

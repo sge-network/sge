@@ -204,7 +204,9 @@ func (m *MsgSettleBet) GetBettorAddress() string {
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet
 // request
 type MsgSettleBetResponse struct {
-	Error  string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	// Error contains any error while settlement
+	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
+	// BetUID is the uuid of the bet to be settled
 	BetUID string `protobuf:"bytes,2,opt,name=bet_uid,proto3" json:"bet_uid"`
 }
 

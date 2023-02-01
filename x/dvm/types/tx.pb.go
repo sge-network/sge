@@ -163,7 +163,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// PlaceBet defines a method to modify the allowed public keys
+	// Mutation defines a method to modify the allowed public keys
 	Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.CallOption) (*MsgMutationResponse, error)
 }
 
@@ -186,7 +186,7 @@ func (c *msgClient) Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// PlaceBet defines a method to modify the allowed public keys
+	// Mutation defines a method to modify the allowed public keys
 	Mutation(context.Context, *MsgMutation) (*MsgMutationResponse, error)
 }
 

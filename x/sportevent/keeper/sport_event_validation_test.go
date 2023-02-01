@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_ValidateCreationEvent(t *testing.T) {
+func TestValidateCreationEvent(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
 	t1 := time.Now()
 	params := k.GetParams(wctx)
@@ -187,7 +187,7 @@ func Test_ValidateCreationEvent(t *testing.T) {
 	}
 }
 
-func Test_ValidateResolveEvent(t *testing.T) {
+func TestValidateResolveEvent(t *testing.T) {
 	k, _, _, _ := setupMsgServerAndKeeper(t)
 	t1 := time.Now()
 
@@ -287,7 +287,7 @@ func Test_ValidateResolveEvent(t *testing.T) {
 	}
 }
 
-func Test_UpdateEvent(t *testing.T) {
+func TestUpdateEvent(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
 	params := k.GetParams(wctx)
 

@@ -107,7 +107,7 @@ func validateResolutionEvent(event types.ResolutionEvent) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
 	}
 
-	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED && len(event.WinnerOddsUIDs) < 1 {
+	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED && len(event.WinnerOddsUIDs) < 1 {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough winner odds for the sports event")
 	}
 

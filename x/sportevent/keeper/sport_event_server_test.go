@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_msgServer_AddEvent(t *testing.T) {
+func TestMsgServerAddEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
 		msg *types.MsgAddSportEventRequest
@@ -50,7 +50,7 @@ func Test_msgServer_AddEvent(t *testing.T) {
 	}
 }
 
-func Test_msgServer_ResolveEvent(t *testing.T) {
+func TestMsgServerResolveEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
 		msg *types.MsgResolveSportEventRequest
@@ -86,7 +86,7 @@ func Test_msgServer_ResolveEvent(t *testing.T) {
 	}
 }
 
-func Test_msgServer_AddEventResponse(t *testing.T) {
+func TestMsgServerAddEventResponse(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	u1 := uuid.NewString()
 	k.SetSportEvent(ctx, types.SportEvent{
@@ -129,7 +129,7 @@ func Test_msgServer_AddEventResponse(t *testing.T) {
 	})
 }
 
-func Test_msgServer_ResolveEventResponse(t *testing.T) {
+func TestMsgServerResolveEventResponse(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 	u1, u2, u3 := uuid.NewString(), uuid.NewString(), uuid.NewString()
@@ -228,7 +228,7 @@ func Test_msgServer_ResolveEventResponse(t *testing.T) {
 	})
 }
 
-func Test_msgServer_UpdateEvent(t *testing.T) {
+func TestMsgServerUpdateEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
 		msg *types.MsgUpdateSportEventRequest
@@ -264,7 +264,7 @@ func Test_msgServer_UpdateEvent(t *testing.T) {
 	}
 }
 
-func Test_msgServer_UpdateEventResponse(t *testing.T) {
+func TestMsgServerUpdateEventResponse(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 	u1, u2, u3 := uuid.NewString(), uuid.NewString(), uuid.NewString()
