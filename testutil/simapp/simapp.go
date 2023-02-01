@@ -10,7 +10,7 @@ import (
 	"time"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	"github.com/cosmos/cosmos-sdk/simapp"
+	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
@@ -47,7 +47,7 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 	db := tmdb.NewMemDB()
 	encCdc := app.MakeEncodingConfig()
 	appInstance := app.NewSgeApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, "", invCheckPeriod, encCdc,
-		simapp.EmptyAppOptions{})
+		sdksimapp.EmptyAppOptions{})
 	if withGenesis {
 		return &TestApp{SgeApp: *appInstance}, app.NewDefaultGenesisState()
 	}
@@ -281,7 +281,7 @@ func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abc
 	p1 := int64(8)
 	p2 := int64(2)
 
-	pks := simapp.CreateTestPubKeys(2)
+	pks := sdksimapp.CreateTestPubKeys(2)
 	valConsPk1 := pks[0]
 	valConsPk2 := pks[1]
 

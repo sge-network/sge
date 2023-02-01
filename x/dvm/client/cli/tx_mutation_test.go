@@ -79,7 +79,9 @@ func TestCmdMutation(t *testing.T) {
 				require.NoError(t, err)
 
 				var resp sdk.TxResponse
+
 				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				fmt.Println(resp)
 				require.True(t, resp.Code == tc.code)
 			}
 		})
