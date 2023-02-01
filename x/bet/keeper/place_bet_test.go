@@ -79,7 +79,7 @@ func TestPlaceBet(t *testing.T) {
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_expired",
 				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
-				EndTS:  000000000,
+				EndTS:  0o00000000,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),

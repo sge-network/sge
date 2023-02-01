@@ -208,7 +208,6 @@ func getVestingParams(cmd *cobra.Command) (int64, int64, sdk.Coins, error) {
 }
 
 func getAndValidateGeneisAccount(cmd *cobra.Command, addr sdk.AccAddress, balances banktypes.Balance) (authtypes.GenesisAccount, error) {
-
 	// create concrete account type based on input parameters
 	var genAccount authtypes.GenesisAccount
 	baseAccount := authtypes.NewBaseAccount(addr, nil, genesisAccountNumber, genesisSquenceNumber)

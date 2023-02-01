@@ -1,13 +1,13 @@
 # SGE Network
 
-The Sports, Gaming & Entertainment Network (SGE Network), is a blockchain 
+The Sports, Gaming & Entertainment Network (SGE Network), is a blockchain
 designed to support the future of sports betting & related gaming by leveraging the modular Cosmos design. We believe the future will be heavily shaped by many of the values driving the recent wave of crypto and blockchain development: transparency, increased decentralization, and utility that benefits all stakeholders, especially the user-base.
 
-Utilizing a sovereign blockchain uniquely enables: 
+Utilizing a sovereign blockchain uniquely enables:
 - An adaptable framework to design custom applications.
 - Enablement of features, tools and economic models where users can directly benefit from the value they help create.
 - An unparalleled level of transparency.
-- An efficiency of settlement and immediate payout to participants. 
+- An efficiency of settlement and immediate payout to participants.
 
 At launch, the SGE Network will be optimized to deploy an inaugural application: Six Sigma Sports, which is re-imagining the sports betting landscape and bringing a unique user experience with the benefit of blockchain technology.[Please visit to learn more about Six Sigma Sports.](https://sixsigmasports.io/)
 

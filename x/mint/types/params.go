@@ -171,7 +171,6 @@ func IsEndPhase(phase Phase) bool {
 
 // getPhaseBlocks returns the total blocks of a certain phase step
 func (p Params) getPhaseBlocks(phaseStep int) sdk.Dec {
-
 	// get the phase year coefficient
 	yearCoefficient := p.Phases[phaseStep-1].YearCoefficient
 
@@ -247,7 +246,6 @@ func validatePhases(i interface{}) error {
 		if IsEndPhase(p) {
 			return fmt.Errorf(ErrTextEndPhaseParamNotAllowed)
 		}
-
 	}
 
 	return nil

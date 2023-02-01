@@ -87,4 +87,3 @@ message QueryEndPhaseStatusResponse {
   // inflation is the current minting inflation value.
   bool isInEndPhase = 1;
 }
-

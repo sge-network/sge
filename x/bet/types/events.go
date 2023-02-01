@@ -1,7 +1,6 @@
 package types
 
 // bet module event data
-// nolint
 const (
 	// AttributeKeyBetCreator is the event attribute for bet creator
 	AttributeKeyBetCreator = "bet_creator"

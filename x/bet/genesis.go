@@ -11,7 +11,6 @@ import (
 // InitGenesis initializes the module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-
 	k.SetBetStats(ctx, genState.Stats)
 
 	// Set all the bet

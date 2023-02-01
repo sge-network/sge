@@ -25,7 +25,6 @@ func GetCmdQueryInflation() *cobra.Command {
 
 			params := &types.QueryInflationRequest{}
 			res, err := queryClient.Inflation(cmd.Context(), params)
-
 			if err != nil {
 				return err
 			}
@@ -55,7 +54,6 @@ func GetCmdQueryPhaseStep() *cobra.Command {
 
 			params := &types.QueryPhaseStepRequest{}
 			res, err := queryClient.PhaseStep(cmd.Context(), params)
-
 			if err != nil {
 				return err
 			}
@@ -85,7 +83,6 @@ func GetCmdQueryPhaseProvisions() *cobra.Command {
 
 			params := &types.QueryPhaseProvisionsRequest{}
 			res, err := queryClient.PhaseProvisions(cmd.Context(), params)
-
 			if err != nil {
 				return err
 			}
@@ -115,7 +112,6 @@ func GetCmdQueryEndPhaseStatus() *cobra.Command {
 
 			params := &types.QueryEndPhaseStatusRequest{}
 			res, err := queryClient.EndPhaseStatus(cmd.Context(), params)
-
 			if err != nil {
 				return err
 			}

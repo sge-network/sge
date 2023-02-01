@@ -16,9 +16,13 @@ PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
 TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::') # grab everything after the space in "github.com/tendermint/tendermint v0.34.7"
+HTTPS_GIT := https://github.com/sge-network/sge.git
 DOCKER := $(shell which docker)
+DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR)/proto:/workspace --workdir /workspace bufbuild/buf
 BUILDDIR ?= $(CURDIR)/build
-TEST_DOCKER_REPO=jackzampolin/sgetest
+
+GO_MAJOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f1)
+GO_MINOR_VERSION = $(shell go version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
 
 export GO111MODULE = on
 
@@ -49,10 +53,12 @@ ifeq ($(LEDGER_ENABLED),true)
 endif
 
 ifeq (cleveldb,$(findstring cleveldb,$(SGE_BUILD_OPTIONS)))
-  build_tags += gcc cleveldb
+  build_tags += gcc
 endif
-build_tags += $(BUILD_TAGS)
-build_tags := $(strip $(build_tags))
+
+ifeq (secp,$(findstring secp,$(SGE_BUILD_OPTIONS)))
+  build_tags += libsecp256k1_sdk
+endif
 
 whitespace :=
 whitespace += $(whitespace)
@@ -68,14 +74,34 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=sge \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
 			-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
 
+# DB backend selection
 ifeq (cleveldb,$(findstring cleveldb,$(SGE_BUILD_OPTIONS)))
   ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=cleveldb
 endif
+ifeq (badgerdb,$(findstring badgerdb,$(SGE_BUILD_OPTIONS)))
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=badgerdb
+  BUILD_TAGS += badgerdb
+endif
+# handle rocksdb
+ifeq (rocksdb,$(findstring rocksdb,$(SGE_BUILD_OPTIONS)))
+  CGO_ENABLED=1
+  BUILD_TAGS += rocksdb
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=rocksdb
+endif
+# handle boltdb
+ifeq (boltdb,$(findstring boltdb,$(SGE_BUILD_OPTIONS)))
+  BUILD_TAGS += boltdb
+  ldflags += -X github.com/cosmos/cosmos-sdk/types.DBBackend=boltdb
+endif
+
 ifeq (,$(findstring nostrip,$(SGE_BUILD_OPTIONS)))
   ldflags += -w -s
 endif
 ldflags += $(LDFLAGS)
 ldflags := $(strip $(ldflags))
+
+build_tags += $(BUILD_TAGS)
+build_tags := $(strip $(build_tags))
 
 BUILD_FLAGS := -tags "$(build_tags)" -ldflags '$(ldflags)'
 # check for nostrip option
@@ -83,14 +109,15 @@ ifeq (,$(findstring nostrip,$(SGE_BUILD_OPTIONS)))
   BUILD_FLAGS += -trimpath
 endif
 
-#$(info $$BUILD_FLAGS is [$(BUILD_FLAGS)])
-
-# The below include contains the tools target.
-include contrib/devtools/Makefile
-
 ###############################################################################
-###                              Documentation                              ###
+###                                  Build                                  ###
 ###############################################################################
+
+check_version:
+ifneq ($(GO_MINOR_VERSION),18)
+	@echo "ERROR: Go version 1.18 is required for this version of SGE. Go 1.19 has changes that are believed to break consensus."
+	exit 1
+endif
 
 all: install lint test
 
@@ -98,63 +125,169 @@ BUILD_TARGETS := build install
 
 build: BUILD_ARGS=-o $(BUILDDIR)/
 
-$(BUILD_TARGETS): go.sum $(BUILDDIR)/
-	go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
+$(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
+	GOWORK=off go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
 
-build-reproducible: go.sum
-	$(DOCKER) rm latest-build || true
-	$(DOCKER) run --volume=$(CURDIR):/sources:ro \
-        --env TARGET_PLATFORMS='linux/amd64 darwin/amd64 linux/arm64 windows/amd64' \
-        --env APP=sged \
-        --env VERSION=$(VERSION) \
-        --env COMMIT=$(COMMIT) \
-        --env LEDGER_ENABLED=$(LEDGER_ENABLED) \
-        --name latest-build cosmossdk/rbuilder:latest
-	$(DOCKER) cp -a latest-build:/home/builder/artifacts/ $(CURDIR)/
-
 build-linux: go.sum
 	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build
-
-build-contract-tests-hooks:
-	mkdir -p $(BUILDDIR)
-	go build -mod=readonly $(BUILD_FLAGS) -o $(BUILDDIR)/ ./cmd/contract_tests
 
 go-mod-cache: go.sum
 	@echo "--> Download go modules to local cache"
 	@go mod download
 
 go.sum: go.mod
-	@echo "--> Ensure dependencies have not been modified"
+	echo "Ensure dependencies have not been modified ..." >&2
 	@go mod verify
 
 draw-deps:
 	@# requires brew install graphviz or apt-get install graphviz
 	go get github.com/RobotsAndPencils/goviz
 	@goviz -i ./cmd/sged -d 2 | dot -Tpng -o dependency-graph.png
-
+	
 clean:
-	rm -rf $(BUILDDIR)/ artifacts/
+	rm -rf $(CURDIR)/artifacts/
 
 distclean: clean
 	rm -rf vendor/
 
-analyze: ## analyze the project for code quality
-	@$(MAKE) .sonar-scanner
-
 ###############################################################################
-###                                 Devdoc                                  ###
+###                                  Proto                                  ###
 ###############################################################################
 
+proto-all: proto-format proto-gen
+
+proto:
+	@echo
+	@echo "=========== Generate Message ============"
+	@echo
+	./scripts/protocgen.sh
+	@echo
+	@echo "=========== Generate Complete ============"
+	@echo
+
+docs:
+	@echo
+	@echo "=========== Generate Message ============"
+	@echo
+	./scripts/generate-docs.sh
+
+	statik -src=client/docs/static -dest=client/docs -f -m
+	@if [ -n "$(git status --porcelain)" ]; then \
+        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
+        exit 1;\
+    else \
+        echo "\033[92mSwagger docs are in sync\033[0m";\
+    fi
+	@echo
+	@echo "=========== Generate Complete ============"
+	@echo
+.PHONY: docs
+
+protoVer=v0.8
+protoImageName=sgenetwork/sge-proto-gen:$(protoVer)
+containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
+containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
+
+proto-gen:
+	@echo "Generating Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protocgen.sh; fi
+
+proto-format:
+	@echo "Formatting Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
+		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+
+proto-image-build:
+	@DOCKER_BUILDKIT=1 docker build -t $(protoImageName) -f ./proto/Dockerfile ./proto
+
+proto-image-push:
+	docker push $(protoImageName)
+
+proto-lint:
+	@$(DOCKER_BUF) lint --error-format=json
+
+proto-check-breaking:
+	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=master
+
+
+###############################################################################
+###                           Tests & Simulation                            ###
+###############################################################################
+
+PACKAGES_UNIT=$(shell go list ./... | grep -E -v 'tests/simulator')
+TEST_PACKAGES=./...
+
+test: test-unit
+test-all: test-unit test-race test-cover
+
+test-unit:
+	@VERSION=$(VERSION) go test -mod=readonly -tags='ledger test_ledger_mock norace' $(PACKAGES_UNIT)
+
+test-race:
+	@VERSION=$(VERSION) go test -mod=readonly -race -tags='ledger test_ledger_mock' $(PACKAGES_UNIT)
+
+test-cover:
+	@VERSION=$(VERSION) mkdir -p .audit/gotest >> /dev/null && go test -timeout 30m -mod=readonly -coverprofile=".audit/gotest/coverage.out" -json -covermode=atomic -tags="norace" $(PACKAGES_UNIT)  > .audit/gotest/report.json
+
+benchmark:
+	@go test -mod=readonly -bench=. $(PACKAGES_UNIT)
+
+
+###############################################################################
+###                                Linting                                  ###
+###############################################################################
+
+golangci_lint_cmd=go run github.com/golangci/golangci-lint/cmd/golangci-lint
+
+lint:
+	@echo "--> Running linter"
+	$(golangci_lint_cmd) run --timeout=10m
+	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md"
+
+format:
+	$(golangci_lint_cmd) run ./... --fix
+	@go run mvdan.cc/gofumpt -l -w x/ app/ ante/ tests/
+	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
+
+mdlint:
+	@echo "--> Running markdown linter"
+	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md"
+
+markdown:
+	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
+
+###############################################################################
+###                              Documentation                              ###
+###############################################################################
+
+update-swagger-docs: statik
+	$(BINDIR)/statik -src=client/docs/swagger-ui -dest=client/docs -f -m
+	@if [ -n "$(git status --porcelain)" ]; then \
+        echo "\033[91mSwagger docs are out of sync!!!\033[0m";\
+        exit 1;\
+    else \
+        echo "\033[92mSwagger docs are in sync\033[0m";\
+    fi
+.PHONY: update-swagger-docs
+
+godocs:
+	@echo "--> Wait a few seconds and visit http://localhost:6060/pkg/github.com/SGE-Network/SGE/types"
+	godoc -http=:6060
+
+# This builds a docs site for each branch/tag in `./docs/versions`
+# and copies each site to a version prefixed path. The last entry inside
+# the `versions` file will be the default root index.html.
 build-docs:
 	@cd docs && \
-	while read p; do \
-		(git checkout $${p} && npm install && VUEPRESS_BASE="/$${p}/" npm run build) ; \
-		mkdir -p ~/output/$${p} ; \
-		cp -r .vuepress/dist/* ~/output/$${p}/ ; \
-		cp ~/output/$${p}/index.html ~/output ; \
+	while read -r branch path_prefix; do \
+		(git checkout $${branch} && npm install && VUEPRESS_BASE="/$${path_prefix}/" npm run build) ; \
+		mkdir -p ~/output/$${path_prefix} ; \
+		cp -r .vuepress/dist/* ~/output/$${path_prefix}/ ; \
+		cp ~/output/$${path_prefix}/index.html ~/output ; \
 	done < versions ;
 .PHONY: build-docs
 
@@ -166,89 +299,21 @@ sync-docs:
 	aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --profile terraform --path "/*" ;
 .PHONY: sync-docs
 
-
 ###############################################################################
-###                           Tests & Simulation                            ###
-###############################################################################
-
-include sims.mk
-
-test: test-unit test-build
-
-test-all: check test-race test-cover
-
-test-unit:
-	@VERSION=$(VERSION) go test -mod=readonly -tags='ledger test_ledger_mock' ./...
-
-test-race:
-	@VERSION=$(VERSION) go test -mod=readonly -race -tags='ledger test_ledger_mock' ./...
-
-test-cover:
-	@mkdir -p .audit/gotest >> /dev/null && go test -mod=readonly -timeout 30m -race -coverprofile=".audit/gotest/coverage.out" -json -covermode=atomic -tags='ledger test_ledger_mock' ./...  > .audit/gotest/report.json
-
-benchmark:
-	@go test -mod=readonly -bench=. ./...
-
-
-###############################################################################
-###                                Linting                                  ###
+###                              SONARQUBE                                  ###
 ###############################################################################
 
-lint:
-	golangci-lint run
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" | xargs gofmt -d -s
-
-format:
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs gofmt -w -s
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs misspell -w
-	find . -name '*.go' -type f -not -path "./vendor*" -not -path "*.git*" -not -path "./client/lcd/statik/statik.go" | xargs goimports -w -local github.com/cosmos/cosmos-sdk
-
-###############################################################################
-###                                Localnet                                 ###
-###############################################################################
-
-build-docker-sgednode:
-	$(MAKE) -C networks/local
-
-# Run a 4-node testnet locally
-localnet-start: build-linux localnet-stop
-	@if ! [ -f build/node0/sged/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/sged:Z tendermint/sgednode testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test ; fi
-	docker-compose up -d
-
-# Stop testnet
-localnet-stop:
-	docker-compose down
-
-test-docker:
-	@docker build -f contrib/Dockerfile.test -t ${TEST_DOCKER_REPO}:$(shell git rev-parse --short HEAD) .
-	@docker tag ${TEST_DOCKER_REPO}:$(shell git rev-parse --short HEAD) ${TEST_DOCKER_REPO}:$(shell git rev-parse --abbrev-ref HEAD | sed 's#/#_#g')
-	@docker tag ${TEST_DOCKER_REPO}:$(shell git rev-parse --short HEAD) ${TEST_DOCKER_REPO}:latest
-
-test-docker-push: test-docker
-	@docker push ${TEST_DOCKER_REPO}:$(shell git rev-parse --short HEAD)
-	@docker push ${TEST_DOCKER_REPO}:$(shell git rev-parse --abbrev-ref HEAD | sed 's#/#_#g')
-	@docker push ${TEST_DOCKER_REPO}:latest
-
-.PHONY: all build-linux install format lint \
-	go-mod-cache draw-deps clean build \
-	setup-transactions setup-contract-tests-data start-sge run-lcd-contract-tests contract-tests \
-	test test-all test-build test-cover test-unit test-race \
-	benchmark \
-	build-docker-sgednode localnet-start localnet-stop \
-	docker-single-node
-
-#
-# ─── SONAR-SCANNER ──────────────────────────────────────────────────────────────
-#
+analyze: ## analyze the project for code quality
+	@$(MAKE) .sonar-scanner
 
 SONAR_TOKEN ?= "SonarScannerToken"
-SONAR_HOST_URL ?=http://host.docker.internal:9000
+SONAR_HOST_URL ?=http://localhost:9000
 SONAR_PROJECT_KEY ?= $(PROJECT_KEY)
 
 SONAR_WDR ?= /usr/src
 SONAR_PROJECT_KEY := $(subst $(subst ,, ),:,$(subst /,--,$(SONAR_PROJECT_KEY)))
 .sonar-scanner:
-	docker run \
+	$(DOCKER) run \
 		--rm \
 		-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
 		-e SONAR_LOGIN="$(SONAR_TOKEN)" \

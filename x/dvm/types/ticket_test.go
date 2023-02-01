@@ -156,7 +156,6 @@ func TestVerify(t *testing.T) {
 		require.Nil(t, err)
 	})
 	t.Run("invalid", func(t *testing.T) {
-
 		err := it.Verify("invalidPubKey")
 		require.Error(t, err)
 	})
@@ -164,5 +163,4 @@ func TestVerify(t *testing.T) {
 		err := it.Verify()
 		require.Error(t, err)
 	})
-
 }

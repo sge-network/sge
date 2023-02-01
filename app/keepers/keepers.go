@@ -128,7 +128,6 @@ func NewAppKeeper(
 	invCheckPeriod uint,
 	appOpts servertypes.AppOptions,
 ) AppKeepers {
-
 	appKeepers := AppKeepers{}
 	// Set keys KVStoreKey, TransientStoreKey, MemoryStoreKey
 	appKeepers.GenerateKeys()
@@ -370,7 +369,6 @@ func NewAppKeeper(
 
 	/****  Module Options ****/
 	return appKeepers
-
 }
 
 // GetSubspace returns a param subspace for a given module name.
@@ -381,9 +379,9 @@ func (appKeepers *AppKeepers) GetSubspace(moduleName string) paramstypes.Subspac
 
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec,
-// nolint
 	legacyAmino *codec.LegacyAmino,
-	key, tkey sdk.StoreKey) paramskeeper.Keeper {
+	key, tkey sdk.StoreKey,
+) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
 	paramsKeeper.Subspace(authtypes.ModuleName)

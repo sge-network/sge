@@ -41,4 +41,3 @@ message QueryReserverResponse {
   // inflation is the current minting inflation value.
   Reserver reserver = 1;
 }
-

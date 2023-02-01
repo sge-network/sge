@@ -17,4 +17,3 @@ message MsgMutation {
 message MsgMutationResponse {
   bool success = 1;
 }
-
