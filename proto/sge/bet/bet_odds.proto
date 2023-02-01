@@ -1,5 +1,6 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
+
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
