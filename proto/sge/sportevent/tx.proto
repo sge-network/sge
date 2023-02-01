@@ -20,15 +20,14 @@ message MsgAddSportEvent {
 
 // SportEvent response for all the transactions call
 message SportEventResponse {
-  string error = 1[(gogoproto.nullable) = true];
-  SportEvent data = 2[(gogoproto.nullable) = true];
+  string error = 1 [ (gogoproto.nullable) = true ];
+  SportEvent data = 2 [ (gogoproto.nullable) = true ];
 }
 
 message MsgResolveSportEvent {
   string creator = 1;
   string ticket = 2;
 }
-
 
 message MsgUpdateSportEvent {
   string creator = 1;

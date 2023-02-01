@@ -7,5 +7,4 @@ message BetStats {
 
   // count is the total count of bets
   uint64 count = 1;
-
 }

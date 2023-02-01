@@ -20,7 +20,6 @@ service Query {
   rpc Reserver(QueryReserverRequest) returns (QueryReserverResponse) {
     option (google.api.http).get = "/sge/strategic-reserve/reserver";
   }
-
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -29,7 +28,7 @@ message QueryParamsRequest {}
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
   // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // QueryReserverRequest is the request type for the Query/Inflation RPC method.

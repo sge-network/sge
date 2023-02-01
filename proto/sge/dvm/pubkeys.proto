@@ -3,6 +3,4 @@ package sgenetwork.sge.dvm;
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
-message PublicKeys {
-  repeated string list = 1;
-}
+message PublicKeys { repeated string list = 1; }

@@ -12,56 +12,58 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // Query defines the gRPC querier service.
 service Query {
-	// Queries a Bet by uid.
-	rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
-		option (google.api.http).get = "/sge/bet/{creator}/{uid}";
-	}
+  // Queries a Bet by uid.
+  rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
+    option (google.api.http).get = "/sge/bet/{creator}/{uid}";
+  }
 
-	// Queries list of Bet items of a certain creator sorted by timestamp.
-	rpc BetsByCreator(QueryBetsByCreatorRequest) returns (QueryBetsResponse) {
-		option (google.api.http).get = "/sge/creator/{creator}/bets";
-	}
+  // Queries list of Bet items of a certain creator sorted by timestamp.
+  rpc BetsByCreator(QueryBetsByCreatorRequest) returns (QueryBetsResponse) {
+    option (google.api.http).get = "/sge/creator/{creator}/bets";
+  }
 
-	// Queries list of Bet items.
-	rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
-		option (google.api.http).get = "/sge/bets";
-	}
+  // Queries list of Bet items.
+  rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
+    option (google.api.http).get = "/sge/bets";
+  }
 
-	// Queries a list of Bet items filtered by uid list.
-	rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
-		option (google.api.http).get = "/sge/bets_by_uids";
-	}
+  // Queries a list of Bet items filtered by uid list.
+  rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
+    option (google.api.http).get = "/sge/bets_by_uids";
+  }
 }
 
 message QueryBetRequest {
-	string creator = 1;
-	string uid = 2 [(gogoproto.jsontag) = "uid", json_name = "uid"];
+  string creator = 1;
+  string uid = 2 [ (gogoproto.jsontag) = "uid", json_name = "uid" ];
 }
 
 message QueryBetResponse {
-	Bet bet = 1 [(gogoproto.nullable) = false];
-	sgenetwork.sge.sportevent.SportEvent sportEvent = 2 [(gogoproto.nullable) = false];
+  Bet bet = 1 [ (gogoproto.nullable) = false ];
+  sgenetwork.sge.sportevent.SportEvent sportEvent = 2
+      [ (gogoproto.nullable) = false ];
 }
 
 message QueryBetsRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryBetsResponse {
-	repeated Bet bet = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 message QueryBetsByUIDsRequest {
-	repeated QueryBetRequest items = 1 [(gogoproto.jsontag) = "items", json_name = "items"];
+  repeated QueryBetRequest items = 1
+      [ (gogoproto.jsontag) = "items", json_name = "items" ];
 }
 
 message QueryBetsByUIDsResponse {
-	repeated Bet bets = 1 [(gogoproto.nullable) = false];
-	repeated string not_found_events = 2;
+  repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
+  repeated string not_found_events = 2;
 }
 
 message QueryBetsByCreatorRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
-	string creator = 2;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string creator = 2;
 }

@@ -9,7 +9,7 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 
 // GenesisState defines the dvm module's genesis state.
 message GenesisState {
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [ (gogoproto.nullable) = false ];
   // publicKeys trusted keys from genesis file
   PublicKeys publicKeys = 2;
 }

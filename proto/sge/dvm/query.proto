@@ -15,9 +15,9 @@ service Query {
     option (google.api.http).get = "/sge/dvm/params";
   }
   // Queries a list of PubKeys items.
-	rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
-		option (google.api.http).get = "/sge/dvm/pub_keys";
-	}
+  rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
+    option (google.api.http).get = "/sge/dvm/pub_keys";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -26,12 +26,9 @@ message QueryParamsRequest {}
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
   // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryPubKeysRequest {
-}
+message QueryPubKeysRequest {}
 
-message QueryPubKeysResponse {
-  repeated string list = 1;
-}
+message QueryPubKeysResponse { repeated string list = 1; }

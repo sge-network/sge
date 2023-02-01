@@ -13,14 +13,14 @@ message Params {
 
   // default minimum bet amount for sport event
   string event_min_bet_amount = 1 [
-    (gogoproto.moretags)   = "yaml:\"event_min_bet_amount\"",
+    (gogoproto.moretags) = "yaml:\"event_min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
   // default min bet fee for a sport event
   string event_min_bet_fee = 3 [
-    (gogoproto.moretags)   = "yaml:\"event_min_bet_fee\"",
+    (gogoproto.moretags) = "yaml:\"event_min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }

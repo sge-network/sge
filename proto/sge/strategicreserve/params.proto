@@ -3,15 +3,13 @@ package sgenetwork.sge.strategicreserve;
 
 import "gogoproto/gogo.proto";
 
-
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
 // Params defines the parameters for the Strategic Reserve module.
-message Params{
-    option (gogoproto.equal) = true;
-    option (gogoproto.goproto_stringer) = false;
+message Params {
+  option (gogoproto.equal) = true;
+  option (gogoproto.goproto_stringer) = false;
 
-    repeated string committee_members = 1
-        [(gogoproto.moretags) = "yaml:\"committee_members\""];
-
+  repeated string committee_members = 1
+      [ (gogoproto.moretags) = "yaml:\"committee_members\"" ];
 }

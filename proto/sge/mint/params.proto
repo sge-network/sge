@@ -13,14 +13,18 @@ message Params {
   // type of coin to mint
   string mint_denom = 1;
   // expected blocks per year
-  int64 blocks_per_year = 2 [(gogoproto.moretags) = "yaml:\"blocks_per_year\""];
+  int64 blocks_per_year = 2
+      [ (gogoproto.moretags) = "yaml:\"blocks_per_year\"" ];
 
   // phases
-  repeated Phase phases = 3 [(gogoproto.moretags) = "yaml:\"phases\"", (gogoproto.nullable) = false];
+  repeated Phase phases = 3 [
+    (gogoproto.moretags) = "yaml:\"phases\"",
+    (gogoproto.nullable) = false
+  ];
 
   string exclude_amount = 4 [
-    (gogoproto.moretags)   = "yaml:\"exclude_amount\"",
+    (gogoproto.moretags) = "yaml:\"exclude_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }

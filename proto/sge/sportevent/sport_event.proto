@@ -9,13 +9,33 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // the internal keeper representation of sport event
 message SportEvent {
-  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
-  uint64 start_ts = 2 [(gogoproto.customname) = "StartTS" ,(gogoproto.jsontag) = "start_ts", json_name = "start_ts"];
-  uint64 end_ts = 3 [(gogoproto.customname) = "EndTS", (gogoproto.jsontag) = "end_ts", json_name = "end_ts"];
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  uint64 start_ts = 2 [
+    (gogoproto.customname) = "StartTS",
+    (gogoproto.jsontag) = "start_ts",
+    json_name = "start_ts"
+  ];
+  uint64 end_ts = 3 [
+    (gogoproto.customname) = "EndTS",
+    (gogoproto.jsontag) = "end_ts",
+    json_name = "end_ts"
+  ];
   repeated Odds odds = 4;
-  repeated string winner_odds_uids = 5 [(gogoproto.customname) = "WinnerOddsUIDs", (gogoproto.jsontag) = "winner_odds_uids", json_name = "winner_odds_uids"];
+  repeated string winner_odds_uids = 5 [
+    (gogoproto.customname) = "WinnerOddsUIDs",
+    (gogoproto.jsontag) = "winner_odds_uids",
+    json_name = "winner_odds_uids"
+  ];
   SportEventStatus status = 6;
-  uint64 resolution_ts = 7 [(gogoproto.customname) = "ResolutionTS", (gogoproto.jsontag) = "resolution_ts", json_name = "resolution_ts"];
+  uint64 resolution_ts = 7 [
+    (gogoproto.customname) = "ResolutionTS",
+    (gogoproto.jsontag) = "resolution_ts",
+    json_name = "resolution_ts"
+  ];
   string creator = 8;
   EventBetConstraints betConstraints = 9;
   bool active = 10;
@@ -31,18 +51,33 @@ enum SportEventStatus {
 }
 
 message ResolutionEvent {
-  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
-  uint64 resolution_ts = 2 [(gogoproto.customname) = "ResolutionTS", (gogoproto.jsontag) = "resolution_ts", json_name = "resolution_ts"];
-  repeated string winner_odds_uids = 3 [(gogoproto.customname) = "WinnerOddsUIDs", (gogoproto.jsontag) = "winner_odds_uids", json_name = "winner_odds_uids"];
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  uint64 resolution_ts = 2 [
+    (gogoproto.customname) = "ResolutionTS",
+    (gogoproto.jsontag) = "resolution_ts",
+    json_name = "resolution_ts"
+  ];
+  repeated string winner_odds_uids = 3 [
+    (gogoproto.customname) = "WinnerOddsUIDs",
+    (gogoproto.jsontag) = "winner_odds_uids",
+    json_name = "winner_odds_uids"
+  ];
   SportEventStatus status = 4;
 }
 
 // Bet constraints parent group for a sport event
 message EventBetConstraints {
-  string min_amount = 2[
+  string min_amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
+    (gogoproto.nullable) = false
+  ];
 
-  cosmos.base.v1beta1.Coin bet_fee = 3
-  [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false];
+  cosmos.base.v1beta1.Coin bet_fee = 3 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
 }

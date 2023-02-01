@@ -10,6 +10,6 @@ option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
 // GenesisState defines the strategicreserve module's genesis state.
 message GenesisState {
-  Reserver reserver = 1 [(gogoproto.nullable) = false];
-  Params params = 2 [(gogoproto.nullable) = false];
+  Reserver reserver = 1 [ (gogoproto.nullable) = false ];
+  Params params = 2 [ (gogoproto.nullable) = false ];
 }

@@ -1,6 +1,7 @@
 
 syntax = "proto3";
 package sgenetwork.sge.bet;
+
 import "gogoproto/gogo.proto";
 import "sge/bet/bet_odds.proto";
 import "sge/bet/kyc.proto";

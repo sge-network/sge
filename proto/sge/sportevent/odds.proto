@@ -7,6 +7,10 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Odds is representation of and sport event odds items
 message Odds {
-    string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
-    string meta = 2;
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  string meta = 2;
 }

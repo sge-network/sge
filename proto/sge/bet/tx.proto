@@ -1,5 +1,6 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
+
 import "gogoproto/gogo.proto";
 import "sge/bet/place_bet_fields.proto";
 
@@ -24,7 +25,8 @@ message MsgPlaceBet {
   PlaceBetFields bet = 2;
 }
 
-// MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet request
+// MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet
+// request
 message MsgPlaceBetResponse {
   string error = 1;
   PlaceBetFields bet = 2;
@@ -36,14 +38,23 @@ message MsgSettleBet {
   string creator = 1;
 
   // bet_uid is the unique uuid of the bet to settle
-  string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
 
   // bettor_address is sthe bec32 address of the bettor
   string bettor_address = 3;
 }
 
-// MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
+// MsgSettleBetResponse is the returning value in the response of MsgSettleBet
+// request
 message MsgSettleBetResponse {
   string error = 1;
-  string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
 }

@@ -16,14 +16,14 @@ message Minter {
   int32 phase_step = 2;
   // current phase expected provisions
   string phase_provisions = 3 [
-    (gogoproto.moretags)   = "yaml:\"phase_provisions\"",
+    (gogoproto.moretags) = "yaml:\"phase_provisions\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
-  // returns current truncated tokens because of Dec to Int conversion in the minting
+  // returns current truncated tokens because of Dec to Int conversion in the
+  // minting
   string truncated_tokens = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-
 }

@@ -11,24 +11,26 @@ option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Query defines the gRPC querier service.
 service Query {
-	// Params queries the parameters of the module.
-	rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
-	option (google.api.http).get = "/sge/sport-event/params";
-	}
-	// Queries a SportEvent by uid.
-	rpc SportEvent(QuerySportEventRequest) returns (QuerySportEventResponse) {
-		option (google.api.http).get = "/sge/sport-event/{uid}";
-	}
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/sport-event/params";
+  }
+  // Queries a SportEvent by uid.
+  rpc SportEvent(QuerySportEventRequest) returns (QuerySportEventResponse) {
+    option (google.api.http).get = "/sge/sport-event/{uid}";
+  }
 
-	// Queries a list of SportEvent items.
-	rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
-		option (google.api.http).get = "/sge/sport-event/sport_events";
-	}
+  // Queries a list of SportEvent items.
+  rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
+    option (google.api.http).get = "/sge/sport-event/sport_events";
+  }
 
-	// Queries a list of SportEventsByUIDs items.
-	rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest) returns (QuerySportEventsByUIDsResponse) {
-		option (google.api.http).get = "/sge/sport-event/sport_events_by_uids/{uids}";
-	}
+  // Queries a list of SportEventsByUIDs items.
+  rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest)
+      returns (QuerySportEventsByUIDsResponse) {
+    option (google.api.http).get =
+        "/sge/sport-event/sport_events_by_uids/{uids}";
+  }
 }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -36,34 +38,32 @@ message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-	// params holds all the parameters of this module.
-	Params params = 1 [(gogoproto.nullable) = false];
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QuerySportEventRequest {
-	string uid = 1;
-}
+message QuerySportEventRequest { string uid = 1; }
 
 message QuerySportEventResponse {
-	SportEvent sportEvent = 1 [(gogoproto.nullable) = false];
+  SportEvent sportEvent = 1 [ (gogoproto.nullable) = false ];
 }
 
 message QuerySportEventsRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QuerySportEventsResponse {
-	repeated SportEvent sportEvent = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+  repeated SportEvent sportEvent = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // Query list of SportEvents by Uids
 message QuerySportEventsByUIDsRequest {
-  repeated string uids = 1 [(gogoproto.jsontag) = "uids", json_name = "uids"];
+  repeated string uids = 1 [ (gogoproto.jsontag) = "uids", json_name = "uids" ];
 }
 
 // Fetch sport events by uids response
 message QuerySportEventsByUIDsResponse {
-	repeated SportEvent sportEvents = 1 [(gogoproto.nullable) = false];
-	repeated string failedEvents = 2;
+  repeated SportEvent sportEvents = 1 [ (gogoproto.nullable) = false ];
+  repeated string failedEvents = 2;
 }
