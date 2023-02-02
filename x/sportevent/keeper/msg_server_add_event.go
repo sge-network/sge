@@ -47,7 +47,7 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 	}
 
 	if !utils.IsValidUID(event.UID) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport-event")
 	}
 
 	if len(event.Odds) < 2 {
@@ -55,7 +55,7 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 	}
 
 	if strings.TrimSpace(event.Meta) == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta is mandatory for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta is mandatory for the sport-event")
 	}
 
 	if len(event.Meta) > types.MaxAllowedCharactersForMeta {
@@ -110,11 +110,11 @@ func initBetConstraints(event *types.SportEvent, params types.Params) {
 
 func validateEventTS(ctx sdk.Context, event *types.SportEvent) error {
 	if event.EndTS <= uint64(ctx.BlockTime().Unix()) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport-event")
 	}
 
 	if event.StartTS >= event.EndTS || event.StartTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid start timestamp for the sport event, cannot be (greater than eql to EndTs) or 0")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid start timestamp for the sport-event, cannot be (greater than eql to EndTs) or 0")
 	}
 
 	return nil

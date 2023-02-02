@@ -12,5 +12,5 @@
     * [Events](specs/bet/07_Events.md)
   * [DVM](specs/DVM/01_Overview.md)
   * [Mint](specs/Mint/01_Overview.md)
-  * [Sport Event](specs/SportEvent/01_Overview.md)
+  * [Sport-Event](specs/SportEvent/01_Overview.md)
   * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)

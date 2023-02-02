@@ -31,7 +31,7 @@ func TestPlaceBet(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			desc: "not found sport event",
+			desc: "not found sport-event",
 			bet: &types.Bet{
 				UID:           "betUID",
 				SportEventUID: "notExistSportEventUID",
@@ -40,7 +40,7 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrNoMatchingSportEvent,
 		},
 		{
-			desc: "inactive sport event",
+			desc: "inactive sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_inactive",
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
@@ -57,7 +57,7 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrInactiveSportEvent,
 		},
 		{
-			desc: "not pending sport event",
+			desc: "not pending sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_declared",
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
@@ -75,7 +75,7 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrSportEventStatusNotPending,
 		},
 		{
-			desc: "expired sport event",
+			desc: "expired sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_expired",
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,

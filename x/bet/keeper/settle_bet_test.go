@@ -61,7 +61,7 @@ func TestSettleBet(t *testing.T) {
 			err: types.ErrBetIsSettled,
 		},
 		{
-			desc: "not found sport event",
+			desc: "not found sport-event",
 			bet: &types.Bet{
 				UID:           "0db09053-2901-4110-8fb5-c14e21f8d400",
 				SportEventUID: "nonExistSportEvent",
@@ -70,7 +70,7 @@ func TestSettleBet(t *testing.T) {
 			err: types.ErrNoMatchingSportEvent,
 		},
 		{
-			desc: "sport event is aborted",
+			desc: "sport-event is aborted",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
@@ -91,7 +91,7 @@ func TestSettleBet(t *testing.T) {
 			},
 		},
 		{
-			desc: "sport event is canceled",
+			desc: "sport-event is canceled",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",

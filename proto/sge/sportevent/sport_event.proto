@@ -7,7 +7,7 @@ import "sge/sportevent/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// SportEvent the representation of the sport event to be stored in sport-event
+// SportEvent the representation of the sport-event to be stored in sport-event
 // state
 message SportEvent {
   // UID is the uuid of the sport-event
@@ -54,7 +54,7 @@ message SportEvent {
   string meta = 11;
 }
 
-// SportEventStatus is the sport event status enumeration
+// SportEventStatus is the sport-event status enumeration
 enum SportEventStatus {
   // event is pending
   SPORT_EVENT_STATUS_UNSPECIFIED = 0;
@@ -68,7 +68,7 @@ enum SportEventStatus {
   SPORT_EVENT_STATUS_RESULT_DECLARED = 4;
 }
 
-// Bet constraints parent group for a sport event
+// Bet constraints parent group for a sport-event
 message EventBetConstraints {
   // MinAmount is the minimum allowed bet amount for a sport-event
   string min_amount = 2 [

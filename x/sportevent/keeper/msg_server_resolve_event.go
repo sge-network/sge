@@ -34,7 +34,7 @@ func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolv
 func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayload *types.SportEventResolutionTicketPayload) error {
 	sportEvent, err := k.getSportEventToResolve(ctx, *resolutionPayload)
 	if err != nil {
-		return sdkerrors.Wrap(err, "getting sport event")
+		return sdkerrors.Wrap(err, "getting sport-event")
 	}
 
 	if err := extractWinnerOddsIDs(&sportEvent, resolutionPayload); err != nil {
@@ -42,7 +42,7 @@ func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayloa
 	}
 
 	if err := k.Keeper.ResolveSportEvent(ctx, resolutionPayload); err != nil {
-		return sdkerrors.Wrap(err, "resolve sport event")
+		return sdkerrors.Wrap(err, "resolve sport-event")
 	}
 
 	return nil
@@ -99,11 +99,11 @@ func validateEventResolution(event types.SportEventResolutionTicketPayload) erro
 	}
 
 	if event.ResolutionTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid resolution timestamp for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid resolution timestamp for the sport-event")
 	}
 
 	if !utils.IsValidUID(event.UID) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport-event")
 	}
 
 	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED && len(event.WinnerOddsUIDs) < 1 {

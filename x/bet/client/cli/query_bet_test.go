@@ -32,7 +32,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	t.Helper()
 	cfg := network.DefaultConfig()
 
-	// sport event module state
+	// sport-event module state
 	sportEventState := sporteventtypes.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[sporteventtypes.ModuleName], &sportEventState))
 

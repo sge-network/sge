@@ -25,7 +25,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// SportEventStatus is the sport event status enumeration
+// SportEventStatus is the sport-event status enumeration
 type SportEventStatus int32
 
 const (
@@ -65,7 +65,7 @@ func (SportEventStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_f4c38f73099259f8, []int{0}
 }
 
-// SportEvent the representation of the sport event to be stored in sport-event
+// SportEvent the representation of the sport-event to be stored in sport-event
 // state
 type SportEvent struct {
 	// UID is the uuid of the sport-event
@@ -202,7 +202,7 @@ func (m *SportEvent) GetMeta() string {
 	return ""
 }
 
-// Bet constraints parent group for a sport event
+// Bet constraints parent group for a sport-event
 type EventBetConstraints struct {
 	// MinAmount is the minimum allowed bet amount for a sport-event
 	MinAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=min_amount,json=minAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_amount"`

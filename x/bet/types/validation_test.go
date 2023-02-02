@@ -116,7 +116,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 			err: types.ErrInvalidOddsUID,
 		},
 		{
-			desc: "space in sport event UID",
+			desc: "space in sport-event UID",
 			betOdds: &types.BetOdds{
 				SportEventUID: " ",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",

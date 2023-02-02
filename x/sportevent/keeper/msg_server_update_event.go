@@ -54,11 +54,11 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 // validateEventUpdate validates individual event acceptability
 func (k msgServer) validateEventUpdate(ctx sdk.Context, updatePayload types.SportEventUpdateTicketPayload, currentData types.SportEvent) error {
 	if updatePayload.EndTS <= uint64(ctx.BlockTime().Unix()) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport-event")
 	}
 
 	if updatePayload.StartTS >= updatePayload.EndTS || updatePayload.StartTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid start timestamp for the sport event")
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid start timestamp for the sport-event")
 	}
 
 	params := k.GetParams(ctx)

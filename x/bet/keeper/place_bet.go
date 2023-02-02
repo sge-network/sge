@@ -65,7 +65,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	return nil
 }
 
-// getSportEvent returns sport event with id
+// getSportEvent returns sport-event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
 	sportevent, found := k.sporteventKeeper.GetSportEvent(ctx, sportEventID)
 	if !found {
@@ -86,7 +86,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 	return sportevent, nil
 }
 
-// oddExists checks if bet odds id is present in the sport event list of odds uids
+// oddExists checks if bet odds id is present in the sport-event list of odds uids
 func oddExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
 	for _, o := range odds {
 		if betOddsID == o.UID {
