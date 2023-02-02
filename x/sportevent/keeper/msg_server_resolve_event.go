@@ -13,17 +13,17 @@ import (
 func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEventRequest) (*types.MsgResolveSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	var resolvedEvent types.ResolutionEvent
-	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolvedEvent)
+	var resolutionPayload types.SportEventResolutionTicketPayload
+	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolutionPayload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	if err := k.processEvents(ctx, &resolvedEvent); err != nil {
+	if err := k.processSportEventResolution(ctx, &resolutionPayload); err != nil {
 		return nil, sdkerrors.Wrap(err, "process resolution event")
 	}
 
-	sportEvent, _ := k.getSportEvent(ctx, resolvedEvent)
+	sportEvent, _ := k.getSportEventToResolve(ctx, resolutionPayload)
 	response := &types.MsgResolveSportEventResponse{
 		Data: &sportEvent,
 	}
@@ -31,25 +31,25 @@ func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolv
 	return response, nil
 }
 
-func (k msgServer) processEvents(ctx sdk.Context, resolvedEvent *types.ResolutionEvent) error {
-	sportEvent, err := k.getSportEvent(ctx, *resolvedEvent)
+func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayload *types.SportEventResolutionTicketPayload) error {
+	sportEvent, err := k.getSportEventToResolve(ctx, *resolutionPayload)
 	if err != nil {
 		return sdkerrors.Wrap(err, "getting sport event")
 	}
 
-	if err := extractWinnerOddsIDs(&sportEvent, resolvedEvent); err != nil {
+	if err := extractWinnerOddsIDs(&sportEvent, resolutionPayload); err != nil {
 		return sdkerrors.Wrap(err, "extract winner odds id")
 	}
 
-	if err := k.Keeper.ResolveSportEvent(ctx, resolvedEvent); err != nil {
+	if err := k.Keeper.ResolveSportEvent(ctx, resolutionPayload); err != nil {
 		return sdkerrors.Wrap(err, "resolve sport event")
 	}
 
 	return nil
 }
 
-func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (types.SportEvent, error) {
-	if err := validateResolutionEvent(event); err != nil {
+func (k msgServer) getSportEventToResolve(ctx sdk.Context, event types.SportEventResolutionTicketPayload) (types.SportEvent, error) {
+	if err := validateEventResolution(event); err != nil {
 		return types.SportEvent{}, err
 	}
 
@@ -65,7 +65,7 @@ func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (
 	return sportEvent, nil
 }
 
-func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionEvent) error {
+func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.SportEventResolutionTicketPayload) error {
 	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		if event.ResolutionTS < sportEvent.StartTS {
 			return types.ErrResolutionTimeLessTnStart
@@ -92,9 +92,8 @@ func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionE
 	return nil
 }
 
-// validateResolutionEvent validates individual event acceptability
-func validateResolutionEvent(event types.ResolutionEvent) error {
-	// NOTE: Will have discussion for this in future, according to real scenerios
+// validateEventResolution validates event resolution payload
+func validateEventResolution(event types.SportEventResolutionTicketPayload) error {
 	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED || event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_INVALID {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
@@ -117,7 +116,7 @@ func validateResolutionEvent(event types.ResolutionEvent) error {
 		}
 	}
 
-	if event.Status > 4 {
+	if event.Status > types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid event resolution status ")
 	}
 

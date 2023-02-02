@@ -57,7 +57,7 @@ func (k Keeper) GetSportEventAll(ctx sdk.Context) (list []types.SportEvent, err 
 }
 
 // ResolveSportEvent updates a sport event with its resolution
-func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.ResolutionEvent) error {
+func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportEventResolutionTicketPayload) error {
 	storedEvent, found := k.GetSportEvent(ctx, resolutionEvent.UID)
 	if !found {
 		return types.ErrNoMatchingSportEvent

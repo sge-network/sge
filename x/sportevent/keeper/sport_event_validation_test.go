@@ -193,12 +193,12 @@ func TestValidateResolveEvent(t *testing.T) {
 
 	tests := []struct {
 		name string
-		msg  types.ResolutionEvent
+		msg  types.SportEventResolutionTicketPayload
 		err  error
 	}{
 		{
 			name: "valid request",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -207,7 +207,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "invalid resolution ts",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   0,
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -217,7 +217,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "invalid uid",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            "invalid uid",
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -227,7 +227,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "empty winner odds",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:          uuid.NewString(),
 				ResolutionTS: uint64(t1.Unix()),
 				Status:       4,
@@ -236,7 +236,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "invalid winner odds",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{"invalid winner odds"},
@@ -246,7 +246,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "msg status pending",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -256,7 +256,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "msg invalid enum status",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -266,7 +266,7 @@ func TestValidateResolveEvent(t *testing.T) {
 		},
 		{
 			name: "msg invalid enum status, pending",
-			msg: types.ResolutionEvent{
+			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
@@ -277,7 +277,7 @@ func TestValidateResolveEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := k.ValidateResolutionEvent(tt.msg)
+			err := k.ValidateEventResolution(tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -287,34 +287,40 @@ func TestValidateResolveEvent(t *testing.T) {
 	}
 }
 
-func TestUpdateEvent(t *testing.T) {
+func TestUpdateEventValidation(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
 	params := k.GetParams(wctx)
 
 	t1 := time.Now()
+
+	sportEvent := types.SportEvent{
+		Creator: sample.AccAddress(),
+		StartTS: uint64(t1.Add(time.Minute).Unix()),
+		EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+		UID:     uuid.NewString(),
+		Odds: []*types.Odds{
+			{UID: uuid.NewString(), Meta: "Odds 1"},
+			{UID: uuid.NewString(), Meta: "Odds 2"},
+		},
+		Meta: "Winner of x:y",
+	}
+
 	tests := []struct {
 		name string
-		msg  types.SportEvent
-		prev types.SportEvent
+		msg  types.SportEventUpdateTicketPayload
 		err  error
 	}{
 		{
 			name: "valid request",
-			msg: types.SportEvent{
-				Creator: sample.AccAddress(),
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:     uuid.NewString(),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "Odds 1"},
-					{UID: uuid.NewString(), Meta: "Odds 2"},
-				},
 			},
 		},
 		{
 			name: "same timestamp",
-			msg: types.SportEvent{
-				Creator: sample.AccAddress(),
+			msg: types.SportEventUpdateTicketPayload{
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute).Unix()),
 			},
@@ -322,23 +328,17 @@ func TestUpdateEvent(t *testing.T) {
 		},
 		{
 			name: "end timestamp before current timestamp",
-			msg: types.SportEvent{
-				Creator: sample.AccAddress(),
-				EndTS:   uint64(t1.Add(-time.Minute).Unix()),
+			msg: types.SportEventUpdateTicketPayload{
+				EndTS: uint64(t1.Add(-time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid min amount, negative",
-			msg: types.SportEvent{
-				Creator: sample.AccAddress(),
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:     uuid.NewString(),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "Odds 1"},
-					{UID: uuid.NewString(), Meta: "Odds 2"},
-				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: sdk.NewInt(-5),
 					BetFee:    params.EventMinBetFee,
@@ -348,15 +348,10 @@ func TestUpdateEvent(t *testing.T) {
 		},
 		{
 			name: "invalid min amount, less than required",
-			msg: types.SportEvent{
-				Creator: sample.AccAddress(),
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:     uuid.NewString(),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "Odds 1"},
-					{UID: uuid.NewString(), Meta: "Odds 2"},
-				},
 				BetConstraints: &types.EventBetConstraints{
 					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
 					BetFee:    params.EventMinBetFee,
@@ -367,7 +362,7 @@ func TestUpdateEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := k.MsgServerValidateUpdateEvent(wctx, tt.msg, tt.msg)
+			err := k.MsgServerValidateEventUpdate(wctx, tt.msg, sportEvent)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

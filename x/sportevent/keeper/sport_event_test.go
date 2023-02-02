@@ -91,7 +91,7 @@ func TestSportEventGetAll(t *testing.T) {
 func TestResolveSportEvents(t *testing.T) {
 	t.Run("NotFound", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: "NotExistUid",
 		}
 		err := k.ResolveSportEvent(ctx, &resEventsIn)
@@ -107,7 +107,7 @@ func TestResolveSportEvents(t *testing.T) {
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: item.UID,
 		}
 
@@ -124,7 +124,7 @@ func TestResolveSportEvents(t *testing.T) {
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID:            item.UID,
 			ResolutionTS:   123456,
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},

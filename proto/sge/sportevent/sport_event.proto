@@ -68,33 +68,6 @@ enum SportEventStatus {
   SPORT_EVENT_STATUS_RESULT_DECLARED = 4;
 }
 
-// ResolutionEvent is type of resolution for sport-event
-message ResolutionEvent {
-  // UID is the uuid of sport-event
-  string uid = 1 [
-    (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
-  ];
-
-  // ResolutionTS is the resolution timestamp of event
-  uint64 resolution_ts = 2 [
-    (gogoproto.customname) = "ResolutionTS",
-    (gogoproto.jsontag) = "resolution_ts",
-    json_name = "resolution_ts"
-  ];
-
-  // WinnerOddsUIDs is the uuid list of winner odds
-  repeated string winner_odds_uids = 3 [
-    (gogoproto.customname) = "WinnerOddsUIDs",
-    (gogoproto.jsontag) = "winner_odds_uids",
-    json_name = "winner_odds_uids"
-  ];
-
-  // Status is the status of resolution
-  SportEventStatus status = 4;
-}
-
 // Bet constraints parent group for a sport event
 message EventBetConstraints {
   // MinAmount is the minimum allowed bet amount for a sport-event
