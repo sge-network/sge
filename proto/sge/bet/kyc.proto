@@ -3,12 +3,12 @@ package sgenetwork.sge.bet;
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// KycDataPayload is the KYC info
+// KycDataPayload is the KYC info.
 message KycDataPayload {
-  // KycRequired represent if kyc validation is required or not
+  // kyc_required represent if kyc validation is required or not.
   bool kyc_required = 1;
-  // KycApproved represent if kvc validation is approved or not
+  // kyc_approved represent if kvc validation is approved or not.
   bool kyc_approved = 2;
-  // KycId is the id of the kyc
+  // kyc_id is the id of the kyc.
   string kyc_id = 3;
 }

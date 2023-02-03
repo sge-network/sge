@@ -25,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Reserver defines the parameters for the StrategicReserve module.
 type Reserver struct {
-	// SrPool hold the sr pool properties of the reserver
+	// sr_pool hold the sr pool properties of the reserver
 	SrPool *SRPool `protobuf:"bytes,1,opt,name=sr_pool,json=srPool,proto3" json:"sr_pool,omitempty" yaml:"sr_pool"`
 }
 

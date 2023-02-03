@@ -25,8 +25,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the strategicreserve module's genesis state.
 type GenesisState struct {
+	// reserver is a space for holding current locked/unlocked amount information.
 	Reserver Reserver `protobuf:"bytes,1,opt,name=reserver,proto3" json:"reserver"`
-	Params   Params   `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
+	// params contains all of the parameters of the sr module.
+	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }

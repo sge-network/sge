@@ -31,6 +31,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsRequest struct {
 }
 
@@ -68,6 +69,7 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsResponse struct {
 	// params hold all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
@@ -114,6 +116,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 }
 
 // QuerySportEventRequest is the request type for the Query/{uid} RPC method.
+// Query/SportEvent RPC method.
 type QuerySportEventRequest struct {
 	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
 }
@@ -159,6 +162,7 @@ func (m *QuerySportEventRequest) GetUid() string {
 }
 
 // QuerySportEventRequest is the response type for the Query/{uid} RPC method.
+// Query/SportEvent RPC method.
 type QuerySportEventResponse struct {
 	SportEvent SportEvent `protobuf:"bytes,1,opt,name=sport_event,json=sportEvent,proto3" json:"sport_event"`
 }
@@ -205,6 +209,7 @@ func (m *QuerySportEventResponse) GetSportEvent() SportEvent {
 
 // QuerySportEventsRequest is the request type for the Query/sport_events RPC
 // method.
+// Query/SportEvents RPC method.
 type QuerySportEventsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -251,6 +256,7 @@ func (m *QuerySportEventsRequest) GetPagination() *query.PageRequest {
 
 // QuerySportEventsResponse is the response type for the Query/sport_events RPC
 // method.
+// Query/SportEvents RPC method.
 type QuerySportEventsResponse struct {
 	SportEvent []SportEvent        `protobuf:"bytes,1,rep,name=sport_event,json=sportEvent,proto3" json:"sport_event"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -305,6 +311,7 @@ func (m *QuerySportEventsResponse) GetPagination() *query.PageResponse {
 
 // QuerySportEventsByUIDsRequest is the request type for the
 // Query/sposport_events_by_uids  RPC method.
+// Query/SportEventsByUIDs RPC method.
 type QuerySportEventsByUIDsRequest struct {
 	Uids []string `protobuf:"bytes,1,rep,name=uids,proto3" json:"uids"`
 }
@@ -351,6 +358,7 @@ func (m *QuerySportEventsByUIDsRequest) GetUids() []string {
 
 // QuerySportEventsByUIDsResponse is the response type for the
 // Query/sposport_events_by_uids  RPC method.
+// Query/SportEventsByUIDs RPC method.
 type QuerySportEventsByUIDsResponse struct {
 	SportEvents  []SportEvent `protobuf:"bytes,1,rep,name=sport_events,json=sportEvents,proto3" json:"sport_events"`
 	FailedEvents []string     `protobuf:"bytes,2,rep,name=failed_events,json=failedEvents,proto3" json:"failed_events,omitempty"`

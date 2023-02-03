@@ -7,12 +7,10 @@ import "sge/bet/kyc.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// BetPlacementTicketPayload indicates data of bet placement ticket
+// BetPlacementTicketPayload indicates data of bet placement ticket.
 message BetPlacementTicketPayload {
-
-  // SelectedOdds is the user-selected odds to place bet on it
-  BetOdds selected_odds = 2;
-
-  // KycData contains the details of user KYC
-  KycDataPayload kyc_data = 3;
+  // selected_odds is the user-selected odds to place bet.
+  BetOdds selected_odds = 1;
+  // kyc_data contains the details of user kyc.
+  KycDataPayload kyc_data = 2;
 }

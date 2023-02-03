@@ -26,9 +26,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Phase defines the phase parameters for the module.
 type Phase struct {
-	// Inflation is the current phase inflation rate
+	// inflation is the current phase inflation rate.
 	Inflation github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=inflation,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"inflation" yaml:"inflation"`
-	// YearCoefficient is the total coefficient from the beginning
+	// year_coefficient is the proportion of a complete year.
 	YearCoefficient github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=year_coefficient,json=yearCoefficient,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"year_coefficient" yaml:"year_coefficient"`
 }
 

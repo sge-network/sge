@@ -25,8 +25,9 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the dvm module's genesis state.
 type GenesisState struct {
+	// params contains parameters of dvm module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	// PublicKeys trusted keys from genesis file
+	// public_keys trusted keys from genesis file.
 	PublicKeys *PublicKeys `protobuf:"bytes,2,opt,name=public_keys,json=publicKeys,proto3" json:"public_keys,omitempty"`
 }
 

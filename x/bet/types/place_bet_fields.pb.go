@@ -24,15 +24,16 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// PlaceBetFields contains necessary fields which come in Place Bet Tx request
+// PlaceBetFields contains necessary fields which come in Place bet tx request.
 type PlaceBetFields struct {
-	// UID is the unique uuid assigned to bet
+	// uid is the universal unique identifier assigned to bet.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// Amount is the wager amount
+	// amount is the wager amount.
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
-	// Ticket is a signed string containing important info such as `oddsValue`
+	// ticket is a signed string containing important info such as `oddsValue`.
 	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
-	// OddsType is the type of odds bettor choose such as decimal, fraction
+	// odds_type is the type of odds that are going to be placed
+	// such as decimal, fraction, moneyline.
 	OddsType OddsType `protobuf:"varint,4,opt,name=odds_type,json=oddsType,proto3,enum=sgenetwork.sge.bet.OddsType" json:"odds_type,omitempty"`
 }
 

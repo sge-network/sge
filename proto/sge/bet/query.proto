@@ -33,53 +33,58 @@ service Query {
   }
 }
 
-// QueryBetRequest is request type for single bet query
+// QueryBetRequest is the request type for a single bet query
+// Query/Bet RPC method.
 message QueryBetRequest {
   string creator = 1;
   string uid = 2 [ (gogoproto.jsontag) = "uid", json_name = "uid" ];
 }
 
-// QueryBetResponse is response type for single bet query
+// QueryBetResponse is the response type for single bet query
+// Query/Bet RPC method.
 message QueryBetResponse {
   Bet bet = 1 [ (gogoproto.nullable) = false ];
   sgenetwork.sge.sportevent.SportEvent sport_event = 2
       [ (gogoproto.nullable) = false ];
 }
 
-// QueryBetsRequest is request type for bets list query
+// QueryBetsRequest is the request type for the bets list query
+// Query/Bets RPC method.
 message QueryBetsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-// QueryBetsResponse is response type for bets list query
+// QueryBetsResponse is the response type for the bets list query
+// Query/Bets RPC method.
 message QueryBetsResponse {
   repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// QueryBetsByUIDsRequest is request type for bets list of certain UID list
-// input
-message QueryBetsByUIDsRequest {
-  repeated QueryBetRequest items = 1
-      [ (gogoproto.jsontag) = "items", json_name = "items" ];
-}
-
-// QueryBetsByUIDsResponse is response type for bets list of certain UID list
-// input
-message QueryBetsByUIDsResponse {
-  repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
-  repeated string not_found_events = 2;
-}
-
-// QueryBetsByUIDsResponse is request type for bets list of all bets of a bettor
+// QueryBetsByUIDsResponse is the request type for bets list of all bets of a
+// bettor Query/BetsByCreator RPC method.
 message QueryBetsByCreatorRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string creator = 2;
 }
 
-// QueryBetsByCreatorResponse is response type for bets list of all bets of a
-// bettor
+// QueryBetsByCreatorResponse is the response type for the bets list of all bets
+// of a bettor Query/BetsByCreator RPC method.
 message QueryBetsByCreatorResponse {
   repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
+// list input Query/BetsByUIDs RPC method.
+message QueryBetsByUIDsRequest {
+  repeated QueryBetRequest items = 1
+      [ (gogoproto.jsontag) = "items", json_name = "items" ];
+}
+
+// QueryBetsByUIDsResponse is the response type for the bets list of a certain
+// UID list input Query/BetsByUIDs RPC method.
+message QueryBetsByUIDsResponse {
+  repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
+  repeated string not_found_events = 2;
 }

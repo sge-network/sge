@@ -19,17 +19,24 @@ service Query {
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsRequest {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsResponse {
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-// QueryPubKeysRequest is the request type for public keys list query
+// QueryPubKeysRequest is the request type for the public keys list query.
+// Query/PubKeys RPC method.
 message QueryPubKeysRequest {}
 
-// QueryPubKeysResponse is the response type for public keys list query
-message QueryPubKeysResponse { repeated string list = 1; }
+// QueryPubKeysResponse is the response type for the public keys list query.
+// Query/PubKeys RPC method.
+message QueryPubKeysResponse {
+  // list is the list of allowed public keys.
+  repeated string list = 1;
+}

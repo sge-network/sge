@@ -33,7 +33,7 @@ const (
 	SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED SportEventStatus = 0
 	// invalid event
 	SportEventStatus_SPORT_EVENT_STATUS_INVALID SportEventStatus = 1
-	// event cancelled
+	// event canceled
 	SportEventStatus_SPORT_EVENT_STATUS_CANCELLED SportEventStatus = 2
 	// event aborted
 	SportEventStatus_SPORT_EVENT_STATUS_ABORTED SportEventStatus = 3
@@ -65,30 +65,30 @@ func (SportEventStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_f4c38f73099259f8, []int{0}
 }
 
-// SportEvent the representation of the sport-event to be stored in sport-event
+// SportEvent the representation of the sport-event to be stored in sport-event.
 // state
 type SportEvent struct {
-	// UID is the uuid of the sport-event
+	// uid is the universal unique identifier of the sport-event.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// StartTS is the start timestamp of the sport-event
+	// start_ts is the start timestamp of the sport-event.
 	StartTS uint64 `protobuf:"varint,2,opt,name=start_ts,proto3" json:"start_ts"`
-	// EndTS is the end timestamp of the sport-event
+	// end_ts is the end timestamp of the sport-event.
 	EndTS uint64 `protobuf:"varint,3,opt,name=end_ts,proto3" json:"end_ts"`
-	// Odds is the list of odds of the sport-event
+	// odds is the list of odds of the sport-event.
 	Odds []*Odds `protobuf:"bytes,4,rep,name=odds,proto3" json:"odds,omitempty"`
-	// WinnerOddsUIDs is the list of winner odds uuid
+	// winner_odds_uids is the list of winner odds universal unique identifiers.
 	WinnerOddsUIDs []string `protobuf:"bytes,5,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids"`
-	// Status is the current status of the sport-event
+	// status is the current status of the sport-event.
 	Status SportEventStatus `protobuf:"varint,6,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
-	// ResolutionTS is the timestamp of respolution of sport-event
+	// resolution_ts is the timestamp of the resolution of sport-event.
 	ResolutionTS uint64 `protobuf:"varint,7,opt,name=resolution_ts,proto3" json:"resolution_ts"`
-	// Creator is the address of creator of sport-event
+	// creator is the address of the creator of sport-event.
 	Creator string `protobuf:"bytes,8,opt,name=creator,proto3" json:"creator,omitempty"`
-	// BetConstraints holds the constraints of sport-event to accept bets
+	// bet_constraints holds the constraints of sport-event to accept bets.
 	BetConstraints *EventBetConstraints `protobuf:"bytes,9,opt,name=bet_constraints,json=betConstraints,proto3" json:"bet_constraints,omitempty"`
-	// Active is the status of active or inactive sport-event
+	// active is the status of active or inactive sport-event.
 	Active bool `protobuf:"varint,10,opt,name=active,proto3" json:"active,omitempty"`
-	// Meta contains human-readable metadata of the sport-event
+	// meta contains human-readable metadata of the sport-event.
 	Meta string `protobuf:"bytes,11,opt,name=meta,proto3" json:"meta,omitempty"`
 }
 
@@ -204,9 +204,9 @@ func (m *SportEvent) GetMeta() string {
 
 // Bet constraints parent group for a sport-event
 type EventBetConstraints struct {
-	// MinAmount is the minimum allowed bet amount for a sport-event
+	// min_amount is the minimum allowed bet amount for a sport-event.
 	MinAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=min_amount,json=minAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_amount"`
-	// BetFee is the fee that bettor needs to pay to bet on the sport-event
+	// bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
 	BetFee types.Coin `protobuf:"bytes,3,opt,name=bet_fee,json=betFee,proto3,castrepeated=github.com/cosmos/cosmos-sdk/types.Coin" json:"bet_fee"`
 }
 

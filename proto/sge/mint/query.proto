@@ -37,20 +37,24 @@ service Query {
   }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsRequest {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsResponse {
-  // params holds all the parameters of this module.
+  // params contains all of the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // QueryInflationRequest is the request type for the Query/Inflation RPC method.
+// Query/Inflation RPC method.
 message QueryInflationRequest {}
 
 // QueryInflationResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/Inflation RPC method.
 message QueryInflationResponse {
   // inflation is the current minting inflation value.
   bytes inflation = 1 [
@@ -60,12 +64,14 @@ message QueryInflationResponse {
 }
 
 // QueryPhaseStepRequest is the request type for the Query/Inflation RPC method.
+// Query/PhaseStep RPC method.
 message QueryPhaseStepRequest {}
 
 // QueryPhaseStepResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/PhaseStep RPC method.
 message QueryPhaseStepResponse {
-  // PhaseStep is the current phase number of the blockchain.
+  // phase_step is the current phase number of the blockchain.
   int32 phase_step = 1;
 }
 
@@ -85,11 +91,14 @@ message QueryPhaseProvisionsResponse {
 
 // QueryEndPhaseStatusRequest is the request type for the Query/Inflation RPC
 // method.
+// Query/EndPhaseStatus RPC method.
 message QueryEndPhaseStatusRequest {}
 
 // QueryEndPhaseStatusResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/EndPhaseStatus RPC method.
 message QueryEndPhaseStatusResponse {
-  // IsInEndPhase is true if there is no more valid phase in the mint parameters
+  // is_in_end_phase is true if there is no more valid phase in the mint
+  // parameters.
   bool is_in_end_phase = 1;
 }

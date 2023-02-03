@@ -22,13 +22,13 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// KycDataPayload is the KYC info
+// KycDataPayload is the KYC info.
 type KycDataPayload struct {
-	// KycRequired represent if kyc validation is required or not
+	// kyc_required represent if kyc validation is required or not.
 	KycRequired bool `protobuf:"varint,1,opt,name=kyc_required,json=kycRequired,proto3" json:"kyc_required,omitempty"`
-	// KycApproved represent if kvc validation is approved or not
+	// kyc_approved represent if kvc validation is approved or not.
 	KycApproved bool `protobuf:"varint,2,opt,name=kyc_approved,json=kycApproved,proto3" json:"kyc_approved,omitempty"`
-	// KycId is the id of the kyc
+	// kyc_id is the id of the kyc.
 	KycId string `protobuf:"bytes,3,opt,name=kyc_id,json=kycId,proto3" json:"kyc_id,omitempty"`
 }
 

@@ -30,7 +30,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsRequest struct {
 }
 
@@ -67,9 +68,10 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsResponse struct {
-	// params holds all the parameters of this module.
+	// params contains all of the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 }
 
@@ -114,6 +116,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 }
 
 // QueryInflationRequest is the request type for the Query/Inflation RPC method.
+// Query/Inflation RPC method.
 type QueryInflationRequest struct {
 }
 
@@ -152,6 +155,7 @@ var xxx_messageInfo_QueryInflationRequest proto.InternalMessageInfo
 
 // QueryInflationResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/Inflation RPC method.
 type QueryInflationResponse struct {
 	// inflation is the current minting inflation value.
 	Inflation github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,1,opt,name=inflation,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"inflation"`
@@ -191,6 +195,7 @@ func (m *QueryInflationResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryInflationResponse proto.InternalMessageInfo
 
 // QueryPhaseStepRequest is the request type for the Query/Inflation RPC method.
+// Query/PhaseStep RPC method.
 type QueryPhaseStepRequest struct {
 }
 
@@ -229,8 +234,9 @@ var xxx_messageInfo_QueryPhaseStepRequest proto.InternalMessageInfo
 
 // QueryPhaseStepResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/PhaseStep RPC method.
 type QueryPhaseStepResponse struct {
-	// PhaseStep is the current phase number of the blockchain.
+	// phase_step is the current phase number of the blockchain.
 	PhaseStep int32 `protobuf:"varint,1,opt,name=phase_step,json=phaseStep,proto3" json:"phase_step,omitempty"`
 }
 
@@ -354,6 +360,7 @@ var xxx_messageInfo_QueryPhaseProvisionsResponse proto.InternalMessageInfo
 
 // QueryEndPhaseStatusRequest is the request type for the Query/Inflation RPC
 // method.
+// Query/EndPhaseStatus RPC method.
 type QueryEndPhaseStatusRequest struct {
 }
 
@@ -392,8 +399,9 @@ var xxx_messageInfo_QueryEndPhaseStatusRequest proto.InternalMessageInfo
 
 // QueryEndPhaseStatusResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/EndPhaseStatus RPC method.
 type QueryEndPhaseStatusResponse struct {
-	// IsInEndPhase is true if there is no more valid phase in the mint parameters
+	// is_in_end_phase is true if there is no more valid phase in the mint parameters.
 	IsInEndPhase bool `protobuf:"varint,1,opt,name=is_in_end_phase,json=isInEndPhase,proto3" json:"is_in_end_phase,omitempty"`
 }
 

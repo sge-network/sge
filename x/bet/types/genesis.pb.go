@@ -25,10 +25,14 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the bet module's genesis state.
 type GenesisState struct {
-	Params     Params   `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	BetList    []Bet    `protobuf:"bytes,2,rep,name=bet_list,json=betList,proto3" json:"bet_list"`
+	// params contains parameters of dvm module.
+	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// bet_list contains bet list in the genesis init.
+	BetList []Bet `protobuf:"bytes,2,rep,name=bet_list,json=betList,proto3" json:"bet_list"`
+	// uid2id_list contains bet to id list in the genesis init.
 	Uid2IdList []UID2ID `protobuf:"bytes,3,rep,name=uid2id_list,json=uid2idList,proto3" json:"uid2id_list"`
-	Stats      BetStats `protobuf:"bytes,4,opt,name=stats,proto3" json:"stats"`
+	// stats contains statistics in the genesis init.
+	Stats BetStats `protobuf:"bytes,4,opt,name=stats,proto3" json:"stats"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }

@@ -5,15 +5,17 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 
 // Msg defines the Msg service.
 service Msg {
-  // Mutation defines a method to modify the allowed public keys
+  // Mutation defines a method to modify the allowed public keys.
   rpc Mutation(MsgMutation) returns (MsgMutationResponse);
 }
 
-// MsgMutation is the type of request for modification of public keys
+// MsgMutation is the type of request for modification of public keys.
 message MsgMutation {
+  // creator is the account address of mutation message creator.
   string creator = 1;
+  // txs is the encoded transaction body.
   string txs = 2;
 }
 
-// MsgMutationResponse is the type of response for modification of public keys
+// MsgMutationResponse is the type of response for modification of public keys.
 message MsgMutationResponse { bool success = 1; }

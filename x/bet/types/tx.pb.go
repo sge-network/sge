@@ -28,11 +28,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgPlaceBet defines a message to place a bet with the given data
+// MsgPlaceBet defines a message to place a bet with the given data.
 type MsgPlaceBet struct {
-	// creator is the bettor address
+	// creator is the bettor address.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// PlaceBetFields contains bet fields
+	// PlaceBetFields contains bet fields.
 	Bet *PlaceBetFields `protobuf:"bytes,2,opt,name=bet,proto3" json:"bet,omitempty"`
 }
 
@@ -83,8 +83,8 @@ func (m *MsgPlaceBet) GetBet() *PlaceBetFields {
 	return nil
 }
 
-// MsgPlaceBetResponse is the returning value in the response of MsgPlaceBet
-// request
+// MsgPlaceBetResponse is the returning value in the response
+// of MsgPlaceBet request.
 type MsgPlaceBetResponse struct {
 	Error string          `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	Bet   *PlaceBetFields `protobuf:"bytes,2,opt,name=bet,proto3" json:"bet,omitempty"`
@@ -137,13 +137,13 @@ func (m *MsgPlaceBetResponse) GetBet() *PlaceBetFields {
 	return nil
 }
 
-// MsgSettleBet defines a message to settle the given bet
+// MsgSettleBet defines a message to settle the given bet.
 type MsgSettleBet struct {
-	// creator is the bettor address
+	// creator is the bettor account address.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// bet_uid is the unique uuid of the bet to settle
+	// bet_uid is the universal unique identifier of the bet to settle.
 	BetUID string `protobuf:"bytes,2,opt,name=bet_uid,proto3" json:"bet_uid"`
-	// bettor_address is sthe bec32 address of the bettor
+	// bettor_address is sthe bec32 address of the bettor.
 	BettorAddress string `protobuf:"bytes,3,opt,name=bettor_address,json=bettorAddress,proto3" json:"bettor_address,omitempty"`
 }
 
@@ -201,12 +201,12 @@ func (m *MsgSettleBet) GetBettorAddress() string {
 	return ""
 }
 
-// MsgSettleBetResponse is the returning value in the response of MsgSettleBet
-// request
+// MsgSettleBetResponse is the returning value in the response of MsgSettleBet.
+// request.
 type MsgSettleBetResponse struct {
-	// Error contains any error while settlement
+	// error contains any error while the settlement.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	// BetUID is the uuid of the bet to be settled
+	// bet_uid is the universal unique identifier of the bet to be settled.
 	BetUID string `protobuf:"bytes,2,opt,name=bet_uid,proto3" json:"bet_uid"`
 }
 
@@ -306,9 +306,9 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// PlaceBet defines a method to place a bet with the given data
+	// PlaceBet defines a method to place a bet with the given data.
 	PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.CallOption) (*MsgPlaceBetResponse, error)
-	// SettleBet defines a method to settle the given bet
+	// SettleBet defines a method to settle the given bet.
 	SettleBet(ctx context.Context, in *MsgSettleBet, opts ...grpc.CallOption) (*MsgSettleBetResponse, error)
 }
 
@@ -340,9 +340,9 @@ func (c *msgClient) SettleBet(ctx context.Context, in *MsgSettleBet, opts ...grp
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// PlaceBet defines a method to place a bet with the given data
+	// PlaceBet defines a method to place a bet with the given data.
 	PlaceBet(context.Context, *MsgPlaceBet) (*MsgPlaceBetResponse, error)
-	// SettleBet defines a method to settle the given bet
+	// SettleBet defines a method to settle the given bet.
 	SettleBet(context.Context, *MsgSettleBet) (*MsgSettleBetResponse, error)
 }
 

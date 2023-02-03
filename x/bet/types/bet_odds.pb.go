@@ -23,15 +23,15 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// BetOdds is the type to store odds of an sport-event
+// BetOdds is the type to store odds of an sport-event.
 type BetOdds struct {
-	// UID is Universal Unique Identifier
-	// Optional | Unique | uuid-v4 or code
+	// uid is universal unique identifier of odds.
+	// Required | Unique | uuid-v4 or code
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// SportEventUID is the parent, used for fast retrieving.
-	// ? Required | NonUnique | -
+	// sport_event_uid is the parent, used for fast retrieving.
+	// Required | NonUnique | -
 	SportEventUID string `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	// Value of the Odds in corresponding odds type
+	// value of the odds in corresponding odds type proposed in bet placement message.
 	// Required | NonUnique | "1.286" or "2/7" or "+500"
 	Value string `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
 }

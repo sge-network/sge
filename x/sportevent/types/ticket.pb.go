@@ -25,15 +25,15 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // SportEventUpdateTicketPayload indicates data of update sportevent ticket
 type SportEventUpdateTicketPayload struct {
-	// UID is the uuid of the sport-event
+	// uid is the uuid of the sport-event
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// StartTS is the start timestamp of the sport-event
+	// start_ts is the start timestamp of the sport-event
 	StartTS uint64 `protobuf:"varint,2,opt,name=start_ts,proto3" json:"start_ts"`
-	// EndTS is the end timestamp of the sport-event
+	// end_ts is the end timestamp of the sport-event
 	EndTS uint64 `protobuf:"varint,3,opt,name=end_ts,proto3" json:"end_ts"`
-	// BetConstraints holds the constraints of sport-event to accept bets
+	// bet_constraints holds the constraints of sport-event to accept bets
 	BetConstraints *EventBetConstraints `protobuf:"bytes,4,opt,name=bet_constraints,json=betConstraints,proto3" json:"bet_constraints,omitempty"`
-	// Active is the status of active or inactive sport-event
+	// active is the status of active or inactive sport-event
 	Active bool `protobuf:"varint,5,opt,name=active,proto3" json:"active,omitempty"`
 }
 
@@ -105,16 +105,16 @@ func (m *SportEventUpdateTicketPayload) GetActive() bool {
 	return false
 }
 
-// SportEventResolutionTicketPayload indicates data of resolution of sportevent
+// SportEventResolutionTicketPayload indicates data of resolution of sportevent.
 // ticket
 type SportEventResolutionTicketPayload struct {
-	// UID is the uuid of sport-event
+	// uid is the universal unique identifier of sport-event.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	// ResolutionTS is the resolution timestamp of event
+	// resolution_ts is the resolution timestamp of the sport-event.
 	ResolutionTS uint64 `protobuf:"varint,2,opt,name=resolution_ts,proto3" json:"resolution_ts"`
-	// WinnerOddsUIDs is the uuid list of winner odds
+	// winner_odds_uids is the universal unique identifier list of the winner odds.
 	WinnerOddsUIDs []string `protobuf:"bytes,3,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids"`
-	// Status is the status of resolution
+	// status is the status of the resolution.
 	Status SportEventStatus `protobuf:"varint,4,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
 }
 

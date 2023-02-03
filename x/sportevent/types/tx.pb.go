@@ -28,11 +28,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgAddSportEventRequest is the message type for adding sport-event into state
+// MsgAddSportEventRequest is the message type for adding sport-event into the state.
 type MsgAddSportEventRequest struct {
-	// Creator is the address of creator account of sport-event
+	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// Ticket is the jwt ticked data
+	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
@@ -83,11 +83,11 @@ func (m *MsgAddSportEventRequest) GetTicket() string {
 	return ""
 }
 
-// MsgAddSportEventResponse response for adding sport-event
+// MsgAddSportEventResponse response for adding sport-event.
 type MsgAddSportEventResponse struct {
-	// Error contains error if adding a sport-event face any issues
+	// error contains an error if adding a sport-event faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	// Data is the data of sport-event
+	// data is the data of sport-event.
 	Data *SportEvent `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
@@ -138,11 +138,11 @@ func (m *MsgAddSportEventResponse) GetData() *SportEvent {
 	return nil
 }
 
-// MsgResolveSportEventRequest is the message type for resolving a sport-event
+// MsgResolveSportEventRequest is the message type for resolving a sport-event.
 type MsgResolveSportEventRequest struct {
-	// Creator is the address of creator account of sport-event
+	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// Ticket is the jwt ticked data
+	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
@@ -193,11 +193,11 @@ func (m *MsgResolveSportEventRequest) GetTicket() string {
 	return ""
 }
 
-// MsgResolveSportEventResponse response for resolving a sport-event
+// MsgResolveSportEventResponse response for resolving a sport-event.
 type MsgResolveSportEventResponse struct {
-	// Error contains error if adding a sport-event face any issues
+	// error contains an error if adding a sport-event faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	// Data is the data of sport-event
+	// data is the data of sport-event.
 	Data *SportEvent `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
@@ -248,12 +248,12 @@ func (m *MsgResolveSportEventResponse) GetData() *SportEvent {
 	return nil
 }
 
-// MsgUpdateSportEventRequest is the message type for updating sport-event data
+// MsgUpdateSportEventRequest is the message type for updating sport-event data.
 // in the state
 type MsgUpdateSportEventRequest struct {
-	// Creator is the address of creator account of sport-event
+	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// Ticket is the jwt ticked data
+	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
@@ -304,11 +304,11 @@ func (m *MsgUpdateSportEventRequest) GetTicket() string {
 	return ""
 }
 
-// MsgUpdateSportEventResponse response for updating a sport-event
+// MsgUpdateSportEventResponse response for updating a sport-event.
 type MsgUpdateSportEventResponse struct {
-	// Error contains error if adding a sport-event face any issues
+	// error contains an error if adding a sport-event faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
-	// Data is the data of sport-event
+	// data is the data of sport-event
 	Data *SportEvent `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
@@ -410,11 +410,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// AddSportEvent defines a method to add sport-event with the given data
+	// AddSportEvent defines a method to add sport-event with the given data.
 	AddSportEvent(ctx context.Context, in *MsgAddSportEventRequest, opts ...grpc.CallOption) (*MsgAddSportEventResponse, error)
-	// ResolveSportEvent defines a method to resolve sport-event
+	// ResolveSportEvent defines a method to resolve sport-event.
 	ResolveSportEvent(ctx context.Context, in *MsgResolveSportEventRequest, opts ...grpc.CallOption) (*MsgResolveSportEventResponse, error)
-	// UpdateSportEvent defines a method to update a sport-event
+	// UpdateSportEvent defines a method to update a sport-event.
 	UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEventRequest, opts ...grpc.CallOption) (*MsgUpdateSportEventResponse, error)
 }
 
@@ -455,11 +455,11 @@ func (c *msgClient) UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEven
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// AddSportEvent defines a method to add sport-event with the given data
+	// AddSportEvent defines a method to add sport-event with the given data.
 	AddSportEvent(context.Context, *MsgAddSportEventRequest) (*MsgAddSportEventResponse, error)
-	// ResolveSportEvent defines a method to resolve sport-event
+	// ResolveSportEvent defines a method to resolve sport-event.
 	ResolveSportEvent(context.Context, *MsgResolveSportEventRequest) (*MsgResolveSportEventResponse, error)
-	// UpdateSportEvent defines a method to update a sport-event
+	// UpdateSportEvent defines a method to update a sport-event.
 	UpdateSportEvent(context.Context, *MsgUpdateSportEventRequest) (*MsgUpdateSportEventResponse, error)
 }
 

@@ -20,17 +20,17 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// OddsType is representation of the type of the odds
+// OddsType is the representation of the type of the odds.
 type OddsType int32
 
 const (
-	// Invalid odds type
+	// invalid odds type
 	OddsType_ODDS_TYPE_UNSPECIFIED OddsType = 0
-	// Decimal odds type (European)
+	// decimal odds type (european)
 	OddsType_ODDS_TYPE_DECIMAL OddsType = 1
-	// Fractional odds type (British)
+	// fractional odds type (british)
 	OddsType_ODDS_TYPE_FRACTIONAL OddsType = 2
-	// Moneyline odds type (American)
+	// moneyline odds type (american)
 	OddsType_ODDS_TYPE_MONEYLINE OddsType = 3
 )
 

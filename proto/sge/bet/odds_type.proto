@@ -3,17 +3,17 @@ package sgenetwork.sge.bet;
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// OddsType is representation of the type of the odds
+// OddsType is the representation of the type of the odds.
 enum OddsType {
-  // Invalid odds type
+  // invalid odds type
   ODDS_TYPE_UNSPECIFIED = 0;
 
-  // Decimal odds type (European)
+  // decimal odds type (european)
   ODDS_TYPE_DECIMAL = 1;
 
-  // Fractional odds type (British)
+  // fractional odds type (british)
   ODDS_TYPE_FRACTIONAL = 2;
 
-  // Moneyline odds type (American)
+  // moneyline odds type (american)
   ODDS_TYPE_MONEYLINE = 3;
 }

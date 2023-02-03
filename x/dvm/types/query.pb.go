@@ -29,7 +29,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsRequest struct {
 }
 
@@ -66,7 +67,8 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsResponse struct {
 	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
@@ -112,7 +114,8 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryPubKeysRequest is the request type for public keys list query
+// QueryPubKeysRequest is the request type for the public keys list query.
+// Query/PubKeys RPC method.
 type QueryPubKeysRequest struct {
 }
 
@@ -149,8 +152,10 @@ func (m *QueryPubKeysRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryPubKeysRequest proto.InternalMessageInfo
 
-// QueryPubKeysResponse is the response type for public keys list query
+// QueryPubKeysResponse is the response type for the public keys list query.
+// Query/PubKeys RPC method.
 type QueryPubKeysResponse struct {
+	// list is the list of allowed public keys.
 	List []string `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 }
 
