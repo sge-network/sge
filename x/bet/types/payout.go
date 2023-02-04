@@ -21,7 +21,6 @@ func calculatePayout(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Int
 
 	// assign corresponding type to the interface instance
 	switch oddsType {
-
 	case OddsType_ODD_TYPE_DECIMAL:
 		oType = new(decimalOdds)
 
@@ -33,7 +32,6 @@ func calculatePayout(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Int
 
 	default:
 		return sdk.ZeroInt(), ErrInvalidOddsType
-
 	}
 
 	// total payout should be paid to bettor

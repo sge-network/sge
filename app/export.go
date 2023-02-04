@@ -48,7 +48,6 @@ func (app *SgeApp) ExportAppStateAndValidators(
 //
 //	in favour of export at a block height
 func (app *SgeApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
-
 	// get allowed validators
 	applyAllowedAddrs, allowedAddrsMap := app.getJailAllowedValidatorsMap(ctx, jailAllowedAddrs)
 

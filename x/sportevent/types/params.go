@@ -24,10 +24,8 @@ const (
 	DefaultMinBetAmount = 1000000
 )
 
-var (
-	// DefaultMinBetFee is the default minimum bet fee amount allowed
-	DefaultMinBetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000))
-)
+// DefaultMinBetFee is the default minimum bet fee amount allowed
+var DefaultMinBetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000))
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {

@@ -23,7 +23,6 @@ var (
 	_ = baseapp.Paramspace
 )
 
-// nolint
 const (
 	opWeightMsgPlaceBet = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value

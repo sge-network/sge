@@ -103,8 +103,7 @@ func (t *ticket) Consensus(pubKeys ...string) error {
 }
 
 func (t *ticket) IsValid(ctx sdk.Context) error {
-
-	//validate the expiration
+	// validate the expiration
 	if !t.exp.Time.After(ctx.BlockTime()) {
 		return ErrTicketExpired
 	}
@@ -153,14 +152,12 @@ func (t *ticket) verifyWithKey(key string) (bool, error) {
 			}
 			return P, nil
 		})
-
 		if err != nil {
 			return false, err
 		}
 		if T.Valid {
 			return true, nil
 		}
-
 	}
 
 	return false, ErrInvalidSignature

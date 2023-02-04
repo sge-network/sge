@@ -11,7 +11,6 @@ var (
 	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 1100, "mint denom cannot be blank")
 )
 
-// nolint
 const (
 	ErrTextInvalidParamType                   = "invalid parameter type: %T"
 	ErrTextBlocksPerYearMustBePositive        = "blocks per year must be positive: %d"

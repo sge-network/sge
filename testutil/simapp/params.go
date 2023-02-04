@@ -36,9 +36,6 @@ var (
 	TestParamValidatorAddresses = make(map[string]TestValidator)
 )
 
-// nolint
-var (
-	// TestDVMPublicKey represents test public keys needed for dvm
-	// TestDVMPrivateKey represents test private keys needed for dvm
-	TestDVMPublicKey, TestDVMPrivateKey, _ = ed25519.GenerateKey(rand.Reader)
-)
+// TestDVMPublicKey represents test public keys needed for dvm
+// TestDVMPrivateKey represents test private keys needed for dvm
+var TestDVMPublicKey, TestDVMPrivateKey, _ = ed25519.GenerateKey(rand.Reader)

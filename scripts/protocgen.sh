@@ -3,31 +3,28 @@
 set -eo pipefail
 
 # get protoc executions
-go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos 2>/dev/null
+go get github.com/regen-network/cosmos-proto/protoc-gen-gocosmos@v1.3.3-alpha.regen.1 2>/dev/null
+
 # get cosmos sdk from github
-go get github.com/cosmos/cosmos-sdk@v0.42.9 2>/dev/null
+go get github.com/cosmos/cosmos-sdk@v0.45.11 2>/dev/null
 
-# Get the path of the cosmos-sdk repo from go/pkg/mod
-cosmos_sdk_dir=$(go list -f '{{ .Dir }}' -m github.com/cosmos/cosmos-sdk)
-proto_dirs=$(find . -path ./third_party -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
+echo "Generating gogo proto code"
+cd proto
+proto_dirs=$(find ./sge -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
 for dir in $proto_dirs; do
-  # generate protobuf bind
-  buf protoc \
-  -I "proto" \
-  -I "$cosmos_sdk_dir/third_party/proto" \
-  -I "$cosmos_sdk_dir/proto" \
-  --gocosmos_out=plugins=interfacetype+grpc,\
-Mgoogle/protobuf/any.proto=github.com/cosmos/cosmos-sdk/codec/types:. \
-  $(find "${dir}" -name '*.proto')
-
-  # generate grpc gateway
-  buf protoc \
-  -I "proto" \
-  -I "$cosmos_sdk_dir/third_party/proto" \
-  -I "$cosmos_sdk_dir/proto" \
-  --grpc-gateway_out=logtostderr=true:. \
-  $(find "${dir}" -maxdepth 1 -name '*.proto')
+  for file in $(find "${dir}" -maxdepth 1 -name '*.proto'); do
+    if grep go_package $file &>/dev/null; then
+      buf generate --template buf.gen.gogo.yaml $file
+    fi
+  done
 done
 
-cp -r ./github.com/sge-network/sge/* ./
-rm -rf ./github.com
+cd ..
+
+# move proto files to the right places
+#
+# Note: Proto files are suffixed with the current binary version.
+cp -r github.com/sge-network/sge/* ./
+rm -rf github.com
+
+go mod tidy -compat=1.18

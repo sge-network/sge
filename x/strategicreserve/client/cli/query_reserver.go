@@ -22,7 +22,6 @@ func GetCmdQueryReserver() *cobra.Command {
 
 			params := &types.QueryReserverRequest{}
 			res, err := queryClient.Reserver(cmd.Context(), params)
-
 			if err != nil {
 				return err
 			}

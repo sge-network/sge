@@ -21,7 +21,8 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
 			name: "valid bet message",
 			msg: MsgPlaceBet{
 				Creator: sample.AccAddress(),
@@ -122,5 +123,4 @@ func TestNewBet(t *testing.T) {
 		require.Equal(t, expectedBet, res)
 		require.Nil(t, err)
 	})
-
 }

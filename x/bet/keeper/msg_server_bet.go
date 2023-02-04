@@ -16,7 +16,8 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	if isFound {
 		return &types.MsgPlaceBetResponse{
 				Error: types.ErrDuplicateUID.Error(),
-				Bet:   msg.Bet},
+				Bet:   msg.Bet,
+			},
 			types.ErrDuplicateUID
 	}
 
@@ -25,14 +26,16 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	if err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: sdkerrors.Wrapf(types.ErrInVerification, "%s", err).Error(),
-				Bet:   msg.Bet},
+				Bet:   msg.Bet,
+			},
 			sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
 	if err = types.TicketFieldsValidation(ticketData); err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: err.Error(),
-				Bet:   msg.Bet},
+				Bet:   msg.Bet,
+			},
 			err
 	}
 
@@ -47,21 +50,24 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	if err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: err.Error(),
-				Bet:   msg.Bet},
+				Bet:   msg.Bet,
+			},
 			err
 	}
 
 	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: err.Error(),
-				Bet:   msg.Bet},
+				Bet:   msg.Bet,
+			},
 			err
 	}
 
 	emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator)
 	return &types.MsgPlaceBetResponse{
 			Error: "",
-			Bet:   msg.Bet},
+			Bet:   msg.Bet,
+		},
 		nil
 }
 

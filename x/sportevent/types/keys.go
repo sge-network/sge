@@ -21,7 +21,5 @@ const (
 	MemStoreKey = "mem_sportevent"
 )
 
-var (
-	// SportEventKeyPrefix is the prefix to retrieve all SportEvent
-	SportEventKeyPrefix = []byte{0x00}
-)
+// SportEventKeyPrefix is the prefix to retrieve all SportEvent
+var SportEventKeyPrefix = []byte{0x00}

@@ -74,7 +74,6 @@ func TestCmdPubKeysList(t *testing.T) {
 					require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 					require.True(t, len(resp.List) > 0)
 					t.Log(resp.List)
-
 				}
 			})
 		}

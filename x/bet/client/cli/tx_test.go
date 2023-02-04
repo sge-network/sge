@@ -37,7 +37,7 @@ func TestGetTxCmd(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			require.True(t, strings.HasPrefix(string(res.Bytes()[:]), "bet transactions subcommands"))
+			require.True(t, strings.HasPrefix(string(res.Bytes()), "bet transactions subcommands"))
 		})
 	}
 }

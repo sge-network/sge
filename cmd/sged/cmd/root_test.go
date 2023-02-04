@@ -10,7 +10,6 @@ import (
 )
 
 func TestRootCmdConfig(t *testing.T) {
-
 	rootCmd, _ := cmd.NewRootCmd()
 	rootCmd.SetArgs([]string{
 		"config",          // Test the config cmd

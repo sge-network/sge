@@ -246,7 +246,6 @@ func TestRefundBettor(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-
 			k.SetPayoutLock(ctx, "32932b20-8737-490b-b00b-8c16eccd8e7f")
 
 			reserver := types.Reserver{
@@ -372,11 +371,11 @@ func TestTransferFundsFromModuleToUser(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
 					LockedAmount:   sdk.ZeroInt(),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000)},
+					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+				},
 			}
 			k.SetReserver(ctx, reserver)
 
@@ -426,11 +425,11 @@ func TestTransferFundsFromModuleToModule(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
 					LockedAmount:   sdk.ZeroInt(),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000)},
+					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+				},
 			}
 			k.SetReserver(ctx, reserver)
 

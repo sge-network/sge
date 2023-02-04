@@ -58,7 +58,6 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 }
 
 func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
-
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddSportEventClaim := jwt.MapClaims{
 		"uid":      testSportEventUID,

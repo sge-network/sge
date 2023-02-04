@@ -15,7 +15,6 @@ import (
 )
 
 func TestMutation(t *testing.T) {
-
 	t.Run("success", func(t *testing.T) {
 		msgk, _, wctx := setupMsgServer(t)
 		creator := simappUtil.TestParamUsers["user1"]
@@ -72,7 +71,5 @@ func TestMutation(t *testing.T) {
 			})
 			require.Error(t, err)
 		})
-
 	})
-
 }

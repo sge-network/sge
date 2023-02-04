@@ -5,7 +5,7 @@ func StrBytes(p string) []byte {
 	return []byte(p)
 }
 
-// RemoveDuplicateStrs retuns input array without duplicates
+// RemoveDuplicateStrs returns input array without duplicates
 func RemoveDuplicateStrs(strSlice []string) (list []string) {
 	keys := make(map[string]bool)
 

@@ -53,7 +53,6 @@ func (k Keeper) SetBetID(ctx sdk.Context, uid2ID types.UID2ID) {
 	store := k.getBetIDStore(ctx)
 	b := k.cdc.MustMarshal(&uid2ID)
 	store.Set(utils.StrBytes(uid2ID.UID), b)
-
 }
 
 // GetBetID returns a bet ID by its UID

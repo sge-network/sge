@@ -35,7 +35,8 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				},
 				Meta: "Winner of x:y",
 			},
-		}, {
+		},
+		{
 			name: "same timestamp",
 			msg: types.SportEvent{
 				Creator: sample.AccAddress(),
@@ -43,14 +44,16 @@ func Test_ValidateCreationEvent(t *testing.T) {
 				EndTS:   uint64(t1.Add(time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
-		}, {
+		},
+		{
 			name: "end timestamp before current timestamp",
 			msg: types.SportEvent{
 				Creator: sample.AccAddress(),
 				EndTS:   uint64(t1.Add(-time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
-		}, {
+		},
+		{
 			name: "invalid uid",
 			msg: types.SportEvent{
 				Creator: sample.AccAddress(),
@@ -164,9 +167,9 @@ func Test_ValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Meta: `Winner of x:y is the final winner of the game, 
-				it is obvious the winner is not the champion yet but if it happens, 
-				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift. 
+				Meta: `Winner of x:y is the final winner of the game,
+				it is obvious the winner is not the champion yet but if it happens,
+				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift.
 				attention! this detail will not be stored in the chain because it's definitely a scam.`,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -201,7 +204,8 @@ func Test_ValidateResolveEvent(t *testing.T) {
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         4,
 			},
-		}, {
+		},
+		{
 			name: "invalid resolution ts",
 			msg: types.ResolutionEvent{
 				UID:            uuid.NewString(),
@@ -281,7 +285,6 @@ func Test_ValidateResolveEvent(t *testing.T) {
 			require.NoError(t, err)
 		})
 	}
-
 }
 
 func Test_UpdateEvent(t *testing.T) {

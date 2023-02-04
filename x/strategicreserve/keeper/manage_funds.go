@@ -24,7 +24,6 @@ func (k Keeper) ProcessBetPlacement(
 	payoutProfit sdk.Int,
 	uniqueLock string,
 ) error {
-
 	// If lock exists, return error
 	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, uniqueLock) {
@@ -86,7 +85,6 @@ func (k Keeper) BettorWins(
 	payoutProfit sdk.Int,
 	uniqueLock string,
 ) error {
-
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist,
@@ -140,8 +138,8 @@ func (k Keeper) BettorWins(
 // payout = bet amount * odds value
 // payout profit = payout - bet amount
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error {
-
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string,
+) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist, uniqueLock))
@@ -177,8 +175,8 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 // payout = bet amount * odds value
 // payout profit = payout - bet amount
 func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error {
-
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string,
+) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist, uniqueLock))
@@ -216,8 +214,8 @@ func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
 
 // updateSrPool updates the Reserver.SrPool with the new amounts
 func (k Keeper) updateSrPool(ctx sdk.Context, newLockedAmount sdk.Int,
-	newUnlockedAmount sdk.Int) {
-
+	newUnlockedAmount sdk.Int,
+) {
 	reserver := k.GetReserver(ctx)
 
 	// Update the Reserver.SrPool
@@ -232,8 +230,8 @@ func (k Keeper) updateSrPool(ctx sdk.Context, newLockedAmount sdk.Int,
 // the given account address to the module account passed.
 // Returns an error if the account holder has insufficient balance.
 func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context,
-	address sdk.AccAddress, moduleAccName string, amount sdk.Int) error {
-
+	address sdk.AccAddress, moduleAccName string, amount sdk.Int,
+) error {
 	// Get the spendable balance of the account holder
 	usgeCoins := k.bankKeeper.SpendableCoins(ctx,
 		address).AmountOf(params.DefaultBondDenom)
@@ -264,8 +262,8 @@ func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context,
 // account to the given account address.
 // Returns an error if the account holder has insufficient balance.
 func (k Keeper) transferFundsFromModuleToUser(ctx sdk.Context,
-	moduleAccName string, address sdk.AccAddress, amount sdk.Int) error {
-
+	moduleAccName string, address sdk.AccAddress, amount sdk.Int,
+) error {
 	// Get the balance of the sender module account
 	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(
 		moduleAccName), params.DefaultBondDenom)
@@ -295,8 +293,8 @@ func (k Keeper) transferFundsFromModuleToUser(ctx sdk.Context,
 // account to another module account.
 // Returns an error if the sender module has insufficient balance.
 func (k Keeper) transferFundsFromModuleToModule(ctx sdk.Context,
-	senderModule string, recipientModule string, amount sdk.Int) error {
-
+	senderModule string, recipientModule string, amount sdk.Int,
+) error {
 	if senderModule == recipientModule {
 		return types.ErrDuplicateSenderAndRecipientModule
 	}

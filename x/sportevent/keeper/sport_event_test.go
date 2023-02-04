@@ -145,7 +145,6 @@ func TestSportEventExist(t *testing.T) {
 		k, ctx := setupKeeper(t)
 		found := k.SportEventExists(ctx, "notExistSportEventUID")
 		require.False(t, found)
-
 	})
 
 	t.Run("Found", func(t *testing.T) {
@@ -156,6 +155,5 @@ func TestSportEventExist(t *testing.T) {
 		k.SetSportEvent(ctx, item)
 		found := k.SportEventExists(ctx, item.UID)
 		require.True(t, found)
-
 	})
 }

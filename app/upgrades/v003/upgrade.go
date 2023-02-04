@@ -13,7 +13,6 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, vm module.VersionMap) (module.VersionMap, error) {
-
 		ctx.Logger().Info("start to run module migrations...")
 
 		return mm.RunMigrations(ctx, configurator, vm)

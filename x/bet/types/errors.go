@@ -8,7 +8,6 @@ import (
 )
 
 // x/bet module sentinel errors
-// nolint
 var (
 	ErrInvalidBetUID                        = sdkerrors.Register(ModuleName, 2001, "bet UID is invalid")
 	ErrInVerification                       = sdkerrors.Register(ModuleName, 2002, "error in verification process")
@@ -49,7 +48,6 @@ var (
 )
 
 // x/bet module sentinel error text
-// nolint
 const (
 	ErrTextInvalidCreator                         = "invalid creator address (%s)"
 	ErrTextInitGenesisFailedBecauseOfMissingBetID = "no bet id found for the bet with uuid (%s)"

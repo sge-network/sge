@@ -98,7 +98,6 @@ func (m Minter) NextPhaseProvisions(totalSupply sdk.Int, excludeAmount sdk.Int, 
 // BlockProvisions returns the provisions for a block based on the phase
 // provisions rate.
 func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec) {
-
 	// get total blocks in this phase
 	blocksPerPhase := params.getPhaseBlocks(phaseStep).TruncateDec()
 

@@ -7,7 +7,6 @@ import (
 )
 
 // x/strategicreserve module sentinel errors
-// nolint
 var (
 	ErrInsufficientUserBalance            = sdkerrors.Register(ModuleName, 1100, "Insufficient user balance. User Address: %s")
 	ErrInsufficientUnlockedAmountInSrPool = sdkerrors.Register(ModuleName, 1101, "Insufficient funds in SR")

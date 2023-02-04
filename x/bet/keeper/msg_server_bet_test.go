@@ -71,7 +71,6 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		require.Nil(t, err)
 
 		inputBet := &types.MsgPlaceBet{
-
 			Creator: creator.Address.String(),
 
 			Bet: &types.PlaceBetFields{
@@ -130,7 +129,6 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		require.Nil(t, err)
 
 		inputBet := &types.MsgPlaceBet{
-
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID:      "BetUID_2",

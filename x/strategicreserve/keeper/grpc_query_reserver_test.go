@@ -24,5 +24,6 @@ func TestReserverQuery(t *testing.T) {
 	out, err := k.Reserver(wctx, &types.QueryReserverRequest{})
 	require.NoError(t, err)
 	require.Equal(t, &types.QueryReserverResponse{
-		Reserver: reserver}, out)
+		Reserver: reserver,
+	}, out)
 }

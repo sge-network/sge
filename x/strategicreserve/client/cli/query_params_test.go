@@ -12,7 +12,6 @@ import (
 )
 
 func TestQueryParams(t *testing.T) {
-
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
