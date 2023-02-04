@@ -46,8 +46,10 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 			MinAmount: updateEvent.BetConstraints.MinAmount,
 			BetFee:    updateEvent.BetConstraints.BetFee,
 		},
-		Active: updateEvent.Active,
-		Meta:   sportEvent.Meta,
+		Active:                 updateEvent.Active,
+		Meta:                   sportEvent.Meta,
+		SrContributionForHouse: sportEvent.SrContributionForHouse,
+		BookId:                 sportEvent.BookId,
 	}
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, sportEvent)

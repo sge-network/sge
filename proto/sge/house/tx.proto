@@ -1,0 +1,26 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Msg defines the house Msg service.
+service Msg {
+  // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+}
+
+// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+message MsgDeposit {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+  
+  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
+  string                   sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
+  cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
+}
+  
+// MsgDepositResponse defines the Msg/Deposit response type.
+message MsgDepositResponse {}

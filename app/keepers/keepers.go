@@ -67,6 +67,14 @@ import (
 	dvmmodulekeeper "github.com/sge-network/sge/x/dvm/keeper"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
 
+	housemodule "github.com/sge-network/sge/x/house"
+	housemodulekeeper "github.com/sge-network/sge/x/house/keeper"
+	housemoduletypes "github.com/sge-network/sge/x/house/types"
+
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -101,9 +109,13 @@ type AppKeepers struct {
 	SporteventKeeper       sporteventmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
+	OrderBookKeeper        orderbookmodulekeeper.Keeper
+	HouseKeeper            housemodulekeeper.Keeper
 	SporteventModule       sporteventmodule.AppModule
 	StrategicreserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
+	OrderBookModule        orderbookmodule.AppModule
+	HouseModule            housemodule.AppModule
 
 	// modules
 	ICAModule      ica.AppModule
@@ -335,13 +347,23 @@ func NewAppKeeper(
 	)
 	appKeepers.DVMModule = dvmmodule.NewAppModule(appCodec, appKeepers.DVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
+	appKeepers.OrderBookKeeper = *orderbookmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[orderbookmoduletypes.StoreKey],
+		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
+		appKeepers.BankKeeper,
+		appKeepers.AccountKeeper,
+	)
+	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
+
 	appKeepers.SporteventKeeper = *sporteventmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[sporteventmoduletypes.StoreKey],
 		appKeepers.keys[sporteventmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(sporteventmoduletypes.ModuleName),
 		sporteventmodulekeeper.ExpectedKeepers{
-			DVMKeeper: appKeepers.DVMKeeper,
+			DVMKeeper:  appKeepers.DVMKeeper,
+			BookKeeper: appKeepers.OrderBookKeeper,
 		},
 	)
 	appKeepers.SporteventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SporteventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
@@ -360,6 +382,14 @@ func NewAppKeeper(
 		},
 	)
 	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.StrategicreserveKeeper, appKeepers.DVMKeeper)
+
+	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[housemoduletypes.StoreKey],
+		appKeepers.OrderBookKeeper,
+		appKeepers.GetSubspace(housemoduletypes.ModuleName),
+	)
+	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
@@ -381,7 +411,7 @@ func (appKeepers *AppKeepers) GetSubspace(moduleName string) paramstypes.Subspac
 
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec,
-// nolint
+	// nolint
 	legacyAmino *codec.LegacyAmino,
 	key, tkey sdk.StoreKey) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
@@ -402,6 +432,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(sporteventmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
+	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
+	paramsKeeper.Subspace(housemoduletypes.ModuleName)
 
 	return paramsKeeper
 }

@@ -55,6 +55,12 @@ import (
 	dvmmodule "github.com/sge-network/sge/x/dvm"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
 
+	housemodule "github.com/sge-network/sge/x/house"
+	housemoduletypes "github.com/sge-network/sge/x/house/types"
+
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -72,6 +78,9 @@ var mAccPerms = map[string][]string{
 	strategicreservemoduletypes.SRPoolName:     nil,
 	strategicreservemoduletypes.BetReserveName: nil,
 	betmoduletypes.ModuleName:                  nil,
+	orderbookmoduletypes.SRBookLiquidityName:   nil,
+	orderbookmoduletypes.BookLiquidityName:     nil,
+	housemoduletypes.HouseParticipationFeeName: nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,
@@ -101,6 +110,8 @@ var ModuleBasics = module.NewBasicManager(
 	sporteventmodule.AppModuleBasic{},
 	strategicreservemodule.AppModuleBasic{},
 	dvmmodule.AppModuleBasic{},
+	housemodule.AppModuleBasic{},
+	orderbookmodule.AppModuleBasic{},
 )
 
 func appModules(
@@ -140,6 +151,8 @@ func appModules(
 		app.SporteventModule,
 		app.StrategicreserveModule,
 		app.DVMModule,
+		app.HouseModule,
+		app.OrderBookModule,
 		// this line is u
 	}
 }
@@ -204,6 +217,8 @@ func orderBeginBlockers() []string {
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
+		housemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 	}
 }
 
@@ -232,6 +247,8 @@ func orderEndBlockers() []string {
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
+		housemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 	}
 }
 
@@ -260,5 +277,7 @@ func orderInitBlockers() []string {
 		sporteventmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
+		housemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 	}
 }

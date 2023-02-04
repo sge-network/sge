@@ -21,4 +21,5 @@ var (
 	ErrResolutionTimeLessTnStart = sdkerrors.Register(ModuleName, 3013, "resolution time cannot be less than event start time")
 	ErrDuplicateEventsExist      = sdkerrors.Register(ModuleName, 30014, "duplicate events provided")
 	ErrOddsStatsNotFound         = sdkerrors.Register(ModuleName, 30015, "odds stats not found")
+	ErrInOrderBookInitiation     = sdkerrors.Register(ModuleName, 30016, "error in order book initiation")
 )

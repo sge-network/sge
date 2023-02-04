@@ -1,0 +1,7 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Query defines the gRPC querier service.
+service Query {}

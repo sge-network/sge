@@ -1,0 +1,19 @@
+syntax = "proto3";
+package sgenetwork.sge.orderbook;
+
+import "gogoproto/gogo.proto";
+import "sge/orderbook/orderbook.proto";
+
+option go_package = "github.com/sge-network/sge/x/orderbook/types";
+
+// GenesisState defines the orderbook module's genesis state.
+message GenesisState {
+  // params defines all the parameters related to orderbook.
+  Params params = 1 [(gogoproto.nullable) = false];
+
+  // books defines the books active at genesis.
+  repeated OrderBook books = 2 [(gogoproto.nullable) = false];
+
+  // bookparticipants defines the book participants active at genesis.
+  repeated BookParticipant bookparticipants = 3 [(gogoproto.nullable) = false];
+}

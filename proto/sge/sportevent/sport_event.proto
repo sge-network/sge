@@ -20,6 +20,11 @@ message SportEvent {
   EventBetConstraints betConstraints = 9;
   bool active = 10;
   string meta = 11;
+  string sr_contribution_for_house = 12[
+    (gogoproto.customname) = "SrContributionForHouse" ,(gogoproto.jsontag) = "sr_contribution_for_house", json_name = "sr_contribution_for_house",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false];
+  string book_id = 13 [(gogoproto.customname) = "BookId" ,(gogoproto.jsontag) = "book_id", json_name = "book_id"];
 }
 
 enum SportEventStatus {

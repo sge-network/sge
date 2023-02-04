@@ -22,7 +22,10 @@ import (
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
+
+	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 	sporteventmoduletypes "github.com/sge-network/sge/x/sportevent/types"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
@@ -44,6 +47,8 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		betmoduletypes.StoreKey,
 		sporteventmoduletypes.StoreKey,
 		dvmmoduletypes.StoreKey,
+		orderbookmoduletypes.StoreKey,
+		housemoduletypes.StoreKey,
 	)
 
 	// Define transient store keys

@@ -1,0 +1,56 @@
+syntax = "proto3";
+package sgenetwork.sge.orderbook;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/orderbook/types";
+
+// Params defines the parameters for the orderbook module.
+message Params {
+    option (gogoproto.equal)            = true;
+    option (gogoproto.goproto_stringer) = false;
+  
+    // max_book_participants is the maximum number of participants per book.
+    uint64 max_book_participants = 1 [(gogoproto.moretags) = "yaml:\"max_book_participants\""];
+  }
+
+// OrderBook represents the order book maintained against a sport event.
+message OrderBook {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // id corresponding to the book
+  string id = 1 [(gogoproto.moretags) = "yaml:\"id\""];
+
+  // number of participants in the order book
+  uint64 participants = 2 [(gogoproto.moretags) = "yaml:\"participants\""];
+  
+  // order book status
+  OrderBookStatus status = 3;
+}
+
+enum OrderBookStatus {
+  STATUS_INVALID = 0;
+  STATUS_ACTIVE = 1;
+  STATUS_SETTLED = 2;
+}
+
+// BookParticipant represents the participants of an order book.
+message BookParticipant {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // book id is id corresponding to the book
+  string book_id = 1 [(gogoproto.moretags) = "yaml:\"book_id\""];
+
+  // participant_address is the bech32-encoded address of the participant.
+  string participant_address = 2 [(gogoproto.moretags) = "yaml:\"participant_address\""];
+
+  // number in initial participation queue
+  uint64 participant_number = 3 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // if participant is a module account
+  bool is_module_account = 4 [(gogoproto.moretags) = "yaml:\"is_module_account\""];;
+}

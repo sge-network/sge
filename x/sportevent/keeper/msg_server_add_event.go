@@ -28,7 +28,13 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, types.ErrEventAlreadyExist
 	}
 
+	bookID, err := k.bookKeeper.InitiateBook(ctx, sportData.UID, sportData.SrContributionForHouse)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
+	}
+
 	sportData.Creator = msg.Creator
+	sportData.BookId = bookID
 	k.Keeper.SetSportEvent(ctx, sportData)
 
 	response := &types.SportEventResponse{
@@ -61,6 +67,10 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 
 	if len(event.Meta) > types.MaxAllowedCharactersForMeta {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", types.MaxAllowedCharactersForMeta)
+	}
+
+	if event.SrContributionForHouse.IsNil() || event.SrContributionForHouse.LT(sdk.OneInt()) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be nil or less than 1")
 	}
 
 	oddsSet := make(map[string]types.Odds, len(event.Odds))

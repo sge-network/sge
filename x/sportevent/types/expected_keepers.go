@@ -23,3 +23,8 @@ type BankKeeper interface {
 type DVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
 }
+
+// BookKeeper defines the expected interface needed to initiate an order book for a sport event
+type BookKeeper interface {
+	InitiateBook(ctx sdk.Context, sportEventUid string, srContribution sdk.Int) (string, error)
+}
