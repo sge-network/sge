@@ -24,10 +24,12 @@ var (
 )
 
 const (
+	//nolint:gosec
 	opWeightMsgPlaceBet = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPlaceBet int = 100
 
+	//nolint:gosec
 	opWeightMsgSettleBet = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgSettleBet int = 100

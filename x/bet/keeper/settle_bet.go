@@ -37,14 +37,14 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
-	// get the respective sport event for the bet
+	// get the respective sport-event for the bet
 	sportEvent, found := k.sporteventKeeper.GetSportEvent(ctx, bet.SportEventUID)
 	if !found {
 		return types.ErrNoMatchingSportEvent
 	}
 
-	if sportEvent.Status == sporteventtypes.SportEventStatus_STATUS_ABORTED ||
-		sportEvent.Status == sporteventtypes.SportEventStatus_STATUS_CANCELLED {
+	if sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED ||
+		sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED {
 		bet.Result = types.Bet_RESULT_ABORTED
 
 		payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -91,8 +91,8 @@ func checkBetStatus(betstatus types.Bet_Status) error {
 
 // ResolveBetResult determines the result of the given bet, it can be lost or won.
 func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) error {
-	// check if sport event result is declared or not
-	if sportEvent.Status != sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED {
+	// check if sport-event result is declared or not
+	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		return types.ErrResultNotDeclared
 	}
 

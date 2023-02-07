@@ -32,14 +32,14 @@ newBet := &types.Bet{
 
 When this  is processed:
 
-- If corresponding sport event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- Resolve the bet result based on the sport event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
+- Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
 
     ```go
     bet.Result = types.Bet_RESULT_WON

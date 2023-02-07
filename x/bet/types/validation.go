@@ -14,8 +14,8 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 		return ErrInvalidAmount
 	}
 
-	if bet.OddsType < OddsType_ODD_TYPE_DECIMAL ||
-		bet.OddsType > OddsType_ODD_TYPE_MONEYLINE {
+	if bet.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
+		bet.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
 		return ErrInvalidOddsType
 	}
 
@@ -49,7 +49,7 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 	}
 
 	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
-		return ErrNoKycIdField
+		return ErrNoKycIDField
 	}
 
 	return nil

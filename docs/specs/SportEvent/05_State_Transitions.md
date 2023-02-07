@@ -10,7 +10,7 @@ When this is processed:
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket
 - If the ticket is valid, check if the event already exists
-- If the sport-event does not already exist, a new sport event should be
+- If the sport-event does not already exist, a new sport-event should be
   created with the given data and will be added to the `sportevent module's KVStore`. Like this:
 
 ```go

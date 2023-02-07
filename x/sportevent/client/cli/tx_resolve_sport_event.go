@@ -17,7 +17,7 @@ func CmdResolveEvent() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resolve-sport-event [ticket]",
 		Short: "set resolution of an event",
-		Long:  "Resolve a sport event with ticket.",
+		Long:  "Resolve a sport-event with ticket.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)

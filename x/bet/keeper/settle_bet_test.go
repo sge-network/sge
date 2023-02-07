@@ -49,7 +49,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -61,7 +61,7 @@ func TestSettleBet(t *testing.T) {
 			err: types.ErrBetIsSettled,
 		},
 		{
-			desc: "not found sport event",
+			desc: "not found sport-event",
 			bet: &types.Bet{
 				UID:           "0db09053-2901-4110-8fb5-c14e21f8d400",
 				SportEventUID: "nonExistSportEvent",
@@ -70,11 +70,11 @@ func TestSettleBet(t *testing.T) {
 			err: types.ErrNoMatchingSportEvent,
 		},
 		{
-			desc: "sport event is aborted",
+			desc: "sport-event is aborted",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -87,15 +87,15 @@ func TestSettleBet(t *testing.T) {
 				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds:    testEventOdds,
 
-				Status: sporteventtypes.SportEventStatus_STATUS_ABORTED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
 			},
 		},
 		{
-			desc: "sport event is canceled",
+			desc: "sport-event is canceled",
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(300),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -108,7 +108,7 @@ func TestSettleBet(t *testing.T) {
 				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds:    testEventOdds,
 
-				Status: sporteventtypes.SportEventStatus_STATUS_CANCELLED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
 			},
 		},
 		{
@@ -116,7 +116,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -129,7 +129,7 @@ func TestSettleBet(t *testing.T) {
 				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds:    testEventOdds,
 
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 			},
 			err: types.ErrResultNotDeclared,
 		},
@@ -138,7 +138,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
@@ -153,7 +153,7 @@ func TestSettleBet(t *testing.T) {
 				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds:    testEventOdds,
 
-				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
@@ -169,7 +169,7 @@ func TestSettleBet(t *testing.T) {
 					StartTS: 1111111111,
 					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 					Odds:    testEventOdds,
-					Status:  sporteventtypes.SportEventStatus_STATUS_PENDING,
+					Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 					Active:  true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
 						MinAmount: sdk.NewInt(1),
@@ -254,7 +254,7 @@ func TestResolveBetResult(t *testing.T) {
 		{
 			desc: "not declared",
 			sportEvent: sporteventtypes.SportEvent{
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 			},
 			bet: &types.Bet{},
 			err: types.ErrResultNotDeclared,
@@ -262,7 +262,7 @@ func TestResolveBetResult(t *testing.T) {
 		{
 			desc: "won",
 			sportEvent: sporteventtypes.SportEvent{
-				Status:         sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet: &types.Bet{
@@ -273,7 +273,7 @@ func TestResolveBetResult(t *testing.T) {
 		{
 			desc: "lost",
 			sportEvent: sporteventtypes.SportEvent{
-				Status:         sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet:    &types.Bet{},

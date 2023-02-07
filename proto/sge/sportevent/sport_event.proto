@@ -7,42 +7,78 @@ import "sge/sportevent/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// the internal keeper representation of sport event
+// SportEvent the representation of the sport-event to be stored in sport-event.
+// state
 message SportEvent {
-  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
-  uint64 start_ts = 2 [(gogoproto.customname) = "StartTS" ,(gogoproto.jsontag) = "start_ts", json_name = "start_ts"];
-  uint64 end_ts = 3 [(gogoproto.customname) = "EndTS", (gogoproto.jsontag) = "end_ts", json_name = "end_ts"];
+  // uid is the universal unique identifier of the sport-event.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // start_ts is the start timestamp of the sport-event.
+  uint64 start_ts = 2 [
+    (gogoproto.customname) = "StartTS",
+    (gogoproto.jsontag) = "start_ts",
+    json_name = "start_ts"
+  ];
+  // end_ts is the end timestamp of the sport-event.
+  uint64 end_ts = 3 [
+    (gogoproto.customname) = "EndTS",
+    (gogoproto.jsontag) = "end_ts",
+    json_name = "end_ts"
+  ];
+  // odds is the list of odds of the sport-event.
   repeated Odds odds = 4;
-  repeated string winner_odds_uids = 5 [(gogoproto.customname) = "WinnerOddsUIDs", (gogoproto.jsontag) = "winner_odds_uids", json_name = "winner_odds_uids"];
+  // winner_odds_uids is the list of winner odds universal unique identifiers.
+  repeated string winner_odds_uids = 5 [
+    (gogoproto.customname) = "WinnerOddsUIDs",
+    (gogoproto.jsontag) = "winner_odds_uids",
+    json_name = "winner_odds_uids"
+  ];
+  // status is the current status of the sport-event.
   SportEventStatus status = 6;
-  uint64 resolution_ts = 7 [(gogoproto.customname) = "ResolutionTS", (gogoproto.jsontag) = "resolution_ts", json_name = "resolution_ts"];
+  // resolution_ts is the timestamp of the resolution of sport-event.
+  uint64 resolution_ts = 7 [
+    (gogoproto.customname) = "ResolutionTS",
+    (gogoproto.jsontag) = "resolution_ts",
+    json_name = "resolution_ts"
+  ];
+  // creator is the address of the creator of sport-event.
   string creator = 8;
-  EventBetConstraints betConstraints = 9;
+  // bet_constraints holds the constraints of sport-event to accept bets.
+  EventBetConstraints bet_constraints = 9;
+  // active is the status of active or inactive sport-event.
   bool active = 10;
+  // meta contains human-readable metadata of the sport-event.
   string meta = 11;
 }
 
+// SportEventStatus is the sport-event status enumeration
 enum SportEventStatus {
-  STATUS_PENDING = 0;
-  STATUS_INVALID = 1;
-  STATUS_CANCELLED = 2;
-  STATUS_ABORTED = 3;
-  STATUS_RESULT_DECLARED = 4;
+  // event is pending
+  SPORT_EVENT_STATUS_UNSPECIFIED = 0;
+  // invalid event
+  SPORT_EVENT_STATUS_INVALID = 1;
+  // event canceled
+  SPORT_EVENT_STATUS_CANCELLED = 2;
+  // event aborted
+  SPORT_EVENT_STATUS_ABORTED = 3;
+  // result of the event is declared
+  SPORT_EVENT_STATUS_RESULT_DECLARED = 4;
 }
 
-message ResolutionEvent {
-  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
-  uint64 resolution_ts = 2 [(gogoproto.customname) = "ResolutionTS", (gogoproto.jsontag) = "resolution_ts", json_name = "resolution_ts"];
-  repeated string winner_odds_uids = 3 [(gogoproto.customname) = "WinnerOddsUIDs", (gogoproto.jsontag) = "winner_odds_uids", json_name = "winner_odds_uids"];
-  SportEventStatus status = 4;
-}
-
-// Bet constraints parent group for a sport event
+// Bet constraints parent group for a sport-event
 message EventBetConstraints {
-  string min_amount = 2[
+  // min_amount is the minimum allowed bet amount for a sport-event.
+  string min_amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
+    (gogoproto.nullable) = false
+  ];
 
-  cosmos.base.v1beta1.Coin bet_fee = 3
-  [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false];
+  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  cosmos.base.v1beta1.Coin bet_fee = 3 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.nullable) = false
+  ];
 }

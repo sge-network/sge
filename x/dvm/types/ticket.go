@@ -27,8 +27,8 @@ type Ticket interface {
 	IsValid(ctx sdk.Context) error
 }
 
-// ticket is the Ticket implementer.
-type ticket struct {
+// jwtTicket is the Ticket implementer.
+type jwtTicket struct {
 	value      string
 	header     string
 	payload    string
@@ -40,7 +40,7 @@ type ticket struct {
 // NewTicket create a new Ticket from the given ticket.
 func NewTicket(ticketStr string) (Ticket, error) {
 	var err error
-	t := ticket{
+	t := jwtTicket{
 		value: ticketStr,
 	}
 
@@ -53,7 +53,7 @@ func NewTicket(ticketStr string) (Ticket, error) {
 }
 
 // Unmarshal the information of the ticket to the v. v must be a pointer.
-func (t *ticket) Unmarshal(v interface{}) error {
+func (t *jwtTicket) Unmarshal(v interface{}) error {
 	// data = json.Unmarshal(base64.Decode(payload))
 
 	var err error
@@ -71,7 +71,7 @@ func (t *ticket) Unmarshal(v interface{}) error {
 
 // Verify verifies the ticket signature with the given public keys. If the ticket is verified by any
 // of the keys, then return nil else return invalid signature error
-func (t *ticket) Verify(pubKeys ...string) error {
+func (t *jwtTicket) Verify(pubKeys ...string) error {
 	for _, v := range pubKeys {
 		_, err := t.verifyWithKey(v)
 		if err == nil {
@@ -86,7 +86,7 @@ func (t *ticket) Verify(pubKeys ...string) error {
 
 // Consensus verifies that 2/3 of given public keys verify the ticket.
 // consensus mechanism will reside in this function if requested
-func (t *ticket) Consensus(pubKeys ...string) error {
+func (t *jwtTicket) Consensus(pubKeys ...string) error {
 	if len(pubKeys) == 0 {
 		return nil
 	}
@@ -102,7 +102,7 @@ func (t *ticket) Consensus(pubKeys ...string) error {
 	return ErrInvalidSignature
 }
 
-func (t *ticket) IsValid(ctx sdk.Context) error {
+func (t *jwtTicket) IsValid(ctx sdk.Context) error {
 	// validate the expiration
 	if !t.exp.Time.After(ctx.BlockTime()) {
 		return ErrTicketExpired
@@ -112,7 +112,7 @@ func (t *ticket) IsValid(ctx sdk.Context) error {
 }
 
 // initFromValue initializes the ticket from the raw value.few validation happening over this process.
-func (t *ticket) initFromValue() error {
+func (t *jwtTicket) initFromValue() error {
 	var err error
 	ts := strings.Split(t.value, JWTSeparator)
 	if len(ts) < 3 {
@@ -139,7 +139,7 @@ func (t *ticket) initFromValue() error {
 }
 
 // verifyWithKey verify a Ticket with the key
-func (t *ticket) verifyWithKey(key string) (bool, error) {
+func (t *jwtTicket) verifyWithKey(key string) (bool, error) {
 	for _, s := range t.signatures {
 		token := t.header + "." + t.payload + "." + s
 		parser := jwt.NewParser(

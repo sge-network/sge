@@ -10,5 +10,5 @@
     * [Messages](specs/DVM/04_Messages.md)
     * [Events](specs/DVM/05_Events.md)
   * [Mint](specs/Mint/01_Overview.md)
-  * [Sport Event](specs/SportEvent/01_Overview.md)
+  * [Sport-Event](specs/SportEvent/01_Overview.md)
   * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)

@@ -30,6 +30,7 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsRequest struct {
 }
 
@@ -67,6 +68,7 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
+// Query/Params RPC method.
 type QueryParamsResponse struct {
 	// params holds all the parameters of this module.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
@@ -113,6 +115,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 }
 
 // QueryReserverRequest is the request type for the Query/Inflation RPC method.
+// Query/Reserver RPC method.
 type QueryReserverRequest struct {
 }
 
@@ -151,8 +154,9 @@ var xxx_messageInfo_QueryReserverRequest proto.InternalMessageInfo
 
 // QueryReserverResponse is the response type for the Query/Inflation RPC
 // method.
+// Query/Reserver RPC method.
 type QueryReserverResponse struct {
-	// inflation is the current minting inflation value.
+	// reserver is a holder for sr fund management.
 	Reserver *Reserver `protobuf:"bytes,1,opt,name=reserver,proto3" json:"reserver,omitempty"`
 }
 

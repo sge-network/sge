@@ -11,6 +11,7 @@ import (
 
 func TestParamChangest(t *testing.T) {
 	s := rand.NewSource(1)
+	//nolint:gosec
 	r := rand.New(s)
 
 	expected := []struct {

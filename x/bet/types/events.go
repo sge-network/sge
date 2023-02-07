@@ -8,7 +8,7 @@ const (
 	// AttributeKeyBetUID is the event attribute for bet unique identifier
 	AttributeKeyBetUID = "bet_uid"
 
-	// AttributeKeySportEventUID is the event attribute for sport event unique identifier
+	// AttributeKeySportEventUID is the event attribute for sport-event unique identifier
 	AttributeKeySportEventUID = "sport_event_uid"
 
 	// AttributeValueCategory is the event attribute for category as module name

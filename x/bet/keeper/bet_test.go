@@ -26,7 +26,7 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		items[i].UID = strconv.Itoa(i)
 		items[i].Creator = testCreator
 		items[i].OddsValue = "10"
-		items[i].OddsType = types.OddsType_ODD_TYPE_DECIMAL
+		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
 		items[i].SportEventUID = testSportEventUID
@@ -48,8 +48,8 @@ func TestBetGet(t *testing.T) {
 	var expectedResp types.Bet
 	require.False(t, found)
 	require.Equal(t,
-		nullify.Fill(&expectedResp),
-		nullify.Fill(&rst),
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
 	)
 
 	for i, item := range items {
@@ -59,8 +59,8 @@ func TestBetGet(t *testing.T) {
 		)
 		require.True(t, found)
 		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
+			nullify.Fill(item),
+			nullify.Fill(rst),
 		)
 	}
 }

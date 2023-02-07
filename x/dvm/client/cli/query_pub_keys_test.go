@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"crypto/ed25519"
+	"crypto/rand"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
@@ -10,7 +11,6 @@ import (
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/sge-network/sge/testutil/network"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/dvm/client/cli"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
@@ -27,7 +27,9 @@ func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	bs, err := x509.MarshalPKIXPublicKey(simappUtil.TestDVMPublicKey)
+	pubKey, privKey, _ := ed25519.GenerateKey(rand.Reader)
+
+	bs, err := x509.MarshalPKIXPublicKey(pubKey)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +41,7 @@ func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
 
-	return network.New(t, cfg), state.PublicKeys, &simappUtil.TestDVMPrivateKey
+	return network.New(t, cfg), state.PublicKeys, &privKey
 }
 
 func TestCmdPubKeysList(t *testing.T) {

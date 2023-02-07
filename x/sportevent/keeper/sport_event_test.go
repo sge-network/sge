@@ -91,7 +91,7 @@ func TestSportEventGetAll(t *testing.T) {
 func TestResolveSportEvents(t *testing.T) {
 	t.Run("NotFound", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: "NotExistUid",
 		}
 		err := k.ResolveSportEvent(ctx, &resEventsIn)
@@ -103,11 +103,11 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_CANCELLED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: item.UID,
 		}
 
@@ -120,15 +120,15 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_PENDING,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID:            item.UID,
 			ResolutionTS:   123456,
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
-			Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
+			Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 		}
 		err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Nil(t, err)

@@ -133,7 +133,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			Bet: &types.PlaceBetFields{
 				UID:      "BetUID_2",
 				Amount:   sdk.NewInt(500),
-				OddsType: types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType: types.OddsType_ODDS_TYPE_DECIMAL,
 				Ticket:   placeBetTicket,
 			},
 		}
@@ -144,7 +144,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			StartTS: 1111111111,
 			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 			Odds:    testEventOdds,
-			Status:  sporteventtypes.SportEventStatus_STATUS_PENDING,
+			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 			Active:  true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
@@ -209,7 +209,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				SportEventUID: testSportEventUID,
 				OddsValue:     "10",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:        sdk.NewInt(500),
 				Creator:       creator.Address.String(),
 				OddsUID:       testOddsUID1,
@@ -223,7 +223,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				StartTS: 1111111111,
 				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds:    testEventOdds,
-				Status:  sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
@@ -239,7 +239,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 					StartTS: 1111111111,
 					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 					Odds:    testEventOdds,
-					Status:  sporteventtypes.SportEventStatus_STATUS_PENDING,
+					Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 					Active:  true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
 						MinAmount: sdk.NewInt(1),

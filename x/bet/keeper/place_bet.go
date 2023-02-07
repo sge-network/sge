@@ -56,7 +56,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bet.CreatedAt = ctx.BlockTime().Unix()
 
 	stats := k.GetBetStats(ctx)
-	stats.Count += 1
+	stats.Count++
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet, stats.Count)
@@ -65,7 +65,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	return nil
 }
 
-// getSportEvent returns sport event with id
+// getSportEvent returns sport-event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
 	sportevent, found := k.sporteventKeeper.GetSportEvent(ctx, sportEventID)
 	if !found {
@@ -76,7 +76,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
 	}
 
-	if sportevent.Status != sporteventtypes.SportEventStatus_STATUS_PENDING {
+	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
 		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
@@ -86,7 +86,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 	return sportevent, nil
 }
 
-// oddExists checks if bet odds id is present in the sport event list of odds uids
+// oddExists checks if bet odds id is present in the sport-event list of odds uids
 func oddExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
 	for _, o := range odds {
 		if betOddsID == o.UID {

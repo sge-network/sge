@@ -23,9 +23,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// GenesisState defines the sportevent module's genesis state.
+// GenesisState defines the sport-event module's genesis state.
 type GenesisState struct {
-	Params         Params       `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// params are the parameters of sport-event module
+	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
+	// sport_event_list is the list of sport-events that are available in the chain init
 	SportEventList []SportEvent `protobuf:"bytes,2,rep,name=sport_event_list,json=sportEventList,proto3" json:"sport_event_list"`
 }
 

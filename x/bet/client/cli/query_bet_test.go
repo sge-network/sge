@@ -32,7 +32,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 	t.Helper()
 	cfg := network.DefaultConfig()
 
-	// sport event module state
+	// sport-event module state
 	sportEventState := sporteventtypes.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[sporteventtypes.ModuleName], &sportEventState))
 
@@ -46,7 +46,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+		Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 	}
 	nullify.Fill(&sportEvent)
 	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}

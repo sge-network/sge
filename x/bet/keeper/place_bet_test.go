@@ -31,7 +31,7 @@ func TestPlaceBet(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			desc: "not found sport event",
+			desc: "not found sport-event",
 			bet: &types.Bet{
 				UID:           "betUID",
 				SportEventUID: "notExistSportEventUID",
@@ -40,10 +40,10 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrNoMatchingSportEvent,
 		},
 		{
-			desc: "inactive sport event",
+			desc: "inactive sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_inactive",
-				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
@@ -57,10 +57,10 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrInactiveSportEvent,
 		},
 		{
-			desc: "not pending sport event",
+			desc: "not pending sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_declared",
-				Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
@@ -75,10 +75,10 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrSportEventStatusNotPending,
 		},
 		{
-			desc: "expired sport event",
+			desc: "expired sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_expired",
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 				EndTS:  0o00000000,
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
@@ -97,7 +97,7 @@ func TestPlaceBet(t *testing.T) {
 			desc: "not exist odds",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_oddsNotexist",
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
@@ -119,7 +119,7 @@ func TestPlaceBet(t *testing.T) {
 				OddsUID:       "notExistOdds",
 				Amount:        sdk.NewInt(1000),
 				OddsValue:     "5",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrOddsUIDNotExist,
@@ -128,7 +128,7 @@ func TestPlaceBet(t *testing.T) {
 			desc: "low bet amount",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_lowBetAmount",
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
@@ -150,7 +150,7 @@ func TestPlaceBet(t *testing.T) {
 				OddsUID:       "odds1",
 				Amount:        sdk.NewInt(100),
 				OddsValue:     "5",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrBetAmountIsLow,
@@ -159,7 +159,7 @@ func TestPlaceBet(t *testing.T) {
 			desc: "success",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_success",
-				Status: sporteventtypes.SportEventStatus_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
@@ -181,7 +181,7 @@ func TestPlaceBet(t *testing.T) {
 				OddsUID:       "odds1",
 				Amount:        sdk.NewInt(1000),
 				OddsValue:     "5",
-				OddsType:      types.OddsType_ODD_TYPE_DECIMAL,
+				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 		},

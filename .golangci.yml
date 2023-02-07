@@ -33,7 +33,6 @@ linters:
     - misspell
     - nakedret
     - nilnil
-    - paralleltest
     - promlinter
     - staticcheck
     - stylecheck
