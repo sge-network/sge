@@ -60,6 +60,11 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet, stats.Count)
+
+	// set bet as an active bet
+	k.SetActiveBet(ctx, types.NewActiveBet(stats.Count, bet.Creator), bet.SportEventUID)
+
+	// set bet stats
 	k.SetBetStats(ctx, stats)
 
 	return nil

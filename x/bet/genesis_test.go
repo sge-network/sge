@@ -11,15 +11,20 @@ import (
 )
 
 func TestGenesis(t *testing.T) {
+	tApp, ctx, err := simappUtil.GetTestObjects()
+	require.NoError(t, err)
+
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
 		BetList: []types.Bet{
 			{
-				UID: "0",
+				UID:     "0",
+				Creator: simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			{
-				UID: "1",
+				UID:     "1",
+				Creator: simappUtil.TestParamUsers["user2"].Address.String(),
 			},
 		},
 		Uid2IdList: []types.UID2ID{
@@ -32,13 +37,22 @@ func TestGenesis(t *testing.T) {
 				ID:  2,
 			},
 		},
+		ActiveBetList: []types.ActiveBet{
+			{
+				ID:      1,
+				Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+			},
+		},
+		SettledBetList: []types.SettledBet{
+			{
+				ID:            1,
+				BettorAddress: simappUtil.TestParamUsers["user1"].Address.String(),
+			},
+		},
 		Stats: types.BetStats{
 			Count: 2,
 		},
 	}
-
-	tApp, ctx, err := simappUtil.GetTestObjects()
-	require.NoError(t, err)
 
 	bet.InitGenesis(ctx, tApp.BetKeeper, genesisState)
 	got := bet.ExportGenesis(ctx, tApp.BetKeeper)

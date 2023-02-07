@@ -58,7 +58,8 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 
 		bet.Status = types.Bet_STATUS_SETTLED
 
-		k.SetBet(ctx, bet, uid2ID.ID)
+		k.updateSettlementState(ctx, bet, uid2ID.ID)
+
 		return nil
 	}
 
@@ -67,12 +68,55 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
-	if err := k.settle(ctx, &bet); err != nil {
+	if err := k.settleResolvedBet(ctx, &bet); err != nil {
 		return err
 	}
 
+	k.updateSettlementState(ctx, bet, uid2ID.ID)
+
+	return nil
+}
+
+// updateSettlementState settles bet in the store
+func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, id uint64) {
+	// set current height as settlement heigth
+	bet.SettlementHeight = ctx.BlockHeight()
+
 	// store bet in the module state
-	k.SetBet(ctx, bet, uid2ID.ID)
+	k.SetBet(ctx, bet, id)
+
+	// remove active bet
+	k.RemoveActiveBet(ctx, bet.SportEventUID, id)
+
+	// store settled bet in the module state
+	k.SetSettledBet(ctx, types.NewSettledBet(id, bet.Creator), ctx.BlockHeight())
+}
+
+// settleResolvedBet settles a bet by calling strategicReserve functions to unlock fund and payout
+// based on bet's result, and updates status of bet to settled
+func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
+	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+	}
+
+	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	if err != nil {
+		return err
+	}
+
+	if bet.Result == types.Bet_RESULT_LOST {
+		if err := k.strategicreserveKeeper.BettorLoses(ctx, bettorAddress, bet.Amount,
+			payout, bet.UID); err != nil {
+			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
+		}
+		bet.Status = types.Bet_STATUS_SETTLED
+	} else if bet.Result == types.Bet_RESULT_WON {
+		if err := k.strategicreserveKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID); err != nil {
+			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
+		}
+		bet.Status = types.Bet_STATUS_SETTLED
+	}
 	return nil
 }
 
@@ -114,33 +158,5 @@ func resolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) err
 	// bettor is loser
 	bet.Result = types.Bet_RESULT_LOST
 	bet.Status = types.Bet_STATUS_RESULT_DECLARED
-	return nil
-}
-
-// settle settles a bet by calling strategicReserve functions to unlock fund and payout
-// based on bet's result, and updates status of bet to settled
-func (k Keeper) settle(ctx sdk.Context, bet *types.Bet) error {
-	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
-	}
-
-	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
-	if err != nil {
-		return err
-	}
-
-	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.strategicreserveKeeper.BettorLoses(ctx, bettorAddress, bet.Amount,
-			payout, bet.UID); err != nil {
-			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
-		}
-		bet.Status = types.Bet_STATUS_SETTLED
-	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.strategicreserveKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID); err != nil {
-			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
-		}
-		bet.Status = types.Bet_STATUS_SETTLED
-	}
 	return nil
 }

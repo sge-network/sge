@@ -1,8 +1,6 @@
 package bet
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
@@ -14,21 +12,29 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	k.SetBetStats(ctx, genState.Stats)
 
 	// Set all the bet
-	for _, elem := range genState.BetList {
+	for _, bet := range genState.BetList {
 		var id uint64
 		for _, uid2ID := range genState.Uid2IdList {
-			if uid2ID.UID == elem.UID {
+			if uid2ID.UID == bet.UID {
 				id = uid2ID.ID
 			}
 		}
 
-		if id == 0 {
-			// this means the imported genesis is broken because there is no corresponding
-			// id mapped to the uid
-			panic(fmt.Errorf(types.ErrTextInitGenesisFailedBecauseOfMissingBetID, elem.UID))
+		// Set all the active bet
+		for _, active := range genState.ActiveBetList {
+			if active.ID == id {
+				k.SetActiveBet(ctx, &active, bet.SportEventUID)
+			}
 		}
 
-		k.SetBet(ctx, elem, id)
+		// Set all the settled bet
+		for _, settled := range genState.SettledBetList {
+			if settled.ID == id {
+				k.SetSettledBet(ctx, &settled, bet.SettlementHeight)
+			}
+		}
+
+		k.SetBet(ctx, bet, id)
 	}
 
 	k.SetParams(ctx, genState.Params)
@@ -41,10 +47,26 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	var err error
 	genesis.BetList, err = k.GetBets(ctx)
-
 	if err != nil {
 		panic(err)
 	}
+
+	genesis.ActiveBetList, err = k.GetActiveBets(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.SettledBetList, err = k.GetSettledBets(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.Uid2IdList, err = k.GetBetIDs(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.Stats = k.GetBetStats(ctx)
 
 	return genesis
 }

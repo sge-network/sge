@@ -84,6 +84,45 @@ func CmdListBetByCreator() *cobra.Command {
 	return cmd
 }
 
+// CmdListActiveBets implements a command to return all active bets of a sport-event
+func CmdListActiveBets() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "active-bets [sport-event-uid]",
+		Short: "get list of active bets of a sport-event",
+		Long:  "Get list of active bets of a sport-event in paginated response.",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx := client.GetClientContextFromCmd(cmd)
+
+			argSportEventUID := args[0]
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			queryClient := types.NewQueryClient(clientCtx)
+
+			params := &types.QueryActiveBetsRequest{
+				SportEventUid: argSportEventUID,
+				Pagination:    pageReq,
+			}
+
+			res, err := queryClient.ActiveBets(context.Background(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
+	flags.AddQueryFlagsToCmd(cmd)
+
+	return cmd
+}
+
 // CmdListBetByUIDs returns command object for querying bets by uid list
 func CmdListBetByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
