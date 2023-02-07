@@ -28,7 +28,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgAddSportEventRequest is the message type for adding sport-event into the state.
+// MsgAddSportEventRequest is the message type for adding sport-event into the
+// state.
 type MsgAddSportEventRequest struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`

@@ -13,7 +13,10 @@ const DefaultIndex uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		SportEventList: []SportEvent{},
-		Params:         DefaultParams(),
+		Stats: SportEventStats{
+			ResolvedUnsettled: []string{},
+		},
+		Params: DefaultParams(),
 	}
 }
 

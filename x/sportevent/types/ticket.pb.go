@@ -112,7 +112,8 @@ type SportEventResolutionTicketPayload struct {
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
 	// resolution_ts is the resolution timestamp of the sport-event.
 	ResolutionTS uint64 `protobuf:"varint,2,opt,name=resolution_ts,proto3" json:"resolution_ts"`
-	// winner_odds_uids is the universal unique identifier list of the winner odds.
+	// winner_odds_uids is the universal unique identifier list of the winner
+	// odds.
 	WinnerOddsUIDs []string `protobuf:"bytes,3,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids"`
 	// status is the status of the resolution.
 	Status SportEventStatus `protobuf:"varint,4,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
