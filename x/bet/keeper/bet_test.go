@@ -34,9 +34,9 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		id := uint64(i + 1)
 		keeper.SetBet(ctx, items[i], id)
 		keeper.SetActiveBet(ctx, &types.ActiveBet{
-			ID:      id,
+			UID:     items[i].UID,
 			Creator: testCreator,
-		}, testSportEventUID)
+		}, id, testSportEventUID)
 	}
 	return items
 }

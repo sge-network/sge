@@ -49,6 +49,8 @@ var (
 
 // x/bet module sentinel error text
 const (
+	ErrTextInvalidParamType                                  = "invalid parameter type: %T"
+	ErrTextBatchSettlementCountMustBePositive                = "batch settlement count should be a positive number %d"
 	ErrTextInvalidCreator                                    = "invalid creator address (%s)"
 	ErrTextInitGenesisFailedBecauseOfMissingBetID            = "no bet id found for the bet with uuid (%s)"
 	ErrTextInitGenesisFailedBecauseOfNotEqualStats           = "bet list items count (%d) is not equal to stats count (%d)"

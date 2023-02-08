@@ -39,13 +39,13 @@ func TestGenesis(t *testing.T) {
 		},
 		ActiveBetList: []types.ActiveBet{
 			{
-				ID:      1,
+				UID:     "1",
 				Creator: simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 		},
 		SettledBetList: []types.SettledBet{
 			{
-				ID:            1,
+				UID:           "1",
 				BettorAddress: simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 		},

@@ -74,9 +74,7 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
 
-		stats := k.GetSportEventStats(ctx)
-		stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, storedEvent.UID)
-		k.SetSportEventStats(ctx, stats)
+		k.appendUnsettledResovedSportEvent(ctx, storedEvent.UID)
 	}
 
 	k.SetSportEvent(ctx, storedEvent)

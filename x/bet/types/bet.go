@@ -1,15 +1,15 @@
 package types
 
-func NewActiveBet(id uint64, creator string) *ActiveBet {
+func NewActiveBet(uid, creator string) *ActiveBet {
 	return &ActiveBet{
-		ID:      id,
+		UID:     uid,
 		Creator: creator,
 	}
 }
 
-func NewSettledBet(id uint64, bettorAddress string) *SettledBet {
+func NewSettledBet(uid, bettorAddress string) *SettledBet {
 	return &SettledBet{
-		ID:            id,
+		UID:           uid,
 		BettorAddress: bettorAddress,
 	}
 }

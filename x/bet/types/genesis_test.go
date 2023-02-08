@@ -33,13 +33,13 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		ActiveBetList: []types.ActiveBet{
 			{
-				ID:      betID1,
+				UID:     betUID1,
 				Creator: testAddress,
 			},
 		},
 		SettledBetList: []types.SettledBet{
 			{
-				ID:            betID2,
+				UID:           betUID2,
 				BettorAddress: testAddress,
 			},
 		},
@@ -56,6 +56,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		Stats: types.BetStats{
 			Count: 2,
 		},
+		Params: types.DefaultParams(),
 	}
 
 	for _, tc := range []struct {

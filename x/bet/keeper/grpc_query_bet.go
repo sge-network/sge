@@ -122,10 +122,14 @@ func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest)
 			return err
 		}
 
-		bet, found := k.GetBet(ctx, activeBet.Creator, activeBet.ID)
+		uid2ID, found := k.GetBetID(ctx, activeBet.UID)
 		if found {
-			bets = append(bets, bet)
+			bet, found := k.GetBet(ctx, activeBet.Creator, uid2ID.ID)
+			if found {
+				bets = append(bets, bet)
+			}
 		}
+
 		return nil
 	})
 	if err != nil {
@@ -152,10 +156,14 @@ func (k Keeper) SettledBetsOfHeight(c context.Context, req *types.QuerySettledBe
 			return err
 		}
 
-		bet, found := k.GetBet(ctx, settledBet.BettorAddress, settledBet.ID)
+		uid2ID, found := k.GetBetID(ctx, settledBet.UID)
 		if found {
-			bets = append(bets, bet)
+			bet, found := k.GetBet(ctx, settledBet.BettorAddress, uid2ID.ID)
+			if found {
+				bets = append(bets, bet)
+			}
 		}
+
 		return nil
 	})
 	if err != nil {

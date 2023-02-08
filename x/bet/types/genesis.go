@@ -66,7 +66,7 @@ func (gs GenesisState) Validate() error {
 
 		isActive := false
 		for _, active := range gs.ActiveBetList {
-			if active.ID == id {
+			if active.UID == bet.UID {
 				if bet.SettlementHeight != 0 {
 					return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsNotZero, bet.UID)
 				}
@@ -76,7 +76,7 @@ func (gs GenesisState) Validate() error {
 
 		isSettled := false
 		for _, settled := range gs.SettledBetList {
-			if settled.ID == id {
+			if settled.UID == bet.UID {
 				if bet.SettlementHeight == 0 {
 					return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsZeroForList, bet.UID)
 				}
@@ -87,7 +87,6 @@ func (gs GenesisState) Validate() error {
 		if !isActive && !isSettled {
 			return fmt.Errorf(ErrTextInitGenesisFailedNotActiveOrSettled, bet.UID)
 		}
-
 	}
 
 	// TODO: IMPORTANT there are a lot of edge cases to be validated

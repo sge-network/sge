@@ -555,7 +555,8 @@ func (m *QueryActiveBetsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QuerySettledBetsOfHeightRequest is the request type for the settled bets of a certain height list query
+// QuerySettledBetsOfHeightRequest is the request type for the settled bets of a
+// certain height list query.
 // Query/ActiveBets RPC method.
 type QuerySettledBetsOfHeightRequest struct {
 	Pagination  *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -609,8 +610,8 @@ func (m *QuerySettledBetsOfHeightRequest) GetBlockHeight() int64 {
 	return 0
 }
 
-// QuerySettledBetsOfHeightResponse is the response type for the settled bets of a certain height list query
-// Query/ActiveBets RPC method.
+// QuerySettledBetsOfHeightResponse is the response type for the settled bets of
+// a certain height list query Query/ActiveBets RPC method.
 type QuerySettledBetsOfHeightResponse struct {
 	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`

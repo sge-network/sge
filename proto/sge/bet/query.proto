@@ -115,7 +115,8 @@ message QueryActiveBetsResponse {
 }
 
 // QuerySettledBetsOfHeightRequest is the request type for the settled bets of a
-// certain height list query Query/ActiveBets RPC method.
+// certain height list query.
+// Query/ActiveBets RPC method.
 message QuerySettledBetsOfHeightRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   int64 block_height = 2;

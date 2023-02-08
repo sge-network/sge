@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/bet/types"
@@ -87,10 +88,26 @@ func (k Keeper) GetBetIDs(ctx sdk.Context) (list []types.UID2ID, err error) {
 }
 
 // SetActiveBet sets an active bet
-func (k Keeper) SetActiveBet(ctx sdk.Context, activeBet *types.ActiveBet, sportEventID string) {
+func (k Keeper) SetActiveBet(ctx sdk.Context, activeBet *types.ActiveBet, id uint64, sportEventUID string) {
 	store := k.getActiveStore(ctx)
 	b := k.cdc.MustMarshal(activeBet)
-	store.Set(types.ActiveBeOfSportEventKey(sportEventID, activeBet.ID), b)
+	store.Set(types.ActiveBeOfSportEventKey(sportEventUID, id), b)
+}
+
+// IsAnyActiveBetForSportevent checks if there is any active bet for the sport-event
+func (k Keeper) IsAnyActiveBetForSportevent(ctx sdk.Context, sportEventUID string) (thereIs bool, err error) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfSportEventPrefix(sportEventUID))
+
+	// create iterator for all existing records
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	// check if the iterator has any records
+	thereIs = iterator.Valid()
+
+	return
 }
 
 // GetActiveBets returns list of the active bets
@@ -112,16 +129,16 @@ func (k Keeper) GetActiveBets(ctx sdk.Context) (list []types.ActiveBet, err erro
 }
 
 // RemoveActiveBet removes an active bet
-func (k Keeper) RemoveActiveBet(ctx sdk.Context, sportEventID string, betID uint64) {
+func (k Keeper) RemoveActiveBet(ctx sdk.Context, sportEventUID string, betID uint64) {
 	store := k.getActiveStore(ctx)
-	store.Delete(types.ActiveBeOfSportEventKey(sportEventID, betID))
+	store.Delete(types.ActiveBeOfSportEventKey(sportEventUID, betID))
 }
 
 // SetSettledBet sets a settled bet
-func (k Keeper) SetSettledBet(ctx sdk.Context, settledBet *types.SettledBet, blockHeight int64) {
+func (k Keeper) SetSettledBet(ctx sdk.Context, settledBet *types.SettledBet, id uint64, blockHeight int64) {
 	store := k.getSettledStore(ctx)
 	b := k.cdc.MustMarshal(settledBet)
-	store.Set(types.SettledBeOfSportEventKey(blockHeight, settledBet.ID), b)
+	store.Set(types.SettledBeOfSportEventKey(blockHeight, id), b)
 }
 
 // GetSettledBets returns list of the active bets

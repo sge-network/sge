@@ -72,10 +72,11 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 		}
 		nullify.Fill(&bet)
 
-		id := uint64(i + 1)
 		state.BetList = append(state.BetList, bet)
-		state.ActiveBetList = append(state.ActiveBetList, types.ActiveBet{ID: id, Creator: testAddress})
-		state.SettledBetList = append(state.SettledBetList, types.SettledBet{ID: id, BettorAddress: testAddress})
+		state.ActiveBetList = append(state.ActiveBetList, types.ActiveBet{UID: bet.UID, Creator: testAddress})
+		state.SettledBetList = append(state.SettledBetList, types.SettledBet{UID: bet.UID, BettorAddress: testAddress})
+
+		id := uint64(i + 1)
 		state.Uid2IdList = append(state.Uid2IdList, types.UID2ID{UID: bet.UID, ID: id})
 	}
 	state.Stats = types.BetStats{Count: 5}

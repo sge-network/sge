@@ -248,7 +248,7 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
-				placeTestBet(ctx, t, tApp, betUID)
+				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
 
 				activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})

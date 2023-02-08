@@ -21,16 +21,18 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		}
 
 		// Set all the active bet
-		for _, active := range genState.ActiveBetList {
-			if active.ID == id {
-				k.SetActiveBet(ctx, &active, bet.SportEventUID)
+		for i := range genState.ActiveBetList {
+			active := genState.ActiveBetList[i]
+			if genState.ActiveBetList[i].UID == bet.UID {
+				k.SetActiveBet(ctx, &active, id, bet.SportEventUID)
 			}
 		}
 
 		// Set all the settled bet
-		for _, settled := range genState.SettledBetList {
-			if settled.ID == id {
-				k.SetSettledBet(ctx, &settled, bet.SettlementHeight)
+		for i := range genState.SettledBetList {
+			settled := genState.SettledBetList[i]
+			if settled.UID == bet.UID {
+				k.SetSettledBet(ctx, &settled, id, bet.SettlementHeight)
 			}
 		}
 
