@@ -1,0 +1,42 @@
+name: Update sgejs
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  update-sgejs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout sge-network/sge
+      uses: actions/checkout@v2
+
+    - name: ls -a
+      run: |
+        ls -a
+
+#     - name: Copy contents of proto folder
+#       run: |
+#         cp -r sge/proto sgejs/proto
+
+#     - name: Replace sgejs proto folder
+#       run: |
+#         rm -rf sgejs/proto
+#         mv sgejs/proto sgejs/
+
+#     - name: Delete src/codegen and types folders
+#       run: |
+#         rm -rf sgejs/src/codegen
+#         rm -rf sgejs/types
+
+#     - name: Run npm run codegen
+#       run: npm run codegen
+
+#     - name: Update npm version
+#       run: |
+#         npm version <minor | major | patch>
+
+#     - name: Publish to npm
+#       run: npm publish
