@@ -6,7 +6,7 @@ import "sge/sportevent/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// SportEvent the representation of the sport-event to be stored in 
+// SportEvent the representation of the sport-event to be stored in
 // the sport-event state.
 message SportEvent {
   // uid is the universal unique identifier of the sport-event.

@@ -15,7 +15,6 @@ func NewEventBetConstraints(minAmount, betFee sdk.Int) *EventBetConstraints {
 
 // validate validates the bet constraints
 func (bc *EventBetConstraints) validate(params *Params) error {
-
 	if bc.BetFee.IsNegative() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event bet fee can not be negative")
 	}

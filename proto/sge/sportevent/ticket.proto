@@ -8,7 +8,6 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-
 // SportEventAddTicketPayload indicates data of add sport-event ticket
 message SportEventAddTicketPayload {
   // uid is the universal unique identifier of the sport-event.
@@ -81,8 +80,8 @@ message SportEventUpdateTicketPayload {
   bool active = 5;
 }
 
-// SportEventResolutionTicketPayload indicates data of resolution of sport-event.
-// ticket
+// SportEventResolutionTicketPayload indicates data of resolution of
+// sport-event. ticket
 message SportEventResolutionTicketPayload {
   // uid is the universal unique identifier of sport-event.
   string uid = 1 [
