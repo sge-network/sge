@@ -2,13 +2,12 @@ syntax = "proto3";
 package sgenetwork.sge.sportevent;
 
 import "gogoproto/gogo.proto";
-import "cosmos/base/v1beta1/coin.proto";
 import "sge/sportevent/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// SportEvent the representation of the sport-event to be stored in sport-event.
-// state
+// SportEvent the representation of the sport-event to be stored in 
+// the sport-event state.
 message SportEvent {
   // uid is the universal unique identifier of the sport-event.
   string uid = 1 [
@@ -77,8 +76,8 @@ message EventBetConstraints {
   ];
 
   // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
-  cosmos.base.v1beta1.Coin bet_fee = 3 [
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
+  string bet_fee = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 }

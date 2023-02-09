@@ -3,11 +3,59 @@ syntax = "proto3";
 package sgenetwork.sge.sportevent;
 
 import "sge/sportevent/sport_event.proto";
+import "sge/sportevent/odds.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// SportEventUpdateTicketPayload indicates data of update sportevent ticket
+
+// SportEventAddTicketPayload indicates data of add sport-event ticket
+message SportEventAddTicketPayload {
+  // uid is the universal unique identifier of the sport-event.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // start_ts is the start timestamp of the sport-event.
+  uint64 start_ts = 2 [
+    (gogoproto.customname) = "StartTS",
+    (gogoproto.jsontag) = "start_ts",
+    json_name = "start_ts"
+  ];
+  // end_ts is the end timestamp of the sport-event.
+  uint64 end_ts = 3 [
+    (gogoproto.customname) = "EndTS",
+    (gogoproto.jsontag) = "end_ts",
+    json_name = "end_ts"
+  ];
+  // odds is the list of odds of the sport-event.
+  repeated Odds odds = 4;
+  // winner_odds_uids is the list of winner odds universal unique identifiers.
+  repeated string winner_odds_uids = 5 [
+    (gogoproto.customname) = "WinnerOddsUIDs",
+    (gogoproto.jsontag) = "winner_odds_uids",
+    json_name = "winner_odds_uids"
+  ];
+  // status is the current status of the sport-event.
+  SportEventStatus status = 6;
+  // resolution_ts is the timestamp of the resolution of sport-event.
+  uint64 resolution_ts = 7 [
+    (gogoproto.customname) = "ResolutionTS",
+    (gogoproto.jsontag) = "resolution_ts",
+    json_name = "resolution_ts"
+  ];
+  // creator is the address of the creator of sport-event.
+  string creator = 8;
+  // bet_constraints holds the constraints of sport-event to accept bets.
+  EventBetConstraints bet_constraints = 9;
+  // active is the status of active or inactive sport-event.
+  bool active = 10;
+  // meta contains human-readable metadata of the sport-event.
+  string meta = 11;
+}
+
+// SportEventUpdateTicketPayload indicates data of update sport-event ticket
 message SportEventUpdateTicketPayload {
   // uid is the uuid of the sport-event
   string uid = 1 [
@@ -33,7 +81,7 @@ message SportEventUpdateTicketPayload {
   bool active = 5;
 }
 
-// SportEventResolutionTicketPayload indicates data of resolution of sportevent.
+// SportEventResolutionTicketPayload indicates data of resolution of sport-event.
 // ticket
 message SportEventResolutionTicketPayload {
   // uid is the universal unique identifier of sport-event.

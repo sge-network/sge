@@ -239,8 +239,8 @@ func (m *QueryBetsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryBetsByUIDsResponse is the request type for bets list of all bets of a bettor
-// Query/BetsByCreator RPC method.
+// QueryBetsByUIDsResponse is the request type for bets list of all bets of a
+// bettor Query/BetsByCreator RPC method.
 type QueryBetsByCreatorRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Creator    string             `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
@@ -293,9 +293,8 @@ func (m *QueryBetsByCreatorRequest) GetCreator() string {
 	return ""
 }
 
-// QueryBetsByCreatorResponse is the response type for the bets list of all bets of a
-// bettor
-// Query/BetsByCreator RPC method.
+// QueryBetsByCreatorResponse is the response type for the bets list of all bets
+// of a bettor Query/BetsByCreator RPC method.
 type QueryBetsByCreatorResponse struct {
 	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -348,9 +347,8 @@ func (m *QueryBetsByCreatorResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryBetsByUIDsRequest is the request type for a bets list of a certain UID list
-// input
-// Query/BetsByUIDs RPC method.
+// QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
+// list input Query/BetsByUIDs RPC method.
 type QueryBetsByUIDsRequest struct {
 	Items []*QueryBetRequest `protobuf:"bytes,1,rep,name=items,proto3" json:"items"`
 }
@@ -395,9 +393,8 @@ func (m *QueryBetsByUIDsRequest) GetItems() []*QueryBetRequest {
 	return nil
 }
 
-// QueryBetsByUIDsResponse is the response type for the bets list of a certain UID list
-// input
-// Query/BetsByUIDs RPC method.
+// QueryBetsByUIDsResponse is the response type for the bets list of a certain
+// UID list input Query/BetsByUIDs RPC method.
 type QueryBetsByUIDsResponse struct {
 	Bets           []Bet    `protobuf:"bytes,1,rep,name=bets,proto3" json:"bets"`
 	NotFoundEvents []string `protobuf:"bytes,2,rep,name=not_found_events,json=notFoundEvents,proto3" json:"not_found_events,omitempty"`

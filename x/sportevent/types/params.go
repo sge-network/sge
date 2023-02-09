@@ -3,7 +3,6 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/sge-network/sge/app/params"
 	"gopkg.in/yaml.v2"
 )
 
@@ -25,7 +24,7 @@ const (
 )
 
 // DefaultMinBetFee is the default minimum bet fee amount allowed
-var DefaultMinBetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000))
+var DefaultMinBetFee = sdk.NewInt(100000)
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
