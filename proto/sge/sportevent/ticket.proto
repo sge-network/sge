@@ -80,8 +80,8 @@ message SportEventUpdateTicketPayload {
   bool active = 5;
 }
 
-// SportEventResolutionTicketPayload indicates data of resolution of
-// sport-event. ticket
+// SportEventResolutionTicketPayload indicates data of the
+// resolution of the sport-event ticket.
 message SportEventResolutionTicketPayload {
   // uid is the universal unique identifier of sport-event.
   string uid = 1 [

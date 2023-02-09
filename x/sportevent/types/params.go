@@ -18,13 +18,13 @@ var (
 )
 
 // default params
-const (
+var (
 	// DefaultMinBetAmount is the default minimum bet amount allowed
-	DefaultMinBetAmount = 1000000
-)
+	DefaultMinBetAmount = sdk.NewInt(1000000)
 
-// DefaultMinBetFee is the default minimum bet fee amount allowed
-var DefaultMinBetFee = sdk.NewInt(100000)
+	// DefaultMinBetFee is the default minimum bet fee amount allowed
+	DefaultMinBetFee = sdk.NewInt(100000)
+)
 
 // ParamKeyTable the param key table for launch module
 func ParamKeyTable() paramtypes.KeyTable {
@@ -34,7 +34,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		EventMinBetAmount: sdk.NewInt(DefaultMinBetAmount),
+		EventMinBetAmount: DefaultMinBetAmount,
 		EventMinBetFee:    DefaultMinBetFee,
 	}
 }

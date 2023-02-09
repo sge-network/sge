@@ -241,8 +241,8 @@ func (m *SportEventUpdateTicketPayload) GetActive() bool {
 	return false
 }
 
-// SportEventResolutionTicketPayload indicates data of resolution of sport-event.
-// ticket
+// SportEventResolutionTicketPayload indicates data of the
+// resolution of the sport-event ticket.
 type SportEventResolutionTicketPayload struct {
 	// uid is the universal unique identifier of sport-event.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
