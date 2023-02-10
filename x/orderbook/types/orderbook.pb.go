@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -103,7 +104,8 @@ type OrderBook struct {
 	// number of participants in the order book
 	Participants uint64 `protobuf:"varint,2,opt,name=participants,proto3" json:"participants,omitempty" yaml:"participants"`
 	// order book status
-	Status OrderBookStatus `protobuf:"varint,3,opt,name=status,proto3,enum=sgenetwork.sge.orderbook.OrderBookStatus" json:"status,omitempty"`
+	Status       OrderBookStatus `protobuf:"varint,3,opt,name=status,proto3,enum=sgenetwork.sge.orderbook.OrderBookStatus" json:"status,omitempty"`
+	NumberOfOdds uint64          `protobuf:"varint,4,opt,name=number_of_odds,json=numberOfOdds,proto3" json:"number_of_odds,omitempty" yaml:"number_of_odds"`
 }
 
 func (m *OrderBook) Reset()      { *m = OrderBook{} }
@@ -148,6 +150,22 @@ type BookParticipant struct {
 	ParticipantNumber uint64 `protobuf:"varint,3,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty" yaml:"participant_number"`
 	// if participant is a module account
 	IsModuleAccount bool `protobuf:"varint,4,opt,name=is_module_account,json=isModuleAccount,proto3" json:"is_module_account,omitempty" yaml:"is_module_account"`
+	// liquidity is the total initial liquidity provided
+	Liquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=liquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"liquidity" yaml:"liquidity"`
+	// current round liquidity is the liquidity provided for current round
+	CurrentRoundLiquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=current_round_liquidity,json=currentRoundLiquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_liquidity" yaml:"current_round_liquidity"`
+	ExposuresNotFilled    uint64                                 `protobuf:"varint,7,opt,name=exposures_not_filled,json=exposuresNotFilled,proto3" json:"exposures_not_filled,omitempty" yaml:"exposures_not_filled"`
+	// total_bet_amount is the total bet amount corresponding to all exposure
+	TotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=total_bet_amount,json=totalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"total_bet_amount" yaml:"total_bet_amount"`
+	// current_round_total_bet_amount is the total bet amount corresponding to all exposure
+	CurrentRoundTotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,9,opt,name=current_round_total_bet_amount,json=currentRoundTotalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_total_bet_amount" yaml:"current_round_total_bet_amount"`
+	// max_loss is the total bet amount corresponding to all exposure
+	MaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=max_loss,json=maxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_loss" yaml:"max_loss"`
+	// current_round_max_loss is the total bet amount corresponding to all exposure
+	CurrentRoundMaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=current_round_max_loss,json=currentRoundMaxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_max_loss" yaml:"current_round_max_loss"`
+	// current_round_max_loss_odd is the total bet amount corresponding to all exposure
+	CurrentRoundMaxLossOdd string   `protobuf:"bytes,12,opt,name=current_round_max_loss_odd,json=currentRoundMaxLossOdd,proto3" json:"current_round_max_loss_odd,omitempty" yaml:"current_round_max_loss_odd"`
+	FullfilledBets         []string `protobuf:"bytes,13,rep,name=fullfilled_bets,json=fullfilledBets,proto3" json:"fullfilled_bets,omitempty" yaml:"fullfilled_bets"`
 }
 
 func (m *BookParticipant) Reset()      { *m = BookParticipant{} }
@@ -182,49 +200,172 @@ func (m *BookParticipant) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_BookParticipant proto.InternalMessageInfo
 
+// BookOddExposures represents the exposures taken on odds
+type BookOddExposure struct {
+	// book id is id corresponding to the book
+	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty" yaml:"book_id"`
+	// odd id is odd'd uid
+	OddId             string   `protobuf:"bytes,2,opt,name=odd_id,json=oddId,proto3" json:"odd_id,omitempty" yaml:"odd_id"`
+	FullfillmentQueue []uint64 `protobuf:"varint,3,rep,packed,name=fullfillment_queue,json=fullfillmentQueue,proto3" json:"fullfillment_queue,omitempty" yaml:"fullfillment_queue"`
+}
+
+func (m *BookOddExposure) Reset()      { *m = BookOddExposure{} }
+func (*BookOddExposure) ProtoMessage() {}
+func (*BookOddExposure) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7247ccc164993ca5, []int{3}
+}
+func (m *BookOddExposure) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *BookOddExposure) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_BookOddExposure.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *BookOddExposure) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BookOddExposure.Merge(m, src)
+}
+func (m *BookOddExposure) XXX_Size() int {
+	return m.Size()
+}
+func (m *BookOddExposure) XXX_DiscardUnknown() {
+	xxx_messageInfo_BookOddExposure.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_BookOddExposure proto.InternalMessageInfo
+
+// ParticipantExposure represents the exposures taken on odds by participants
+type ParticipantExposure struct {
+	// book id is id corresponding to the book
+	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty" yaml:"book_id"`
+	// odd id is odd's uid
+	OddId string `protobuf:"bytes,2,opt,name=odd_id,json=oddId,proto3" json:"odd_id,omitempty" yaml:"odd_id"`
+	// number in initial participation queue
+	ParticipantNumber uint64 `protobuf:"varint,3,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty" yaml:"participant_number"`
+	// exposure is the total exposure taken on given odd
+	Exposure github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=exposure,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"exposure" yaml:"exposure"`
+	// bet_amount is the total bet amount corresponding to the exposure
+	BetAmount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=bet_amount,json=betAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_amount" yaml:"bet_amount"`
+	IsFullfilled bool                                   `protobuf:"varint,6,opt,name=is_fullfilled,json=isFullfilled,proto3" json:"is_fullfilled,omitempty" yaml:"is_fullfilled"`
+	// number of current round in queue
+	Round uint64 `protobuf:"varint,7,opt,name=round,proto3" json:"round,omitempty" yaml:"rounds"`
+}
+
+func (m *ParticipantExposure) Reset()      { *m = ParticipantExposure{} }
+func (*ParticipantExposure) ProtoMessage() {}
+func (*ParticipantExposure) Descriptor() ([]byte, []int) {
+	return fileDescriptor_7247ccc164993ca5, []int{4}
+}
+func (m *ParticipantExposure) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *ParticipantExposure) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_ParticipantExposure.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *ParticipantExposure) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ParticipantExposure.Merge(m, src)
+}
+func (m *ParticipantExposure) XXX_Size() int {
+	return m.Size()
+}
+func (m *ParticipantExposure) XXX_DiscardUnknown() {
+	xxx_messageInfo_ParticipantExposure.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ParticipantExposure proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterEnum("sgenetwork.sge.orderbook.OrderBookStatus", OrderBookStatus_name, OrderBookStatus_value)
 	proto.RegisterType((*Params)(nil), "sgenetwork.sge.orderbook.Params")
 	proto.RegisterType((*OrderBook)(nil), "sgenetwork.sge.orderbook.OrderBook")
 	proto.RegisterType((*BookParticipant)(nil), "sgenetwork.sge.orderbook.BookParticipant")
+	proto.RegisterType((*BookOddExposure)(nil), "sgenetwork.sge.orderbook.BookOddExposure")
+	proto.RegisterType((*ParticipantExposure)(nil), "sgenetwork.sge.orderbook.ParticipantExposure")
 }
 
 func init() { proto.RegisterFile("sge/orderbook/orderbook.proto", fileDescriptor_7247ccc164993ca5) }
 
 var fileDescriptor_7247ccc164993ca5 = []byte{
-	// 505 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x93, 0xcb, 0x6e, 0xd3, 0x4e,
-	0x14, 0xc6, 0x3d, 0xf9, 0x47, 0xf9, 0x37, 0xa3, 0x36, 0x97, 0x09, 0x08, 0x53, 0x35, 0x9e, 0x68,
-	0x56, 0xe1, 0xe6, 0x48, 0xb0, 0x0b, 0x2b, 0x9b, 0x06, 0x11, 0x29, 0xb4, 0x95, 0x63, 0xba, 0x60,
-	0x63, 0x4d, 0xe2, 0x91, 0x6b, 0xa5, 0xce, 0x44, 0x1e, 0x5b, 0xa4, 0x6f, 0xc0, 0x92, 0x25, 0xcb,
-	0xbc, 0x04, 0x12, 0x8f, 0xc0, 0xb2, 0x4b, 0x56, 0x16, 0x4a, 0x36, 0xac, 0xfd, 0x04, 0xc8, 0x17,
-	0x82, 0x93, 0xc2, 0xee, 0xe8, 0x9b, 0xdf, 0x1c, 0x7f, 0xdf, 0x39, 0x1e, 0xd8, 0x16, 0x0e, 0xeb,
-	0x71, 0xdf, 0x66, 0xfe, 0x84, 0xf3, 0xd9, 0x9f, 0x4a, 0x5d, 0xf8, 0x3c, 0xe0, 0x48, 0x16, 0x0e,
-	0x9b, 0xb3, 0xe0, 0x03, 0xf7, 0x67, 0xaa, 0x70, 0x98, 0xba, 0x3d, 0x3f, 0xbe, 0xe7, 0x70, 0x87,
-	0xa7, 0x50, 0x2f, 0xa9, 0x32, 0x9e, 0x5c, 0xc1, 0xca, 0x05, 0xf5, 0xa9, 0x27, 0x90, 0x09, 0xef,
-	0x7b, 0x74, 0x69, 0x25, 0xac, 0xb5, 0xa0, 0x7e, 0xe0, 0x4e, 0xdd, 0x05, 0x9d, 0x07, 0x42, 0x06,
-	0x1d, 0xd0, 0x2d, 0xeb, 0x9d, 0x38, 0xc2, 0x27, 0x37, 0xd4, 0xbb, 0xee, 0x93, 0xbf, 0x62, 0xc4,
-	0x68, 0x79, 0x74, 0xa9, 0x73, 0x3e, 0xbb, 0x28, 0xa8, 0xfd, 0x83, 0xcf, 0x2b, 0x2c, 0xfd, 0x5c,
-	0x61, 0x40, 0xbe, 0x02, 0x58, 0x3d, 0x4f, 0xdc, 0x24, 0x0c, 0x6a, 0xc3, 0x92, 0x6b, 0xa7, 0xad,
-	0xab, 0xfa, 0x51, 0x1c, 0xe1, 0x6a, 0xd6, 0xda, 0xb5, 0x89, 0x51, 0x72, 0x6d, 0xf4, 0x12, 0x1e,
-	0xee, 0x78, 0x28, 0xa5, 0x1e, 0x1e, 0xc4, 0x11, 0x6e, 0x65, 0xe0, 0xee, 0xa7, 0x77, 0x60, 0xa4,
-	0xc1, 0x8a, 0x08, 0x68, 0x10, 0x0a, 0xf9, 0xbf, 0x0e, 0xe8, 0xd6, 0x9e, 0x3f, 0x52, 0xff, 0x35,
-	0x14, 0x75, 0x6b, 0x68, 0x9c, 0x5e, 0x30, 0xf2, 0x8b, 0xfd, 0xc3, 0x8f, 0x2b, 0x2c, 0xe5, 0xd6,
-	0x25, 0xf2, 0xa5, 0x04, 0xeb, 0x7b, 0xc9, 0xd0, 0x13, 0xf8, 0x7f, 0x3a, 0x83, 0x6d, 0x0a, 0x14,
-	0x47, 0xb8, 0x96, 0x99, 0xcb, 0x0f, 0x88, 0x51, 0x49, 0xaa, 0xa1, 0x8d, 0xce, 0x61, 0xab, 0xe0,
-	0xd0, 0xa2, 0xb6, 0xed, 0x33, 0x91, 0xa5, 0xaa, 0xea, 0x4a, 0x1c, 0xe1, 0xe3, 0x3b, 0xa9, 0x7e,
-	0x43, 0xc4, 0x40, 0x05, 0x55, 0xcb, 0x44, 0x34, 0x82, 0x45, 0xd5, 0x9a, 0x87, 0xde, 0x84, 0xf9,
-	0x69, 0xdc, 0xb2, 0xde, 0x8e, 0x23, 0xfc, 0xf0, 0x6e, 0xbf, 0x8c, 0x21, 0x46, 0xb3, 0x20, 0x9e,
-	0xa5, 0x1a, 0x7a, 0x03, 0x9b, 0xae, 0xb0, 0x3c, 0x6e, 0x87, 0xd7, 0xcc, 0xa2, 0xd3, 0x29, 0x0f,
-	0xe7, 0x81, 0x5c, 0xee, 0x80, 0xee, 0x81, 0x7e, 0x12, 0x47, 0x58, 0xce, 0x77, 0xb3, 0x8f, 0x10,
-	0xa3, 0xee, 0x8a, 0xb7, 0xa9, 0xa4, 0x65, 0xca, 0xee, 0xdc, 0x1e, 0x8f, 0x60, 0x7d, 0x6f, 0xc0,
-	0x08, 0xc1, 0xda, 0xd8, 0xd4, 0xcc, 0x77, 0x63, 0x6b, 0x78, 0x76, 0xa9, 0x8d, 0x86, 0xa7, 0x0d,
-	0x09, 0x35, 0xe1, 0x51, 0xae, 0x69, 0xaf, 0xcc, 0xe1, 0xe5, 0xa0, 0x01, 0x0a, 0xd8, 0x78, 0x60,
-	0x9a, 0xa3, 0xc1, 0x69, 0xa3, 0xa4, 0xbf, 0xfe, 0xb6, 0x56, 0xc0, 0xed, 0x5a, 0x01, 0x3f, 0xd6,
-	0x0a, 0xf8, 0xb4, 0x51, 0xa4, 0xdb, 0x8d, 0x22, 0x7d, 0xdf, 0x28, 0xd2, 0xfb, 0xa7, 0x8e, 0x1b,
-	0x5c, 0x85, 0x13, 0x75, 0xca, 0xbd, 0x9e, 0x70, 0xd8, 0xb3, 0x7c, 0xd7, 0x49, 0xdd, 0x5b, 0x16,
-	0x1e, 0x4b, 0x70, 0xb3, 0x60, 0x62, 0x52, 0x49, 0xff, 0xfc, 0x17, 0xbf, 0x02, 0x00, 0x00, 0xff,
-	0xff, 0x6a, 0xba, 0x2e, 0x91, 0x4a, 0x03, 0x00, 0x00,
+	// 1004 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x56, 0xcb, 0x6f, 0xe3, 0x44,
+	0x1c, 0x8e, 0xfb, 0x48, 0x93, 0xa1, 0xcd, 0x63, 0xd2, 0x87, 0x37, 0x6c, 0x33, 0x61, 0xa4, 0x85,
+	0xf2, 0xd8, 0x44, 0x82, 0x5b, 0x11, 0x42, 0x71, 0xb7, 0x15, 0x91, 0xb2, 0x4d, 0x77, 0x1a, 0x16,
+	0x09, 0x81, 0x8c, 0x93, 0x71, 0xb3, 0x56, 0xe3, 0x4c, 0xd6, 0x63, 0x8b, 0xf4, 0xce, 0x61, 0x8f,
+	0x5c, 0x90, 0x90, 0xb8, 0xf4, 0x8f, 0xe1, 0xb0, 0xc7, 0x3d, 0x22, 0x0e, 0x16, 0x6a, 0x2f, 0x9c,
+	0xcd, 0x89, 0x1b, 0xf2, 0x8c, 0xeb, 0x38, 0x8f, 0x45, 0x8a, 0x40, 0x7b, 0xaa, 0xfb, 0xcd, 0xe7,
+	0xdf, 0xef, 0xfb, 0x7d, 0xe3, 0xf9, 0x32, 0x60, 0x9f, 0xf7, 0xcd, 0x3a, 0x73, 0xa8, 0xe9, 0x74,
+	0x19, 0xbb, 0x9c, 0x3c, 0xd5, 0x46, 0x0e, 0x73, 0x19, 0x54, 0x79, 0xdf, 0x1c, 0x9a, 0xee, 0xf7,
+	0xcc, 0xb9, 0xac, 0xf1, 0xbe, 0x59, 0x8b, 0xd7, 0xcb, 0xdb, 0x7d, 0xd6, 0x67, 0x82, 0x54, 0x0f,
+	0x9f, 0x24, 0x1f, 0x3f, 0x03, 0xe9, 0x33, 0xc3, 0x31, 0x6c, 0x0e, 0x3b, 0x60, 0xc7, 0x36, 0xc6,
+	0x7a, 0xc8, 0xd5, 0x47, 0x86, 0xe3, 0x5a, 0x3d, 0x6b, 0x64, 0x0c, 0x5d, 0xae, 0x2a, 0x55, 0xe5,
+	0x60, 0x4d, 0xab, 0x06, 0x3e, 0xba, 0x7f, 0x65, 0xd8, 0x83, 0x43, 0xbc, 0x90, 0x86, 0x49, 0xc9,
+	0x36, 0xc6, 0x1a, 0x63, 0x97, 0x67, 0x09, 0xf4, 0x30, 0xf3, 0xf3, 0x35, 0x4a, 0xfd, 0x79, 0x8d,
+	0x14, 0xfc, 0xb7, 0x02, 0xb2, 0xed, 0x50, 0x4d, 0xc8, 0x81, 0xfb, 0x60, 0xc5, 0xa2, 0xa2, 0x74,
+	0x56, 0xdb, 0x0a, 0x7c, 0x94, 0x95, 0xa5, 0x2d, 0x8a, 0xc9, 0x8a, 0x45, 0xe1, 0xa7, 0x60, 0x73,
+	0x4a, 0xc3, 0x8a, 0xd0, 0xb0, 0x17, 0xf8, 0xa8, 0x24, 0x89, 0xd3, 0xad, 0xa7, 0xc8, 0xb0, 0x01,
+	0xd2, 0xdc, 0x35, 0x5c, 0x8f, 0xab, 0xab, 0x55, 0xe5, 0x20, 0xf7, 0xf1, 0xfb, 0xb5, 0xd7, 0x99,
+	0x52, 0x8b, 0x05, 0x9d, 0x8b, 0x17, 0x48, 0xf4, 0x22, 0xfc, 0x1c, 0xe4, 0x86, 0x9e, 0xdd, 0x35,
+	0x1d, 0x9d, 0x5d, 0xe8, 0x8c, 0x52, 0xae, 0xae, 0x09, 0x05, 0xf7, 0x02, 0x1f, 0xed, 0x48, 0x05,
+	0xd3, 0xeb, 0x98, 0x6c, 0x4a, 0xa0, 0x7d, 0xd1, 0xa6, 0x94, 0x1f, 0x6e, 0xbe, 0xb8, 0x46, 0xa9,
+	0x68, 0xf6, 0x14, 0xfe, 0x09, 0x80, 0xfc, 0x8c, 0x35, 0xf0, 0x43, 0xb0, 0x21, 0x4c, 0x8c, 0x6d,
+	0x80, 0x81, 0x8f, 0x72, 0xb2, 0x76, 0xb4, 0x80, 0x49, 0x3a, 0x7c, 0x6a, 0x52, 0xd8, 0x06, 0xa5,
+	0xc4, 0x88, 0xba, 0x41, 0xa9, 0x63, 0x72, 0x69, 0x4b, 0x56, 0xab, 0x04, 0x3e, 0x2a, 0xcf, 0xd9,
+	0x72, 0x47, 0xc2, 0x04, 0x26, 0xd0, 0x86, 0x04, 0x61, 0x0b, 0x24, 0x51, 0x5d, 0x6a, 0x17, 0x7e,
+	0xad, 0x69, 0xfb, 0x81, 0x8f, 0xee, 0xcd, 0xd7, 0x93, 0x1c, 0x4c, 0x8a, 0x09, 0xf0, 0x54, 0x60,
+	0xf0, 0x0b, 0x50, 0xb4, 0xb8, 0x6e, 0x33, 0xea, 0x0d, 0x4c, 0xdd, 0xe8, 0xf5, 0x98, 0x37, 0x74,
+	0x85, 0x63, 0x19, 0xed, 0x7e, 0xe0, 0x23, 0x35, 0xda, 0xdc, 0x59, 0x0a, 0x26, 0x79, 0x8b, 0x3f,
+	0x16, 0x50, 0x43, 0x22, 0xf0, 0x3b, 0x90, 0x1d, 0x58, 0xcf, 0x3d, 0x8b, 0x5a, 0xee, 0x95, 0xba,
+	0x2e, 0xc6, 0xd3, 0x5e, 0xfa, 0x28, 0xf5, 0xbb, 0x8f, 0xde, 0xed, 0x5b, 0xee, 0x33, 0xaf, 0x5b,
+	0xeb, 0x31, 0xbb, 0xde, 0x63, 0xdc, 0x66, 0x3c, 0xfa, 0xf3, 0x90, 0xd3, 0xcb, 0xba, 0x7b, 0x35,
+	0x32, 0x79, 0xad, 0x39, 0x74, 0x03, 0x1f, 0x15, 0x64, 0xbf, 0xb8, 0x10, 0x26, 0x93, 0xa2, 0xf0,
+	0x85, 0x02, 0xf6, 0x7a, 0x9e, 0xe3, 0x98, 0x43, 0x57, 0x77, 0x98, 0x37, 0xa4, 0xfa, 0xa4, 0x61,
+	0x5a, 0x34, 0x3c, 0x5b, 0xba, 0x61, 0x45, 0x36, 0x7c, 0x4d, 0x59, 0x4c, 0x76, 0xa2, 0x15, 0x12,
+	0x2e, 0xb4, 0x62, 0x29, 0x4f, 0xc0, 0xb6, 0x39, 0x1e, 0x31, 0xee, 0x39, 0x26, 0xd7, 0x87, 0xcc,
+	0xd5, 0x2f, 0xac, 0xc1, 0xc0, 0xa4, 0xea, 0x86, 0xd8, 0x06, 0x14, 0xf8, 0xe8, 0x6d, 0x59, 0x78,
+	0x11, 0x0b, 0x13, 0x18, 0xc3, 0xa7, 0xcc, 0x3d, 0x11, 0x20, 0xe4, 0xa0, 0xe0, 0x32, 0xd7, 0x18,
+	0xe8, 0x5d, 0xd3, 0xd5, 0x0d, 0x5b, 0x6c, 0x44, 0x46, 0x4c, 0xd5, 0x5c, 0x7a, 0xaa, 0x3d, 0xd9,
+	0x7c, 0xb6, 0x1e, 0x26, 0x39, 0x01, 0x69, 0xa6, 0xdb, 0x10, 0x00, 0xfc, 0x45, 0x01, 0x95, 0xe9,
+	0xd9, 0xe7, 0x34, 0x64, 0x85, 0x86, 0xaf, 0x96, 0xd6, 0xf0, 0x60, 0x91, 0xb3, 0xf3, 0x8a, 0xca,
+	0x49, 0x83, 0x3b, 0xd3, 0xea, 0xbe, 0x01, 0x99, 0x30, 0xb1, 0x06, 0x8c, 0x73, 0x15, 0x08, 0x19,
+	0x8d, 0xa5, 0x65, 0xe4, 0x27, 0xc9, 0x17, 0xd6, 0xc1, 0x64, 0xc3, 0x36, 0xc6, 0x2d, 0xc6, 0x39,
+	0xfc, 0x41, 0x01, 0xbb, 0xd3, 0xea, 0xe2, 0x66, 0x6f, 0x89, 0x66, 0xed, 0xa5, 0x9b, 0xed, 0x2f,
+	0x9a, 0x79, 0xd2, 0xba, 0x94, 0x9c, 0xf5, 0x71, 0x24, 0xc3, 0x00, 0xe5, 0xc5, 0xfc, 0x30, 0x9d,
+	0xd4, 0x4d, 0xa1, 0xe4, 0x41, 0xe0, 0xa3, 0x77, 0xfe, 0xad, 0x76, 0xc8, 0xc5, 0x64, 0x77, 0x41,
+	0xfd, 0x36, 0xa5, 0xf0, 0x08, 0xe4, 0x2f, 0xbc, 0xc1, 0x40, 0x7e, 0x7d, 0xa1, 0xfb, 0x5c, 0xdd,
+	0xaa, 0xae, 0x1e, 0x64, 0xb5, 0x72, 0xe0, 0xa3, 0x5d, 0x59, 0x77, 0x86, 0x80, 0x49, 0x6e, 0x82,
+	0x68, 0xa6, 0x3b, 0x9b, 0x8b, 0xbf, 0x2a, 0x32, 0x17, 0xdb, 0x94, 0x1e, 0x47, 0xdf, 0xf2, 0x72,
+	0xb9, 0x78, 0x00, 0xd2, 0x8c, 0xd2, 0x90, 0x2b, 0xa3, 0xb0, 0x18, 0xf8, 0x68, 0x4b, 0x72, 0x25,
+	0x8e, 0xc9, 0x3a, 0xa3, 0xb4, 0x49, 0xc3, 0xc0, 0xbb, 0x93, 0x62, 0x87, 0x93, 0x3f, 0xf7, 0x4c,
+	0xcf, 0x54, 0x57, 0xab, 0xab, 0xd3, 0x81, 0x37, 0xcf, 0xc1, 0xa4, 0x98, 0x04, 0x9f, 0x84, 0xd8,
+	0xcc, 0x18, 0x7f, 0xad, 0x82, 0x52, 0x22, 0xda, 0xdf, 0xc0, 0x28, 0xff, 0x63, 0x76, 0x7f, 0x0b,
+	0x32, 0x77, 0x39, 0x22, 0x22, 0xfb, 0x3f, 0x1c, 0x8f, 0xbb, 0x3a, 0x98, 0xc4, 0x25, 0x61, 0x17,
+	0x80, 0x44, 0x0c, 0xc8, 0x44, 0x3f, 0x5a, 0xba, 0x41, 0x31, 0x32, 0x2d, 0x71, 0xe4, 0xb3, 0xdd,
+	0xf8, 0x84, 0x7f, 0x06, 0xb6, 0x2c, 0xae, 0x4f, 0xbe, 0x34, 0x91, 0xe3, 0x19, 0x4d, 0x0d, 0x7c,
+	0xb4, 0x1d, 0xff, 0xf4, 0x4c, 0x96, 0x31, 0xd9, 0xb4, 0xf8, 0x49, 0xfc, 0x2f, 0x7c, 0x0f, 0xac,
+	0x8b, 0x73, 0x10, 0xe5, 0x6e, 0xc2, 0x78, 0x01, 0x73, 0x4c, 0xe4, 0xfa, 0xf4, 0xae, 0x7f, 0xd0,
+	0x02, 0xf9, 0x99, 0xeb, 0x03, 0x84, 0x20, 0x77, 0xde, 0x69, 0x74, 0xbe, 0x3c, 0xd7, 0x9b, 0xa7,
+	0x4f, 0x1b, 0xad, 0xe6, 0xa3, 0x42, 0x0a, 0x16, 0xc1, 0x56, 0x84, 0x35, 0x8e, 0x3a, 0xcd, 0xa7,
+	0xc7, 0x05, 0x25, 0x41, 0x3b, 0x3f, 0xee, 0x74, 0x5a, 0xc7, 0x8f, 0x0a, 0x2b, 0xda, 0xc9, 0xcb,
+	0x9b, 0x8a, 0xf2, 0xea, 0xa6, 0xa2, 0xfc, 0x71, 0x53, 0x51, 0x7e, 0xbc, 0xad, 0xa4, 0x5e, 0xdd,
+	0x56, 0x52, 0xbf, 0xdd, 0x56, 0x52, 0x5f, 0x7f, 0x94, 0x70, 0x89, 0xf7, 0xcd, 0x87, 0xd1, 0x4d,
+	0x26, 0x7c, 0xae, 0x8f, 0x13, 0x57, 0x41, 0xe1, 0x57, 0x37, 0x2d, 0xee, 0x75, 0x9f, 0xfc, 0x13,
+	0x00, 0x00, 0xff, 0xff, 0xad, 0xfc, 0x07, 0x7c, 0x28, 0x0a, 0x00, 0x00,
 }
 
 func (this *Params) Equal(that interface{}) bool {
@@ -299,6 +440,11 @@ func (m *OrderBook) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if m.NumberOfOdds != 0 {
+		i = encodeVarintOrderbook(dAtA, i, uint64(m.NumberOfOdds))
+		i--
+		dAtA[i] = 0x20
+	}
 	if m.Status != 0 {
 		i = encodeVarintOrderbook(dAtA, i, uint64(m.Status))
 		i--
@@ -339,6 +485,87 @@ func (m *BookParticipant) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.FullfilledBets) > 0 {
+		for iNdEx := len(m.FullfilledBets) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.FullfilledBets[iNdEx])
+			copy(dAtA[i:], m.FullfilledBets[iNdEx])
+			i = encodeVarintOrderbook(dAtA, i, uint64(len(m.FullfilledBets[iNdEx])))
+			i--
+			dAtA[i] = 0x6a
+		}
+	}
+	if len(m.CurrentRoundMaxLossOdd) > 0 {
+		i -= len(m.CurrentRoundMaxLossOdd)
+		copy(dAtA[i:], m.CurrentRoundMaxLossOdd)
+		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.CurrentRoundMaxLossOdd)))
+		i--
+		dAtA[i] = 0x62
+	}
+	{
+		size := m.CurrentRoundMaxLoss.Size()
+		i -= size
+		if _, err := m.CurrentRoundMaxLoss.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x5a
+	{
+		size := m.MaxLoss.Size()
+		i -= size
+		if _, err := m.MaxLoss.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x52
+	{
+		size := m.CurrentRoundTotalBetAmount.Size()
+		i -= size
+		if _, err := m.CurrentRoundTotalBetAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x4a
+	{
+		size := m.TotalBetAmount.Size()
+		i -= size
+		if _, err := m.TotalBetAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x42
+	if m.ExposuresNotFilled != 0 {
+		i = encodeVarintOrderbook(dAtA, i, uint64(m.ExposuresNotFilled))
+		i--
+		dAtA[i] = 0x38
+	}
+	{
+		size := m.CurrentRoundLiquidity.Size()
+		i -= size
+		if _, err := m.CurrentRoundLiquidity.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x32
+	{
+		size := m.Liquidity.Size()
+		i -= size
+		if _, err := m.Liquidity.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
 	if m.IsModuleAccount {
 		i--
 		if m.IsModuleAccount {
@@ -358,6 +585,138 @@ func (m *BookParticipant) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i -= len(m.ParticipantAddress)
 		copy(dAtA[i:], m.ParticipantAddress)
 		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.ParticipantAddress)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.BookId) > 0 {
+		i -= len(m.BookId)
+		copy(dAtA[i:], m.BookId)
+		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.BookId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *BookOddExposure) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *BookOddExposure) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *BookOddExposure) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.FullfillmentQueue) > 0 {
+		dAtA2 := make([]byte, len(m.FullfillmentQueue)*10)
+		var j1 int
+		for _, num := range m.FullfillmentQueue {
+			for num >= 1<<7 {
+				dAtA2[j1] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j1++
+			}
+			dAtA2[j1] = uint8(num)
+			j1++
+		}
+		i -= j1
+		copy(dAtA[i:], dAtA2[:j1])
+		i = encodeVarintOrderbook(dAtA, i, uint64(j1))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.OddId) > 0 {
+		i -= len(m.OddId)
+		copy(dAtA[i:], m.OddId)
+		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.OddId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.BookId) > 0 {
+		i -= len(m.BookId)
+		copy(dAtA[i:], m.BookId)
+		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.BookId)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *ParticipantExposure) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ParticipantExposure) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *ParticipantExposure) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Round != 0 {
+		i = encodeVarintOrderbook(dAtA, i, uint64(m.Round))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.IsFullfilled {
+		i--
+		if m.IsFullfilled {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x30
+	}
+	{
+		size := m.BetAmount.Size()
+		i -= size
+		if _, err := m.BetAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.Exposure.Size()
+		i -= size
+		if _, err := m.Exposure.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintOrderbook(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
+	if m.ParticipantNumber != 0 {
+		i = encodeVarintOrderbook(dAtA, i, uint64(m.ParticipantNumber))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.OddId) > 0 {
+		i -= len(m.OddId)
+		copy(dAtA[i:], m.OddId)
+		i = encodeVarintOrderbook(dAtA, i, uint64(len(m.OddId)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -410,6 +769,9 @@ func (m *OrderBook) Size() (n int) {
 	if m.Status != 0 {
 		n += 1 + sovOrderbook(uint64(m.Status))
 	}
+	if m.NumberOfOdds != 0 {
+		n += 1 + sovOrderbook(uint64(m.NumberOfOdds))
+	}
 	return n
 }
 
@@ -432,6 +794,85 @@ func (m *BookParticipant) Size() (n int) {
 	}
 	if m.IsModuleAccount {
 		n += 2
+	}
+	l = m.Liquidity.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = m.CurrentRoundLiquidity.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	if m.ExposuresNotFilled != 0 {
+		n += 1 + sovOrderbook(uint64(m.ExposuresNotFilled))
+	}
+	l = m.TotalBetAmount.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = m.CurrentRoundTotalBetAmount.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = m.MaxLoss.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = m.CurrentRoundMaxLoss.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = len(m.CurrentRoundMaxLossOdd)
+	if l > 0 {
+		n += 1 + l + sovOrderbook(uint64(l))
+	}
+	if len(m.FullfilledBets) > 0 {
+		for _, s := range m.FullfilledBets {
+			l = len(s)
+			n += 1 + l + sovOrderbook(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *BookOddExposure) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.BookId)
+	if l > 0 {
+		n += 1 + l + sovOrderbook(uint64(l))
+	}
+	l = len(m.OddId)
+	if l > 0 {
+		n += 1 + l + sovOrderbook(uint64(l))
+	}
+	if len(m.FullfillmentQueue) > 0 {
+		l = 0
+		for _, e := range m.FullfillmentQueue {
+			l += sovOrderbook(uint64(e))
+		}
+		n += 1 + sovOrderbook(uint64(l)) + l
+	}
+	return n
+}
+
+func (m *ParticipantExposure) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.BookId)
+	if l > 0 {
+		n += 1 + l + sovOrderbook(uint64(l))
+	}
+	l = len(m.OddId)
+	if l > 0 {
+		n += 1 + l + sovOrderbook(uint64(l))
+	}
+	if m.ParticipantNumber != 0 {
+		n += 1 + sovOrderbook(uint64(m.ParticipantNumber))
+	}
+	l = m.Exposure.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	l = m.BetAmount.Size()
+	n += 1 + l + sovOrderbook(uint64(l))
+	if m.IsFullfilled {
+		n += 2
+	}
+	if m.Round != 0 {
+		n += 1 + sovOrderbook(uint64(m.Round))
 	}
 	return n
 }
@@ -610,6 +1051,25 @@ func (m *OrderBook) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NumberOfOdds", wireType)
+			}
+			m.NumberOfOdds = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NumberOfOdds |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipOrderbook(dAtA[iNdEx:])
@@ -763,6 +1223,723 @@ func (m *BookParticipant) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.IsModuleAccount = bool(v != 0)
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Liquidity", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Liquidity.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentRoundLiquidity", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CurrentRoundLiquidity.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ExposuresNotFilled", wireType)
+			}
+			m.ExposuresNotFilled = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ExposuresNotFilled |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TotalBetAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.TotalBetAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentRoundTotalBetAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CurrentRoundTotalBetAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxLoss", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MaxLoss.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 11:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentRoundMaxLoss", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.CurrentRoundMaxLoss.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 12:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CurrentRoundMaxLossOdd", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.CurrentRoundMaxLossOdd = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 13:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FullfilledBets", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.FullfilledBets = append(m.FullfilledBets, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOrderbook(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *BookOddExposure) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOrderbook
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: BookOddExposure: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: BookOddExposure: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BookId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BookId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OddId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OddId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType == 0 {
+				var v uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowOrderbook
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= uint64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.FullfillmentQueue = append(m.FullfillmentQueue, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowOrderbook
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthOrderbook
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthOrderbook
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA[iNdEx:postIndex] {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.FullfillmentQueue) == 0 {
+					m.FullfillmentQueue = make([]uint64, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v uint64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowOrderbook
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= uint64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.FullfillmentQueue = append(m.FullfillmentQueue, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field FullfillmentQueue", wireType)
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipOrderbook(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ParticipantExposure) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowOrderbook
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ParticipantExposure: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ParticipantExposure: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BookId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BookId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OddId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OddId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantNumber", wireType)
+			}
+			m.ParticipantNumber = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ParticipantNumber |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Exposure", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Exposure.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BetAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthOrderbook
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BetAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field IsFullfilled", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.IsFullfilled = bool(v != 0)
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Round", wireType)
+			}
+			m.Round = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowOrderbook
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Round |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipOrderbook(dAtA[iNdEx:])

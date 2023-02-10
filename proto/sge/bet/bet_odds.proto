@@ -17,4 +17,11 @@ message BetOdds {
     // value of the Odd in decimal odd type
     // Required | NonUnique | "1.286"
     string value = 3;
+
+    // max_loss_multiplier is the factor for calculating max loss for given odds
+    string max_loss_multiplier = 4 [
+        (gogoproto.customname) = "MaxLossMultiplier" ,(gogoproto.jsontag) = "max_loss_multiplier", json_name = "max_loss_multiplier",
+        (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+        (gogoproto.nullable) = false
+    ];
 }

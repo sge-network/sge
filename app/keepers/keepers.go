@@ -375,12 +375,12 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
 		betmodulekeeper.ExpectedKeepers{
-			SporteventKeeper:       appKeepers.SporteventKeeper,
-			StrategicreserveKeeper: appKeepers.StrategicreserveKeeper,
-			DVMKeeper:              appKeepers.DVMKeeper,
+			SporteventKeeper: appKeepers.SporteventKeeper,
+			OrderBookKeeper:  appKeepers.OrderBookKeeper,
+			DVMKeeper:        appKeepers.DVMKeeper,
 		},
 	)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.StrategicreserveKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
 
 	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
 		appCodec,

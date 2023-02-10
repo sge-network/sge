@@ -19,6 +19,14 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 	for _, bp := range data.Bookparticipants {
 		keeper.SetBookParticipant(ctx, bp)
 	}
+
+	for _, be := range data.BookExposures {
+		keeper.SetBookOddExposure(ctx, be)
+	}
+
+	for _, pe := range data.ParticipantExposures {
+		keeper.SetParticipantExposure(ctx, pe)
+	}
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper. The
@@ -26,9 +34,11 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	// TODO
 	return &types.GenesisState{
-		Params:           keeper.GetParams(ctx),
-		Books:            keeper.GetAllBooks(ctx),
-		Bookparticipants: keeper.GetAllBookParticipants(ctx),
+		Params:               keeper.GetParams(ctx),
+		Books:                keeper.GetAllBooks(ctx),
+		Bookparticipants:     keeper.GetAllBookParticipants(ctx),
+		BookExposures:        keeper.GetAllBookExposures(ctx),
+		ParticipantExposures: keeper.GetAllParticipantExposures(ctx),
 	}
 }
 

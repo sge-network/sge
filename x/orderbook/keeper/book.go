@@ -52,12 +52,12 @@ func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
 }
 
 // InitiateBook initiates a book for a given sport event
-func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUid string, srContribution sdk.Int) (string, error) {
+func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUid string, srContribution sdk.Int, oddIds []string) (string, error) {
 	book, found := k.GetBook(ctx, sportEventUid)
 	if found {
 		return "", sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.Id)
 	} else {
-		book = types.NewBook(sportEventUid, 0, types.OrderBookStatus_STATUS_ACTIVE)
+		book = types.NewBook(sportEventUid, 0, uint64(len(oddIds)), types.OrderBookStatus_STATUS_ACTIVE)
 	}
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
@@ -67,12 +67,25 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUid string, srContributi
 	}
 
 	// Add book participant
-	bp := types.NewBookParticipant(book.Id, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName), 1, true)
+	bp := types.NewBookParticipant(
+		book.Id, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName), 1, book.NumberOfOdds, true, srContribution, srContribution,
+		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", []string{},
+	)
 	_, found = k.GetBookParticipant(ctx, book.Id, bp.ParticipantNumber)
 	if found {
 		return "", sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", bp.ParticipantNumber)
 	}
 	k.SetBookParticipant(ctx, bp)
+
+	// Add book exposures
+	fullfillmentQueue := []uint64{bp.ParticipantNumber}
+	for _, oddId := range oddIds {
+		boe := types.NewBookOddExposure(book.Id, oddId, fullfillmentQueue)
+		k.SetBookOddExposure(ctx, boe)
+
+		pe := types.NewParticipantExposure(bp.BookId, oddId, sdk.ZeroInt(), sdk.ZeroInt(), bp.ParticipantNumber, 1, false)
+		k.SetParticipantExposure(ctx, pe)
+	}
 
 	// Make entry for book
 	book.Participants = 1

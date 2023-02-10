@@ -10,7 +10,7 @@ import (
 
 // GetBookParticipant returns a specific book participant.
 func (k Keeper) GetBookParticipant(ctx sdk.Context, bookID string, bpNumber uint64) (bp types.BookParticipant, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticiapntKeyPrefix)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
 	value := store.Get(types.GetBookParticipantKey(bookID, bpNumber))
 	if value == nil {
 		return bp, false
@@ -21,9 +21,23 @@ func (k Keeper) GetBookParticipant(ctx sdk.Context, bookID string, bpNumber uint
 	return bp, true
 }
 
+// GetParticipantsByBook returns all participants for a book
+func (k Keeper) GetParticipantsByBook(ctx sdk.Context, bookId string) (bps []types.BookParticipant) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipantsKey(bookId))
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		bp := types.MustUnmarshalBookParticipant(k.cdc, iterator.Value())
+		bps = append(bps, bp)
+	}
+
+	return bps
+}
+
 // IterateAllBookParticipants iterates through all of the book participants.
 func (k Keeper) IterateAllBookParticipants(ctx sdk.Context, cb func(bp types.BookParticipant) (stop bool)) {
-	iterator := sdk.KVStorePrefixIterator(ctx.KVStore(k.storeKey), types.BookParticiapntKeyPrefix)
+	iterator := sdk.KVStorePrefixIterator(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -46,7 +60,7 @@ func (k Keeper) GetAllBookParticipants(ctx sdk.Context) (bps []types.BookPartici
 
 // SetBookParticipant sets a book participant.
 func (k Keeper) SetBookParticipant(ctx sdk.Context, bp types.BookParticipant) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticiapntKeyPrefix)
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
 	store.Set(types.GetBookParticipantKey(bp.BookId, bp.ParticipantNumber), types.MustMarshalBookParticipant(k.cdc, bp))
 }
 
@@ -74,7 +88,10 @@ func (k Keeper) AddBookParticipant(
 			types.ErrBookParticipantAlreadyExists, "id already exists %d", bookParticipant.ParticipantNumber,
 		)
 	} else {
-		bookParticipant = types.NewBookParticipant(book.Id, addr, book.Participants+1, false)
+		bookParticipant = types.NewBookParticipant(
+			book.Id, addr, book.Participants+1, book.NumberOfOdds, false, liquidity, liquidity, sdk.ZeroInt(), sdk.ZeroInt(),
+			sdk.ZeroInt(), sdk.Int{}, "", []string{},
+		)
 	}
 
 	// Transfer fee from book participant to the feeAccountName
@@ -89,11 +106,22 @@ func (k Keeper) AddBookParticipant(
 		return bookParticipantNumber, err
 	}
 
+	// Make entry for book participant
+	k.SetBookParticipant(ctx, bookParticipant)
+
+	// Update book odd exposures and add particiapnt exposures
+	boes := k.GetOddExposuresByBook(ctx, bookParticipant.BookId)
+	for _, boe := range boes {
+		boe.FullfillmentQueue = append(boe.FullfillmentQueue, bookParticipant.ParticipantNumber)
+		k.SetBookOddExposure(ctx, boe)
+
+		pe := types.NewParticipantExposure(book.Id, boe.OddId, sdk.ZeroInt(), sdk.ZeroInt(), bookParticipant.ParticipantNumber, 1, false)
+		k.SetParticipantExposure(ctx, pe)
+	}
+
 	// Update orderbook
 	book.Participants += 1
 	k.SetBook(ctx, book)
 
-	// Make entry for book participant
-	k.SetBookParticipant(ctx, bookParticipant)
 	return bookParticipant.ParticipantNumber, nil
 }

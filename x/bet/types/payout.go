@@ -42,3 +42,41 @@ func calculatePayout(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Int
 
 	return payout, nil
 }
+
+// CalculateBetAmount calculates the amount of bet according to bet odds value and payout profit
+func CalculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Int) (sdk.Int, error) {
+	betAmount, err := calculateBetAmount(oddsType, oddsVal, payoutProfit)
+	if err != nil {
+		return sdk.ZeroInt(), err
+	}
+
+	return betAmount, nil
+}
+
+// calculateBetAmount calculates the amount of bet according to bet odds value and payoutProfit
+func calculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Int) (sdk.Int, error) {
+	var oType OddsTypeI
+
+	// assign corresponding type to the interface instance
+	switch oddsType {
+	case OddsType_ODD_TYPE_DECIMAL:
+		oType = new(decimalOdds)
+
+	case OddsType_ODD_TYPE_FRACTIONAL:
+		oType = new(fractionalOdds)
+
+	case OddsType_ODD_TYPE_MONEYLINE:
+		oType = new(moneylineOdds)
+
+	default:
+		return sdk.ZeroInt(), ErrInvalidOddsType
+	}
+
+	// total payout should be paid to bettor
+	betAmount, err := oType.CalculateBetAmount(oddsVal, payoutProfit)
+	if err != nil {
+		return sdk.ZeroInt(), err
+	}
+
+	return betAmount, nil
+}

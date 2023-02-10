@@ -1,6 +1,7 @@
 package orderbook
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 	abci "github.com/tendermint/tendermint/abci/types"
 
+	"github.com/sge-network/sge/x/orderbook/client/cli"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
@@ -54,7 +56,11 @@ func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncod
 func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the orderbook module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
+}
 
 // GetTxCmd returns the root tx command for the orderbook module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command {
@@ -63,7 +69,7 @@ func (AppModuleBasic) GetTxCmd() *cobra.Command {
 
 // GetQueryCmd returns no root query command for the orderbook module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return nil
+	return cli.GetQueryCmd(types.StoreKey)
 }
 
 // AppModule implements an application module for the orderbook module.
@@ -91,7 +97,7 @@ func (am AppModule) Route() sdk.Route {
 
 // QuerierRoute returns the orderbook module's querier route name.
 func (AppModule) QuerierRoute() string {
-	return ""
+	return types.QuerierRoute
 }
 
 // LegacyQuerierHandler returns the orderbook module sdk.Querier.
@@ -100,7 +106,9 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 }
 
 // RegisterServices registers a GRPC query service to respond to the module-specific GRPC queries.
-func (am AppModule) RegisterServices(cfg module.Configurator) {}
+func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
+}
 
 // InitGenesis performs genesis initialization for the orderbook module.
 func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {

@@ -45,6 +45,7 @@ var (
 	ErrMoneylineOddsCanNotBeZero            = sdkerrors.Register(ModuleName, 2034, "moneyline odds can not be zero")
 	ErrFractionalOddsIncorrectFormat        = sdkerrors.Register(ModuleName, 2035, "incorrect format of fractional odds")
 	ErrBettorAddressNotEqualToCreator       = sdkerrors.Register(ModuleName, 2036, "provided bettor address is not equal to bet owner")
+	ErrMaxLossMultiplierCanNotBeZero        = sdkerrors.Register(ModuleName, 2037, "max loss multiplier cannot be nil or zero")
 )
 
 // x/bet module sentinel error text
