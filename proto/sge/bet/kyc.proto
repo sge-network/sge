@@ -1,12 +1,14 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
-import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// KycDataPayload is the KYC info
-message KycDataPayload{
-    bool kyc_required = 1;
-    bool kyc_approved = 2;
-    string kyc_id = 3;
+// KycDataPayload is the KYC info.
+message KycDataPayload {
+  // kyc_required represent if kyc validation is required or not.
+  bool kyc_required = 1;
+  // kyc_approved represent if kvc validation is approved or not.
+  bool kyc_approved = 2;
+  // kyc_id is the id of the kyc.
+  string kyc_id = 3;
 }

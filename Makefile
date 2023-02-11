@@ -146,7 +146,7 @@ draw-deps:
 	@# requires brew install graphviz or apt-get install graphviz
 	go get github.com/RobotsAndPencils/goviz
 	@goviz -i ./cmd/sged -d 2 | dot -Tpng -o dependency-graph.png
-	
+
 clean:
 	rm -rf $(CURDIR)/artifacts/
 
@@ -250,7 +250,7 @@ lint:
 
 format:
 	$(golangci_lint_cmd) run ./... --fix
-	@go run mvdan.cc/gofumpt -l -w x/ app/ ante/ tests/
+	@go run mvdan.cc/gofumpt -l -w x/ app/
 	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
 
 mdlint:

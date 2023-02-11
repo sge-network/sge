@@ -23,6 +23,8 @@ type BankKeeper interface {
 // SporteventKeeper defines the expected interface needed to get sportEvents from KVStore
 type SporteventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
+	GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool)
+	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }
 
 // DVMKeeper defines the expected interface needed to verify ticket and unmarshal it

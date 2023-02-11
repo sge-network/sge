@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"crypto/ed25519"
@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -32,20 +33,16 @@ func TestVerifyWithKey(t *testing.T) {
 	singedT1, err := T1.SignedString(Pri2)
 	require.NoError(t, err)
 	ss := strings.Split(singedT1, ".")
-	// t.Log(ss)
-	ticket := ticket{
-		header:     ss[0],
-		payload:    ss[1],
-		signatures: []string{ss[2]},
-	}
+
+	ticket := types.NewTestJwtToken(ss[0], ss[1], []string{ss[2]})
 	require.Nil(t, err)
 	t.Run("Success", func(t *testing.T) {
-		_, err = ticket.verifyWithKey(string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs})))
+		_, err = ticket.VerifyWithKey(string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs})))
 		require.NoError(t, err)
 	})
 	t.Run("Error", func(t *testing.T) {
 		invalidKey := "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgGiRKsHZPpIWUVyHVePzoZLHLvFZ+TdnAI2Xg7WJjrJKEX5D3R5KV9uFU5lwmT09fj4BrKjwOf4Yv8+u/BJhfdsiDbkqln3FhNG1ZSxAa+9n6CKBeJku9OLpDt7olBpcydyCf8CYmTNq+YABpJbVX6iYZrbpsWK34C9fppe3rzFDAgMBAAE="
-		_, err := ticket.verifyWithKey(invalidKey)
+		_, err := ticket.VerifyWithKey(invalidKey)
 		require.Error(t, err)
 	})
 }
@@ -69,14 +66,14 @@ func TestNewTicket(t *testing.T) {
 		tkn, err := Token.SignedString(Pri)
 		require.Nil(t, err)
 		t.Log(err)
-		it, err := NewTicket(tkn)
+		it, err := types.NewTicket(tkn)
 		t.Log(err)
 		require.Nil(t, err)
 		require.NotNil(t, it)
 	})
 
 	t.Run("invalid", func(t *testing.T) {
-		it, err := NewTicket("invlaid.Token")
+		it, err := types.NewTicket("invlaid.Token")
 		require.Error(t, err)
 		// require.Nil(t, it)
 		_ = it
@@ -108,7 +105,7 @@ func TestUnmarshal(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := NewTicket(tkn)
+	it, err := types.NewTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 
@@ -147,7 +144,7 @@ func TestVerify(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := NewTicket(tkn)
+	it, err := types.NewTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 

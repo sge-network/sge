@@ -113,7 +113,7 @@ func (am AppModule) Name() string { return am.AppModuleBasic.Name() }
 
 // Route returns the module's message routing key.
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper))
+	return sdk.Route{}
 }
 
 // QuerierRoute returns the module's query routing key.

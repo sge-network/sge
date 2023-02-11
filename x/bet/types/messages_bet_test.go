@@ -1,4 +1,4 @@
-package types
+package types_test
 
 import (
 	"testing"
@@ -6,27 +6,28 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
+func TestMsgPlaceBetValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgPlaceBet
+		msg  types.MsgPlaceBet
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: MsgPlaceBet{
+			msg: types.MsgPlaceBet{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid bet message",
-			msg: MsgPlaceBet{
+			msg: types.MsgPlaceBet{
 				Creator: sample.AccAddress(),
-				Bet: &PlaceBetFields{
+				Bet: &types.PlaceBetFields{
 					UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 					Amount:   sdk.NewInt(int64(10)),
 					Ticket:   "Ticket",
@@ -36,13 +37,13 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid bet UID",
-			msg: MsgPlaceBet{
+			msg: types.MsgPlaceBet{
 				Creator: sample.AccAddress(),
-				Bet: &PlaceBetFields{
+				Bet: &types.PlaceBetFields{
 					UID: "Invalid UID",
 				},
 			},
-			err: ErrInvalidBetUID,
+			err: types.ErrInvalidBetUID,
 		},
 	}
 	for _, tt := range tests {
@@ -59,19 +60,19 @@ func TestMsgPlaceBet_ValidateBasic(t *testing.T) {
 
 func TestNewBet(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		inputBet := &PlaceBetFields{
+		inputBet := &types.PlaceBetFields{
 			UID:    "betUid",
 			Ticket: "ticket",
 			Amount: sdk.NewInt(int64(10)),
 		}
 		creator := "creator"
-		inputBetOdds := &BetOdds{
+		inputBetOdds := &types.BetOdds{
 			UID:           "Oddsuid",
 			SportEventUID: "sportEventUid",
 			Value:         "1000",
 		}
 
-		expectedBet := &Bet{
+		expectedBet := &types.Bet{
 			UID:           inputBet.UID,
 			Creator:       creator,
 			SportEventUID: inputBetOdds.SportEventUID,
@@ -80,7 +81,7 @@ func TestNewBet(t *testing.T) {
 			Amount:        inputBet.Amount,
 			Ticket:        inputBet.Ticket,
 		}
-		res, err := NewBet(creator, inputBet, inputBetOdds)
+		res, err := types.NewBet(creator, inputBet, inputBetOdds)
 		require.Equal(t, expectedBet, res)
 		require.Nil(t, err)
 	})

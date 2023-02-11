@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
+	"github.com/spf13/cast"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -32,7 +34,7 @@ var (
 	}
 	testCreator       string
 	testBet           *types.MsgPlaceBet
-	testAddSportEvent *sporteventtypes.MsgAddSportEvent
+	testAddSportEvent *sporteventtypes.MsgAddSportEventRequest
 
 	testSportEvent = sporteventtypes.SportEvent{
 		UID:     testSportEventUID,
@@ -40,7 +42,7 @@ var (
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds:    testEventOdds,
-		Status:  sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+		Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 	}
 )
 
@@ -57,7 +59,7 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	return k, ctx
 }
 
-func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
+func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddSportEventClaim := jwt.MapClaims{
 		"uid":      testSportEventUID,
@@ -71,7 +73,7 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
 
-	testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
+	testAddSportEvent = &sporteventtypes.MsgAddSportEventRequest{
 		Creator: testCreator,
 		Ticket:  testAddSportEventTicket,
 	}
@@ -82,7 +84,38 @@ func addSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	require.NotNil(t, resAddEvent)
 }
 
-func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUID string) {
+func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, count int) (uids []string) {
+	for i := 0; i < count; i++ {
+		testCreator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
+		uid := uuid.NewString()
+		uids = append(uids, uid)
+		testAddSportEventClaim := jwt.MapClaims{
+			"uid":      uid,
+			"start_ts": 1111111111,
+			"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
+			"odds":     testEventOdds,
+			"exp":      9999999999,
+			"iat":      7777777777,
+			"meta":     "Winner of x:y",
+		}
+		testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
+		require.Nil(t, err)
+
+		testAddSportEvent = &sporteventtypes.MsgAddSportEventRequest{
+			Creator: testCreator,
+			Ticket:  testAddSportEventTicket,
+		}
+		wctx := sdk.WrapSDKContext(ctx)
+		sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SporteventKeeper)
+		resAddEvent, err := sporteventSrv.AddSportEvent(wctx, testAddSportEvent)
+		require.Nil(t, err)
+		require.NotNil(t, resAddEvent)
+	}
+
+	return
+}
+
+func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUID string, selectedOdds *types.BetOdds) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
@@ -91,10 +124,15 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 		KycApproved: true,
 		KycId:       testCreator,
 	}
+
+	if selectedOdds == nil {
+		selectedOdds = testSelectedBetOdds
+	}
+
 	testPlaceBetClaim := jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
-		"selected_odds": testSelectedBetOdds,
+		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
 	}
 	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)

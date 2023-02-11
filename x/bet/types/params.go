@@ -1,8 +1,21 @@
 package types
 
 import (
+	fmt "fmt"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
+)
+
+const (
+	batchSettlementCount = 1000
+)
+
+// parameter store keys
+var (
+	// KeyBatchSettlementCount is the batch settlement
+	// count of bets
+	KeyBatchSettlementCount = []byte("BatchSettlementCount")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -14,7 +27,9 @@ func ParamKeyTable() paramtypes.KeyTable {
 
 // NewParams creates a new Params instance
 func NewParams() Params {
-	return Params{}
+	return Params{
+		BatchSettlementCount: batchSettlementCount,
+	}
 }
 
 // DefaultParams returns a default set of parameters
@@ -24,11 +39,16 @@ func DefaultParams() Params {
 
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{}
+	return paramtypes.ParamSetPairs{
+		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
+	}
 }
 
 // Validate validates the set of params
 func (p Params) Validate() error {
+	if err := validateBatchSettlementCount(p.BatchSettlementCount); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -36,4 +56,17 @@ func (p Params) Validate() error {
 func (p Params) String() string {
 	out, _ := yaml.Marshal(p)
 	return string(out)
+}
+
+func validateBatchSettlementCount(i interface{}) error {
+	v, ok := i.(uint32)
+	if !ok {
+		return fmt.Errorf(ErrTextInvalidParamType, i)
+	}
+
+	if v <= 0 {
+		return fmt.Errorf(ErrTextBatchSettlementCountMustBePositive, v)
+	}
+
+	return nil
 }

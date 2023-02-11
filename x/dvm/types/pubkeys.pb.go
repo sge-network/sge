@@ -22,7 +22,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// PublicKeys is the list of public keys stored in dvm state.
 type PublicKeys struct {
+	// list contains allowed public keys.
 	List []string `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
 }
 

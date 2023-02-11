@@ -6,7 +6,7 @@
   * [Bet](specs/bet/01_Overview.md)
   * [DVM](specs/DVM/01_Overview.md)
   * [Mint](specs/Mint/01_Overview.md)
-  * [Sport Event](specs/SportEvent/01_Overview.md)
+  * [Sport-Event](specs/SportEvent/01_Overview.md)
     * [Overview](specs/SportEvent/01_Overview.md)
     * [State](specs/SportEvent/02_State.md)
     * [Messages](specs/SportEvent/03_Messages.md)

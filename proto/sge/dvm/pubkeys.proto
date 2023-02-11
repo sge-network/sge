@@ -3,6 +3,8 @@ package sgenetwork.sge.dvm;
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
+// PublicKeys is the list of public keys stored in dvm state.
 message PublicKeys {
+  // list contains allowed public keys.
   repeated string list = 1;
 }

@@ -1,16 +1,16 @@
 # **Concepts**
 
-Bet module is tasked with placement and settlement of the bets. the user can place bet on a same sport event multiple times with different or equal odds through commandline or singing and broadcasting the bet placement/settlement message.
+Bet module is tasked with placement and settlement of the bets. the user can place bet on a same sport-event multiple times with different or equal odds through commandline or singing and broadcasting the bet placement/settlement message.
 
 > Bet Placement will be done using a ticket containing odds info signed by a trusted source. Verifying this ticket will be done in the placement state itself.
-> Bet amount can not be less than a minimum amount which is defined for each sport event. A module parameter is used for this purpose.
-> Also, a betting fee has been defined for each sport event, A module parameter is used for this purpose.
+> Bet amount can not be less than a minimum amount which is defined for each sport-event. A module parameter is used for this purpose.
+> Also, a betting fee has been defined for each sport-event, A module parameter is used for this purpose.
 
 ---
 
 Before accepting bet some validation should take place:
 
-- Sport event level validation:
+- Sport-Event level validation:
   - Event is active for bet placement
     - Event is not already resolved or cancelled
     - Maximum cap for sport-event has not already reached (based on bet amount deducted by betting fee)

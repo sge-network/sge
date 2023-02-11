@@ -1,79 +1,80 @@
-package types
+package types_test
 
 import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBetFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc string
-		bet  *PlaceBetFields
+		bet  *types.PlaceBetFields
 		err  error
 	}{
 		{
 			desc: "space in UID",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      " ",
 				Amount:   sdk.NewInt(int64(10)),
 				Ticket:   "Ticket",
 				OddsType: 1,
 			},
-			err: ErrInvalidBetUID,
+			err: types.ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid UID",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      "invalidUID",
 				Amount:   sdk.NewInt(int64(10)),
 				Ticket:   "Ticket",
 				OddsType: 1,
 			},
-			err: ErrInvalidBetUID,
+			err: types.ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid amount",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount:   sdk.NewInt(int64(-1)),
 				Ticket:   "Ticket",
 				OddsType: 1,
 			},
-			err: ErrInvalidAmount,
+			err: types.ErrInvalidAmount,
 		},
 		{
 			desc: "empty amount",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Ticket:   "Ticket",
 				OddsType: 1,
 			},
-			err: ErrInvalidAmount,
+			err: types.ErrInvalidAmount,
 		},
 		{
 			desc: "space in ticket",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount:   sdk.NewInt(int64(10)),
 				Ticket:   " ",
 				OddsType: 1,
 			},
-			err: ErrInvalidTicket,
+			err: types.ErrInvalidTicket,
 		},
 		{
 			desc: "space in ticket",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: " ",
 			},
-			err: ErrInvalidOddsType,
+			err: types.ErrInvalidOddsType,
 		},
 		{
 			desc: "valid message",
-			bet: &PlaceBetFields{
+			bet: &types.PlaceBetFields{
 				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount:   sdk.NewInt(int64(10)),
 				Ticket:   "Ticket",
@@ -83,7 +84,7 @@ func TestBetFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := BetFieldsValidation(tc.bet)
+			err := types.BetFieldsValidation(tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -96,83 +97,83 @@ func TestBetFieldsValidation(t *testing.T) {
 func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc    string
-		betOdds *BetOdds
-		kyc     *KycDataPayload
+		betOdds *types.BetOdds
+		kyc     *types.KycDataPayload
 		err     error
 	}{
 		{
 			desc: "space in odds UID",
-			betOdds: &BetOdds{
+			betOdds: &types.BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           " ",
 				Value:         "10",
 			},
-			kyc: &KycDataPayload{
+			kyc: &types.KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "creator",
 			},
-			err: ErrInvalidOddsUID,
+			err: types.ErrInvalidOddsUID,
 		},
 		{
-			desc: "space in sport event UID",
-			betOdds: &BetOdds{
+			desc: "space in sport-event UID",
+			betOdds: &types.BetOdds{
 				SportEventUID: " ",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &KycDataPayload{
+			kyc: &types.KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "creator",
 			},
-			err: ErrInvalidSportEventUID,
+			err: types.ErrInvalidSportEventUID,
 		},
 		{
 			desc: "empty odds value",
-			betOdds: &BetOdds{
+			betOdds: &types.BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "",
 			},
-			kyc: &KycDataPayload{
+			kyc: &types.KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "creator",
 			},
-			err: ErrEmptyOddsValue,
+			err: types.ErrEmptyOddsValue,
 		},
 		{
 			desc: "no kyc",
-			betOdds: &BetOdds{
+			betOdds: &types.BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			err: ErrNoKycField,
+			err: types.ErrNoKycField,
 		},
 		{
 			desc: "no kyc ID field",
-			betOdds: &BetOdds{
+			betOdds: &types.BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &KycDataPayload{
+			kyc: &types.KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "",
 			},
-			err: ErrNoKycIdField,
+			err: types.ErrNoKycIDField,
 		},
 		{
 			desc: "valid message",
-			betOdds: &BetOdds{
+			betOdds: &types.BetOdds{
 				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &KycDataPayload{
+			kyc: &types.KycDataPayload{
 				KycRequired: true,
 				KycApproved: true,
 				KycId:       "creator",
@@ -181,7 +182,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := TicketFieldsValidation(&BetPlacementTicketPayload{
+			err := types.TicketFieldsValidation(&types.BetPlacementTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
 			})

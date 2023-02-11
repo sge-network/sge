@@ -11,3 +11,9 @@ func (k Keeper) getSportEventsStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.SportEventKeyPrefix)
 }
+
+// getSportEventStatsStore returns sport-event stats store ready for iterating.
+func (k Keeper) getSportEventStatsStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.SportEventStatsKey)
+}

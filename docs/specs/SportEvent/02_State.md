@@ -3,7 +3,7 @@
 ## **Bet Constraints**
 
 ```proto
-// Bet constraints parent group for a sport event
+// Bet constraints parent group for a sport-event
 message EventBetConstraints {
   string min_amount = 2[
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -24,10 +24,10 @@ granular control of different categories of event. We can modify here following:
 
 ---
 
-## **Sport Event**
+## **Sport-Event**
 
 ```proto
-// the internal keeper representation of sport event
+// the internal keeper representation of sport-event
 message SportEvent {
   string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
   uint64 start_ts = 2 [(gogoproto.customname) = "StartTS" ,(gogoproto.jsontag) = "start_ts", json_name = "start_ts"];

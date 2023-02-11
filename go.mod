@@ -266,5 +266,10 @@ require (
 	nhooyr.io/websocket v1.8.7 // indirect
 )
 
-// use cosmos-compatible protobufs
-replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+replace (
+	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
+	// use cosmos-compatible protobufs
+	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+	// use grpc compatible with cosmos protobufs
+	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+)

@@ -27,6 +27,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	// minter is a space for holding current inflation information.
 	Minter Minter `protobuf:"bytes,1,opt,name=minter,proto3" json:"minter"`
+	// params contains the mint module parameters.
 	Params Params `protobuf:"bytes,2,opt,name=params,proto3" json:"params"`
 }
 

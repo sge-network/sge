@@ -18,13 +18,13 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		_ = ctx
 
 		switch msg := msg.(type) {
-		case *types.MsgAddSportEvent:
+		case *types.MsgAddSportEventRequest:
 			res, err := msgServer.AddSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgResolveSportEvent:
+		case *types.MsgResolveSportEventRequest:
 			res, err := msgServer.ResolveSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
-		case *types.MsgUpdateSportEvent:
+		case *types.MsgUpdateSportEventRequest:
 			res, err := msgServer.UpdateSportEvent(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		default:

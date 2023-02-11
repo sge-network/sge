@@ -23,8 +23,9 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Params defines the parameters for the Strategic Reserve module.
+// Params defines the parameters for the strategic reserve module.
 type Params struct {
+	// committee_members hold the list of committee members.
 	CommitteeMembers []string `protobuf:"bytes,1,rep,name=committee_members,json=committeeMembers,proto3" json:"committee_members,omitempty" yaml:"committee_members"`
 }
 

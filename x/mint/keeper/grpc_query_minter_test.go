@@ -20,7 +20,7 @@ func TestMinterQuery(t *testing.T) {
 
 	phaseStep, err := k.PhaseStep(wctx, &types.QueryPhaseStepRequest{})
 	require.NoError(t, err)
-	require.Equal(t, &types.QueryPhaseStepResponse{PhaseStep: int32(k.GetMinter(ctx).PhaseStep)}, phaseStep)
+	require.Equal(t, &types.QueryPhaseStepResponse{PhaseStep: k.GetMinter(ctx).PhaseStep}, phaseStep)
 
 	phaseProvisions, err := k.PhaseProvisions(wctx, &types.QueryPhaseProvisionsRequest{})
 	require.NoError(t, err)

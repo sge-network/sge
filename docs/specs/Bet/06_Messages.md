@@ -65,11 +65,11 @@ The transaction will fail if:
 - Empty or invalid odds UID in ticket
 - Empty, negative or invalid odds value in ticket
 - Invalid bet value according to the selected `OddsType`
-- There is no any sport event with the given sportEventUID
-- Sport event is not active for accepting bet (it's not active or status in not `PENDING`)
-- Sport event has expired
-- Sport event maximum betting capacity has been reached
-- The sport event does not contain the selected odds
+- There is no any sport-event with the given sportEventUID
+- The sport-event is not active for accepting bet (it's not active or status in not `PENDING`)
+- The sport-event has expired
+- The sport-event maximum betting capacity has been reached
+- The sport-event does not contain the selected odds
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
 - There is an error in AddPayoutProfitToEvent in sportEvent module
@@ -128,20 +128,20 @@ The transaction will fail if:
 - There is no matching bet for the bettor address
 - Bet is canceled
 - Bet is already settled
-- Corresponding sport event not found
-- Result of corresponding sport event is not declared
+- Corresponding sport-event not found
+- Result of corresponding sport-event is not declared
 - There is an error in SR module functions
 
 ### **What Happens if settlement fails**
 
-- If corresponding sport event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- Resolve the bet result based on the sport event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
+- Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
 - Call `Strategic Reserve module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
 - Store the updated bet in the `bet module's KVStore`.
 

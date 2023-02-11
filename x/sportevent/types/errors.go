@@ -8,10 +8,10 @@ import (
 
 // x/sportevent module sentinel errors
 var (
-	ErrInMarshaling              = sdkerrors.Register(ModuleName, 3001, "Internal error in marshaling")
-	ErrInUnmarshaling            = sdkerrors.Register(ModuleName, 3002, "Internal error in unmarshaling")
-	ErrNoMatchingSportEvent      = sdkerrors.Register(ModuleName, 3003, "Sport event not found")
-	ErrEmptySportEventUIDs       = sdkerrors.Register(ModuleName, 3004, "Sport event UID(s) must be provided")
+	ErrInMarshaling              = sdkerrors.Register(ModuleName, 3001, "internal error in marshaling")
+	ErrInUnmarshaling            = sdkerrors.Register(ModuleName, 3002, "internal error in unmarshaling")
+	ErrNoMatchingSportEvent      = sdkerrors.Register(ModuleName, 3003, "sport-event not found")
+	ErrEmptySportEventUIDs       = sdkerrors.Register(ModuleName, 3004, "sport-event UID(s) must be provided")
 	ErrCanNotBeAltered           = sdkerrors.Register(ModuleName, 3006, "event cannot be altered after resolution")
 	ErrEventAlreadyExist         = sdkerrors.Register(ModuleName, 3007, "event already exist")
 	ErrEventNotFound             = sdkerrors.Register(ModuleName, 3008, "event not found")

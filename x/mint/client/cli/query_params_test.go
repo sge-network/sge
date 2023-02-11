@@ -2,6 +2,7 @@ package cli_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -39,7 +40,10 @@ func TestQueryParams(t *testing.T) {
 			}
 
 			var params types.QueryParamsResponse
-			json.Unmarshal(res.Bytes(), &params)
+			err = json.Unmarshal(res.Bytes(), &params)
+			fmt.Println(params)
+			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshallable.
+			require.EqualError(t, err, "json: cannot unmarshal string into Go struct field Params.params.blocks_per_year of type int64")
 
 			defaultParams := types.DefaultParams()
 			defaultParams.BlocksPerYear = 0

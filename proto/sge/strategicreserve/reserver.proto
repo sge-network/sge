@@ -11,5 +11,6 @@ message Reserver {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
-  SRPool sr_pool = 1 [(gogoproto.moretags) = "yaml:\"sr_pool\""];
+  // sr_pool hold the sr pool properties of the reserver.
+  SRPool sr_pool = 1 [ (gogoproto.moretags) = "yaml:\"sr_pool\"" ];
 }

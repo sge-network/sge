@@ -24,14 +24,15 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Params defines the parameters for the module.
+// Params define the parameters for the module.
 type Params struct {
-	// type of coin to mint
+	// mint_denom is the type of coin to mint.
 	MintDenom string `protobuf:"bytes,1,opt,name=mint_denom,json=mintDenom,proto3" json:"mint_denom,omitempty"`
-	// expected blocks per year
+	// blocks_per_year is expected blocks per year.
 	BlocksPerYear int64 `protobuf:"varint,2,opt,name=blocks_per_year,json=blocksPerYear,proto3" json:"blocks_per_year,omitempty" yaml:"blocks_per_year"`
-	// phases
-	Phases        []Phase                                `protobuf:"bytes,3,rep,name=phases,proto3" json:"phases" yaml:"phases"`
+	// phases contains phases of inflation.
+	Phases []Phase `protobuf:"bytes,3,rep,name=phases,proto3" json:"phases" yaml:"phases"`
+	// exclude_amount is the excluded amount form being calculated in inflation.
 	ExcludeAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=exclude_amount,json=excludeAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"exclude_amount" yaml:"exclude_amount"`
 }
 

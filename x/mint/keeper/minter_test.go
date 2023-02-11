@@ -30,7 +30,9 @@ func TestBondedRatio(t *testing.T) {
 func TestMintCoins(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	mintAmount := int64(100)
-	k.MintCoins(ctx, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(mintAmount))))
+	err := k.MintCoins(ctx, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(mintAmount))))
+	require.NoError(t, err)
+
 	totalSupply := k.TokenSupply(ctx, params.DefaultBondDenom)
 	totalSupply = totalSupply.Add(sdk.NewInt(mintAmount))
 	require.Equal(t, int64(150010020002200), totalSupply.Int64())

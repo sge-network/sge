@@ -28,16 +28,18 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+const testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
+
 func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 
-	// sport event module state
+	// sport-event module state
 	sportEventState := sporteventtypes.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[sporteventtypes.ModuleName], &sportEventState))
 
 	sportEvent := sporteventtypes.SportEvent{
-		UID:     "5db09053-2901-4110-8fb5-c14e21f8d555",
+		UID:     testSportEventUID,
 		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
@@ -46,7 +48,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status: sporteventtypes.SportEventStatus_STATUS_RESULT_DECLARED,
+		Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 	}
 	nullify.Fill(&sportEvent)
 	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}
@@ -69,8 +71,13 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			BetFee:        sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
 		}
 		nullify.Fill(&bet)
+
 		state.BetList = append(state.BetList, bet)
-		state.Uid2IdList = append(state.Uid2IdList, types.UID2ID{UID: bet.UID, ID: uint64(i + 1)})
+		state.ActiveBetList = append(state.ActiveBetList, types.ActiveBet{UID: bet.UID, Creator: testAddress})
+		state.SettledBetList = append(state.SettledBetList, types.SettledBet{UID: bet.UID, BettorAddress: testAddress})
+
+		id := uint64(i + 1)
+		state.Uid2IdList = append(state.Uid2IdList, types.UID2ID{UID: bet.UID, ID: id})
 	}
 	state.Stats = types.BetStats{Count: 5}
 
@@ -260,6 +267,71 @@ func TestQueryBet(t *testing.T) {
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListBetByCreator(), args)
 			require.NoError(t, err)
 			var resp types.QueryBetsResponse
+			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+			require.NoError(t, err)
+			require.Equal(t, len(objs), int(resp.Pagination.Total))
+			require.ElementsMatch(t,
+				nullify.Fill(objs),
+				nullify.Fill(resp.Bet),
+			)
+		})
+	})
+
+	t.Run("ListActiveBetOfSportEvent", func(t *testing.T) {
+		ctx := net.Validators[0].ClientCtx
+		request := func(next []byte, offset, limit uint64, total bool) []string {
+			args := []string{
+				testSportEventUID,
+				fmt.Sprintf("--%s=json", tmcli.OutputFlag),
+			}
+			if next == nil {
+				args = append(args, fmt.Sprintf("--%s=%d", flags.FlagOffset, offset))
+			} else {
+				args = append(args, fmt.Sprintf("--%s=%s", flags.FlagPageKey, next))
+			}
+			args = append(args, fmt.Sprintf("--%s=%d", flags.FlagLimit, limit))
+			if total {
+				args = append(args, fmt.Sprintf("--%s", flags.FlagCountTotal))
+			}
+			return args
+		}
+		t.Run("ByOffset", func(t *testing.T) {
+			step := 2
+			for i := 0; i < len(objs); i += step {
+				args := request(nil, uint64(i), uint64(step), false)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+				require.NoError(t, err)
+				var resp types.QueryActiveBetsResponse
+				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.LessOrEqual(t, len(resp.Bet), step)
+				require.Subset(t,
+					nullify.Fill(objs),
+					nullify.Fill(resp.Bet),
+				)
+			}
+		})
+		t.Run("ByKey", func(t *testing.T) {
+			step := 2
+			var next []byte
+			for i := 0; i < len(objs); i += step {
+				args := request(next, 0, uint64(step), false)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+				require.NoError(t, err)
+				var resp types.QueryActiveBetsResponse
+				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
+				require.LessOrEqual(t, len(resp.Bet), step)
+				require.Subset(t,
+					nullify.Fill(objs),
+					nullify.Fill(resp.Bet),
+				)
+				next = resp.Pagination.NextKey
+			}
+		})
+		t.Run("Total", func(t *testing.T) {
+			args := request(nil, 0, uint64(len(objs)), true)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+			require.NoError(t, err)
+			var resp types.QueryActiveBetsResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.NoError(t, err)
 			require.Equal(t, len(objs), int(resp.Pagination.Total))

@@ -1,6 +1,6 @@
 # **Events**
 
-The Sport Event module emits the following events:
+The Sport-Event module emits the following events:
 
 ## *MsgEventCreated*
 

@@ -16,8 +16,8 @@ var _ = strconv.Itoa(0)
 func CmdAddEvent() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add-sport-event [ticket]",
-		Short: "create new sport event",
-		Long:  "Create a sport event with ticket.",
+		Short: "create new sport-event",
+		Long:  "Create a sport-event with ticket.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -41,12 +41,12 @@ func CmdAddEvent() *cobra.Command {
 	return cmd
 }
 
-// CmdUpdateEvent returns query for updating sport event transaction
+// CmdUpdateEvent returns query for updating sport-event transaction
 func CmdUpdateEvent() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-sport-event [ticket]",
-		Short: "update sport event",
-		Long:  "Update a sport event with ticket.",
+		Short: "update sport-event",
+		Long:  "Update a sport-event with ticket.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
