@@ -69,7 +69,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUid string, srContributi
 	// Add book participant
 	bp := types.NewBookParticipant(
 		book.Id, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName), 1, book.NumberOfOdds, true, srContribution, srContribution,
-		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", []string{},
+		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", []string{}, sdk.ZeroInt(),
 	)
 	_, found = k.GetBookParticipant(ctx, book.Id, bp.ParticipantNumber)
 	if found {

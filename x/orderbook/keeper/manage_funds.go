@@ -60,3 +60,31 @@ func (k Keeper) transferFundsFromModuleToModule(
 
 	return nil
 }
+
+// transferFundsFromModuleToUser transfers the given amount from a module
+// account to the given account address.
+// Returns an error if the account holder has insufficient balance.
+func (k Keeper) transferFundsFromModuleToUser(ctx sdk.Context,
+	moduleAccName string, address sdk.AccAddress, amount sdk.Int,
+) error {
+	// Get the balance of the sender module account
+	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(
+		moduleAccName), params.DefaultBondDenom)
+
+	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
+
+	// If module account has insufficient balance, return error
+	if balance.Amount.LT(amt.AmountOf(params.DefaultBondDenom)) {
+		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount,
+			moduleAccName)
+	}
+
+	// Transfer funds
+	err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, moduleAccName,
+		address, amt)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
+	}
+
+	return nil
+}

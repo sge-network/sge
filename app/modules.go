@@ -79,6 +79,7 @@ var mAccPerms = map[string][]string{
 	strategicreservemoduletypes.BetReserveName: nil,
 	betmoduletypes.ModuleName:                  nil,
 	orderbookmoduletypes.SRBookLiquidityName:   nil,
+	orderbookmoduletypes.SRProfitName:          nil,
 	orderbookmoduletypes.BookLiquidityName:     nil,
 	housemoduletypes.HouseParticipationFeeName: nil,
 }

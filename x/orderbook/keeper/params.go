@@ -12,10 +12,17 @@ func (k Keeper) MaxBookParticipants(ctx sdk.Context) (res uint64) {
 	return
 }
 
+// BatchSettlementCount - number of deposits to be settled in end blocker.
+func (k Keeper) BatchSettlementCount(ctx sdk.Context) (res uint64) {
+	k.paramstore.Get(ctx, types.KeyBatchSettlementCount, &res)
+	return
+}
+
 // Get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.MaxBookParticipants(ctx),
+		k.BatchSettlementCount(ctx),
 	)
 }
 

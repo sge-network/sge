@@ -90,7 +90,7 @@ func (k Keeper) AddBookParticipant(
 	} else {
 		bookParticipant = types.NewBookParticipant(
 			book.Id, addr, book.Participants+1, book.NumberOfOdds, false, liquidity, liquidity, sdk.ZeroInt(), sdk.ZeroInt(),
-			sdk.ZeroInt(), sdk.Int{}, "", []string{},
+			sdk.ZeroInt(), sdk.Int{}, "", []string{}, sdk.ZeroInt(),
 		)
 	}
 

@@ -27,6 +27,8 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 	for _, pe := range data.ParticipantExposures {
 		keeper.SetParticipantExposure(ctx, pe)
 	}
+
+	keeper.SetOrderBookStats(ctx, data.Stats)
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper. The
@@ -39,6 +41,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 		Bookparticipants:     keeper.GetAllBookParticipants(ctx),
 		BookExposures:        keeper.GetAllBookExposures(ctx),
 		ParticipantExposures: keeper.GetAllParticipantExposures(ctx),
+		Stats:                keeper.GetOrderBookStats(ctx),
 	}
 }
 

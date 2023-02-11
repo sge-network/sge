@@ -19,3 +19,9 @@ func (k Keeper) setPayoutLock(ctx sdk.Context, uniqueLock string) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PayoutLockKeyPrefix)
 	store.Set(utils.StrBytes(uniqueLock), []byte{1})
 }
+
+// removePayoutLock removes a lock from payout
+func (k Keeper) removePayoutLock(ctx sdk.Context, uniqueLock string) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PayoutLockKeyPrefix)
+	store.Delete(utils.StrBytes(uniqueLock))
+}

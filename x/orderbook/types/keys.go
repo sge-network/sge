@@ -22,6 +22,9 @@ const (
 
 	// SRBookLiquidityName defines the account name for book liquidity for sr
 	SRBookLiquidityName = "sr_book_liquidity_pool"
+
+	// SRProfitName defines the account name for profit for sr
+	SRProfitName = "sr_profit_pool"
 )
 
 var (
@@ -32,6 +35,7 @@ var (
 	PayoutLockKeyPrefix                    = []byte{0x04} // prefix for keys that store payout locks
 	ParticipantExposureByPNKeyPrefix       = []byte{0x05} // prefix for keys that store participant exposures
 	HistoricalParticipantExposureKeyPrefix = []byte{0x06} // prefix for keys that store historical participant exposures
+	BookStatsKeyPrefix                     = []byte{0x07} // prefix for keys that store book stats
 )
 
 // GetBookKey returns the bytes of an book key

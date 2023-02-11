@@ -22,4 +22,7 @@ message GenesisState {
 
   // participantExposures defines the participant exposures active at genesis.
   repeated ParticipantExposure participantExposures = 5 [(gogoproto.nullable) = false];
+
+  // stats is the statistics of the order-book
+  OrderBookStats stats = 6 [ (gogoproto.nullable) = false ];
 }

@@ -35,4 +35,8 @@ type DVMKeeper interface {
 // OrderBookKeeper defines the expected interface needed to process bet placement
 type OrderBookKeeper interface {
 	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookId, oddId string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Coin, betAmount sdk.Int, oddsType OddsType, oddsVal string) (error, []*BetFullfillment)
+	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
+	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error
+	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error
+	AddBookSettlement(ctx sdk.Context, orderBookId string) error
 }

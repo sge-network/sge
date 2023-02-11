@@ -28,4 +28,6 @@ var (
 	ErrParticipantExposureNotFound        = sdkerrors.Register(ModuleName, 1017, "participant exposure not found")
 	ErrParticipantExposureAlreadyFilled   = sdkerrors.Register(ModuleName, 1018, "participant exposure already filled")
 	ErrInternalProcessingBet              = sdkerrors.Register(ModuleName, 1019, "internal error in processing bet")
+	ErrPayoutLockDoesnotExist             = sdkerrors.Register(ModuleName, 1020, "Payout lock for bet uid %s does not exist")
+	ErrBookParticipantAlreadySettled      = sdkerrors.Register(ModuleName, 1021, "book participant already settled")
 )
