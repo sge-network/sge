@@ -65,7 +65,7 @@ $ %s query orderbook orderbooks
 			}
 
 			result, err := queryClient.OrderBooks(cmd.Context(), &types.QueryOrderBooksRequest{
-				// Leaving status empty on purpose to query all validators.
+				// Leaving status empty on purpose to query all orderbooks.
 				Pagination: pageReq,
 			})
 			if err != nil {

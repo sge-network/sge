@@ -33,5 +33,10 @@ var (
 
 // GetDepositKey creates the key for deposit bond with sport event and participant
 func GetDepositKey(depAddr sdk.AccAddress, sportEventUid string, participantId uint64) []byte {
-	return append(address.MustLengthPrefix(depAddr), append(utils.StrBytes(sportEventUid), utils.Uint64ToBytes(participantId)...)...)
+	return append(GetDepositsKey(depAddr), append(utils.StrBytes(sportEventUid), utils.Uint64ToBytes(participantId)...)...)
+}
+
+// GetDepositsKey creates the key for deposit bond with sport event
+func GetDepositsKey(depAddr sdk.AccAddress) []byte {
+	return address.MustLengthPrefix(depAddr)
 }
