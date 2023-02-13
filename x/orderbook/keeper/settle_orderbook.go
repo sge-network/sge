@@ -78,19 +78,19 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipant) error {
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.SRBookLiquidityName, srtypes.SRPoolName, depositPlusProfit)
+			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, srtypes.SRPoolName, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.SRBookLiquidityName, srtypes.SRPoolName, bp.Liquidity)
+			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, srtypes.SRPoolName, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to `sr_profit_pool` module account
-			err = k.transferFundsFromModuleToModule(ctx, srtypes.BetReserveName, types.SRProfitName, bp.ActualProfit)
+			err = k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRProfitName, bp.ActualProfit)
 			if err != nil {
 				return err
 			}
@@ -111,7 +111,7 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipant) error {
 			}
 
 			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToUser(ctx, srtypes.BetReserveName, sdk.AccAddress(bp.ParticipantAddress), bp.ActualProfit)
+			err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(bp.ParticipantAddress), bp.ActualProfit)
 			if err != nil {
 				return err
 			}

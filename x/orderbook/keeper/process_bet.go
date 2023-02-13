@@ -6,7 +6,6 @@ import (
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
-	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // ProcessBetPlacement processes bet placement
@@ -145,7 +144,7 @@ func (k Keeper) ProcessBetPlacement(
 				ParticipantAddress: participant.ParticipantAddress,
 				ParticipantNumber:  participant.ParticipantNumber,
 				BetAmount:          betAmount,
-				PayoutAmount:       availableLiquidty,
+				PayoutAmount:       remainingPayoutProfit,
 			})
 			remainingPayoutProfit = remainingPayoutProfit.Sub(remainingPayoutProfit)
 			participant.FullfilledBets = append(participant.FullfilledBets, uniqueLock)
@@ -206,8 +205,8 @@ func (k Keeper) ProcessBetPlacement(
 		return err, betFullfillment
 	}
 
-	// Transfer bet amount from bettor to `bet_reserve` Account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, srtypes.BetReserveName, betAmount)
+	// Transfer bet amount from bettor to `book_liquidity_pool` Account
+	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, betAmount)
 	if err != nil {
 		return err, betFullfillment
 	}

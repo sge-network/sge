@@ -61,7 +61,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUid string, srContributi
 	}
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
-	err := k.transferFundsFromModuleToModule(ctx, srtypes.SRPoolName, types.SRBookLiquidityName, srContribution)
+	err := k.transferFundsFromModuleToModule(ctx, srtypes.SRPoolName, types.BookLiquidityName, srContribution)
 	if err != nil {
 		return "", err
 	}

@@ -48,25 +48,20 @@ func (k Keeper) BettorWins(
 			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, betFullfillment.ParticipantNumber)
 		}
 
-		if bookParticipant.IsModuleAccount {
-			// Transfer payout from the `sr_book_liquidity_pool` account to bettor
-			err := k.transferFundsFromModuleToUser(ctx, types.SRBookLiquidityName, bettorAddress, betFullfillment.PayoutAmount)
-			if err != nil {
-				return err
-			}
-		} else {
-			// Transfer payout from the `book_liquidity_pool` account to bettor
-			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFullfillment.PayoutAmount)
-			if err != nil {
-				return err
-			}
+		// Transfer payout from the `book_liquidity_pool` account to bettor
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFullfillment.PayoutAmount)
+		if err != nil {
+			return err
 		}
+
+		// Transfer bet amount from the `book_liquidity_pool` account to bettor
+		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
+		if err != nil {
+			return err
+		}
+
 		bookParticipant.ActualProfit = bookParticipant.ActualProfit.Sub(betFullfillment.PayoutAmount)
 		k.SetBookParticipant(ctx, bookParticipant)
-	}
-	err := k.transferFundsFromModuleToUser(ctx, srtypes.BetReserveName, bettorAddress, betAmount)
-	if err != nil {
-		return err
 	}
 
 	// Delete lock from the payout store as the bet is settled
