@@ -100,6 +100,10 @@ func (k msgServer) validateAddEvent(ctx sdk.Context, event *types.SportEvent) er
 		return err
 	}
 
+	if event.SrContributionForHouse.GT(params.EventMaxSrContribution) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be more than %d", params.EventMaxSrContribution.Int64())
+	}
+
 	return nil
 }
 

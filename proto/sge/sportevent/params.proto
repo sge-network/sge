@@ -22,4 +22,10 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false
   ];
+  // event_max_sr_contribution default max sr contribution for a sport-event.
+  string event_max_sr_contribution = 4 [
+    (gogoproto.moretags) = "yaml:\"event_max_sr_contribution\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }

@@ -20,9 +20,6 @@ const (
 	// BookLiquidityName defines the account name for book liquidity for users
 	BookLiquidityName = "book_liquidity_pool"
 
-	// SRBookLiquidityName defines the account name for book liquidity for sr
-	SRBookLiquidityName = "sr_book_liquidity_pool"
-
 	// SRProfitName defines the account name for profit for sr
 	SRProfitName = "sr_profit_pool"
 )
