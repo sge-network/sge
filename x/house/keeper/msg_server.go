@@ -32,9 +32,13 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		return nil, sdkerrors.Wrap(err, "validate deposit")
 	}
 
-	if err = k.Keeper.Deposit(ctx, depAddr, msg.SportEventUid, msg.Amount.Amount); err != nil {
+	err, participantId := k.Keeper.Deposit(ctx, depAddr, msg.SportEventUid, msg.Amount.Amount)
+	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process deposit")
 	}
 
-	return &types.MsgDepositResponse{}, nil
+	return &types.MsgDepositResponse{
+		SportEventUid: msg.SportEventUid,
+		ParticipantId: participantId,
+	}, nil
 }

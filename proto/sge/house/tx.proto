@@ -23,4 +23,8 @@ message MsgDeposit {
 }
   
 // MsgDepositResponse defines the Msg/Deposit response type.
-message MsgDepositResponse {}
+message MsgDepositResponse {
+  string sport_event_uid = 1 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
+
+  uint64 participant_id = 2 [(gogoproto.moretags) = "yaml:\"participant_id\""];
+}

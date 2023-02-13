@@ -59,8 +59,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	remainingPayoutProfit, updatedFullfillmentQueue := payoutProfit, bookExposure.FullfillmentQueue
-	continueLoop := len(updatedFullfillmentQueue) > 0
-
+	continueLoop, calculatedBetAmount := len(updatedFullfillmentQueue) > 0, sdk.ZeroInt()
 	for continueLoop {
 		pn := updatedFullfillmentQueue[0]
 		participant, found := participantMap[pn]
@@ -86,6 +85,7 @@ func (k Keeper) ProcessBetPlacement(
 			if err != nil {
 				return err, betFullfillment
 			}
+			calculatedBetAmount = calculatedBetAmount.Add(betAmount)
 			participantExposure.BetAmount = participantExposure.BetAmount.Add(betAmount)
 			participantExposure.IsFullfilled = true
 			participant.ExposuresNotFilled -= 1
@@ -122,6 +122,7 @@ func (k Keeper) ProcessBetPlacement(
 			if err != nil {
 				return err, betFullfillment
 			}
+			calculatedBetAmount = calculatedBetAmount.Add(betAmount)
 			participantExposure.BetAmount = participantExposure.BetAmount.Add(betAmount)
 			participant.TotalBetAmount = participant.TotalBetAmount.Add(betAmount)
 			participant.CurrentRoundTotalBetAmount = participant.CurrentRoundTotalBetAmount.Add(betAmount)
@@ -206,7 +207,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, betAmount)
+	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, calculatedBetAmount)
 	if err != nil {
 		return err, betFullfillment
 	}

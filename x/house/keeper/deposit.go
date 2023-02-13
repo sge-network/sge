@@ -64,7 +64,7 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) error {
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUid string, depAmt sdk.Int) error {
+func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUid string, depAmt sdk.Int) (error, uint64) {
 	// Create the deposit object
 	deposit := types.NewDeposit(depAddr, sportEventUid, depAmt)
 
@@ -75,14 +75,14 @@ func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUid s
 		ctx, depAddr, sportEventUid, deposit.Liquidity, deposit.Fee, types.HouseParticipationFeeName,
 	)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
+		return sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err), participantId
 	}
 
 	deposit.ParticipantId = participantId
 
 	if err = k.SetDeposit(ctx, deposit); err != nil {
-		return err
+		return err, participantId
 	}
 
-	return nil
+	return nil, participantId
 }
