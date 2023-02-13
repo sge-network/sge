@@ -54,6 +54,10 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 		return ErrMaxLossMultiplierCanNotBeZero
 	}
 
+	if ticketData.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+		return ErrMaxLossMultiplierCanNotBeMoreThanOne
+	}
+
 	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
 		return ErrNoKycIDField
 	}
