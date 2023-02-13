@@ -18,11 +18,11 @@ func (k Keeper) PubKeys(goCtx context.Context, req *types.QueryPubKeysRequest) (
 
 	// Process the query
 
-	res, found := k.GetPublicKeys(ctx)
+	res, found := k.GetKeyVault(ctx)
 
 	if !found {
 		return nil, types.ErrNoPublicKeysFound
 	}
 
-	return &types.QueryPubKeysResponse{List: res.List}, nil
+	return &types.QueryPubKeysResponse{List: res.PublicKeys}, nil
 }

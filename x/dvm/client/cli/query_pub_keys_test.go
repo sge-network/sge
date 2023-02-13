@@ -21,7 +21,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *ed25519.PrivateKey) {
+func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault, *ed25519.PrivateKey) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
@@ -33,15 +33,15 @@ func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *
 	if err != nil {
 		panic(err)
 	}
-	state.PublicKeys = &types.PublicKeys{
-		List: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+	state.KeyVault = types.KeyVault{
+		PublicKeys: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
 	}
 
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
 
-	return network.New(t, cfg), state.PublicKeys, &privKey
+	return network.New(t, cfg), &state.KeyVault, &privKey
 }
 
 func TestCmdPubKeysList(t *testing.T) {

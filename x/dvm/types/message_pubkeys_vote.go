@@ -5,31 +5,31 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// typeMsgMutation is type of message MsgMutation
-const typeMsgMutation = "mutation"
+// typeMsgVotePubkeysChange is type of message MsgPubkeysChangeProposalRequest
+const typeMsgVotePubkeysChange = "pubkeys_change_vote"
 
-var _ sdk.Msg = &MsgMutation{}
+var _ sdk.Msg = &MsgVotePubkeysChangeRequest{}
 
-// NewMsgMutation returns a MsgMutation using given data
-func NewMsgMutation(creator string, txs string) *MsgMutation {
-	return &MsgMutation{
+// MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
+func NewMsgVotePubkeysChangeRequest(creator string, txs string) *MsgVotePubkeysChangeRequest {
+	return &MsgVotePubkeysChangeRequest{
 		Creator: creator,
-		Txs:     txs,
+		Ticket:  txs,
 	}
 }
 
 // Route returns the module's message router key.
-func (msg *MsgMutation) Route() string {
+func (msg *MsgVotePubkeysChangeRequest) Route() string {
 	return RouterKey
 }
 
 // Type returns type of its message
-func (msg *MsgMutation) Type() string {
-	return typeMsgMutation
+func (msg *MsgVotePubkeysChangeRequest) Type() string {
+	return typeMsgPubkeysChangeProposal
 }
 
 // GetSigners returns the signers of its message
-func (msg *MsgMutation) GetSigners() []sdk.AccAddress {
+func (msg *MsgVotePubkeysChangeRequest) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -38,13 +38,13 @@ func (msg *MsgMutation) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes returns sortJson form of its message
-func (msg *MsgMutation) GetSignBytes() []byte {
+func (msg *MsgVotePubkeysChangeRequest) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic performs basic validations on its message
-func (msg *MsgMutation) ValidateBasic() error {
+func (msg *MsgVotePubkeysChangeRequest) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

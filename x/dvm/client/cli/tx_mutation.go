@@ -12,11 +12,11 @@ import (
 
 var _ = strconv.Itoa(0)
 
-// CmdMutation is the command object for mutation of public keys
-func CmdMutation() *cobra.Command {
+// CmdChangePubkeysListProposal is the command object for change of public keys
+func CmdChangePubkeysListProposal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mutation [txs]",
-		Short: "updates list of public keys",
+		Use:   "pubkeys-change-proposal [ticket]",
+		Short: "creates a proposal to update list of public keys",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			argTxs := args[0]
@@ -26,7 +26,7 @@ func CmdMutation() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgMutation(
+			msg := types.NewMsgPubkeysChangeProposalRequest(
 				clientCtx.GetFromAddress().String(),
 				argTxs,
 			)

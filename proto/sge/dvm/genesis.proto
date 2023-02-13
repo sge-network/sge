@@ -4,6 +4,8 @@ package sgenetwork.sge.dvm;
 import "gogoproto/gogo.proto";
 import "sge/dvm/params.proto";
 import "sge/dvm/pubkeys.proto";
+import "sge/dvm/proposal.proto";
+import "sge/dvm/stats.proto";
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
@@ -11,6 +13,12 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 message GenesisState {
   // params contains parameters of dvm module.
   Params params = 1 [ (gogoproto.nullable) = false ];
-  // public_keys trusted keys from genesis file.
-  PublicKeys public_keys = 2;
+  // key_vault trusted keys from genesis file.
+  KeyVault key_vault = 2 [ (gogoproto.nullable) = false ];
+  // active_pubkeys_change_proposals is the finished proposal list for the public keys change.
+  repeated PublicKeysChangeProposal active_pubkeys_change_proposals = 3 [ (gogoproto.nullable) = false ];
+  // finished_pubkeys_change_proposals is the active proposal list for the public keys change.
+  repeated PublicKeysChangeFinishedProposal finished_pubkeys_change_proposals = 4 [ (gogoproto.nullable) = false ];
+  // proposal_stats holds the proposal statistics.
+  ProposalStats proposal_stats = 5 [ (gogoproto.nullable) = false ];
 }

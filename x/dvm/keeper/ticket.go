@@ -13,25 +13,25 @@ import (
 func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	t, err := types.NewTicket(ticket)
+	t, err := types.NewJwtTicket(ticket)
 	if err != nil {
 		return err
 	}
 
 	// check the expiration of ticket
-	err = t.IsValid(ctx)
+	err = t.ValidateExpiry(ctx)
 	if err != nil {
 		return err
 	}
 
 	// get pub keys from KV-Store
-	keys, found := k.GetPublicKeys(ctx)
+	keys, found := k.GetKeyVault(ctx)
 	if !found {
 		return types.ErrNoPublicKeysFound
 	}
 
 	// validate the ticket by the keys
-	err = t.Verify(keys.List...)
+	err = t.Verify(keys.PublicKeys...)
 	if err != nil {
 		return err
 	}
@@ -44,26 +44,26 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// construct new ticket object from string ticket
-	ticket, err := types.NewTicket(ticketStr)
+	ticket, err := types.NewJwtTicket(ticketStr)
 	if err != nil {
 		return err
 	}
 
 	// check the expiration of ticket
-	err = ticket.IsValid(ctx)
+	err = ticket.ValidateExpiry(ctx)
 	if err != nil {
 		return err
 	}
 
 	// get pub keys from module state
-	keys, found := k.GetPublicKeys(ctx)
+	keys, found := k.GetKeyVault(ctx)
 
 	if !found {
 		return types.ErrNoPublicKeysFound
 	}
 
 	// validate ticket by the keys
-	err = ticket.Verify(keys.List...)
+	err = ticket.Verify(keys.PublicKeys...)
 	if err != nil {
 		return err
 	}

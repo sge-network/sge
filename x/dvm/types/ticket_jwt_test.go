@@ -66,14 +66,14 @@ func TestNewTicket(t *testing.T) {
 		tkn, err := Token.SignedString(Pri)
 		require.Nil(t, err)
 		t.Log(err)
-		it, err := types.NewTicket(tkn)
+		it, err := types.NewJwtTicket(tkn)
 		t.Log(err)
 		require.Nil(t, err)
 		require.NotNil(t, it)
 	})
 
 	t.Run("invalid", func(t *testing.T) {
-		it, err := types.NewTicket("invlaid.Token")
+		it, err := types.NewJwtTicket("invlaid.Token")
 		require.Error(t, err)
 		// require.Nil(t, it)
 		_ = it
@@ -105,7 +105,7 @@ func TestUnmarshal(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := types.NewTicket(tkn)
+	it, err := types.NewJwtTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 
@@ -144,7 +144,7 @@ func TestVerify(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := types.NewTicket(tkn)
+	it, err := types.NewJwtTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 

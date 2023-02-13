@@ -111,8 +111,8 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 		}
 
 		dvmGenesisState := &dvmtypes.GenesisState{
-			PublicKeys: &dvmtypes.PublicKeys{
-				List: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+			KeyVault: dvmtypes.KeyVault{
+				PublicKeys: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
 			},
 		}
 		genesisState[dvmtypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(dvmGenesisState)

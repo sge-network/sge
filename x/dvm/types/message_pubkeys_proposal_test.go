@@ -9,21 +9,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgMutation_ValidateBasic(t *testing.T) {
+func TestMsgChangePubkeysListProposalValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgMutation
+		msg  types.MsgSubmitPubkeysChangeProposalRequest
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: types.MsgMutation{
+			msg: types.MsgSubmitPubkeysChangeProposalRequest{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: types.MsgMutation{
+			msg: types.MsgSubmitPubkeysChangeProposalRequest{
 				Creator: sample.AccAddress(),
 			},
 		},

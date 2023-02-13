@@ -1,10 +1,12 @@
 syntax = "proto3";
 package sgenetwork.sge.dvm;
 
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
-// PublicKeys is the list of public keys stored in dvm state.
-message PublicKeys {
+// KeyVault is the information of important keys stored in dvm state.
+message KeyVault {
   // list contains allowed public keys.
-  repeated string list = 1;
+  repeated string public_keys = 1 [ (gogoproto.nullable) = false ];
 }

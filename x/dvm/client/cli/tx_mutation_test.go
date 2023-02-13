@@ -22,7 +22,7 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func TestCmdMutation(t *testing.T) {
+func TestCmdChangePubkeysListProposal(t *testing.T) {
 	net, _, pri := networkWithPublicKeys(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -72,7 +72,7 @@ func TestCmdMutation(t *testing.T) {
 				tc.ticket,
 			}
 			args = append(args, commonArgs...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdMutation(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdChangePubkeysListProposal(), args)
 			if tc.err != nil {
 				require.Error(t, err, "")
 			} else {

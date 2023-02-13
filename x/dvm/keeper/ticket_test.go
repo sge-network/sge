@@ -86,8 +86,8 @@ func TestVerifyTicketUnmarshal(t *testing.T) {
 		Bytes: bs,
 	})
 
-	k.SetPublicKeys(ctx, types.PublicKeys{
-		List: []string{string(Pbs)},
+	k.SetKeyVault(ctx, types.KeyVault{
+		PublicKeys: []string{string(Pbs)},
 	})
 
 	t.Run("valid", func(t *testing.T) {

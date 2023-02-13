@@ -1,21 +1,20 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/dvm/types"
 )
 
-// SetPublicKeys sets the list of keys, overwrite the old values.
-func (k Keeper) SetPublicKeys(ctx sdk.Context, ks types.PublicKeys) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PubKeysListKey)
+// SetKeyVault sets the key vault and overwrite the old values.
+func (k Keeper) SetKeyVault(ctx sdk.Context, ks types.KeyVault) {
+	store := k.getPubKeysStore(ctx)
 	b := k.cdc.MustMarshal(&ks)
 	store.Set([]byte{0}, b)
 }
 
-// GetPublicKeys is the helper functions for this keeper to query the list of public keys.
-func (k *Keeper) GetPublicKeys(ctx sdk.Context) (keys types.PublicKeys, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PubKeysListKey)
+// GetKeyVault is the helper functions for this keeper to query the key vault.
+func (k *Keeper) GetKeyVault(ctx sdk.Context) (keys types.KeyVault, found bool) {
+	store := k.getPubKeysStore(ctx)
 
 	b := store.Get([]byte{0})
 	if b == nil {

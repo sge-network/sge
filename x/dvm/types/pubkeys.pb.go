@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -22,24 +23,24 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// PublicKeys is the list of public keys stored in dvm state.
-type PublicKeys struct {
+// KeyVault is the information of important keys stored in dvm state.
+type KeyVault struct {
 	// list contains allowed public keys.
-	List []string `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	PublicKeys []string `protobuf:"bytes,1,rep,name=public_keys,json=publicKeys,proto3" json:"public_keys,omitempty"`
 }
 
-func (m *PublicKeys) Reset()         { *m = PublicKeys{} }
-func (m *PublicKeys) String() string { return proto.CompactTextString(m) }
-func (*PublicKeys) ProtoMessage()    {}
-func (*PublicKeys) Descriptor() ([]byte, []int) {
+func (m *KeyVault) Reset()         { *m = KeyVault{} }
+func (m *KeyVault) String() string { return proto.CompactTextString(m) }
+func (*KeyVault) ProtoMessage()    {}
+func (*KeyVault) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ca49d8561b21a3b5, []int{0}
 }
-func (m *PublicKeys) XXX_Unmarshal(b []byte) error {
+func (m *KeyVault) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *PublicKeys) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *KeyVault) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_PublicKeys.Marshal(b, m, deterministic)
+		return xxx_messageInfo_KeyVault.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -49,46 +50,48 @@ func (m *PublicKeys) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *PublicKeys) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PublicKeys.Merge(m, src)
+func (m *KeyVault) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_KeyVault.Merge(m, src)
 }
-func (m *PublicKeys) XXX_Size() int {
+func (m *KeyVault) XXX_Size() int {
 	return m.Size()
 }
-func (m *PublicKeys) XXX_DiscardUnknown() {
-	xxx_messageInfo_PublicKeys.DiscardUnknown(m)
+func (m *KeyVault) XXX_DiscardUnknown() {
+	xxx_messageInfo_KeyVault.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PublicKeys proto.InternalMessageInfo
+var xxx_messageInfo_KeyVault proto.InternalMessageInfo
 
-func (m *PublicKeys) GetList() []string {
+func (m *KeyVault) GetPublicKeys() []string {
 	if m != nil {
-		return m.List
+		return m.PublicKeys
 	}
 	return nil
 }
 
 func init() {
-	proto.RegisterType((*PublicKeys)(nil), "sgenetwork.sge.dvm.PublicKeys")
+	proto.RegisterType((*KeyVault)(nil), "sgenetwork.sge.dvm.KeyVault")
 }
 
 func init() { proto.RegisterFile("sge/dvm/pubkeys.proto", fileDescriptor_ca49d8561b21a3b5) }
 
 var fileDescriptor_ca49d8561b21a3b5 = []byte{
-	// 160 bytes of a gzipped FileDescriptorProto
+	// 188 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2d, 0x4e, 0x4f, 0xd5,
 	0x4f, 0x29, 0xcb, 0xd5, 0x2f, 0x28, 0x4d, 0xca, 0x4e, 0xad, 0x2c, 0xd6, 0x2b, 0x28, 0xca, 0x2f,
 	0xc9, 0x17, 0x12, 0x2a, 0x4e, 0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6, 0x2b, 0x4e,
-	0x4f, 0xd5, 0x4b, 0x29, 0xcb, 0x55, 0x52, 0xe0, 0xe2, 0x0a, 0x28, 0x4d, 0xca, 0xc9, 0x4c, 0xf6,
-	0x4e, 0xad, 0x2c, 0x16, 0x12, 0xe2, 0x62, 0xc9, 0xc9, 0x2c, 0x2e, 0x91, 0x60, 0x54, 0x60, 0xd6,
-	0xe0, 0x0c, 0x02, 0xb3, 0x9d, 0x1c, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1,
-	0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21,
-	0x4a, 0x2d, 0x3d, 0xb3, 0x24, 0xa3, 0x34, 0x49, 0x2f, 0x39, 0x3f, 0x57, 0xbf, 0x38, 0x3d, 0x55,
-	0x17, 0x6a, 0x36, 0x88, 0xad, 0x5f, 0x01, 0xb6, 0xbf, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d,
-	0x6c, 0xbd, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x13, 0x31, 0x83, 0xcd, 0x97, 0x00, 0x00, 0x00,
+	0x4f, 0xd5, 0x4b, 0x29, 0xcb, 0x95, 0x12, 0x49, 0xcf, 0x4f, 0xcf, 0x07, 0x4b, 0xeb, 0x83, 0x58,
+	0x10, 0x95, 0x4a, 0x86, 0x5c, 0x1c, 0xde, 0xa9, 0x95, 0x61, 0x89, 0xa5, 0x39, 0x25, 0x42, 0xaa,
+	0x5c, 0xdc, 0x05, 0xa5, 0x49, 0x39, 0x99, 0xc9, 0xf1, 0x20, 0xa3, 0x24, 0x18, 0x15, 0x98, 0x35,
+	0x38, 0x9d, 0x58, 0x4e, 0xdc, 0x93, 0x67, 0x08, 0xe2, 0x82, 0x48, 0x78, 0xa7, 0x56, 0x16, 0x3b,
+	0x39, 0x9c, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72, 0x8c, 0x13, 0x1e,
+	0xcb, 0x31, 0x5c, 0x78, 0x2c, 0xc7, 0x70, 0xe3, 0xb1, 0x1c, 0x43, 0x94, 0x5a, 0x7a, 0x66, 0x49,
+	0x46, 0x69, 0x92, 0x5e, 0x72, 0x7e, 0xae, 0x7e, 0x71, 0x7a, 0xaa, 0x2e, 0xd4, 0x09, 0x20, 0xb6,
+	0x7e, 0x05, 0xd8, 0x99, 0x25, 0x95, 0x05, 0xa9, 0xc5, 0x49, 0x6c, 0x60, 0xbb, 0x8d, 0x01, 0x01,
+	0x00, 0x00, 0xff, 0xff, 0xd9, 0x68, 0xc7, 0x5f, 0xbe, 0x00, 0x00, 0x00,
 }
 
-func (m *PublicKeys) Marshal() (dAtA []byte, err error) {
+func (m *KeyVault) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -98,21 +101,21 @@ func (m *PublicKeys) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *PublicKeys) MarshalTo(dAtA []byte) (int, error) {
+func (m *KeyVault) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *PublicKeys) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *KeyVault) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.List) > 0 {
-		for iNdEx := len(m.List) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.List[iNdEx])
-			copy(dAtA[i:], m.List[iNdEx])
-			i = encodeVarintPubkeys(dAtA, i, uint64(len(m.List[iNdEx])))
+	if len(m.PublicKeys) > 0 {
+		for iNdEx := len(m.PublicKeys) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.PublicKeys[iNdEx])
+			copy(dAtA[i:], m.PublicKeys[iNdEx])
+			i = encodeVarintPubkeys(dAtA, i, uint64(len(m.PublicKeys[iNdEx])))
 			i--
 			dAtA[i] = 0xa
 		}
@@ -131,14 +134,14 @@ func encodeVarintPubkeys(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *PublicKeys) Size() (n int) {
+func (m *KeyVault) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.List) > 0 {
-		for _, s := range m.List {
+	if len(m.PublicKeys) > 0 {
+		for _, s := range m.PublicKeys {
 			l = len(s)
 			n += 1 + l + sovPubkeys(uint64(l))
 		}
@@ -152,7 +155,7 @@ func sovPubkeys(x uint64) (n int) {
 func sozPubkeys(x uint64) (n int) {
 	return sovPubkeys(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *PublicKeys) Unmarshal(dAtA []byte) error {
+func (m *KeyVault) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -175,15 +178,15 @@ func (m *PublicKeys) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: PublicKeys: wiretype end group for non-group")
+			return fmt.Errorf("proto: KeyVault: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: PublicKeys: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: KeyVault: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field List", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field PublicKeys", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -211,7 +214,7 @@ func (m *PublicKeys) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.List = append(m.List, string(dAtA[iNdEx:postIndex]))
+			m.PublicKeys = append(m.PublicKeys, string(dAtA[iNdEx:postIndex]))
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
