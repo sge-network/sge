@@ -5,6 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
+	htypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
@@ -124,4 +125,69 @@ func (k Keeper) AddBookParticipant(
 	k.SetBook(ctx, book)
 
 	return bookParticipant.ParticipantNumber, nil
+}
+
+func (k Keeper) LiquidateBookParticipant(
+	ctx sdk.Context, depAddr, bookId string, bpNumber uint64, mode htypes.WithdrawalMode, amount sdk.Int,
+) (sdk.Int, error) {
+	var withdrawalAmt sdk.Int
+
+	bp, found := k.GetBookParticipant(ctx, bookId, bpNumber)
+	if !found {
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, bpNumber)
+	}
+
+	if bp.IsSettled {
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantAlreadySettled, "%s, %d", bookId, bpNumber)
+	}
+
+	if bp.ParticipantAddress != depAddr {
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+	}
+
+	if bp.IsModuleAccount {
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
+	}
+
+	// Calculate max amount that can be transferred
+	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
+	if mode == htypes.WithdrawalMode_MODE_FULL {
+		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
+			return withdrawalAmt, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity.Int64(), bp.CurrentRoundMaxLoss.Int64())
+		}
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(depAddr), maxTransferableAmount)
+		if err != nil {
+			return withdrawalAmt, err
+		}
+		withdrawalAmt = maxTransferableAmount
+	} else if mode == htypes.WithdrawalMode_MODE_PARTIAL {
+		if maxTransferableAmount.LT(amount) {
+			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %d, max %d", amount, maxTransferableAmount)
+		}
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(depAddr), amount)
+		if err != nil {
+			return withdrawalAmt, err
+		}
+		withdrawalAmt = amount
+	} else {
+		return withdrawalAmt, sdkerrors.Wrapf(htypes.ErrInvalidMode, "%s", mode.String())
+	}
+
+	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)
+	bp.Liquidity = bp.Liquidity.Sub(withdrawalAmt)
+	k.SetBookParticipant(ctx, bp)
+
+	if bp.CurrentRoundLiquidity.LTE(sdk.ZeroInt()) {
+		boes := k.GetOddExposuresByBook(ctx, bookId)
+		for _, boe := range boes {
+			for i, pn := range boe.FullfillmentQueue {
+				if pn == bp.ParticipantNumber {
+					boe.FullfillmentQueue = append(boe.FullfillmentQueue[:i], boe.FullfillmentQueue[i+1:]...)
+				}
+			}
+			k.SetBookOddExposure(ctx, boe)
+		}
+	}
+
+	return withdrawalAmt, nil
 }

@@ -8,11 +8,13 @@ import (
 
 // NewDeposit creates a new deposit object
 //nolint:interfacer
-func NewDeposit(depAddr sdk.AccAddress, seUid string, depAmt sdk.Int) Deposit {
+func NewDeposit(depAddr sdk.AccAddress, seUid string, depAmt, withAmt sdk.Int, withdrawals uint64) Deposit {
 	return Deposit{
-		DepositorAddress: depAddr.String(),
-		SportEventUid:    seUid,
-		Amount:           depAmt,
+		DepositorAddress:      depAddr.String(),
+		SportEventUid:         seUid,
+		Amount:                depAmt,
+		Withdrawals:           withdrawals,
+		TotalWithdrawalAmount: withAmt,
 	}
 }
 

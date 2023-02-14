@@ -42,3 +42,24 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		ParticipantId: participantId,
 	}, nil
 }
+
+// Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*types.MsgWithdrawResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	depAddr, err := sdk.AccAddressFromBech32(msg.DepositorAddress)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
+	}
+
+	err, withdrawalId := k.Keeper.Withdraw(ctx, depAddr, msg.SportEventUid, msg.ParticipantId, msg.Mode, msg.Amount.Amount)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "process withdrawal")
+	}
+
+	return &types.MsgWithdrawResponse{
+		SportEventUid:    msg.SportEventUid,
+		ParticipantId:    msg.ParticipantId,
+		WithdrawalNumber: withdrawalId,
+	}, nil
+}

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -26,6 +27,7 @@ func NewTxCmd() *cobra.Command {
 
 	houseTxCmd.AddCommand(
 		NewDepositCmd(),
+		NewWithdrawalCmd(),
 	)
 
 	return houseTxCmd
@@ -62,6 +64,63 @@ func NewDepositCmd() *cobra.Command {
 			depAddr := clientCtx.GetFromAddress()
 
 			msg := types.NewMsgDeposit(depAddr, sportEventUid, amount)
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func NewWithdrawalCmd() *cobra.Command {
+
+	cmd := &cobra.Command{
+		Use:   "withdraw [sport_event_uid] [participant_number] [mode] [amount]",
+		Args:  cobra.RangeArgs(3, 4),
+		Short: "Withdraw tokens from a deposit",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Withdraw coins of unused amount corresponding to a deposit.
+
+				Example:
+				$ %s tx house withdraw bc79a72c-ad7e-4cf5-91a2-98af2751e812 1 1 1000usge --from mykey
+				`,
+				version.AppName,
+			),
+		),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			sportEventUid := args[0]
+
+			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil || particiapntNumber < 1 {
+				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
+			}
+
+			mode, err := strconv.ParseInt(args[2], 10, 32)
+			if err != nil {
+				return fmt.Errorf("mode argument provided must be a non-negative-integer: %v", mode)
+			}
+
+			var amount sdk.Coin
+			if mode == int64(types.WithdrawalMode_MODE_PARTIAL) {
+				if len(args) != 4 {
+					return fmt.Errorf("amount is mandatory for partial mode")
+				}
+				amount, err = sdk.ParseCoinNormalized(args[3])
+				if err != nil {
+					return err
+				}
+			}
+
+			depAddr := clientCtx.GetFromAddress()
+
+			msg := types.NewMsgWithdraw(depAddr, sportEventUid, amount, particiapntNumber, types.WithdrawalMode(mode))
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

@@ -30,4 +30,8 @@ var (
 	ErrInternalProcessingBet              = sdkerrors.Register(ModuleName, 1019, "internal error in processing bet")
 	ErrPayoutLockDoesnotExist             = sdkerrors.Register(ModuleName, 1020, "Payout lock for bet uid %s does not exist")
 	ErrBookParticipantAlreadySettled      = sdkerrors.Register(ModuleName, 1021, "book participant already settled")
+	ErrMismatchInDepositorAddress         = sdkerrors.Register(ModuleName, 1022, "mismatch in depositor address")
+	ErrDepositorIsModuleAccount           = sdkerrors.Register(ModuleName, 1023, "depositor is module account")
+	ErrWithdrawalAmountIsTooLarge         = sdkerrors.Register(ModuleName, 1024, "withdrawal amount more than available amount for withdrawal")
+	ErrMaxWithdrawableAmountIsZero        = sdkerrors.Register(ModuleName, 1025, "maximum withdrawable amount is zero")
 )

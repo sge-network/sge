@@ -156,18 +156,22 @@ func (k Keeper) ProcessBetPlacement(
 		if participant.ExposuresNotFilled == 0 {
 			// add back to queue
 			maxLoss := sdk.MaxInt(sdk.ZeroInt(), participant.CurrentRoundMaxLoss)
-			participantExposures := k.GetExposureByBookAndParticipantNumber(ctx, bookId, pn)
+			participant.CurrentRoundLiquidity = participant.CurrentRoundLiquidity.Sub(maxLoss)
+			eligibleForNextRound := participant.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
+			participantExposures := k.GetExposureByBookAndParticipantNumber(ctx, bookId, pn)
 			for _, pe := range participantExposures {
 				k.MoveToHistoricalParticipantExposure(ctx, pe)
-				newPe := types.NewParticipantExposure(book.Id, pe.OddId, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipantNumber, pe.Round+1, false)
-				k.SetParticipantExposure(ctx, newPe)
-				if pe.OddId == participantExposure.OddId {
-					participantExposure = newPe
-					participantExposureMap[pe.ParticipantNumber] = participantExposure
+				if eligibleForNextRound {
+					newPe := types.NewParticipantExposure(book.Id, pe.OddId, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipantNumber, pe.Round+1, false)
+					k.SetParticipantExposure(ctx, newPe)
+					if pe.OddId == participantExposure.OddId {
+						participantExposure = newPe
+						participantExposureMap[pe.ParticipantNumber] = participantExposure
+					}
 				}
 			}
-			participant.CurrentRoundLiquidity = participant.CurrentRoundLiquidity.Sub(maxLoss)
+
 			participant.ExposuresNotFilled = book.NumberOfOdds
 			participant.CurrentRoundTotalBetAmount = sdk.ZeroInt()
 			participant.MaxLoss = participant.MaxLoss.Add(participant.CurrentRoundMaxLoss)
@@ -175,17 +179,19 @@ func (k Keeper) ProcessBetPlacement(
 			participantMap[participant.ParticipantNumber] = participant
 			k.SetBookParticipant(ctx, participant)
 
-			boes := k.GetOddExposuresByBook(ctx, bookId)
-			for _, boe := range boes {
-				boe.FullfillmentQueue = append(boe.FullfillmentQueue, pn)
-				if boe.OddId == participantExposure.OddId {
-					bookExposure = boe
-				}
+			if eligibleForNextRound {
+				boes := k.GetOddExposuresByBook(ctx, bookId)
+				for _, boe := range boes {
+					boe.FullfillmentQueue = append(boe.FullfillmentQueue, pn)
+					if boe.OddId == participantExposure.OddId {
+						bookExposure = boe
+					}
 
-				k.SetBookOddExposure(ctx, boe)
+					k.SetBookOddExposure(ctx, boe)
+				}
+				updatedFullfillmentQueue = append(updatedFullfillmentQueue, pn)
+				bookExposure.FullfillmentQueue = updatedFullfillmentQueue
 			}
-			updatedFullfillmentQueue = append(updatedFullfillmentQueue, pn)
-			bookExposure.FullfillmentQueue = updatedFullfillmentQueue
 		}
 
 		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFullfillmentQueue) <= 0 {

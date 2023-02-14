@@ -28,7 +28,8 @@ const (
 )
 
 var (
-	DepositKeyPrefix = []byte{0x00} // prefix for keys that store deposits
+	DepositKeyPrefix    = []byte{0x00} // prefix for keys that store deposits
+	WithdrawalKeyPrefix = []byte{0x01} // prefix for keys that store withdrawals
 )
 
 // GetDepositKey creates the key for deposit bond with sport event and participant
@@ -38,5 +39,15 @@ func GetDepositKey(depAddr sdk.AccAddress, sportEventUid string, participantId u
 
 // GetDepositsKey creates the key for deposit bond with sport event
 func GetDepositsKey(depAddr sdk.AccAddress) []byte {
+	return address.MustLengthPrefix(depAddr)
+}
+
+// GetWithdrawalKey creates the key for withdrawal bond with sport event and deposit
+func GetWithdrawalKey(depAddr sdk.AccAddress, sportEventUid string, participantId uint64, withdrawalNumber uint64) []byte {
+	return append(GetDepositKey(depAddr, sportEventUid, participantId), utils.Uint64ToBytes(withdrawalNumber)...)
+}
+
+// GetWithdrawalsKey creates the key for withdrawals bond with sport event
+func GetWithdrawalsKey(depAddr sdk.AccAddress) []byte {
 	return address.MustLengthPrefix(depAddr)
 }

@@ -8,8 +8,8 @@ import (
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// GetDepositFromByteID returns a specific deposit where provided id is a byte array.
-func (k Keeper) GetDepositFromByteID(ctx sdk.Context, depositIDBytes []byte) (deposit types.Deposit, found bool) {
+// GetDeposit returns a specific deposit.
+func (k Keeper) GetDeposit(ctx sdk.Context, depositIDBytes []byte) (deposit types.Deposit, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
 	value := store.Get(depositIDBytes)
 	if value == nil {
@@ -51,22 +51,15 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) error {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
 	b := types.MustMarshalDeposit(k.cdc, deposit)
 
-	depoistKeyBytes := types.GetDepositKey(depAddress, deposit.SportEventUid, deposit.ParticipantId)
-
-	// Sanity check - this should never happen
-	_, found := k.GetDepositFromByteID(ctx, depoistKeyBytes)
-	if found {
-		return sdkerrors.Wrap(types.ErrDepositSetting, "id already exists")
-	}
-
-	store.Set(depoistKeyBytes, b)
+	depoistKey := types.GetDepositKey(depAddress, deposit.SportEventUid, deposit.ParticipantId)
+	store.Set(depoistKey, b)
 	return nil
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
 func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUid string, depAmt sdk.Int) (error, uint64) {
 	// Create the deposit object
-	deposit := types.NewDeposit(depAddr, sportEventUid, depAmt)
+	deposit := types.NewDeposit(depAddr, sportEventUid, depAmt, sdk.ZeroInt(), 0)
 
 	// Set the house participation fee
 	deposit.SetHouseParticipationFee(k.HouseParticipationFee(ctx))
