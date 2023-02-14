@@ -4,13 +4,13 @@ func NewPublicKeysChangeProposal(
 	id uint64,
 	creator string,
 	modifications PubkeysChangeProposalPayload,
-	startTS int64) PublicKeysChangeProposal {
+	startTS int64,
+) PublicKeysChangeProposal {
 	return PublicKeysChangeProposal{
 		Id:            id,
 		Creator:       creator,
 		Modifications: modifications,
 		StartTS:       startTS,
-		ApprovedBy:    []string{creator},
 	}
 }
 

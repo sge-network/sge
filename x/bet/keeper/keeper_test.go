@@ -116,7 +116,7 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestDVMPrivateKey)
+	return token.SignedString(simappUtil.TestDVMPrivateKeys[0])
 }
 
 func TestLogger(t *testing.T) {

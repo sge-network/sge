@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	minApprovePublicKeyCount = 3
-	maxValidProposalTime     = 30
+	minVoteCountForDecision = 3
+	maxValidProposalTime    = 30
 )
 
 // SetActivePubkeysChangeProposal sets a pubkey list change proposal in the store.
@@ -52,8 +52,8 @@ func (k Keeper) GetAllActivePubkeysChangeProposals(ctx sdk.Context) (list []type
 	return
 }
 
-// removeActiveProposal removes an active pubkeys change proposal.
-func (k Keeper) removeActiveProposal(ctx sdk.Context, id uint64) {
+// RemoveActiveProposal removes an active pubkeys change proposal.
+func (k Keeper) RemoveActiveProposal(ctx sdk.Context, id uint64) {
 	store := k.getActivePubKeysChangeProposalStore(ctx)
 	store.Delete(utils.Uint64ToBytes(id))
 }
@@ -103,7 +103,7 @@ func (k Keeper) FinishProposals(ctx sdk.Context) error {
 func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 	activeProposals, err := k.GetAllActivePubkeysChangeProposals(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("error while retrieving the active pubkeys change proposals: %s", err)
 	}
 
 	if len(activeProposals) == 0 {
@@ -111,50 +111,79 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 	}
 
 	for _, proposal := range activeProposals {
-
 		expireTime := ctx.BlockTime().Add(maxValidProposalTime * time.Minute).Unix()
 		if proposal.StartTS > expireTime {
 			// proposal is expired
-			k.finishPubkeysChangeProposal(
+			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
 				types.ProposalResult_PROPOSAL_RESULT_EXPIRED,
 				fmt.Sprintf("current block time is %d, more than %d minutes is passed since start time.", expireTime, maxValidProposalTime),
-			)
+			); err != nil {
+				return fmt.Errorf("error while setting the proposal as expired: %s", err)
+			}
 		}
 
-		if len(proposal.ApprovedBy) > minApprovePublicKeyCount {
+		var approvedCount, rejectedCount int
+		for _, v := range proposal.Votes {
+			switch v.Vote {
+			case types.ProposalVote_PROPOSAL_VOTE_YES:
+				approvedCount++
+			case types.ProposalVote_PROPOSAL_VOTE_NO:
+				rejectedCount++
+			}
+		}
 
+		if rejectedCount > minVoteCountForDecision {
+			if err = k.finishPubkeysChangeProposal(
+				ctx,
+				proposal.Id,
+				types.ProposalResult_PROPOSAL_RESULT_REJECTED,
+				fmt.Sprintf("rejected with %d number of 'no' votes.", rejectedCount),
+			); err != nil {
+				return fmt.Errorf("error while setting the proposal as rejected: %s", err)
+			}
+
+			// this proposal is rejected go for next proposal
+			continue
+		}
+
+		if approvedCount > minVoteCountForDecision {
 			pubKeys, found := k.GetKeyVault(ctx)
 			if !found {
 				fmt.Printf("there is no publick keys record")
-			}
-			for _, added := range proposal.Modifications.Additions {
-				if err := types.IsValidJwtToken(added); err != nil {
-					k.finishPubkeysChangeProposal(
-						ctx,
-						proposal.Id,
-						types.ProposalResult_PROPOSAL_RESULT_REJECTED,
-						fmt.Sprintf("public key %s is not a valid jwt token.", added),
-					)
-
-					break
-				}
-				pubKeys.PublicKeys = append(pubKeys.PublicKeys, added)
 			}
 
 			for _, deleted := range proposal.Modifications.Deletions {
 				pubKeys.PublicKeys = utils.RemoveStr(pubKeys.PublicKeys, deleted)
 			}
 
+			for _, added := range proposal.Modifications.Additions {
+				if err := types.IsValidJwtToken(added); err != nil {
+					if err = k.finishPubkeysChangeProposal(
+						ctx,
+						proposal.Id,
+						types.ProposalResult_PROPOSAL_RESULT_REJECTED,
+						fmt.Sprintf("public key %s is not a valid jwt token.", added),
+					); err != nil {
+						return fmt.Errorf("error while setting the proposal as rejected because of invalid jwt: %s", err)
+					}
+
+					break
+				}
+				pubKeys.PublicKeys = append(pubKeys.PublicKeys, added)
+			}
+
 			k.SetKeyVault(ctx, pubKeys)
 
-			k.finishPubkeysChangeProposal(
+			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
 				types.ProposalResult_PROPOSAL_RESULT_APPROVED,
 				"",
-			)
+			); err != nil {
+				return fmt.Errorf("error while setting the proposal as approved: %s", err)
+			}
 		}
 	}
 
@@ -180,7 +209,7 @@ func (k Keeper) finishPubkeysChangeProposal(
 			ctx.BlockTime().Unix(),
 		),
 	)
-	k.removeActiveProposal(ctx, proposalID)
+	k.RemoveActiveProposal(ctx, proposalID)
 
 	return k.finishPubkeysChangeProposals(ctx)
 }

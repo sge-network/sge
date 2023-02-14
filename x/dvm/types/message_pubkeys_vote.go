@@ -1,6 +1,8 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -11,10 +13,11 @@ const typeMsgVotePubkeysChange = "pubkeys_change_vote"
 var _ sdk.Msg = &MsgVotePubkeysChangeRequest{}
 
 // MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
-func NewMsgVotePubkeysChangeRequest(creator string, txs string) *MsgVotePubkeysChangeRequest {
+func NewMsgVotePubkeysChangeRequest(creator, ticket, pubkey string) *MsgVotePubkeysChangeRequest {
 	return &MsgVotePubkeysChangeRequest{
-		Creator: creator,
-		Ticket:  txs,
+		Creator:   creator,
+		Ticket:    ticket,
+		PublicKey: pubkey,
 	}
 }
 
@@ -25,7 +28,7 @@ func (msg *MsgVotePubkeysChangeRequest) Route() string {
 
 // Type returns type of its message
 func (msg *MsgVotePubkeysChangeRequest) Type() string {
-	return typeMsgPubkeysChangeProposal
+	return typeMsgVotePubkeysChange
 }
 
 // GetSigners returns the signers of its message
@@ -49,5 +52,10 @@ func (msg *MsgVotePubkeysChangeRequest) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if strings.TrimSpace(msg.PublicKey) == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "public key is a mandatory propery")
+	}
+
 	return nil
 }

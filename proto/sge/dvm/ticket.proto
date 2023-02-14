@@ -5,18 +5,19 @@ import "sge/dvm/vote.proto";
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
-// PubkeysChangeProposalPayload indicates data of public keys changes proposal ticket.
+// PubkeysChangeProposalPayload indicates data of public keys changes proposal
+// ticket.
 message PubkeysChangeProposalPayload {
-    // additions contain new pub keys to be added to public keys.
-    repeated string additions = 1;
-    // deletions contain old pub keys to be removed from public keys.
-    repeated string deletions = 2;
+  // additions contain new pub keys to be added to public keys.
+  repeated string additions = 1;
+  // deletions contain old pub keys to be removed from public keys.
+  repeated string deletions = 2;
 }
 
-// ProposalVotePayload indicates data vote ticket.
+// ProposalVotePayload indicates vote data ticket.
 message ProposalVotePayload {
-    // proposal_id is the id of the proposal.
-    uint64 proposal_id = 1;
-    // vote is the chosen option for the vote.
-    ProposalVote vote = 2;
+  // proposal_id is the id of the proposal.
+  uint64 proposal_id = 1;
+  // vote is the chosen option for the vote.
+  ProposalVote vote = 2;
 }

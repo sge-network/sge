@@ -30,7 +30,7 @@ func TestVerifyTicket(t *testing.T) {
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 			},
 		})
-		tkn, err := Token.SignedString(&simappUtil.TestDVMPrivateKey)
+		tkn, err := Token.SignedString(&simappUtil.TestDVMPrivateKeys[0])
 		require.Nil(t, err)
 
 		err = k.VerifyTicket(wctx, tkn)

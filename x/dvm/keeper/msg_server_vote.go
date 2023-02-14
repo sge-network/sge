@@ -13,24 +13,28 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	payload := types.ProposalVotePayload{}
-	err := k.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload)
+	err := k.verifyTicketWithKeyUnmarshal(goCtx, msg.Ticket, &payload, msg.PublicKey)
 	if err != nil {
-		return nil, err
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket should be signed by the provided pub key: %s", err)
 	}
 
 	proposal, found := k.GetActivePubkeysChangeProposal(ctx, payload.ProposalId)
-
 	if !found {
-		return nil, types.ErrNoPublicKeysFound
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "proposal not fount with id %d", &payload.ProposalId)
 	}
 
-	for _, approver := range proposal.ApprovedBy {
-		if approver == msg.Creator {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "approval already set for this address %s", msg.Creator)
+	for _, voter := range proposal.Votes {
+		if voter.PublicKey == msg.PublicKey {
+			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "vote already set for this pubkey %s", msg.Creator)
 		}
 	}
 
-	proposal.ApprovedBy = append(proposal.ApprovedBy, msg.Creator)
+	proposal.Votes = append(proposal.Votes,
+		types.NewVote(
+			msg.PublicKey,
+			payload.Vote,
+		),
+	)
 
 	return &types.MsgVotePubkeysChangeResponse{Success: true}, nil
 }

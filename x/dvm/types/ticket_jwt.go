@@ -14,15 +14,15 @@ import (
 
 // jwtTicket is the Ticket implementer.
 type jwtTicket struct {
-	value      string
-	header     string
-	payload    string
-	signatures []string
-	exp        time.WeightedTime
-	clm        *jwt.RegisteredClaims
+	value     string
+	header    string
+	payload   string
+	signature string
+	exp       time.WeightedTime
+	clm       *jwt.RegisteredClaims
 }
 
-// NewJwtTicket create a new Ticket from the given ticket.
+// NewJwtTicket create a new jwt ticket from the given ticket.
 func NewJwtTicket(ticketStr string) (Ticket, error) {
 	var err error
 	t := jwtTicket{
@@ -69,24 +69,6 @@ func (t *jwtTicket) Verify(pubKeys ...string) error {
 	return ErrInvalidSignature
 }
 
-// Consensus verifies that 2/3 of given public keys verify the ticket.
-// consensus mechanism will reside in this function if requested
-func (t *jwtTicket) Consensus(pubKeys ...string) error {
-	if len(pubKeys) == 0 {
-		return nil
-	}
-	for _, v := range pubKeys {
-		_, err := t.verifyWithKey(v)
-		if err == nil {
-			return nil
-		}
-		if err != ErrInvalidSignature {
-			return err
-		}
-	}
-	return ErrInvalidSignature
-}
-
 func (t *jwtTicket) ValidateExpiry(ctx sdk.Context) error {
 	// validate the expiration
 	if !t.exp.Time.After(ctx.BlockTime()) {
@@ -105,7 +87,7 @@ func (t *jwtTicket) initFromValue() error {
 	}
 	t.header = ts[JWTHeaderIndex]
 	t.payload = ts[JWTPayloadIndex]
-	t.signatures = ts[JWTPayloadIndex+1:]
+	t.signature = ts[JWTPayloadIndex+1]
 
 	clm := jwt.RegisteredClaims{}
 	err = t.Unmarshal(&clm)
@@ -125,24 +107,22 @@ func (t *jwtTicket) initFromValue() error {
 
 // verifyWithKey verify a Ticket with the key
 func (t *jwtTicket) verifyWithKey(key string) (bool, error) {
-	for _, s := range t.signatures {
-		token := t.header + "." + t.payload + "." + s
-		parser := jwt.NewParser(
-			jwt.WithoutClaimsValidation(),
-		)
-		parsedToken, err := parser.Parse(token, func(t *jwt.Token) (interface{}, error) {
-			parsedPubKey, err := jwt.ParseEdPublicKeyFromPEM([]byte(key))
-			if err != nil {
-				return nil, err
-			}
-			return parsedPubKey, nil
-		})
+	token := t.header + "." + t.payload + "." + t.signature
+	parser := jwt.NewParser(
+		jwt.WithoutClaimsValidation(),
+	)
+	parsedToken, err := parser.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		parsedPubKey, err := jwt.ParseEdPublicKeyFromPEM([]byte(key))
 		if err != nil {
-			return false, err
+			return nil, err
 		}
-		if parsedToken.Valid {
-			return true, nil
-		}
+		return parsedPubKey, nil
+	})
+	if err != nil {
+		return false, err
+	}
+	if parsedToken.Valid {
+		return true, nil
 	}
 
 	return false, ErrInvalidSignature

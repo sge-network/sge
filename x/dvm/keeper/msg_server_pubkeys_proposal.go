@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
 )
 
@@ -24,13 +24,17 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 		return nil, err
 	}
 
+	// remove duplicate additions and deletions
+	payload.Additions = utils.RemoveDuplicateStrs(payload.Additions)
+	payload.Deletions = utils.RemoveDuplicateStrs(payload.Deletions)
+
 	err = payload.Validate(keys.PublicKeys)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid", err)
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
 
 	stats := k.GetProposalStats(ctx)
-	stats.PubkeysChangeCount += 1
+	stats.PubkeysChangeCount++
 
 	// set active proposal
 	k.Keeper.SetActivePubkeysChangeProposal(ctx,
@@ -46,37 +50,4 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	k.Keeper.SetProposalStats(ctx, stats)
 
 	return &types.MsgSubmitPubkeysChangeProposalResponse{Success: true}, nil
-}
-
-// mutateList verifies and adds the Addition Keys and remove the deletion keys from the list of public Keys.
-func mutateList(ks *types.KeyVault, modifs types.PubkeysChangeProposalPayload) error {
-	// populate map of keys
-	mKeys := make(map[string]string)
-	for _, v := range ks.PublicKeys {
-		mKeys[v] = ""
-	}
-
-	for _, v := range modifs.Additions {
-		// check if pem content is a valid ED25516 key
-		P, err := jwt.ParseEdPublicKeyFromPEM([]byte(v))
-		if err != nil {
-			return err
-		}
-		_ = P
-
-		// add the key to the list
-		mKeys[v] = ""
-	}
-
-	for _, v := range modifs.Deletions {
-		delete(mKeys, v)
-	}
-
-	res := []string{}
-	for key := range mKeys {
-		res = append(res, key)
-	}
-	ks.PublicKeys = res
-
-	return nil
 }

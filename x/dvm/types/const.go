@@ -15,4 +15,6 @@ const (
 	DefaultTimeWeight = 1
 
 	minPubKeysCount = 5
+
+	maxPubKeysCount = 7
 )

@@ -20,9 +20,13 @@ type Ticket interface {
 }
 
 func (payload *PubkeysChangeProposalPayload) Validate(keys []string) error {
-	finalCount := len(payload.Additions) - len(payload.Deletions)
+	finalCount := len(keys) + len(payload.Additions) - len(payload.Deletions)
 	if finalCount < minPubKeysCount {
-		return fmt.Errorf("total number of pubkeys should not be less than %d", finalCount)
+		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", finalCount, minPubKeysCount)
+	}
+
+	if finalCount > maxPubKeysCount {
+		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", finalCount, minPubKeysCount)
 	}
 
 	// loop through additions and check if is a valid jwt token

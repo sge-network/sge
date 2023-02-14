@@ -22,7 +22,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// PubkeysChangeProposalPayload indicates data of public keys changes proposal ticket.
+// PubkeysChangeProposalPayload indicates data of public keys changes proposal
+// ticket.
 type PubkeysChangeProposalPayload struct {
 	// additions contain new pub keys to be added to public keys.
 	Additions []string `protobuf:"bytes,1,rep,name=additions,proto3" json:"additions,omitempty"`
@@ -77,7 +78,7 @@ func (m *PubkeysChangeProposalPayload) GetDeletions() []string {
 	return nil
 }
 
-// ProposalVotePayload indicates data vote ticket.
+// ProposalVotePayload indicates vote data ticket.
 type ProposalVotePayload struct {
 	// proposal_id is the id of the proposal.
 	ProposalId uint64 `protobuf:"varint,1,opt,name=proposal_id,json=proposalId,proto3" json:"proposal_id,omitempty"`

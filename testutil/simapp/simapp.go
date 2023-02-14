@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 	"encoding/json"
-	"encoding/pem"
 	"testing"
 	"time"
 
@@ -20,6 +19,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/utils"
 	dvmtypes "github.com/sge-network/sge/x/dvm/types"
 	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
 	strategicreservetypes "github.com/sge-network/sge/x/strategicreserve/types"
@@ -104,15 +104,11 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
 	{
-		TestDVMPublicKey, TestDVMPrivateKey, _ = ed25519.GenerateKey(rand.Reader)
-		bs, err := x509.MarshalPKIXPublicKey(TestDVMPublicKey)
-		if err != nil {
-			panic(err)
-		}
+		publicKeys := GenerateDvmPublicKeys(5)
 
 		dvmGenesisState := &dvmtypes.GenesisState{
 			KeyVault: dvmtypes.KeyVault{
-				PublicKeys: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+				PublicKeys: publicKeys,
 			},
 		}
 		genesisState[dvmtypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(dvmGenesisState)
@@ -371,4 +367,19 @@ func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *te
 
 func validatorDefaultCommission() stakingtypes.CommissionRates {
 	return stakingtypes.NewCommissionRates(sdk.MustNewDecFromStr("0.1"), sdk.MustNewDecFromStr("0.2"), sdk.MustNewDecFromStr("0.01"))
+}
+
+func GenerateDvmPublicKeys(n int) (pubKeys []string) {
+	TestDVMPublicKeys = make([]ed25519.PublicKey, n)
+	TestDVMPrivateKeys = make([]ed25519.PrivateKey, n)
+	for i := 0; i < n; i++ {
+		TestDVMPublicKeys[i], TestDVMPrivateKeys[i], _ = ed25519.GenerateKey(rand.Reader)
+		bs, err := x509.MarshalPKIXPublicKey(TestDVMPublicKeys[i])
+		if err != nil {
+			panic(err)
+		}
+		pubKeys = append(pubKeys, string(utils.NewPubKeyMemory(bs)))
+	}
+
+	return pubKeys
 }

@@ -4,44 +4,66 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/x509"
-	"encoding/pem"
 	"testing"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
 
+func createNTestPubKeys(n int) ([]string, error) {
+	items := []string{}
+
+	for i := 0; i < n; i++ {
+		pub1, _, err := ed25519.GenerateKey(rand.Reader)
+		if err != nil {
+			return nil, err
+		}
+
+		bs, err := x509.MarshalPKIXPublicKey(pub1)
+		if err != nil {
+			return nil, err
+		}
+
+		pb := string(utils.NewPubKeyMemory(bs))
+		items = append(items, pb)
+	}
+
+	return items, nil
+}
+
 func TestChangePubkeysListProposal(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		msgk, _, wctx := setupMsgServer(t)
+		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 		creator := simappUtil.TestParamUsers["user1"]
-		Pub2, Pri2, err := ed25519.GenerateKey(rand.Reader)
-		_ = Pri2
+		pubs, err := createNTestPubKeys(3)
 		require.NoError(t, err)
-		bs, err := x509.MarshalPKIXPublicKey(Pub2)
-		require.NoError(t, err)
+
+		keyVault, found := k.GetKeyVault(ctx)
+		require.True(t, found)
 
 		T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
 			Additions []string
 			Deletions []string
 			jwt.RegisteredClaims
 		}{
-			Additions: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+			Additions: pubs,
+			Deletions: keyVault.PublicKeys[0:3],
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 			},
 		})
-		singedT1, err := T1.SignedString(simappUtil.TestDVMPrivateKey)
+		singedT1, err := T1.SignedString(simappUtil.TestDVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(wctx, &types.MsgSubmitPubkeysChangeProposalRequest{
 			Creator: creator.Address.String(),
 			Ticket:  singedT1,
 		})
-		require.Nil(t, err)
+		require.NoError(t, err)
 		require.Equal(t, true, resp.Success)
 	})
 

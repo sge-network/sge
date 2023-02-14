@@ -21,6 +21,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdChangePubkeysListProposal())
+	cmd.AddCommand(CmdChangePubkeysListVote())
 
 	return cmd
 }

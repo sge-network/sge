@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/dvm/types"
@@ -41,6 +42,11 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 
 // VerifyTicketUnmarshal verifies the ticket first, then if the token was verified, it unmarshal the data of ticket into clm.
 func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, clm interface{}) error {
+	return k.verifyTicketWithKeyUnmarshal(goCtx, ticketStr, clm, "")
+}
+
+// verifyTicketWithKeyUnmarshal verifies the ticket using the provided publiv key first, then if the token was verified, it unmarshal the data of ticket into clm.
+func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr string, clm interface{}, pubKey string) error {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// construct new ticket object from string ticket
@@ -55,15 +61,34 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 		return err
 	}
 
-	// get pub keys from module state
-	keys, found := k.GetKeyVault(ctx)
-
+	// get key vault from module state
+	keyVault, found := k.GetKeyVault(ctx)
 	if !found {
 		return types.ErrNoPublicKeysFound
 	}
 
-	// validate ticket by the keys
-	err = ticket.Verify(keys.PublicKeys...)
+	pubKeys := keyVault.PublicKeys
+
+	if pubKey != "" {
+		// check if the provided pubkey is registered or not
+		isRegistered := false
+		for _, registereedPubKey := range pubKeys {
+			if registereedPubKey == pubKey {
+				isRegistered = true
+			}
+		}
+
+		// pubkey is not registered so it is invalid
+		if !isRegistered {
+			return fmt.Errorf("the provided public key is not registered in the blockchain store: %s", pubKey)
+		}
+
+		// replace the registered pubkeys with the provided key
+		pubKeys = []string{pubKey}
+	}
+
+	// validate ticket by the keys with provided pubkey
+	err = ticket.Verify(pubKeys...)
 	if err != nil {
 		return err
 	}

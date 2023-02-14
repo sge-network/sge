@@ -4,12 +4,12 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/x509"
-	"encoding/pem"
 	"testing"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
@@ -18,8 +18,7 @@ func TestQueryPublicKeys(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 	creator := simappUtil.TestParamUsers["user1"]
-	Pub2, Pri2, err := ed25519.GenerateKey(rand.Reader)
-	_ = Pri2
+	Pub2, _, err := ed25519.GenerateKey(rand.Reader)
 	require.NoError(t, err)
 	bs, err := x509.MarshalPKIXPublicKey(Pub2)
 	require.NoError(t, err)
@@ -29,12 +28,12 @@ func TestQueryPublicKeys(t *testing.T) {
 		Deletions []string
 		jwt.RegisteredClaims
 	}{
-		Additions: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+		Additions: []string{string(utils.NewPubKeyMemory(bs))},
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
 	})
-	singedT1, err := T1.SignedString(simappUtil.TestDVMPrivateKey)
+	singedT1, err := T1.SignedString(simappUtil.TestDVMPrivateKeys[0])
 	require.NoError(t, err)
 
 	resp, err := msgk.SubmitPubkeysChangeProposal(wctx, &types.MsgSubmitPubkeysChangeProposalRequest{
