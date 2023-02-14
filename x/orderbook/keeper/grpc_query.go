@@ -244,7 +244,7 @@ func (k Keeper) ParticipantExposure(c context.Context, req *types.QueryParticipa
 	var participantExposures []types.ParticipantExposure
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureByPNKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipantExposuresByPNKey(req.BookId, req.ParticipantNumber))
+	exposureStore := prefix.NewStore(store, types.GetParticipantByPNKey(req.BookId, req.ParticipantNumber))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		participantExposure, err := types.UnmarshalParticipantExposure(k.cdc, value)
 		if err != nil {
@@ -298,5 +298,45 @@ func (k Keeper) HistoricalParticipantExposures(c context.Context, req *types.Que
 	return &types.QueryHistoricalParticipantExposuresResponse{
 		ParticipantExposures: historicalParticipantExposures,
 		Pagination:           pageRes,
+	}, nil
+}
+
+// ParticipantFullfilledBets queries participant fullfilled bets info for given order book id and participant number
+func (k Keeper) ParticipantFullfilledBets(c context.Context, req *types.QueryParticipantFullfilledBetsRequest) (*types.QueryParticipantFullfilledBetsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "empty request")
+	}
+
+	if req.BookId == "" {
+		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
+	}
+
+	if req.ParticipantNumber < 1 {
+		return nil, status.Error(codes.InvalidArgument, "participant number can not be less than 1")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	var participantBets []types.ParticipantBetPairResponse
+
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantBetPairKeyPrefix)
+	betsStore := prefix.NewStore(store, types.GetParticipantByPNKey(req.BookId, req.ParticipantNumber))
+	pageRes, err := query.FilteredPaginate(betsStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
+		participantBet, err := types.UnmarshalParticipantBetPair(k.cdc, value)
+		if err != nil {
+			return false, err
+		}
+
+		if accumulate {
+			participantBets = append(participantBets, participantBet)
+		}
+		return true, nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryParticipantFullfilledBetsResponse{
+		ParticipantBets: participantBets,
+		Pagination:      pageRes,
 	}, nil
 }

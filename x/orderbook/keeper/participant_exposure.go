@@ -24,7 +24,7 @@ func (k Keeper) GetExposureByBookAndOdd(ctx sdk.Context, bookId, oddId string) (
 // GetExposureByBookAndParticipantNumber returns all exposures for a book id and participant number
 func (k Keeper) GetExposureByBookAndParticipantNumber(ctx sdk.Context, bookId string, pn uint64) (pes []types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureByPNKeyPrefix)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantExposuresByPNKey(bookId, pn))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantByPNKey(bookId, pn))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {

@@ -33,6 +33,7 @@ var (
 	ParticipantExposureByPNKeyPrefix       = []byte{0x05} // prefix for keys that store participant exposures
 	HistoricalParticipantExposureKeyPrefix = []byte{0x06} // prefix for keys that store historical participant exposures
 	BookStatsKeyPrefix                     = []byte{0x07} // prefix for keys that store book stats
+	ParticipantBetPairKeyPrefix            = []byte{0x08} // prefix for keys that store book participant and bet pairs
 )
 
 // GetBookKey returns the bytes of an book key
@@ -77,15 +78,20 @@ func GetParticipantExposuresByBookKey(bookId string) []byte {
 
 // GetParticipantExposureByPNKey creates the key for participant exposure for an odd by participant number
 func GetParticipantExposureByPNKey(bookId, oddId string, pn uint64) []byte {
-	return append(GetParticipantExposuresByPNKey(bookId, pn), utils.StrBytes(oddId)...)
+	return append(GetParticipantByPNKey(bookId, pn), utils.StrBytes(oddId)...)
 }
 
 // GetParticipantExposuresByPNKey creates the key for exposures for a book id and participant number
-func GetParticipantExposuresByPNKey(bookId string, pn uint64) []byte {
+func GetParticipantByPNKey(bookId string, pn uint64) []byte {
 	return append(utils.StrBytes(bookId), utils.Uint64ToBytes(pn)...)
 }
 
 // GetHistoricalParticipantExposureKey creates the key for participant exposure for an odd
 func GetHistoricalParticipantExposureKey(bookId, oddId string, pn, round uint64) []byte {
 	return append(GetParticipantExposureKey(bookId, oddId, pn), utils.Uint64ToBytes(round)...)
+}
+
+// GetParticipantBetPairKey creates the bond between participant and bet
+func GetParticipantBetPairKey(bookId string, bookParticipantNumber uint64, betId uint64) []byte {
+	return append(GetParticipantByPNKey(bookId, bookParticipantNumber), utils.Uint64ToBytes(betId)...)
 }

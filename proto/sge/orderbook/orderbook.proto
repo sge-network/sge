@@ -114,16 +114,14 @@ message BookParticipant {
   // current_round_max_loss_odd is the total bet amount corresponding to all exposure
   string current_round_max_loss_odd = 12 [(gogoproto.moretags)   = "yaml:\"current_round_max_loss_odd\""];
 
-  repeated string fullfilled_bets = 13 [(gogoproto.moretags)   = "yaml:\"fullfilled_bets\""];
-
-  string actual_profit = 14 [
+  string actual_profit = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false,
     (gogoproto.moretags)   = "yaml:\"actual_profit\""
   ];
 
   // if participant is settled
-  bool is_settled = 15 [(gogoproto.moretags) = "yaml:\"is_settled\""];;
+  bool is_settled = 14 [(gogoproto.moretags) = "yaml:\"is_settled\""];;
 }
 
 // BookOddExposures represents the exposures taken on odds
@@ -174,4 +172,31 @@ message ParticipantExposure {
 
   // number of current round in queue
   uint64 round = 7 [(gogoproto.moretags) = "yaml:\"rounds\""];
+}
+
+// ParticipantBetPair represents the book participant and bet bond
+message ParticipantBetPair {
+  // book id is id corresponding to the book
+  string book_id = 1 [(gogoproto.moretags) = "yaml:\"book_id\""];
+
+  // number in initial participation queue
+  uint64 participant_number = 2 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // bet_uuid is bet's uuid
+  string bet_uuid = 3 [(gogoproto.moretags) = "yaml:\"bet_uuid\""];
+
+  // bet_id is bet's sequential id
+  uint64 bet_id = 4 [(gogoproto.moretags) = "yaml:\"bet_id\""];
+}
+
+// ParticipantBetPairResponse represents the book participant and bet bond response
+message ParticipantBetPairResponse {
+  // book id is id corresponding to the book
+  string book_id = 1 [(gogoproto.moretags) = "yaml:\"book_id\""];
+
+  // number in initial participation queue
+  uint64 participant_number = 2 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // bet_uuid is bet's uuid
+  string bet_uuid = 3 [(gogoproto.moretags) = "yaml:\"bet_uuid\""];
 }

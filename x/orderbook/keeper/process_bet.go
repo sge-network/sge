@@ -18,7 +18,7 @@ func (k Keeper) ProcessBetPlacement(
 	betFee sdk.Coin,
 	betAmount sdk.Int,
 	oddsType bettypes.OddsType,
-	oddsVal string,
+	oddsVal string, betId uint64,
 ) (error, []*bettypes.BetFullfillment) {
 	betFullfillment := []*bettypes.BetFullfillment{}
 
@@ -115,7 +115,8 @@ func (k Keeper) ProcessBetPlacement(
 				BetAmount:          betAmount,
 				PayoutAmount:       availableLiquidty,
 			})
-			participant.FullfilledBets = append(participant.FullfilledBets, uniqueLock)
+			participantBetPair := types.NewParticipantBetPair(participant.BookId, uniqueLock, participant.ParticipantNumber, betId)
+			k.SetParticipantBetPair(ctx, participantBetPair)
 		} else {
 			participantExposure.Exposure = participantExposure.Exposure.Add(remainingPayoutProfit)
 			betAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, remainingPayoutProfit)
@@ -148,7 +149,8 @@ func (k Keeper) ProcessBetPlacement(
 				PayoutAmount:       remainingPayoutProfit,
 			})
 			remainingPayoutProfit = remainingPayoutProfit.Sub(remainingPayoutProfit)
-			participant.FullfilledBets = append(participant.FullfilledBets, uniqueLock)
+			participantBetPair := types.NewParticipantBetPair(participant.BookId, uniqueLock, participant.ParticipantNumber, betId)
+			k.SetParticipantBetPair(ctx, participantBetPair)
 		}
 		k.SetParticipantExposure(ctx, participantExposure)
 		k.SetBookParticipant(ctx, participant)

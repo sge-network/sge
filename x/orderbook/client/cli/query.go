@@ -33,6 +33,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdQueryParticipantExposures(),
 		GetCmdQueryParticipantExposure(),
 		GetCmdQueryHistoricalParticipantExposures(),
+		GetCmdQueryParticipantBets(),
 	)
 
 	return orderBookQueryCmd
@@ -448,6 +449,61 @@ $ %s query orderbook historical-participant-exposures %s
 
 	flags.AddQueryFlagsToCmd(cmd)
 	flags.AddPaginationFlagsToCmd(cmd, "historical participant exposures")
+
+	return cmd
+}
+
+// GetCmdQueryParticipantBets implements the command to query all the participant fullfilled bets to a specific orderbook.
+func GetCmdQueryParticipantBets() *cobra.Command {
+
+	cmd := &cobra.Command{
+		Use:   "participant-bets [order-book-id] [participant-number]",
+		Short: "Query all participant fullfilled bets for a specific order book",
+		Long: strings.TrimSpace(
+			fmt.Sprintf(`Query participant fullfilled bets on an individual order book.
+
+Example:
+$ %s query orderbook participant-bets %s %d
+`,
+				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", 2,
+			),
+		),
+		Args: cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			clientCtx, err := client.GetClientQueryContext(cmd)
+			if err != nil {
+				return err
+			}
+			queryClient := types.NewQueryClient(clientCtx)
+
+			orderBookId := args[0]
+			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
+			if err != nil || particiapntNumber < 1 {
+				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
+			}
+
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			params := &types.QueryParticipantFullfilledBetsRequest{
+				BookId:            orderBookId,
+				ParticipantNumber: particiapntNumber,
+				Pagination:        pageReq,
+			}
+
+			res, err := queryClient.ParticipantFullfilledBets(cmd.Context(), params)
+			if err != nil {
+				return err
+			}
+
+			return clientCtx.PrintProto(res)
+		},
+	}
+
+	flags.AddQueryFlagsToCmd(cmd)
+	flags.AddPaginationFlagsToCmd(cmd, "participant fullfilled bets")
 
 	return cmd
 }

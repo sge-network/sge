@@ -54,6 +54,11 @@ service Query {
   rpc HistoricalParticipantExposures(QueryHistoricalParticipantExposuresRequest) returns (QueryHistoricalParticipantExposuresResponse) {
     option (google.api.http).get = "/sge/orderbooks/{book_id}/historical-participant-exposures";
   }
+
+  // ParticipantFullfilledBets queries fullfilled bets for given orderbook participant.
+  rpc ParticipantFullfilledBets(QueryParticipantFullfilledBetsRequest) returns (QueryParticipantFullfilledBetsResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participants/{participant_number}/fullfilled_bets";
+  }
 }
 
 // QueryOrderBooksRequest is request type for Query/OrderBooks RPC method.
@@ -202,4 +207,24 @@ message QueryHistoricalParticipantExposuresResponse {
 
     // pagination defines the pagination in the response.
     cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParticipantFullfilledBetsRequest is request type for the Query/ParticipantFullfilledBets RPC method
+message QueryParticipantFullfilledBetsRequest {
+  // book_id defines the book id to query for.
+  string book_id = 1;
+
+  uint64 participant_number = 2;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+// QueryParticipantFullfilledBetsResponse is response type for the Query/ParticipantFullfilledBets RPC method
+message QueryParticipantFullfilledBetsResponse {
+  // book_exposure defines the the book exposure info.
+  repeated ParticipantBetPairResponse participant_bets = 1 [(gogoproto.nullable) = false];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
