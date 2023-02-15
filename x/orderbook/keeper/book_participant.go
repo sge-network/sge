@@ -131,6 +131,10 @@ func (k Keeper) LiquidateBookParticipant(
 	ctx sdk.Context, depAddr, bookId string, bpNumber uint64, mode htypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	var withdrawalAmt sdk.Int
+	depositorAddress, err := sdk.AccAddressFromBech32(depAddr)
+	if err != nil {
+		return withdrawalAmt, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+	}
 
 	bp, found := k.GetBookParticipant(ctx, bookId, bpNumber)
 	if !found {
@@ -155,7 +159,7 @@ func (k Keeper) LiquidateBookParticipant(
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity.Int64(), bp.CurrentRoundMaxLoss.Int64())
 		}
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(depAddr), maxTransferableAmount)
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, maxTransferableAmount)
 		if err != nil {
 			return withdrawalAmt, err
 		}
@@ -164,7 +168,7 @@ func (k Keeper) LiquidateBookParticipant(
 		if maxTransferableAmount.LT(amount) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %d, max %d", amount, maxTransferableAmount)
 		}
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(depAddr), amount)
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, amount)
 		if err != nil {
 			return withdrawalAmt, err
 		}
