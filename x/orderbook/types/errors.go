@@ -35,3 +35,8 @@ var (
 	ErrWithdrawalAmountIsTooLarge         = sdkerrors.Register(ModuleName, 1024, "withdrawal amount more than available amount for withdrawal")
 	ErrMaxWithdrawableAmountIsZero        = sdkerrors.Register(ModuleName, 1025, "maximum withdrawable amount is zero")
 )
+
+// x/orderbook module sentinel error text
+const (
+	ErrTextInvalidDesositor = "invalid depositor address (%s)"
+)

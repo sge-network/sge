@@ -97,21 +97,25 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipant) error {
 		}
 	} else {
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+		depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
+		if err != nil {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+		}
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to depositor address
-			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(bp.ParticipantAddress), depositPlusProfit)
+			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to depositor address
-			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(bp.ParticipantAddress), bp.Liquidity)
+			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, sdk.AccAddress(bp.ParticipantAddress), bp.ActualProfit)
+			err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, bp.ActualProfit)
 			if err != nil {
 				return err
 			}
