@@ -55,7 +55,7 @@ func (k Keeper) BettorWins(
 		}
 
 		// Transfer bet amount from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
+		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFullfillment.BetAmount)
 		if err != nil {
 			return err
 		}
