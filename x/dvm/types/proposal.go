@@ -27,3 +27,8 @@ func NewFinishedPublicKeysChangeProposal(
 		FinishTS:   finishTS,
 	}
 }
+
+func (proposal *PublicKeysChangeProposal) IsExpired(blockTime int64) bool {
+	diff := blockTime - proposal.StartTS
+	return diff > MaxValidProposalSeconds
+}

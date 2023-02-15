@@ -30,5 +30,5 @@ var (
 	PubKeysChangeProposalListActivePrefix = []byte{0x02}
 
 	// FinishedPubKeysChangeProposalListPrefix is the prefix of pubkeys change proposal that is finished.
-	FinishedPubKeysChangeProposalListPrefix = []byte{0x02}
+	FinishedPubKeysChangeProposalListPrefix = []byte{0x03}
 )

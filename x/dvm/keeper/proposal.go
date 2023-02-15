@@ -2,16 +2,10 @@ package keeper
 
 import (
 	"fmt"
-	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
-)
-
-const (
-	minVoteCountForDecision = 3
-	maxValidProposalTime    = 30
 )
 
 // SetActivePubkeysChangeProposal sets a pubkey list change proposal in the store.
@@ -80,7 +74,7 @@ func (k Keeper) GetFinishedPubkeysChangeProposal(ctx sdk.Context, id uint64) (va
 
 // GetAllFinishedPubkeysChangeProposals returns list of all finished pubkeys change proposals
 func (k Keeper) GetAllFinishedPubkeysChangeProposals(ctx sdk.Context) (list []types.PublicKeysChangeFinishedProposal, err error) {
-	store := k.getActivePubKeysChangeProposalStore(ctx)
+	store := k.getFinishedPubKeysChangeProposalStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -110,18 +104,22 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 		return nil
 	}
 
+	blockTime := ctx.BlockTime().Unix()
+
 	for _, proposal := range activeProposals {
-		expireTime := ctx.BlockTime().Add(maxValidProposalTime * time.Minute).Unix()
-		if proposal.StartTS > expireTime {
+		if proposal.IsExpired(blockTime) {
 			// proposal is expired
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
 				types.ProposalResult_PROPOSAL_RESULT_EXPIRED,
-				fmt.Sprintf("current block time is %d, more than %d minutes is passed since start time.", expireTime, maxValidProposalTime),
+				fmt.Sprintf("current block time is %d, more than %d minutes is passed since start time.", blockTime, types.MaxValidProposalMinutes),
 			); err != nil {
 				return fmt.Errorf("error while setting the proposal as expired: %s", err)
 			}
+
+			// this proposal is expired go for next proposal
+			continue
 		}
 
 		var approvedCount, rejectedCount int
@@ -134,7 +132,7 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			}
 		}
 
-		if rejectedCount > minVoteCountForDecision {
+		if rejectedCount > types.MinVoteCountForDecision {
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
@@ -148,33 +146,17 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			continue
 		}
 
-		if approvedCount > minVoteCountForDecision {
-			pubKeys, found := k.GetKeyVault(ctx)
+		if approvedCount > types.MinVoteCountForDecision {
+			keyVault, found := k.GetKeyVault(ctx)
 			if !found {
 				fmt.Printf("there is no publick keys record")
 			}
 
 			for _, deleted := range proposal.Modifications.Deletions {
-				pubKeys.PublicKeys = utils.RemoveStr(pubKeys.PublicKeys, deleted)
+				keyVault.PublicKeys = utils.RemoveStr(keyVault.PublicKeys, deleted)
 			}
 
-			for _, added := range proposal.Modifications.Additions {
-				if err := types.IsValidJwtToken(added); err != nil {
-					if err = k.finishPubkeysChangeProposal(
-						ctx,
-						proposal.Id,
-						types.ProposalResult_PROPOSAL_RESULT_REJECTED,
-						fmt.Sprintf("public key %s is not a valid jwt token.", added),
-					); err != nil {
-						return fmt.Errorf("error while setting the proposal as rejected because of invalid jwt: %s", err)
-					}
-
-					break
-				}
-				pubKeys.PublicKeys = append(pubKeys.PublicKeys, added)
-			}
-
-			k.SetKeyVault(ctx, pubKeys)
+			keyVault.PublicKeys = append(keyVault.PublicKeys, proposal.Modifications.Additions...)
 
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
@@ -184,6 +166,8 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			); err != nil {
 				return fmt.Errorf("error while setting the proposal as approved: %s", err)
 			}
+
+			k.SetKeyVault(ctx, keyVault)
 		}
 	}
 
@@ -211,5 +195,5 @@ func (k Keeper) finishPubkeysChangeProposal(
 	)
 	k.RemoveActiveProposal(ctx, proposalID)
 
-	return k.finishPubkeysChangeProposals(ctx)
+	return nil
 }

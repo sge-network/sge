@@ -10,5 +10,7 @@ import (
 // EndBlocker settles the active bets of resolved sport events
 func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 	err := k.FinishProposals(ctx)
-	k.Logger(ctx).Error(fmt.Sprintf("end block number %d error: %s", ctx.BlockHeight(), err))
+	if err != nil {
+		k.Logger(ctx).Error(fmt.Sprintf("end block number %d error: %s", ctx.BlockHeight(), err))
+	}
 }
