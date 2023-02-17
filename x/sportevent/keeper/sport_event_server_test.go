@@ -112,13 +112,14 @@ func TestMsgServerAddEventResponse(t *testing.T) {
 
 	t.Run("pre existing uid", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
-			"uid":      u1,
-			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
-			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"meta":     "Winner of x:y",
+			"uid":                       u1,
+			"start_ts":                  uint64(time.Now().Add(time.Minute).Unix()),
+			"end_ts":                    uint64(time.Now().Add(time.Minute * 5).Unix()),
+			"odds":                      []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
+			"exp":                       9999999999,
+			"iat":                       1111111111,
+			"meta":                      "Winner of x:y",
+			"sr_contribution_for_house": "2",
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)

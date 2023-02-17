@@ -33,7 +33,8 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Meta: "Winner of x:y",
+				Meta:                   "Winner of x:y",
+				SrContributionForHouse: sdk.NewInt(2),
 			},
 		},
 		{
@@ -153,7 +154,8 @@ func TestValidateCreationEvent(t *testing.T) {
 					MinAmount: params.EventMinBetAmount,
 					BetFee:    params.EventMinBetFee,
 				},
-				Meta: "Winner of x:y",
+				Meta:                   "Winner of x:y",
+				SrContributionForHouse: sdk.NewInt(2),
 			},
 		},
 		{

@@ -23,7 +23,7 @@ func NewSpoerEvent(
 		BetConstraints:         betConstraits,
 		Active:                 active,
 		Meta:                   meta,
-		BookId:                 bookID,
+		BookID:                 bookID,
 		SrContributionForHouse: srContributionForHouse,
 	}
 }
