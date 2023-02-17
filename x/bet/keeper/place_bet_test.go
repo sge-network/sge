@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
@@ -46,7 +45,7 @@ func TestPlaceBet(t *testing.T) {
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			bet: &types.Bet{
@@ -64,7 +63,7 @@ func TestPlaceBet(t *testing.T) {
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			bet: &types.Bet{
@@ -83,7 +82,7 @@ func TestPlaceBet(t *testing.T) {
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			bet: &types.Bet{
@@ -106,7 +105,7 @@ func TestPlaceBet(t *testing.T) {
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -137,7 +136,7 @@ func TestPlaceBet(t *testing.T) {
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1000),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -168,7 +167,7 @@ func TestPlaceBet(t *testing.T) {
 				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+					BetFee:    sdk.NewInt(1),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{

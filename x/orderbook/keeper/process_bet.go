@@ -15,7 +15,7 @@ func (k Keeper) ProcessBetPlacement(
 	maxLossMultiplier sdk.Dec,
 	payoutProfit sdk.Int,
 	bettorAddress sdk.AccAddress,
-	betFee sdk.Coin,
+	betFee sdk.Int,
 	betAmount sdk.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betId uint64,
@@ -209,7 +209,7 @@ func (k Keeper) ProcessBetPlacement(
 	k.SetBookOddExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
-	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee.Amount)
+	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)
 	if err != nil {
 		return err, betFullfillment
 	}

@@ -24,6 +24,7 @@ type BankKeeper interface {
 type SporteventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
 	GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool)
+	GetDefaultBetConstraints(ctx sdk.Context) (params *sporteventtypes.EventBetConstraints)
 	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }
 
@@ -34,7 +35,7 @@ type DVMKeeper interface {
 
 // OrderBookKeeper defines the expected interface needed to process bet placement
 type OrderBookKeeper interface {
-	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookId, oddId string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Coin, betAmount sdk.Int, oddsType OddsType, oddsVal string, betId uint64) (error, []*BetFullfillment)
+	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookId, oddId string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Int, betAmount sdk.Int, oddsType OddsType, oddsVal string, betId uint64) (error, []*BetFullfillment)
 	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
 	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error
 	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error

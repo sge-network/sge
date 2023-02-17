@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/nullify"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
@@ -28,7 +27,7 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		items[i].OddsValue = "10"
 		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
-		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
+		items[i].BetFee = sdk.NewInt(1)
 		items[i].SportEventUID = testSportEventUID
 
 		id := uint64(i + 1)

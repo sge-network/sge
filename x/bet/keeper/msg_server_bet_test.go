@@ -8,7 +8,6 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 
@@ -147,7 +146,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			Active:  true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
-				BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+				BetFee:    sdk.NewInt(1),
 			},
 		}
 
