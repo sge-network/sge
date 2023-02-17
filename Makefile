@@ -250,7 +250,7 @@ lint:
 
 format:
 	$(golangci_lint_cmd) run ./... --fix
-	@go run mvdan.cc/gofumpt -l -w x/ app/ ante/ tests/
+	@go run mvdan.cc/gofumpt -l -w x/ app/
 	$(DOCKER) run -v $(PWD):/workdir ghcr.io/igorshubovych/markdownlint-cli:latest "**/*.md" --fix
 
 mdlint:

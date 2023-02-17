@@ -191,11 +191,13 @@ func TestPlaceBet(t *testing.T) {
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
 			}
+
 			err := k.PlaceBet(ctx, tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
+
 			require.NoError(t, err)
 		})
 	}

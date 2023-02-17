@@ -67,15 +67,18 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 		return types.ErrCanNotBeAltered
 	}
 
-	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
-		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
-	}
-
 	storedEvent.Active = false
 	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
 	storedEvent.Status = resolutionEvent.Status
 
+	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
+		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
+
+		k.appendUnsettledResovedSportEvent(ctx, storedEvent.UID)
+	}
+
 	k.SetSportEvent(ctx, storedEvent)
+
 	return nil
 }
 
