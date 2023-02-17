@@ -42,11 +42,16 @@ message OrderBook {
   uint64 number_of_odds = 4 [(gogoproto.moretags) = "yaml:\"number_of_odds\""];
 }
 
+// OrderBookStatus is the enum type for the status of the orderbook.
 enum OrderBookStatus {
-  STATUS_INVALID = 0;
-  STATUS_ACTIVE = 1;
-  STATUS_RESOLVED = 2;
-  STATUS_SETTLED = 3;
+  // invalid
+  ORDER_BOOK_STATUS_UNSPECIFIED = 0;
+  // active
+  ORDER_BOOK_STATUS_STATUS_ACTIVE = 1;
+  // resolved not settled
+  ORDER_BOOK_STATUS_STATUS_RESOLVED = 2;
+  // resolved and settled
+  ORDER_BOOK_STATUS_STATUS_SETTLED = 3;
 }
 
 // BookParticipant represents the participants of an order book.

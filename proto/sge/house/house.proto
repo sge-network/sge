@@ -95,8 +95,12 @@ string amount = 6 [
 ];
 }
 
+// WithdrawalMode is the enum type for the withdrawal mode.
 enum WithdrawalMode {
-  MODE_INVALID = 0;
-  MODE_FULL = 1;
-  MODE_PARTIAL = 2;
+  // invalid
+  WITHDRAWAL_MODE_UNSPECIFIED = 0;
+  // full
+  WITHDRAWAL_MODE_FULL = 1;
+  // partial
+  WITHDRAWAL_MODE_PARTIAL = 2;
 }

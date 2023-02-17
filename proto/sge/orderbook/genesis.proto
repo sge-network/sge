@@ -14,14 +14,14 @@ message GenesisState {
   // books defines the books active at genesis.
   repeated OrderBook books = 2 [(gogoproto.nullable) = false];
 
-  // bookparticipants defines the book participants active at genesis.
-  repeated BookParticipant bookparticipants = 3 [(gogoproto.nullable) = false];
+  // book_participants defines the book participants active at genesis.
+  repeated BookParticipant book_participants = 3 [(gogoproto.nullable) = false];
 
-  // bookExposures defines the book exposures active at genesis.
-  repeated BookOddExposure bookExposures = 4 [(gogoproto.nullable) = false];
+  // book_exposures defines the book exposures active at genesis.
+  repeated BookOddExposure book_exposures = 4 [(gogoproto.nullable) = false];
 
-  // participantExposures defines the participant exposures active at genesis.
-  repeated ParticipantExposure participantExposures = 5 [(gogoproto.nullable) = false];
+  // participant_exposures defines the participant exposures active at genesis.
+  repeated ParticipantExposure participant_exposures = 5 [(gogoproto.nullable) = false];
 
   // stats is the statistics of the order-book
   OrderBookStats stats = 6 [ (gogoproto.nullable) = false ];
