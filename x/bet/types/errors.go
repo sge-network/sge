@@ -49,6 +49,14 @@ var (
 
 // x/bet module sentinel error text
 const (
-	ErrTextInvalidCreator                         = "invalid creator address (%s)"
-	ErrTextInitGenesisFailedBecauseOfMissingBetID = "no bet id found for the bet with uuid (%s)"
+	ErrTextInvalidParamType                                  = "invalid parameter type: %T"
+	ErrTextBatchSettlementCountMustBePositive                = "batch settlement count should be a positive number %d"
+	ErrTextInvalidCreator                                    = "invalid creator address (%s)"
+	ErrTextInitGenesisFailedBecauseOfMissingBetID            = "no bet id found for the bet with uuid (%s)"
+	ErrTextInitGenesisFailedBecauseOfNotEqualStats           = "bet list items count (%d) is not equal to stats count (%d)"
+	ErrTextInitGenesisFailedBetCountNotEqualActiveAndSettled = "sum of active and settled list items count (%d) is not equal to bet list items count (%d)"
+	ErrTextInitGenesisFailedNotActiveOrSettled               = "bet is not active nor settled with uuid (%s)"
+	ErrTextInitGenesisFailedSettlementHeightIsZero           = "settlement height can not be zero for the settled bet with uuid (%s)"
+	ErrTextInitGenesisFailedSettlementHeightIsZeroForList    = "settlement height can not be zero for a bet in the settled bet list with uuid (%s)"
+	ErrTextInitGenesisFailedSettlementHeightIsNotZero        = "settlement height should be zero for the active bet with uuid (%s)"
 )

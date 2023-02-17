@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 
@@ -148,7 +147,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			Active:  true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
-				BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+				BetFee:    sdk.NewInt(1),
 			},
 		}
 
@@ -243,13 +242,17 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 					Active:  true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
 						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						BetFee:    sdk.NewInt(1),
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
-				placeTestBet(ctx, t, tApp, betUID)
+				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
+
+				activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
+				require.NoError(t, err)
+				require.Equal(t, 1, len(activeBets.Bet))
 			}
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
@@ -271,6 +274,15 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, expectedResp, res)
+
+			activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
+			require.NoError(t, err)
+			require.Equal(t, 0, len(activeBets.Bet))
+
+			settledBets, err := k.SettledBetsOfHeight(wctx, &types.QuerySettledBetsOfHeightRequest{BlockHeight: ctx.BlockHeight()})
+			require.NoError(t, err)
+			require.Equal(t, 1, len(settledBets.Bet))
+			require.Equal(t, ctx.BlockHeight(), settledBets.Bet[0].SettlementHeight)
 		})
 	}
 }

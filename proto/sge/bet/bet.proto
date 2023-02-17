@@ -2,7 +2,6 @@ syntax = "proto3";
 package sgenetwork.sge.bet;
 
 import "gogoproto/gogo.proto";
-import "cosmos/base/v1beta1/coin.proto";
 import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
@@ -47,8 +46,8 @@ message Bet {
   ];
 
   // bet_fee is the betting fee calculated by the bet amount.
-  cosmos.base.v1beta1.Coin bet_fee = 7 [
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
+  string bet_fee = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
@@ -69,6 +68,9 @@ message Bet {
 
   // created_at is the bet placement timestamp.
   int64 created_at = 13;
+
+  // settlement_height is the block height that the bet is settled.
+  int64 settlement_height = 14;
 
   // Status of the Bet.
   enum Status {
@@ -134,4 +136,28 @@ message UID2ID {
     (gogoproto.jsontag) = "id",
     json_name = "id"
   ];
+}
+
+// ActiveBet is the type for an active bet
+message ActiveBet {
+  // uid is the universal unique identifier for the bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // creator is the bettor address.
+  string creator = 2;
+}
+
+// SettledBet is the type for a settled bet.
+message SettledBet {
+  // uid is the universal unique identifier for the bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // bettor_address is the bech32 address of the bettor account.
+  string bettor_address = 2;
 }

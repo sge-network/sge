@@ -9,16 +9,16 @@ import (
 // to export unexported methods of the keeper
 type KeeperTest = Keeper
 
-func (k KeeperTest) ValidateEventResolution(event types.SportEventResolutionTicketPayload) error {
-	return validateEventResolution(event)
+func (k KeeperTest) ValidateEventResolution(resolutionPayload types.SportEventResolutionTicketPayload) error {
+	return resolutionPayload.Validate()
 }
 
-func (k KeeperTest) MsgServerValidateCreationEvent(ctx sdk.Context, event types.SportEvent) error {
-	msgSrv := &msgServer{Keeper: k}
-	return msgSrv.validateAddEvent(ctx, &event)
+func (k KeeperTest) ValidateEventAdd(ctx sdk.Context, addPayload types.SportEventAddTicketPayload) error {
+	params := k.GetParams(ctx)
+	return addPayload.Validate(ctx, &params)
 }
 
-func (k KeeperTest) MsgServerValidateEventUpdate(ctx sdk.Context, updatePayload types.SportEventUpdateTicketPayload, previousEvent types.SportEvent) error {
-	msgSrv := &msgServer{Keeper: k}
-	return msgSrv.validateEventUpdate(ctx, updatePayload, previousEvent)
+func (k KeeperTest) ValidateEventUpdate(ctx sdk.Context, updatePayload types.SportEventUpdateTicketPayload, previousEvent types.SportEvent) error {
+	params := k.GetParams(ctx)
+	return updatePayload.Validate(ctx, &params)
 }

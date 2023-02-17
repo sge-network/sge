@@ -9,8 +9,8 @@ import (
 // to export unexported methods of the keeper
 type KeeperTest = Keeper
 
-func (k KeeperTest) ResolveBetResult(bet *types.Bet, sportEvent sporteventtypes.SportEvent) error {
-	return resolveBetResult(bet, sportEvent)
+func (k KeeperTest) ProcessBetResultAndStatus(bet *types.Bet, sportEvent sporteventtypes.SportEvent) error {
+	return processBetResultAndStatus(bet, sportEvent)
 }
 
 func (k KeeperTest) CheckBetStatus(bet *types.Bet) error {

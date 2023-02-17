@@ -25,6 +25,11 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check minimum bet amount allowed
+	betConstraints := sportEvent.GetBetConstraints()
+	if betConstraints == nil {
+		sportEvent.BetConstraints = k.sporteventKeeper.GetDefaultBetConstraints(ctx)
+	}
+
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
@@ -58,8 +63,15 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	stats := k.GetBetStats(ctx)
 	stats.Count++
 
+	betID := stats.Count
+
 	// store bet in the module state
-	k.SetBet(ctx, *bet, stats.Count)
+	k.SetBet(ctx, *bet, betID)
+
+	// set bet as an active bet
+	k.SetActiveBet(ctx, types.NewActiveBet(bet.UID, bet.Creator), betID, bet.SportEventUID)
+
+	// set bet stats
 	k.SetBetStats(ctx, stats)
 
 	return nil
@@ -97,7 +109,7 @@ func oddExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer
-func setBetFee(bet *types.Bet, betFee sdk.Coin) {
-	bet.Amount = bet.Amount.Sub(betFee.Amount)
+func setBetFee(bet *types.Bet, betFee sdk.Int) {
+	bet.Amount = bet.Amount.Sub(betFee)
 	bet.BetFee = betFee
 }

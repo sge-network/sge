@@ -1,6 +1,6 @@
 # **Events**
 
-The Strategic Reserve module emits the following events
+The Bet module emits the following events
 
 ## *MsgPlaceBet*
 

@@ -19,7 +19,7 @@ import (
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betFee sdk.Coin,
+	betFee sdk.Int,
 	betAmount sdk.Int,
 	payoutProfit sdk.Int,
 	uniqueLock string,
@@ -44,8 +44,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Transfer bet fee from bettor to the `bet` module account
-	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName,
-		betFee.Amount)
+	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)
 	if err != nil {
 		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betFee,
 			bettorAddress, bettypes.ModuleName, err.Error()))

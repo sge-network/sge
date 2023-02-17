@@ -6,7 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
@@ -16,7 +15,7 @@ import (
 func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
-	addSportEvent(t, tApp, ctx)
+	addTestSportEvent(t, tApp, ctx)
 
 	tcs := []struct {
 		desc             string
@@ -173,32 +172,118 @@ func TestSettleBet(t *testing.T) {
 					Active:  true,
 					BetConstraints: &sporteventtypes.EventBetConstraints{
 						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+						BetFee:    sdk.NewInt(1),
 					},
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
-				placeTestBet(ctx, t, tApp, betUID)
+				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
 			}
+
 			if tc.updateSportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.updateSportEvent)
 			}
+
 			if tc.betUID != "" {
 				betUID = tc.betUID
 			}
+
 			if tc.bet == nil {
 				tc.bet = &types.Bet{
 					Creator: "",
 				}
 			}
+
 			err := k.SettleBet(ctx, tc.bet.Creator, betUID)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
 			}
+
 			require.NoError(t, err)
 		})
+	}
+}
+
+func TestBatchSettleBet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+
+	p := k.GetParams(ctx)
+	p.BatchSettlementCount = 7
+	k.SetParams(ctx, p)
+
+	sportEventCount := 5
+	sportEventBetCount := 10
+	allBetCount := sportEventCount * sportEventBetCount
+	blockCount := allBetCount/int(p.BatchSettlementCount) + 1
+
+	sportEventUIDs := addTestSportEventBatch(t, tApp, ctx, sportEventCount)
+	for _, sportEventUID := range sportEventUIDs {
+		sportEvent, found := tApp.SporteventKeeper.GetSportEvent(ctx, sportEventUID)
+		require.True(t, found)
+
+		sportEvent.Active = true
+		sportEvent.BetConstraints = &sporteventtypes.EventBetConstraints{
+			MinAmount: sdk.NewInt(1),
+			BetFee:    sdk.NewInt(1),
+		}
+		tApp.SporteventKeeper.SetSportEvent(ctx, sportEvent)
+
+		for i := 0; i < sportEventBetCount; i++ {
+			placeTestBet(ctx, t, tApp,
+				uuid.NewString(),
+				&types.BetOdds{
+					UID:           testOddsUID1,
+					SportEventUID: sportEventUID,
+					Value:         "4.20",
+				})
+		}
+	}
+
+	allActiveBets, err := k.GetActiveBets(ctx)
+	require.NoError(t, err)
+	require.Equal(t, allBetCount, len(allActiveBets))
+
+	for _, sportEventUID := range sportEventUIDs {
+		err := tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+			UID:            sportEventUID,
+			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+			WinnerOddsUIDs: []string{testOddsUID1, testOddsUID2, testOddsUID3},
+			Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		})
+		require.NoError(t, err)
+	}
+
+	for i := 1; i <= blockCount; i++ {
+		ctx = ctx.WithBlockHeight(int64(i))
+		err := k.BatchSportEventSettlements(ctx)
+		require.NoError(t, err)
+
+		activeBets, err := k.GetActiveBets(ctx)
+		require.NoError(t, err)
+
+		settledBets, err := k.GetSettledBets(ctx)
+		require.NoError(t, err)
+
+		sportEventStats := tApp.SporteventKeeper.GetSportEventStats(ctx)
+
+		t.Logf("block: %d, active bets: %d, settled bets: %d, resolved events: %v\n", i, len(activeBets), len(settledBets), sportEventStats.ResolvedUnsettled)
+		require.GreaterOrEqual(t, int(p.BatchSettlementCount)*i, len(settledBets))
+	}
+
+	allActiveBets, err = k.GetActiveBets(ctx)
+	require.NoError(t, err)
+	require.Equal(t, 0, len(allActiveBets))
+
+	allSettledBets, err := k.GetSettledBets(ctx)
+	require.NoError(t, err)
+	require.Equal(t, allBetCount, len(allSettledBets))
+
+	allBets, err := k.GetBets(ctx)
+	require.NoError(t, err)
+	for _, bet := range allBets {
+		require.NotEqual(t, 0, bet.SettlementHeight)
 	}
 }
 
@@ -242,7 +327,7 @@ func TestCheckBetStatus(t *testing.T) {
 	}
 }
 
-func TestResolveBetResult(t *testing.T) {
+func TestProcessBetResultAndStatus(t *testing.T) {
 	k, _ := setupKeeper(t)
 	tcs := []struct {
 		desc       string
@@ -282,7 +367,7 @@ func TestResolveBetResult(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := k.ResolveBetResult(tc.bet, tc.sportEvent)
+			err := k.ProcessBetResultAndStatus(tc.bet, tc.sportEvent)
 			if tc.err != nil {
 				require.Equal(t, tc.err, err)
 			} else {

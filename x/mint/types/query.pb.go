@@ -401,7 +401,8 @@ var xxx_messageInfo_QueryEndPhaseStatusRequest proto.InternalMessageInfo
 // method.
 // Query/EndPhaseStatus RPC method.
 type QueryEndPhaseStatusResponse struct {
-	// is_in_end_phase is true if there is no more valid phase in the mint parameters.
+	// is_in_end_phase is true if there is no more valid phase in the mint
+	// parameters.
 	IsInEndPhase bool `protobuf:"varint,1,opt,name=is_in_end_phase,json=isInEndPhase,proto3" json:"is_in_end_phase,omitempty"`
 }
 
