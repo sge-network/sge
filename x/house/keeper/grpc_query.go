@@ -38,7 +38,6 @@ func (k Keeper) Deposits(c context.Context, req *types.QueryDepositsRequest) (*t
 
 		return true, nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -79,7 +78,6 @@ func (k Keeper) DepositorDeposits(c context.Context, req *types.QueryDepositorDe
 	}
 
 	return &types.QueryDepositorDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
-
 }
 
 // DepositorWithdrawals queries all withdrawals of a give depositor address
@@ -115,5 +113,4 @@ func (k Keeper) DepositorWithdrawals(c context.Context, req *types.QueryDeposito
 	}
 
 	return &types.QueryDepositorWithdrawalsResponse{Withdrawals: withdrawals, Pagination: pageRes}, nil
-
 }

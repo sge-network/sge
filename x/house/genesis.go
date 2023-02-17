@@ -13,7 +13,10 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 	keeper.SetParams(ctx, data.Params)
 
 	for _, deposit := range data.Deposits {
-		keeper.SetDeposit(ctx, deposit)
+		err := keeper.SetDeposit(ctx, deposit)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 

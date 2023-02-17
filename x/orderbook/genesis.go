@@ -16,7 +16,7 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 		keeper.SetBook(ctx, book)
 	}
 
-	for _, bp := range data.Bookparticipants {
+	for _, bp := range data.BookParticipants {
 		keeper.SetBookParticipant(ctx, bp)
 	}
 
@@ -38,7 +38,7 @@ func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
 	return &types.GenesisState{
 		Params:               keeper.GetParams(ctx),
 		Books:                keeper.GetAllBooks(ctx),
-		Bookparticipants:     keeper.GetAllBookParticipants(ctx),
+		BookParticipants:     keeper.GetAllBookParticipants(ctx),
 		BookExposures:        keeper.GetAllBookExposures(ctx),
 		ParticipantExposures: keeper.GetAllParticipantExposures(ctx),
 		Stats:                keeper.GetOrderBookStats(ctx),

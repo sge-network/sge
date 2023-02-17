@@ -51,31 +51,31 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) error {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
 	b := types.MustMarshalDeposit(k.cdc, deposit)
 
-	depoistKey := types.GetDepositKey(depAddress, deposit.SportEventUid, deposit.ParticipantId)
+	depoistKey := types.GetDepositKey(depAddress, deposit.SportEventUID, deposit.ParticipantID)
 	store.Set(depoistKey, b)
 	return nil
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUid string, depAmt sdk.Int) (error, uint64) {
+func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUID string, depAmt sdk.Int) (uint64, error) {
 	// Create the deposit object
-	deposit := types.NewDeposit(depAddr, sportEventUid, depAmt, sdk.ZeroInt(), 0)
+	deposit := types.NewDeposit(depAddr, sportEventUID, depAmt, sdk.ZeroInt(), 0)
 
 	// Set the house participation fee
 	deposit.SetHouseParticipationFee(k.HouseParticipationFee(ctx))
 
-	participantId, err := k.orderBookKeeper.AddBookParticipant(
-		ctx, depAddr, sportEventUid, deposit.Liquidity, deposit.Fee, types.HouseParticipationFeeName,
+	participantID, err := k.orderBookKeeper.AddBookParticipant(
+		ctx, depAddr, sportEventUID, deposit.Liquidity, deposit.Fee, types.HouseParticipationFeeName,
 	)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err), participantId
+		return participantID, sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
 	}
 
-	deposit.ParticipantId = participantId
+	deposit.ParticipantID = participantID
 
 	if err = k.SetDeposit(ctx, deposit); err != nil {
-		return err, participantId
+		return participantID, err
 	}
 
-	return nil, participantId
+	return participantID, nil
 }

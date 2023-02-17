@@ -37,7 +37,7 @@ service Query {
 
   // BookExposure queries exposure info for given orderbook and odd id.
   rpc BookExposure(QueryBookExposureRequest) returns (QueryBookExposureResponse) {
-    option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures/{odd_id}";
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures/{odds_id}";
   }
 
   // ParticipantExposures queries exposures info for given orderbook participants.
@@ -55,7 +55,7 @@ service Query {
     option (google.api.http).get = "/sge/orderbooks/{book_id}/historical-participant-exposures";
   }
 
-  // ParticipantFullfilledBets queries fullfilled bets for given orderbook participant.
+  // ParticipantFullfilledBets queries fulfilled bets for given orderbook participant.
   rpc ParticipantFullfilledBets(QueryParticipantFullfilledBetsRequest) returns (QueryParticipantFullfilledBetsResponse) {
     option (google.api.http).get = "/sge/orderbooks/{book_id}/participants/{participant_number}/fullfilled_bets";
   }
@@ -145,8 +145,8 @@ message QueryBookExposureRequest {
     // book_id defines the book id to query for.
     string book_id = 1;
 
-    // odd_id defines the odd id to query for.
-    string odd_id = 2;
+    // odds_id defines the odd id to query for.
+    string odds_id = 2;
 }
 
 // QueryBookExposureResponse is response type for the Query/BookExposure RPC method

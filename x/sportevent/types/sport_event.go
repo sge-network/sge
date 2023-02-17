@@ -11,7 +11,7 @@ func NewSpoerEvent(
 	betConstraits *EventBetConstraints,
 	active bool,
 	meta string,
-	bookId string,
+	bookID string,
 	srContributionForHouse sdk.Int,
 ) SportEvent {
 	return SportEvent{
@@ -23,7 +23,7 @@ func NewSpoerEvent(
 		BetConstraints:         betConstraits,
 		Active:                 active,
 		Meta:                   meta,
-		BookId:                 bookId,
+		BookId:                 bookID,
 		SrContributionForHouse: srContributionForHouse,
 	}
 }

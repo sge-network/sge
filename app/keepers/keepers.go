@@ -409,7 +409,6 @@ func (appKeepers *AppKeepers) GetSubspace(moduleName string) paramstypes.Subspac
 
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec,
-	// nolint
 	legacyAmino *codec.LegacyAmino,
 	key, tkey sdk.StoreKey,
 ) paramskeeper.Keeper {

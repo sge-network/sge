@@ -32,14 +32,14 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		return nil, sdkerrors.Wrap(err, "validate deposit")
 	}
 
-	err, participantId := k.Keeper.Deposit(ctx, depAddr, msg.SportEventUid, msg.Amount.Amount)
+	participantID, err := k.Keeper.Deposit(ctx, depAddr, msg.SportEventUID, msg.Amount.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process deposit")
 	}
 
 	return &types.MsgDepositResponse{
-		SportEventUid: msg.SportEventUid,
-		ParticipantId: participantId,
+		SportEventUID: msg.SportEventUID,
+		ParticipantID: participantID,
 	}, nil
 }
 
@@ -52,14 +52,14 @@ func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*typ
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
 	}
 
-	err, withdrawalId := k.Keeper.Withdraw(ctx, depAddr, msg.SportEventUid, msg.ParticipantId, msg.Mode, msg.Amount.Amount)
+	withdrawalID, err := k.Keeper.Withdraw(ctx, depAddr, msg.SportEventUID, msg.ParticipantID, msg.Mode, msg.Amount.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process withdrawal")
 	}
 
 	return &types.MsgWithdrawResponse{
-		SportEventUid:    msg.SportEventUid,
-		ParticipantId:    msg.ParticipantId,
-		WithdrawalNumber: withdrawalId,
+		SportEventUID:    msg.SportEventUID,
+		ParticipantID:    msg.ParticipantID,
+		WithdrawalNumber: withdrawalID,
 	}, nil
 }

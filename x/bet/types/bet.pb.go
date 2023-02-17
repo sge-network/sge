@@ -148,9 +148,11 @@ type Bet struct {
 	// created_at is the bet placement timestamp.
 	CreatedAt int64 `protobuf:"varint,13,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	// settlement_height is the block height that the bet is settled.
-	SettlementHeight  int64                                  `protobuf:"varint,14,opt,name=settlement_height,json=settlementHeight,proto3" json:"settlement_height,omitempty"`
+	SettlementHeight int64 `protobuf:"varint,14,opt,name=settlement_height,json=settlementHeight,proto3" json:"settlement_height,omitempty"`
+	// max_loss_multiplier is the multiplier coefficient of max loss.
 	MaxLossMultiplier github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,15,opt,name=max_loss_multiplier,json=maxLossMultiplier,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"max_loss_multiplier"`
-	BetFullfillment   []*BetFullfillment                     `protobuf:"bytes,16,rep,name=bet_fullfillment,json=betFullfillment,proto3" json:"bet_fullfillment,omitempty"`
+	// bet_fullfillment is the fulfillment data.
+	BetFullfillment []*BetFullfillment `protobuf:"bytes,16,rep,name=bet_fullfillment,json=betFullfillment,proto3" json:"bet_fullfillment,omitempty"`
 }
 
 func (m *Bet) Reset()         { *m = Bet{} }
@@ -442,14 +444,15 @@ func (m *SettledBet) GetBettorAddress() string {
 	return ""
 }
 
+// BetFullfillment is the type for bet fulfillment
 type BetFullfillment struct {
 	// participant_address is the bech32-encoded address of the participant fullfilling bet.
 	ParticipantAddress string `protobuf:"bytes,1,opt,name=participant_address,json=participantAddress,proto3" json:"participant_address,omitempty" yaml:"participant_address"`
 	// number in initial participation queue number
 	ParticipantNumber uint64 `protobuf:"varint,2,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty" yaml:"participant_number"`
-	// bet amount fullfilled by the participant
+	// bet amount fulfilled by the participant
 	BetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=bet_amount,json=betAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_amount" yaml:"bet_amount"`
-	// payout amount fullfilled by the participant
+	// payout amount fulfilled by the participant
 	PayoutAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=payout_amount,json=payoutAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"payout_amount" yaml:"payout_amount"`
 }
 

@@ -35,9 +35,9 @@ type DVMKeeper interface {
 
 // OrderBookKeeper defines the expected interface needed to process bet placement
 type OrderBookKeeper interface {
-	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookId, oddId string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Int, betAmount sdk.Int, oddsType OddsType, oddsVal string, betId uint64) (error, []*BetFullfillment)
+	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookID, oddsID string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Int, betAmount sdk.Int, oddsType OddsType, oddsVal string, betID uint64) ([]*BetFullfillment, error)
 	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
-	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error
-	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookId string) error
-	AddBookSettlement(ctx sdk.Context, orderBookId string) error
+	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookID string) error
+	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fullfillment []*BetFullfillment, bookID string) error
+	AddBookSettlement(ctx sdk.Context, orderBookID string) error
 }

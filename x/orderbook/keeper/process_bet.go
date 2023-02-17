@@ -11,48 +11,48 @@ import (
 // ProcessBetPlacement processes bet placement
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
-	uniqueLock, bookId, oddId string,
+	uniqueLock, bookID, oddsID string,
 	maxLossMultiplier sdk.Dec,
 	payoutProfit sdk.Int,
 	bettorAddress sdk.AccAddress,
 	betFee sdk.Int,
 	betAmount sdk.Int,
 	oddsType bettypes.OddsType,
-	oddsVal string, betId uint64,
-) (error, []*bettypes.BetFullfillment) {
+	oddsVal string, betID uint64,
+) ([]*bettypes.BetFullfillment, error) {
 	betFullfillment := []*bettypes.BetFullfillment{}
 
 	// If lock exists, return error
 	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, uniqueLock) {
-		return sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", uniqueLock), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", uniqueLock)
 	}
 
 	// Check bet fullfillment
-	book, found := k.GetBook(ctx, bookId)
+	book, found := k.GetBook(ctx, bookID)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookId), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
 	}
-	bookExposure, found := k.GetBookOddExposure(ctx, bookId, oddId)
+	bookExposure, found := k.GetBookOddExposure(ctx, bookID, oddsID)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookId, oddId), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsID)
 	}
 
 	// Get participants for a book
 	participantMap := make(map[uint64]types.BookParticipant)
 	participantExposureMap := make(map[uint64]types.ParticipantExposure)
 
-	bps := k.GetParticipantsByBook(ctx, book.Id)
+	bps := k.GetParticipantsByBook(ctx, book.ID)
 	if int(book.Participants) != len(bps) {
-		return sdkerrors.Wrapf(types.ErrBookParticipantsNotFound, "%s", bookId), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrBookParticipantsNotFound, "%s", bookID)
 	}
 	for _, bp := range bps {
 		participantMap[bp.ParticipantNumber] = bp
 	}
 
-	pes := k.GetExposureByBookAndOdd(ctx, bookId, oddId)
+	pes := k.GetExposureByBookAndOdd(ctx, bookID, oddsID)
 	if int(book.Participants) != len(pes) {
-		return sdkerrors.Wrapf(types.ErrParticipantExposuresNotFound, "%s, %s", bookId, oddId), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrParticipantExposuresNotFound, "%s, %s", bookID, oddsID)
 	}
 	for _, pe := range pes {
 		participantExposureMap[pe.ParticipantNumber] = pe
@@ -64,84 +64,89 @@ func (k Keeper) ProcessBetPlacement(
 		pn := updatedFullfillmentQueue[0]
 		participant, found := participantMap[pn]
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, pn), betFullfillment
+			return betFullfillment, sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, pn)
 		}
 		participantExposure, found := participantExposureMap[pn]
 		if !found {
-			return sdkerrors.Wrapf(types.ErrParticipantExposureNotFound, "%s, %d", bookId, pn), betFullfillment
+			return betFullfillment, sdkerrors.Wrapf(types.ErrParticipantExposureNotFound, "%s, %d", bookID, pn)
 		}
 		if participantExposure.IsFullfilled {
-			return sdkerrors.Wrapf(types.ErrParticipantExposureAlreadyFilled, "%s, %d", bookId, pn), betFullfillment
+			return betFullfillment, sdkerrors.Wrapf(types.ErrParticipantExposureAlreadyFilled, "%s, %d", bookID, pn)
 		}
 
 		availableLiquidty := maxLossMultiplier.MulInt(participant.CurrentRoundLiquidity).TruncateInt().Sub(participantExposure.Exposure)
-		if availableLiquidty.LTE(sdk.ZeroInt()) {
+		switch {
+		case availableLiquidty.LTE(sdk.ZeroInt()):
 			participantExposure.IsFullfilled = true
-			participant.ExposuresNotFilled -= 1
+			participant.ExposuresNotFilled--
 			updatedFullfillmentQueue = updatedFullfillmentQueue[1:]
-		} else if availableLiquidty.LTE(remainingPayoutProfit) {
+		case availableLiquidty.LTE(remainingPayoutProfit):
 			participantExposure.Exposure = participantExposure.Exposure.Add(availableLiquidty)
 			betAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, availableLiquidty)
 			if err != nil {
-				return err, betFullfillment
+				return betFullfillment, err
 			}
 			calculatedBetAmount = calculatedBetAmount.Add(betAmount)
 			participantExposure.BetAmount = participantExposure.BetAmount.Add(betAmount)
 			participantExposure.IsFullfilled = true
-			participant.ExposuresNotFilled -= 1
+			participant.ExposuresNotFilled--
 			participant.TotalBetAmount = participant.TotalBetAmount.Add(betAmount)
 			participant.CurrentRoundTotalBetAmount = participant.CurrentRoundTotalBetAmount.Add(betAmount)
 			updatedFullfillmentQueue = updatedFullfillmentQueue[1:]
 
 			remainingPayoutProfit = remainingPayoutProfit.Sub(availableLiquidty)
 			maxLoss := participantExposure.Exposure.Sub(participant.CurrentRoundTotalBetAmount).Add(participantExposure.BetAmount)
-			if participant.CurrentRoundMaxLoss.IsNil() {
+			switch {
+			case participant.CurrentRoundMaxLoss.IsNil():
 				participant.CurrentRoundMaxLoss = maxLoss
-				participant.CurrentRoundMaxLossOdd = oddId
-			} else if participant.CurrentRoundMaxLossOdd == oddId {
+				participant.CurrentRoundMaxLossOdd = oddsID
+			case participant.CurrentRoundMaxLossOdd == oddsID:
 				participant.CurrentRoundMaxLoss = maxLoss
-			} else {
+			default:
 				originalMaxLoss := participant.CurrentRoundMaxLoss.Sub(betAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participant.CurrentRoundMaxLoss = maxLoss
-					participant.CurrentRoundMaxLossOdd = oddId
+					participant.CurrentRoundMaxLossOdd = oddsID
 				} else {
 					participant.CurrentRoundMaxLoss = originalMaxLoss
 				}
 			}
+
 			betFullfillment = append(betFullfillment, &bettypes.BetFullfillment{
 				ParticipantAddress: participant.ParticipantAddress,
 				ParticipantNumber:  participant.ParticipantNumber,
 				BetAmount:          betAmount,
 				PayoutAmount:       availableLiquidty,
 			})
-			participantBetPair := types.NewParticipantBetPair(participant.BookId, uniqueLock, participant.ParticipantNumber, betId)
+			participantBetPair := types.NewParticipantBetPair(participant.BookID, uniqueLock, participant.ParticipantNumber, betID)
 			k.SetParticipantBetPair(ctx, participantBetPair)
-		} else {
+		default:
 			participantExposure.Exposure = participantExposure.Exposure.Add(remainingPayoutProfit)
 			betAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, remainingPayoutProfit)
 			if err != nil {
-				return err, betFullfillment
+				return betFullfillment, err
 			}
 			calculatedBetAmount = calculatedBetAmount.Add(betAmount)
 			participantExposure.BetAmount = participantExposure.BetAmount.Add(betAmount)
 			participant.TotalBetAmount = participant.TotalBetAmount.Add(betAmount)
 			participant.CurrentRoundTotalBetAmount = participant.CurrentRoundTotalBetAmount.Add(betAmount)
 			maxLoss := participantExposure.Exposure.Sub(participant.CurrentRoundTotalBetAmount).Add(participantExposure.BetAmount)
-			if participant.CurrentRoundMaxLoss.IsNil() {
+			switch {
+			case participant.CurrentRoundMaxLoss.IsNil():
 				participant.CurrentRoundMaxLoss = maxLoss
-				participant.CurrentRoundMaxLossOdd = oddId
-			} else if participant.CurrentRoundMaxLossOdd == oddId {
+				participant.CurrentRoundMaxLossOdd = oddsID
+			case participant.CurrentRoundMaxLossOdd == oddsID:
 				participant.CurrentRoundMaxLoss = maxLoss
-			} else {
+			default:
 				originalMaxLoss := participant.CurrentRoundMaxLoss.Sub(betAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participant.CurrentRoundMaxLoss = maxLoss
-					participant.CurrentRoundMaxLossOdd = oddId
+					participant.CurrentRoundMaxLossOdd = oddsID
 				} else {
 					participant.CurrentRoundMaxLoss = originalMaxLoss
 				}
 			}
+
 			betFullfillment = append(betFullfillment, &bettypes.BetFullfillment{
 				ParticipantAddress: participant.ParticipantAddress,
 				ParticipantNumber:  participant.ParticipantNumber,
@@ -149,9 +154,10 @@ func (k Keeper) ProcessBetPlacement(
 				PayoutAmount:       remainingPayoutProfit,
 			})
 			remainingPayoutProfit = remainingPayoutProfit.Sub(remainingPayoutProfit)
-			participantBetPair := types.NewParticipantBetPair(participant.BookId, uniqueLock, participant.ParticipantNumber, betId)
+			participantBetPair := types.NewParticipantBetPair(participant.BookID, uniqueLock, participant.ParticipantNumber, betID)
 			k.SetParticipantBetPair(ctx, participantBetPair)
 		}
+
 		k.SetParticipantExposure(ctx, participantExposure)
 		k.SetBookParticipant(ctx, participant)
 
@@ -161,13 +167,13 @@ func (k Keeper) ProcessBetPlacement(
 			participant.CurrentRoundLiquidity = participant.CurrentRoundLiquidity.Sub(maxLoss)
 			eligibleForNextRound := participant.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
-			participantExposures := k.GetExposureByBookAndParticipantNumber(ctx, bookId, pn)
+			participantExposures := k.GetExposureByBookAndParticipantNumber(ctx, bookID, pn)
 			for _, pe := range participantExposures {
 				k.MoveToHistoricalParticipantExposure(ctx, pe)
 				if eligibleForNextRound {
-					newPe := types.NewParticipantExposure(book.Id, pe.OddId, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipantNumber, pe.Round+1, false)
+					newPe := types.NewParticipantExposure(book.ID, pe.OddsID, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipantNumber, pe.Round+1, false)
 					k.SetParticipantExposure(ctx, newPe)
-					if pe.OddId == participantExposure.OddId {
+					if pe.OddsID == participantExposure.OddsID {
 						participantExposure = newPe
 						participantExposureMap[pe.ParticipantNumber] = participantExposure
 					}
@@ -182,10 +188,10 @@ func (k Keeper) ProcessBetPlacement(
 			k.SetBookParticipant(ctx, participant)
 
 			if eligibleForNextRound {
-				boes := k.GetOddExposuresByBook(ctx, bookId)
+				boes := k.GetOddExposuresByBook(ctx, bookID)
 				for _, boe := range boes {
 					boe.FullfillmentQueue = append(boe.FullfillmentQueue, pn)
-					if boe.OddId == participantExposure.OddId {
+					if boe.OddsID == participantExposure.OddsID {
 						bookExposure = boe
 					}
 
@@ -196,13 +202,13 @@ func (k Keeper) ProcessBetPlacement(
 			}
 		}
 
-		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFullfillmentQueue) <= 0 {
+		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFullfillmentQueue) == 0 {
 			break
 		}
 	}
 
 	if remainingPayoutProfit.GT(sdk.ZeroInt()) {
-		return sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book"), betFullfillment
+		return betFullfillment, sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
 	}
 
 	bookExposure.FullfillmentQueue = updatedFullfillmentQueue
@@ -211,17 +217,17 @@ func (k Keeper) ProcessBetPlacement(
 	// Transfer bet fee from bettor to the `bet` module account
 	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)
 	if err != nil {
-		return err, betFullfillment
+		return betFullfillment, err
 	}
 
 	// Transfer bet amount from bettor to `book_liquidity_pool` Account
 	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, calculatedBetAmount)
 	if err != nil {
-		return err, betFullfillment
+		return betFullfillment, err
 	}
 
 	// Create a unique lock in the Payout Store for the bet
 	k.setPayoutLock(ctx, uniqueLock)
 
-	return nil, betFullfillment
+	return betFullfillment, nil
 }

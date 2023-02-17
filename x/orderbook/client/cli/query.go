@@ -85,7 +85,6 @@ $ %s query orderbook orderbooks
 
 // GetCmdQueryOrderBook implements the orderbook query command.
 func GetCmdQueryOrderBook() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "orderbook [order-book-id]",
 		Short: "Query a orderbook",
@@ -106,9 +105,9 @@ $ %s query orderbook orderbook %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
-			params := &types.QueryOrderBookRequest{BookId: orderBookId}
+			params := &types.QueryOrderBookRequest{BookId: orderBookID}
 			res, err := queryClient.OrderBook(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -125,7 +124,6 @@ $ %s query orderbook orderbook %s
 
 // GetCmdQueryBookParticipants implements the command to query all the participants to a specific orderbook.
 func GetCmdQueryBookParticipants() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "book-participants [order-book-id]",
 		Short: "Query all book participants for a specific order book",
@@ -146,7 +144,7 @@ $ %s query orderbook book-participants %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -154,7 +152,7 @@ $ %s query orderbook book-participants %s
 			}
 
 			params := &types.QueryBookParticipantsRequest{
-				BookId:     orderBookId,
+				BookId:     orderBookID,
 				Pagination: pageReq,
 			}
 
@@ -175,7 +173,6 @@ $ %s query orderbook book-participants %s
 
 // GetCmdQueryBookParticipant implements the bookparticipant query command.
 func GetCmdQueryBookParticipant() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "book-participant [order-book-id] [participant-number]",
 		Short: "Query a book participant",
@@ -196,14 +193,14 @@ $ %s query orderbook book-participant %s %d
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
 			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil || particiapntNumber < 1 {
 				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
 			}
 
-			params := &types.QueryBookParticipantRequest{BookId: orderBookId, ParticipantNumber: particiapntNumber}
+			params := &types.QueryBookParticipantRequest{BookId: orderBookID, ParticipantNumber: particiapntNumber}
 			res, err := queryClient.BookParticipant(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -220,7 +217,6 @@ $ %s query orderbook book-participant %s %d
 
 // GetCmdQueryBookExposures implements the command to query all the exposures to a specific orderbook.
 func GetCmdQueryBookExposures() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "book-exposures [order-book-id]",
 		Short: "Query all book exposures for a specific order book",
@@ -241,7 +237,7 @@ $ %s query orderbook book-exposures %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -249,7 +245,7 @@ $ %s query orderbook book-exposures %s
 			}
 
 			params := &types.QueryBookExposuresRequest{
-				BookId:     orderBookId,
+				BookId:     orderBookID,
 				Pagination: pageReq,
 			}
 
@@ -270,7 +266,6 @@ $ %s query orderbook book-exposures %s
 
 // GetCmdQueryBookExposure implements the bookexposure query command.
 func GetCmdQueryBookExposure() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "book-exposure [order-book-id] [odd-id]",
 		Short: "Query a book exposure",
@@ -291,10 +286,10 @@ $ %s query orderbook book-exposure %s %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
-			oddId := args[1]
+			orderBookID := args[0]
+			oddsID := args[1]
 
-			params := &types.QueryBookExposureRequest{BookId: orderBookId, OddId: oddId}
+			params := &types.QueryBookExposureRequest{BookId: orderBookID, OddsId: oddsID}
 			res, err := queryClient.BookExposure(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -311,7 +306,6 @@ $ %s query orderbook book-exposure %s %s
 
 // GetCmdQueryParticipantExposures implements the command to query all the participant exposures to a specific orderbook.
 func GetCmdQueryParticipantExposures() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "participant-exposures [order-book-id]",
 		Short: "Query all participant exposures for a specific order book",
@@ -332,7 +326,7 @@ $ %s query orderbook participant-exposures %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -340,7 +334,7 @@ $ %s query orderbook participant-exposures %s
 			}
 
 			params := &types.QueryParticipantExposuresRequest{
-				BookId:     orderBookId,
+				BookId:     orderBookID,
 				Pagination: pageReq,
 			}
 
@@ -361,7 +355,6 @@ $ %s query orderbook participant-exposures %s
 
 // GetCmdQueryParticipantExposure implements the participantexposure query command.
 func GetCmdQueryParticipantExposure() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "participant-exposure [order-book-id] [participant-number]",
 		Short: "Query a participant exposure",
@@ -382,13 +375,13 @@ $ %s query orderbook participant-exposure %s %d
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil || particiapntNumber < 1 {
 				return fmt.Errorf("participant number argument provided must be a non-negative-integer: %v", err)
 			}
 
-			params := &types.QueryParticipantExposureRequest{BookId: orderBookId, ParticipantNumber: particiapntNumber}
+			params := &types.QueryParticipantExposureRequest{BookId: orderBookID, ParticipantNumber: particiapntNumber}
 			res, err := queryClient.ParticipantExposure(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -405,7 +398,6 @@ $ %s query orderbook participant-exposure %s %d
 
 // GetCmdQueryHistoricalParticipantExposures implements the command to query all the historical participant exposures to a specific orderbook.
 func GetCmdQueryHistoricalParticipantExposures() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "historical-participant-exposures [order-book-id]",
 		Short: "Query all historical participant exposures for a specific order book",
@@ -426,7 +418,7 @@ $ %s query orderbook historical-participant-exposures %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -434,7 +426,7 @@ $ %s query orderbook historical-participant-exposures %s
 			}
 
 			params := &types.QueryHistoricalParticipantExposuresRequest{
-				BookId:     orderBookId,
+				BookId:     orderBookID,
 				Pagination: pageReq,
 			}
 
@@ -453,14 +445,13 @@ $ %s query orderbook historical-participant-exposures %s
 	return cmd
 }
 
-// GetCmdQueryParticipantBets implements the command to query all the participant fullfilled bets to a specific orderbook.
+// GetCmdQueryParticipantBets implements the command to query all the participant fulfilled bets to a specific orderbook.
 func GetCmdQueryParticipantBets() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "participant-bets [order-book-id] [participant-number]",
-		Short: "Query all participant fullfilled bets for a specific order book",
+		Short: "Query all participant fulfilled bets for a specific order book",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query participant fullfilled bets on an individual order book.
+			fmt.Sprintf(`Query participant fulfilled bets on an individual order book.
 
 Example:
 $ %s query orderbook participant-bets %s %d
@@ -476,7 +467,7 @@ $ %s query orderbook participant-bets %s %d
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookId := args[0]
+			orderBookID := args[0]
 			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil || particiapntNumber < 1 {
 				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
@@ -488,7 +479,7 @@ $ %s query orderbook participant-bets %s %d
 			}
 
 			params := &types.QueryParticipantFullfilledBetsRequest{
-				BookId:            orderBookId,
+				BookId:            orderBookID,
 				ParticipantNumber: particiapntNumber,
 				Pagination:        pageReq,
 			}
@@ -503,7 +494,7 @@ $ %s query orderbook participant-bets %s %d
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "participant fullfilled bets")
+	flags.AddPaginationFlagsToCmd(cmd, "participant fulfilled bets")
 
 	return cmd
 }

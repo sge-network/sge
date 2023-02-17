@@ -8,9 +8,9 @@ import (
 )
 
 // GetBookOddExposure returns a specific book odd exposure.
-func (k Keeper) GetBookOddExposure(ctx sdk.Context, bookId, oddId string) (boe types.BookOddExposure, found bool) {
+func (k Keeper) GetBookOddExposure(ctx sdk.Context, bookID, oddsID string) (boe types.BookOddExposure, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddExposureKeyPrefix)
-	value := store.Get(types.GetBookOddExposureKey(bookId, oddId))
+	value := store.Get(types.GetBookOddExposureKey(bookID, oddsID))
 	if value == nil {
 		return boe, false
 	}
@@ -21,9 +21,9 @@ func (k Keeper) GetBookOddExposure(ctx sdk.Context, bookId, oddId string) (boe t
 }
 
 // GetOddExposuresByBook returns all exposures for a book
-func (k Keeper) GetOddExposuresByBook(ctx sdk.Context, bookId string) (boes []types.BookOddExposure) {
+func (k Keeper) GetOddExposuresByBook(ctx sdk.Context, bookID string) (boes []types.BookOddExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddExposureKeyPrefix)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddExposuresKey(bookId))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddExposuresKey(bookID))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -60,5 +60,5 @@ func (k Keeper) GetAllBookExposures(ctx sdk.Context) (bes []types.BookOddExposur
 // SetBookOddExposure sets a book odd exposure.
 func (k Keeper) SetBookOddExposure(ctx sdk.Context, boe types.BookOddExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddExposureKeyPrefix)
-	store.Set(types.GetBookOddExposureKey(boe.BookId, boe.OddId), types.MustMarshalBookOddExposure(k.cdc, boe))
+	store.Set(types.GetBookOddExposureKey(boe.BookID, boe.OddsID), types.MustMarshalBookOddExposure(k.cdc, boe))
 }

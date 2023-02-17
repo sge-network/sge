@@ -30,7 +30,11 @@ message Deposit {
   string depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
 
   // sport_event_uid is the uid of sport event against which deposit is being made.
-  string sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
+  string sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
 
   // amount is the amount being deposited.
   string amount = 3 [
@@ -54,7 +58,11 @@ message Deposit {
   ];
 
   // id corresponding to the book participant
-  uint64 participant_id = 6 [(gogoproto.moretags) = "yaml:\"participant_id\""];
+  uint64 participant_id = 6 [
+    (gogoproto.customname) = "ParticipantID",
+    (gogoproto.jsontag) = "participant_id",
+    json_name = "participant_id"
+  ];
 
   // withdrawals
   uint64 withdrawals = 7 [(gogoproto.moretags) = "yaml:\"withdrawals\""];
@@ -77,10 +85,18 @@ message Withdrawal {
 string depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
 
 // sport_event_uid is the uid of sport event against which deposit is being made.
-string sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
+string sport_event_uid = 2 [
+  (gogoproto.customname) = "SportEventUID",
+  (gogoproto.jsontag) = "sport_event_uid",
+  json_name = "sport_event_uid"
+];
 
 // id corresponding to the book participant
-uint64 participant_id = 3 [(gogoproto.moretags) = "yaml:\"participant_id\""];
+uint64 participant_id = 3 [
+  (gogoproto.customname) = "ParticipantID",
+  (gogoproto.jsontag) = "participant_id",
+  json_name = "participant_id"
+];
 
 // withdrawal number is the number of withdrawal against the deposit
 uint64 withdrawal_number = 4 [(gogoproto.moretags) = "yaml:\"withdrawal_number\""];

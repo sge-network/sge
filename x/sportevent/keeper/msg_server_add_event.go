@@ -28,11 +28,11 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, types.ErrEventAlreadyExist
 	}
 
-	var oddIds []string
-	for _, oddId := range addPayload.Odds {
-		oddIds = append(oddIds, oddId.UID)
+	var oddsIDs []string
+	for _, oddsID := range addPayload.Odds {
+		oddsIDs = append(oddsIDs, oddsID.UID)
 	}
-	bookID, err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddIds)
+	bookID, err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}

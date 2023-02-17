@@ -23,9 +23,9 @@ func (k Keeper) GetBookParticipant(ctx sdk.Context, bookID string, bpNumber uint
 }
 
 // GetParticipantsByBook returns all participants for a book
-func (k Keeper) GetParticipantsByBook(ctx sdk.Context, bookId string) (bps []types.BookParticipant) {
+func (k Keeper) GetParticipantsByBook(ctx sdk.Context, bookID string) (bps []types.BookParticipant) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipantsKey(bookId))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipantsKey(bookID))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -62,7 +62,7 @@ func (k Keeper) GetAllBookParticipants(ctx sdk.Context) (bps []types.BookPartici
 // SetBookParticipant sets a book participant.
 func (k Keeper) SetBookParticipant(ctx sdk.Context, bp types.BookParticipant) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipantKeyPrefix)
-	store.Set(types.GetBookParticipantKey(bp.BookId, bp.ParticipantNumber), types.MustMarshalBookParticipant(k.cdc, bp))
+	store.Set(types.GetBookParticipantKey(bp.BookID, bp.ParticipantNumber), types.MustMarshalBookParticipant(k.cdc, bp))
 }
 
 func (k Keeper) AddBookParticipant(
@@ -74,7 +74,7 @@ func (k Keeper) AddBookParticipant(
 		return bookParticipantNumber, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
 	}
 
-	if book.Status != types.OrderBookStatus_STATUS_ACTIVE {
+	if book.Status != types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE {
 		return bookParticipantNumber, sdkerrors.Wrapf(types.ErrOrderBookNotActive, "%s", book.Status)
 	}
 
@@ -82,18 +82,18 @@ func (k Keeper) AddBookParticipant(
 		return bookParticipantNumber, sdkerrors.Wrapf(types.ErrMaxNumberOfParticipantsReached, "%d", book.Participants)
 	}
 
-	bookParticipant, found := k.GetBookParticipant(ctx, book.Id, book.Participants+1)
+	bookParticipant, found := k.GetBookParticipant(ctx, book.ID, book.Participants+1)
 	// This should never happen, just a sanity check
 	if found {
 		return bookParticipantNumber, sdkerrors.Wrapf(
 			types.ErrBookParticipantAlreadyExists, "id already exists %d", bookParticipant.ParticipantNumber,
 		)
-	} else {
-		bookParticipant = types.NewBookParticipant(
-			book.Id, addr, book.Participants+1, book.NumberOfOdds, false, liquidity, liquidity, sdk.ZeroInt(), sdk.ZeroInt(),
-			sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
-		)
 	}
+
+	bookParticipant = types.NewBookParticipant(
+		book.ID, addr, book.Participants+1, book.NumberOfOdds, false, liquidity, liquidity, sdk.ZeroInt(), sdk.ZeroInt(),
+		sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
+	)
 
 	// Transfer fee from book participant to the feeAccountName
 	err := k.transferFundsFromUserToModule(ctx, addr, feeAccountName, fee)
@@ -111,24 +111,24 @@ func (k Keeper) AddBookParticipant(
 	k.SetBookParticipant(ctx, bookParticipant)
 
 	// Update book odd exposures and add particiapnt exposures
-	boes := k.GetOddExposuresByBook(ctx, bookParticipant.BookId)
+	boes := k.GetOddExposuresByBook(ctx, bookParticipant.BookID)
 	for _, boe := range boes {
 		boe.FullfillmentQueue = append(boe.FullfillmentQueue, bookParticipant.ParticipantNumber)
 		k.SetBookOddExposure(ctx, boe)
 
-		pe := types.NewParticipantExposure(book.Id, boe.OddId, sdk.ZeroInt(), sdk.ZeroInt(), bookParticipant.ParticipantNumber, 1, false)
+		pe := types.NewParticipantExposure(book.ID, boe.OddsID, sdk.ZeroInt(), sdk.ZeroInt(), bookParticipant.ParticipantNumber, 1, false)
 		k.SetParticipantExposure(ctx, pe)
 	}
 
 	// Update orderbook
-	book.Participants += 1
+	book.Participants++
 	k.SetBook(ctx, book)
 
 	return bookParticipant.ParticipantNumber, nil
 }
 
 func (k Keeper) LiquidateBookParticipant(
-	ctx sdk.Context, depAddr, bookId string, bpNumber uint64, mode htypes.WithdrawalMode, amount sdk.Int,
+	ctx sdk.Context, depAddr, bookID string, bpNumber uint64, mode htypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	var withdrawalAmt sdk.Int
 	depositorAddress, err := sdk.AccAddressFromBech32(depAddr)
@@ -136,13 +136,13 @@ func (k Keeper) LiquidateBookParticipant(
 		return withdrawalAmt, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
-	bp, found := k.GetBookParticipant(ctx, bookId, bpNumber)
+	bp, found := k.GetBookParticipant(ctx, bookID, bpNumber)
 	if !found {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, bpNumber)
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, bpNumber)
 	}
 
 	if bp.IsSettled {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantAlreadySettled, "%s, %d", bookId, bpNumber)
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipantAlreadySettled, "%s, %d", bookID, bpNumber)
 	}
 
 	if bp.ParticipantAddress != depAddr {
@@ -155,7 +155,9 @@ func (k Keeper) LiquidateBookParticipant(
 
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
-	if mode == htypes.WithdrawalMode_MODE_FULL {
+
+	switch mode {
+	case htypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity.Int64(), bp.CurrentRoundMaxLoss.Int64())
 		}
@@ -164,7 +166,7 @@ func (k Keeper) LiquidateBookParticipant(
 			return withdrawalAmt, err
 		}
 		withdrawalAmt = maxTransferableAmount
-	} else if mode == htypes.WithdrawalMode_MODE_PARTIAL {
+	case htypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %d, max %d", amount, maxTransferableAmount)
 		}
@@ -173,7 +175,7 @@ func (k Keeper) LiquidateBookParticipant(
 			return withdrawalAmt, err
 		}
 		withdrawalAmt = amount
-	} else {
+	default:
 		return withdrawalAmt, sdkerrors.Wrapf(htypes.ErrInvalidMode, "%s", mode.String())
 	}
 
@@ -182,7 +184,7 @@ func (k Keeper) LiquidateBookParticipant(
 	k.SetBookParticipant(ctx, bp)
 
 	if bp.CurrentRoundLiquidity.LTE(sdk.ZeroInt()) {
-		boes := k.GetOddExposuresByBook(ctx, bookId)
+		boes := k.GetOddExposuresByBook(ctx, bookID)
 		for _, boe := range boes {
 			for i, pn := range boe.FullfillmentQueue {
 				if pn == bp.ParticipantNumber {

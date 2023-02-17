@@ -6,11 +6,12 @@ import (
 )
 
 // NewBookOddExposure creates a new book odd exposure object
+//
 //nolint:interfacer
-func NewBookOddExposure(bookId, oddId string, fullfillmentQueue []uint64) BookOddExposure {
+func NewBookOddExposure(bookID, oddsID string, fullfillmentQueue []uint64) BookOddExposure {
 	return BookOddExposure{
-		BookId:            bookId,
-		OddId:             oddId,
+		BookID:            bookID,
+		OddsID:            oddsID,
 		FullfillmentQueue: fullfillmentQueue,
 	}
 }

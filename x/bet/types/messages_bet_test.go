@@ -68,7 +68,7 @@ func TestNewBet(t *testing.T) {
 		creator := "creator"
 		inputBetOdds := &types.BetOdds{
 			UID:           "Oddsuid",
-			SportEventUID: "sportEventUid",
+			SportEventUID: "sportEventUID",
 			Value:         "1000",
 		}
 

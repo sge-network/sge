@@ -8,9 +8,9 @@ import (
 )
 
 // GetExposureByBookAndOdd returns all exposures for a book id and odd id
-func (k Keeper) GetExposureByBookAndOdd(ctx sdk.Context, bookId, oddId string) (pes []types.ParticipantExposure) {
+func (k Keeper) GetExposureByBookAndOdd(ctx sdk.Context, bookID, oddsID string) (pes []types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureKeyPrefix)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantExposuresKey(bookId, oddId))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantExposuresKey(bookID, oddsID))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -22,9 +22,9 @@ func (k Keeper) GetExposureByBookAndOdd(ctx sdk.Context, bookId, oddId string) (
 }
 
 // GetExposureByBookAndParticipantNumber returns all exposures for a book id and participant number
-func (k Keeper) GetExposureByBookAndParticipantNumber(ctx sdk.Context, bookId string, pn uint64) (pes []types.ParticipantExposure) {
+func (k Keeper) GetExposureByBookAndParticipantNumber(ctx sdk.Context, bookID string, pn uint64) (pes []types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureByPNKeyPrefix)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantByPNKey(bookId, pn))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantByPNKey(bookID, pn))
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
@@ -61,19 +61,19 @@ func (k Keeper) GetAllParticipantExposures(ctx sdk.Context) (pes []types.Partici
 // SetParticipantExposure sets a participant exposure.
 func (k Keeper) SetParticipantExposure(ctx sdk.Context, pe types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureKeyPrefix)
-	store.Set(types.GetParticipantExposureKey(pe.BookId, pe.OddId, pe.ParticipantNumber), types.MustMarshalParticipantExposure(k.cdc, pe))
+	store.Set(types.GetParticipantExposureKey(pe.BookID, pe.OddsID, pe.ParticipantNumber), types.MustMarshalParticipantExposure(k.cdc, pe))
 
 	store = prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureByPNKeyPrefix)
-	store.Set(types.GetParticipantExposureByPNKey(pe.BookId, pe.OddId, pe.ParticipantNumber), types.MustMarshalParticipantExposure(k.cdc, pe))
+	store.Set(types.GetParticipantExposureByPNKey(pe.BookID, pe.OddsID, pe.ParticipantNumber), types.MustMarshalParticipantExposure(k.cdc, pe))
 }
 
 func (k Keeper) MoveToHistoricalParticipantExposure(ctx sdk.Context, pe types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.HistoricalParticipantExposureKeyPrefix)
-	store.Set(types.GetHistoricalParticipantExposureKey(pe.BookId, pe.OddId, pe.ParticipantNumber, pe.Round), types.MustMarshalParticipantExposure(k.cdc, pe))
+	store.Set(types.GetHistoricalParticipantExposureKey(pe.BookID, pe.OddsID, pe.ParticipantNumber, pe.Round), types.MustMarshalParticipantExposure(k.cdc, pe))
 
 	store = prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureKeyPrefix)
-	store.Delete(types.GetParticipantExposureKey(pe.BookId, pe.OddId, pe.ParticipantNumber))
+	store.Delete(types.GetParticipantExposureKey(pe.BookID, pe.OddsID, pe.ParticipantNumber))
 
 	store = prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureByPNKeyPrefix)
-	store.Delete(types.GetParticipantExposureByPNKey(pe.BookId, pe.OddId, pe.ParticipantNumber))
+	store.Delete(types.GetParticipantExposureByPNKey(pe.BookID, pe.OddsID, pe.ParticipantNumber))
 }

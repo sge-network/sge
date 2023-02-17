@@ -33,8 +33,8 @@ var (
 )
 
 // GetDepositKey creates the key for deposit bond with sport event and participant
-func GetDepositKey(depAddr sdk.AccAddress, sportEventUid string, participantId uint64) []byte {
-	return append(GetDepositsKey(depAddr), append(utils.StrBytes(sportEventUid), utils.Uint64ToBytes(participantId)...)...)
+func GetDepositKey(depAddr sdk.AccAddress, sportEventUID string, participantID uint64) []byte {
+	return append(GetDepositsKey(depAddr), append(utils.StrBytes(sportEventUID), utils.Uint64ToBytes(participantID)...)...)
 }
 
 // GetDepositsKey creates the key for deposit bond with sport event
@@ -43,8 +43,8 @@ func GetDepositsKey(depAddr sdk.AccAddress) []byte {
 }
 
 // GetWithdrawalKey creates the key for withdrawal bond with sport event and deposit
-func GetWithdrawalKey(depAddr sdk.AccAddress, sportEventUid string, participantId uint64, withdrawalNumber uint64) []byte {
-	return append(GetDepositKey(depAddr, sportEventUid, participantId), utils.Uint64ToBytes(withdrawalNumber)...)
+func GetWithdrawalKey(depAddr sdk.AccAddress, sportEventUID string, participantID uint64, withdrawalNumber uint64) []byte {
+	return append(GetDepositKey(depAddr, sportEventUID, participantID), utils.Uint64ToBytes(withdrawalNumber)...)
 }
 
 // GetWithdrawalsKey creates the key for withdrawals bond with sport event

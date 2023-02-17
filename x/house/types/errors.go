@@ -7,15 +7,14 @@ import (
 )
 
 // x/house module sentinel errors
-// nolint
 var (
 	ErrEmptyDepositorAddr           = sdkerrors.Register(ModuleName, 1001, "empty depositor address")
-	ErrInvalidSportEventUid         = sdkerrors.Register(ModuleName, 1002, "invalid sport event uid")
+	ErrInvalidSportEventUID         = sdkerrors.Register(ModuleName, 1002, "invalid sport event uid")
 	ErrInvalidDenom                 = sdkerrors.Register(ModuleName, 1003, "invalid coin denomination")
 	ErrDepositTooSmall              = sdkerrors.Register(ModuleName, 1004, "deposit is not greater than minimum deposit amount")
 	ErrOrderBookDepositProcessing   = sdkerrors.Register(ModuleName, 1005, "internal error in processing deposit in OB")
 	ErrDepositSetting               = sdkerrors.Register(ModuleName, 1006, "internal error in setting deposit")
-	ErrInvalidParticipantId         = sdkerrors.Register(ModuleName, 1007, "invalid participant id")
+	ErrInvalidParticipantID         = sdkerrors.Register(ModuleName, 1007, "invalid participant id")
 	ErrInvalidMode                  = sdkerrors.Register(ModuleName, 1008, "invalid withdrawal mode")
 	ErrDepositNotFound              = sdkerrors.Register(ModuleName, 1009, "deposit not found")
 	ErrWithdrawalTooLarge           = sdkerrors.Register(ModuleName, 1010, "withdrawal is more than unused amount")

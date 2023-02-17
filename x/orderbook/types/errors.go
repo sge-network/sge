@@ -7,7 +7,6 @@ import (
 )
 
 // x/orderbook module sentinel errors
-// nolint
 var (
 	ErrOrderBookNotFound                  = sdkerrors.Register(ModuleName, 1001, "order book not found")
 	ErrOrderBookNotActive                 = sdkerrors.Register(ModuleName, 1002, "order book not active")

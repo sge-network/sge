@@ -12,7 +12,6 @@ import (
 // the given account address to the module account passed.
 // Returns an error if the account holder has insufficient balance.
 func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context, address sdk.AccAddress, moduleAccName string, amount sdk.Int) error {
-
 	// Get the spendable balance of the account holder
 	usgeCoins := k.bankKeeper.SpendableCoins(ctx, address).AmountOf(params.BaseCoinUnit)
 
@@ -36,8 +35,11 @@ func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context, address sdk.AccAd
 // account to another module account.
 // Returns an error if the sender module has insufficient balance.
 func (k Keeper) transferFundsFromModuleToModule(
-	ctx sdk.Context, senderModule string, recipientModule string, amount sdk.Int) error {
-
+	ctx sdk.Context,
+	senderModule string,
+	recipientModule string,
+	amount sdk.Int,
+) error {
 	if senderModule == recipientModule {
 		return types.ErrDuplicateSenderAndRecipientModule
 	}

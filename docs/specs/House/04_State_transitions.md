@@ -12,7 +12,7 @@ When this is processed:
 newDeposit := &types.Deposit{
     Creator:            msg.Creator,
     Uid:                <will be calculated>,
-    SportEventUid:      msg.SportEventUid,
+    SportEventUID:      msg.SportEventUID,
     Amount:             msg.Amount,
     WithdrawnAmount:    nil,
     BetFee              <will be calculated>,

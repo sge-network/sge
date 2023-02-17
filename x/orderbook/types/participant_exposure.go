@@ -7,11 +7,12 @@ import (
 )
 
 // NewParticipantExposure creates a new participant exposure object
+//
 //nolint:interfacer
-func NewParticipantExposure(bookId, oddId string, exposure, betAmount sdk.Int, pn, round uint64, isFullfilled bool) ParticipantExposure {
+func NewParticipantExposure(bookID, oddsID string, exposure, betAmount sdk.Int, pn, round uint64, isFullfilled bool) ParticipantExposure {
 	return ParticipantExposure{
-		BookId:            bookId,
-		OddId:             oddId,
+		BookID:            bookID,
+		OddsID:            oddsID,
 		ParticipantNumber: pn,
 		Exposure:          exposure,
 		BetAmount:         betAmount,

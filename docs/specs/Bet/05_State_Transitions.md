@@ -12,7 +12,7 @@ When this is processed:
 newBet := &types.Bet{
     Creator:       msg.Creator,
     Uid:           msg.Uid,
-    SportEventUid: <msg.Ticket.SportEventUid>,
+    SportEventUID: <msg.Ticket.SportEventUID>,
     OddsUid:       <msg.Ticket.OddsUid>,
     OddsType:      <msg.OddsType>,
     OddsValue:     <msg.Ticket.OddsValue>,

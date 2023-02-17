@@ -20,11 +20,12 @@ const (
 )
 
 // NewMsgDeposit creates a new MsgDeposit instance.
+//
 //nolint:interfacer
-func NewMsgDeposit(depAddr sdk.AccAddress, sportEventUid string, amount sdk.Coin) *MsgDeposit {
+func NewMsgDeposit(depAddr sdk.AccAddress, sportEventUID string, amount sdk.Coin) *MsgDeposit {
 	return &MsgDeposit{
 		DepositorAddress: depAddr.String(),
-		SportEventUid:    sportEventUid,
+		SportEventUID:    sportEventUID,
 		Amount:           amount,
 	}
 }
@@ -60,8 +61,8 @@ func (msg MsgDeposit) ValidateBasic() error {
 		return ErrEmptyDepositorAddr
 	}
 
-	if !isValidUID(msg.SportEventUid) {
-		return ErrInvalidSportEventUid
+	if !isValidUID(msg.SportEventUID) {
+		return ErrInvalidSportEventUID
 	}
 
 	if !msg.Amount.IsValid() || !msg.Amount.Amount.IsPositive() {
@@ -97,12 +98,13 @@ func isValidUUID(uid string) bool {
 }
 
 // NewMsgWithdraw creates a new MsgWithdraw instance.
+//
 //nolint:interfacer
-func NewMsgWithdraw(depAddr sdk.AccAddress, sportEventUid string, amount sdk.Coin, pId uint64, mode WithdrawalMode) *MsgWithdraw {
+func NewMsgWithdraw(depAddr sdk.AccAddress, sportEventUID string, amount sdk.Coin, pID uint64, mode WithdrawalMode) *MsgWithdraw {
 	return &MsgWithdraw{
 		DepositorAddress: depAddr.String(),
-		SportEventUid:    sportEventUid,
-		ParticipantId:    pId,
+		SportEventUID:    sportEventUID,
+		ParticipantID:    pID,
 		Mode:             mode,
 		Amount:           amount,
 	}
@@ -139,19 +141,19 @@ func (msg MsgWithdraw) ValidateBasic() error {
 		return ErrEmptyDepositorAddr
 	}
 
-	if !isValidUID(msg.SportEventUid) {
-		return ErrInvalidSportEventUid
+	if !isValidUID(msg.SportEventUID) {
+		return ErrInvalidSportEventUID
 	}
 
-	if msg.ParticipantId < 1 {
-		return ErrInvalidSportEventUid
+	if msg.ParticipantID < 1 {
+		return ErrInvalidSportEventUID
 	}
 
-	if msg.Mode != WithdrawalMode_MODE_FULL && msg.Mode != WithdrawalMode_MODE_PARTIAL {
-		return ErrInvalidSportEventUid
+	if msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_FULL && msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
+		return ErrInvalidSportEventUID
 	}
 
-	if msg.Mode == WithdrawalMode_MODE_PARTIAL {
+	if msg.Mode == WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if !msg.Amount.IsValid() || !msg.Amount.Amount.IsPositive() {
 			return sdkerrors.Wrap(
 				sdkerrors.ErrInvalidRequest,

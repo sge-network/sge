@@ -5,15 +5,16 @@ import (
 )
 
 // NewParticipantBetPair creates a new participant bet pair object
+//
 //nolint:interfacer
 func NewParticipantBetPair(
-	bId, betUuid string, participantNumber, betId uint64,
+	bID, betUID string, participantNumber, betID uint64,
 ) ParticipantBetPair {
 	return ParticipantBetPair{
-		BookId:            bId,
+		BookID:            bID,
 		ParticipantNumber: participantNumber,
-		BetUuid:           betUuid,
-		BetId:             betId,
+		BetUID:            betUID,
+		BetID:             betID,
 	}
 }
 

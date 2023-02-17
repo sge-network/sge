@@ -35,7 +35,7 @@ func (k Keeper) BettorWins(
 	payoutProfit sdk.Int,
 	uniqueLock string,
 	betFullfillments []*bettypes.BetFullfillment,
-	bookId string,
+	bookID string,
 ) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -43,9 +43,9 @@ func (k Keeper) BettorWins(
 	}
 
 	for _, betFullfillment := range betFullfillments {
-		bookParticipant, found := k.GetBookParticipant(ctx, bookId, betFullfillment.ParticipantNumber)
+		bookParticipant, found := k.GetBookParticipant(ctx, bookID, betFullfillment.ParticipantNumber)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, betFullfillment.ParticipantNumber)
+			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, betFullfillment.ParticipantNumber)
 		}
 
 		// Transfer payout from the `book_liquidity_pool` account to bettor
@@ -72,7 +72,7 @@ func (k Keeper) BettorWins(
 
 // BettorLoses process bets in case bettor looses
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string, betFullfillments []*bettypes.BetFullfillment, bookId string,
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string, betFullfillments []*bettypes.BetFullfillment, bookID string,
 ) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -81,9 +81,9 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 
 	for _, betFullfillment := range betFullfillments {
 		// Update amount to be transferred to house
-		bookParticipant, found := k.GetBookParticipant(ctx, bookId, betFullfillment.ParticipantNumber)
+		bookParticipant, found := k.GetBookParticipant(ctx, bookID, betFullfillment.ParticipantNumber)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookId, betFullfillment.ParticipantNumber)
+			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, betFullfillment.ParticipantNumber)
 		}
 		bookParticipant.ActualProfit = bookParticipant.ActualProfit.Add(betFullfillment.BetAmount)
 		k.SetBookParticipant(ctx, bookParticipant)

@@ -401,15 +401,15 @@ func request_Query_BookExposure_0(ctx context.Context, marshaler runtime.Marshal
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
 	}
 
-	val, ok = pathParams["odd_id"]
+	val, ok = pathParams["odds_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "odd_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "odds_id")
 	}
 
-	protoReq.OddId, err = runtime.String(val)
+	protoReq.OddsId, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "odd_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "odds_id", err)
 	}
 
 	msg, err := client.BookExposure(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -439,15 +439,15 @@ func local_request_Query_BookExposure_0(ctx context.Context, marshaler runtime.M
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
 	}
 
-	val, ok = pathParams["odd_id"]
+	val, ok = pathParams["odds_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "odd_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "odds_id")
 	}
 
-	protoReq.OddId, err = runtime.String(val)
+	protoReq.OddsId, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "odd_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "odds_id", err)
 	}
 
 	msg, err := server.BookExposure(ctx, &protoReq)
@@ -1278,7 +1278,7 @@ var (
 
 	pattern_Query_BookExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "exposures"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_id", "exposures", "odd_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_id", "exposures", "odds_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_Query_ParticipantExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "participant-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
 

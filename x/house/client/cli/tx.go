@@ -34,7 +34,6 @@ func NewTxCmd() *cobra.Command {
 }
 
 func NewDepositCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "deposit [sport_event_uid] [amount]",
 		Args:  cobra.ExactArgs(2),
@@ -54,7 +53,7 @@ func NewDepositCmd() *cobra.Command {
 				return err
 			}
 
-			sportEventUid := args[0]
+			sportEventUID := args[0]
 
 			amount, err := sdk.ParseCoinNormalized(args[1])
 			if err != nil {
@@ -63,7 +62,7 @@ func NewDepositCmd() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgDeposit(depAddr, sportEventUid, amount)
+			msg := types.NewMsgDeposit(depAddr, sportEventUID, amount)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
@@ -75,7 +74,6 @@ func NewDepositCmd() *cobra.Command {
 }
 
 func NewWithdrawalCmd() *cobra.Command {
-
 	cmd := &cobra.Command{
 		Use:   "withdraw [sport_event_uid] [participant_number] [mode] [amount]",
 		Args:  cobra.RangeArgs(3, 4),
@@ -95,7 +93,7 @@ func NewWithdrawalCmd() *cobra.Command {
 				return err
 			}
 
-			sportEventUid := args[0]
+			sportEventUID := args[0]
 
 			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
 			if err != nil || particiapntNumber < 1 {
@@ -108,7 +106,7 @@ func NewWithdrawalCmd() *cobra.Command {
 			}
 
 			var amount sdk.Coin
-			if mode == int64(types.WithdrawalMode_MODE_PARTIAL) {
+			if mode == int64(types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 4 {
 					return fmt.Errorf("amount is mandatory for partial mode")
 				}
@@ -120,7 +118,7 @@ func NewWithdrawalCmd() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgWithdraw(depAddr, sportEventUid, amount, particiapntNumber, types.WithdrawalMode(mode))
+			msg := types.NewMsgWithdraw(depAddr, sportEventUID, amount, particiapntNumber, types.WithdrawalMode(mode))
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

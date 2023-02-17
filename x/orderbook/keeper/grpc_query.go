@@ -22,7 +22,8 @@ func (k Keeper) OrderBooks(c context.Context, req *types.QueryOrderBooksRequest)
 	}
 
 	// validate the provided status, return all the orderbooks if the status is empty
-	if req.Status != "" && !(req.Status == types.OrderBookStatus_STATUS_ACTIVE.String() || req.Status == types.OrderBookStatus_STATUS_SETTLED.String()) {
+	if req.Status != "" && !(req.Status == types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE.String() ||
+		req.Status == types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_SETTLED.String()) {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid order book status %s", req.Status)
 	}
 
@@ -48,7 +49,6 @@ func (k Keeper) OrderBooks(c context.Context, req *types.QueryOrderBooksRequest)
 
 		return true, nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -178,14 +178,14 @@ func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequ
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
-	if req.OddId == "" {
+	if req.OddsId == "" {
 		return nil, status.Error(codes.InvalidArgument, "odd id can not be empty")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	bookExposure, found := k.GetBookOddExposure(ctx, req.BookId, req.OddId)
+	bookExposure, found := k.GetBookOddExposure(ctx, req.BookId, req.OddsId)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookId, req.OddId)
+		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookId, req.OddsId)
 	}
 
 	return &types.QueryBookExposureResponse{BookExposure: bookExposure}, nil
@@ -301,7 +301,7 @@ func (k Keeper) HistoricalParticipantExposures(c context.Context, req *types.Que
 	}, nil
 }
 
-// ParticipantFullfilledBets queries participant fullfilled bets info for given order book id and participant number
+// ParticipantFullfilledBets queries participant fulfilled bets info for given order book id and participant number
 func (k Keeper) ParticipantFullfilledBets(c context.Context, req *types.QueryParticipantFullfilledBetsRequest) (*types.QueryParticipantFullfilledBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")

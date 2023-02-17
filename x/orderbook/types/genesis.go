@@ -5,6 +5,6 @@ func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Params:           DefaultParams(),
 		Books:            []OrderBook{},
-		Bookparticipants: []BookParticipant{},
+		BookParticipants: []BookParticipant{},
 	}
 }

@@ -7,15 +7,16 @@ import (
 )
 
 // NewBookParticipant creates a new book participant object
+//
 //nolint:interfacer
 func NewBookParticipant(
-	bId string, pAddr sdk.AccAddress,
+	bID string, pAddr sdk.AccAddress,
 	participantNumber, exposuresNotFilled uint64, isModuleAccount bool,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
 	currentRoundMaxLossOdd string, actualProfit sdk.Int,
 ) BookParticipant {
 	return BookParticipant{
-		BookId:                     bId,
+		BookID:                     bID,
 		ParticipantAddress:         pAddr.String(),
 		ParticipantNumber:          participantNumber,
 		IsModuleAccount:            isModuleAccount,
