@@ -245,7 +245,7 @@ func TestBatchSettleBet(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, allBetCount, len(allActiveBets))
 
-	for _, sportEventUID := range sportEventUIDs {
+	for _, sportEventUID := range sportEventUIDs[:len(sportEventUIDs)-2] {
 		err := tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
 			UID:            sportEventUID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -254,6 +254,22 @@ func TestBatchSettleBet(t *testing.T) {
 		})
 		require.NoError(t, err)
 	}
+
+	err = tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+		UID:          sportEventUIDs[len(sportEventUIDs)-2],
+		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
+		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
+	})
+	require.NoError(t, err)
+
+	err = tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+		UID:          sportEventUIDs[len(sportEventUIDs)-1],
+		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
+		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
+	})
+	require.NoError(t, err)
+
+	require.NoError(t, err)
 
 	for i := 1; i <= blockCount; i++ {
 		ctx = ctx.WithBlockHeight(int64(i))

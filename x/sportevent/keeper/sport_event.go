@@ -67,14 +67,24 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 		return types.ErrCanNotBeAltered
 	}
 
+	// after resolution the sport-event should not be active,
+	// otherwise it will be processed in the future.
 	storedEvent.Active = false
 	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
 	storedEvent.Status = resolutionEvent.Status
 
+	// if the result is declared for the sport-event, we need to update the winner odds uids.
 	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
+	}
 
-		k.appendUnsettledResovedSportEvent(ctx, storedEvent.UID)
+	// if the result is declared or the sport-event is canceled or aborted, it should be added
+	// to the unsettled resolved sport-event list  in the state.
+	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED ||
+		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED ||
+		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_ABORTED {
+		// append sport-event id to the unsettled resolved in statistics.
+		k.appendUnsettledResolvedSportEvent(ctx, storedEvent.UID)
 	}
 
 	k.SetSportEvent(ctx, storedEvent)
