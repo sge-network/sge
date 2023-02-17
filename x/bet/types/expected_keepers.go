@@ -24,13 +24,14 @@ type BankKeeper interface {
 type SporteventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
 	GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool)
+	GetDefaultBetConstraints(ctx sdk.Context) (params *sporteventtypes.EventBetConstraints)
 	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }
 
 // StrategicreserveKeeper defines the expected interface needed to unlock fund and pay out
 type StrategicreserveKeeper interface {
 	ProcessBetPlacement(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betFee sdk.Coin, betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
+		betFee sdk.Int, betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
 
 	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress,
 		betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error

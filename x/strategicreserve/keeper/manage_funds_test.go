@@ -18,7 +18,7 @@ func TestProcessBetPlacement(t *testing.T) {
 	tcs := []struct {
 		desc          string
 		bettorAddress sdk.AccAddress
-		betFee        sdk.Coin
+		betFee        sdk.Int
 		betAmount     sdk.Int
 		payoutProfit  sdk.Int
 		uniqueLock    string
@@ -27,27 +27,27 @@ func TestProcessBetPlacement(t *testing.T) {
 		{
 			desc:          "Success!",
 			bettorAddress: user.Address,
-			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
-			betAmount:     sdk.NewIntFromUint64(99),
-			payoutProfit:  sdk.NewIntFromUint64(198),
+			betFee:        sdk.NewInt(1),
+			betAmount:     sdk.NewInt(99),
+			payoutProfit:  sdk.NewInt(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           nil,
 		},
 		{
 			desc:          "Failure! Lock already exists in payout store",
 			bettorAddress: user.Address,
-			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
-			betAmount:     sdk.NewIntFromUint64(99),
-			payoutProfit:  sdk.NewIntFromUint64(198),
+			betFee:        sdk.NewInt(1),
+			betAmount:     sdk.NewInt(99),
+			payoutProfit:  sdk.NewInt(198),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           types.ErrLockAlreadyExists,
 		},
 		{
 			desc:          "Failure! Insufficient user balance",
 			bettorAddress: user.Address,
-			betFee:        sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromUint64(1)),
-			betAmount:     sdk.NewIntFromUint64(45000000000000),
-			payoutProfit:  sdk.NewIntFromUint64(9000000),
+			betFee:        sdk.NewInt(1),
+			betAmount:     sdk.NewInt(45000000000000),
+			payoutProfit:  sdk.NewInt(9000000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7l",
 			err:           types.ErrInsufficientUserBalance,
 		},
@@ -57,8 +57,8 @@ func TestProcessBetPlacement(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
-					LockedAmount:   sdk.NewIntFromUint64(4500),
-					UnlockedAmount: sdk.NewIntFromUint64(149999999995500),
+					LockedAmount:   sdk.NewInt(4500),
+					UnlockedAmount: sdk.NewInt(149999999995500),
 				},
 			}
 			k.SetReserver(ctx, reserver)
@@ -91,24 +91,24 @@ func TestBettorWins(t *testing.T) {
 		{
 			desc:          "Success! Payout done",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(45),
-			payoutProfit:  sdk.NewIntFromUint64(90),
+			betAmount:     sdk.NewInt(45),
+			payoutProfit:  sdk.NewInt(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7p",
 			err:           nil,
 		},
 		{
 			desc:          "Failure! Payout lock does not exist in the payout store",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(45),
-			payoutProfit:  sdk.NewIntFromUint64(90),
+			betAmount:     sdk.NewInt(45),
+			payoutProfit:  sdk.NewInt(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           types.ErrPayoutLockDoesnotExist,
 		},
 		{
 			desc:          "Failure! SR locked amount has insufficient balance",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(50),
-			payoutProfit:  sdk.NewIntFromUint64(5000),
+			betAmount:     sdk.NewInt(50),
+			payoutProfit:  sdk.NewInt(5000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7p",
 			err:           types.ErrInsufficientLockedAmountInSrPool,
 		},
@@ -120,8 +120,8 @@ func TestBettorWins(t *testing.T) {
 
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
-					LockedAmount:   sdk.NewIntFromUint64(4500),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+					LockedAmount:   sdk.NewInt(4500),
+					UnlockedAmount: sdk.NewInt(150000000000000),
 				},
 			}
 			k.SetReserver(ctx, reserver)
@@ -152,24 +152,24 @@ func TestBettorLoses(t *testing.T) {
 		{
 			desc:         "Success! Payout done",
 			address:      user.Address,
-			betAmount:    sdk.NewIntFromUint64(45),
-			payoutProfit: sdk.NewIntFromUint64(90),
+			betAmount:    sdk.NewInt(45),
+			payoutProfit: sdk.NewInt(90),
 			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:          nil,
 		},
 		{
 			desc:         "Failure! Payout lock does not exist",
 			address:      user.Address,
-			betAmount:    sdk.NewIntFromUint64(45),
-			payoutProfit: sdk.NewIntFromUint64(90),
+			betAmount:    sdk.NewInt(45),
+			payoutProfit: sdk.NewInt(90),
 			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:          sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, "32932b20-8737-490b-b00b-8c16eccd8e7x"),
 		},
 		{
 			desc:         "Failure! Insufficient balance in Bet Reserve Account",
 			address:      user.Address,
-			betAmount:    sdk.NewIntFromUint64(5000),
-			payoutProfit: sdk.NewIntFromUint64(5000),
+			betAmount:    sdk.NewInt(5000),
+			payoutProfit: sdk.NewInt(5000),
 			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:          types.ErrInsufficientBalanceInModuleAccount,
 		},
@@ -181,8 +181,8 @@ func TestBettorLoses(t *testing.T) {
 
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
-					LockedAmount:   sdk.NewIntFromUint64(6000),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+					LockedAmount:   sdk.NewInt(6000),
+					UnlockedAmount: sdk.NewInt(150000000000000),
 				},
 			}
 			k.SetReserver(ctx, reserver)
@@ -213,32 +213,32 @@ func TestRefundBettor(t *testing.T) {
 		{
 			desc:          "Success! Bettor is refunded",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(45),
-			payoutProfit:  sdk.NewIntFromUint64(90),
+			betAmount:     sdk.NewInt(45),
+			payoutProfit:  sdk.NewInt(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           nil,
 		},
 		{
 			desc:          "Failure! Payout lock does not exist",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(45),
-			payoutProfit:  sdk.NewIntFromUint64(90),
+			betAmount:     sdk.NewInt(45),
+			payoutProfit:  sdk.NewInt(90),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7x",
 			err:           sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, "32932b20-8737-490b-b00b-8c16eccd8e7x"),
 		},
 		{
 			desc:          "Failure! Insufficient balance in Bet Reserve Account",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(5000),
-			payoutProfit:  sdk.NewIntFromUint64(5000),
+			betAmount:     sdk.NewInt(5000),
+			payoutProfit:  sdk.NewInt(5000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, types.BetReserveName),
 		},
 		{
 			desc:          "Failure! Insufficient balance in SR Locked Amount",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewIntFromUint64(5000),
-			payoutProfit:  sdk.NewIntFromUint64(6001),
+			betAmount:     sdk.NewInt(5000),
+			payoutProfit:  sdk.NewInt(6001),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           types.ErrInsufficientLockedAmountInSrPool,
 		},
@@ -250,8 +250,8 @@ func TestRefundBettor(t *testing.T) {
 
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
-					LockedAmount:   sdk.NewIntFromUint64(6000),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+					LockedAmount:   sdk.NewInt(6000),
+					UnlockedAmount: sdk.NewInt(150000000000000),
 				},
 			}
 			k.SetReserver(ctx, reserver)
@@ -286,8 +286,8 @@ func TestUpdateSrPool(t *testing.T) {
 	t.Run(tc[0].desc, func(t *testing.T) {
 		reserver := types.Reserver{
 			SrPool: &types.SRPool{
-				LockedAmount:   sdk.NewIntFromUint64(0),
-				UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+				LockedAmount:   sdk.NewInt(0),
+				UnlockedAmount: sdk.NewInt(150000000000000),
 			},
 		}
 		k.SetReserver(ctx, reserver)
@@ -374,7 +374,7 @@ func TestTransferFundsFromModuleToUser(t *testing.T) {
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
 					LockedAmount:   sdk.ZeroInt(),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+					UnlockedAmount: sdk.NewInt(150000000000000),
 				},
 			}
 			k.SetReserver(ctx, reserver)
@@ -428,7 +428,7 @@ func TestTransferFundsFromModuleToModule(t *testing.T) {
 			reserver := types.Reserver{
 				SrPool: &types.SRPool{
 					LockedAmount:   sdk.ZeroInt(),
-					UnlockedAmount: sdk.NewIntFromUint64(150000000000000),
+					UnlockedAmount: sdk.NewInt(150000000000000),
 				},
 			}
 			k.SetReserver(ctx, reserver)

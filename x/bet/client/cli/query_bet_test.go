@@ -16,7 +16,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -68,7 +67,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			SportEventUID: sportEvent.UID,
 			OddsValue:     "10",
 			Amount:        sdk.NewInt(10),
-			BetFee:        sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1)),
+			BetFee:        sdk.NewInt(1),
 		}
 		nullify.Fill(&bet)
 

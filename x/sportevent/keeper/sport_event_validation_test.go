@@ -19,12 +19,12 @@ func TestValidateCreationEvent(t *testing.T) {
 
 	tests := []struct {
 		name string
-		msg  types.SportEvent
+		msg  types.SportEventAddTicketPayload
 		err  error
 	}{
 		{
 			name: "valid request",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -38,7 +38,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "same timestamp",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute).Unix()),
@@ -47,7 +47,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "end timestamp before current timestamp",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				EndTS:   uint64(t1.Add(-time.Minute).Unix()),
 			},
@@ -55,7 +55,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "invalid uid",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -69,7 +69,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "few odds than required",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -82,7 +82,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "invalid odd id",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -96,7 +96,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "duplicate odds id",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -110,7 +110,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "invalid min amount, negative",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -125,7 +125,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "invalid min amount, less than required",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -140,7 +140,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "valid request, with bet constraint",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -158,7 +158,7 @@ func TestValidateCreationEvent(t *testing.T) {
 		},
 		{
 			name: "large metadata",
-			msg: types.SportEvent{
+			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
@@ -177,7 +177,7 @@ func TestValidateCreationEvent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := k.MsgServerValidateCreationEvent(wctx, tt.msg)
+			err := k.ValidateEventAdd(wctx, tt.msg)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -362,7 +362,7 @@ func TestUpdateEventValidation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := k.MsgServerValidateEventUpdate(wctx, tt.msg, sportEvent)
+			err := k.ValidateEventUpdate(wctx, tt.msg, sportEvent)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

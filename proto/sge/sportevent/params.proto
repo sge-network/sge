@@ -19,7 +19,7 @@ message Params {
   // event_min_bet_fee default minimum bet fee for a sport-event.
   string event_min_bet_fee = 3 [
     (gogoproto.moretags) = "yaml:\"event_min_bet_fee\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 }
