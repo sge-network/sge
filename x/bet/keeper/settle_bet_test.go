@@ -224,7 +224,7 @@ func TestBatchSettleBet(t *testing.T) {
 		require.True(t, found)
 
 		sportEvent.Active = true
-		*sportEvent.BetConstraints = sporteventtypes.EventBetConstraints{
+		sportEvent.BetConstraints = &sporteventtypes.EventBetConstraints{
 			MinAmount: sdk.NewInt(1),
 			BetFee:    sdk.NewInt(1),
 		}
