@@ -1,6 +1,5 @@
 # **State**
 
-
 ## **Book**
 
 The Book keeps track of the order book for a sport event.
