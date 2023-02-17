@@ -52,5 +52,5 @@ genesis:
     sportevent:
       params:
         event_min_bet_amount: "1000000"
-        event_min_bet_fee: {"denom": "usge", "amount": "100000"}
+        event_min_bet_fee: "0"
         event_max_sr_contribution: "100000000"
