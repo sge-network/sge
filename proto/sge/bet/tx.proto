@@ -28,4 +28,3 @@ message MsgPlaceBetResponse {
   string error = 1;
   PlaceBetFields bet = 2;
 }
-

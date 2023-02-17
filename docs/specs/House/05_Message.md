@@ -22,7 +22,7 @@ service Msg {
 message MsgDeposit {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
-  
+
   string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
   string                   sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
   cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];

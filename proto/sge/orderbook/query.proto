@@ -69,7 +69,7 @@ message QueryOrderBooksRequest {
     // pagination defines an optional pagination for the request.
     cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
-  
+
 // QueryOrderBooksResponse is response type for the Query/OrderBooks RPC method
 message QueryOrderBooksResponse {
     // orderbooks contains all the queried order books.

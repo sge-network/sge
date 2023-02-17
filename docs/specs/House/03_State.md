@@ -30,9 +30,9 @@ message Deposit {
 
   // depositor_address is the bech32-encoded address of the depositor.
   string depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
-  
+
   string sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
-  
+
   cosmos.base.v1beta1.Coin deposit_amount = 3 [
     (gogoproto.moretags) = "yaml:\"deposit_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",
@@ -41,7 +41,7 @@ message Deposit {
   cosmos.base.v1beta1.Coin fee = 4 [
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
     (gogoproto.nullable) = false];
-  
+
   cosmos.base.v1beta1.Coin withdrawn_amount = 5 [
     (gogoproto.moretags) = "yaml:\"withdrawn_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Coin",

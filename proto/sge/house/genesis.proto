@@ -10,7 +10,7 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 message GenesisState {
   // params defines all the parameters related to deposit.
   Params params = 1 [(gogoproto.nullable) = false];
-  
+
   // deposits defines the deposits active at genesis.
   repeated Deposit deposits = 2 [(gogoproto.nullable) = false];
 }

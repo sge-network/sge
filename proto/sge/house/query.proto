@@ -31,7 +31,7 @@ message QueryDepositsRequest {
     // pagination defines an optional pagination for the request.
     cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
-  
+
 // QueryDepositsResponse is response type for the Query/Deposits RPC method
 message QueryDepositsResponse {
     // deposits contains all the queried deposits.
@@ -49,7 +49,7 @@ message QueryDepositorDepositsRequest {
     // pagination defines an optional pagination for the request.
     cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
-  
+
 // QueryDepositorDepositsResponse is response type for the Query/DepositorDeposits RPC method
 message QueryDepositorDepositsResponse {
     // deposits contains all the queried deposits.
@@ -67,7 +67,7 @@ message QueryDepositorWithdrawalsRequest {
     // pagination defines an optional pagination for the request.
     cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
-  
+
 // QueryDepositorWithdrawalsResponse is response type for the Query/DepositorWithdrawals RPC method
 message QueryDepositorWithdrawalsResponse {
     // withdrawals contains all the queried withdrawals.

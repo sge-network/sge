@@ -20,12 +20,12 @@ service Msg {
 message MsgDeposit {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
-  
+
   string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
   string                   sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
   cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
 }
-  
+
 // MsgDepositResponse defines the Msg/Deposit response type.
 message MsgDepositResponse {
   string sport_event_uid = 1 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
@@ -37,14 +37,14 @@ message MsgDepositResponse {
 message MsgWithdraw {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
-  
+
   string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
   string                   sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
   uint64 participant_id = 3 [(gogoproto.moretags) = "yaml:\"participant_id\""];
   WithdrawalMode mode = 4 [(gogoproto.moretags) = "yaml:\"mode\""];
   cosmos.base.v1beta1.Coin amount            = 5 [(gogoproto.nullable) = false];
 }
-  
+
 // MsgWithdrawResponse defines the Msg/Withdraw response type.
 message MsgWithdrawResponse {
   string sport_event_uid = 1 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
