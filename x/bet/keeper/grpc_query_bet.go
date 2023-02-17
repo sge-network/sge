@@ -21,7 +21,7 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	betStore := k.getBetStore(ctx)
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListPrefix)
 
 	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
 		var bet types.Bet
@@ -48,7 +48,7 @@ func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRe
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorKey(req.Creator))
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorPrefix(req.Creator))
 
 	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
 		var bet types.Bet
@@ -79,7 +79,7 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 
-	req.Items = RemoveDuplicateUIDs(req.Items)
+	req.Items = removeDuplicateUIDs(req.Items)
 
 	foundBets := make([]types.Bet, 0, count)
 	notFoundBets := make([]string, 0)
@@ -103,6 +103,74 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 		Bets:           foundBets,
 		NotFoundEvents: notFoundBets,
 	}, nil
+}
+
+// ActiveBets returns active bets of a sport-event
+func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest) (*types.QueryActiveBetsResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+
+	var bets []types.Bet
+	ctx := sdk.UnwrapSDKContext(c)
+
+	activeBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfSportEventPrefix(req.SportEventUid))
+
+	pageRes, err := query.Paginate(activeBetStore, req.Pagination, func(key []byte, value []byte) error {
+		var activeBet types.ActiveBet
+		if err := k.cdc.Unmarshal(value, &activeBet); err != nil {
+			return err
+		}
+
+		uid2ID, found := k.GetBetID(ctx, activeBet.UID)
+		if found {
+			bet, found := k.GetBet(ctx, activeBet.Creator, uid2ID.ID)
+			if found {
+				bets = append(bets, bet)
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QueryActiveBetsResponse{Bet: bets, Pagination: pageRes}, nil
+}
+
+// SettledBetsOfHeight returns settled bets of a certain height
+func (k Keeper) SettledBetsOfHeight(c context.Context, req *types.QuerySettledBetsOfHeightRequest) (*types.QuerySettledBetsOfHeightResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+
+	var bets []types.Bet
+	ctx := sdk.UnwrapSDKContext(c)
+
+	settledBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetListOfBlockHeightPrefix(req.BlockHeight))
+
+	pageRes, err := query.Paginate(settledBetStore, req.Pagination, func(key []byte, value []byte) error {
+		var settledBet types.SettledBet
+		if err := k.cdc.Unmarshal(value, &settledBet); err != nil {
+			return err
+		}
+
+		uid2ID, found := k.GetBetID(ctx, settledBet.UID)
+		if found {
+			bet, found := k.GetBet(ctx, settledBet.BettorAddress, uid2ID.ID)
+			if found {
+				bets = append(bets, bet)
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QuerySettledBetsOfHeightResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
 // Bet returns a specific bet by its UID
@@ -134,8 +202,8 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
 }
 
-// RemoveDuplicateUIDs returns input array without duplicates
-func RemoveDuplicateUIDs(strSlice []*types.QueryBetRequest) (list []*types.QueryBetRequest) {
+// removeDuplicateUIDs returns input array without duplicates
+func removeDuplicateUIDs(strSlice []*types.QueryBetRequest) (list []*types.QueryBetRequest) {
 	keys := make(map[string]bool)
 
 	// If the key(values of the slice) is not equal

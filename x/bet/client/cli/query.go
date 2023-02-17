@@ -26,6 +26,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdListBet())
 	cmd.AddCommand(CmdListBetByCreator())
+	cmd.AddCommand(CmdListActiveBets())
 	cmd.AddCommand(CmdListBetByUIDs())
 	cmd.AddCommand(CmdShowBet())
 

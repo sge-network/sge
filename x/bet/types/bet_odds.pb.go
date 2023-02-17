@@ -31,8 +31,8 @@ type BetOdds struct {
 	// sport_event_uid is the parent, used for fast retrieving.
 	// Required | NonUnique | -
 	SportEventUID string `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	// value of the odds in corresponding odds type proposed in bet placement message.
-	// Required | NonUnique | "1.286" or "2/7" or "+500"
+	// value of the odds in corresponding odds type proposed in bet placement
+	// message. Required | NonUnique | "1.286" or "2/7" or "+500"
 	Value string `protobuf:"bytes,3,opt,name=value,proto3" json:"value,omitempty"`
 }
 

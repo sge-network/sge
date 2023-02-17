@@ -31,7 +31,12 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		items[i].BetFee = sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1))
 		items[i].SportEventUID = testSportEventUID
 
-		keeper.SetBet(ctx, items[i], uint64(i+1))
+		id := uint64(i + 1)
+		keeper.SetBet(ctx, items[i], id)
+		keeper.SetActiveBet(ctx, &types.ActiveBet{
+			UID:     items[i].UID,
+			Creator: testCreator,
+		}, id, testSportEventUID)
 	}
 	return items
 }

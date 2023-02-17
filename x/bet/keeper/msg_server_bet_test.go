@@ -248,8 +248,12 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
-				placeTestBet(ctx, t, tApp, betUID)
+				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
+
+				activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
+				require.NoError(t, err)
+				require.Equal(t, 1, len(activeBets.Bet))
 			}
 			if tc.sportEvent != nil {
 				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
@@ -271,6 +275,15 @@ func TestBetMsgServerSettleBet(t *testing.T) {
 			}
 			require.NoError(t, err)
 			require.Equal(t, expectedResp, res)
+
+			activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
+			require.NoError(t, err)
+			require.Equal(t, 0, len(activeBets.Bet))
+
+			settledBets, err := k.SettledBetsOfHeight(wctx, &types.QuerySettledBetsOfHeightRequest{BlockHeight: ctx.BlockHeight()})
+			require.NoError(t, err)
+			require.Equal(t, 1, len(settledBets.Bet))
+			require.Equal(t, ctx.BlockHeight(), settledBets.Bet[0].SettlementHeight)
 		})
 	}
 }

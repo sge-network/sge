@@ -25,11 +25,11 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines the parameters for the module.
-// contains bet constraints associated to a sport-event
+// contains bet constraints associated to a sport-event.
 type Params struct {
-	// event_min_bet_amount default minimum bet amount for a sport-event
+	// event_min_bet_amount default minimum bet amount for a sport-event.
 	EventMinBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=event_min_bet_amount,json=eventMinBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"event_min_bet_amount" yaml:"event_min_bet_amount"`
-	// event_min_bet_fee default minimum bet fee for a sport-event
+	// event_min_bet_fee default minimum bet fee for a sport-event.
 	EventMinBetFee github_com_cosmos_cosmos_sdk_types.Coin `protobuf:"bytes,3,opt,name=event_min_bet_fee,json=eventMinBetFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Coin" json:"event_min_bet_fee" yaml:"event_min_bet_fee"`
 }
 
