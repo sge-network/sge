@@ -83,7 +83,7 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED ||
 		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED ||
 		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_ABORTED {
-
+		// append sport-event id to the unsettled resolved in statistics.
 		k.appendUnsettledResolvedSportEvent(ctx, storedEvent.UID)
 	}
 
