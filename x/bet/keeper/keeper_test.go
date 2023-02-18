@@ -28,21 +28,23 @@ var (
 		{UID: testOddsUID3, Meta: "Odds 3"},
 	}
 	testSelectedBetOdds = &types.BetOdds{
-		UID:           testOddsUID1,
-		SportEventUID: testSportEventUID,
-		Value:         "4.20",
+		UID:               testOddsUID1,
+		SportEventUID:     testSportEventUID,
+		Value:             "4.20",
+		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 	testCreator       string
 	testBet           *types.MsgPlaceBet
 	testAddSportEvent *sporteventtypes.MsgAddSportEventRequest
 
 	testSportEvent = sporteventtypes.SportEvent{
-		UID:     testSportEventUID,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
-		StartTS: 1111111111,
-		EndTS:   uint64(time.Now().Unix()) + 5000,
-		Odds:    testEventOdds,
-		Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		UID:                    testSportEventUID,
+		Creator:                simappUtil.TestParamUsers["user1"].Address.String(),
+		StartTS:                1111111111,
+		EndTS:                  uint64(time.Now().Unix()) + 5000,
+		Odds:                   testEventOdds,
+		Status:                 sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		SrContributionForHouse: sdk.NewInt(5),
 	}
 )
 
@@ -62,13 +64,14 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddSportEventClaim := jwt.MapClaims{
-		"uid":      testSportEventUID,
-		"start_ts": 1111111111,
-		"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
-		"odds":     testEventOdds,
-		"exp":      9999999999,
-		"iat":      7777777777,
-		"meta":     "Winner of x:y",
+		"uid":                       testSportEventUID,
+		"start_ts":                  1111111111,
+		"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
+		"odds":                      testEventOdds,
+		"exp":                       9999999999,
+		"iat":                       7777777777,
+		"meta":                      "Winner of x:y",
+		"sr_contribution_for_house": sdk.NewInt(500000),
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
@@ -90,13 +93,14 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 		uid := uuid.NewString()
 		uids = append(uids, uid)
 		testAddSportEventClaim := jwt.MapClaims{
-			"uid":      uid,
-			"start_ts": 1111111111,
-			"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
-			"odds":     testEventOdds,
-			"exp":      9999999999,
-			"iat":      7777777777,
-			"meta":     "Winner of x:y",
+			"uid":                       uid,
+			"start_ts":                  1111111111,
+			"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
+			"odds":                      testEventOdds,
+			"exp":                       9999999999,
+			"iat":                       7777777777,
+			"meta":                      "Winner of x:y",
+			"sr_contribution_for_house": sdk.NewInt(500000),
 		}
 		testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 		require.Nil(t, err)

@@ -29,6 +29,7 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewInt(1)
 		items[i].SportEventUID = testSportEventUID
+		items[i].MaxLossMultiplier = sdk.NewDec(10)
 
 		id := uint64(i + 1)
 		keeper.SetBet(ctx, items[i], id)

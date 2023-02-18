@@ -28,6 +28,15 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, types.ErrEventAlreadyExist
 	}
 
+	var oddsIDs []string
+	for _, oddsID := range addPayload.Odds {
+		oddsIDs = append(oddsIDs, oddsID.UID)
+	}
+	bookID, err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsIDs)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
+	}
+
 	sportEvent := types.NewSpoerEvent(
 		addPayload.UID,
 		msg.Creator,
@@ -37,6 +46,8 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		addPayload.BetConstraints,
 		addPayload.Active,
 		addPayload.Meta,
+		bookID,
+		addPayload.SrContributionForHouse,
 	)
 
 	k.Keeper.SetSportEvent(ctx, sportEvent)

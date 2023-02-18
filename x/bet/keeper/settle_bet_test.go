@@ -80,11 +80,12 @@ func TestSettleBet(t *testing.T) {
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:     testSportEventUID,
-				Creator: testCreator,
-				StartTS: 1111111111,
-				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:    testEventOdds,
+				UID:                    testSportEventUID,
+				Creator:                testCreator,
+				StartTS:                1111111111,
+				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:                   testEventOdds,
+				SrContributionForHouse: sdk.NewInt(500000),
 
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
 			},
@@ -101,11 +102,12 @@ func TestSettleBet(t *testing.T) {
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:     testSportEventUID,
-				Creator: testCreator,
-				StartTS: 1111111111,
-				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:    testEventOdds,
+				UID:                    testSportEventUID,
+				Creator:                testCreator,
+				StartTS:                1111111111,
+				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:                   testEventOdds,
+				SrContributionForHouse: sdk.NewInt(500000),
 
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
 			},
@@ -122,11 +124,12 @@ func TestSettleBet(t *testing.T) {
 				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:     testSportEventUID,
-				Creator: testCreator,
-				StartTS: 1111111111,
-				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:    testEventOdds,
+				UID:                    testSportEventUID,
+				Creator:                testCreator,
+				StartTS:                1111111111,
+				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:                   testEventOdds,
+				SrContributionForHouse: sdk.NewInt(500000),
 
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
 			},
@@ -146,11 +149,12 @@ func TestSettleBet(t *testing.T) {
 				Result: types.Bet_RESULT_WON,
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:     testSportEventUID,
-				Creator: testCreator,
-				StartTS: 1111111111,
-				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:    testEventOdds,
+				UID:                    testSportEventUID,
+				Creator:                testCreator,
+				StartTS:                1111111111,
+				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:                   testEventOdds,
+				SrContributionForHouse: sdk.NewInt(500000),
 
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
@@ -174,6 +178,7 @@ func TestSettleBet(t *testing.T) {
 						MinAmount: sdk.NewInt(1),
 						BetFee:    sdk.NewInt(1),
 					},
+					SrContributionForHouse: sdk.NewInt(500000),
 				}
 				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
@@ -234,10 +239,12 @@ func TestBatchSettleBet(t *testing.T) {
 			placeTestBet(ctx, t, tApp,
 				uuid.NewString(),
 				&types.BetOdds{
-					UID:           testOddsUID1,
-					SportEventUID: sportEventUID,
-					Value:         "4.20",
-				})
+					UID:               testOddsUID1,
+					SportEventUID:     sportEventUID,
+					Value:             "4.20",
+					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				},
+			)
 		}
 	}
 

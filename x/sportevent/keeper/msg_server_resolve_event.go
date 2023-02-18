@@ -84,7 +84,7 @@ func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.SportEventR
 		}
 
 		if !validWinnerOdds {
-			return types.ErrInvalidWinnerOdd
+			return types.ErrInvalidWinnerOdds
 		}
 	}
 

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "gogoproto/gogo.proto";
+import "sge/house/house.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// GenesisState defines the house module's genesis state.
+message GenesisState {
+  // params defines all the parameters related to deposit.
+  Params params = 1 [(gogoproto.nullable) = false];
+
+  // deposits defines the deposits active at genesis.
+  repeated Deposit deposits = 2 [(gogoproto.nullable) = false];
+}

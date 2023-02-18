@@ -60,35 +60,3 @@ func CmdPlaceBet() *cobra.Command {
 
 	return cmd
 }
-
-// CmdSettleBet implements a command to settle a bet
-func CmdSettleBet() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "settle-bet [bet-creator-address] [bet-uid]",
-		Short: "Settle a bet",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetCreator := args[0]
-			argBetUID := args[1]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgSettleBet(
-				clientCtx.GetFromAddress().String(),
-				argBetCreator,
-				argBetUID,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}

@@ -72,6 +72,15 @@ message Bet {
   // settlement_height is the block height that the bet is settled.
   int64 settlement_height = 14;
 
+  // max_loss_multiplier is the multiplier coefficient of max loss.
+  string max_loss_multiplier = 15 [
+      (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+      (gogoproto.nullable) = false
+  ];
+
+  // bet_fullfillment is the fulfillment data.
+  repeated BetFullfillment bet_fullfillment = 16;
+
   // Status of the Bet.
   enum Status {
 
@@ -160,4 +169,27 @@ message SettledBet {
   ];
   // bettor_address is the bech32 address of the bettor account.
   string bettor_address = 2;
+}
+
+// BetFullfillment is the type for bet fulfillment
+message BetFullfillment {
+  // participant_address is the bech32-encoded address of the participant fullfilling bet.
+  string participant_address = 1 [(gogoproto.moretags) = "yaml:\"participant_address\""];
+
+  // number in initial participation queue number
+  uint64 participant_number = 2 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // bet amount fulfilled by the participant
+  string bet_amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"bet_amount\""
+  ];
+
+  // payout amount fulfilled by the participant
+  string payout_amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"payout_amount\""
+  ];
 }

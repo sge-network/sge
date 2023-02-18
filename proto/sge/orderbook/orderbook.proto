@@ -1,0 +1,257 @@
+syntax = "proto3";
+package sgenetwork.sge.orderbook;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/orderbook/types";
+
+// Params defines the parameters for the orderbook module.
+message Params {
+  option (gogoproto.equal)            = true;
+  option (gogoproto.goproto_stringer) = false;
+
+  // max_book_participants is the maximum number of participants per book.
+  uint64 max_book_participants = 1 [(gogoproto.moretags) = "yaml:\"max_book_participants\""];
+
+  // batch_settlement_count is the batch settlement deposit counts.
+  uint64 batch_settlement_count = 2 [(gogoproto.moretags) = "yaml:\"batch_settlement_count\""];
+}
+
+// OrderBookStats holds statistics of the order-book
+message OrderBookStats {
+  // resolved_unsettled is the list of book ids that needs to be settled.
+  repeated string resolved_unsettled = 1;
+}
+
+
+// OrderBook represents the order book maintained against a sport event.
+message OrderBook {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // id corresponding to the book
+  string id = 1 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id"
+  ];
+
+  // number of participants in the order book
+  uint64 participants = 2 [(gogoproto.moretags) = "yaml:\"participants\""];
+
+  // order book status
+  OrderBookStatus status = 3;
+
+  uint64 number_of_odds = 4 [(gogoproto.moretags) = "yaml:\"number_of_odds\""];
+}
+
+// OrderBookStatus is the enum type for the status of the orderbook.
+enum OrderBookStatus {
+  // invalid
+  ORDER_BOOK_STATUS_UNSPECIFIED = 0;
+  // active
+  ORDER_BOOK_STATUS_STATUS_ACTIVE = 1;
+  // resolved not settled
+  ORDER_BOOK_STATUS_STATUS_RESOLVED = 2;
+  // resolved and settled
+  ORDER_BOOK_STATUS_STATUS_SETTLED = 3;
+}
+
+// BookParticipant represents the participants of an order book.
+message BookParticipant {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // book id is id corresponding to the book
+  string book_id = 1 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
+  ];
+
+  // participant_address is the bech32-encoded address of the participant.
+  string participant_address = 2 [(gogoproto.moretags) = "yaml:\"participant_address\""];
+
+  // number in initial participation queue
+  uint64 participant_number = 3 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // if participant is a module account
+  bool is_module_account = 4 [(gogoproto.moretags) = "yaml:\"is_module_account\""];;
+
+  // liquidity is the total initial liquidity provided
+  string liquidity = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"liquidity\""
+  ];
+
+  // current round liquidity is the liquidity provided for current round
+  string current_round_liquidity = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"current_round_liquidity\""
+  ];
+
+  uint64 exposures_not_filled = 7 [(gogoproto.moretags) = "yaml:\"exposures_not_filled\""];;
+
+  // total_bet_amount is the total bet amount corresponding to all exposure
+  string total_bet_amount = 8 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"total_bet_amount\""
+  ];
+
+  // current_round_total_bet_amount is the total bet amount corresponding to all exposure
+  string current_round_total_bet_amount = 9 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"current_round_total_bet_amount\""
+  ];
+
+  // max_loss is the total bet amount corresponding to all exposure
+  string max_loss = 10 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"max_loss\""
+  ];
+
+  // current_round_max_loss is the total bet amount corresponding to all exposure
+  string current_round_max_loss = 11 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"current_round_max_loss\""
+  ];
+
+  // current_round_max_loss_odds_id is the total bet amount corresponding to all exposure
+  string current_round_max_loss_odds_id = 12 [
+    (gogoproto.customname) = "CurrentRoundMaxLossOddsID",
+    (gogoproto.jsontag) = "currentRoundMaxLossOddsID",
+    json_name = "currentRoundMaxLossOddsID",
+    (gogoproto.moretags)   = "yaml:\"current_round_max_loss_odds_id\""
+  ];
+
+  // actual_profit is the actual profit
+  string actual_profit = 13 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"actual_profit\""
+  ];
+
+  // if participant is settled
+  bool is_settled = 14 [(gogoproto.moretags) = "yaml:\"is_settled\""];;
+}
+
+// BookOddsExposure represents the exposures taken on odds
+message BookOddsExposure {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // book_id is id corresponding to the book
+  string book_id = 1 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
+  ];
+
+  // odds_id is odd'd uid
+  string odds_id = 2 [
+    (gogoproto.customname) = "OddsID",
+    (gogoproto.jsontag) = "oddsID",
+    json_name = "oddsID"
+  ];
+
+  repeated uint64 fullfillment_queue = 3 [(gogoproto.moretags) = "yaml:\"fullfillment_queue\""];
+}
+
+// ParticipantExposure represents the exposures taken on odds by participants
+message ParticipantExposure {
+  option (gogoproto.equal)            = false;
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // book_id is id corresponding to the book
+  string book_id = 1 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
+  ];
+
+  // odds_id is odd's uid
+  string odds_id = 2 [
+    (gogoproto.customname) = "OddsID",
+    (gogoproto.jsontag) = "oddsID",
+    json_name = "oddsID"
+  ];
+
+  // number in initial participation queue
+  uint64 participant_number = 3 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // exposure is the total exposure taken on given odd
+  string exposure = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"exposure\""
+  ];
+
+  // bet_amount is the total bet amount corresponding to the exposure
+  string bet_amount = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable)   = false,
+    (gogoproto.moretags)   = "yaml:\"bet_amount\""
+  ];
+
+  bool is_fullfilled = 6 [(gogoproto.moretags) = "yaml:\"is_fullfilled\""];
+
+  // number of current round in queue
+  uint64 round = 7 [(gogoproto.moretags) = "yaml:\"rounds\""];
+}
+
+// ParticipantBetPair represents the book participant and bet bond
+message ParticipantBetPair {
+  // book id is id corresponding to the book
+  string book_id = 1 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
+  ];
+
+  // number in initial participation queue
+  uint64 participant_number = 2 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // bet_uid is bet's uuid
+  string bet_uid = 3 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "betUID",
+    json_name = "betUID"
+  ];
+
+  // bet_id is bet's sequential id
+  uint64 bet_id = 4 [
+    (gogoproto.customname) = "BetID",
+    (gogoproto.jsontag) = "betID",
+    json_name = "betID"
+  ];
+}
+
+// ParticipantBetPairResponse represents the book participant and bet bond response
+message ParticipantBetPairResponse {
+  // book id is id corresponding to the book
+  string book_id = 1 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
+  ];
+
+  // number in initial participation queue
+  uint64 participant_number = 2 [(gogoproto.moretags) = "yaml:\"participant_number\""];
+
+  // bet_uid is bet's uuid
+  string bet_uid = 3 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "betUID",
+    json_name = "betUID"
+  ];
+}

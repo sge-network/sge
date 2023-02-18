@@ -69,19 +69,6 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 		nil
 }
 
-func (k msgServer) SettleBet(goCtx context.Context, msg *types.MsgSettleBet) (*types.MsgSettleBetResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	if err := k.Keeper.SettleBet(ctx, msg.BettorAddress, msg.BetUID); err != nil {
-		return &types.MsgSettleBetResponse{
-			Error:  err.Error(),
-			BetUID: msg.BetUID,
-		}, err
-	}
-	emitBetEvent(ctx, types.TypeMsgSettleBet, msg.BetUID, msg.Creator)
-	return &types.MsgSettleBetResponse{}, nil
-}
-
 func emitBetEvent(ctx sdk.Context, msgType string, betUID string, betCreator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(

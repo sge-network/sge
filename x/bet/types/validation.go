@@ -2,6 +2,8 @@ package types
 
 import (
 	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // BetFieldsValidation validates fields of the given bet
@@ -50,6 +52,14 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 
 	if len(strings.TrimSpace(ticketData.SelectedOdds.Value)) == 0 {
 		return ErrEmptyOddsValue
+	}
+
+	if ticketData.SelectedOdds.MaxLossMultiplier.IsNil() || ticketData.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+		return ErrMaxLossMultiplierCanNotBeZero
+	}
+
+	if ticketData.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+		return ErrMaxLossMultiplierCanNotBeMoreThanOne
 	}
 
 	return nil
