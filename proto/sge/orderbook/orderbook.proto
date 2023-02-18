@@ -124,9 +124,15 @@ message BookParticipant {
     (gogoproto.moretags)   = "yaml:\"current_round_max_loss\""
   ];
 
-  // current_round_max_loss_odd is the total bet amount corresponding to all exposure
-  string current_round_max_loss_odd = 12 [(gogoproto.moretags)   = "yaml:\"current_round_max_loss_odd\""];
+  // current_round_max_loss_odds_id is the total bet amount corresponding to all exposure
+  string current_round_max_loss_odds_id = 12 [
+    (gogoproto.customname) = "CurrentRoundMaxLossOddsID",
+    (gogoproto.jsontag) = "current_round_max_loss_odds_id",
+    json_name = "current_round_max_loss_odds_id",
+    (gogoproto.moretags)   = "yaml:\"current_round_max_loss_odds_id\""
+  ];
 
+  // actual_profit is the actual profit
   string actual_profit = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable)   = false,
@@ -137,8 +143,8 @@ message BookParticipant {
   bool is_settled = 14 [(gogoproto.moretags) = "yaml:\"is_settled\""];;
 }
 
-// BookOddExposures represents the exposures taken on odds
-message BookOddExposure {
+// BookOddsExposure represents the exposures taken on odds
+message BookOddsExposure {
   option (gogoproto.equal)            = false;
   option (gogoproto.goproto_getters)  = false;
   option (gogoproto.goproto_stringer) = false;

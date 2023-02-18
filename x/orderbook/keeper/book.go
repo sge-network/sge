@@ -80,8 +80,8 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContributi
 	// Add book exposures
 	fullfillmentQueue := []uint64{bp.ParticipantNumber}
 	for _, oddsID := range oddsIDs {
-		boe := types.NewBookOddExposure(book.ID, oddsID, fullfillmentQueue)
-		k.SetBookOddExposure(ctx, boe)
+		boe := types.NewBookOddsExposure(book.ID, oddsID, fullfillmentQueue)
+		k.SetBookOddsExposure(ctx, boe)
 
 		pe := types.NewParticipantExposure(bp.BookID, oddsID, sdk.ZeroInt(), sdk.ZeroInt(), bp.ParticipantNumber, 1, false)
 		k.SetParticipantExposure(ctx, pe)

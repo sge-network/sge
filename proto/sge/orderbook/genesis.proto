@@ -18,7 +18,7 @@ message GenesisState {
   repeated BookParticipant book_participants = 3 [(gogoproto.nullable) = false];
 
   // book_exposures defines the book exposures active at genesis.
-  repeated BookOddExposure book_exposures = 4 [(gogoproto.nullable) = false];
+  repeated BookOddsExposure book_exposures = 4 [(gogoproto.nullable) = false];
 
   // participant_exposures defines the participant exposures active at genesis.
   repeated ParticipantExposure participant_exposures = 5 [(gogoproto.nullable) = false];

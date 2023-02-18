@@ -110,11 +110,11 @@ func (k Keeper) AddBookParticipant(
 	// Make entry for book participant
 	k.SetBookParticipant(ctx, bookParticipant)
 
-	// Update book odd exposures and add particiapnt exposures
-	boes := k.GetOddExposuresByBook(ctx, bookParticipant.BookID)
+	// Update book odds exposures and add particiapnt exposures
+	boes := k.GetOddsExposuresByBook(ctx, bookParticipant.BookID)
 	for _, boe := range boes {
 		boe.FullfillmentQueue = append(boe.FullfillmentQueue, bookParticipant.ParticipantNumber)
-		k.SetBookOddExposure(ctx, boe)
+		k.SetBookOddsExposure(ctx, boe)
 
 		pe := types.NewParticipantExposure(book.ID, boe.OddsID, sdk.ZeroInt(), sdk.ZeroInt(), bookParticipant.ParticipantNumber, 1, false)
 		k.SetParticipantExposure(ctx, pe)
@@ -184,14 +184,14 @@ func (k Keeper) LiquidateBookParticipant(
 	k.SetBookParticipant(ctx, bp)
 
 	if bp.CurrentRoundLiquidity.LTE(sdk.ZeroInt()) {
-		boes := k.GetOddExposuresByBook(ctx, bookID)
+		boes := k.GetOddsExposuresByBook(ctx, bookID)
 		for _, boe := range boes {
 			for i, pn := range boe.FullfillmentQueue {
 				if pn == bp.ParticipantNumber {
 					boe.FullfillmentQueue = append(boe.FullfillmentQueue[:i], boe.FullfillmentQueue[i+1:]...)
 				}
 			}
-			k.SetBookOddExposure(ctx, boe)
+			k.SetBookOddsExposure(ctx, boe)
 		}
 	}
 

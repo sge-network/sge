@@ -21,7 +21,7 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 	}
 
 	for _, be := range data.BookExposures {
-		keeper.SetBookOddExposure(ctx, be)
+		keeper.SetBookOddsExposure(ctx, be)
 	}
 
 	for _, pe := range data.ParticipantExposures {

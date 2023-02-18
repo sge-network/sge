@@ -33,7 +33,7 @@ func (k Keeper) ProcessBetPlacement(
 	if !found {
 		return betFullfillment, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
 	}
-	bookExposure, found := k.GetBookOddExposure(ctx, bookID, oddsID)
+	bookExposure, found := k.GetBookOddsExposure(ctx, bookID, oddsID)
 	if !found {
 		return betFullfillment, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsID)
 	}
@@ -50,7 +50,7 @@ func (k Keeper) ProcessBetPlacement(
 		participantMap[bp.ParticipantNumber] = bp
 	}
 
-	pes := k.GetExposureByBookAndOdd(ctx, bookID, oddsID)
+	pes := k.GetExposureByBookAndOdds(ctx, bookID, oddsID)
 	if int(book.Participants) != len(pes) {
 		return betFullfillment, sdkerrors.Wrapf(types.ErrParticipantExposuresNotFound, "%s, %s", bookID, oddsID)
 	}
@@ -99,14 +99,14 @@ func (k Keeper) ProcessBetPlacement(
 			switch {
 			case participant.CurrentRoundMaxLoss.IsNil():
 				participant.CurrentRoundMaxLoss = maxLoss
-				participant.CurrentRoundMaxLossOdd = oddsID
-			case participant.CurrentRoundMaxLossOdd == oddsID:
+				participant.CurrentRoundMaxLossOddsID = oddsID
+			case participant.CurrentRoundMaxLossOddsID == oddsID:
 				participant.CurrentRoundMaxLoss = maxLoss
 			default:
 				originalMaxLoss := participant.CurrentRoundMaxLoss.Sub(betAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participant.CurrentRoundMaxLoss = maxLoss
-					participant.CurrentRoundMaxLossOdd = oddsID
+					participant.CurrentRoundMaxLossOddsID = oddsID
 				} else {
 					participant.CurrentRoundMaxLoss = originalMaxLoss
 				}
@@ -134,14 +134,14 @@ func (k Keeper) ProcessBetPlacement(
 			switch {
 			case participant.CurrentRoundMaxLoss.IsNil():
 				participant.CurrentRoundMaxLoss = maxLoss
-				participant.CurrentRoundMaxLossOdd = oddsID
-			case participant.CurrentRoundMaxLossOdd == oddsID:
+				participant.CurrentRoundMaxLossOddsID = oddsID
+			case participant.CurrentRoundMaxLossOddsID == oddsID:
 				participant.CurrentRoundMaxLoss = maxLoss
 			default:
 				originalMaxLoss := participant.CurrentRoundMaxLoss.Sub(betAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participant.CurrentRoundMaxLoss = maxLoss
-					participant.CurrentRoundMaxLossOdd = oddsID
+					participant.CurrentRoundMaxLossOddsID = oddsID
 				} else {
 					participant.CurrentRoundMaxLoss = originalMaxLoss
 				}
@@ -188,14 +188,14 @@ func (k Keeper) ProcessBetPlacement(
 			k.SetBookParticipant(ctx, participant)
 
 			if eligibleForNextRound {
-				boes := k.GetOddExposuresByBook(ctx, bookID)
+				boes := k.GetOddsExposuresByBook(ctx, bookID)
 				for _, boe := range boes {
 					boe.FullfillmentQueue = append(boe.FullfillmentQueue, pn)
 					if boe.OddsID == participantExposure.OddsID {
 						bookExposure = boe
 					}
 
-					k.SetBookOddExposure(ctx, boe)
+					k.SetBookOddsExposure(ctx, boe)
 				}
 				updatedFullfillmentQueue = append(updatedFullfillmentQueue, pn)
 				bookExposure.FullfillmentQueue = updatedFullfillmentQueue
@@ -212,7 +212,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	bookExposure.FullfillmentQueue = updatedFullfillmentQueue
-	k.SetBookOddExposure(ctx, bookExposure)
+	k.SetBookOddsExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
 	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)

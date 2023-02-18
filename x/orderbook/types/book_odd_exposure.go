@@ -5,26 +5,26 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// NewBookOddExposure creates a new book odd exposure object
+// NewBookOddsExposure creates a new book odds exposure object
 //
 //nolint:interfacer
-func NewBookOddExposure(bookID, oddsID string, fullfillmentQueue []uint64) BookOddExposure {
-	return BookOddExposure{
+func NewBookOddsExposure(bookID, oddsID string, fullfillmentQueue []uint64) BookOddsExposure {
+	return BookOddsExposure{
 		BookID:            bookID,
 		OddsID:            oddsID,
 		FullfillmentQueue: fullfillmentQueue,
 	}
 }
 
-// MustMarshalBookOddExposure returns the book exposure bytes. Panics if fails
-func MustMarshalBookOddExposure(cdc codec.BinaryCodec, boe BookOddExposure) []byte {
+// MustMarshalBookOddsExposure returns the book exposure bytes. Panics if fails
+func MustMarshalBookOddsExposure(cdc codec.BinaryCodec, boe BookOddsExposure) []byte {
 	return cdc.MustMarshal(&boe)
 }
 
-// MustUnmarshalBookOddExposure return the unmarshaled book odd exposure from bytes.
+// MustUnmarshalBookOddsExposure return the unmarshaled book odds exposure from bytes.
 // Panics if fails.
-func MustUnmarshalBookOddExposure(cdc codec.BinaryCodec, value []byte) BookOddExposure {
-	boe, err := UnmarshalBookOddExposure(cdc, value)
+func MustUnmarshalBookOddsExposure(cdc codec.BinaryCodec, value []byte) BookOddsExposure {
+	boe, err := UnmarshalBookOddsExposure(cdc, value)
 	if err != nil {
 		panic(err)
 	}
@@ -32,14 +32,14 @@ func MustUnmarshalBookOddExposure(cdc codec.BinaryCodec, value []byte) BookOddEx
 	return boe
 }
 
-// return the book odd exposure
-func UnmarshalBookOddExposure(cdc codec.BinaryCodec, value []byte) (boe BookOddExposure, err error) {
+// return the book odds exposure
+func UnmarshalBookOddsExposure(cdc codec.BinaryCodec, value []byte) (boe BookOddsExposure, err error) {
 	err = cdc.Unmarshal(value, &boe)
 	return boe, err
 }
 
-// String returns a human readable string representation of a BookOddExposure.
-func (boe BookOddExposure) String() string {
+// String returns a human readable string representation of a BookOddsExposure.
+func (boe BookOddsExposure) String() string {
 	out, _ := yaml.Marshal(boe)
 	return string(out)
 }

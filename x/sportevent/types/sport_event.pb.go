@@ -88,7 +88,8 @@ type SportEvent struct {
 	// active is the status of active or inactive sport-event.
 	Active bool `protobuf:"varint,10,opt,name=active,proto3" json:"active,omitempty"`
 	// meta contains human-readable metadata of the sport-event.
-	Meta                   string                                 `protobuf:"bytes,11,opt,name=meta,proto3" json:"meta,omitempty"`
+	Meta string `protobuf:"bytes,11,opt,name=meta,proto3" json:"meta,omitempty"`
+	// sr_contribution_for_house is the amount of contibution of house in the sr
 	SrContributionForHouse github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,12,opt,name=sr_contribution_for_house,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"sr_contribution_for_house"`
 	// book_id is the id of book
 	BookID string `protobuf:"bytes,13,opt,name=book_id,proto3" json:"book_id"`

@@ -27,7 +27,7 @@ const (
 var (
 	BookKeyPrefix                          = []byte{0x00} // prefix for keys that store books
 	BookParticipantKeyPrefix               = []byte{0x01} // prefix for keys that store book participants
-	BookOddExposureKeyPrefix               = []byte{0x02} // prefix for keys that store book odd exposures
+	BookOddsExposureKeyPrefix              = []byte{0x02} // prefix for keys that store book odds exposures
 	ParticipantExposureKeyPrefix           = []byte{0x03} // prefix for keys that store participant exposures
 	PayoutLockKeyPrefix                    = []byte{0x04} // prefix for keys that store payout locks
 	ParticipantExposureByPNKeyPrefix       = []byte{0x05} // prefix for keys that store participant exposures
@@ -51,13 +51,13 @@ func GetBookParticipantsKey(bookID string) []byte {
 	return utils.StrBytes(bookID)
 }
 
-// GetBookOddExposureKey creates the key for book exposure for an odd
-func GetBookOddExposureKey(bookID, oddsID string) []byte {
-	return append(GetBookOddExposuresKey(bookID), utils.StrBytes(oddsID)...)
+// GetBookOddsExposureKey creates the key for book exposure for an odd
+func GetBookOddsExposureKey(bookID, oddsID string) []byte {
+	return append(GetBookOddsExposuresKey(bookID), utils.StrBytes(oddsID)...)
 }
 
-// GetBookOddExposuresKey creates the key for book exposure for an book
-func GetBookOddExposuresKey(bookID string) []byte {
+// GetBookOddsExposuresKey creates the key for book exposure for an book
+func GetBookOddsExposuresKey(bookID string) []byte {
 	return utils.StrBytes(bookID)
 }
 
@@ -66,7 +66,7 @@ func GetParticipantExposureKey(bookID, oddsID string, pn uint64) []byte {
 	return append(GetParticipantExposuresKey(bookID, oddsID), utils.Uint64ToBytes(pn)...)
 }
 
-// GetParticipantExposuresKey creates the key for exposures for a book id and odd id
+// GetParticipantExposuresKey creates the key for exposures for a book id and odds id
 func GetParticipantExposuresKey(bookID, oddsID string) []byte {
 	return append(GetParticipantExposuresByBookKey(bookID), utils.StrBytes(oddsID)...)
 }
@@ -76,7 +76,7 @@ func GetParticipantExposuresByBookKey(bookID string) []byte {
 	return utils.StrBytes(bookID)
 }
 
-// GetParticipantExposureByPNKey creates the key for participant exposure for an odd by participant number
+// GetParticipantExposureByPNKey creates the key for participant exposure for an odds by participant number
 func GetParticipantExposureByPNKey(bookID, oddsID string, pn uint64) []byte {
 	return append(GetParticipantByPNKey(bookID, pn), utils.StrBytes(oddsID)...)
 }

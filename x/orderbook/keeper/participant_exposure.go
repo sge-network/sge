@@ -7,8 +7,8 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
-// GetExposureByBookAndOdd returns all exposures for a book id and odd id
-func (k Keeper) GetExposureByBookAndOdd(ctx sdk.Context, bookID, oddsID string) (pes []types.ParticipantExposure) {
+// GetExposureByBookAndOdds returns all exposures for a book id and odds id
+func (k Keeper) GetExposureByBookAndOdds(ctx sdk.Context, bookID, oddsID string) (pes []types.ParticipantExposure) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipantExposureKeyPrefix)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipantExposuresKey(bookID, oddsID))
 	defer iterator.Close()

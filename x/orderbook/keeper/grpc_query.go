@@ -142,13 +142,13 @@ func (k Keeper) BookExposures(c context.Context, req *types.QueryBookExposuresRe
 	if req.BookId == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
 	}
-	var bookExposures []types.BookOddExposure
+	var bookExposures []types.BookOddsExposure
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetBookOddExposuresKey(req.BookId))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddsExposureKeyPrefix)
+	exposureStore := prefix.NewStore(store, types.GetBookOddsExposuresKey(req.BookId))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		bookExposure, err := types.UnmarshalBookOddExposure(k.cdc, value)
+		bookExposure, err := types.UnmarshalBookOddsExposure(k.cdc, value)
 		if err != nil {
 			return false, err
 		}
@@ -168,7 +168,7 @@ func (k Keeper) BookExposures(c context.Context, req *types.QueryBookExposuresRe
 	}, nil
 }
 
-// BookExposure queries book exposure info for given order book id and odd id
+// BookExposure queries book exposure info for given order book id and odds id
 func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequest) (*types.QueryBookExposureResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
@@ -179,11 +179,11 @@ func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequ
 	}
 
 	if req.OddsId == "" {
-		return nil, status.Error(codes.InvalidArgument, "odd id can not be empty")
+		return nil, status.Error(codes.InvalidArgument, "odds id can not be empty")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	bookExposure, found := k.GetBookOddExposure(ctx, req.BookId, req.OddsId)
+	bookExposure, found := k.GetBookOddsExposure(ctx, req.BookId, req.OddsId)
 	if !found {
 		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookId, req.OddsId)
 	}

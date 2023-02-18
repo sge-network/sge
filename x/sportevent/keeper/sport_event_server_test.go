@@ -224,7 +224,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdd)
+		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)
 	})
 }

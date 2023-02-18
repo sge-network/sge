@@ -35,7 +35,7 @@ service Query {
     option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures";
   }
 
-  // BookExposure queries exposure info for given orderbook and odd id.
+  // BookExposure queries exposure info for given orderbook and odds id.
   rpc BookExposure(QueryBookExposureRequest) returns (QueryBookExposureResponse) {
     option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures/{odds_id}";
   }
@@ -134,7 +134,7 @@ message QueryBookExposuresRequest {
 
 // QueryBookExposuresResponse is response type for the Query/BookExposures RPC method
 message QueryBookExposuresResponse {
-    repeated BookOddExposure book_exposures = 1 [(gogoproto.nullable) = false];
+    repeated BookOddsExposure book_exposures = 1 [(gogoproto.nullable) = false];
 
     // pagination defines the pagination in the response.
     cosmos.base.query.v1beta1.PageResponse pagination = 2;
@@ -145,14 +145,14 @@ message QueryBookExposureRequest {
     // book_id defines the book id to query for.
     string book_id = 1;
 
-    // odds_id defines the odd id to query for.
+    // odds_id defines the odds id to query for.
     string odds_id = 2;
 }
 
 // QueryBookExposureResponse is response type for the Query/BookExposure RPC method
 message QueryBookExposureResponse {
     // book_exposure defines the the book exposure info.
-    BookOddExposure book_exposure = 1 [(gogoproto.nullable) = false];
+    BookOddsExposure book_exposure = 1 [(gogoproto.nullable) = false];
 }
 
 // QueryParticipantExposuresRequest is request type for the Query/ParticipantExposures RPC method

@@ -13,7 +13,7 @@ func NewBookParticipant(
 	bID string, pAddr sdk.AccAddress,
 	participantNumber, exposuresNotFilled uint64, isModuleAccount bool,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
-	currentRoundMaxLossOdd string, actualProfit sdk.Int,
+	currentRoundMaxLossOddsID string, actualProfit sdk.Int,
 ) BookParticipant {
 	return BookParticipant{
 		BookID:                     bID,
@@ -27,7 +27,7 @@ func NewBookParticipant(
 		CurrentRoundTotalBetAmount: currentRoundTotalBetAmount,
 		MaxLoss:                    maxLoss,
 		CurrentRoundMaxLoss:        currentRoundMaxLoss,
-		CurrentRoundMaxLossOdd:     currentRoundMaxLossOdd,
+		CurrentRoundMaxLossOddsID:  currentRoundMaxLossOddsID,
 		ActualProfit:               actualProfit,
 	}
 }

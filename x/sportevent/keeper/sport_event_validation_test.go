@@ -82,7 +82,7 @@ func TestValidateCreationEvent(t *testing.T) {
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "invalid odd id",
+			name: "invalid odds id",
 			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),

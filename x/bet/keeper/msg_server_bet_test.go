@@ -148,9 +148,18 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewInt(1),
 			},
+			SrContributionForHouse: sdk.NewInt(50000),
 		}
 
 		tApp.SporteventKeeper.SetSportEvent(ctx, sportEventItem)
+
+		var oddsIDs []string
+		for _, v := range sportEventItem.Odds {
+			oddsIDs = append(oddsIDs, v.UID)
+		}
+		_, err = tApp.OrderBookKeeper.InitiateBook(ctx, sportEventItem.UID, sportEventItem.SrContributionForHouse, oddsIDs)
+		require.NoError(t, err)
+
 		_, err = msgk.PlaceBet(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found := k.GetBet(ctx,
