@@ -24,8 +24,8 @@ message MsgDeposit {
   string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
   string                   sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sportEventUID",
-    json_name = "sportEventUID"
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
   ];
   cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
 }
@@ -34,14 +34,14 @@ message MsgDeposit {
 message MsgDepositResponse {
   string sport_event_uid = 1 [
     (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sportEventUID",
-    json_name = "sportEventUID"
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
   ];
 
   uint64 participant_id = 2 [
     (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participantID",
-    json_name = "participantID"
+    (gogoproto.jsontag) = "participant_id",
+    json_name = "participant_id"
   ];
 }
 
@@ -50,16 +50,16 @@ message MsgWithdraw {
   option (gogoproto.equal)           = false;
   option (gogoproto.goproto_getters) = false;
 
-  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
-  string                   sport_event_uid = 2 [
+  string depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
+  string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sportEventUID",
-    json_name = "sportEventUID"
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
   ];
   uint64 participant_id = 3 [
     (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participantID",
-    json_name = "participantID"
+    (gogoproto.jsontag) = "participant_id",
+    json_name = "participant_id"
   ];
   WithdrawalMode mode = 4 [(gogoproto.moretags) = "yaml:\"mode\""];
   cosmos.base.v1beta1.Coin amount            = 5 [(gogoproto.nullable) = false];
@@ -69,14 +69,14 @@ message MsgWithdraw {
 message MsgWithdrawResponse {
   string sport_event_uid = 1 [
     (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sportEventUID",
-    json_name = "sportEventUID"
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
   ];
 
   uint64 participant_id = 2 [
     (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participantID",
-    json_name = "participantID"
+    (gogoproto.jsontag) = "participant_id",
+    json_name = "participant_id"
   ];
 
   uint64 withdrawal_number = 3 [(gogoproto.moretags) = "yaml:\"withdrawal_number\""];
