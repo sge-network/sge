@@ -67,8 +67,8 @@ message BookParticipant {
   // book id is id corresponding to the book
   string book_id = 1 [
     (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
   ];
 
   // participant_address is the bech32-encoded address of the participant.
@@ -127,8 +127,8 @@ message BookParticipant {
   // current_round_max_loss_odds_id is the total bet amount corresponding to all exposure
   string current_round_max_loss_odds_id = 12 [
     (gogoproto.customname) = "CurrentRoundMaxLossOddsID",
-    (gogoproto.jsontag) = "current_round_max_loss_odds_id",
-    json_name = "current_round_max_loss_odds_id",
+    (gogoproto.jsontag) = "currentRoundMaxLossOddsID",
+    json_name = "currentRoundMaxLossOddsID",
     (gogoproto.moretags)   = "yaml:\"current_round_max_loss_odds_id\""
   ];
 
@@ -152,15 +152,15 @@ message BookOddsExposure {
   // book_id is id corresponding to the book
   string book_id = 1 [
     (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
   ];
 
   // odds_id is odd'd uid
   string odds_id = 2 [
     (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+    (gogoproto.jsontag) = "oddsID",
+    json_name = "oddsID"
   ];
 
   repeated uint64 fullfillment_queue = 3 [(gogoproto.moretags) = "yaml:\"fullfillment_queue\""];
@@ -175,15 +175,15 @@ message ParticipantExposure {
   // book_id is id corresponding to the book
   string book_id = 1 [
     (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
   ];
 
   // odds_id is odd's uid
   string odds_id = 2 [
     (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+    (gogoproto.jsontag) = "oddsID",
+    json_name = "oddsID"
   ];
 
   // number in initial participation queue
@@ -214,8 +214,8 @@ message ParticipantBetPair {
   // book id is id corresponding to the book
   string book_id = 1 [
     (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
   ];
 
   // number in initial participation queue
@@ -224,15 +224,15 @@ message ParticipantBetPair {
   // bet_uid is bet's uuid
   string bet_uid = 3 [
     (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "bet_uid",
-    json_name = "bet_uid"
+    (gogoproto.jsontag) = "betUID",
+    json_name = "betUID"
   ];
 
   // bet_id is bet's sequential id
   uint64 bet_id = 4 [
     (gogoproto.customname) = "BetID",
-    (gogoproto.jsontag) = "bet_id",
-    json_name = "bet_id"
+    (gogoproto.jsontag) = "betID",
+    json_name = "betID"
   ];
 }
 
@@ -241,8 +241,8 @@ message ParticipantBetPairResponse {
   // book id is id corresponding to the book
   string book_id = 1 [
     (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+    (gogoproto.jsontag) = "bookID",
+    json_name = "bookID"
   ];
 
   // number in initial participation queue
@@ -251,7 +251,7 @@ message ParticipantBetPairResponse {
   // bet_uid is bet's uuid
   string bet_uid = 3 [
     (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "bet_uid",
-    json_name = "bet_uid"
+    (gogoproto.jsontag) = "betUID",
+    json_name = "betUID"
   ];
 }
