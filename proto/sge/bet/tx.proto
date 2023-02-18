@@ -40,8 +40,8 @@ message MsgSettleBet {
   // bet_uid is the universal unique identifier of the bet to settle.
   string bet_uid = 2 [
     (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "betUID",
-    json_name = "betUID"
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
   ];
 
   // bettor_address is sthe bec32 address of the bettor.
@@ -56,7 +56,7 @@ message MsgSettleBetResponse {
   // bet_uid is the universal unique identifier of the bet to be settled.
   string bet_uid = 2 [
     (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "betUID",
-    json_name = "betUID"
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
   ];
 }
