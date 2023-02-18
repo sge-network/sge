@@ -98,7 +98,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc    string
 		betOdds *types.BetOdds
-		kyc     *types.KycDataPayload
+		kyc     types.KycDataPayload
 		err     error
 	}{
 		{
@@ -109,10 +109,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrInvalidOddsUID,
 		},
@@ -124,10 +123,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrInvalidSportEventUID,
 		},
@@ -139,10 +137,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrEmptyOddsValue,
 		},
@@ -154,7 +151,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			err: types.ErrNoKycField,
+			err: types.ErrNoKycIDField,
 		},
 		{
 			desc: "no kyc ID field",
@@ -164,10 +161,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "",
+				KycID:       "",
 			},
 			err: types.ErrNoKycIDField,
 		},
@@ -179,10 +175,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 		},
 	}

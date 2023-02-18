@@ -276,8 +276,6 @@ func TestBatchSettleBet(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	require.NoError(t, err)
-
 	for i := 1; i <= blockCount; i++ {
 		ctx = ctx.WithBlockHeight(int64(i))
 		err := k.BatchSportEventSettlements(ctx)

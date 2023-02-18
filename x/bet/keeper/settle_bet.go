@@ -177,7 +177,10 @@ func (k Keeper) batchSettlementOfSportEvent(ctx sdk.Context, sportEventUID strin
 		singlePageNum,
 		uint(countToBeSettled))
 	defer func() {
-		err = iterator.Close()
+		iterErr := iterator.Close()
+		if iterErr != nil {
+			err = iterErr
+		}
 	}()
 
 	// settle bets for the filtered active bets

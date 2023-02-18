@@ -55,9 +55,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 		selectedBetOdds.SportEventUID = ""
 		testKyc := &types.KycDataPayload{
-			KycRequired: true,
 			KycApproved: true,
-			KycId:       creator.Address.String(),
+			KycID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,
@@ -84,9 +83,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("No matching sportEvent", func(t *testing.T) {
 		testKyc := &types.KycDataPayload{
-			KycRequired: true,
 			KycApproved: true,
-			KycId:       creator.Address.String(),
+			KycID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,
@@ -113,9 +111,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		testKyc := &types.KycDataPayload{
-			KycRequired: true,
 			KycApproved: true,
-			KycId:       creator.Address.String(),
+			KycID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,

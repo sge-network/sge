@@ -36,7 +36,7 @@ var (
 	ErrOddsDataNotFound                     = sdkerrors.Register(ModuleName, 2025, "odds does not exist in ticket payload")
 	ErrInvalidOddsType                      = sdkerrors.Register(ModuleName, 2026, "valid odds type should be provided, 1: decimal, 2: fractional, 3: monyline")
 	ErrUserKycFailed                        = sdkerrors.Register(ModuleName, 2027, "the bettor failed the KYC Validation")
-	ErrNoKycField                           = sdkerrors.Register(ModuleName, 2028, "KYC field does not exist in ticket payload")
+	ErrKycNotApproved                       = sdkerrors.Register(ModuleName, 2028, "KYC is not approved")
 	ErrNoKycIDField                         = sdkerrors.Register(ModuleName, 2029, "KYC ID does not exist in KYC part of ticket payload")
 	ErrCanNotQueryLargeNumberOfBets         = sdkerrors.Register(ModuleName, 2030, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
 	ErrDecimalOddsCanNotBeNegative          = sdkerrors.Register(ModuleName, 2031, "decimal odds value can not bet negative")

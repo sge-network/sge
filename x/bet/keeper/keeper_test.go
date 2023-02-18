@@ -124,9 +124,8 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
 	testKyc := &types.KycDataPayload{
-		KycRequired: true,
 		KycApproved: true,
-		KycId:       testCreator,
+		KycID:       testCreator,
 	}
 
 	if selectedOdds == nil {

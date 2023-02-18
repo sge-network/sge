@@ -40,10 +40,8 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	}
 
 	// Kyc validation is done only when the KYC is required
-	if ticketData.KycData.KycRequired {
-		if !KycValidation(msg.Creator, ticketData) {
-			return nil, sdkerrors.Wrapf(types.ErrUserKycFailed, "%s", msg.Creator)
-		}
+	if !kycValidation(msg.Creator, ticketData.KycData) {
+		return nil, sdkerrors.Wrapf(types.ErrUserKycFailed, "%s", msg.Creator)
 	}
 
 	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData.SelectedOdds)
