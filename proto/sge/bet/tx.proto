@@ -1,7 +1,6 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
-import "gogoproto/gogo.proto";
 import "sge/bet/place_bet_fields.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
@@ -11,9 +10,6 @@ service Msg {
 
   // PlaceBet defines a method to place a bet with the given data.
   rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
-
-  // SettleBet defines a method to settle the given bet.
-  rpc SettleBet(MsgSettleBet) returns (MsgSettleBetResponse);
 }
 
 // MsgPlaceBet defines a message to place a bet with the given data.
@@ -30,33 +26,4 @@ message MsgPlaceBet {
 message MsgPlaceBetResponse {
   string error = 1;
   PlaceBetFields bet = 2;
-}
-
-// MsgSettleBet defines a message to settle the given bet.
-message MsgSettleBet {
-  // creator is the bettor account address.
-  string creator = 1;
-
-  // bet_uid is the universal unique identifier of the bet to settle.
-  string bet_uid = 2 [
-    (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "bet_uid",
-    json_name = "bet_uid"
-  ];
-
-  // bettor_address is sthe bec32 address of the bettor.
-  string bettor_address = 3;
-}
-
-// MsgSettleBetResponse is the returning value in the response of MsgSettleBet.
-// request.
-message MsgSettleBetResponse {
-  // error contains any error while the settlement.
-  string error = 1;
-  // bet_uid is the universal unique identifier of the bet to be settled.
-  string bet_uid = 2 [
-    (gogoproto.customname) = "BetUID",
-    (gogoproto.jsontag) = "bet_uid",
-    json_name = "bet_uid"
-  ];
 }

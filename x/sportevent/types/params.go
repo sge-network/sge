@@ -1,6 +1,8 @@
 package types
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
@@ -15,12 +17,18 @@ var (
 
 	// KeyMinBetFee is the minimum bet fee param key
 	KeyMinBetFee = []byte("EventMinBetFee")
+
+	// KeyMaxSRContribution is the min bet amount param key
+	KeyMaxSRContribution = []byte("EventMaxSRContribution")
 )
 
 // default params
 var (
 	// DefaultMinBetAmount is the default minimum bet amount allowed
 	DefaultMinBetAmount = sdk.NewInt(1000000)
+
+	// DefaultMaxSRContribution is the default maximum sr contribution allowed
+	DefaultMaxSRContribution = sdk.NewInt(100000000)
 
 	// DefaultMinBetFee is the default minimum bet fee amount allowed
 	DefaultMinBetFee = sdk.NewInt(100000)
@@ -34,8 +42,9 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		EventMinBetAmount: DefaultMinBetAmount,
-		EventMinBetFee:    DefaultMinBetFee,
+		EventMinBetAmount:      DefaultMinBetAmount,
+		EventMinBetFee:         DefaultMinBetFee,
+		EventMaxSrContribution: DefaultMaxSRContribution,
 	}
 }
 
@@ -49,6 +58,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyEventMinBetAmount, &p.EventMinBetAmount, validateMinBetAmount),
 		paramtypes.NewParamSetPair(KeyMinBetFee, &p.EventMinBetFee, validateMinBetFeePercentage),
+		paramtypes.NewParamSetPair(KeyMaxSRContribution, &p.EventMaxSrContribution, validateMaxSRContribution),
 	}
 }
 
@@ -68,5 +78,18 @@ func validateMinBetAmount(i interface{}) error {
 }
 
 func validateMinBetFeePercentage(i interface{}) error {
+	return nil
+}
+
+func validateMaxSRContribution(i interface{}) error {
+	v, ok := i.(sdk.Int)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.LTE(sdk.OneInt()) {
+		return fmt.Errorf("max SR contribution must be positive: %d", v.Int64())
+	}
+
 	return nil
 }

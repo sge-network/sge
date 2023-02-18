@@ -72,55 +72,6 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 	return nil
 }
 
-var _ sdk.Msg = &MsgSettleBet{}
-
-// NewMsgSettleBet returns a MsgSettleBet using given data
-func NewMsgSettleBet(creator, bettorAddress, betUID string) *MsgSettleBet {
-	return &MsgSettleBet{
-		Creator:       creator,
-		BettorAddress: bettorAddress,
-		BetUID:        betUID,
-	}
-}
-
-// Route returns the module's message router key.
-func (msg *MsgSettleBet) Route() string {
-	return RouterKey
-}
-
-// Type returns type of its message
-func (msg *MsgSettleBet) Type() string {
-	return TypeMsgSettleBet
-}
-
-// GetSigners returns the signers of its message
-func (msg *MsgSettleBet) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-// GetSignBytes returns sortJson form of its message
-func (msg *MsgSettleBet) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-// ValidateBasic does some validate checks on its message
-func (msg *MsgSettleBet) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, ErrTextInvalidCreator, err)
-	}
-
-	if !IsValidUID(msg.BetUID) {
-		return ErrInvalidBetUID
-	}
-	return nil
-}
-
 // isValidUUID validates the uid
 func isValidUUID(uid string) bool {
 	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
@@ -142,13 +93,14 @@ func IsValidUID(uid string) bool {
 // NewBet creates and returns a new bet from given message
 func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
 	return &Bet{
-		Creator:       creator,
-		UID:           bet.UID,
-		SportEventUID: odds.SportEventUID,
-		OddsUID:       odds.UID,
-		OddsValue:     odds.Value,
-		Amount:        bet.Amount,
-		Ticket:        bet.Ticket,
-		OddsType:      bet.OddsType,
+		Creator:           creator,
+		UID:               bet.UID,
+		SportEventUID:     odds.SportEventUID,
+		OddsUID:           odds.UID,
+		OddsValue:         odds.Value,
+		Amount:            bet.Amount,
+		Ticket:            bet.Ticket,
+		OddsType:          bet.OddsType,
+		MaxLossMultiplier: odds.MaxLossMultiplier,
 	}, nil
 }

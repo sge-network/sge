@@ -13,20 +13,20 @@ import (
 
 // Keeper is the type for module properties
 type Keeper struct {
-	cdc                    codec.BinaryCodec
-	storeKey               sdk.StoreKey
-	memKey                 sdk.StoreKey
-	paramstore             paramtypes.Subspace
-	sporteventKeeper       types.SporteventKeeper
-	strategicreserveKeeper types.StrategicreserveKeeper
-	dvmKeeper              types.DVMKeeper
+	cdc              codec.BinaryCodec
+	storeKey         sdk.StoreKey
+	memKey           sdk.StoreKey
+	paramstore       paramtypes.Subspace
+	sporteventKeeper types.SporteventKeeper
+	obKeeper         types.OrderBookKeeper
+	dvmKeeper        types.DVMKeeper
 }
 
 // ExpectedKeepers contains expected keepers parameter needed by NewKeeper
 type ExpectedKeepers struct {
-	SporteventKeeper       types.SporteventKeeper
-	StrategicreserveKeeper types.StrategicreserveKeeper
-	DVMKeeper              types.DVMKeeper
+	SporteventKeeper types.SporteventKeeper
+	OrderBookKeeper  types.OrderBookKeeper
+	DVMKeeper        types.DVMKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -43,13 +43,13 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:                    cdc,
-		storeKey:               storeKey,
-		memKey:                 memKey,
-		paramstore:             ps,
-		sporteventKeeper:       expectedKeepers.SporteventKeeper,
-		strategicreserveKeeper: expectedKeepers.StrategicreserveKeeper,
-		dvmKeeper:              expectedKeepers.DVMKeeper,
+		cdc:              cdc,
+		storeKey:         storeKey,
+		memKey:           memKey,
+		paramstore:       ps,
+		sporteventKeeper: expectedKeepers.SporteventKeeper,
+		obKeeper:         expectedKeepers.OrderBookKeeper,
+		dvmKeeper:        expectedKeepers.DVMKeeper,
 	}
 }
 

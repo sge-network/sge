@@ -18,6 +18,7 @@ func createNSportEvent(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Sp
 	items := make([]types.SportEvent, n)
 	for i := range items {
 		items[i].UID = strconv.Itoa(i)
+		items[i].SrContributionForHouse = sdk.NewInt(0)
 
 		keeper.SetSportEvent(ctx, items[i])
 	}

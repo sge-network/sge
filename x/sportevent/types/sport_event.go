@@ -1,5 +1,9 @@
 package types
 
+import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
 func NewSpoerEvent(
 	uid, creator string,
 	startTS, endTS uint64,
@@ -7,15 +11,19 @@ func NewSpoerEvent(
 	betConstraits *EventBetConstraints,
 	active bool,
 	meta string,
+	bookID string,
+	srContributionForHouse sdk.Int,
 ) SportEvent {
 	return SportEvent{
-		UID:            uid,
-		Creator:        creator,
-		StartTS:        startTS,
-		EndTS:          endTS,
-		Odds:           odds,
-		BetConstraints: betConstraits,
-		Active:         active,
-		Meta:           meta,
+		UID:                    uid,
+		Creator:                creator,
+		StartTS:                startTS,
+		EndTS:                  endTS,
+		Odds:                   odds,
+		BetConstraints:         betConstraits,
+		Active:                 active,
+		Meta:                   meta,
+		BookID:                 bookID,
+		SrContributionForHouse: srContributionForHouse,
 	}
 }

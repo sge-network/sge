@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -149,9 +148,18 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewInt(1),
 			},
+			SrContributionForHouse: sdk.NewInt(50000),
 		}
 
 		tApp.SporteventKeeper.SetSportEvent(ctx, sportEventItem)
+
+		var oddsIDs []string
+		for _, v := range sportEventItem.Odds {
+			oddsIDs = append(oddsIDs, v.UID)
+		}
+		_, err = tApp.OrderBookKeeper.InitiateBook(ctx, sportEventItem.UID, sportEventItem.SrContributionForHouse, oddsIDs)
+		require.NoError(t, err)
+
 		_, err = msgk.PlaceBet(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found := k.GetBet(ctx,
@@ -185,104 +193,4 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		stats = k.GetBetStats(ctx)
 		require.Equal(t, types.BetStats{Count: 2}, stats)
 	})
-}
-
-func TestBetMsgServerSettleBet(t *testing.T) {
-	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-
-	tcs := []struct {
-		desc       string
-		betUID     string
-		sportEvent *sporteventtypes.SportEvent
-		bet        *types.Bet
-		err        error
-	}{
-		{
-			desc:   "invalid betUID",
-			betUID: "invalidUID",
-			err:    types.ErrInvalidBetUID,
-		},
-		{
-			desc: "success",
-			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(500),
-				Creator:       creator.Address.String(),
-				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
-
-				Result: types.Bet_RESULT_WON,
-			},
-			sportEvent: &sporteventtypes.SportEvent{
-				UID:     testSportEventUID,
-				Creator: creator.Address.String(),
-				StartTS: 1111111111,
-				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:    testEventOdds,
-				Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
-			},
-		},
-	}
-
-	for _, tc := range tcs {
-		t.Run(tc.desc, func(t *testing.T) {
-			betUID := uuid.NewString()
-
-			if tc.bet != nil {
-				resetSportEvent := sporteventtypes.SportEvent{
-					UID:     testSportEventUID,
-					Creator: creator.Address.String(),
-					StartTS: 1111111111,
-					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-					Odds:    testEventOdds,
-					Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
-					Active:  true,
-					BetConstraints: &sporteventtypes.EventBetConstraints{
-						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewInt(1),
-					},
-				}
-				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
-				tc.bet.UID = betUID
-				placeTestBet(ctx, t, tApp, betUID, nil)
-				k.SetBet(ctx, *tc.bet, 1)
-
-				activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
-				require.NoError(t, err)
-				require.Equal(t, 1, len(activeBets.Bet))
-			}
-			if tc.sportEvent != nil {
-				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
-			}
-			if tc.betUID != "" {
-				betUID = tc.betUID
-			}
-			inputMsg := &types.MsgSettleBet{
-				Creator:       creator.Address.String(),
-				BettorAddress: creator.Address.String(),
-				BetUID:        betUID,
-			}
-			expectedResp := &types.MsgSettleBetResponse{}
-			res, err := msgk.SettleBet(wctx, inputMsg)
-			if tc.err != nil {
-				require.Equal(t, tc.err, err)
-				require.Equal(t, &types.MsgSettleBetResponse{Error: tc.err.Error(), BetUID: betUID}, res)
-				return
-			}
-			require.NoError(t, err)
-			require.Equal(t, expectedResp, res)
-
-			activeBets, err := k.ActiveBets(wctx, &types.QueryActiveBetsRequest{SportEventUid: testSportEventUID})
-			require.NoError(t, err)
-			require.Equal(t, 0, len(activeBets.Bet))
-
-			settledBets, err := k.SettledBetsOfHeight(wctx, &types.QuerySettledBetsOfHeightRequest{BlockHeight: ctx.BlockHeight()})
-			require.NoError(t, err)
-			require.Equal(t, 1, len(settledBets.Bet))
-			require.Equal(t, ctx.BlockHeight(), settledBets.Bet[0].SettlementHeight)
-		})
-	}
 }

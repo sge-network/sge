@@ -13,3 +13,5 @@
     * [Parameters](specs/Mint/06_Parameters.md)
   * [Sport-Event](specs/SportEvent/01_Overview.md)
   * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)
+  * [House](specs/House/01_Overview.md)
+  * [Order Book](specs/OrderBook/01_Overview.md)
