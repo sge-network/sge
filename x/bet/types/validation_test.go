@@ -98,7 +98,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc    string
 		betOdds *types.BetOdds
-		kyc     *types.KycDataPayload
+		kyc     types.KycDataPayload
 		err     error
 	}{
 		{
@@ -108,10 +108,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           " ",
 				Value:         "10",
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrInvalidOddsUID,
 		},
@@ -122,10 +121,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrInvalidSportEventUID,
 		},
@@ -136,10 +134,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "",
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 			err: types.ErrEmptyOddsValue,
 		},
@@ -150,7 +147,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			err: types.ErrNoKycField,
+			err: types.ErrNoKycIDField,
 		},
 		{
 			desc: "no kyc ID field",
@@ -159,10 +156,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "",
+				KycID:       "",
 			},
 			err: types.ErrNoKycIDField,
 		},
@@ -173,10 +169,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:         "10",
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
+			kyc: types.KycDataPayload{
 				KycApproved: true,
-				KycId:       "creator",
+				KycID:       "creator",
 			},
 		},
 	}

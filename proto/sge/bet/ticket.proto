@@ -2,6 +2,7 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
+import "gogoproto/gogo.proto";
 import "sge/bet/bet_odds.proto";
 import "sge/bet/kyc.proto";
 
@@ -12,5 +13,5 @@ message BetPlacementTicketPayload {
   // selected_odds is the user-selected odds to place bet.
   BetOdds selected_odds = 1;
   // kyc_data contains the details of user kyc.
-  KycDataPayload kyc_data = 2;
+  KycDataPayload kyc_data = 2 [(gogoproto.nullable) = false];
 }

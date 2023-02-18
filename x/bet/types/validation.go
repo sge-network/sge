@@ -32,8 +32,12 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 		return ErrOddsDataNotFound
 	}
 
-	if ticketData.KycData == nil {
-		return ErrNoKycField
+	if ticketData.KycData.KycID == "" {
+		return ErrNoKycIDField
+	}
+
+	if !ticketData.KycData.KycApproved {
+		return ErrKycNotApproved
 	}
 
 	if !IsValidUID(ticketData.SelectedOdds.SportEventUID) {
@@ -46,10 +50,6 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 
 	if len(strings.TrimSpace(ticketData.SelectedOdds.Value)) == 0 {
 		return ErrEmptyOddsValue
-	}
-
-	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
-		return ErrNoKycIDField
 	}
 
 	return nil
