@@ -13,3 +13,5 @@
     * [Events](specs/SportEvent/04_Events.md)
     * [State Transitions](specs/SportEvent/05_State_Transitions.md)
   * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)
+  * [House](specs/House/01_Overview.md)
+  * [Order Book](specs/OrderBook/01_Overview.md)

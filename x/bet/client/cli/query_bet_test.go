@@ -47,7 +47,8 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		Status:                 sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		SrContributionForHouse: sdk.NewInt(5000000),
 	}
 	nullify.Fill(&sportEvent)
 	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}
@@ -62,12 +63,13 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Creator:       testAddress,
-			UID:           uuid.NewString(),
-			SportEventUID: sportEvent.UID,
-			OddsValue:     "10",
-			Amount:        sdk.NewInt(10),
-			BetFee:        sdk.NewInt(1),
+			Creator:           testAddress,
+			UID:               uuid.NewString(),
+			SportEventUID:     sportEvent.UID,
+			OddsValue:         "10",
+			Amount:            sdk.NewInt(10),
+			BetFee:            sdk.NewInt(1),
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)
 

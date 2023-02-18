@@ -58,45 +58,6 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 	}
 }
 
-func TestMsgSettleBetValidateBasic(t *testing.T) {
-	tests := []struct {
-		name string
-		msg  types.MsgSettleBet
-		err  error
-	}{
-		{
-			name: "invalid creator",
-			msg: types.MsgSettleBet{
-				Creator: "invalid_address",
-			},
-			err: sdkerrors.ErrInvalidAddress,
-		}, {
-			name: "valid message",
-			msg: types.MsgSettleBet{
-				Creator: sample.AccAddress(),
-				BetUID:  "6e31c60f-2025-48ce-ae79-1dc110f16355",
-			},
-		}, {
-			name: "empty bet UID",
-			msg: types.MsgSettleBet{
-				Creator: sample.AccAddress(),
-				BetUID:  "",
-			},
-			err: types.ErrInvalidBetUID,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := tt.msg.ValidateBasic()
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
-}
-
 func TestNewBet(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		inputBet := &types.PlaceBetFields{
@@ -107,7 +68,7 @@ func TestNewBet(t *testing.T) {
 		creator := "creator"
 		inputBetOdds := &types.BetOdds{
 			UID:           "Oddsuid",
-			SportEventUID: "sportEventUid",
+			SportEventUID: "sportEventUID",
 			Value:         "1000",
 		}
 

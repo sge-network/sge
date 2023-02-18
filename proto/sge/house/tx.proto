@@ -1,0 +1,83 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "sge/house/house.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Msg defines the house Msg service.
+service Msg {
+  // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+
+  // Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+}
+
+// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+message MsgDeposit {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
+  string                   sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sportEventUID",
+    json_name = "sportEventUID"
+  ];
+  cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
+}
+
+// MsgDepositResponse defines the Msg/Deposit response type.
+message MsgDepositResponse {
+  string sport_event_uid = 1 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sportEventUID",
+    json_name = "sportEventUID"
+  ];
+
+  uint64 participant_id = 2 [
+    (gogoproto.customname) = "ParticipantID",
+    (gogoproto.jsontag) = "participantID",
+    json_name = "participantID"
+  ];
+}
+
+// MsgWithdraw defines a SDK message for performing a withdrawal of coins of unused amount corresponding to a deposit.
+message MsgWithdraw {
+  option (gogoproto.equal)           = false;
+  option (gogoproto.goproto_getters) = false;
+
+  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
+  string                   sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sportEventUID",
+    json_name = "sportEventUID"
+  ];
+  uint64 participant_id = 3 [
+    (gogoproto.customname) = "ParticipantID",
+    (gogoproto.jsontag) = "participantID",
+    json_name = "participantID"
+  ];
+  WithdrawalMode mode = 4 [(gogoproto.moretags) = "yaml:\"mode\""];
+  cosmos.base.v1beta1.Coin amount            = 5 [(gogoproto.nullable) = false];
+}
+
+// MsgWithdrawResponse defines the Msg/Withdraw response type.
+message MsgWithdrawResponse {
+  string sport_event_uid = 1 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sportEventUID",
+    json_name = "sportEventUID"
+  ];
+
+  uint64 participant_id = 2 [
+    (gogoproto.customname) = "ParticipantID",
+    (gogoproto.jsontag) = "participantID",
+    json_name = "participantID"
+  ];
+
+  uint64 withdrawal_number = 3 [(gogoproto.moretags) = "yaml:\"withdrawal_number\""];
+}

@@ -1,0 +1,230 @@
+syntax = "proto3";
+package sgenetwork.sge.orderbook;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sge/orderbook/orderbook.proto";
+
+option go_package = "github.com/sge-network/sge/x/orderbook/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // OrderBooks queries all order books that match the given status.
+  rpc OrderBooks(QueryOrderBooksRequest) returns (QueryOrderBooksResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{status}";
+  }
+
+  // OrderBook queries orderbook info for given order book id.
+  rpc OrderBook(QueryOrderBookRequest) returns (QueryOrderBookResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}";
+  }
+
+  // BookParticipants queries participant info for given orderbook.
+  rpc BookParticipants(QueryBookParticipantsRequest) returns (QueryBookParticipantsResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participants";
+  }
+
+  // BookParticipant queries participant info for given orderbook and participant number.
+  rpc BookParticipant(QueryBookParticipantRequest) returns (QueryBookParticipantResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participants/{participant_number}";
+  }
+
+  // BookExposures queries exposures info for given orderbook.
+  rpc BookExposures(QueryBookExposuresRequest) returns (QueryBookExposuresResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures";
+  }
+
+  // BookExposure queries exposure info for given orderbook and odds id.
+  rpc BookExposure(QueryBookExposureRequest) returns (QueryBookExposureResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures/{odds_id}";
+  }
+
+  // ParticipantExposures queries exposures info for given orderbook participants.
+  rpc ParticipantExposures(QueryParticipantExposuresRequest) returns (QueryParticipantExposuresResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participant-exposures";
+  }
+
+  // ParticipantExposure queries exposure info for given orderbook participant.
+  rpc ParticipantExposure(QueryParticipantExposureRequest) returns (QueryParticipantExposureResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participant-exposures/{participant_number}";
+  }
+
+  // HistoricalParticipantExposures queries historical exposures info for given orderbook participant.
+  rpc HistoricalParticipantExposures(QueryHistoricalParticipantExposuresRequest) returns (QueryHistoricalParticipantExposuresResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/historical-participant-exposures";
+  }
+
+  // ParticipantFullfilledBets queries fulfilled bets for given orderbook participant.
+  rpc ParticipantFullfilledBets(QueryParticipantFullfilledBetsRequest) returns (QueryParticipantFullfilledBetsResponse) {
+    option (google.api.http).get = "/sge/orderbooks/{book_id}/participants/{participant_number}/fullfilled_bets";
+  }
+}
+
+// QueryOrderBooksRequest is request type for Query/OrderBooks RPC method.
+message QueryOrderBooksRequest {
+    // status enables to query for order bookds matching a given status.
+    string status = 1;
+
+    // pagination defines an optional pagination for the request.
+    cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryOrderBooksResponse is response type for the Query/OrderBooks RPC method
+message QueryOrderBooksResponse {
+    // orderbooks contains all the queried order books.
+    repeated OrderBook orderbooks = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryOrderBookRequest is request type for the Query/OrderBook RPC method
+message QueryOrderBookRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+}
+
+// QueryOrderBookResponse is response type for the Query/OrderBook RPC method
+message QueryOrderBookResponse {
+    // orderBook defines the the order book info.
+    OrderBook orderbook = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryBookParticipantsRequest is request type for the Query/BookParticipants RPC method
+message QueryBookParticipantsRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // pagination defines an optional pagination for the request.
+    cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryBookParticipantsResponse is response type for the Query/BookParticipants RPC method
+message QueryBookParticipantsResponse {
+    repeated BookParticipant book_participants = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryBookParticipantRequest is request type for the Query/BookParticipant RPC method
+message QueryBookParticipantRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // participant_number defines the participant number to query for
+    uint64 participant_number = 2;
+}
+
+// QueryBookParticipantResponse is response type for the Query/BookParticipant RPC method
+message QueryBookParticipantResponse {
+    // book_participant defines the the book participant info.
+    BookParticipant book_participant = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryBookExposuresRequest is request type for the Query/BookExposures RPC method
+message QueryBookExposuresRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // pagination defines an optional pagination for the request.
+    cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryBookExposuresResponse is response type for the Query/BookExposures RPC method
+message QueryBookExposuresResponse {
+    repeated BookOddsExposure book_exposures = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryBookExposureRequest is request type for the Query/BookExposure RPC method
+message QueryBookExposureRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // odds_id defines the odds id to query for.
+    string odds_id = 2;
+}
+
+// QueryBookExposureResponse is response type for the Query/BookExposure RPC method
+message QueryBookExposureResponse {
+    // book_exposure defines the the book exposure info.
+    BookOddsExposure book_exposure = 1 [(gogoproto.nullable) = false];
+}
+
+// QueryParticipantExposuresRequest is request type for the Query/ParticipantExposures RPC method
+message QueryParticipantExposuresRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // pagination defines an optional pagination for the request.
+    cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryParticipantExposuresResponse is response type for the Query/ParticipantExposures RPC method
+message QueryParticipantExposuresResponse {
+    repeated ParticipantExposure participant_exposures = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParticipantExposureRequest is request type for the Query/ParticipantExposure RPC method
+message QueryParticipantExposureRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    uint64 participant_number = 2;
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+// QueryParticipantExposureResponse is response type for the Query/ParticipantExposure RPC method
+message QueryParticipantExposureResponse {
+    // book_exposure defines the the book exposure info.
+    repeated ParticipantExposure participant_exposure = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryHistoricalParticipantExposuresRequest is request type for the Query/HistoricalParticipantExposures RPC method
+message QueryHistoricalParticipantExposuresRequest {
+    // book_id defines the book id to query for.
+    string book_id = 1;
+
+    // pagination defines an optional pagination for the request.
+    cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryHistoricalParticipantExposuresResponse is response type for the Query/HistoricalParticipantExposures RPC method
+message QueryHistoricalParticipantExposuresResponse {
+    repeated ParticipantExposure participant_exposures = 1 [(gogoproto.nullable) = false];
+
+    // pagination defines the pagination in the response.
+    cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryParticipantFullfilledBetsRequest is request type for the Query/ParticipantFullfilledBets RPC method
+message QueryParticipantFullfilledBetsRequest {
+  // book_id defines the book id to query for.
+  string book_id = 1;
+
+  uint64 participant_number = 2;
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+// QueryParticipantFullfilledBetsResponse is response type for the Query/ParticipantFullfilledBets RPC method
+message QueryParticipantFullfilledBetsResponse {
+  // book_exposure defines the the book exposure info.
+  repeated ParticipantBetPairResponse participant_bets = 1 [(gogoproto.nullable) = false];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
