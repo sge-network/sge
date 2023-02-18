@@ -11,16 +11,16 @@ message BetOdds {
   // Required | Unique | uuid-v4 or code
   string uid = 1 [
     (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
+    (gogoproto.jsontag) = "UID",
+    json_name = "UID"
   ];
 
   // sport_event_uid is the parent, used for fast retrieving.
   // Required | NonUnique | -
   string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+    (gogoproto.jsontag) = "sportEventUID",
+    json_name = "sportEventUID"
   ];
 
   // value of the odds in corresponding odds type proposed in bet placement

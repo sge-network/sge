@@ -11,8 +11,8 @@ message PlaceBetFields {
   // uid is the universal unique identifier assigned to bet.
   string uid = 1 [
     (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
+    (gogoproto.jsontag) = "UID",
+    json_name = "UID"
   ];
 
   // amount is the wager amount.

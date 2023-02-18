@@ -10,8 +10,8 @@ message Odds {
   // uid is the universal unique identifier of the odds.
   string uid = 1 [
     (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
+    (gogoproto.jsontag) = "UID",
+    json_name = "UID"
   ];
   // meta contains any human-readable metadata of the odds.
   string meta = 2;

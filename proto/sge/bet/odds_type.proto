@@ -7,13 +7,10 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 enum OddsType {
   // invalid odds type
   ODDS_TYPE_UNSPECIFIED = 0;
-
   // decimal odds type (european)
   ODDS_TYPE_DECIMAL = 1;
-
   // fractional odds type (british)
   ODDS_TYPE_FRACTIONAL = 2;
-
   // moneyline odds type (american)
   ODDS_TYPE_MONEYLINE = 3;
 }
