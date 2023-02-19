@@ -11,7 +11,7 @@ import (
 // House params default values
 const (
 	// Default minimum deposit acceptable.
-	DefaultMinDeposit uint64 = 100
+	DefaultMinDeposit int64 = 100
 
 	// Default house participation fee.
 	DefaultHouseParticipationFee string = "0.1"
@@ -28,7 +28,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minDeposit uint64, houseParticipationFee sdk.Dec) Params {
+func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 	return Params{
 		MinimumDeposit:        minDeposit,
 		HouseParticipationFee: houseParticipationFee,
@@ -46,7 +46,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultMinDeposit,
+		sdk.NewInt(DefaultMinDeposit),
 		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
 	)
 }

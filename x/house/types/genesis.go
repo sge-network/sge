@@ -1,9 +1,10 @@
 package types
 
 // DefaultGenesis returns the default  genesis state
-func DefaultGenesisState() *GenesisState {
+func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		Params:   DefaultParams(),
-		Deposits: []Deposit{},
+		Params:         DefaultParams(),
+		DepositList:    []Deposit{},
+		WithdrawalList: []Withdrawal{},
 	}
 }

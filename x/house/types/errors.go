@@ -10,7 +10,7 @@ import (
 var (
 	ErrEmptyDepositorAddr           = sdkerrors.Register(ModuleName, 1001, "empty depositor address")
 	ErrInvalidSportEventUID         = sdkerrors.Register(ModuleName, 1002, "invalid sport event uid")
-	ErrInvalidDenom                 = sdkerrors.Register(ModuleName, 1003, "invalid coin denomination")
+	ErrInvalidAmount                = sdkerrors.Register(ModuleName, 1003, "valid amount should be provided")
 	ErrDepositTooSmall              = sdkerrors.Register(ModuleName, 1004, "deposit is not greater than minimum deposit amount")
 	ErrOrderBookDepositProcessing   = sdkerrors.Register(ModuleName, 1005, "internal error in processing deposit in OB")
 	ErrDepositSetting               = sdkerrors.Register(ModuleName, 1006, "internal error in setting deposit")
