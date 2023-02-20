@@ -19,9 +19,9 @@ func (k Keeper) SetBookParticipation(ctx sdk.Context, participation types.BookPa
 
 // GetBook GetBookParticipation a specific participation.
 func (k Keeper) GetBookParticipation(ctx sdk.Context, bookID string, index uint64) (val types.BookParticipation, found bool) {
-	sportEventsStore := k.getParticipationStore(ctx)
+	store := k.getParticipationStore(ctx)
 	aprticipationKey := types.GetBookParticipationKey(bookID, index)
-	b := sportEventsStore.Get(aprticipationKey)
+	b := store.Get(aprticipationKey)
 	if b == nil {
 		return val, false
 	}
@@ -33,7 +33,7 @@ func (k Keeper) GetBookParticipation(ctx sdk.Context, bookID string, index uint6
 
 // GetParticipationsOfBook returns all participations for a book
 func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookID string) (list []types.BookParticipation, err error) {
-	store := k.getBookStore(ctx)
+	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipationsKey(bookID))
 
 	defer func() {
@@ -51,7 +51,7 @@ func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookID string) (list []
 
 // GetAllBookParticipations returns all book participations used during genesis dump.
 func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookParticipation, err error) {
-	store := k.getBookStore(ctx)
+	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {

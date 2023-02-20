@@ -71,12 +71,12 @@ func (p Params) Validate() error {
 }
 
 func validateMinimumDeposit(i interface{}) error {
-	v, ok := i.(uint64)
+	v, ok := i.(sdk.Int)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v == 0 {
+	if v.IsZero() {
 		return fmt.Errorf("minimum deposit must be positive: %d", v)
 	}
 

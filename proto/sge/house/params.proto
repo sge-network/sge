@@ -7,7 +7,6 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 
 // Params define the parameters for the house module.
 message Params {
-  option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
   // min_deposit is the minimum amount of acceptable deposit.

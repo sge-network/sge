@@ -31,7 +31,7 @@ func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookID, oddsID string) (val
 
 // GetOddsExposuresByBook returns all exposures for a book
 func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookID string) (list []types.BookOddsExposure, err error) {
-	store := k.getParticipationExposureStore(ctx)
+	store := k.getBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddsExposuresKey(bookID))
 
 	defer func() {

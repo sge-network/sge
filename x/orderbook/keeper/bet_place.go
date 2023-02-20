@@ -149,7 +149,7 @@ func (k Keeper) ProcessBetPlacement(
 			}
 			removeQueueItem()
 		default:
-			err := processBetFulfillment(availableLiquidty, false)
+			err := processBetFulfillment(remainingPayoutProfit, false)
 			if err != nil {
 				return betFulfillments, err
 			}
