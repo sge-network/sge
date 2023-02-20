@@ -136,12 +136,12 @@ func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryPa
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	var participationBets []types.ParticipationBetPairResponse
+	var participationBets []types.ParticipationBetPair
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationBetPairKeyPrefix)
 	betsStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.BookId, req.ParticipationIndex))
 	pageRes, err := query.FilteredPaginate(betsStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var participationBet types.ParticipationBetPairResponse
+		var participationBet types.ParticipationBetPair
 		if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
 			return false, err
 		}

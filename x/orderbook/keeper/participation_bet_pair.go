@@ -7,8 +7,8 @@ import (
 )
 
 // SetParticipationBetPair sets a participation bet pair.
-func (k Keeper) SetParticipationBetPair(ctx sdk.Context, bp types.ParticipationBetPair) {
-	bpKey := types.GetParticipationBetPairKey(bp.BookID, bp.ParticipationIndex, bp.BetID)
+func (k Keeper) SetParticipationBetPair(ctx sdk.Context, bp types.ParticipationBetPair, betID uint64) {
+	bpKey := types.GetParticipationBetPairKey(bp.BookID, bp.ParticipationIndex, betID)
 
 	store := k.getParticipationBetPairStore(ctx)
 	b := k.cdc.MustMarshal(&bp)

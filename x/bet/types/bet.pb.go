@@ -446,7 +446,8 @@ func (m *SettledBet) GetBettorAddress() string {
 
 // BetFulfillment is the type for bet fulfillment
 type BetFulfillment struct {
-	// participant_address is the bech32-encoded address of the participant fulfilling bet.
+	// participant_address is the bech32-encoded address of the participant
+	// fulfilling bet.
 	ParticipantAddress string `protobuf:"bytes,1,opt,name=participant_address,json=participantAddress,proto3" json:"participant_address,omitempty" yaml:"participant_address"`
 	// participation_index is the index in initial participation queue number
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`

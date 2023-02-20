@@ -133,8 +133,8 @@ func (k Keeper) ProcessBetPlacement(
 				PayoutAmount:       amount,
 			})
 			remainingPayoutProfit = remainingPayoutProfit.Sub(amount)
-			participationBetPair := types.NewParticipationBetPair(participation.BookID, betUID, participation.Index, betID)
-			k.SetParticipationBetPair(ctx, participationBetPair)
+			participationBetPair := types.NewParticipationBetPair(participation.BookID, betUID, participation.Index)
+			k.SetParticipationBetPair(ctx, participationBetPair, betID)
 			return nil
 		}
 

@@ -61,7 +61,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContributi
 	}
 
 	// create new active book object
-	book = types.NewBook(
+	book = types.NewOrderBook(
 		bookID,
 		1, // sr participation is the only participation of the new book
 		uint64(len(oddsUIDs)),

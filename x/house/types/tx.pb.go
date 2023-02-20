@@ -29,7 +29,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+// MsgDeposit defines a SDK message for performing a deposit of coins to become
+// part of the house corresponding to a sport event.
 type MsgDeposit struct {
 	Creator       string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
 	SportEventUID string                                 `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
@@ -122,7 +123,8 @@ func (m *MsgDepositResponse) GetParticipationIndex() uint64 {
 	return 0
 }
 
-// MsgWithdraw defines a SDK message for performing a withdrawal of coins of unused amount corresponding to a deposit.
+// MsgWithdraw defines a SDK message for performing a withdrawal of coins of
+// unused amount corresponding to a deposit.
 type MsgWithdraw struct {
 	Creator            string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
 	SportEventUID      string                                 `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
@@ -283,9 +285,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+	// Deposit defines a method for performing a deposit of coins to become part
+	// of the house corresponding to a sport event.
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// amount corresponding to a deposit.
 	Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.CallOption) (*MsgWithdrawResponse, error)
 }
 
@@ -317,9 +321,11 @@ func (c *msgClient) Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+	// Deposit defines a method for performing a deposit of coins to become part
+	// of the house corresponding to a sport event.
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// amount corresponding to a deposit.
 	Withdraw(context.Context, *MsgWithdraw) (*MsgWithdrawResponse, error)
 }
 

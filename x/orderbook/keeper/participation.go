@@ -5,7 +5,6 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
-	htypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
@@ -143,7 +142,7 @@ func (k Keeper) InitiateBookParticipation(
 }
 
 func (k Keeper) LiquidateBookParticipation(
-	ctx sdk.Context, depositorAddr, bookID string, participationIndex uint64, mode htypes.WithdrawalMode, amount sdk.Int,
+	ctx sdk.Context, depositorAddr, bookID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	var withdrawalAmt sdk.Int
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
@@ -172,7 +171,7 @@ func (k Keeper) LiquidateBookParticipation(
 	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
 
 	switch mode {
-	case htypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
+	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity.Int64(), bp.CurrentRoundMaxLoss.Int64())
 		}
@@ -181,7 +180,7 @@ func (k Keeper) LiquidateBookParticipation(
 			return withdrawalAmt, err
 		}
 		withdrawalAmt = maxTransferableAmount
-	case htypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
+	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
 			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %d, max %d", amount, maxTransferableAmount)
 		}
@@ -191,7 +190,7 @@ func (k Keeper) LiquidateBookParticipation(
 		}
 		withdrawalAmt = amount
 	default:
-		return withdrawalAmt, sdkerrors.Wrapf(htypes.ErrInvalidMode, "%s", mode.String())
+		return withdrawalAmt, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
 	}
 
 	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)

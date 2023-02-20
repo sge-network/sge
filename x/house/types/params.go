@@ -30,7 +30,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 	return Params{
-		MinimumDeposit:        minDeposit,
+		MinDeposit:            minDeposit,
 		HouseParticipationFee: houseParticipationFee,
 	}
 }
@@ -38,7 +38,7 @@ func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinimumDeposit, validateMinimumDeposit),
+		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinDeposit, validateMinimumDeposit),
 		paramtypes.NewParamSetPair(KeyHouseParticipationFee, &p.HouseParticipationFee, validateHouseParticipationFee),
 	}
 }
@@ -59,7 +59,7 @@ func (p Params) String() string {
 
 // validate a set of params
 func (p Params) Validate() error {
-	if err := validateMinimumDeposit(p.MinimumDeposit); err != nil {
+	if err := validateMinimumDeposit(p.MinDeposit); err != nil {
 		return err
 	}
 

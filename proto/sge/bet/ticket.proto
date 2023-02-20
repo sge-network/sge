@@ -13,5 +13,5 @@ message BetPlacementTicketPayload {
   // selected_odds is the user-selected odds to place bet.
   BetOdds selected_odds = 1;
   // kyc_data contains the details of user kyc.
-  KycDataPayload kyc_data = 2 [(gogoproto.nullable) = false];
+  KycDataPayload kyc_data = 2 [ (gogoproto.nullable) = false ];
 }

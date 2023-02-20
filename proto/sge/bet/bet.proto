@@ -74,8 +74,8 @@ message Bet {
 
   // max_loss_multiplier is the multiplier coefficient of max loss.
   string max_loss_multiplier = 15 [
-      (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-      (gogoproto.nullable) = false
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
   ];
 
   // bet_fulfillment is the fulfillment data.
@@ -173,23 +173,26 @@ message SettledBet {
 
 // BetFulfillment is the type for bet fulfillment
 message BetFulfillment {
-  // participant_address is the bech32-encoded address of the participant fulfilling bet.
-  string participant_address = 1 [(gogoproto.moretags) = "yaml:\"participant_address\""];
+  // participant_address is the bech32-encoded address of the participant
+  // fulfilling bet.
+  string participant_address = 1
+      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
 
   // participation_index is the index in initial participation queue number
-  uint64 participation_index = 2 [(gogoproto.moretags) = "yaml:\"participation_index\""];
+  uint64 participation_index = 2
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 
   // bet amount fulfilled by the participation
   string bet_amount = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false,
-    (gogoproto.moretags)   = "yaml:\"bet_amount\""
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"bet_amount\""
   ];
 
   // payout amount fulfilled by the participation
   string payout_amount = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false,
-    (gogoproto.moretags)   = "yaml:\"payout_amount\""
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"payout_amount\""
   ];
 }
