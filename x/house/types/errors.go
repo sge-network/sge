@@ -14,7 +14,7 @@ var (
 	ErrDepositTooSmall              = sdkerrors.Register(ModuleName, 1004, "deposit is not greater than minimum deposit amount")
 	ErrOrderBookDepositProcessing   = sdkerrors.Register(ModuleName, 1005, "internal error in processing deposit in OB")
 	ErrDepositSetting               = sdkerrors.Register(ModuleName, 1006, "internal error in setting deposit")
-	ErrInvalidParticipantID         = sdkerrors.Register(ModuleName, 1007, "invalid participant id")
+	ErrInvalidparticipationIndex    = sdkerrors.Register(ModuleName, 1007, "invalid participant index")
 	ErrInvalidMode                  = sdkerrors.Register(ModuleName, 1008, "invalid withdrawal mode")
 	ErrDepositNotFound              = sdkerrors.Register(ModuleName, 1009, "deposit not found")
 	ErrWithdrawalTooLarge           = sdkerrors.Register(ModuleName, 1010, "withdrawal is more than unused amount")

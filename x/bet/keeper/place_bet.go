@@ -47,7 +47,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	stats.Count++
 	betID := stats.Count
 
-	betFullfillment, err := k.obKeeper.ProcessBetPlacement(
+	betFulfillment, err := k.obKeeper.ProcessBetPlacement(
 		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, payoutProfit, bettorAddress, bet.BetFee, bet.Amount,
 		bet.OddsType, bet.OddsValue, betID,
 	)
@@ -65,7 +65,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bet.Verified = true
 
 	bet.CreatedAt = ctx.BlockTime().Unix()
-	bet.BetFullfillment = betFullfillment
+	bet.BetFulfillment = betFulfillment
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet, betID)

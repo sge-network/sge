@@ -12,20 +12,20 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 	// TODO
 	keeper.SetParams(ctx, data.Params)
 
-	for _, book := range data.Books {
+	for _, book := range data.BookList {
 		keeper.SetBook(ctx, book)
 	}
 
-	for _, bp := range data.BookParticipants {
-		keeper.SetBookParticipant(ctx, bp)
+	for _, bp := range data.BookParticipationList {
+		keeper.SetBookParticipation(ctx, bp)
 	}
 
-	for _, be := range data.BookExposures {
+	for _, be := range data.BookExposureList {
 		keeper.SetBookOddsExposure(ctx, be)
 	}
 
-	for _, pe := range data.ParticipantExposures {
-		keeper.SetParticipantExposure(ctx, pe)
+	for _, pe := range data.ParticipationExposureList {
+		keeper.SetParticipationExposure(ctx, pe)
 	}
 
 	keeper.SetOrderBookStats(ctx, data.Stats)
@@ -33,16 +33,34 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 
 // ExportGenesis returns a GenesisState for a given context and keeper. The
 // GenesisState will contain the params found in the keeper.
-func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
-	// TODO
-	return &types.GenesisState{
-		Params:               keeper.GetParams(ctx),
-		Books:                keeper.GetAllBooks(ctx),
-		BookParticipants:     keeper.GetAllBookParticipants(ctx),
-		BookExposures:        keeper.GetAllBookExposures(ctx),
-		ParticipantExposures: keeper.GetAllParticipantExposures(ctx),
-		Stats:                keeper.GetOrderBookStats(ctx),
+func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
+	genesis := types.DefaultGenesis()
+	genesis.Params = k.GetParams(ctx)
+
+	var err error
+	genesis.BookList, err = k.GetAllBooks(ctx)
+	if err != nil {
+		panic(err)
 	}
+
+	genesis.BookParticipationList, err = k.GetAllBookParticipations(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.BookExposureList, err = k.GetAllBookExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.ParticipationExposureList, err = k.GetAllParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.Stats = k.GetOrderBookStats(ctx)
+
+	return genesis
 }
 
 // ValidateGenesis validates the provided orderbook genesis state to ensure the

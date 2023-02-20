@@ -34,7 +34,7 @@ func (k Keeper) BettorWins(
 	betAmount sdk.Int,
 	payoutProfit sdk.Int,
 	uniqueLock string,
-	betFullfillments []*bettypes.BetFullfillment,
+	betFulfillments []*bettypes.BetFulfillment,
 	bookID string,
 ) error {
 	// Idempotency check: If lock does not exist, return error
@@ -42,26 +42,26 @@ func (k Keeper) BettorWins(
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
-	for _, betFullfillment := range betFullfillments {
-		bookParticipant, found := k.GetBookParticipant(ctx, bookID, betFullfillment.ParticipantNumber)
+	for _, betFulfillment := range betFulfillments {
+		bookParticipation, found := k.GetBookParticipation(ctx, bookID, betFulfillment.ParticipationIndex)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, betFullfillment.ParticipantNumber)
+			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, betFulfillment.ParticipationIndex)
 		}
 
 		// Transfer payout from the `book_liquidity_pool` account to bettor
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFullfillment.PayoutAmount)
+		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.PayoutAmount)
 		if err != nil {
 			return err
 		}
 
 		// Transfer bet amount from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFullfillment.BetAmount)
+		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.BetAmount)
 		if err != nil {
 			return err
 		}
 
-		bookParticipant.ActualProfit = bookParticipant.ActualProfit.Sub(betFullfillment.PayoutAmount)
-		k.SetBookParticipant(ctx, bookParticipant)
+		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Sub(betFulfillment.PayoutAmount)
+		k.SetBookParticipation(ctx, bookParticipation)
 	}
 
 	// Delete lock from the payout store as the bet is settled
@@ -72,21 +72,21 @@ func (k Keeper) BettorWins(
 
 // BettorLoses process bets in case bettor looses
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string, betFullfillments []*bettypes.BetFullfillment, bookID string,
+	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string, betFulfillments []*bettypes.BetFulfillment, bookID string,
 ) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
-	for _, betFullfillment := range betFullfillments {
+	for _, betFulfillment := range betFulfillments {
 		// Update amount to be transferred to house
-		bookParticipant, found := k.GetBookParticipant(ctx, bookID, betFullfillment.ParticipantNumber)
+		bookParticipation, found := k.GetBookParticipation(ctx, bookID, betFulfillment.ParticipationIndex)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipantNotFound, "%s, %d", bookID, betFullfillment.ParticipantNumber)
+			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, betFulfillment.ParticipationIndex)
 		}
-		bookParticipant.ActualProfit = bookParticipant.ActualProfit.Add(betFullfillment.BetAmount)
-		k.SetBookParticipant(ctx, bookParticipant)
+		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
+		k.SetBookParticipation(ctx, bookParticipation)
 	}
 
 	// Delete lock from the payout store as the bet is settled

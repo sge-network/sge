@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -9,87 +8,96 @@ import (
 	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// GetBook returns a specific book.
-func (k Keeper) GetBook(ctx sdk.Context, bookID string) (book types.OrderBook, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookKeyPrefix)
-	value := store.Get(types.GetBookKey(bookID))
-	if value == nil {
-		return book, false
-	}
-
-	book = types.MustUnmarshalBook(k.cdc, value)
-
-	return book, true
-}
-
-// IterateAllBooks iterates through all of the books.
-func (k Keeper) IterateAllBooks(ctx sdk.Context, cb func(book types.OrderBook) (stop bool)) {
-	iterator := sdk.KVStorePrefixIterator(ctx.KVStore(k.storeKey), types.BookKeyPrefix)
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		book := types.MustUnmarshalBook(k.cdc, iterator.Value())
-		if cb(book) {
-			break
-		}
-	}
-}
-
-// GetAllBooks returns all books used during genesis dump.
-func (k Keeper) GetAllBooks(ctx sdk.Context) (books []types.OrderBook) {
-	k.IterateAllBooks(ctx, func(book types.OrderBook) bool {
-		books = append(books, book)
-		return false
-	})
-
-	return books
-}
-
 // SetBook sets a book.
 func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookKeyPrefix)
-	store.Set(types.GetBookKey(book.ID), types.MustMarshalBook(k.cdc, book))
+	bookKey := types.GetBookKey(book.ID)
+
+	store := k.getBookStore(ctx)
+	b := k.cdc.MustMarshal(&book)
+	store.Set(bookKey, b)
+}
+
+// GetBook returns a specific order book.
+func (k Keeper) GetBook(ctx sdk.Context, bookID string) (val types.OrderBook, found bool) {
+	sportEventsStore := k.getBookStore(ctx)
+	bookKey := types.GetBookKey(bookID)
+	b := sportEventsStore.Get(bookKey)
+	if b == nil {
+		return val, false
+	}
+
+	k.cdc.MustUnmarshal(b, &val)
+
+	return val, true
+}
+
+// GetAllBooks returns all order books used during genesis dump.
+func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error) {
+	store := k.getBookStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.OrderBook
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
 }
 
 // InitiateBook initiates a book for a given sport event
-func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsIDs []string) (string, error) {
-	book, found := k.GetBook(ctx, sportEventUID)
+func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (bookID string, err error) {
+	// book and sport event have one-to-one relationship
+	bookID = sportEventUID
+
+	// check for existing book with id
+	book, found := k.GetBook(ctx, bookID)
 	if found {
 		return "", sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
 	}
 
-	book = types.NewBook(sportEventUID, 0, uint64(len(oddsIDs)), types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE)
+	// create new active book object
+	book = types.NewBook(
+		bookID,
+		1, // sr participation is the only participation of the new book
+		uint64(len(oddsUIDs)),
+		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
+	)
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
-	err := k.transferFundsFromModuleToModule(ctx, srtypes.SRPoolName, types.BookLiquidityName, srContribution)
+	err = k.transferFundsFromModuleToModule(ctx, srtypes.SRPoolName, types.BookLiquidityName, srContribution)
 	if err != nil {
-		return "", err
+		return
 	}
 
-	// Add book participant
-	bp := types.NewBookParticipant(
-		book.ID, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName), 1, book.NumberOfOdds, true, srContribution, srContribution,
+	// Add book participation
+	srParticipation := types.NewBookParticipation(
+		types.SrparticipationIndex, book.ID, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
-	_, found = k.GetBookParticipant(ctx, book.ID, bp.ParticipantNumber)
+
+	_, found = k.GetBookParticipation(ctx, book.ID, srParticipation.Index)
 	if found {
-		return "", sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", bp.ParticipantNumber)
+		err = sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", srParticipation.Index)
+		return
 	}
-	k.SetBookParticipant(ctx, bp)
+	k.SetBookParticipation(ctx, srParticipation)
 
 	// Add book exposures
-	fullfillmentQueue := []uint64{bp.ParticipantNumber}
-	for _, oddsID := range oddsIDs {
-		boe := types.NewBookOddsExposure(book.ID, oddsID, fullfillmentQueue)
+	fulfillmentQueue := []uint64{srParticipation.Index}
+	for _, oddsUID := range oddsUIDs {
+		boe := types.NewBookOddsExposure(book.ID, oddsUID, fulfillmentQueue)
 		k.SetBookOddsExposure(ctx, boe)
 
-		pe := types.NewParticipantExposure(bp.BookID, oddsID, sdk.ZeroInt(), sdk.ZeroInt(), bp.ParticipantNumber, 1, false)
-		k.SetParticipantExposure(ctx, pe)
+		pe := types.NewParticipationExposure(srParticipation.BookID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
+		k.SetParticipationExposure(ctx, pe)
 	}
 
-	// Make entry for book
-	book.Participants = 1
 	k.SetBook(ctx, book)
 
-	return book.ID, nil
+	return
 }

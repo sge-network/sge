@@ -16,7 +16,7 @@ import (
 
 func CmdWithdrawal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw [sport_event_uid] [participant_number] [mode] [amount]",
+		Use:   "withdraw [sport_event_uid] [participation_index] [mode] [amount]",
 		Args:  cobra.RangeArgs(3, 4),
 		Short: "Withdraw tokens from a deposit",
 		Long: strings.TrimSpace(

@@ -1,10 +1,13 @@
 package types
 
 // DefaultGenesis returns the default  genesis state
-func DefaultGenesisState() *GenesisState {
+func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		Params:           DefaultParams(),
-		Books:            []OrderBook{},
-		BookParticipants: []BookParticipant{},
+		Params:                    DefaultParams(),
+		BookList:                  []OrderBook{},
+		BookParticipationList:     []BookParticipation{},
+		BookExposureList:          []BookOddsExposure{},
+		ParticipationExposureList: []ParticipationExposure{},
+		Stats:                     OrderBookStats{ResolvedUnsettled: []string{}},
 	}
 }

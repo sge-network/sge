@@ -111,12 +111,12 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.obKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFullfillment, bet.SportEventUID); err != nil {
+		if err := k.obKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.obKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFullfillment, bet.SportEventUID); err != nil {
+		if err := k.obKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED

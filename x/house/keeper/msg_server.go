@@ -27,14 +27,14 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 		return nil, sdkerrors.Wrap(err, "validate deposit")
 	}
 
-	participantID, err := k.Keeper.Deposit(ctx, msg.Creator, msg.SportEventUID, msg.Amount)
+	participationIndex, err := k.Keeper.Deposit(ctx, msg.Creator, msg.SportEventUID, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process deposit")
 	}
 
 	return &types.MsgDepositResponse{
-		SportEventUID: msg.SportEventUID,
-		ParticipantID: participantID,
+		SportEventUID:      msg.SportEventUID,
+		ParticipationIndex: participationIndex,
 	}, nil
 }
 
@@ -42,14 +42,14 @@ func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types
 func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*types.MsgWithdrawResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.SportEventUID, msg.ParticipantID, msg.Mode, msg.Amount)
+	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.SportEventUID, msg.ParticipationIndex, msg.Mode, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process withdrawal")
 	}
 
 	return &types.MsgWithdrawResponse{
-		ID:            id,
-		SportEventUID: msg.SportEventUID,
-		ParticipantID: msg.ParticipantID,
+		ID:                 id,
+		SportEventUID:      msg.SportEventUID,
+		ParticipationIndex: msg.ParticipationIndex,
 	}, nil
 }

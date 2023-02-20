@@ -61,12 +61,8 @@ message Deposit {
     (gogoproto.moretags)   = "yaml:\"liquidity\""
   ];
 
-  // id corresponding to the book participant
-  uint64 participant_id = 6 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
+  // participation_index index corresponding to the book participation
+  uint64 participation_index = 6 [(gogoproto.moretags) = "yaml:\"participation_index\""];
 
   // withdrawal_count is the total count of the withdrawal attempts
   uint64 withdrawal_count = 7 [(gogoproto.moretags) = "yaml:\"withdrawals\""];
@@ -103,12 +99,8 @@ string sport_event_uid = 3 [
   json_name = "sport_event_uid"
 ];
 
-// participant_id is the id corresponding to the book participant
-uint64 participant_id = 4 [
-  (gogoproto.customname) = "ParticipantID",
-  (gogoproto.jsontag) = "participant_id",
-  json_name = "participant_id"
-];
+// participation_index is the id corresponding to the book participation
+uint64 participation_index = 4 [(gogoproto.moretags) = "yaml:\"participation_index\""];
 
 // mode is the withdrawal mode enum value
 WithdrawalMode mode = 5 [(gogoproto.moretags) = "yaml:\"mode\""];

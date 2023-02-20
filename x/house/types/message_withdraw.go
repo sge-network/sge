@@ -11,13 +11,13 @@ const typeMsgWithdraw = "withdraw"
 var _ sdk.Msg = &MsgDeposit{}
 
 // NewMsgWithdraw creates the new input for withdrawal of a deposit
-func NewMsgWithdraw(creator string, sportEventUID string, amount sdk.Int, participantID uint64, mode WithdrawalMode) *MsgWithdraw {
+func NewMsgWithdraw(creator string, sportEventUID string, amount sdk.Int, participationIndex uint64, mode WithdrawalMode) *MsgWithdraw {
 	return &MsgWithdraw{
-		Creator:       creator,
-		SportEventUID: sportEventUID,
-		ParticipantID: participantID,
-		Mode:          mode,
-		Amount:        amount,
+		Creator:            creator,
+		SportEventUID:      sportEventUID,
+		ParticipationIndex: participationIndex,
+		Mode:               mode,
+		Amount:             amount,
 	}
 }
 
@@ -57,7 +57,7 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 		return ErrInvalidSportEventUID
 	}
 
-	if msg.ParticipantID < 1 {
+	if msg.ParticipationIndex < 1 {
 		return ErrInvalidSportEventUID
 	}
 

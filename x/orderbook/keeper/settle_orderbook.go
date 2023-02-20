@@ -50,10 +50,13 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookID string, co
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
-	bookParticipants := k.GetParticipantsByBook(ctx, orderBookID)
-	for _, bookParticipant := range bookParticipants {
-		if !bookParticipant.IsSettled {
-			err = k.settleDeposit(ctx, bookParticipant)
+	bookParticipations, err := k.GetParticipationsOfBook(ctx, orderBookID)
+	if err != nil {
+		return false, err
+	}
+	for _, bookParticipation := range bookParticipations {
+		if !bookParticipation.IsSettled {
+			err = k.settleDeposit(ctx, bookParticipation)
 			if err != nil {
 				return allSettled, err
 			}
@@ -68,9 +71,9 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookID string, co
 	return allSettled, nil
 }
 
-func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipant) error {
+func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipation) error {
 	if bp.IsSettled {
-		return sdkerrors.Wrapf(types.ErrBookParticipantAlreadySettled, "%s %d", bp.BookID, bp.ParticipantNumber)
+		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.BookID, bp.Index)
 	}
 
 	if bp.IsModuleAccount {
@@ -121,6 +124,6 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipant) error {
 		}
 	}
 	bp.IsSettled = true
-	k.SetBookParticipant(ctx, bp)
+	k.SetBookParticipation(ctx, bp)
 	return nil
 }

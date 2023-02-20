@@ -1,50 +1,27 @@
 package types
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	yaml "gopkg.in/yaml.v2"
 )
 
-// NewParticipantExposure creates a new participant exposure object
+// NewParticipationExposure creates a new participation exposure object
 //
 //nolint:interfacer
-func NewParticipantExposure(bookID, oddsID string, exposure, betAmount sdk.Int, pn, round uint64, isFullfilled bool) ParticipantExposure {
-	return ParticipantExposure{
-		BookID:            bookID,
-		OddsID:            oddsID,
-		ParticipantNumber: pn,
-		Exposure:          exposure,
-		BetAmount:         betAmount,
-		IsFullfilled:      isFullfilled,
-		Round:             round,
+func NewParticipationExposure(bookID, oddsID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
+	return ParticipationExposure{
+		BookID:             bookID,
+		OddsID:             oddsID,
+		ParticipationIndex: participationIndex,
+		Exposure:           exposure,
+		BetAmount:          betAmount,
+		IsFulfilled:        isFulfilled,
+		Round:              round,
 	}
 }
 
-// MustMarshalParticipantExposure returns the participant exposure bytes. Panics if fails
-func MustMarshalParticipantExposure(cdc codec.BinaryCodec, pe ParticipantExposure) []byte {
-	return cdc.MustMarshal(&pe)
-}
-
-// MustUnmarshalParticipantExposure return the unmarshaled participant exposure from bytes.
-// Panics if fails.
-func MustUnmarshalParticipantExposure(cdc codec.BinaryCodec, value []byte) ParticipantExposure {
-	pe, err := UnmarshalParticipantExposure(cdc, value)
-	if err != nil {
-		panic(err)
-	}
-
-	return pe
-}
-
-// return the participant exposure
-func UnmarshalParticipantExposure(cdc codec.BinaryCodec, value []byte) (pe ParticipantExposure, err error) {
-	err = cdc.Unmarshal(value, &pe)
-	return pe, err
-}
-
-// String returns a human readable string representation of a ParticipantExposure.
-func (pe ParticipantExposure) String() string {
+// String returns a human readable string representation of a participationExposure.
+func (pe ParticipationExposure) String() string {
 	out, _ := yaml.Marshal(pe)
 	return string(out)
 }

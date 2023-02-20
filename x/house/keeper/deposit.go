@@ -9,7 +9,7 @@ import (
 
 // SetDeposit sets a deposit.
 func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
-	depoistKey := types.GetDepositKey(deposit.Creator, deposit.SportEventUID, deposit.ParticipantID)
+	depoistKey := types.GetDepositKey(deposit.Creator, deposit.SportEventUID, deposit.ParticipationIndex)
 
 	store := k.getDepositsStore(ctx)
 	b := k.cdc.MustMarshal(&deposit)
@@ -17,9 +17,9 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
 }
 
 // GetDeposit returns a specific deposit.
-func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, sportEventUID string, participantID uint64) (val types.Deposit, found bool) {
+func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, sportEventUID string, participationIndex uint64) (val types.Deposit, found bool) {
 	sportEventsStore := k.getDepositsStore(ctx)
-	depoistKey := types.GetDepositKey(depositorAddress, sportEventUID, participantID)
+	depoistKey := types.GetDepositKey(depositorAddress, sportEventUID, participationIndex)
 	b := sportEventsStore.Get(depoistKey)
 	if b == nil {
 		return val, false
@@ -49,27 +49,27 @@ func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, creator string, sportEventUID string, amount sdk.Int) (participantID uint64, err error) {
+func (k Keeper) Deposit(ctx sdk.Context, creator string, sportEventUID string, amount sdk.Int) (participationIndex uint64, err error) {
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, sportEventUID, amount, sdk.ZeroInt(), 0)
 
 	deposit.SetHouseParticipationFee(k.GetHouseParticipationFee(ctx))
 
-	bettorAddress, err := sdk.AccAddressFromBech32(creator)
+	creatorAddr, err := sdk.AccAddressFromBech32(creator)
 	if err != nil {
 		err = sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 		return
 	}
 
-	participantID, err = k.orderBookKeeper.AddBookParticipant(
-		ctx, bettorAddress, sportEventUID, deposit.Liquidity, deposit.Fee, types.HouseParticipationFeeName,
+	participationIndex, err = k.orderBookKeeper.InitiateBookParticipation(
+		ctx, creatorAddr, sportEventUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
 		err = sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
 		return
 	}
 
-	deposit.ParticipantID = participantID
+	deposit.ParticipationIndex = participationIndex
 
 	k.SetDeposit(ctx, deposit)
 

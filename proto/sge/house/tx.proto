@@ -40,11 +40,7 @@ message MsgDepositResponse {
     json_name = "sport_event_uid"
   ];
 
-  uint64 participant_id = 2 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
+  uint64 participation_index = 2 [(gogoproto.moretags) = "yaml:\"participation_index\""];
 }
 
 // MsgWithdraw defines a SDK message for performing a withdrawal of coins of unused amount corresponding to a deposit.
@@ -58,11 +54,7 @@ message MsgWithdraw {
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
-  uint64 participant_id = 3 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
+  uint64 participation_index = 3 [(gogoproto.moretags) = "yaml:\"participation_index\""];
   WithdrawalMode mode = 4 [(gogoproto.moretags) = "yaml:\"mode\""];
   string amount            = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -85,9 +77,5 @@ message MsgWithdrawResponse {
     json_name = "sport_event_uid"
   ];
 
-  uint64 participant_id = 3 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
+  uint64 participation_index = 3 [(gogoproto.moretags) = "yaml:\"participation_index\""];
 }
