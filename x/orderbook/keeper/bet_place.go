@@ -19,24 +19,27 @@ func (k Keeper) ProcessBetPlacement(
 	betAmount sdk.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
-) ([]*bettypes.BetFulfillment, error) {
-	betFulfillments := []*bettypes.BetFulfillment{}
+) (betFulfillments []*bettypes.BetFulfillment, err error) {
+	// betFulfillments := []*bettypes.BetFulfillment{}
 
 	// If lock exists, return error
 	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, betUID) {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", betUID)
+		err = sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", betUID)
+		return
 	}
 
 	// get book data by its id
 	book, found := k.GetBook(ctx, bookID)
 	if !found {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
+		return
 	}
 	// get exposures of the odds user is placing the bet
 	bookExposure, found := k.GetBookOddsExposure(ctx, bookID, oddsID)
 	if !found {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsID)
+		return
 	}
 
 	// make maps for participation and its exposures
@@ -45,10 +48,11 @@ func (k Keeper) ProcessBetPlacement(
 
 	bps, err := k.GetParticipationsOfBook(ctx, book.ID)
 	if err != nil {
-		return betFulfillments, err
+		return
 	}
 	if int(book.ParticipationCount) != len(bps) {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookID)
+		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookID)
+		return
 	}
 	for _, bp := range bps {
 		participationMap[bp.Index] = bp
@@ -56,10 +60,11 @@ func (k Keeper) ProcessBetPlacement(
 
 	pes, err := k.GetExposureByBookAndOdds(ctx, bookID, oddsID)
 	if err != nil {
-		return betFulfillments, err
+		return
 	}
 	if int(book.ParticipationCount) != len(pes) {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookID, oddsID)
+		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookID, oddsID)
+		return
 	}
 	for _, pe := range pes {
 		participationExposureMap[pe.ParticipationIndex] = pe
@@ -70,20 +75,24 @@ func (k Keeper) ProcessBetPlacement(
 
 	// continue until updatedFulfillmentQueue gets empty
 	for len(updatedFulfillmentQueue) > 0 {
-		pn := updatedFulfillmentQueue[0]
-		participation, found := participationMap[pn]
-		if !found {
-			return betFulfillments, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, pn)
-		}
-		participationExposure, found := participationExposureMap[pn]
-		if !found {
-			return betFulfillments, sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookID, pn)
-		}
-		if participationExposure.IsFulfilled {
-			return betFulfillments, sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookID, pn)
-		}
+		var participation types.BookParticipation
+		var participationExposure types.ParticipationExposure
+		participationIndex := updatedFulfillmentQueue[0]
 
-		availableLiquidty := maxLossMultiplier.MulInt(participation.CurrentRoundLiquidity).TruncateInt().Sub(participationExposure.Exposure)
+		getQueueItemParticipation := func() error {
+			participation, found = participationMap[participationIndex]
+			if !found {
+				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, participationIndex)
+			}
+			participationExposure, found = participationExposureMap[participationIndex]
+			if !found {
+				return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookID, participationIndex)
+			}
+			if participationExposure.IsFulfilled {
+				return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookID, participationIndex)
+			}
+			return nil
+		}
 
 		removeQueueItem := func() {
 			updatedFulfillmentQueue = updatedFulfillmentQueue[1:]
@@ -138,38 +147,16 @@ func (k Keeper) ProcessBetPlacement(
 			return nil
 		}
 
-		switch {
-		case availableLiquidty.LTE(sdk.ZeroInt()):
-			setFulfilled()
-			removeQueueItem()
-		case availableLiquidty.LTE(remainingPayoutProfit):
-			err := processBetFulfillment(availableLiquidty, true)
-			if err != nil {
-				return betFulfillments, err
-			}
-			removeQueueItem()
-		default:
-			err := processBetFulfillment(remainingPayoutProfit, false)
-			if err != nil {
-				return betFulfillments, err
-			}
-		}
-
-		k.SetParticipationExposure(ctx, participationExposure)
-		k.SetBookParticipation(ctx, participation)
-
-		// if there are no more exposures to be filled
-		if participation.ExposuresNotFilled == 0 {
-			// add back to queue
+		refreshQueueAndState := func() (err error) {
 			maxLoss := sdk.MaxInt(sdk.ZeroInt(), participation.CurrentRoundMaxLoss)
 			participation.CurrentRoundLiquidity = participation.CurrentRoundLiquidity.Sub(maxLoss)
 
 			// check if there is more liquidity amount
 			eligibleForNextRound := participation.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
-			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, bookID, pn)
+			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, bookID, participationIndex)
 			if err != nil {
-				return betFulfillments, err
+				return
 			}
 			for _, pe := range participationExposures {
 				k.MoveToHistoricalParticipationExposure(ctx, pe)
@@ -191,21 +178,64 @@ func (k Keeper) ProcessBetPlacement(
 			k.SetBookParticipation(ctx, participation)
 
 			if eligibleForNextRound {
-				boes, err := k.GetOddsExposuresByBook(ctx, bookID)
+				var boes []types.BookOddsExposure
+				boes, err = k.GetOddsExposuresByBook(ctx, bookID)
 				if err != nil {
-					return betFulfillments, err
+					return
 				}
 				for _, boe := range boes {
-					boe.FulfillmentQueue = append(boe.FulfillmentQueue, pn)
+					boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
 					if boe.OddsID == participationExposure.OddsID {
 						bookExposure = boe
 					}
 
 					k.SetBookOddsExposure(ctx, boe)
 				}
-				updatedFulfillmentQueue = append(updatedFulfillmentQueue, pn)
+				updatedFulfillmentQueue = append(updatedFulfillmentQueue, participationIndex)
 				bookExposure.FulfillmentQueue = updatedFulfillmentQueue
 			}
+
+			return nil
+		}
+
+		// fill participation and exposure values
+		err = getQueueItemParticipation()
+		if err != nil {
+			return
+		}
+
+		// availableLiquidty is the available amount of tokens to be used from the participation exposure
+		availableLiquidty := maxLossMultiplier.
+			MulInt(participation.CurrentRoundLiquidity).TruncateInt().
+			Sub(participationExposure.Exposure)
+
+		switch {
+		case availableLiquidty.LTE(sdk.ZeroInt()):
+			setFulfilled()
+			removeQueueItem()
+		case availableLiquidty.LTE(remainingPayoutProfit):
+			// if the available liquidity is less than remaining payout profit that
+			// need to be paid, we should use all of available liquidity pull for the calculations.
+			err := processBetFulfillment(availableLiquidty, true)
+			if err != nil {
+				return betFulfillments, err
+			}
+			removeQueueItem()
+		default:
+			// availableLiquidty is positive and more than remaining payout profit that
+			// need to be paid, so we can cover all of payout profits with available liquidity.
+			err := processBetFulfillment(remainingPayoutProfit, false)
+			if err != nil {
+				return betFulfillments, err
+			}
+		}
+
+		k.SetParticipationExposure(ctx, participationExposure)
+		k.SetBookParticipation(ctx, participation)
+
+		// if there are no more exposures to be filled
+		if participation.ExposuresNotFilled == 0 {
+			refreshQueueAndState()
 		}
 
 		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFulfillmentQueue) == 0 {
