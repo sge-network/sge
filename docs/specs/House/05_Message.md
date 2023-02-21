@@ -11,27 +11,38 @@ Within this message, the user specifies the deposit information they wish to mak
 service Msg {
   // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
-
-  // Withdraw defines a method for performing a withdrawal of coins against a deposit.
-  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
 }
 ```
 
 ```proto
-// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+// MsgDepositRequest defines a SDK message for performing a deposit of coins to become
+// part of the house corresponding to a sport event.
 message MsgDeposit {
-  option (gogoproto.equal)           = false;
+  option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
-  string                   sport_event_uid = 2 [(gogoproto.moretags) = "yaml:\"sport_event_uid\""];
-  cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+  string sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
+  string amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MsgDepositResponse defines the Msg/Deposit response type.
 message MsgDepositResponse {
-    string error = 1;
-    uint32 deposit_id = 2;
+  string sport_event_uid = 1 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
+
+  uint64 participation_index = 2
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 }
 ```
 
@@ -53,26 +64,49 @@ Within this message, the user provides a deposit UID they wish to make a withdra
 ```proto
 // Msg defines the Msg service.
 service Msg {
-
   // Withdraw defines a method for performing a withdrawal of coins against a deposit.
   rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
-
 }
 ```
 
 ```proto
-// MsgWithdraw defines a message for performing a withdrawal of coins against a deposit.
+// MsgWithdraw defines a SDK message for performing a withdrawal of coins of
+// unused amount corresponding to a deposit.
 message MsgWithdraw {
-  // bet_uid is the unique uuid of the bet to settle
-  string deposit_uid = 1 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "deposit_uid", json_name = "bedeposit_uidt_uid"];
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
 
-  cosmos.base.v1beta1.Coin amount            = 2 [(gogoproto.nullable) = false];
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+  string sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
+  uint64 participation_index = 3
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
+  WithdrawalMode mode = 4 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
+  string amount = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
-// MsgWithdrawResponse is the returning value in the response of MsgWithdraw request
+// MsgWithdrawResponse defines the Msg/Withdraw response type.
 message MsgWithdrawResponse {
-    string error = 1;
-    string deposit_uid = 2;
-}
+  uint64 id = 1 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id",
+    (gogoproto.moretags) = "yaml:\"id\""
+  ];
 
+  string sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
+
+  uint64 participation_index = 3
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
+}
 ```
