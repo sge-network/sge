@@ -1,0 +1,56 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Withdrawal represents the withdrawal against a deposit.
+message Withdrawal {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // withdrawal is the withdrawal attempt id.
+  uint64 id = 1 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id",
+    (gogoproto.moretags) = "yaml:\"id\""
+  ];
+
+  // creator is the bech32-encoded address of the depositor.
+  string creator = 2 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+
+  // sport_event_uid is the uid of sport-event against which the deposit is
+  // being made.
+  string sport_event_uid = 3 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
+
+  // participation_index is the id corresponding to the book participation
+  uint64 participation_index = 4
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
+
+  // mode is the withdrawal mode enum value
+  WithdrawalMode mode = 5 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
+
+  // amount is the amount being withdrawn.
+  string amount = 6 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\""
+  ];
+}
+
+// WithdrawalMode is the enum type for the withdrawal mode.
+enum WithdrawalMode {
+  // invalid
+  WITHDRAWAL_MODE_UNSPECIFIED = 0;
+  // full
+  WITHDRAWAL_MODE_FULL = 1;
+  // partial
+  WITHDRAWAL_MODE_PARTIAL = 2;
+}
