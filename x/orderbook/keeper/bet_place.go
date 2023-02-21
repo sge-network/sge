@@ -16,7 +16,6 @@ func (k Keeper) ProcessBetPlacement(
 	payoutProfit sdk.Int,
 	bettorAddress sdk.AccAddress,
 	betFee sdk.Int,
-	betAmount sdk.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 ) (betFulfillments []*bettypes.BetFulfillment, err error) {
@@ -103,20 +102,20 @@ func (k Keeper) ProcessBetPlacement(
 			participation.ExposuresNotFilled--
 		}
 
-		processBetFulfillment := func(amount sdk.Int, noMoreLiquidity bool) error {
-			participationExposure.Exposure = participationExposure.Exposure.Add(amount)
-			betAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, amount)
+		processBetFulfillment := func(expectedPayout sdk.Int, noMoreLiquidity bool) error {
+			participationExposure.Exposure = participationExposure.Exposure.Add(expectedPayout)
+			expectedBetAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, expectedPayout)
 			if err != nil {
 				return err
 			}
 
-			liquidatedBetAmount = liquidatedBetAmount.Add(betAmount)
-			participationExposure.BetAmount = participationExposure.BetAmount.Add(betAmount)
+			liquidatedBetAmount = liquidatedBetAmount.Add(expectedBetAmount)
+			participationExposure.BetAmount = participationExposure.BetAmount.Add(expectedBetAmount)
 			if noMoreLiquidity {
 				setFulfilled()
 			}
-			participation.TotalBetAmount = participation.TotalBetAmount.Add(betAmount)
-			participation.CurrentRoundTotalBetAmount = participation.CurrentRoundTotalBetAmount.Add(betAmount)
+			participation.TotalBetAmount = participation.TotalBetAmount.Add(expectedBetAmount)
+			participation.CurrentRoundTotalBetAmount = participation.CurrentRoundTotalBetAmount.Add(expectedBetAmount)
 
 			maxLoss := participationExposure.Exposure.Sub(participation.CurrentRoundTotalBetAmount).Add(participationExposure.BetAmount)
 			switch {
@@ -126,7 +125,7 @@ func (k Keeper) ProcessBetPlacement(
 			case participation.CurrentRoundMaxLossOddsID == oddsID:
 				participation.CurrentRoundMaxLoss = maxLoss
 			default:
-				originalMaxLoss := participation.CurrentRoundMaxLoss.Sub(betAmount)
+				originalMaxLoss := participation.CurrentRoundMaxLoss.Sub(expectedBetAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participation.CurrentRoundMaxLoss = maxLoss
 					participation.CurrentRoundMaxLossOddsID = oddsID
@@ -138,10 +137,10 @@ func (k Keeper) ProcessBetPlacement(
 			betFulfillments = append(betFulfillments, &bettypes.BetFulfillment{
 				ParticipantAddress: participation.ParticipantAddress,
 				ParticipationIndex: participation.Index,
-				BetAmount:          betAmount,
-				PayoutAmount:       amount,
+				BetAmount:          expectedBetAmount,
+				PayoutAmount:       expectedPayout,
 			})
-			remainingPayoutProfit = remainingPayoutProfit.Sub(amount)
+			remainingPayoutProfit = remainingPayoutProfit.Sub(expectedPayout)
 			participationBetPair := types.NewParticipationBetPair(participation.BookID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)
 			return nil
