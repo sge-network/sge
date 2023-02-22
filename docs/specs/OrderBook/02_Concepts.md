@@ -7,7 +7,7 @@ The created book for the sport-event is inititated will be maintained until the 
 
 The Book for a given sport-event, is made up of Book Participants. The first book participant for any book of
 a sport-event will be Strategic Reserve. At the creation of a sport-event, in order to faciliate betting on
-the created sport-event. The order book initiates a book for the sport-event and sets the first participation for the 
+the created sport-event. The order book initiates a book for the sport-event and sets the first participation for the
 strategic reserve module.
 
 Once the order book has initiated a book for a sport-event, users can either bet against the house or
