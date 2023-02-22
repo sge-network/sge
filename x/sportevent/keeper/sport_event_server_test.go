@@ -17,7 +17,7 @@ import (
 func TestMsgServerAddEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgAddSportEventRequest
+		msg *types.MsgAddSportEvent
 	}
 
 	u1 := uuid.NewString()
@@ -53,7 +53,7 @@ func TestMsgServerAddEvent(t *testing.T) {
 func TestMsgServerResolveEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgResolveSportEventRequest
+		msg *types.MsgResolveSportEvent
 	}
 
 	u1 := uuid.NewString()
@@ -120,6 +120,7 @@ func TestMsgServerAddEventResponse(t *testing.T) {
 			"iat":                       1111111111,
 			"meta":                      "Winner of x:y",
 			"sr_contribution_for_house": "2",
+			"status":                    types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
@@ -137,6 +138,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u1,
 		Creator: sample.AccAddress(),
+		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 	})
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u3,
@@ -232,7 +234,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 func TestMsgServerUpdateEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgUpdateSportEventRequest
+		msg *types.MsgUpdateSportEvent
 	}
 
 	u1 := uuid.NewString()

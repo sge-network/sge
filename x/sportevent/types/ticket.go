@@ -14,6 +14,10 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		return err
 	}
 
+	if payload.Status != SportEventStatus_SPORT_EVENT_STATUS_PENDING {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "acceptable status is pending")
+	}
+
 	if !utils.IsValidUID(payload.UID) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport-event")
 	}
@@ -84,7 +88,7 @@ func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Param
 // Validate validates sport-event resolution ticket payload.
 func (payload *SportEventResolutionTicketPayload) Validate() error {
 	if payload.Status == SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED ||
-		payload.Status == SportEventStatus_SPORT_EVENT_STATUS_INVALID {
+		payload.Status == SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
 

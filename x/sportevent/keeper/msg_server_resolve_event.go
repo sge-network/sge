@@ -9,7 +9,7 @@ import (
 )
 
 // ResolveSportEvent accepts ticket containing multiple resolution events and return batch response after processing
-func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEventRequest) (*types.MsgResolveSportEventResponse, error) {
+func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.MsgResolveSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolutionPayload types.SportEventResolutionTicketPayload
@@ -57,7 +57,7 @@ func (k msgServer) getSportEventToResolve(ctx sdk.Context, resolutionPayload typ
 		return types.SportEvent{}, types.ErrEventNotFound
 	}
 
-	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
+	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return types.SportEvent{}, types.ErrEventIsNotPending
 	}
 

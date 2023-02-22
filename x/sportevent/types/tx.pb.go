@@ -28,27 +28,27 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgAddSportEventRequest is the message type for adding sport-event into the
+// MsgAddSportEvent is the message type for adding sport-event into the
 // state.
-type MsgAddSportEventRequest struct {
+type MsgAddSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgAddSportEventRequest) Reset()         { *m = MsgAddSportEventRequest{} }
-func (m *MsgAddSportEventRequest) String() string { return proto.CompactTextString(m) }
-func (*MsgAddSportEventRequest) ProtoMessage()    {}
-func (*MsgAddSportEventRequest) Descriptor() ([]byte, []int) {
+func (m *MsgAddSportEvent) Reset()         { *m = MsgAddSportEvent{} }
+func (m *MsgAddSportEvent) String() string { return proto.CompactTextString(m) }
+func (*MsgAddSportEvent) ProtoMessage()    {}
+func (*MsgAddSportEvent) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0d8f6623c66e124, []int{0}
 }
-func (m *MsgAddSportEventRequest) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddSportEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddSportEventRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddSportEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddSportEventRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddSportEvent.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -58,26 +58,26 @@ func (m *MsgAddSportEventRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgAddSportEventRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddSportEventRequest.Merge(m, src)
+func (m *MsgAddSportEvent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddSportEvent.Merge(m, src)
 }
-func (m *MsgAddSportEventRequest) XXX_Size() int {
+func (m *MsgAddSportEvent) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddSportEventRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddSportEventRequest.DiscardUnknown(m)
+func (m *MsgAddSportEvent) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddSportEvent.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddSportEventRequest proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddSportEvent proto.InternalMessageInfo
 
-func (m *MsgAddSportEventRequest) GetCreator() string {
+func (m *MsgAddSportEvent) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgAddSportEventRequest) GetTicket() string {
+func (m *MsgAddSportEvent) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
@@ -139,26 +139,26 @@ func (m *MsgAddSportEventResponse) GetData() *SportEvent {
 	return nil
 }
 
-// MsgResolveSportEventRequest is the message type for resolving a sport-event.
-type MsgResolveSportEventRequest struct {
+// MsgResolveSportEvent is the message type for resolving a sport-event.
+type MsgResolveSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgResolveSportEventRequest) Reset()         { *m = MsgResolveSportEventRequest{} }
-func (m *MsgResolveSportEventRequest) String() string { return proto.CompactTextString(m) }
-func (*MsgResolveSportEventRequest) ProtoMessage()    {}
-func (*MsgResolveSportEventRequest) Descriptor() ([]byte, []int) {
+func (m *MsgResolveSportEvent) Reset()         { *m = MsgResolveSportEvent{} }
+func (m *MsgResolveSportEvent) String() string { return proto.CompactTextString(m) }
+func (*MsgResolveSportEvent) ProtoMessage()    {}
+func (*MsgResolveSportEvent) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0d8f6623c66e124, []int{2}
 }
-func (m *MsgResolveSportEventRequest) XXX_Unmarshal(b []byte) error {
+func (m *MsgResolveSportEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgResolveSportEventRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgResolveSportEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgResolveSportEventRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgResolveSportEvent.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -168,26 +168,26 @@ func (m *MsgResolveSportEventRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *MsgResolveSportEventRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgResolveSportEventRequest.Merge(m, src)
+func (m *MsgResolveSportEvent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgResolveSportEvent.Merge(m, src)
 }
-func (m *MsgResolveSportEventRequest) XXX_Size() int {
+func (m *MsgResolveSportEvent) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgResolveSportEventRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgResolveSportEventRequest.DiscardUnknown(m)
+func (m *MsgResolveSportEvent) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgResolveSportEvent.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgResolveSportEventRequest proto.InternalMessageInfo
+var xxx_messageInfo_MsgResolveSportEvent proto.InternalMessageInfo
 
-func (m *MsgResolveSportEventRequest) GetCreator() string {
+func (m *MsgResolveSportEvent) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgResolveSportEventRequest) GetTicket() string {
+func (m *MsgResolveSportEvent) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
@@ -249,27 +249,27 @@ func (m *MsgResolveSportEventResponse) GetData() *SportEvent {
 	return nil
 }
 
-// MsgUpdateSportEventRequest is the message type for updating sport-event data.
+// MsgUpdateSportEvent is the message type for updating sport-event data.
 // in the state
-type MsgUpdateSportEventRequest struct {
+type MsgUpdateSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticked data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgUpdateSportEventRequest) Reset()         { *m = MsgUpdateSportEventRequest{} }
-func (m *MsgUpdateSportEventRequest) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateSportEventRequest) ProtoMessage()    {}
-func (*MsgUpdateSportEventRequest) Descriptor() ([]byte, []int) {
+func (m *MsgUpdateSportEvent) Reset()         { *m = MsgUpdateSportEvent{} }
+func (m *MsgUpdateSportEvent) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateSportEvent) ProtoMessage()    {}
+func (*MsgUpdateSportEvent) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0d8f6623c66e124, []int{4}
 }
-func (m *MsgUpdateSportEventRequest) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateSportEvent) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateSportEventRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateSportEvent) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateSportEventRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateSportEvent.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -279,26 +279,26 @@ func (m *MsgUpdateSportEventRequest) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateSportEventRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateSportEventRequest.Merge(m, src)
+func (m *MsgUpdateSportEvent) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateSportEvent.Merge(m, src)
 }
-func (m *MsgUpdateSportEventRequest) XXX_Size() int {
+func (m *MsgUpdateSportEvent) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateSportEventRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateSportEventRequest.DiscardUnknown(m)
+func (m *MsgUpdateSportEvent) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateSportEvent.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateSportEventRequest proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdateSportEvent proto.InternalMessageInfo
 
-func (m *MsgUpdateSportEventRequest) GetCreator() string {
+func (m *MsgUpdateSportEvent) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgUpdateSportEventRequest) GetTicket() string {
+func (m *MsgUpdateSportEvent) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
@@ -361,42 +361,42 @@ func (m *MsgUpdateSportEventResponse) GetData() *SportEvent {
 }
 
 func init() {
-	proto.RegisterType((*MsgAddSportEventRequest)(nil), "sgenetwork.sge.sportevent.MsgAddSportEventRequest")
+	proto.RegisterType((*MsgAddSportEvent)(nil), "sgenetwork.sge.sportevent.MsgAddSportEvent")
 	proto.RegisterType((*MsgAddSportEventResponse)(nil), "sgenetwork.sge.sportevent.MsgAddSportEventResponse")
-	proto.RegisterType((*MsgResolveSportEventRequest)(nil), "sgenetwork.sge.sportevent.MsgResolveSportEventRequest")
+	proto.RegisterType((*MsgResolveSportEvent)(nil), "sgenetwork.sge.sportevent.MsgResolveSportEvent")
 	proto.RegisterType((*MsgResolveSportEventResponse)(nil), "sgenetwork.sge.sportevent.MsgResolveSportEventResponse")
-	proto.RegisterType((*MsgUpdateSportEventRequest)(nil), "sgenetwork.sge.sportevent.MsgUpdateSportEventRequest")
+	proto.RegisterType((*MsgUpdateSportEvent)(nil), "sgenetwork.sge.sportevent.MsgUpdateSportEvent")
 	proto.RegisterType((*MsgUpdateSportEventResponse)(nil), "sgenetwork.sge.sportevent.MsgUpdateSportEventResponse")
 }
 
 func init() { proto.RegisterFile("sge/sportevent/tx.proto", fileDescriptor_d0d8f6623c66e124) }
 
 var fileDescriptor_d0d8f6623c66e124 = []byte{
-	// 382 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x94, 0xcf, 0x4b, 0x3a, 0x41,
-	0x18, 0xc6, 0x9d, 0xaf, 0x7e, 0x8d, 0x26, 0x82, 0x1a, 0x22, 0xb7, 0x2d, 0x36, 0x11, 0x82, 0x2e,
-	0xee, 0x82, 0x92, 0x1d, 0x23, 0x21, 0x3a, 0xc4, 0x16, 0x6c, 0x74, 0xe9, 0x12, 0xab, 0xfb, 0x32,
-	0x89, 0xe5, 0x6c, 0x33, 0xe3, 0x8f, 0xea, 0x14, 0x74, 0xea, 0xd4, 0x9f, 0xe5, 0xd1, 0x63, 0xa7,
-	0x08, 0xfd, 0x47, 0x62, 0x67, 0x57, 0x44, 0x6d, 0x05, 0x41, 0xbc, 0xbd, 0xb3, 0xef, 0xfb, 0x7c,
-	0x98, 0x67, 0xe7, 0xe1, 0xc5, 0x19, 0x41, 0xc1, 0x12, 0x3e, 0xe3, 0x12, 0x5a, 0xd0, 0x90, 0x96,
-	0xec, 0x98, 0x3e, 0x67, 0x92, 0x91, 0x1d, 0x41, 0xa1, 0x01, 0xb2, 0xcd, 0x78, 0xdd, 0x14, 0x14,
-	0xcc, 0xd1, 0x8c, 0xbe, 0x45, 0x19, 0x65, 0x6a, 0xca, 0x0a, 0xaa, 0x50, 0xa0, 0x67, 0x27, 0x48,
-	0xaa, 0xbc, 0x53, 0x75, 0x38, 0x91, 0xbb, 0xc0, 0x19, 0x5b, 0xd0, 0x53, 0xcf, 0xbb, 0x0e, 0x5a,
-	0x67, 0x41, 0xc7, 0x81, 0xa7, 0x26, 0x08, 0x49, 0x34, 0xbc, 0x52, 0xe5, 0xe0, 0x4a, 0xc6, 0x35,
-	0x94, 0x45, 0x87, 0xab, 0xce, 0xf0, 0x48, 0xb6, 0x71, 0x5a, 0xd6, 0xaa, 0x75, 0x90, 0xda, 0x3f,
-	0xd5, 0x88, 0x4e, 0xb9, 0x36, 0xd6, 0xa6, 0x61, 0xc2, 0x67, 0x0d, 0x01, 0x44, 0xc7, 0xff, 0x81,
-	0xf3, 0x21, 0xab, 0x9c, 0xea, 0x7e, 0xef, 0x23, 0x27, 0xfc, 0x44, 0x4e, 0x70, 0xca, 0x73, 0xa5,
-	0xab, 0x68, 0x6b, 0x85, 0x03, 0x33, 0xd6, 0xa6, 0x39, 0x02, 0x47, 0x04, 0x25, 0xcc, 0x5d, 0xe1,
-	0x5d, 0x5b, 0x50, 0x07, 0x04, 0x7b, 0x68, 0xc1, 0x22, 0x9c, 0xbc, 0xe2, 0xbd, 0xbf, 0x81, 0xcb,
-	0x70, 0x73, 0x89, 0x75, 0x5b, 0xd0, 0x1b, 0xdf, 0x73, 0xe5, 0x42, 0xcc, 0xbc, 0xa8, 0xbf, 0x33,
-	0xcd, 0x5b, 0x82, 0x97, 0xc2, 0x47, 0x12, 0x27, 0x6d, 0x41, 0x49, 0x07, 0xaf, 0x8f, 0xe5, 0x82,
-	0x14, 0x66, 0xb0, 0x62, 0x12, 0xa9, 0x17, 0xe7, 0xd2, 0x44, 0xf6, 0xde, 0x11, 0xde, 0x9c, 0x7a,
-	0x48, 0x52, 0x9a, 0x8d, 0x8a, 0x8b, 0x92, 0x7e, 0x3c, 0xb7, 0x2e, 0xba, 0xc6, 0x1b, 0xc2, 0x1b,
-	0x93, 0x4f, 0x40, 0x8e, 0x66, 0xd3, 0x62, 0x22, 0xa0, 0x97, 0xe6, 0x95, 0x85, 0x77, 0x28, 0x9f,
-	0x77, 0xfb, 0x06, 0xea, 0xf5, 0x0d, 0xf4, 0xd3, 0x37, 0xd0, 0xe7, 0xc0, 0x48, 0xf4, 0x06, 0x46,
-	0xe2, 0x6b, 0x60, 0x24, 0x6e, 0xf3, 0xb4, 0x26, 0xef, 0x9b, 0x15, 0xb3, 0xca, 0x1e, 0x2d, 0x41,
-	0x21, 0x1f, 0xc1, 0x83, 0xda, 0xea, 0x8c, 0xed, 0xa2, 0x67, 0x1f, 0x44, 0x25, 0xad, 0x96, 0x47,
-	0xf1, 0x37, 0x00, 0x00, 0xff, 0xff, 0x14, 0x45, 0x5a, 0xd3, 0xaa, 0x04, 0x00, 0x00,
+	// 371 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2f, 0x4e, 0x4f, 0xd5,
+	0x2f, 0x2e, 0xc8, 0x2f, 0x2a, 0x49, 0x2d, 0x4b, 0xcd, 0x2b, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28,
+	0xca, 0x2f, 0xc9, 0x17, 0x92, 0x2c, 0x4e, 0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6,
+	0x2b, 0x4e, 0x4f, 0xd5, 0x43, 0xa8, 0x91, 0x12, 0x49, 0xcf, 0x4f, 0xcf, 0x07, 0xab, 0xd2, 0x07,
+	0xb1, 0x20, 0x1a, 0xa4, 0x14, 0xd0, 0x4c, 0x02, 0x33, 0xe3, 0xc1, 0x6c, 0x88, 0x0a, 0x25, 0x17,
+	0x2e, 0x01, 0xdf, 0xe2, 0x74, 0xc7, 0x94, 0x94, 0x60, 0x90, 0x94, 0x2b, 0x48, 0x46, 0x48, 0x82,
+	0x8b, 0x3d, 0xb9, 0x28, 0x35, 0xb1, 0x24, 0xbf, 0x48, 0x82, 0x51, 0x81, 0x51, 0x83, 0x33, 0x08,
+	0xc6, 0x15, 0x12, 0xe3, 0x62, 0x2b, 0xc9, 0x4c, 0xce, 0x4e, 0x2d, 0x91, 0x60, 0x02, 0x4b, 0x40,
+	0x79, 0x4a, 0xe5, 0x5c, 0x12, 0xe8, 0xa6, 0x04, 0xa5, 0x16, 0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a,
+	0x49, 0x71, 0xb1, 0xa6, 0x16, 0x15, 0xc1, 0xcc, 0x72, 0x62, 0x39, 0x71, 0x4f, 0x9e, 0x31, 0x08,
+	0x22, 0x24, 0x64, 0xcf, 0xc5, 0x92, 0x92, 0x58, 0x92, 0x08, 0x36, 0x8d, 0xdb, 0x48, 0x55, 0x0f,
+	0xa7, 0xff, 0xf4, 0x10, 0x06, 0x43, 0x4d, 0x00, 0x6b, 0x54, 0xf2, 0xe0, 0x12, 0xf1, 0x2d, 0x4e,
+	0x0f, 0x4a, 0x2d, 0xce, 0xcf, 0x29, 0x4b, 0xa5, 0xc8, 0x0b, 0xd5, 0x5c, 0x32, 0xd8, 0x4c, 0xa2,
+	0x8f, 0x37, 0xdc, 0xb9, 0x84, 0x7d, 0x8b, 0xd3, 0x43, 0x0b, 0x52, 0x12, 0x4b, 0x28, 0xf3, 0x45,
+	0x15, 0x97, 0x34, 0x16, 0x83, 0xe8, 0xe2, 0x09, 0xa3, 0xcf, 0x4c, 0x5c, 0xcc, 0xbe, 0xc5, 0xe9,
+	0x42, 0x85, 0x5c, 0xbc, 0xa8, 0xe9, 0x49, 0x1b, 0x8f, 0x59, 0xe8, 0xc9, 0x46, 0xca, 0x98, 0x04,
+	0xc5, 0x70, 0x7f, 0xd5, 0x72, 0x09, 0x62, 0xa6, 0x01, 0x7d, 0xfc, 0x26, 0x61, 0x68, 0x90, 0x32,
+	0x27, 0x51, 0x03, 0xdc, 0xfa, 0x2a, 0x2e, 0x01, 0x8c, 0xb8, 0xd3, 0xc3, 0x6f, 0x18, 0xba, 0x7a,
+	0x29, 0x33, 0xd2, 0xd4, 0xc3, 0xec, 0x76, 0x72, 0x3f, 0xf1, 0x48, 0x8e, 0xf1, 0xc2, 0x23, 0x39,
+	0xc6, 0x07, 0x8f, 0xe4, 0x18, 0x27, 0x3c, 0x96, 0x63, 0xb8, 0xf0, 0x58, 0x8e, 0xe1, 0xc6, 0x63,
+	0x39, 0x86, 0x28, 0xdd, 0xf4, 0xcc, 0x92, 0x8c, 0xd2, 0x24, 0xbd, 0xe4, 0xfc, 0x5c, 0xfd, 0xe2,
+	0xf4, 0x54, 0x5d, 0xa8, 0xe1, 0x20, 0xb6, 0x7e, 0x05, 0x4a, 0xf9, 0x52, 0x59, 0x90, 0x5a, 0x9c,
+	0xc4, 0x06, 0x2e, 0x10, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x0b, 0x4e, 0x71, 0x66, 0x7e,
+	0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -412,11 +412,11 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	// AddSportEvent defines a method to add sport-event with the given data.
-	AddSportEvent(ctx context.Context, in *MsgAddSportEventRequest, opts ...grpc.CallOption) (*MsgAddSportEventResponse, error)
+	AddSportEvent(ctx context.Context, in *MsgAddSportEvent, opts ...grpc.CallOption) (*MsgAddSportEventResponse, error)
 	// ResolveSportEvent defines a method to resolve sport-event.
-	ResolveSportEvent(ctx context.Context, in *MsgResolveSportEventRequest, opts ...grpc.CallOption) (*MsgResolveSportEventResponse, error)
+	ResolveSportEvent(ctx context.Context, in *MsgResolveSportEvent, opts ...grpc.CallOption) (*MsgResolveSportEventResponse, error)
 	// UpdateSportEvent defines a method to update a sport-event.
-	UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEventRequest, opts ...grpc.CallOption) (*MsgUpdateSportEventResponse, error)
+	UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEvent, opts ...grpc.CallOption) (*MsgUpdateSportEventResponse, error)
 }
 
 type msgClient struct {
@@ -427,7 +427,7 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) AddSportEvent(ctx context.Context, in *MsgAddSportEventRequest, opts ...grpc.CallOption) (*MsgAddSportEventResponse, error) {
+func (c *msgClient) AddSportEvent(ctx context.Context, in *MsgAddSportEvent, opts ...grpc.CallOption) (*MsgAddSportEventResponse, error) {
 	out := new(MsgAddSportEventResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Msg/AddSportEvent", in, out, opts...)
 	if err != nil {
@@ -436,7 +436,7 @@ func (c *msgClient) AddSportEvent(ctx context.Context, in *MsgAddSportEventReque
 	return out, nil
 }
 
-func (c *msgClient) ResolveSportEvent(ctx context.Context, in *MsgResolveSportEventRequest, opts ...grpc.CallOption) (*MsgResolveSportEventResponse, error) {
+func (c *msgClient) ResolveSportEvent(ctx context.Context, in *MsgResolveSportEvent, opts ...grpc.CallOption) (*MsgResolveSportEventResponse, error) {
 	out := new(MsgResolveSportEventResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Msg/ResolveSportEvent", in, out, opts...)
 	if err != nil {
@@ -445,7 +445,7 @@ func (c *msgClient) ResolveSportEvent(ctx context.Context, in *MsgResolveSportEv
 	return out, nil
 }
 
-func (c *msgClient) UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEventRequest, opts ...grpc.CallOption) (*MsgUpdateSportEventResponse, error) {
+func (c *msgClient) UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEvent, opts ...grpc.CallOption) (*MsgUpdateSportEventResponse, error) {
 	out := new(MsgUpdateSportEventResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.sportevent.Msg/UpdateSportEvent", in, out, opts...)
 	if err != nil {
@@ -457,24 +457,24 @@ func (c *msgClient) UpdateSportEvent(ctx context.Context, in *MsgUpdateSportEven
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// AddSportEvent defines a method to add sport-event with the given data.
-	AddSportEvent(context.Context, *MsgAddSportEventRequest) (*MsgAddSportEventResponse, error)
+	AddSportEvent(context.Context, *MsgAddSportEvent) (*MsgAddSportEventResponse, error)
 	// ResolveSportEvent defines a method to resolve sport-event.
-	ResolveSportEvent(context.Context, *MsgResolveSportEventRequest) (*MsgResolveSportEventResponse, error)
+	ResolveSportEvent(context.Context, *MsgResolveSportEvent) (*MsgResolveSportEventResponse, error)
 	// UpdateSportEvent defines a method to update a sport-event.
-	UpdateSportEvent(context.Context, *MsgUpdateSportEventRequest) (*MsgUpdateSportEventResponse, error)
+	UpdateSportEvent(context.Context, *MsgUpdateSportEvent) (*MsgUpdateSportEventResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) AddSportEvent(ctx context.Context, req *MsgAddSportEventRequest) (*MsgAddSportEventResponse, error) {
+func (*UnimplementedMsgServer) AddSportEvent(ctx context.Context, req *MsgAddSportEvent) (*MsgAddSportEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddSportEvent not implemented")
 }
-func (*UnimplementedMsgServer) ResolveSportEvent(ctx context.Context, req *MsgResolveSportEventRequest) (*MsgResolveSportEventResponse, error) {
+func (*UnimplementedMsgServer) ResolveSportEvent(ctx context.Context, req *MsgResolveSportEvent) (*MsgResolveSportEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResolveSportEvent not implemented")
 }
-func (*UnimplementedMsgServer) UpdateSportEvent(ctx context.Context, req *MsgUpdateSportEventRequest) (*MsgUpdateSportEventResponse, error) {
+func (*UnimplementedMsgServer) UpdateSportEvent(ctx context.Context, req *MsgUpdateSportEvent) (*MsgUpdateSportEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSportEvent not implemented")
 }
 
@@ -483,7 +483,7 @@ func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 }
 
 func _Msg_AddSportEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgAddSportEventRequest)
+	in := new(MsgAddSportEvent)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -495,13 +495,13 @@ func _Msg_AddSportEvent_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/sgenetwork.sge.sportevent.Msg/AddSportEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).AddSportEvent(ctx, req.(*MsgAddSportEventRequest))
+		return srv.(MsgServer).AddSportEvent(ctx, req.(*MsgAddSportEvent))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_ResolveSportEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgResolveSportEventRequest)
+	in := new(MsgResolveSportEvent)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -513,13 +513,13 @@ func _Msg_ResolveSportEvent_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/sgenetwork.sge.sportevent.Msg/ResolveSportEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).ResolveSportEvent(ctx, req.(*MsgResolveSportEventRequest))
+		return srv.(MsgServer).ResolveSportEvent(ctx, req.(*MsgResolveSportEvent))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Msg_UpdateSportEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateSportEventRequest)
+	in := new(MsgUpdateSportEvent)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -531,7 +531,7 @@ func _Msg_UpdateSportEvent_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/sgenetwork.sge.sportevent.Msg/UpdateSportEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateSportEvent(ctx, req.(*MsgUpdateSportEventRequest))
+		return srv.(MsgServer).UpdateSportEvent(ctx, req.(*MsgUpdateSportEvent))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -557,7 +557,7 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	Metadata: "sge/sportevent/tx.proto",
 }
 
-func (m *MsgAddSportEventRequest) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddSportEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -567,12 +567,12 @@ func (m *MsgAddSportEventRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddSportEventRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddSportEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddSportEventRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddSportEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -636,7 +636,7 @@ func (m *MsgAddSportEventResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgResolveSportEventRequest) Marshal() (dAtA []byte, err error) {
+func (m *MsgResolveSportEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -646,12 +646,12 @@ func (m *MsgResolveSportEventRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgResolveSportEventRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgResolveSportEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgResolveSportEventRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgResolveSportEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -715,7 +715,7 @@ func (m *MsgResolveSportEventResponse) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateSportEventRequest) Marshal() (dAtA []byte, err error) {
+func (m *MsgUpdateSportEvent) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -725,12 +725,12 @@ func (m *MsgUpdateSportEventRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateSportEventRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUpdateSportEvent) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateSportEventRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUpdateSportEvent) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -805,7 +805,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgAddSportEventRequest) Size() (n int) {
+func (m *MsgAddSportEvent) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -839,7 +839,7 @@ func (m *MsgAddSportEventResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgResolveSportEventRequest) Size() (n int) {
+func (m *MsgResolveSportEvent) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -873,7 +873,7 @@ func (m *MsgResolveSportEventResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateSportEventRequest) Size() (n int) {
+func (m *MsgUpdateSportEvent) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -913,7 +913,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgAddSportEventRequest) Unmarshal(dAtA []byte) error {
+func (m *MsgAddSportEvent) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -936,10 +936,10 @@ func (m *MsgAddSportEventRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddSportEventRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddSportEvent: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddSportEventRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddSportEvent: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1145,7 +1145,7 @@ func (m *MsgAddSportEventResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgResolveSportEventRequest) Unmarshal(dAtA []byte) error {
+func (m *MsgResolveSportEvent) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1168,10 +1168,10 @@ func (m *MsgResolveSportEventRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgResolveSportEventRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgResolveSportEvent: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgResolveSportEventRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgResolveSportEvent: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1377,7 +1377,7 @@ func (m *MsgResolveSportEventResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateSportEventRequest) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateSportEvent) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1400,10 +1400,10 @@ func (m *MsgUpdateSportEventRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateSportEventRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateSportEvent: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateSportEventRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateSportEvent: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

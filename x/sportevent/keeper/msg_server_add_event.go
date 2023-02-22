@@ -9,7 +9,7 @@ import (
 )
 
 // AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
-func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEventRequest) (*types.MsgAddSportEventResponse, error) {
+func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.MsgAddSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.SportEventAddTicketPayload
@@ -37,7 +37,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}
 
-	sportEvent := types.NewSpoerEvent(
+	sportEvent := types.NewSportEvent(
 		addPayload.UID,
 		msg.Creator,
 		addPayload.StartTS,
@@ -48,6 +48,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		addPayload.Meta,
 		bookID,
 		addPayload.SrContributionForHouse,
+		addPayload.Status,
 	)
 
 	k.Keeper.SetSportEvent(ctx, sportEvent)

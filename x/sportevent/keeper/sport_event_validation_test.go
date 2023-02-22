@@ -35,6 +35,7 @@ func TestValidateCreationEvent(t *testing.T) {
 				},
 				Meta:                   "Winner of x:y",
 				SrContributionForHouse: sdk.NewInt(2),
+				Status:                 types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 			},
 		},
 		{
@@ -156,6 +157,7 @@ func TestValidateCreationEvent(t *testing.T) {
 				},
 				Meta:                   "Winner of x:y",
 				SrContributionForHouse: sdk.NewInt(2),
+				Status:                 types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 			},
 		},
 		{

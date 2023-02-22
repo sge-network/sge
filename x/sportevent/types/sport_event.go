@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-func NewSpoerEvent(
+func NewSportEvent(
 	uid, creator string,
 	startTS, endTS uint64,
 	odds []*Odds,
@@ -13,6 +13,7 @@ func NewSpoerEvent(
 	meta string,
 	bookID string,
 	srContributionForHouse sdk.Int,
+	status SportEventStatus,
 ) SportEvent {
 	return SportEvent{
 		UID:                    uid,
@@ -25,5 +26,6 @@ func NewSpoerEvent(
 		Meta:                   meta,
 		BookID:                 bookID,
 		SrContributionForHouse: srContributionForHouse,
+		Status:                 status,
 	}
 }

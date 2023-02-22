@@ -72,7 +72,7 @@ enum SportEventStatus {
   // event is pending
   SPORT_EVENT_STATUS_UNSPECIFIED = 0;
   // invalid event
-  SPORT_EVENT_STATUS_INVALID = 1;
+  SPORT_EVENT_STATUS_PENDING = 1;
   // event canceled
   SPORT_EVENT_STATUS_CANCELLED = 2;
   // event aborted

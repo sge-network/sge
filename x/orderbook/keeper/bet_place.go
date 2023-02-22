@@ -19,8 +19,6 @@ func (k Keeper) ProcessBetPlacement(
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 ) (betFulfillments []*bettypes.BetFulfillment, err error) {
-	// betFulfillments := []*bettypes.BetFulfillment{}
-
 	// If lock exists, return error
 	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, betUID) {

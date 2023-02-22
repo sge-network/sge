@@ -84,7 +84,7 @@ message Bet {
   // Status of the Bet.
   enum Status {
 
-    // unknown status
+    // the invalid or unknown
     STATUS_UNSPECIFIED = 0;
 
     // bet is placed
@@ -104,6 +104,9 @@ message Bet {
 
     // the bet is settled
     STATUS_SETTLED = 6;
+
+    // the bet placement failed
+    STATUS_FAILED = 7;
   }
 
   // Result of the bet.
