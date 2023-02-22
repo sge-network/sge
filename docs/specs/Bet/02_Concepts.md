@@ -15,7 +15,7 @@ Before accepting bet some validation should take place:
     - Event is not already resolved or cancelled
     - Maximum cap for sport-event has not already reached (based on bet amount deducted by betting fee)
     - Bet amount (deducted by betting fee) is not less than the minimum allowed bet amount
-- SR level validation:
+- OrderBook level validation:
   - Maximum bet placement cap of SR has not reached
 - DVM level validation:
   - All data provided in placement request is valid e.g. odds value
@@ -27,13 +27,13 @@ After a bet is accepted:
 
 - Corresponding betting fee will be deducted from total bet amount
 - Betting fee will be transferred to the module account of bet module
-- The rest of bet amount will be transferred and locked in Strategic Reserve module
+- The rest of bet amount will be transferred and locked in Order Book module
 
 For bet placement user can raise a request to place a single bet. Also, the same for bet settlement, it can be done for a single bet only.
 
 When a user is raising a transaction to place a bet, the creator of the transaction is the owner of the  bet. But in the case of bet settlement transaction, creator of the transaction can be different from owner of the bet, means that anyone can raise a settlement request for any bet.
 
-> Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Strategic Reserve to bettor's account.
+> Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Order Book to bettor's account.
 
 ## Supported Odds Types
 

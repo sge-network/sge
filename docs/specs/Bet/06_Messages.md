@@ -73,7 +73,7 @@ The transaction will fail if:
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
 - There is an error in AddPayoutProfitToEvent in sportEvent module
-- There is an error in ProcessBetPlacement in SR module
+- There is an error in ProcessBetPlacement in Order Book module
 
 ### **What Happens if bet fails**
 
@@ -142,7 +142,7 @@ The transaction will fail if:
     ```
 
 - Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
-- Call `Strategic Reserve module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
+- Call `Order Book module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
 - Store the updated bet in the `bet module's KVStore`.
 
 ---
