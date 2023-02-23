@@ -232,7 +232,10 @@ func (k Keeper) ProcessBetPlacement(
 
 		// if there are no more exposures to be filled
 		if participation.ExposuresNotFilled == 0 {
-			refreshQueueAndState()
+			err = refreshQueueAndState()
+			if err != nil {
+				return
+			}
 		}
 
 		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFulfillmentQueue) == 0 {

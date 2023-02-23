@@ -73,5 +73,5 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string, sportEventUID string, a
 
 	k.SetDeposit(ctx, deposit)
 
-	return
+	return participationIndex, err
 }

@@ -50,14 +50,14 @@ func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error)
 }
 
 // InitiateBook initiates a book for a given sport event
-func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (bookID string, err error) {
+func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
 	// book and sport event have one-to-one relationship
-	bookID = sportEventUID
+	bookID := sportEventUID
 
 	// check for existing book with id
 	book, found := k.GetBook(ctx, bookID)
 	if found {
-		return "", sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
+		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
 	}
 
 	// create new active book object
@@ -99,5 +99,5 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContributi
 
 	k.SetBook(ctx, book)
 
-	return
+	return nil
 }

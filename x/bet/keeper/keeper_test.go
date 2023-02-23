@@ -118,7 +118,7 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 		require.NotNil(t, resAddEvent)
 	}
 
-	return
+	return uids
 }
 
 func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUID string, selectedOdds *types.BetOdds) {

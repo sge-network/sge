@@ -138,7 +138,7 @@ func (k Keeper) InitiateBookParticipation(
 	// Update orderbook
 	k.SetBook(ctx, book)
 
-	return
+	return index, nil
 }
 
 func (k Keeper) LiquidateBookParticipation(

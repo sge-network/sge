@@ -6,7 +6,6 @@ import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "sge/house/deposit.proto";
 import "sge/house/withdraw.proto";
-import "sge/house/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 

@@ -202,7 +202,7 @@ func TestPlaceBet(t *testing.T) {
 				for _, v := range tc.sportEvent.Odds {
 					oddsIDs = append(oddsIDs, v.UID)
 				}
-				_, err := tApp.OrderBookKeeper.InitiateBook(ctx, tc.sportEvent.UID, tc.sportEvent.SrContributionForHouse, oddsIDs)
+				err := tApp.OrderBookKeeper.InitiateBook(ctx, tc.sportEvent.UID, tc.sportEvent.SrContributionForHouse, oddsIDs)
 				require.NoError(t, err)
 			}
 

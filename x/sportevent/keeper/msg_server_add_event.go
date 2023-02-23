@@ -32,7 +32,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 	for _, oddsID := range addPayload.Odds {
 		oddsUIDs = append(oddsUIDs, oddsID.UID)
 	}
-	bookID, err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
+	err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}
@@ -46,7 +46,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		params.NewEventBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Active,
 		addPayload.Meta,
-		bookID,
+		addPayload.UID,
 		addPayload.SrContributionForHouse,
 		addPayload.Status,
 	)

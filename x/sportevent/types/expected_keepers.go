@@ -26,5 +26,5 @@ type DVMKeeper interface {
 
 // BookKeeper defines the expected interface needed to initiate an order book for a sport event
 type BookKeeper interface {
-	InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (string, error)
+	InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) error
 }
