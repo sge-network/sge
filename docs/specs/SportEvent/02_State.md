@@ -1,5 +1,38 @@
 # **State**
 
+## **Params**
+
+1. `event_min_bet_amount`: The minimum allowed bet amount that can be set in the whole system.
+2. `event_min_bet_fee`: The minimum bet fee allowed across the system.
+3. `event_max_sr_contribution`: The maximum allowed contribution by th sr module across the system.
+
+```proto
+// Params defines the parameters for the module.
+// contains bet constraints associated to a sport-event.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  // event_min_bet_amount default minimum bet amount for a sport-event.
+  string event_min_bet_amount = 1 [
+    (gogoproto.moretags) = "yaml:\"event_min_bet_amount\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  // event_min_bet_fee default minimum bet fee for a sport-event.
+  string event_min_bet_fee = 3 [
+    (gogoproto.moretags) = "yaml:\"event_min_bet_fee\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  // event_max_sr_contribution default max sr contribution for a sport-event.
+  string event_max_sr_contribution = 4 [
+    (gogoproto.moretags) = "yaml:\"event_max_sr_contribution\"",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+```
+
 ## **Bet Constraints**
 
 ```proto
@@ -97,3 +130,17 @@ type ResolutionEvent struct {
 ```
 
 ---
+
+## **Statistics**
+
+Keeps track of statistics of the sport-event module including the resolved unsettled sport-events.
+
+```proto
+// SportEventStats holds statistics of the sport-event
+message SportEventStats {
+  // resolved_unsettled is the list of universal unique identifiers
+  // of resolved sport-events that have unsettled bets
+  repeated string resolved_unsettled = 1;
+}
+
+```

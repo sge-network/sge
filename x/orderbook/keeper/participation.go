@@ -182,7 +182,7 @@ func (k Keeper) LiquidateBookParticipation(
 		withdrawalAmt = maxTransferableAmount
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
-			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %d, max %d", amount, maxTransferableAmount)
+			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
 		}
 		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, amount)
 		if err != nil {
@@ -197,7 +197,7 @@ func (k Keeper) LiquidateBookParticipation(
 	bp.Liquidity = bp.Liquidity.Sub(withdrawalAmt)
 	k.SetBookParticipation(ctx, bp)
 
-	if bp.CurrentRoundLiquidity.LTE(sdk.ZeroInt()) {
+	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
 		boes, err := k.GetOddsExposuresByBook(ctx, bookID)
 		if err != nil {
 			return withdrawalAmt, err
