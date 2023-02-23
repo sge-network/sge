@@ -53,24 +53,22 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	if msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_FULL &&
+		msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
+		return ErrInvalidWithdrawMode
+	}
+
 	if !utils.IsValidUID(msg.SportEventUID) {
 		return ErrInvalidSportEventUID
 	}
 
 	if msg.ParticipationIndex < 1 {
-		return ErrInvalidSportEventUID
-	}
-
-	if msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_FULL && msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
-		return ErrInvalidSportEventUID
+		return ErrInvalidIndex
 	}
 
 	if msg.Mode == WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if !msg.Amount.IsPositive() {
-			return sdkerrors.Wrap(
-				sdkerrors.ErrInvalidRequest,
-				"invalid withdrawal amount",
-			)
+			return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid withdrawal amount")
 		}
 	}
 
