@@ -453,7 +453,7 @@ type BetFulfillment struct {
 	// participant_address is the bech32-encoded address of the participant
 	// fulfilling bet.
 	ParticipantAddress string `protobuf:"bytes,1,opt,name=participant_address,json=participantAddress,proto3" json:"participant_address,omitempty" yaml:"participant_address"`
-	// participation_index is the index in initial participation queue number
+	// participation_index is the index in initial participation queue index
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 	// bet amount fulfilled by the participation
 	BetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=bet_amount,json=betAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_amount" yaml:"bet_amount"`

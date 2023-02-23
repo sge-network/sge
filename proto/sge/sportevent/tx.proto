@@ -23,7 +23,7 @@ service Msg {
 message MsgAddSportEvent {
   // creator is the address of the creator account of sport-event.
   string creator = 1;
-  // ticket is the jwt ticked data.
+  // ticket is the jwt ticket data.
   string ticket = 2;
 }
 
@@ -39,7 +39,7 @@ message MsgAddSportEventResponse {
 message MsgResolveSportEvent {
   // creator is the address of the creator account of sport-event.
   string creator = 1;
-  // ticket is the jwt ticked data.
+  // ticket is the jwt ticket data.
   string ticket = 2;
 }
 
@@ -56,7 +56,7 @@ message MsgResolveSportEventResponse {
 message MsgUpdateSportEvent {
   // creator is the address of the creator account of sport-event.
   string creator = 1;
-  // ticket is the jwt ticked data.
+  // ticket is the jwt ticket data.
   string ticket = 2;
 }
 

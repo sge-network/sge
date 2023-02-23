@@ -181,7 +181,7 @@ message BetFulfillment {
   string participant_address = 1
       [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
 
-  // participation_index is the index in initial participation queue number
+  // participation_index is the index in initial participation queue index
   uint64 participation_index = 2
       [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 

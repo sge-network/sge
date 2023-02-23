@@ -33,7 +33,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgAddSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// ticket is the jwt ticked data.
+	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
@@ -143,7 +143,7 @@ func (m *MsgAddSportEventResponse) GetData() *SportEvent {
 type MsgResolveSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// ticket is the jwt ticked data.
+	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
@@ -254,7 +254,7 @@ func (m *MsgResolveSportEventResponse) GetData() *SportEvent {
 type MsgUpdateSportEvent struct {
 	// creator is the address of the creator account of sport-event.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// ticket is the jwt ticked data.
+	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
