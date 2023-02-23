@@ -12,6 +12,12 @@ func (k Keeper) getBookStore(ctx sdk.Context) prefix.Store {
 	return prefix.NewStore(store, types.BookKeyPrefix)
 }
 
+// getBookStatsStore gets the store containing the statistics.
+func (k Keeper) getBookStatsStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.BookStatsKeyPrefix)
+}
+
 // getParticipationStore gets the store containing all participations.
 func (k Keeper) getParticipationStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
@@ -46,4 +52,10 @@ func (k Keeper) getParticipationBetPairStore(ctx sdk.Context) prefix.Store {
 func (k Keeper) getBookOddsExposureStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.BookOddsExposureKeyPrefix)
+}
+
+// getPayoutLockStore gets the store containing all payout locks.
+func (k Keeper) getPayoutLockStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.PayoutLockKeyPrefix)
 }

@@ -9,9 +9,6 @@ import (
 
 // InitGenesis sets the parameters for the provided keeper.
 func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState) {
-	// TODO
-	keeper.SetParams(ctx, data.Params)
-
 	for _, book := range data.BookList {
 		keeper.SetBook(ctx, book)
 	}
@@ -28,7 +25,29 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 		keeper.SetParticipationExposure(ctx, pe)
 	}
 
+	for _, pe := range data.ParticipationExposureByIndexList {
+		keeper.SetParticipationExposureByIndex(ctx, pe)
+	}
+
+	for _, pe := range data.HistoricalParticipationExposureList {
+		keeper.SetHistoricalParticipationExposure(ctx, pe)
+	}
+
+	for _, pb := range data.ParticipationBetPairExposureList {
+		betID, found := keeper.BetKeeper.GetBetID(ctx, pb.BetUID)
+		if !found {
+			panic("bet uid %s of the participation bet pair list not found")
+		}
+		keeper.SetParticipationBetPair(ctx, pb, betID.ID)
+	}
+
+	for _, pl := range data.PayoutLock {
+		keeper.SetPayoutLock(ctx, string(pl))
+	}
+
 	keeper.SetOrderBookStats(ctx, data.Stats)
+
+	keeper.SetParams(ctx, data.Params)
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper. The
@@ -58,15 +77,27 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		panic(err)
 	}
 
+	genesis.ParticipationExposureByIndexList, err = k.GetAllParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.HistoricalParticipationExposureList, err = k.GetAllHistoricalParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.ParticipationBetPairExposureList, err = k.GetAllParticipationBetPair(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.PayoutLock, err = k.GetAllPayoutLock(ctx)
+	if err != nil {
+		panic(err)
+	}
+
 	genesis.Stats = k.GetOrderBookStats(ctx)
 
 	return genesis
-}
-
-// ValidateGenesis validates the provided orderbook genesis state to ensure the
-// expected invariants holds. (i.e. params in correct bounds)
-func ValidateGenesis(data *types.GenesisState) error {
-	// TODO
-
-	return data.Params.Validate()
 }

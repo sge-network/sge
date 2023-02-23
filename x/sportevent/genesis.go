@@ -9,12 +9,12 @@ import (
 // InitGenesis initializes the module's state from a provided genesis
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
-	k.SetSportEventStats(ctx, genState.Stats)
-
-	// Set all the sportEvent
+	// Set all the sport-events
 	for _, elem := range genState.SportEventList {
 		k.SetSportEvent(ctx, elem)
 	}
+
+	k.SetSportEventStats(ctx, genState.Stats)
 
 	k.SetParams(ctx, genState.Params)
 }

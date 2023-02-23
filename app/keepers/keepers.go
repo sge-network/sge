@@ -352,6 +352,7 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
 		appKeepers.BankKeeper,
 		appKeepers.AccountKeeper,
+		appKeepers.BetKeeper,
 	)
 	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
 

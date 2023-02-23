@@ -9,7 +9,7 @@ import (
 
 // SetWithdrawal sets a withdrawal.
 func (k Keeper) SetWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
-	withdrawalKey := types.GetWithdrawalKey(withdrawal.Creator, withdrawal.SportEventUID, withdrawal.ParticipationIndex, withdrawal.ID)
+	withdrawalKey := types.GetWithdrawalKey(withdrawal.DepositorAddress, withdrawal.SportEventUID, withdrawal.ParticipationIndex, withdrawal.ID)
 
 	store := k.getWithdrawalsStore(ctx)
 	b := k.cdc.MustMarshal(&withdrawal)

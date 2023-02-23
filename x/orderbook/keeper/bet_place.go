@@ -260,7 +260,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Create a unique lock in the Payout Store for the bet
-	k.setPayoutLock(ctx, betUID)
+	k.SetPayoutLock(ctx, betUID)
 
 	return betFulfillments, nil
 }

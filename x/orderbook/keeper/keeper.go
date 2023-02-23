@@ -18,11 +18,17 @@ type Keeper struct {
 	paramstore    paramtypes.Subspace
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
+	BetKeeper     types.BetKeeper
 }
 
 // NewKeeper creates a new orderbook Keeper instance
 func NewKeeper(
-	cdc codec.BinaryCodec, key sdk.StoreKey, ps paramtypes.Subspace, bnkKeeper types.BankKeeper, accKeeper types.AccountKeeper,
+	cdc codec.BinaryCodec,
+	key sdk.StoreKey,
+	ps paramtypes.Subspace,
+	bnkKeeper types.BankKeeper,
+	accKeeper types.AccountKeeper,
+	betKeeper types.BetKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -35,6 +41,7 @@ func NewKeeper(
 		paramstore:    ps,
 		bankKeeper:    bnkKeeper,
 		accountKeeper: accKeeper,
+		BetKeeper:     betKeeper,
 	}
 }
 

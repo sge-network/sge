@@ -92,6 +92,6 @@ func GetHistoricalParticipationExposureKey(bookID, oddsID string, index, round u
 }
 
 // GetParticipationBetPairKey creates the bond between participation and bet
-func GetParticipationBetPairKey(bookID string, bookParticipationNumber uint64, betID uint64) []byte {
-	return append(GetParticipationByIndexKey(bookID, bookParticipationNumber), utils.Uint64ToBytes(betID)...)
+func GetParticipationBetPairKey(bookID string, bookParticipationIndex uint64, betID uint64) []byte {
+	return append(GetParticipationByIndexKey(bookID, bookParticipationIndex), utils.Uint64ToBytes(betID)...)
 }

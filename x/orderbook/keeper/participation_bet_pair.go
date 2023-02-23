@@ -14,3 +14,21 @@ func (k Keeper) SetParticipationBetPair(ctx sdk.Context, bp types.ParticipationB
 	b := k.cdc.MustMarshal(&bp)
 	store.Set(bpKey, b)
 }
+
+// GetAllParticipationBetPair returns all participation bet pairs used during genesis dump.
+func (k Keeper) GetAllParticipationBetPair(ctx sdk.Context) (list []types.ParticipationBetPair, err error) {
+	store := k.getParticipationBetPairStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.ParticipationBetPair
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}

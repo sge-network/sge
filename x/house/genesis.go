@@ -39,11 +39,3 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 
 	return genesis
 }
-
-// ValidateGenesis validates the provided house genesis state to ensure the
-// expected invariants holds. (i.e. params in correct bounds, no duplicate deposits)
-func ValidateGenesis(data *types.GenesisState) error {
-	// TODO
-
-	return data.Params.Validate()
-}
