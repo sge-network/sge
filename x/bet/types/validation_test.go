@@ -110,8 +110,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				KycApproved: true,
-				KycID:       "creator",
+				Required: false,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrInvalidOddsUID,
 		},
@@ -124,8 +125,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				KycApproved: true,
-				KycID:       "creator",
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrInvalidSportEventUID,
 		},
@@ -138,8 +140,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				KycApproved: true,
-				KycID:       "creator",
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrEmptyOddsValue,
 		},
@@ -151,7 +154,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			err: types.ErrNoKycIDField,
 		},
 		{
 			desc: "no kyc ID field",
@@ -162,10 +164,11 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				KycApproved: true,
-				KycID:       "",
+				Required: true,
+				Approved: true,
+				ID:       "",
 			},
-			err: types.ErrNoKycIDField,
+			err: types.ErrUserKycFailed,
 		},
 		{
 			desc: "valid message",
@@ -176,17 +179,19 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				KycApproved: true,
-				KycID:       "creator",
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 		},
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := types.TicketFieldsValidation(&types.BetPlacementTicketPayload{
+			p := types.BetPlacementTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
-			})
+			}
+			err := p.Validate(testAddress)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

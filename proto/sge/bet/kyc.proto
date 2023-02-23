@@ -7,12 +7,14 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // KycDataPayload is the KYC info.
 message KycDataPayload {
-  // kyc_approved represent if kvc validation is approved or not.
-  bool kyc_approved = 1;
-  // kyc_id is the id of the kyc.
-  string kyc_id = 2 [
-    (gogoproto.customname) = "KycID",
-    (gogoproto.jsontag) = "kyc_id",
-    json_name = "kyc_id"
+  // approved is true if kyc validation is required.
+  bool required = 1;
+  // approved represent if kvc validation is approved or not.
+  bool approved = 2;
+  // id is the id of the kyc.
+  string id = 3 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id"
   ];
 }

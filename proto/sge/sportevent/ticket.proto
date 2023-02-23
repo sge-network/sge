@@ -46,7 +46,7 @@ message SportEventAddTicketPayload {
   ];
   // creator is the address of the creator of sport-event.
   string creator = 8;
-  
+
   // min_bet_amount is the minimum allowed bet amount for a sport-event.
   string min_bet_amount = 9 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
