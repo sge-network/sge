@@ -20,7 +20,8 @@ message Withdrawal {
   ];
 
   // depositorAddress is the bech32-encoded address of the depositor.
-  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
+  string depositor_address = 2
+      [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 
   // sport_event_uid is the uid of sport-event against which the deposit is
   // being made.

@@ -31,23 +31,24 @@ message GenesisState {
   repeated ParticipationExposure participation_exposure_list = 5
       [ (gogoproto.nullable) = false ];
 
-  // participation_exposure_by_index_list defines the participation exposures by index active at
-  // genesis.
+  // participation_exposure_by_index_list defines the participation exposures by
+  // index active at genesis.
   repeated ParticipationExposure participation_exposure_by_index_list = 6
       [ (gogoproto.nullable) = false ];
 
-    // historical_participation_exposure_list defines the historical participation exposures active at
+  // historical_participation_exposure_list defines the historical participation
+  // exposures active at
   // genesis.
   repeated ParticipationExposure historical_participation_exposure_list = 7
       [ (gogoproto.nullable) = false ];
 
-    // historical_participation_exposure_list defines the historical participation exposures active at
+  // historical_participation_exposure_list defines the historical participation
+  // exposures active at
   // genesis.
   repeated ParticipationBetPair participation_bet_pair_exposure_list = 8
-  [ (gogoproto.nullable) = false ];
+      [ (gogoproto.nullable) = false ];
 
-   repeated bytes payout_lock = 9
-    [ (gogoproto.nullable) = false ];
+  repeated bytes payout_lock = 9 [ (gogoproto.nullable) = false ];
 
   // stats is the statistics of the order-book
   OrderBookStats stats = 10 [ (gogoproto.nullable) = false ];

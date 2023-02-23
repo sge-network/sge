@@ -35,7 +35,7 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, 
 	}
 
 	// odds value should not be less than 1
-	if oddsDecVal.LT(sdk.NewDec(1)) {
+	if oddsDecVal.LTE(sdk.NewDec(1)) {
 		return sdk.ZeroInt(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}

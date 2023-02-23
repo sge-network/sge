@@ -30,40 +30,32 @@ message SportEventAddTicketPayload {
   ];
   // odds is the list of odds of the sport-event.
   repeated Odds odds = 4;
-  // winner_odds_uids is the list of winner odds universal unique identifiers.
-  repeated string winner_odds_uids = 5 [
-    (gogoproto.customname) = "WinnerOddsUIDs",
-    (gogoproto.jsontag) = "winner_odds_uids",
-    json_name = "winner_odds_uids"
-  ];
+
   // status is the current status of the sport-event.
-  SportEventStatus status = 6;
-  // resolution_ts is the timestamp of the resolution of sport-event.
-  uint64 resolution_ts = 7 [
-    (gogoproto.customname) = "ResolutionTS",
-    (gogoproto.jsontag) = "resolution_ts",
-    json_name = "resolution_ts"
-  ];
+  SportEventStatus status = 5;
+
   // creator is the address of the creator of sport-event.
-  string creator = 8;
+  string creator = 6;
 
   // min_bet_amount is the minimum allowed bet amount for a sport-event.
-  string min_bet_amount = 9 [
+  string min_bet_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
-  string bet_fee = 10 [
+  string bet_fee = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // active is the status of active or inactive sport-event.
-  bool active = 11;
+  bool active = 9;
   // meta contains human-readable metadata of the sport-event.
-  string meta = 12;
-  string sr_contribution_for_house = 13 [
+  string meta = 10;
+  // sr_contribution_for_house is the portion of payout that should be paid by
+  // sr
+  string sr_contribution_for_house = 11 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
     json_name = "sr_contribution_for_house",
