@@ -93,3 +93,19 @@ func validateMaxSRContribution(i interface{}) error {
 
 	return nil
 }
+
+// NewEventBetConstraints creates new bet constraint pointer
+func (p *Params) NewEventBetConstraints(minAmount, betFee sdk.Int) *EventBetConstraints {
+	if minAmount.IsNil() {
+		minAmount = p.EventMinBetAmount
+	}
+
+	if betFee.IsNil() {
+		betFee = p.EventMinBetFee
+	}
+
+	return &EventBetConstraints{
+		MinAmount: minAmount,
+		BetFee:    betFee,
+	}
+}

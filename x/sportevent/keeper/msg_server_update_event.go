@@ -37,7 +37,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	// replace current data with payload values
 	currentData.StartTS = updatePayload.StartTS
 	currentData.EndTS = updatePayload.EndTS
-	currentData.BetConstraints = updatePayload.GetBetConstraints()
+	currentData.BetConstraints = params.NewEventBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
 	currentData.Active = updatePayload.Active
 
 	// the update event is successful so update the module state

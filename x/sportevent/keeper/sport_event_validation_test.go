@@ -17,6 +17,9 @@ func TestValidateCreationEvent(t *testing.T) {
 	t1 := time.Now()
 	params := k.GetParams(wctx)
 
+	negativeBetAmount := sdk.NewInt(-5)
+	lowerBetAmount := params.EventMinBetAmount.Sub(sdk.NewInt(5))
+
 	tests := []struct {
 		name string
 		msg  types.SportEventAddTicketPayload
@@ -121,7 +124,7 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{MinAmount: sdk.NewInt(-5)},
+				MinBetAmount: negativeBetAmount,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -136,7 +139,7 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5))},
+				MinBetAmount: lowerBetAmount,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -151,10 +154,8 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMinBetAmount,
-					BetFee:    params.EventMinBetFee,
-				},
+				MinBetAmount:           params.EventMinBetAmount,
+				BetFee:                 params.EventMinBetFee,
 				Meta:                   "Winner of x:y",
 				SrContributionForHouse: sdk.NewInt(2),
 				Status:                 types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
@@ -297,6 +298,9 @@ func TestUpdateEventValidation(t *testing.T) {
 
 	t1 := time.Now()
 
+	negativeBetAmount := sdk.NewInt(-5)
+	lowerBetAmount := params.EventMinBetAmount.Sub(sdk.NewInt(5))
+
 	sportEvent := types.SportEvent{
 		Creator: sample.AccAddress(),
 		StartTS: uint64(t1.Add(time.Minute).Unix()),
@@ -340,26 +344,22 @@ func TestUpdateEventValidation(t *testing.T) {
 		{
 			name: "invalid min amount, negative",
 			msg: types.SportEventUpdateTicketPayload{
-				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: sdk.NewInt(-5),
-					BetFee:    params.EventMinBetFee,
-				},
+				UID:          uuid.NewString(),
+				StartTS:      uint64(t1.Add(time.Minute).Unix()),
+				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
+				MinBetAmount: negativeBetAmount,
+				BetFee:       params.EventMinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid min amount, less than required",
 			msg: types.SportEventUpdateTicketPayload{
-				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
-					BetFee:    params.EventMinBetFee,
-				},
+				UID:          uuid.NewString(),
+				StartTS:      uint64(t1.Add(time.Minute).Unix()),
+				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
+				MinBetAmount: lowerBetAmount,
+				BetFee:       params.EventMinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},

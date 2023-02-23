@@ -55,7 +55,7 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		oddsSet[o.UID] = Odds{}
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err
@@ -75,7 +75,7 @@ func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Param
 		return err
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err

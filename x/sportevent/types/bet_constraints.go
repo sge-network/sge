@@ -1,17 +1,8 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
-
-// NewEventBetConstraints creates new bet constraint pointer
-func NewEventBetConstraints(minAmount, betFee sdk.Int) *EventBetConstraints {
-	return &EventBetConstraints{
-		MinAmount: minAmount,
-		BetFee:    betFee,
-	}
-}
 
 // validate validates the bet constraints
 func (bc *EventBetConstraints) validate(params *Params) error {
