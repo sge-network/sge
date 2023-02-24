@@ -232,26 +232,27 @@ func (m *QueryOrderBookResponse) GetOrderbook() OrderBook {
 	return OrderBook{}
 }
 
-// QueryBookParticipantsRequest is request type for the Query/BookParticipants RPC method
-type QueryBookParticipantsRequest struct {
+// QueryBookParticipationsRequest is request type for the
+// Query/BookParticipations RPC method
+type QueryBookParticipationsRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
 	// pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookParticipantsRequest) Reset()         { *m = QueryBookParticipantsRequest{} }
-func (m *QueryBookParticipantsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipantsRequest) ProtoMessage()    {}
-func (*QueryBookParticipantsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryBookParticipationsRequest) Reset()         { *m = QueryBookParticipationsRequest{} }
+func (m *QueryBookParticipationsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBookParticipationsRequest) ProtoMessage()    {}
+func (*QueryBookParticipationsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{4}
 }
-func (m *QueryBookParticipantsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryBookParticipationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipantsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryBookParticipationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipantsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryBookParticipationsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -261,51 +262,52 @@ func (m *QueryBookParticipantsRequest) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipantsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipantsRequest.Merge(m, src)
+func (m *QueryBookParticipationsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBookParticipationsRequest.Merge(m, src)
 }
-func (m *QueryBookParticipantsRequest) XXX_Size() int {
+func (m *QueryBookParticipationsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipantsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipantsRequest.DiscardUnknown(m)
+func (m *QueryBookParticipationsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBookParticipationsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipantsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryBookParticipationsRequest proto.InternalMessageInfo
 
-func (m *QueryBookParticipantsRequest) GetBookId() string {
+func (m *QueryBookParticipationsRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryBookParticipantsRequest) GetPagination() *query.PageRequest {
+func (m *QueryBookParticipationsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookParticipantsResponse is response type for the Query/BookParticipants RPC method
-type QueryBookParticipantsResponse struct {
-	BookParticipants []BookParticipant `protobuf:"bytes,1,rep,name=book_participants,json=bookParticipants,proto3" json:"book_participants"`
+// QueryBookParticipationsResponse is response type for the
+// Query/BookParticipations RPC method
+type QueryBookParticipationsResponse struct {
+	BookParticipations []BookParticipation `protobuf:"bytes,1,rep,name=book_participations,json=bookParticipations,proto3" json:"book_participations"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookParticipantsResponse) Reset()         { *m = QueryBookParticipantsResponse{} }
-func (m *QueryBookParticipantsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipantsResponse) ProtoMessage()    {}
-func (*QueryBookParticipantsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryBookParticipationsResponse) Reset()         { *m = QueryBookParticipationsResponse{} }
+func (m *QueryBookParticipationsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBookParticipationsResponse) ProtoMessage()    {}
+func (*QueryBookParticipationsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{5}
 }
-func (m *QueryBookParticipantsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryBookParticipationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipantsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryBookParticipationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipantsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryBookParticipationsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -315,52 +317,53 @@ func (m *QueryBookParticipantsResponse) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipantsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipantsResponse.Merge(m, src)
+func (m *QueryBookParticipationsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBookParticipationsResponse.Merge(m, src)
 }
-func (m *QueryBookParticipantsResponse) XXX_Size() int {
+func (m *QueryBookParticipationsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipantsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipantsResponse.DiscardUnknown(m)
+func (m *QueryBookParticipationsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBookParticipationsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipantsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryBookParticipationsResponse proto.InternalMessageInfo
 
-func (m *QueryBookParticipantsResponse) GetBookParticipants() []BookParticipant {
+func (m *QueryBookParticipationsResponse) GetBookParticipations() []BookParticipation {
 	if m != nil {
-		return m.BookParticipants
+		return m.BookParticipations
 	}
 	return nil
 }
 
-func (m *QueryBookParticipantsResponse) GetPagination() *query.PageResponse {
+func (m *QueryBookParticipationsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookParticipantRequest is request type for the Query/BookParticipant RPC method
-type QueryBookParticipantRequest struct {
+// QueryBookParticipationRequest is request type for the Query/BookParticipation
+// RPC method
+type QueryBookParticipationRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
-	// participant_number defines the participant number to query for
-	ParticipantNumber uint64 `protobuf:"varint,2,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty"`
+	// participation_index defines the participation index to query for
+	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 }
 
-func (m *QueryBookParticipantRequest) Reset()         { *m = QueryBookParticipantRequest{} }
-func (m *QueryBookParticipantRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipantRequest) ProtoMessage()    {}
-func (*QueryBookParticipantRequest) Descriptor() ([]byte, []int) {
+func (m *QueryBookParticipationRequest) Reset()         { *m = QueryBookParticipationRequest{} }
+func (m *QueryBookParticipationRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBookParticipationRequest) ProtoMessage()    {}
+func (*QueryBookParticipationRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{6}
 }
-func (m *QueryBookParticipantRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryBookParticipationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipantRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryBookParticipationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipantRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryBookParticipationRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -370,50 +373,51 @@ func (m *QueryBookParticipantRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipantRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipantRequest.Merge(m, src)
+func (m *QueryBookParticipationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBookParticipationRequest.Merge(m, src)
 }
-func (m *QueryBookParticipantRequest) XXX_Size() int {
+func (m *QueryBookParticipationRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipantRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipantRequest.DiscardUnknown(m)
+func (m *QueryBookParticipationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBookParticipationRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipantRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryBookParticipationRequest proto.InternalMessageInfo
 
-func (m *QueryBookParticipantRequest) GetBookId() string {
+func (m *QueryBookParticipationRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryBookParticipantRequest) GetParticipantNumber() uint64 {
+func (m *QueryBookParticipationRequest) GetParticipationIndex() uint64 {
 	if m != nil {
-		return m.ParticipantNumber
+		return m.ParticipationIndex
 	}
 	return 0
 }
 
-// QueryBookParticipantResponse is response type for the Query/BookParticipant RPC method
-type QueryBookParticipantResponse struct {
-	// book_participant defines the the book participant info.
-	BookParticipant BookParticipant `protobuf:"bytes,1,opt,name=book_participant,json=bookParticipant,proto3" json:"book_participant"`
+// QueryBookParticipationResponse is response type for the
+// Query/BookParticipation RPC method
+type QueryBookParticipationResponse struct {
+	// book_participation defines the the book participation info.
+	BookParticipation BookParticipation `protobuf:"bytes,1,opt,name=book_participation,json=bookParticipation,proto3" json:"book_participation"`
 }
 
-func (m *QueryBookParticipantResponse) Reset()         { *m = QueryBookParticipantResponse{} }
-func (m *QueryBookParticipantResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipantResponse) ProtoMessage()    {}
-func (*QueryBookParticipantResponse) Descriptor() ([]byte, []int) {
+func (m *QueryBookParticipationResponse) Reset()         { *m = QueryBookParticipationResponse{} }
+func (m *QueryBookParticipationResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBookParticipationResponse) ProtoMessage()    {}
+func (*QueryBookParticipationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{7}
 }
-func (m *QueryBookParticipantResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryBookParticipationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipantResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryBookParticipationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipantResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryBookParticipationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -423,26 +427,27 @@ func (m *QueryBookParticipantResponse) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipantResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipantResponse.Merge(m, src)
+func (m *QueryBookParticipationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBookParticipationResponse.Merge(m, src)
 }
-func (m *QueryBookParticipantResponse) XXX_Size() int {
+func (m *QueryBookParticipationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipantResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipantResponse.DiscardUnknown(m)
+func (m *QueryBookParticipationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBookParticipationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipantResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryBookParticipationResponse proto.InternalMessageInfo
 
-func (m *QueryBookParticipantResponse) GetBookParticipant() BookParticipant {
+func (m *QueryBookParticipationResponse) GetBookParticipation() BookParticipation {
 	if m != nil {
-		return m.BookParticipant
+		return m.BookParticipation
 	}
-	return BookParticipant{}
+	return BookParticipation{}
 }
 
-// QueryBookExposuresRequest is request type for the Query/BookExposures RPC method
+// QueryBookExposuresRequest is request type for the Query/BookExposures RPC
+// method
 type QueryBookExposuresRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
@@ -497,7 +502,8 @@ func (m *QueryBookExposuresRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryBookExposuresResponse is response type for the Query/BookExposures RPC method
+// QueryBookExposuresResponse is response type for the Query/BookExposures RPC
+// method
 type QueryBookExposuresResponse struct {
 	BookExposures []BookOddsExposure `protobuf:"bytes,1,rep,name=book_exposures,json=bookExposures,proto3" json:"book_exposures"`
 	// pagination defines the pagination in the response.
@@ -551,12 +557,13 @@ func (m *QueryBookExposuresResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryBookExposureRequest is request type for the Query/BookExposure RPC method
+// QueryBookExposureRequest is request type for the Query/BookExposure RPC
+// method
 type QueryBookExposureRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
-	// odds_id defines the odds id to query for.
-	OddsId string `protobuf:"bytes,2,opt,name=odds_id,json=oddsId,proto3" json:"odds_id,omitempty"`
+	// odds_uid defines the odds id to query for.
+	OddsUid string `protobuf:"bytes,2,opt,name=odds_uid,json=oddsUid,proto3" json:"odds_uid,omitempty"`
 }
 
 func (m *QueryBookExposureRequest) Reset()         { *m = QueryBookExposureRequest{} }
@@ -599,14 +606,15 @@ func (m *QueryBookExposureRequest) GetBookId() string {
 	return ""
 }
 
-func (m *QueryBookExposureRequest) GetOddsId() string {
+func (m *QueryBookExposureRequest) GetOddsUid() string {
 	if m != nil {
-		return m.OddsId
+		return m.OddsUid
 	}
 	return ""
 }
 
-// QueryBookExposureResponse is response type for the Query/BookExposure RPC method
+// QueryBookExposureResponse is response type for the Query/BookExposure RPC
+// method
 type QueryBookExposureResponse struct {
 	// book_exposure defines the the book exposure info.
 	BookExposure BookOddsExposure `protobuf:"bytes,1,opt,name=book_exposure,json=bookExposure,proto3" json:"book_exposure"`
@@ -652,26 +660,27 @@ func (m *QueryBookExposureResponse) GetBookExposure() BookOddsExposure {
 	return BookOddsExposure{}
 }
 
-// QueryParticipantExposuresRequest is request type for the Query/ParticipantExposures RPC method
-type QueryParticipantExposuresRequest struct {
+// QueryParticipationExposuresRequest is request type for the
+// Query/ParticipationExposures RPC method
+type QueryParticipationExposuresRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
 	// pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantExposuresRequest) Reset()         { *m = QueryParticipantExposuresRequest{} }
-func (m *QueryParticipantExposuresRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantExposuresRequest) ProtoMessage()    {}
-func (*QueryParticipantExposuresRequest) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationExposuresRequest) Reset()         { *m = QueryParticipationExposuresRequest{} }
+func (m *QueryParticipationExposuresRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationExposuresRequest) ProtoMessage()    {}
+func (*QueryParticipationExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{12}
 }
-func (m *QueryParticipantExposuresRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantExposuresRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationExposuresRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -681,51 +690,52 @@ func (m *QueryParticipantExposuresRequest) XXX_Marshal(b []byte, deterministic b
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantExposuresRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantExposuresRequest.Merge(m, src)
+func (m *QueryParticipationExposuresRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationExposuresRequest.Merge(m, src)
 }
-func (m *QueryParticipantExposuresRequest) XXX_Size() int {
+func (m *QueryParticipationExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantExposuresRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantExposuresRequest.DiscardUnknown(m)
+func (m *QueryParticipationExposuresRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationExposuresRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantExposuresRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationExposuresRequest proto.InternalMessageInfo
 
-func (m *QueryParticipantExposuresRequest) GetBookId() string {
+func (m *QueryParticipationExposuresRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryParticipantExposuresRequest) GetPagination() *query.PageRequest {
+func (m *QueryParticipationExposuresRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryParticipantExposuresResponse is response type for the Query/ParticipantExposures RPC method
-type QueryParticipantExposuresResponse struct {
-	ParticipantExposures []ParticipantExposure `protobuf:"bytes,1,rep,name=participant_exposures,json=participantExposures,proto3" json:"participant_exposures"`
+// QueryParticipationExposuresResponse is response type for the
+// Query/ParticipationExposures RPC method
+type QueryParticipationExposuresResponse struct {
+	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantExposuresResponse) Reset()         { *m = QueryParticipantExposuresResponse{} }
-func (m *QueryParticipantExposuresResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantExposuresResponse) ProtoMessage()    {}
-func (*QueryParticipantExposuresResponse) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationExposuresResponse) Reset()         { *m = QueryParticipationExposuresResponse{} }
+func (m *QueryParticipationExposuresResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationExposuresResponse) ProtoMessage()    {}
+func (*QueryParticipationExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{13}
 }
-func (m *QueryParticipantExposuresResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantExposuresResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationExposuresResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -735,53 +745,54 @@ func (m *QueryParticipantExposuresResponse) XXX_Marshal(b []byte, deterministic 
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantExposuresResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantExposuresResponse.Merge(m, src)
+func (m *QueryParticipationExposuresResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationExposuresResponse.Merge(m, src)
 }
-func (m *QueryParticipantExposuresResponse) XXX_Size() int {
+func (m *QueryParticipationExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantExposuresResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantExposuresResponse.DiscardUnknown(m)
+func (m *QueryParticipationExposuresResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationExposuresResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantExposuresResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationExposuresResponse proto.InternalMessageInfo
 
-func (m *QueryParticipantExposuresResponse) GetParticipantExposures() []ParticipantExposure {
+func (m *QueryParticipationExposuresResponse) GetParticipationExposures() []ParticipationExposure {
 	if m != nil {
-		return m.ParticipantExposures
+		return m.ParticipationExposures
 	}
 	return nil
 }
 
-func (m *QueryParticipantExposuresResponse) GetPagination() *query.PageResponse {
+func (m *QueryParticipationExposuresResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryParticipantExposureRequest is request type for the Query/ParticipantExposure RPC method
-type QueryParticipantExposureRequest struct {
+// QueryParticipationExposureRequest is request type for the
+// Query/ParticipationExposure RPC method
+type QueryParticipationExposureRequest struct {
 	// book_id defines the book id to query for.
-	BookId            string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
-	ParticipantNumber uint64 `protobuf:"varint,2,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty"`
+	BookId             string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
+	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantExposureRequest) Reset()         { *m = QueryParticipantExposureRequest{} }
-func (m *QueryParticipantExposureRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantExposureRequest) ProtoMessage()    {}
-func (*QueryParticipantExposureRequest) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationExposureRequest) Reset()         { *m = QueryParticipationExposureRequest{} }
+func (m *QueryParticipationExposureRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationExposureRequest) ProtoMessage()    {}
+func (*QueryParticipationExposureRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{14}
 }
-func (m *QueryParticipantExposureRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationExposureRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantExposureRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationExposureRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -791,59 +802,60 @@ func (m *QueryParticipantExposureRequest) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantExposureRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantExposureRequest.Merge(m, src)
+func (m *QueryParticipationExposureRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationExposureRequest.Merge(m, src)
 }
-func (m *QueryParticipantExposureRequest) XXX_Size() int {
+func (m *QueryParticipationExposureRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantExposureRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantExposureRequest.DiscardUnknown(m)
+func (m *QueryParticipationExposureRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationExposureRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantExposureRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationExposureRequest proto.InternalMessageInfo
 
-func (m *QueryParticipantExposureRequest) GetBookId() string {
+func (m *QueryParticipationExposureRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryParticipantExposureRequest) GetParticipantNumber() uint64 {
+func (m *QueryParticipationExposureRequest) GetParticipationIndex() uint64 {
 	if m != nil {
-		return m.ParticipantNumber
+		return m.ParticipationIndex
 	}
 	return 0
 }
 
-func (m *QueryParticipantExposureRequest) GetPagination() *query.PageRequest {
+func (m *QueryParticipationExposureRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryParticipantExposureResponse is response type for the Query/ParticipantExposure RPC method
-type QueryParticipantExposureResponse struct {
+// QueryParticipationExposureResponse is response type for the
+// Query/ParticipationExposure RPC method
+type QueryParticipationExposureResponse struct {
 	// book_exposure defines the the book exposure info.
-	ParticipantExposure []ParticipantExposure `protobuf:"bytes,1,rep,name=participant_exposure,json=participantExposure,proto3" json:"participant_exposure"`
+	ParticipationExposure []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposure,json=participationExposure,proto3" json:"participation_exposure"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantExposureResponse) Reset()         { *m = QueryParticipantExposureResponse{} }
-func (m *QueryParticipantExposureResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantExposureResponse) ProtoMessage()    {}
-func (*QueryParticipantExposureResponse) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationExposureResponse) Reset()         { *m = QueryParticipationExposureResponse{} }
+func (m *QueryParticipationExposureResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationExposureResponse) ProtoMessage()    {}
+func (*QueryParticipationExposureResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{15}
 }
-func (m *QueryParticipantExposureResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationExposureResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantExposureResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationExposureResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -853,56 +865,57 @@ func (m *QueryParticipantExposureResponse) XXX_Marshal(b []byte, deterministic b
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantExposureResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantExposureResponse.Merge(m, src)
+func (m *QueryParticipationExposureResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationExposureResponse.Merge(m, src)
 }
-func (m *QueryParticipantExposureResponse) XXX_Size() int {
+func (m *QueryParticipationExposureResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantExposureResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantExposureResponse.DiscardUnknown(m)
+func (m *QueryParticipationExposureResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationExposureResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantExposureResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationExposureResponse proto.InternalMessageInfo
 
-func (m *QueryParticipantExposureResponse) GetParticipantExposure() []ParticipantExposure {
+func (m *QueryParticipationExposureResponse) GetParticipationExposure() []ParticipationExposure {
 	if m != nil {
-		return m.ParticipantExposure
+		return m.ParticipationExposure
 	}
 	return nil
 }
 
-func (m *QueryParticipantExposureResponse) GetPagination() *query.PageResponse {
+func (m *QueryParticipationExposureResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryHistoricalParticipantExposuresRequest is request type for the Query/HistoricalParticipantExposures RPC method
-type QueryHistoricalParticipantExposuresRequest struct {
+// QueryHistoricalParticipationExposuresRequest is request type for the
+// Query/HistoricalParticipationExposures RPC method
+type QueryHistoricalParticipationExposuresRequest struct {
 	// book_id defines the book id to query for.
 	BookId string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
 	// pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) Reset() {
-	*m = QueryHistoricalParticipantExposuresRequest{}
+func (m *QueryHistoricalParticipationExposuresRequest) Reset() {
+	*m = QueryHistoricalParticipationExposuresRequest{}
 }
-func (m *QueryHistoricalParticipantExposuresRequest) String() string {
+func (m *QueryHistoricalParticipationExposuresRequest) String() string {
 	return proto.CompactTextString(m)
 }
-func (*QueryHistoricalParticipantExposuresRequest) ProtoMessage() {}
-func (*QueryHistoricalParticipantExposuresRequest) Descriptor() ([]byte, []int) {
+func (*QueryHistoricalParticipationExposuresRequest) ProtoMessage() {}
+func (*QueryHistoricalParticipationExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{16}
 }
-func (m *QueryHistoricalParticipantExposuresRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryHistoricalParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryHistoricalParticipantExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryHistoricalParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryHistoricalParticipantExposuresRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -912,55 +925,56 @@ func (m *QueryHistoricalParticipantExposuresRequest) XXX_Marshal(b []byte, deter
 		return b[:n], nil
 	}
 }
-func (m *QueryHistoricalParticipantExposuresRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryHistoricalParticipantExposuresRequest.Merge(m, src)
+func (m *QueryHistoricalParticipationExposuresRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.Merge(m, src)
 }
-func (m *QueryHistoricalParticipantExposuresRequest) XXX_Size() int {
+func (m *QueryHistoricalParticipationExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryHistoricalParticipantExposuresRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryHistoricalParticipantExposuresRequest.DiscardUnknown(m)
+func (m *QueryHistoricalParticipationExposuresRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryHistoricalParticipantExposuresRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryHistoricalParticipationExposuresRequest proto.InternalMessageInfo
 
-func (m *QueryHistoricalParticipantExposuresRequest) GetBookId() string {
+func (m *QueryHistoricalParticipationExposuresRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) GetPagination() *query.PageRequest {
+func (m *QueryHistoricalParticipationExposuresRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryHistoricalParticipantExposuresResponse is response type for the Query/HistoricalParticipantExposures RPC method
-type QueryHistoricalParticipantExposuresResponse struct {
-	ParticipantExposures []ParticipantExposure `protobuf:"bytes,1,rep,name=participant_exposures,json=participantExposures,proto3" json:"participant_exposures"`
+// QueryHistoricalParticipationExposuresResponse is response type for the
+// Query/HistoricalParticipationExposures RPC method
+type QueryHistoricalParticipationExposuresResponse struct {
+	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) Reset() {
-	*m = QueryHistoricalParticipantExposuresResponse{}
+func (m *QueryHistoricalParticipationExposuresResponse) Reset() {
+	*m = QueryHistoricalParticipationExposuresResponse{}
 }
-func (m *QueryHistoricalParticipantExposuresResponse) String() string {
+func (m *QueryHistoricalParticipationExposuresResponse) String() string {
 	return proto.CompactTextString(m)
 }
-func (*QueryHistoricalParticipantExposuresResponse) ProtoMessage() {}
-func (*QueryHistoricalParticipantExposuresResponse) Descriptor() ([]byte, []int) {
+func (*QueryHistoricalParticipationExposuresResponse) ProtoMessage() {}
+func (*QueryHistoricalParticipationExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{17}
 }
-func (m *QueryHistoricalParticipantExposuresResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryHistoricalParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryHistoricalParticipantExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryHistoricalParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryHistoricalParticipantExposuresResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -970,53 +984,56 @@ func (m *QueryHistoricalParticipantExposuresResponse) XXX_Marshal(b []byte, dete
 		return b[:n], nil
 	}
 }
-func (m *QueryHistoricalParticipantExposuresResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryHistoricalParticipantExposuresResponse.Merge(m, src)
+func (m *QueryHistoricalParticipationExposuresResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.Merge(m, src)
 }
-func (m *QueryHistoricalParticipantExposuresResponse) XXX_Size() int {
+func (m *QueryHistoricalParticipationExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryHistoricalParticipantExposuresResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryHistoricalParticipantExposuresResponse.DiscardUnknown(m)
+func (m *QueryHistoricalParticipationExposuresResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryHistoricalParticipantExposuresResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryHistoricalParticipationExposuresResponse proto.InternalMessageInfo
 
-func (m *QueryHistoricalParticipantExposuresResponse) GetParticipantExposures() []ParticipantExposure {
+func (m *QueryHistoricalParticipationExposuresResponse) GetParticipationExposures() []ParticipationExposure {
 	if m != nil {
-		return m.ParticipantExposures
+		return m.ParticipationExposures
 	}
 	return nil
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) GetPagination() *query.PageResponse {
+func (m *QueryHistoricalParticipationExposuresResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryParticipantFullfilledBetsRequest is request type for the Query/ParticipantFullfilledBets RPC method
-type QueryParticipantFullfilledBetsRequest struct {
+// QueryParticipationFulfilledBetsRequest is request type for the
+// Query/ParticipationFulfilledBets RPC method
+type QueryParticipationFulfilledBetsRequest struct {
 	// book_id defines the book id to query for.
-	BookId            string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
-	ParticipantNumber uint64 `protobuf:"varint,2,opt,name=participant_number,json=participantNumber,proto3" json:"participant_number,omitempty"`
+	BookId             string `protobuf:"bytes,1,opt,name=book_id,json=bookId,proto3" json:"book_id,omitempty"`
+	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) Reset()         { *m = QueryParticipantFullfilledBetsRequest{} }
-func (m *QueryParticipantFullfilledBetsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantFullfilledBetsRequest) ProtoMessage()    {}
-func (*QueryParticipantFullfilledBetsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationFulfilledBetsRequest) Reset() {
+	*m = QueryParticipationFulfilledBetsRequest{}
+}
+func (m *QueryParticipationFulfilledBetsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationFulfilledBetsRequest) ProtoMessage()    {}
+func (*QueryParticipationFulfilledBetsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{18}
 }
-func (m *QueryParticipantFullfilledBetsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationFulfilledBetsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantFullfilledBetsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationFulfilledBetsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantFullfilledBetsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationFulfilledBetsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1026,61 +1043,62 @@ func (m *QueryParticipantFullfilledBetsRequest) XXX_Marshal(b []byte, determinis
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantFullfilledBetsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantFullfilledBetsRequest.Merge(m, src)
+func (m *QueryParticipationFulfilledBetsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationFulfilledBetsRequest.Merge(m, src)
 }
-func (m *QueryParticipantFullfilledBetsRequest) XXX_Size() int {
+func (m *QueryParticipationFulfilledBetsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantFullfilledBetsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantFullfilledBetsRequest.DiscardUnknown(m)
+func (m *QueryParticipationFulfilledBetsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationFulfilledBetsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantFullfilledBetsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationFulfilledBetsRequest proto.InternalMessageInfo
 
-func (m *QueryParticipantFullfilledBetsRequest) GetBookId() string {
+func (m *QueryParticipationFulfilledBetsRequest) GetBookId() string {
 	if m != nil {
 		return m.BookId
 	}
 	return ""
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) GetParticipantNumber() uint64 {
+func (m *QueryParticipationFulfilledBetsRequest) GetParticipationIndex() uint64 {
 	if m != nil {
-		return m.ParticipantNumber
+		return m.ParticipationIndex
 	}
 	return 0
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) GetPagination() *query.PageRequest {
+func (m *QueryParticipationFulfilledBetsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryParticipantFullfilledBetsResponse is response type for the Query/ParticipantFullfilledBets RPC method
-type QueryParticipantFullfilledBetsResponse struct {
+// QueryParticipationFulfilledBetsResponse is response type for the
+// Query/ParticipationFulfilledBets RPC method
+type QueryParticipationFulfilledBetsResponse struct {
 	// book_exposure defines the the book exposure info.
-	ParticipantBets []ParticipantBetPairResponse `protobuf:"bytes,1,rep,name=participant_bets,json=participantBets,proto3" json:"participant_bets"`
+	ParticipationBets []ParticipationBetPair `protobuf:"bytes,1,rep,name=participation_bets,json=participationBets,proto3" json:"participation_bets"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) Reset() {
-	*m = QueryParticipantFullfilledBetsResponse{}
+func (m *QueryParticipationFulfilledBetsResponse) Reset() {
+	*m = QueryParticipationFulfilledBetsResponse{}
 }
-func (m *QueryParticipantFullfilledBetsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipantFullfilledBetsResponse) ProtoMessage()    {}
-func (*QueryParticipantFullfilledBetsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryParticipationFulfilledBetsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryParticipationFulfilledBetsResponse) ProtoMessage()    {}
+func (*QueryParticipationFulfilledBetsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{19}
 }
-func (m *QueryParticipantFullfilledBetsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryParticipationFulfilledBetsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryParticipantFullfilledBetsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryParticipationFulfilledBetsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryParticipantFullfilledBetsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryParticipationFulfilledBetsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -1090,26 +1108,26 @@ func (m *QueryParticipantFullfilledBetsResponse) XXX_Marshal(b []byte, determini
 		return b[:n], nil
 	}
 }
-func (m *QueryParticipantFullfilledBetsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipantFullfilledBetsResponse.Merge(m, src)
+func (m *QueryParticipationFulfilledBetsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryParticipationFulfilledBetsResponse.Merge(m, src)
 }
-func (m *QueryParticipantFullfilledBetsResponse) XXX_Size() int {
+func (m *QueryParticipationFulfilledBetsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryParticipantFullfilledBetsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipantFullfilledBetsResponse.DiscardUnknown(m)
+func (m *QueryParticipationFulfilledBetsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryParticipationFulfilledBetsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryParticipantFullfilledBetsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryParticipationFulfilledBetsResponse proto.InternalMessageInfo
 
-func (m *QueryParticipantFullfilledBetsResponse) GetParticipantBets() []ParticipantBetPairResponse {
+func (m *QueryParticipationFulfilledBetsResponse) GetParticipationBets() []ParticipationBetPair {
 	if m != nil {
-		return m.ParticipantBets
+		return m.ParticipationBets
 	}
 	return nil
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) GetPagination() *query.PageResponse {
+func (m *QueryParticipationFulfilledBetsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -1121,96 +1139,97 @@ func init() {
 	proto.RegisterType((*QueryOrderBooksResponse)(nil), "sgenetwork.sge.orderbook.QueryOrderBooksResponse")
 	proto.RegisterType((*QueryOrderBookRequest)(nil), "sgenetwork.sge.orderbook.QueryOrderBookRequest")
 	proto.RegisterType((*QueryOrderBookResponse)(nil), "sgenetwork.sge.orderbook.QueryOrderBookResponse")
-	proto.RegisterType((*QueryBookParticipantsRequest)(nil), "sgenetwork.sge.orderbook.QueryBookParticipantsRequest")
-	proto.RegisterType((*QueryBookParticipantsResponse)(nil), "sgenetwork.sge.orderbook.QueryBookParticipantsResponse")
-	proto.RegisterType((*QueryBookParticipantRequest)(nil), "sgenetwork.sge.orderbook.QueryBookParticipantRequest")
-	proto.RegisterType((*QueryBookParticipantResponse)(nil), "sgenetwork.sge.orderbook.QueryBookParticipantResponse")
+	proto.RegisterType((*QueryBookParticipationsRequest)(nil), "sgenetwork.sge.orderbook.QueryBookParticipationsRequest")
+	proto.RegisterType((*QueryBookParticipationsResponse)(nil), "sgenetwork.sge.orderbook.QueryBookParticipationsResponse")
+	proto.RegisterType((*QueryBookParticipationRequest)(nil), "sgenetwork.sge.orderbook.QueryBookParticipationRequest")
+	proto.RegisterType((*QueryBookParticipationResponse)(nil), "sgenetwork.sge.orderbook.QueryBookParticipationResponse")
 	proto.RegisterType((*QueryBookExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryBookExposuresRequest")
 	proto.RegisterType((*QueryBookExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryBookExposuresResponse")
 	proto.RegisterType((*QueryBookExposureRequest)(nil), "sgenetwork.sge.orderbook.QueryBookExposureRequest")
 	proto.RegisterType((*QueryBookExposureResponse)(nil), "sgenetwork.sge.orderbook.QueryBookExposureResponse")
-	proto.RegisterType((*QueryParticipantExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipantExposuresRequest")
-	proto.RegisterType((*QueryParticipantExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipantExposuresResponse")
-	proto.RegisterType((*QueryParticipantExposureRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipantExposureRequest")
-	proto.RegisterType((*QueryParticipantExposureResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipantExposureResponse")
-	proto.RegisterType((*QueryHistoricalParticipantExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipantExposuresRequest")
-	proto.RegisterType((*QueryHistoricalParticipantExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipantExposuresResponse")
-	proto.RegisterType((*QueryParticipantFullfilledBetsRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipantFullfilledBetsRequest")
-	proto.RegisterType((*QueryParticipantFullfilledBetsResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipantFullfilledBetsResponse")
+	proto.RegisterType((*QueryParticipationExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposuresRequest")
+	proto.RegisterType((*QueryParticipationExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposuresResponse")
+	proto.RegisterType((*QueryParticipationExposureRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposureRequest")
+	proto.RegisterType((*QueryParticipationExposureResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposureResponse")
+	proto.RegisterType((*QueryHistoricalParticipationExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipationExposuresRequest")
+	proto.RegisterType((*QueryHistoricalParticipationExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipationExposuresResponse")
+	proto.RegisterType((*QueryParticipationFulfilledBetsRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationFulfilledBetsRequest")
+	proto.RegisterType((*QueryParticipationFulfilledBetsResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipationFulfilledBetsResponse")
 }
 
 func init() { proto.RegisterFile("sge/orderbook/query.proto", fileDescriptor_8b016841afa49a45) }
 
 var fileDescriptor_8b016841afa49a45 = []byte{
-	// 1081 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x98, 0xcf, 0x6f, 0xdc, 0x54,
-	0x10, 0xc7, 0xf3, 0xd2, 0xd2, 0x2a, 0xd3, 0x86, 0xa4, 0xaf, 0x69, 0xb3, 0x71, 0xdb, 0x6d, 0xea,
-	0xaa, 0x21, 0xa4, 0xac, 0x5f, 0x7e, 0xf4, 0x87, 0x48, 0x41, 0xa0, 0xa5, 0x4d, 0x89, 0x28, 0x34,
-	0x2c, 0x42, 0x48, 0x15, 0x52, 0x65, 0xc7, 0x2f, 0x8e, 0x95, 0xcd, 0x3e, 0xd7, 0xcf, 0x0b, 0x29,
-	0x21, 0x42, 0x82, 0x33, 0x12, 0xa8, 0x57, 0xee, 0x9c, 0x40, 0x42, 0x1c, 0xb8, 0x71, 0x03, 0xe5,
-	0x58, 0xa9, 0x12, 0xaa, 0x38, 0xa0, 0x2a, 0xe1, 0x1f, 0x40, 0xfc, 0x03, 0xc8, 0xcf, 0xcf, 0x8e,
-	0xd7, 0xb1, 0x77, 0xed, 0x64, 0xd5, 0x88, 0x9b, 0xbd, 0xb3, 0x33, 0xf3, 0xf9, 0xce, 0x8c, 0xed,
-	0xb1, 0x61, 0x84, 0x5b, 0x94, 0x30, 0xd7, 0xa4, 0xae, 0xc1, 0xd8, 0x0a, 0x79, 0xd0, 0xa4, 0xee,
-	0x43, 0xcd, 0x71, 0x99, 0xc7, 0x70, 0x89, 0x5b, 0xb4, 0x41, 0xbd, 0x4f, 0x99, 0xbb, 0xa2, 0x71,
-	0x8b, 0x6a, 0xd1, 0xbf, 0x94, 0x89, 0x45, 0xc6, 0x57, 0x19, 0x27, 0x86, 0xce, 0x69, 0xe0, 0x42,
-	0x3e, 0x99, 0x32, 0xa8, 0xa7, 0x4f, 0x11, 0x47, 0xb7, 0xec, 0x86, 0xee, 0xd9, 0xac, 0x11, 0x44,
-	0x51, 0x86, 0x2c, 0x66, 0x31, 0x71, 0x48, 0xfc, 0x23, 0xf9, 0xeb, 0x59, 0x8b, 0x31, 0xab, 0x4e,
-	0x89, 0xee, 0xd8, 0x44, 0x6f, 0x34, 0x98, 0x27, 0x5c, 0xb8, 0xb4, 0x9e, 0x6b, 0x85, 0x8a, 0x8e,
-	0x02, 0xb3, 0xba, 0x06, 0xa7, 0xdf, 0xf7, 0x93, 0xde, 0xf5, 0x7f, 0xaf, 0x32, 0xb6, 0xc2, 0x6b,
-	0xf4, 0x41, 0x93, 0x72, 0x0f, 0x9f, 0x86, 0x23, 0xdc, 0xd3, 0xbd, 0x26, 0x2f, 0xa1, 0x51, 0x34,
-	0xde, 0x57, 0x93, 0x67, 0x78, 0x0e, 0x60, 0x07, 0xac, 0xd4, 0x3b, 0x8a, 0xc6, 0x8f, 0x4d, 0x8f,
-	0x69, 0x81, 0x0a, 0xcd, 0x57, 0xa1, 0x05, 0xc2, 0xa5, 0x0a, 0x6d, 0x41, 0xb7, 0xa8, 0x8c, 0x59,
-	0x8b, 0x79, 0xaa, 0x3f, 0x20, 0x18, 0xde, 0x95, 0x9a, 0x3b, 0xac, 0xc1, 0x29, 0x9e, 0x07, 0x88,
-	0x40, 0xfd, 0xfc, 0x87, 0xc6, 0x8f, 0x4d, 0x5f, 0xd4, 0xb2, 0x6a, 0xa8, 0x45, 0x11, 0xaa, 0x87,
-	0x37, 0xff, 0x3a, 0xdf, 0x53, 0x8b, 0x39, 0xe3, 0xdb, 0x29, 0xb8, 0x2f, 0x75, 0xc4, 0x0d, 0x38,
-	0x5a, 0x78, 0x27, 0xe1, 0x54, 0x2b, 0x6e, 0x58, 0xa8, 0x61, 0x38, 0xea, 0xa7, 0xba, 0x6f, 0x9b,
-	0x61, 0xa5, 0xfc, 0xd3, 0x79, 0x53, 0xd5, 0x93, 0xb5, 0x8d, 0xf4, 0xdd, 0x86, 0xbe, 0x08, 0x51,
-	0x38, 0x15, 0x92, 0xb7, 0xe3, 0xab, 0x7e, 0x01, 0x67, 0x45, 0x0a, 0xdf, 0xba, 0xa0, 0xbb, 0x9e,
-	0xbd, 0x68, 0x3b, 0x7a, 0xc3, 0xe3, 0x9d, 0xd8, 0xba, 0xd6, 0xc5, 0xdf, 0x11, 0x9c, 0xcb, 0x20,
-	0x90, 0x5a, 0x3f, 0x86, 0x13, 0x02, 0xc1, 0x89, 0x19, 0x65, 0x4b, 0x5f, 0xce, 0xd6, 0x9c, 0x08,
-	0x27, 0x95, 0x0f, 0x1a, 0x89, 0x2c, 0xdd, 0x6b, 0x2f, 0x85, 0x33, 0x69, 0x3a, 0x3a, 0x16, 0xb2,
-	0x02, 0x38, 0xa6, 0xec, 0x7e, 0xa3, 0xb9, 0x6a, 0x50, 0x57, 0x80, 0x1c, 0xae, 0x9d, 0x88, 0x59,
-	0xde, 0x13, 0x06, 0xf5, 0xb3, 0xf4, 0x86, 0x45, 0xd5, 0xba, 0x07, 0x83, 0xc9, 0x6a, 0xc9, 0x01,
-	0x29, 0x5c, 0xac, 0x81, 0x44, 0xb1, 0xd4, 0xcf, 0x61, 0x24, 0xca, 0x7d, 0x6b, 0xcd, 0x61, 0xbc,
-	0xe9, 0xd2, 0xe7, 0x37, 0x29, 0xbf, 0x22, 0x50, 0xd2, 0xd2, 0x4b, 0xe1, 0x1f, 0xc1, 0x8b, 0x22,
-	0x3f, 0x0d, 0x2d, 0x72, 0x46, 0x26, 0xda, 0xcb, 0xbe, 0x6b, 0x9a, 0x3c, 0x0c, 0x26, 0x75, 0xf7,
-	0x1b, 0xf1, 0x04, 0xdd, 0x9b, 0x90, 0x3b, 0x50, 0xda, 0xc5, 0xdf, 0xb1, 0x7a, 0xc3, 0x70, 0x94,
-	0x99, 0x26, 0xf7, 0x0d, 0xbd, 0x81, 0xc1, 0x3f, 0x9d, 0x37, 0x55, 0x37, 0xa5, 0x19, 0x51, 0x31,
-	0x3e, 0x84, 0xfe, 0x96, 0x62, 0xc8, 0x11, 0x28, 0x5e, 0x8b, 0xe3, 0xf1, 0x5a, 0xa8, 0x5f, 0x21,
-	0x18, 0x15, 0x49, 0x63, 0x53, 0xf1, 0xfc, 0x07, 0xe1, 0x0f, 0x04, 0x17, 0xda, 0x50, 0xc8, 0x12,
-	0x2c, 0xc3, 0xa9, 0xf8, 0x75, 0x95, 0x1c, 0x8b, 0x4a, 0x76, 0x29, 0x52, 0xc2, 0xca, 0x6a, 0x0c,
-	0x39, 0x29, 0x19, 0xbb, 0x37, 0x20, 0x3f, 0x21, 0x38, 0x9f, 0x25, 0xac, 0xcb, 0xf7, 0x91, 0x44,
-	0x33, 0x0e, 0xed, 0xb9, 0x19, 0x4f, 0xda, 0x8c, 0x44, 0xd4, 0x8b, 0x25, 0x18, 0x4a, 0xeb, 0xc5,
-	0x7e, 0x5a, 0x71, 0x32, 0xa5, 0x15, 0xdd, 0xeb, 0xc4, 0xd7, 0x08, 0x26, 0x84, 0xaa, 0xb7, 0x6d,
-	0xee, 0x31, 0xd7, 0x5e, 0xd4, 0xeb, 0x07, 0x3a, 0xf2, 0xcf, 0x10, 0x5c, 0xce, 0xc5, 0xf3, 0xff,
-	0x1d, 0xfe, 0x5f, 0x10, 0x5c, 0x4a, 0x0e, 0xd2, 0x5c, 0xb3, 0x5e, 0x5f, 0xb2, 0xeb, 0x75, 0x6a,
-	0x56, 0x69, 0x8e, 0x9d, 0xe4, 0x80, 0x2e, 0x81, 0xa7, 0x08, 0xc6, 0x3a, 0x91, 0xcb, 0xbe, 0x50,
-	0x18, 0x8c, 0x13, 0x1a, 0x34, 0x5a, 0x65, 0xae, 0xe4, 0x6a, 0x49, 0x95, 0x7a, 0x0b, 0xba, 0xed,
-	0x86, 0xf1, 0xc2, 0x07, 0xb5, 0xd3, 0xf2, 0x8f, 0xee, 0x35, 0x65, 0xfa, 0xbb, 0x01, 0x78, 0x41,
-	0x48, 0xc3, 0x8f, 0x10, 0xc0, 0xce, 0xa2, 0x8d, 0x27, 0xb3, 0x71, 0xd3, 0x5f, 0x07, 0x94, 0xa9,
-	0x02, 0x1e, 0x01, 0x89, 0x3a, 0xfa, 0xe5, 0x93, 0xbf, 0x1f, 0xf5, 0x2a, 0xb8, 0x44, 0x5a, 0xde,
-	0x41, 0x38, 0x59, 0x0f, 0x5e, 0x25, 0x36, 0xf0, 0xb7, 0x08, 0xfa, 0x22, 0x47, 0x4c, 0xf2, 0xa6,
-	0x08, 0x99, 0x26, 0xf3, 0x3b, 0x48, 0xa4, 0x0b, 0x02, 0xe9, 0x0c, 0x1e, 0xd9, 0x85, 0x24, 0x47,
-	0x72, 0x03, 0xff, 0x8c, 0x60, 0x30, 0xb9, 0xcc, 0xe2, 0x6b, 0x1d, 0x32, 0x65, 0xec, 0xdf, 0xca,
-	0xf5, 0xc2, 0x7e, 0x12, 0x54, 0x13, 0xa0, 0xe3, 0x78, 0x2c, 0x13, 0x94, 0xc4, 0x17, 0x6a, 0xfc,
-	0x1b, 0x82, 0x81, 0x44, 0x30, 0x7c, 0xb5, 0x58, 0xf2, 0x90, 0xf9, 0x5a, 0x51, 0x37, 0x89, 0xfc,
-	0x96, 0x40, 0x7e, 0x1d, 0xdf, 0xc8, 0x87, 0x4c, 0xd6, 0x77, 0x5f, 0xec, 0x1b, 0xf8, 0x7b, 0x04,
-	0xfd, 0x2d, 0x0b, 0x22, 0x9e, 0xc9, 0x81, 0x93, 0xbc, 0xa3, 0x2b, 0x57, 0x8a, 0x39, 0x49, 0x05,
-	0x97, 0x85, 0x82, 0x4b, 0xf8, 0x62, 0xb6, 0x82, 0xe8, 0x56, 0x8c, 0x7f, 0x44, 0x70, 0x3c, 0x1e,
-	0x06, 0x4f, 0x17, 0xc8, 0x19, 0x72, 0xce, 0x14, 0xf2, 0x91, 0x98, 0x57, 0x05, 0x26, 0xc1, 0x95,
-	0x1c, 0x98, 0x64, 0x5d, 0xae, 0x9f, 0x1b, 0x78, 0x13, 0xc1, 0x50, 0xda, 0x53, 0x07, 0xcf, 0x76,
-	0x80, 0x68, 0xf3, 0xe8, 0x54, 0x6e, 0xec, 0xc9, 0x57, 0x0a, 0xb9, 0x2e, 0x84, 0x4c, 0x61, 0x92,
-	0x6b, 0x62, 0x2a, 0x3b, 0xb5, 0xff, 0x13, 0xc1, 0xc9, 0x94, 0xc8, 0xf8, 0xd5, 0xe2, 0x34, 0xa1,
-	0x90, 0xd9, 0xbd, 0xb8, 0x4a, 0x1d, 0x77, 0x84, 0x8e, 0x39, 0x7c, 0xb3, 0xa0, 0x8e, 0xf4, 0x4b,
-	0xe0, 0x1f, 0x04, 0xe5, 0xf6, 0x7b, 0x02, 0xbe, 0xd9, 0x01, 0x36, 0xd7, 0xda, 0xa3, 0xdc, 0xda,
-	0x67, 0x14, 0xa9, 0xbe, 0x2a, 0xd4, 0xbf, 0x86, 0x67, 0xb3, 0xd5, 0x2f, 0x47, 0x91, 0x2a, 0xe9,
-	0x0d, 0xfd, 0x17, 0xc1, 0x48, 0xe6, 0xe3, 0x17, 0xbf, 0x91, 0xbf, 0x37, 0xa9, 0x2b, 0x87, 0xf2,
-	0xe6, 0xde, 0x03, 0x48, 0x91, 0x1f, 0x08, 0x91, 0xef, 0xe2, 0x77, 0xf6, 0x71, 0x73, 0x23, 0x4b,
-	0x51, 0x6c, 0xb1, 0x3a, 0x54, 0xe7, 0x36, 0xb7, 0xca, 0xe8, 0xf1, 0x56, 0x19, 0x3d, 0xdb, 0x2a,
-	0xa3, 0x6f, 0xb6, 0xcb, 0x3d, 0x8f, 0xb7, 0xcb, 0x3d, 0x4f, 0xb7, 0xcb, 0x3d, 0xf7, 0x5e, 0xb1,
-	0x6c, 0x6f, 0xb9, 0x69, 0x68, 0x8b, 0x6c, 0xd5, 0x4f, 0x58, 0x91, 0xec, 0x22, 0xf9, 0x5a, 0xec,
-	0x73, 0x9e, 0xf7, 0xd0, 0xa1, 0xdc, 0x38, 0x22, 0xbe, 0xe5, 0xcd, 0xfc, 0x17, 0x00, 0x00, 0xff,
-	0xff, 0x63, 0x88, 0xf7, 0x6b, 0x81, 0x14, 0x00, 0x00,
+	// 1094 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x98, 0xc1, 0x6f, 0xdc, 0xc4,
+	0x17, 0xc7, 0x33, 0x6d, 0x7f, 0xed, 0x2f, 0xaf, 0x0d, 0xa8, 0xaf, 0x64, 0xb3, 0x31, 0xed, 0x36,
+	0x71, 0x44, 0x1b, 0xa5, 0x8d, 0xbd, 0x49, 0x10, 0xb4, 0x22, 0x54, 0x65, 0x05, 0x1b, 0x72, 0x80,
+	0x84, 0x95, 0x22, 0x24, 0x2e, 0xc1, 0xbb, 0x9e, 0xba, 0x56, 0xb6, 0x3b, 0xae, 0xc7, 0x0b, 0xa9,
+	0x42, 0x0e, 0x54, 0xe2, 0x0c, 0xa8, 0x7f, 0x04, 0x27, 0xc4, 0x89, 0x0b, 0x48, 0x9c, 0x7b, 0x40,
+	0x55, 0x24, 0x0e, 0x20, 0x21, 0x55, 0x28, 0xe1, 0xc0, 0x9f, 0x00, 0x37, 0xe4, 0xd9, 0xb1, 0xb3,
+	0x5e, 0xdb, 0x59, 0x7b, 0xb3, 0x2a, 0x70, 0xdb, 0xcd, 0xec, 0x7b, 0xef, 0xf3, 0xfd, 0xbe, 0x37,
+	0xe3, 0x71, 0x60, 0x92, 0x5b, 0x54, 0x67, 0xae, 0x49, 0xdd, 0x3a, 0x63, 0x5b, 0xfa, 0xfd, 0x36,
+	0x75, 0x1f, 0x68, 0x8e, 0xcb, 0x3c, 0x86, 0x45, 0x6e, 0xd1, 0x16, 0xf5, 0x3e, 0x66, 0xee, 0x96,
+	0xc6, 0x2d, 0xaa, 0x85, 0xbf, 0x52, 0xe6, 0x1a, 0x8c, 0xdf, 0x63, 0x5c, 0xaf, 0x1b, 0x9c, 0x76,
+	0x42, 0xf4, 0x8f, 0x16, 0xea, 0xd4, 0x33, 0x16, 0x74, 0xc7, 0xb0, 0xec, 0x96, 0xe1, 0xd9, 0xac,
+	0xd5, 0xc9, 0xa2, 0xbc, 0x60, 0x31, 0x8b, 0x89, 0x8f, 0xba, 0xff, 0x49, 0xfe, 0xf5, 0xa2, 0xc5,
+	0x98, 0xd5, 0xa4, 0xba, 0xe1, 0xd8, 0xba, 0xd1, 0x6a, 0x31, 0x4f, 0x84, 0x70, 0xb9, 0x7a, 0x29,
+	0x0a, 0x15, 0x7e, 0x92, 0xcb, 0xd3, 0xd1, 0x65, 0xc7, 0x70, 0x3d, 0xbb, 0x61, 0x3b, 0xdd, 0x55,
+	0x2f, 0x46, 0x7f, 0x42, 0xb7, 0x1d, 0xc6, 0xdb, 0x2e, 0xed, 0xac, 0xaa, 0xdb, 0x50, 0x78, 0xcf,
+	0xa7, 0x5e, 0xf3, 0x7f, 0x50, 0x61, 0x6c, 0x8b, 0xd7, 0xe8, 0xfd, 0x36, 0xe5, 0x1e, 0x16, 0xe0,
+	0x34, 0xf7, 0x0c, 0xaf, 0xcd, 0x8b, 0x64, 0x8a, 0xcc, 0x8e, 0xd6, 0xe4, 0x37, 0xac, 0x02, 0x1c,
+	0x2a, 0x2b, 0x9e, 0x98, 0x22, 0xb3, 0x67, 0x17, 0xaf, 0x68, 0x1d, 0x1b, 0x34, 0xdf, 0x06, 0xad,
+	0xe3, 0x9c, 0xb4, 0x41, 0x5b, 0x37, 0x2c, 0x2a, 0x73, 0xd6, 0xba, 0x22, 0xd5, 0xaf, 0x09, 0x4c,
+	0xc4, 0x4a, 0x73, 0x87, 0xb5, 0x38, 0xc5, 0x55, 0x80, 0x90, 0xd8, 0xaf, 0x7f, 0x72, 0xf6, 0xec,
+	0xe2, 0x8c, 0x96, 0xd6, 0x04, 0x2d, 0xcc, 0x50, 0x39, 0xf5, 0xf8, 0xe9, 0xe5, 0x91, 0x5a, 0x57,
+	0x30, 0xae, 0x24, 0xe0, 0x5e, 0xed, 0x8b, 0xdb, 0xe1, 0x88, 0xf0, 0x96, 0x61, 0x3c, 0x8a, 0x1b,
+	0x18, 0x35, 0x01, 0x67, 0xfc, 0x52, 0x9b, 0xb6, 0x19, 0x38, 0xe5, 0x7f, 0x5d, 0x35, 0x55, 0xa3,
+	0xd7, 0xdb, 0x50, 0xdf, 0x0a, 0x8c, 0x86, 0x88, 0x22, 0x28, 0x97, 0xbc, 0xc3, 0x58, 0xf5, 0x53,
+	0x02, 0x25, 0x51, 0xc3, 0x5f, 0x5e, 0xef, 0xee, 0x3e, 0xef, 0x87, 0x37, 0xb4, 0x46, 0x3e, 0x21,
+	0x70, 0x39, 0x95, 0x41, 0x0a, 0xae, 0xc3, 0x05, 0x01, 0x11, 0x19, 0xd0, 0xa0, 0xb3, 0xd7, 0xd2,
+	0xa5, 0xc7, 0x52, 0x4a, 0x0b, 0xb0, 0x1e, 0xab, 0x35, 0xbc, 0x4e, 0xdb, 0x70, 0x29, 0x59, 0x4f,
+	0x5f, 0x4b, 0x75, 0xb8, 0x10, 0x51, 0xb8, 0x69, 0xb7, 0x4c, 0xba, 0x2d, 0x58, 0x4e, 0xd5, 0x30,
+	0xb2, 0xb4, 0xea, 0xaf, 0xa8, 0x0f, 0x53, 0xfb, 0x17, 0x5a, 0xf7, 0x21, 0x60, 0xdc, 0x3a, 0x39,
+	0x34, 0x03, 0x38, 0x77, 0x3e, 0xe6, 0x9c, 0xfa, 0x09, 0x4c, 0x86, 0x0c, 0x6f, 0xc9, 0xe3, 0xe1,
+	0xd9, 0x8d, 0xcf, 0x0f, 0x04, 0x94, 0xa4, 0xf2, 0x52, 0xfe, 0xfb, 0xf0, 0x9c, 0xa8, 0x1f, 0x9c,
+	0x5b, 0xc1, 0xd0, 0xcc, 0x1d, 0x2d, 0x7d, 0xcd, 0x34, 0x79, 0x90, 0x4c, 0x2a, 0x1f, 0xab, 0x77,
+	0x17, 0x18, 0xde, 0xb8, 0xbc, 0x0b, 0xc5, 0x18, 0x7f, 0x5f, 0xf7, 0x26, 0xe1, 0xff, 0xcc, 0x34,
+	0xf9, 0x66, 0xdb, 0x36, 0x45, 0xed, 0xd1, 0xda, 0x19, 0xff, 0xfb, 0x86, 0x6d, 0xaa, 0x6e, 0x42,
+	0x3b, 0x42, 0x3b, 0x36, 0x60, 0x2c, 0x62, 0x87, 0x1c, 0x84, 0xfc, 0x6e, 0x9c, 0xeb, 0x76, 0x43,
+	0xfd, 0x8c, 0x80, 0x2a, 0x8a, 0x46, 0x26, 0xe3, 0xd9, 0x0f, 0xc3, 0x53, 0x02, 0x33, 0x47, 0x72,
+	0x48, 0x1b, 0x5a, 0x30, 0x11, 0xdd, 0x68, 0xbd, 0xe3, 0xa1, 0xa7, 0x1b, 0x92, 0x98, 0x5a, 0xba,
+	0x52, 0x70, 0x12, 0xeb, 0x0e, 0x6f, 0x58, 0xbe, 0x25, 0x30, 0x9d, 0x2e, 0x70, 0xe8, 0x07, 0x4c,
+	0x4f, 0x63, 0x4e, 0x0e, 0xdc, 0x98, 0x5f, 0x8f, 0x1c, 0x90, 0xb0, 0x2f, 0x4d, 0x28, 0x24, 0xf7,
+	0xe5, 0x78, 0x6d, 0x19, 0x4f, 0x6c, 0xcb, 0xf0, 0xba, 0xf2, 0x39, 0x81, 0xeb, 0x42, 0xdd, 0xdb,
+	0x36, 0xf7, 0x98, 0x6b, 0x37, 0x8c, 0xe6, 0x3f, 0xbc, 0x11, 0xfe, 0x20, 0x30, 0x9f, 0x91, 0xe8,
+	0xbf, 0xbe, 0x25, 0xbe, 0x23, 0x70, 0x25, 0x3e, 0x5a, 0xd5, 0x76, 0xf3, 0x8e, 0xdd, 0x6c, 0x52,
+	0xb3, 0x42, 0x3d, 0xfe, 0xef, 0xdd, 0x17, 0x3f, 0x13, 0xb8, 0xda, 0x17, 0x5e, 0x76, 0xa8, 0x01,
+	0x51, 0x92, 0xcd, 0x3a, 0xf5, 0x82, 0xe6, 0x68, 0x19, 0x9b, 0x53, 0xa1, 0xde, 0xba, 0x61, 0xbb,
+	0xc1, 0xc3, 0xdc, 0xe9, 0x59, 0x1b, 0x5e, 0x5b, 0x16, 0x7f, 0x7c, 0x1e, 0xfe, 0x27, 0x94, 0xe1,
+	0x23, 0x02, 0x70, 0x78, 0x49, 0xc7, 0x72, 0x3a, 0x6a, 0xf2, 0xab, 0x84, 0xb2, 0x90, 0x23, 0xa2,
+	0x43, 0xa2, 0x4e, 0x3d, 0xfc, 0xe9, 0xf7, 0x47, 0x27, 0x14, 0x2c, 0xea, 0x91, 0xd7, 0x17, 0xae,
+	0xef, 0x74, 0x5e, 0x43, 0x76, 0xf1, 0x4b, 0x02, 0xa3, 0x61, 0x20, 0xea, 0x59, 0x4b, 0x04, 0x4c,
+	0xe5, 0xec, 0x01, 0x12, 0x69, 0x5a, 0x20, 0xbd, 0x88, 0x93, 0x31, 0x24, 0x39, 0x93, 0xbb, 0xf8,
+	0x3d, 0x01, 0x8c, 0xdf, 0x82, 0xf1, 0x46, 0x9f, 0x5a, 0xa9, 0x97, 0x77, 0xe5, 0xe6, 0x00, 0x91,
+	0x12, 0xb7, 0x2c, 0x70, 0xe7, 0x70, 0x36, 0x15, 0x37, 0xfa, 0xba, 0xc8, 0xf1, 0x09, 0x81, 0xf3,
+	0xb1, 0x84, 0xf8, 0x6a, 0x5e, 0x84, 0x80, 0xfd, 0x46, 0xfe, 0x40, 0x89, 0x5e, 0x15, 0xe8, 0xb7,
+	0xf1, 0x56, 0x56, 0x74, 0x7d, 0x27, 0x61, 0xf7, 0xef, 0xe2, 0x57, 0x04, 0xc6, 0x22, 0xb7, 0x4a,
+	0x5c, 0xca, 0xc0, 0xd4, 0x7b, 0xd8, 0x2b, 0x2f, 0xe7, 0x0b, 0x92, 0x22, 0xae, 0x09, 0x11, 0x2f,
+	0xe1, 0x4c, 0xba, 0x88, 0xf0, 0x84, 0xc6, 0x6f, 0x08, 0x9c, 0xeb, 0x4e, 0x83, 0x8b, 0x39, 0x6a,
+	0x06, 0x9c, 0x4b, 0xb9, 0x62, 0x24, 0xe6, 0x2b, 0x02, 0xb3, 0x8c, 0x5a, 0x06, 0x4c, 0x7d, 0x27,
+	0xb8, 0xb3, 0xee, 0xe2, 0x1e, 0x81, 0x42, 0xf2, 0x13, 0x09, 0x97, 0xfb, 0x70, 0x1c, 0xf9, 0x68,
+	0x55, 0x5e, 0x1f, 0x30, 0x5a, 0xea, 0xb9, 0x29, 0xf4, 0x2c, 0xe1, 0x42, 0xc6, 0xd9, 0x99, 0x3f,
+	0x6c, 0xc2, 0x01, 0x81, 0xf1, 0xc4, 0xec, 0xf8, 0xda, 0x20, 0x4c, 0x81, 0xa0, 0xe5, 0xc1, 0x82,
+	0xa5, 0x9e, 0x35, 0xa1, 0x67, 0x15, 0x57, 0x72, 0xeb, 0x49, 0xd9, 0x14, 0x7f, 0x11, 0x98, 0xea,
+	0x77, 0xa9, 0xc0, 0x6a, 0x1f, 0xe6, 0x8c, 0xf7, 0x24, 0x65, 0xe5, 0xd8, 0x79, 0xa4, 0x0d, 0x6f,
+	0x0a, 0x1b, 0x6e, 0xe1, 0x72, 0xba, 0x0d, 0x77, 0xc3, 0x5c, 0xf3, 0x69, 0x1d, 0xfe, 0x93, 0x80,
+	0x92, 0xfe, 0xa0, 0xc6, 0xdb, 0x79, 0x3a, 0x95, 0x74, 0x41, 0x51, 0xde, 0x38, 0x46, 0x06, 0xa9,
+	0x74, 0x43, 0x28, 0x5d, 0xc3, 0x77, 0x8e, 0x77, 0xf8, 0xe9, 0x77, 0x82, 0xec, 0xe2, 0x9a, 0x51,
+	0xa9, 0x3e, 0xde, 0x2f, 0x91, 0xbd, 0xfd, 0x12, 0xf9, 0x6d, 0xbf, 0x44, 0xbe, 0x38, 0x28, 0x8d,
+	0xec, 0x1d, 0x94, 0x46, 0x7e, 0x39, 0x28, 0x8d, 0x7c, 0x70, 0xdd, 0xb2, 0xbd, 0xbb, 0xed, 0xba,
+	0xd6, 0x60, 0xf7, 0xfc, 0x92, 0xf3, 0x12, 0x5f, 0x94, 0xdf, 0xee, 0xfa, 0xcf, 0xa1, 0xf7, 0xc0,
+	0xa1, 0xbc, 0x7e, 0x5a, 0xfc, 0xdf, 0x70, 0xe9, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3f, 0x5d,
+	0xc9, 0x7e, 0x2e, 0x15, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1229,22 +1248,27 @@ type QueryClient interface {
 	OrderBooks(ctx context.Context, in *QueryOrderBooksRequest, opts ...grpc.CallOption) (*QueryOrderBooksResponse, error)
 	// OrderBook queries orderbook info for given order book id.
 	OrderBook(ctx context.Context, in *QueryOrderBookRequest, opts ...grpc.CallOption) (*QueryOrderBookResponse, error)
-	// BookParticipants queries participant info for given orderbook.
-	BookParticipants(ctx context.Context, in *QueryBookParticipantsRequest, opts ...grpc.CallOption) (*QueryBookParticipantsResponse, error)
-	// BookParticipant queries participant info for given orderbook and participant number.
-	BookParticipant(ctx context.Context, in *QueryBookParticipantRequest, opts ...grpc.CallOption) (*QueryBookParticipantResponse, error)
+	// BookParticipations queries participation info for given orderbook.
+	BookParticipations(ctx context.Context, in *QueryBookParticipationsRequest, opts ...grpc.CallOption) (*QueryBookParticipationsResponse, error)
+	// BookParticipation queries participation info for given orderbook and
+	// participation index.
+	BookParticipation(ctx context.Context, in *QueryBookParticipationRequest, opts ...grpc.CallOption) (*QueryBookParticipationResponse, error)
 	// BookExposures queries exposures info for given orderbook.
 	BookExposures(ctx context.Context, in *QueryBookExposuresRequest, opts ...grpc.CallOption) (*QueryBookExposuresResponse, error)
 	// BookExposure queries exposure info for given orderbook and odds id.
 	BookExposure(ctx context.Context, in *QueryBookExposureRequest, opts ...grpc.CallOption) (*QueryBookExposureResponse, error)
-	// ParticipantExposures queries exposures info for given orderbook participants.
-	ParticipantExposures(ctx context.Context, in *QueryParticipantExposuresRequest, opts ...grpc.CallOption) (*QueryParticipantExposuresResponse, error)
-	// ParticipantExposure queries exposure info for given orderbook participant.
-	ParticipantExposure(ctx context.Context, in *QueryParticipantExposureRequest, opts ...grpc.CallOption) (*QueryParticipantExposureResponse, error)
-	// HistoricalParticipantExposures queries historical exposures info for given orderbook participant.
-	HistoricalParticipantExposures(ctx context.Context, in *QueryHistoricalParticipantExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipantExposuresResponse, error)
-	// ParticipantFullfilledBets queries fulfilled bets for given orderbook participant.
-	ParticipantFullfilledBets(ctx context.Context, in *QueryParticipantFullfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipantFullfilledBetsResponse, error)
+	// ParticipationExposures queries exposures info for given orderbook
+	// participations.
+	ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error)
+	// ParticipationExposure queries exposure info for given orderbook
+	// participation.
+	ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error)
+	// HistoricalParticipationExposures queries historical exposures info for
+	// given orderbook participation.
+	HistoricalParticipationExposures(ctx context.Context, in *QueryHistoricalParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipationExposuresResponse, error)
+	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// participation.
+	ParticipationFulfilledBets(ctx context.Context, in *QueryParticipationFulfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipationFulfilledBetsResponse, error)
 }
 
 type queryClient struct {
@@ -1273,18 +1297,18 @@ func (c *queryClient) OrderBook(ctx context.Context, in *QueryOrderBookRequest, 
 	return out, nil
 }
 
-func (c *queryClient) BookParticipants(ctx context.Context, in *QueryBookParticipantsRequest, opts ...grpc.CallOption) (*QueryBookParticipantsResponse, error) {
-	out := new(QueryBookParticipantsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/BookParticipants", in, out, opts...)
+func (c *queryClient) BookParticipations(ctx context.Context, in *QueryBookParticipationsRequest, opts ...grpc.CallOption) (*QueryBookParticipationsResponse, error) {
+	out := new(QueryBookParticipationsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/BookParticipations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) BookParticipant(ctx context.Context, in *QueryBookParticipantRequest, opts ...grpc.CallOption) (*QueryBookParticipantResponse, error) {
-	out := new(QueryBookParticipantResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/BookParticipant", in, out, opts...)
+func (c *queryClient) BookParticipation(ctx context.Context, in *QueryBookParticipationRequest, opts ...grpc.CallOption) (*QueryBookParticipationResponse, error) {
+	out := new(QueryBookParticipationResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/BookParticipation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1309,36 +1333,36 @@ func (c *queryClient) BookExposure(ctx context.Context, in *QueryBookExposureReq
 	return out, nil
 }
 
-func (c *queryClient) ParticipantExposures(ctx context.Context, in *QueryParticipantExposuresRequest, opts ...grpc.CallOption) (*QueryParticipantExposuresResponse, error) {
-	out := new(QueryParticipantExposuresResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipantExposures", in, out, opts...)
+func (c *queryClient) ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error) {
+	out := new(QueryParticipationExposuresResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationExposures", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) ParticipantExposure(ctx context.Context, in *QueryParticipantExposureRequest, opts ...grpc.CallOption) (*QueryParticipantExposureResponse, error) {
-	out := new(QueryParticipantExposureResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipantExposure", in, out, opts...)
+func (c *queryClient) ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error) {
+	out := new(QueryParticipationExposureResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationExposure", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) HistoricalParticipantExposures(ctx context.Context, in *QueryHistoricalParticipantExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipantExposuresResponse, error) {
-	out := new(QueryHistoricalParticipantExposuresResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/HistoricalParticipantExposures", in, out, opts...)
+func (c *queryClient) HistoricalParticipationExposures(ctx context.Context, in *QueryHistoricalParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipationExposuresResponse, error) {
+	out := new(QueryHistoricalParticipationExposuresResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/HistoricalParticipationExposures", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) ParticipantFullfilledBets(ctx context.Context, in *QueryParticipantFullfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipantFullfilledBetsResponse, error) {
-	out := new(QueryParticipantFullfilledBetsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipantFullfilledBets", in, out, opts...)
+func (c *queryClient) ParticipationFulfilledBets(ctx context.Context, in *QueryParticipationFulfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipationFulfilledBetsResponse, error) {
+	out := new(QueryParticipationFulfilledBetsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationFulfilledBets", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1351,22 +1375,27 @@ type QueryServer interface {
 	OrderBooks(context.Context, *QueryOrderBooksRequest) (*QueryOrderBooksResponse, error)
 	// OrderBook queries orderbook info for given order book id.
 	OrderBook(context.Context, *QueryOrderBookRequest) (*QueryOrderBookResponse, error)
-	// BookParticipants queries participant info for given orderbook.
-	BookParticipants(context.Context, *QueryBookParticipantsRequest) (*QueryBookParticipantsResponse, error)
-	// BookParticipant queries participant info for given orderbook and participant number.
-	BookParticipant(context.Context, *QueryBookParticipantRequest) (*QueryBookParticipantResponse, error)
+	// BookParticipations queries participation info for given orderbook.
+	BookParticipations(context.Context, *QueryBookParticipationsRequest) (*QueryBookParticipationsResponse, error)
+	// BookParticipation queries participation info for given orderbook and
+	// participation index.
+	BookParticipation(context.Context, *QueryBookParticipationRequest) (*QueryBookParticipationResponse, error)
 	// BookExposures queries exposures info for given orderbook.
 	BookExposures(context.Context, *QueryBookExposuresRequest) (*QueryBookExposuresResponse, error)
 	// BookExposure queries exposure info for given orderbook and odds id.
 	BookExposure(context.Context, *QueryBookExposureRequest) (*QueryBookExposureResponse, error)
-	// ParticipantExposures queries exposures info for given orderbook participants.
-	ParticipantExposures(context.Context, *QueryParticipantExposuresRequest) (*QueryParticipantExposuresResponse, error)
-	// ParticipantExposure queries exposure info for given orderbook participant.
-	ParticipantExposure(context.Context, *QueryParticipantExposureRequest) (*QueryParticipantExposureResponse, error)
-	// HistoricalParticipantExposures queries historical exposures info for given orderbook participant.
-	HistoricalParticipantExposures(context.Context, *QueryHistoricalParticipantExposuresRequest) (*QueryHistoricalParticipantExposuresResponse, error)
-	// ParticipantFullfilledBets queries fulfilled bets for given orderbook participant.
-	ParticipantFullfilledBets(context.Context, *QueryParticipantFullfilledBetsRequest) (*QueryParticipantFullfilledBetsResponse, error)
+	// ParticipationExposures queries exposures info for given orderbook
+	// participations.
+	ParticipationExposures(context.Context, *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error)
+	// ParticipationExposure queries exposure info for given orderbook
+	// participation.
+	ParticipationExposure(context.Context, *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error)
+	// HistoricalParticipationExposures queries historical exposures info for
+	// given orderbook participation.
+	HistoricalParticipationExposures(context.Context, *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error)
+	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// participation.
+	ParticipationFulfilledBets(context.Context, *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -1379,11 +1408,11 @@ func (*UnimplementedQueryServer) OrderBooks(ctx context.Context, req *QueryOrder
 func (*UnimplementedQueryServer) OrderBook(ctx context.Context, req *QueryOrderBookRequest) (*QueryOrderBookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBook not implemented")
 }
-func (*UnimplementedQueryServer) BookParticipants(ctx context.Context, req *QueryBookParticipantsRequest) (*QueryBookParticipantsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookParticipants not implemented")
+func (*UnimplementedQueryServer) BookParticipations(ctx context.Context, req *QueryBookParticipationsRequest) (*QueryBookParticipationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BookParticipations not implemented")
 }
-func (*UnimplementedQueryServer) BookParticipant(ctx context.Context, req *QueryBookParticipantRequest) (*QueryBookParticipantResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookParticipant not implemented")
+func (*UnimplementedQueryServer) BookParticipation(ctx context.Context, req *QueryBookParticipationRequest) (*QueryBookParticipationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BookParticipation not implemented")
 }
 func (*UnimplementedQueryServer) BookExposures(ctx context.Context, req *QueryBookExposuresRequest) (*QueryBookExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BookExposures not implemented")
@@ -1391,17 +1420,17 @@ func (*UnimplementedQueryServer) BookExposures(ctx context.Context, req *QueryBo
 func (*UnimplementedQueryServer) BookExposure(ctx context.Context, req *QueryBookExposureRequest) (*QueryBookExposureResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BookExposure not implemented")
 }
-func (*UnimplementedQueryServer) ParticipantExposures(ctx context.Context, req *QueryParticipantExposuresRequest) (*QueryParticipantExposuresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParticipantExposures not implemented")
+func (*UnimplementedQueryServer) ParticipationExposures(ctx context.Context, req *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposures not implemented")
 }
-func (*UnimplementedQueryServer) ParticipantExposure(ctx context.Context, req *QueryParticipantExposureRequest) (*QueryParticipantExposureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParticipantExposure not implemented")
+func (*UnimplementedQueryServer) ParticipationExposure(ctx context.Context, req *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposure not implemented")
 }
-func (*UnimplementedQueryServer) HistoricalParticipantExposures(ctx context.Context, req *QueryHistoricalParticipantExposuresRequest) (*QueryHistoricalParticipantExposuresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HistoricalParticipantExposures not implemented")
+func (*UnimplementedQueryServer) HistoricalParticipationExposures(ctx context.Context, req *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HistoricalParticipationExposures not implemented")
 }
-func (*UnimplementedQueryServer) ParticipantFullfilledBets(ctx context.Context, req *QueryParticipantFullfilledBetsRequest) (*QueryParticipantFullfilledBetsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParticipantFullfilledBets not implemented")
+func (*UnimplementedQueryServer) ParticipationFulfilledBets(ctx context.Context, req *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParticipationFulfilledBets not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -1444,38 +1473,38 @@ func _Query_OrderBook_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookParticipants_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookParticipantsRequest)
+func _Query_BookParticipations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBookParticipationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookParticipants(ctx, in)
+		return srv.(QueryServer).BookParticipations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/BookParticipants",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/BookParticipations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookParticipants(ctx, req.(*QueryBookParticipantsRequest))
+		return srv.(QueryServer).BookParticipations(ctx, req.(*QueryBookParticipationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookParticipant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookParticipantRequest)
+func _Query_BookParticipation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBookParticipationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookParticipant(ctx, in)
+		return srv.(QueryServer).BookParticipation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/BookParticipant",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/BookParticipation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookParticipant(ctx, req.(*QueryBookParticipantRequest))
+		return srv.(QueryServer).BookParticipation(ctx, req.(*QueryBookParticipationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1516,74 +1545,74 @@ func _Query_BookExposure_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ParticipantExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParticipantExposuresRequest)
+func _Query_ParticipationExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryParticipationExposuresRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ParticipantExposures(ctx, in)
+		return srv.(QueryServer).ParticipationExposures(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipantExposures",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipationExposures",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ParticipantExposures(ctx, req.(*QueryParticipantExposuresRequest))
+		return srv.(QueryServer).ParticipationExposures(ctx, req.(*QueryParticipationExposuresRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ParticipantExposure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParticipantExposureRequest)
+func _Query_ParticipationExposure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryParticipationExposureRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ParticipantExposure(ctx, in)
+		return srv.(QueryServer).ParticipationExposure(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipantExposure",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipationExposure",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ParticipantExposure(ctx, req.(*QueryParticipantExposureRequest))
+		return srv.(QueryServer).ParticipationExposure(ctx, req.(*QueryParticipationExposureRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_HistoricalParticipantExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryHistoricalParticipantExposuresRequest)
+func _Query_HistoricalParticipationExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryHistoricalParticipationExposuresRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).HistoricalParticipantExposures(ctx, in)
+		return srv.(QueryServer).HistoricalParticipationExposures(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/HistoricalParticipantExposures",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/HistoricalParticipationExposures",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).HistoricalParticipantExposures(ctx, req.(*QueryHistoricalParticipantExposuresRequest))
+		return srv.(QueryServer).HistoricalParticipationExposures(ctx, req.(*QueryHistoricalParticipationExposuresRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ParticipantFullfilledBets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParticipantFullfilledBetsRequest)
+func _Query_ParticipationFulfilledBets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryParticipationFulfilledBetsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ParticipantFullfilledBets(ctx, in)
+		return srv.(QueryServer).ParticipationFulfilledBets(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipantFullfilledBets",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipationFulfilledBets",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ParticipantFullfilledBets(ctx, req.(*QueryParticipantFullfilledBetsRequest))
+		return srv.(QueryServer).ParticipationFulfilledBets(ctx, req.(*QueryParticipationFulfilledBetsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1601,12 +1630,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_OrderBook_Handler,
 		},
 		{
-			MethodName: "BookParticipants",
-			Handler:    _Query_BookParticipants_Handler,
+			MethodName: "BookParticipations",
+			Handler:    _Query_BookParticipations_Handler,
 		},
 		{
-			MethodName: "BookParticipant",
-			Handler:    _Query_BookParticipant_Handler,
+			MethodName: "BookParticipation",
+			Handler:    _Query_BookParticipation_Handler,
 		},
 		{
 			MethodName: "BookExposures",
@@ -1617,20 +1646,20 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_BookExposure_Handler,
 		},
 		{
-			MethodName: "ParticipantExposures",
-			Handler:    _Query_ParticipantExposures_Handler,
+			MethodName: "ParticipationExposures",
+			Handler:    _Query_ParticipationExposures_Handler,
 		},
 		{
-			MethodName: "ParticipantExposure",
-			Handler:    _Query_ParticipantExposure_Handler,
+			MethodName: "ParticipationExposure",
+			Handler:    _Query_ParticipationExposure_Handler,
 		},
 		{
-			MethodName: "HistoricalParticipantExposures",
-			Handler:    _Query_HistoricalParticipantExposures_Handler,
+			MethodName: "HistoricalParticipationExposures",
+			Handler:    _Query_HistoricalParticipationExposures_Handler,
 		},
 		{
-			MethodName: "ParticipantFullfilledBets",
-			Handler:    _Query_ParticipantFullfilledBets_Handler,
+			MethodName: "ParticipationFulfilledBets",
+			Handler:    _Query_ParticipationFulfilledBets_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1791,7 +1820,7 @@ func (m *QueryOrderBookResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipantsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryBookParticipationsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1801,12 +1830,12 @@ func (m *QueryBookParticipantsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipantsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipantsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1833,7 +1862,7 @@ func (m *QueryBookParticipantsRequest) MarshalToSizedBuffer(dAtA []byte) (int, e
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipantsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryBookParticipationsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1843,12 +1872,12 @@ func (m *QueryBookParticipantsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipantsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipantsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1865,10 +1894,10 @@ func (m *QueryBookParticipantsResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookParticipants) > 0 {
-		for iNdEx := len(m.BookParticipants) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.BookParticipations) > 0 {
+		for iNdEx := len(m.BookParticipations) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.BookParticipants[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.BookParticipations[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -1882,7 +1911,7 @@ func (m *QueryBookParticipantsResponse) MarshalToSizedBuffer(dAtA []byte) (int, 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipantRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryBookParticipationRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1892,18 +1921,18 @@ func (m *QueryBookParticipantRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipantRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipantRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.ParticipantNumber != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -1917,7 +1946,7 @@ func (m *QueryBookParticipantRequest) MarshalToSizedBuffer(dAtA []byte) (int, er
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipantResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryBookParticipationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1927,18 +1956,18 @@ func (m *QueryBookParticipantResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipantResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipantResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryBookParticipationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.BookParticipant.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.BookParticipation.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2061,10 +2090,10 @@ func (m *QueryBookExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error
 	_ = i
 	var l int
 	_ = l
-	if len(m.OddsId) > 0 {
-		i -= len(m.OddsId)
-		copy(dAtA[i:], m.OddsId)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.OddsId)))
+	if len(m.OddsUid) > 0 {
+		i -= len(m.OddsUid)
+		copy(dAtA[i:], m.OddsUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OddsUid)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -2111,7 +2140,7 @@ func (m *QueryBookExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantExposuresRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationExposuresRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2121,12 +2150,12 @@ func (m *QueryParticipantExposuresRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2153,7 +2182,7 @@ func (m *QueryParticipantExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantExposuresResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationExposuresResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2163,12 +2192,12 @@ func (m *QueryParticipantExposuresResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2185,10 +2214,10 @@ func (m *QueryParticipantExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (i
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ParticipantExposures) > 0 {
-		for iNdEx := len(m.ParticipantExposures) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.ParticipationExposures) > 0 {
+		for iNdEx := len(m.ParticipationExposures) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ParticipantExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ParticipationExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2202,7 +2231,7 @@ func (m *QueryParticipantExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (i
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantExposureRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationExposureRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2212,12 +2241,12 @@ func (m *QueryParticipantExposureRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantExposureRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposureRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2234,8 +2263,8 @@ func (m *QueryParticipantExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.ParticipantNumber != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -2249,7 +2278,7 @@ func (m *QueryParticipantExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantExposureResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationExposureResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2259,12 +2288,12 @@ func (m *QueryParticipantExposureResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantExposureResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposureResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2281,10 +2310,10 @@ func (m *QueryParticipantExposureResponse) MarshalToSizedBuffer(dAtA []byte) (in
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ParticipantExposure) > 0 {
-		for iNdEx := len(m.ParticipantExposure) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.ParticipationExposure) > 0 {
+		for iNdEx := len(m.ParticipationExposure) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ParticipantExposure[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ParticipationExposure[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2298,7 +2327,7 @@ func (m *QueryParticipantExposureResponse) MarshalToSizedBuffer(dAtA []byte) (in
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryHistoricalParticipationExposuresRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2308,12 +2337,12 @@ func (m *QueryHistoricalParticipantExposuresRequest) Marshal() (dAtA []byte, err
 	return dAtA[:n], nil
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryHistoricalParticipationExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryHistoricalParticipationExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2340,7 +2369,7 @@ func (m *QueryHistoricalParticipantExposuresRequest) MarshalToSizedBuffer(dAtA [
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryHistoricalParticipationExposuresResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2350,12 +2379,12 @@ func (m *QueryHistoricalParticipantExposuresResponse) Marshal() (dAtA []byte, er
 	return dAtA[:n], nil
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryHistoricalParticipationExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryHistoricalParticipationExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2372,10 +2401,10 @@ func (m *QueryHistoricalParticipantExposuresResponse) MarshalToSizedBuffer(dAtA 
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ParticipantExposures) > 0 {
-		for iNdEx := len(m.ParticipantExposures) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.ParticipationExposures) > 0 {
+		for iNdEx := len(m.ParticipationExposures) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ParticipantExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ParticipationExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2389,7 +2418,7 @@ func (m *QueryHistoricalParticipantExposuresResponse) MarshalToSizedBuffer(dAtA 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationFulfilledBetsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2399,12 +2428,12 @@ func (m *QueryParticipantFullfilledBetsRequest) Marshal() (dAtA []byte, err erro
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationFulfilledBetsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationFulfilledBetsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2421,8 +2450,8 @@ func (m *QueryParticipantFullfilledBetsRequest) MarshalToSizedBuffer(dAtA []byte
 		i--
 		dAtA[i] = 0x1a
 	}
-	if m.ParticipantNumber != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -2436,7 +2465,7 @@ func (m *QueryParticipantFullfilledBetsRequest) MarshalToSizedBuffer(dAtA []byte
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryParticipationFulfilledBetsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2446,12 +2475,12 @@ func (m *QueryParticipantFullfilledBetsResponse) Marshal() (dAtA []byte, err err
 	return dAtA[:n], nil
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryParticipationFulfilledBetsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryParticipationFulfilledBetsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2468,10 +2497,10 @@ func (m *QueryParticipantFullfilledBetsResponse) MarshalToSizedBuffer(dAtA []byt
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.ParticipantBets) > 0 {
-		for iNdEx := len(m.ParticipantBets) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.ParticipationBets) > 0 {
+		for iNdEx := len(m.ParticipationBets) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ParticipantBets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ParticipationBets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2556,7 +2585,7 @@ func (m *QueryOrderBookResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipantsRequest) Size() (n int) {
+func (m *QueryBookParticipationsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2573,14 +2602,14 @@ func (m *QueryBookParticipantsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipantsResponse) Size() (n int) {
+func (m *QueryBookParticipationsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.BookParticipants) > 0 {
-		for _, e := range m.BookParticipants {
+	if len(m.BookParticipations) > 0 {
+		for _, e := range m.BookParticipations {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2592,7 +2621,7 @@ func (m *QueryBookParticipantsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipantRequest) Size() (n int) {
+func (m *QueryBookParticipationRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2602,19 +2631,19 @@ func (m *QueryBookParticipantRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	if m.ParticipantNumber != 0 {
-		n += 1 + sovQuery(uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovQuery(uint64(m.ParticipationIndex))
 	}
 	return n
 }
 
-func (m *QueryBookParticipantResponse) Size() (n int) {
+func (m *QueryBookParticipationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.BookParticipant.Size()
+	l = m.BookParticipation.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -2665,7 +2694,7 @@ func (m *QueryBookExposureRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	l = len(m.OddsId)
+	l = len(m.OddsUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2683,7 +2712,7 @@ func (m *QueryBookExposureResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantExposuresRequest) Size() (n int) {
+func (m *QueryParticipationExposuresRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2700,14 +2729,14 @@ func (m *QueryParticipantExposuresRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantExposuresResponse) Size() (n int) {
+func (m *QueryParticipationExposuresResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.ParticipantExposures) > 0 {
-		for _, e := range m.ParticipantExposures {
+	if len(m.ParticipationExposures) > 0 {
+		for _, e := range m.ParticipationExposures {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2719,7 +2748,7 @@ func (m *QueryParticipantExposuresResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantExposureRequest) Size() (n int) {
+func (m *QueryParticipationExposureRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2729,8 +2758,8 @@ func (m *QueryParticipantExposureRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	if m.ParticipantNumber != 0 {
-		n += 1 + sovQuery(uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovQuery(uint64(m.ParticipationIndex))
 	}
 	if m.Pagination != nil {
 		l = m.Pagination.Size()
@@ -2739,14 +2768,14 @@ func (m *QueryParticipantExposureRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantExposureResponse) Size() (n int) {
+func (m *QueryParticipationExposureResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.ParticipantExposure) > 0 {
-		for _, e := range m.ParticipantExposure {
+	if len(m.ParticipationExposure) > 0 {
+		for _, e := range m.ParticipationExposure {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2758,7 +2787,7 @@ func (m *QueryParticipantExposureResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryHistoricalParticipantExposuresRequest) Size() (n int) {
+func (m *QueryHistoricalParticipationExposuresRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2775,14 +2804,14 @@ func (m *QueryHistoricalParticipantExposuresRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryHistoricalParticipantExposuresResponse) Size() (n int) {
+func (m *QueryHistoricalParticipationExposuresResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.ParticipantExposures) > 0 {
-		for _, e := range m.ParticipantExposures {
+	if len(m.ParticipationExposures) > 0 {
+		for _, e := range m.ParticipationExposures {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2794,7 +2823,7 @@ func (m *QueryHistoricalParticipantExposuresResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantFullfilledBetsRequest) Size() (n int) {
+func (m *QueryParticipationFulfilledBetsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2804,8 +2833,8 @@ func (m *QueryParticipantFullfilledBetsRequest) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	if m.ParticipantNumber != 0 {
-		n += 1 + sovQuery(uint64(m.ParticipantNumber))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovQuery(uint64(m.ParticipationIndex))
 	}
 	if m.Pagination != nil {
 		l = m.Pagination.Size()
@@ -2814,14 +2843,14 @@ func (m *QueryParticipantFullfilledBetsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipantFullfilledBetsResponse) Size() (n int) {
+func (m *QueryParticipationFulfilledBetsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.ParticipantBets) > 0 {
-		for _, e := range m.ParticipantBets {
+	if len(m.ParticipationBets) > 0 {
+		for _, e := range m.ParticipationBets {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -3242,7 +3271,7 @@ func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipantsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3265,10 +3294,10 @@ func (m *QueryBookParticipantsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipantsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryBookParticipationsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipantsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryBookParticipationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3360,7 +3389,7 @@ func (m *QueryBookParticipantsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipantsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3383,15 +3412,15 @@ func (m *QueryBookParticipantsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipantsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryBookParticipationsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipantsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryBookParticipationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipants", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipations", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3418,8 +3447,8 @@ func (m *QueryBookParticipantsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookParticipants = append(m.BookParticipants, BookParticipant{})
-			if err := m.BookParticipants[len(m.BookParticipants)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.BookParticipations = append(m.BookParticipations, BookParticipation{})
+			if err := m.BookParticipations[len(m.BookParticipations)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3480,7 +3509,7 @@ func (m *QueryBookParticipantsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipantRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryBookParticipationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3503,10 +3532,10 @@ func (m *QueryBookParticipantRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipantRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryBookParticipationRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipantRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryBookParticipationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -3543,9 +3572,9 @@ func (m *QueryBookParticipantRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantNumber", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.ParticipantNumber = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -3555,7 +3584,7 @@ func (m *QueryBookParticipantRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ParticipantNumber |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -3581,7 +3610,7 @@ func (m *QueryBookParticipantRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipantResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryBookParticipationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3604,15 +3633,15 @@ func (m *QueryBookParticipantResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipantResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryBookParticipationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipantResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryBookParticipationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipant", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipation", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3639,7 +3668,7 @@ func (m *QueryBookParticipantResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.BookParticipant.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.BookParticipation.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3965,7 +3994,7 @@ func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field OddsId", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OddsUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3993,7 +4022,7 @@ func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.OddsId = string(dAtA[iNdEx:postIndex])
+			m.OddsUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -4099,7 +4128,7 @@ func (m *QueryBookExposureResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryParticipantExposuresRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4122,10 +4151,10 @@ func (m *QueryParticipantExposuresRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantExposuresRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationExposuresRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4217,7 +4246,7 @@ func (m *QueryParticipantExposuresRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryParticipantExposuresResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4240,15 +4269,15 @@ func (m *QueryParticipantExposuresResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantExposuresResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationExposuresResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantExposures", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposures", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4275,8 +4304,8 @@ func (m *QueryParticipantExposuresResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ParticipantExposures = append(m.ParticipantExposures, ParticipantExposure{})
-			if err := m.ParticipantExposures[len(m.ParticipantExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ParticipationExposures = append(m.ParticipationExposures, ParticipationExposure{})
+			if err := m.ParticipationExposures[len(m.ParticipationExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4337,7 +4366,7 @@ func (m *QueryParticipantExposuresResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryParticipantExposureRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationExposureRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4360,10 +4389,10 @@ func (m *QueryParticipantExposureRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantExposureRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationExposureRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantExposureRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationExposureRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4400,9 +4429,9 @@ func (m *QueryParticipantExposureRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantNumber", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.ParticipantNumber = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -4412,7 +4441,7 @@ func (m *QueryParticipantExposureRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ParticipantNumber |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -4474,7 +4503,7 @@ func (m *QueryParticipantExposureRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryParticipantExposureResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationExposureResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4497,15 +4526,15 @@ func (m *QueryParticipantExposureResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantExposureResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationExposureResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantExposureResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationExposureResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantExposure", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposure", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4532,8 +4561,8 @@ func (m *QueryParticipantExposureResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ParticipantExposure = append(m.ParticipantExposure, ParticipantExposure{})
-			if err := m.ParticipantExposure[len(m.ParticipantExposure)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ParticipationExposure = append(m.ParticipationExposure, ParticipationExposure{})
+			if err := m.ParticipationExposure[len(m.ParticipationExposure)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4594,7 +4623,7 @@ func (m *QueryParticipantExposureResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryHistoricalParticipantExposuresRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryHistoricalParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4617,10 +4646,10 @@ func (m *QueryHistoricalParticipantExposuresRequest) Unmarshal(dAtA []byte) erro
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryHistoricalParticipantExposuresRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryHistoricalParticipationExposuresRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryHistoricalParticipantExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryHistoricalParticipationExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4712,7 +4741,7 @@ func (m *QueryHistoricalParticipantExposuresRequest) Unmarshal(dAtA []byte) erro
 	}
 	return nil
 }
-func (m *QueryHistoricalParticipantExposuresResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryHistoricalParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4735,15 +4764,15 @@ func (m *QueryHistoricalParticipantExposuresResponse) Unmarshal(dAtA []byte) err
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryHistoricalParticipantExposuresResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryHistoricalParticipationExposuresResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryHistoricalParticipantExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryHistoricalParticipationExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantExposures", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposures", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4770,8 +4799,8 @@ func (m *QueryHistoricalParticipantExposuresResponse) Unmarshal(dAtA []byte) err
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ParticipantExposures = append(m.ParticipantExposures, ParticipantExposure{})
-			if err := m.ParticipantExposures[len(m.ParticipantExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ParticipationExposures = append(m.ParticipationExposures, ParticipationExposure{})
+			if err := m.ParticipationExposures[len(m.ParticipationExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4832,7 +4861,7 @@ func (m *QueryHistoricalParticipantExposuresResponse) Unmarshal(dAtA []byte) err
 	}
 	return nil
 }
-func (m *QueryParticipantFullfilledBetsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationFulfilledBetsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4855,10 +4884,10 @@ func (m *QueryParticipantFullfilledBetsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantFullfilledBetsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationFulfilledBetsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantFullfilledBetsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationFulfilledBetsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -4895,9 +4924,9 @@ func (m *QueryParticipantFullfilledBetsRequest) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantNumber", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.ParticipantNumber = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowQuery
@@ -4907,7 +4936,7 @@ func (m *QueryParticipantFullfilledBetsRequest) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ParticipantNumber |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -4969,7 +4998,7 @@ func (m *QueryParticipantFullfilledBetsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryParticipantFullfilledBetsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryParticipationFulfilledBetsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4992,15 +5021,15 @@ func (m *QueryParticipantFullfilledBetsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipantFullfilledBetsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryParticipationFulfilledBetsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipantFullfilledBetsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryParticipationFulfilledBetsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantBets", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationBets", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -5027,8 +5056,8 @@ func (m *QueryParticipantFullfilledBetsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ParticipantBets = append(m.ParticipantBets, ParticipantBetPairResponse{})
-			if err := m.ParticipantBets[len(m.ParticipantBets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ParticipationBets = append(m.ParticipationBets, ParticipationBetPair{})
+			if err := m.ParticipationBets[len(m.ParticipationBets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

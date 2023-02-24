@@ -9,7 +9,7 @@ import (
 )
 
 // UpdateSportEvent accepts ticket containing multiple update events and return batch response after processing
-func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEventRequest) (*types.MsgUpdateSportEventResponse, error) {
+func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEvent) (*types.MsgUpdateSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updatePayload types.SportEventUpdateTicketPayload
@@ -30,14 +30,14 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	}
 
 	// if the status is still pending so it is failed
-	if currentData.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
+	if currentData.Status != types.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return nil, types.ErrCanNotBeAltered
 	}
 
 	// replace current data with payload values
 	currentData.StartTS = updatePayload.StartTS
 	currentData.EndTS = updatePayload.EndTS
-	currentData.BetConstraints = updatePayload.GetBetConstraints()
+	currentData.BetConstraints = params.NewEventBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
 	currentData.Active = updatePayload.Active
 
 	// the update event is successful so update the module state

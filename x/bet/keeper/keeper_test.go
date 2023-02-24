@@ -35,7 +35,7 @@ var (
 	}
 	testCreator       string
 	testBet           *types.MsgPlaceBet
-	testAddSportEvent *sporteventtypes.MsgAddSportEventRequest
+	testAddSportEvent *sporteventtypes.MsgAddSportEvent
 
 	testSportEvent = sporteventtypes.SportEvent{
 		UID:                    testSportEventUID,
@@ -72,11 +72,12 @@ func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) 
 		"iat":                       7777777777,
 		"meta":                      "Winner of x:y",
 		"sr_contribution_for_house": sdk.NewInt(500000),
+		"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
 
-	testAddSportEvent = &sporteventtypes.MsgAddSportEventRequest{
+	testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
 		Creator: testCreator,
 		Ticket:  testAddSportEventTicket,
 	}
@@ -101,11 +102,12 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 			"iat":                       7777777777,
 			"meta":                      "Winner of x:y",
 			"sr_contribution_for_house": sdk.NewInt(500000),
+			"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 		}
 		testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 		require.Nil(t, err)
 
-		testAddSportEvent = &sporteventtypes.MsgAddSportEventRequest{
+		testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
 			Creator: testCreator,
 			Ticket:  testAddSportEventTicket,
 		}
@@ -116,7 +118,7 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 		require.NotNil(t, resAddEvent)
 	}
 
-	return
+	return uids
 }
 
 func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUID string, selectedOdds *types.BetOdds) {
@@ -124,8 +126,9 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
 	testKyc := &types.KycDataPayload{
-		KycApproved: true,
-		KycID:       testCreator,
+		Required: true,
+		Approved: true,
+		ID:       testCreator,
 	}
 
 	if selectedOdds == nil {

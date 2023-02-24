@@ -55,8 +55,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 		selectedBetOdds.SportEventUID = ""
 		testKyc := &types.KycDataPayload{
-			KycApproved: true,
-			KycID:       creator.Address.String(),
+			Approved: true,
+			ID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,
@@ -83,8 +83,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("No matching sportEvent", func(t *testing.T) {
 		testKyc := &types.KycDataPayload{
-			KycApproved: true,
-			KycID:       creator.Address.String(),
+			Approved: true,
+			ID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,
@@ -111,8 +111,8 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 	t.Run("Success", func(t *testing.T) {
 		testKyc := &types.KycDataPayload{
-			KycApproved: true,
-			KycID:       creator.Address.String(),
+			Approved: true,
+			ID:       creator.Address.String(),
 		}
 		placeBetClaim := jwt.MapClaims{
 			"exp":           9999999999,
@@ -139,7 +139,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			StartTS: 1111111111,
 			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 			Odds:    testEventOdds,
-			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
+			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 			Active:  true,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
@@ -150,11 +150,11 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 
 		tApp.SporteventKeeper.SetSportEvent(ctx, sportEventItem)
 
-		var oddsIDs []string
+		var oddsUIDs []string
 		for _, v := range sportEventItem.Odds {
-			oddsIDs = append(oddsIDs, v.UID)
+			oddsUIDs = append(oddsUIDs, v.UID)
 		}
-		_, err = tApp.OrderBookKeeper.InitiateBook(ctx, sportEventItem.UID, sportEventItem.SrContributionForHouse, oddsIDs)
+		err = tApp.OrderBookKeeper.InitiateBook(ctx, sportEventItem.UID, sportEventItem.SrContributionForHouse, oddsUIDs)
 		require.NoError(t, err)
 
 		_, err = msgk.PlaceBet(wctx, inputBet)

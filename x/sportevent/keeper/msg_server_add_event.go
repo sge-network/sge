@@ -9,7 +9,7 @@ import (
 )
 
 // AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
-func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEventRequest) (*types.MsgAddSportEventResponse, error) {
+func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.MsgAddSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.SportEventAddTicketPayload
@@ -28,26 +28,27 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, types.ErrEventAlreadyExist
 	}
 
-	var oddsIDs []string
-	for _, oddsID := range addPayload.Odds {
-		oddsIDs = append(oddsIDs, oddsID.UID)
+	var oddsUIDs []string
+	for _, odds := range addPayload.Odds {
+		oddsUIDs = append(oddsUIDs, odds.UID)
 	}
-	bookID, err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsIDs)
+	err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}
 
-	sportEvent := types.NewSpoerEvent(
+	sportEvent := types.NewSportEvent(
 		addPayload.UID,
 		msg.Creator,
 		addPayload.StartTS,
 		addPayload.EndTS,
 		addPayload.Odds,
-		addPayload.BetConstraints,
+		params.NewEventBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Active,
 		addPayload.Meta,
-		bookID,
+		addPayload.UID,
 		addPayload.SrContributionForHouse,
+		addPayload.Status,
 	)
 
 	k.Keeper.SetSportEvent(ctx, sportEvent)

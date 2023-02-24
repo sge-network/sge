@@ -6,7 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	types "github.com/cosmos/cosmos-sdk/types"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
@@ -29,11 +29,12 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+// MsgDeposit defines a SDK message for performing a deposit of coins to become
+// part of the house corresponding to a sport event.
 type MsgDeposit struct {
-	DepositorAddress string     `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty" yaml:"depositor_address"`
-	SportEventUID    string     `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	Amount           types.Coin `protobuf:"bytes,3,opt,name=amount,proto3" json:"amount"`
+	Creator       string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
+	SportEventUID string                                 `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
+	Amount        github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
 }
 
 func (m *MsgDeposit) Reset()         { *m = MsgDeposit{} }
@@ -71,8 +72,8 @@ var xxx_messageInfo_MsgDeposit proto.InternalMessageInfo
 
 // MsgDepositResponse defines the Msg/Deposit response type.
 type MsgDepositResponse struct {
-	SportEventUID string `protobuf:"bytes,1,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	ParticipantID uint64 `protobuf:"varint,2,opt,name=participant_id,proto3" json:"participant_id"`
+	SportEventUID      string `protobuf:"bytes,1,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
+	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
 func (m *MsgDepositResponse) Reset()         { *m = MsgDepositResponse{} }
@@ -115,20 +116,21 @@ func (m *MsgDepositResponse) GetSportEventUID() string {
 	return ""
 }
 
-func (m *MsgDepositResponse) GetParticipantID() uint64 {
+func (m *MsgDepositResponse) GetParticipationIndex() uint64 {
 	if m != nil {
-		return m.ParticipantID
+		return m.ParticipationIndex
 	}
 	return 0
 }
 
-// MsgWithdraw defines a SDK message for performing a withdrawal of coins of unused amount corresponding to a deposit.
+// MsgWithdraw defines a SDK message for performing a withdrawal of coins of
+// unused amount corresponding to a deposit.
 type MsgWithdraw struct {
-	DepositorAddress string         `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty" yaml:"depositor_address"`
-	SportEventUID    string         `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	ParticipantID    uint64         `protobuf:"varint,3,opt,name=participant_id,proto3" json:"participant_id"`
-	Mode             WithdrawalMode `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
-	Amount           types.Coin     `protobuf:"bytes,5,opt,name=amount,proto3" json:"amount"`
+	Creator            string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
+	SportEventUID      string                                 `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
+	ParticipationIndex uint64                                 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
+	Mode               WithdrawalMode                         `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
+	Amount             github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
 }
 
 func (m *MsgWithdraw) Reset()         { *m = MsgWithdraw{} }
@@ -166,9 +168,9 @@ var xxx_messageInfo_MsgWithdraw proto.InternalMessageInfo
 
 // MsgWithdrawResponse defines the Msg/Withdraw response type.
 type MsgWithdrawResponse struct {
-	SportEventUID    string `protobuf:"bytes,1,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
-	ParticipantID    uint64 `protobuf:"varint,2,opt,name=participant_id,proto3" json:"participant_id"`
-	WithdrawalNumber uint64 `protobuf:"varint,3,opt,name=withdrawal_number,json=withdrawalNumber,proto3" json:"withdrawal_number,omitempty" yaml:"withdrawal_number"`
+	ID                 uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" yaml:"id"`
+	SportEventUID      string `protobuf:"bytes,2,opt,name=sport_event_uid,proto3" json:"sport_event_uid"`
+	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
 func (m *MsgWithdrawResponse) Reset()         { *m = MsgWithdrawResponse{} }
@@ -204,6 +206,13 @@ func (m *MsgWithdrawResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgWithdrawResponse proto.InternalMessageInfo
 
+func (m *MsgWithdrawResponse) GetID() uint64 {
+	if m != nil {
+		return m.ID
+	}
+	return 0
+}
+
 func (m *MsgWithdrawResponse) GetSportEventUID() string {
 	if m != nil {
 		return m.SportEventUID
@@ -211,16 +220,9 @@ func (m *MsgWithdrawResponse) GetSportEventUID() string {
 	return ""
 }
 
-func (m *MsgWithdrawResponse) GetParticipantID() uint64 {
+func (m *MsgWithdrawResponse) GetParticipationIndex() uint64 {
 	if m != nil {
-		return m.ParticipantID
-	}
-	return 0
-}
-
-func (m *MsgWithdrawResponse) GetWithdrawalNumber() uint64 {
-	if m != nil {
-		return m.WithdrawalNumber
+		return m.ParticipationIndex
 	}
 	return 0
 }
@@ -235,41 +237,40 @@ func init() {
 func init() { proto.RegisterFile("sge/house/tx.proto", fileDescriptor_d3891d05e499977f) }
 
 var fileDescriptor_d3891d05e499977f = []byte{
-	// 531 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x54, 0x3f, 0x6f, 0xd3, 0x40,
-	0x1c, 0xf5, 0x91, 0x50, 0xca, 0x45, 0xb4, 0xc5, 0x14, 0xc9, 0x44, 0xc8, 0x0e, 0xa6, 0x83, 0x19,
-	0x38, 0xab, 0x61, 0x40, 0xea, 0x86, 0x29, 0x43, 0x84, 0x52, 0x21, 0xa3, 0x0a, 0xc4, 0x62, 0x9d,
-	0xe3, 0xd3, 0xc5, 0xa2, 0xf6, 0x59, 0xbe, 0x73, 0xd3, 0xce, 0x2c, 0x8c, 0x7c, 0x84, 0x7e, 0x05,
-	0x16, 0x3e, 0x43, 0xc7, 0x8e, 0x4c, 0x16, 0x4a, 0x16, 0xd4, 0xb1, 0x3b, 0x12, 0xf2, 0xbf, 0x38,
-	0x4a, 0x82, 0x2a, 0x85, 0x05, 0x16, 0xeb, 0xfc, 0x7e, 0xef, 0x9e, 0xee, 0xfd, 0x7e, 0xef, 0x0e,
-	0xca, 0x9c, 0x12, 0x73, 0xc8, 0x12, 0x4e, 0x4c, 0x71, 0x82, 0xa2, 0x98, 0x09, 0x26, 0x6f, 0x73,
-	0x4a, 0x42, 0x22, 0x46, 0x2c, 0xfe, 0x88, 0x38, 0x25, 0x28, 0x2f, 0xb7, 0xb7, 0x29, 0xa3, 0x2c,
-	0x27, 0x98, 0xd9, 0xaa, 0xe0, 0xb6, 0xd5, 0x01, 0xe3, 0x01, 0xe3, 0xa6, 0x8b, 0x39, 0x31, 0x8f,
-	0x77, 0x5d, 0x22, 0xf0, 0xae, 0x39, 0x60, 0x7e, 0x58, 0xd6, 0xef, 0xd7, 0xfa, 0xf9, 0xb7, 0x80,
-	0xf5, 0x4b, 0x00, 0x61, 0x9f, 0xd3, 0x7d, 0x12, 0x31, 0xee, 0x0b, 0xb9, 0x07, 0xef, 0x7a, 0xc5,
-	0x92, 0xc5, 0x0e, 0xf6, 0xbc, 0x98, 0x70, 0xae, 0x80, 0x0e, 0x30, 0x6e, 0x5b, 0x0f, 0xaf, 0x52,
-	0x4d, 0x39, 0xc5, 0xc1, 0xd1, 0x9e, 0xbe, 0x40, 0xd1, 0xed, 0xad, 0x29, 0xf6, 0xa2, 0x80, 0xe4,
-	0x03, 0xb8, 0xc9, 0x23, 0x16, 0x0b, 0x87, 0x1c, 0x93, 0x50, 0x38, 0x89, 0xef, 0x29, 0x37, 0x72,
-	0xa1, 0x9d, 0x71, 0xaa, 0xdd, 0x79, 0x9b, 0x95, 0x5e, 0x65, 0x95, 0xc3, 0xde, 0xfe, 0x65, 0xaa,
-	0xcd, 0x73, 0xed, 0x79, 0x40, 0x7e, 0x0e, 0xd7, 0x70, 0xc0, 0x92, 0x50, 0x28, 0x8d, 0x0e, 0x30,
-	0x5a, 0xdd, 0x07, 0xa8, 0x70, 0x8c, 0x32, 0xc7, 0xa8, 0x74, 0x8c, 0x5e, 0x32, 0x3f, 0xb4, 0x9a,
-	0xe7, 0xa9, 0x26, 0xd9, 0x25, 0x7d, 0x6f, 0xfd, 0xf3, 0x99, 0x26, 0xfd, 0x3c, 0xd3, 0x24, 0xfd,
-	0x2b, 0x80, 0x72, 0x6d, 0xd6, 0x26, 0x3c, 0x62, 0x21, 0x27, 0xcb, 0x4e, 0x0a, 0xfe, 0xe6, 0xa4,
-	0xaf, 0xe1, 0x46, 0x84, 0x63, 0xe1, 0x0f, 0xfc, 0x08, 0x87, 0xc2, 0x29, 0x8d, 0x37, 0xad, 0xc7,
-	0x99, 0xdc, 0x9b, 0xba, 0x92, 0xcb, 0xcd, 0x51, 0xed, 0xb9, 0x7f, 0xfd, 0x53, 0x03, 0xb6, 0xfa,
-	0x9c, 0xbe, 0xf3, 0xc5, 0xd0, 0x8b, 0xf1, 0xe8, 0x5f, 0x9e, 0xd0, 0xa2, 0xef, 0xc6, 0xca, 0xbe,
-	0xe5, 0x1e, 0x6c, 0x06, 0xcc, 0x23, 0x4a, 0xb3, 0x03, 0x8c, 0x8d, 0xee, 0x0e, 0x5a, 0x76, 0x15,
-	0x50, 0xd5, 0x15, 0x7c, 0xd4, 0x67, 0x1e, 0xb1, 0x36, 0xaf, 0x52, 0xad, 0x55, 0x34, 0x20, 0xdb,
-	0xab, 0xdb, 0xb9, 0xc4, 0x4c, 0x72, 0x6e, 0xae, 0x9a, 0x9c, 0x5f, 0x00, 0xde, 0x9b, 0x99, 0xc2,
-	0x7f, 0x11, 0x9d, 0x2c, 0x2a, 0xa3, 0x69, 0x83, 0x9c, 0x30, 0x09, 0x5c, 0x12, 0x97, 0x23, 0x99,
-	0x89, 0xca, 0x02, 0x45, 0xb7, 0xb7, 0x6a, 0xec, 0x20, 0x87, 0xba, 0xdf, 0x00, 0x6c, 0xf4, 0x39,
-	0x95, 0x0f, 0xe1, 0xad, 0xea, 0xa9, 0xe8, 0x2c, 0x1f, 0x49, 0x7d, 0xbf, 0xda, 0xc6, 0x75, 0x8c,
-	0x69, 0x1b, 0xdf, 0xc3, 0xf5, 0x69, 0xc0, 0x1f, 0xfd, 0x71, 0x57, 0x45, 0x69, 0x3f, 0xb9, 0x96,
-	0x52, 0x29, 0x5b, 0xd6, 0xf9, 0x58, 0x05, 0x17, 0x63, 0x15, 0xfc, 0x18, 0xab, 0xe0, 0xcb, 0x44,
-	0x95, 0x2e, 0x26, 0xaa, 0xf4, 0x7d, 0xa2, 0x4a, 0x1f, 0x0c, 0xea, 0x8b, 0x61, 0xe2, 0xa2, 0x01,
-	0x0b, 0x4c, 0x4e, 0xc9, 0xd3, 0x52, 0x2f, 0x5b, 0x9b, 0x27, 0xd5, 0x4b, 0x7c, 0x1a, 0x11, 0xee,
-	0xae, 0xe5, 0x4f, 0xe5, 0xb3, 0xdf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x9e, 0x9c, 0xf0, 0x9e, 0xa3,
-	0x05, 0x00, 0x00,
+	// 518 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0x4f, 0x6b, 0xd4, 0x40,
+	0x14, 0xcf, 0x64, 0xd7, 0xfe, 0x99, 0x62, 0x0b, 0xd3, 0x1e, 0x62, 0x0e, 0x99, 0x35, 0x14, 0xd9,
+	0x82, 0x4d, 0xa0, 0xde, 0x7a, 0x0c, 0x55, 0xd8, 0xc3, 0x2a, 0x44, 0x8a, 0xe2, 0x65, 0x49, 0x37,
+	0xc3, 0xec, 0xd0, 0x26, 0x13, 0x32, 0xb3, 0xee, 0xf6, 0x1b, 0x78, 0xf4, 0x23, 0xf4, 0x4b, 0xe8,
+	0x67, 0xe8, 0xb1, 0x47, 0x11, 0x09, 0x9a, 0xbd, 0x88, 0xc7, 0xbd, 0x79, 0x93, 0x4c, 0x92, 0xdd,
+	0xb5, 0x6c, 0x29, 0xa8, 0x60, 0x4f, 0x19, 0xde, 0xfb, 0xbd, 0x97, 0xf7, 0x7e, 0xbf, 0xdf, 0x0c,
+	0x44, 0x82, 0x12, 0x77, 0xc0, 0x87, 0x82, 0xb8, 0x72, 0xec, 0x24, 0x29, 0x97, 0x1c, 0xed, 0x08,
+	0x4a, 0x62, 0x22, 0x47, 0x3c, 0x3d, 0x75, 0x04, 0x25, 0x8e, 0x4a, 0x9b, 0x3b, 0x94, 0x53, 0xae,
+	0x00, 0x6e, 0x71, 0x2a, 0xb1, 0xa6, 0x31, 0xaf, 0x1f, 0x31, 0x39, 0x08, 0xd3, 0x60, 0x54, 0x66,
+	0xec, 0x2f, 0x00, 0xc2, 0xae, 0xa0, 0x47, 0x24, 0xe1, 0x82, 0x49, 0xf4, 0x18, 0xae, 0xf6, 0x53,
+	0x12, 0x48, 0x9e, 0x1a, 0xa0, 0x05, 0xda, 0xeb, 0x1e, 0x9a, 0x66, 0x78, 0xf3, 0x3c, 0x88, 0xce,
+	0x0e, 0xed, 0x2a, 0x61, 0xfb, 0x35, 0x04, 0x3d, 0x87, 0x5b, 0x22, 0xe1, 0xa9, 0xec, 0x91, 0xb7,
+	0x24, 0x96, 0xbd, 0x21, 0x0b, 0x0d, 0x5d, 0x55, 0xed, 0xe6, 0x19, 0xbe, 0xff, 0xb2, 0x48, 0x3d,
+	0x2d, 0x32, 0xc7, 0x9d, 0xa3, 0x1f, 0x19, 0xbe, 0x8e, 0xf5, 0xaf, 0x07, 0xd0, 0x33, 0xb8, 0x12,
+	0x44, 0x7c, 0x18, 0x4b, 0xa3, 0xa1, 0xda, 0x38, 0x97, 0x19, 0xd6, 0x3e, 0x67, 0xf8, 0x11, 0x65,
+	0x72, 0x30, 0x3c, 0x71, 0xfa, 0x3c, 0x72, 0xfb, 0x5c, 0x44, 0x5c, 0x54, 0x9f, 0x7d, 0x11, 0x9e,
+	0xba, 0xf2, 0x3c, 0x21, 0xc2, 0xe9, 0xc4, 0xd2, 0xaf, 0xaa, 0x0f, 0xd7, 0xde, 0x5d, 0x60, 0xed,
+	0xfb, 0x05, 0xd6, 0xec, 0x0f, 0x00, 0xa2, 0xf9, 0x7a, 0x3e, 0x11, 0x09, 0x8f, 0x05, 0x59, 0x36,
+	0x38, 0xf8, 0x9b, 0xc1, 0x5f, 0xc0, 0xed, 0x24, 0x48, 0x25, 0xeb, 0xb3, 0x24, 0x90, 0x8c, 0xc7,
+	0x3d, 0x16, 0x87, 0x64, 0xac, 0xc8, 0x68, 0x7a, 0xd6, 0x34, 0xc3, 0x66, 0x49, 0xe1, 0x12, 0x90,
+	0xed, 0xa3, 0xdf, 0xa2, 0x1d, 0x15, 0xfc, 0xa9, 0xc3, 0x8d, 0xae, 0xa0, 0xaf, 0x2a, 0xb1, 0xfe,
+	0xb3, 0x2e, 0x37, 0xac, 0xd7, 0xf8, 0xd3, 0xf5, 0x50, 0x07, 0x36, 0x23, 0x1e, 0x12, 0xa3, 0xd9,
+	0x02, 0xed, 0xcd, 0x83, 0x5d, 0x67, 0x99, 0x95, 0x9d, 0x7a, 0xf9, 0xe0, 0xac, 0xcb, 0x43, 0xe2,
+	0x6d, 0x4d, 0x33, 0xbc, 0x51, 0xfe, 0xa7, 0xa8, 0xb5, 0x7d, 0xd5, 0x62, 0xc1, 0x33, 0xf7, 0xfe,
+	0x91, 0x67, 0xbe, 0x01, 0xb8, 0xbd, 0xc0, 0xfd, 0xcc, 0x34, 0x7b, 0x50, 0xaf, 0x7c, 0xd2, 0xf4,
+	0x1e, 0xe4, 0x19, 0xd6, 0x15, 0x7b, 0x3a, 0x0b, 0xa7, 0x19, 0x5e, 0x2f, 0x07, 0x63, 0xa1, 0xed,
+	0xeb, 0x2c, 0xbc, 0xf3, 0x02, 0x1c, 0x7c, 0x04, 0xb0, 0xd1, 0x15, 0x14, 0x1d, 0xc3, 0xd5, 0xfa,
+	0xea, 0xb7, 0x96, 0xab, 0x30, 0xbf, 0x3d, 0x66, 0xfb, 0x36, 0xc4, 0x8c, 0xaa, 0xd7, 0x70, 0x6d,
+	0x66, 0xdd, 0x87, 0x37, 0x56, 0xd5, 0x10, 0x73, 0xef, 0x56, 0x48, 0xdd, 0xd9, 0xf3, 0x2e, 0x73,
+	0x0b, 0x5c, 0xe5, 0x16, 0xf8, 0x9a, 0x5b, 0xe0, 0xfd, 0xc4, 0xd2, 0xae, 0x26, 0x96, 0xf6, 0x69,
+	0x62, 0x69, 0x6f, 0xda, 0x0b, 0x82, 0x0b, 0x4a, 0xf6, 0xab, 0x7e, 0xc5, 0xd9, 0x1d, 0xd7, 0x8f,
+	0x67, 0x21, 0xfb, 0xc9, 0x8a, 0x7a, 0xfa, 0x9e, 0xfc, 0x0a, 0x00, 0x00, 0xff, 0xff, 0x34, 0x59,
+	0xa5, 0x3d, 0x56, 0x05, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -284,9 +285,11 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+	// Deposit defines a method for performing a deposit of coins to become part
+	// of the house corresponding to a sport event.
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// amount corresponding to a deposit.
 	Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.CallOption) (*MsgWithdrawResponse, error)
 }
 
@@ -318,9 +321,11 @@ func (c *msgClient) Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+	// Deposit defines a method for performing a deposit of coins to become part
+	// of the house corresponding to a sport event.
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// amount corresponding to a deposit.
 	Withdraw(context.Context, *MsgWithdraw) (*MsgWithdrawResponse, error)
 }
 
@@ -413,11 +418,11 @@ func (m *MsgDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	{
-		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
+		size := m.Amount.Size()
+		i -= size
+		if _, err := m.Amount.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
-		i -= size
 		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
 	i--
@@ -429,10 +434,10 @@ func (m *MsgDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -459,8 +464,8 @@ func (m *MsgDepositResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.ParticipantID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.ParticipantID))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x10
 	}
@@ -495,11 +500,11 @@ func (m *MsgWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	var l int
 	_ = l
 	{
-		size, err := m.Amount.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
+		size := m.Amount.Size()
+		i -= size
+		if _, err := m.Amount.MarshalTo(dAtA[i:]); err != nil {
 			return 0, err
 		}
-		i -= size
 		i = encodeVarintTx(dAtA, i, uint64(size))
 	}
 	i--
@@ -509,8 +514,8 @@ func (m *MsgWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x20
 	}
-	if m.ParticipantID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.ParticipantID))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x18
 	}
@@ -521,10 +526,10 @@ func (m *MsgWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.DepositorAddress) > 0 {
-		i -= len(m.DepositorAddress)
-		copy(dAtA[i:], m.DepositorAddress)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.DepositorAddress)))
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -551,22 +556,22 @@ func (m *MsgWithdrawResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.WithdrawalNumber != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.WithdrawalNumber))
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ParticipationIndex))
 		i--
 		dAtA[i] = 0x18
-	}
-	if m.ParticipantID != 0 {
-		i = encodeVarintTx(dAtA, i, uint64(m.ParticipantID))
-		i--
-		dAtA[i] = 0x10
 	}
 	if len(m.SportEventUID) > 0 {
 		i -= len(m.SportEventUID)
 		copy(dAtA[i:], m.SportEventUID)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.SportEventUID)))
 		i--
-		dAtA[i] = 0xa
+		dAtA[i] = 0x12
+	}
+	if m.ID != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.ID))
+		i--
+		dAtA[i] = 0x8
 	}
 	return len(dAtA) - i, nil
 }
@@ -588,7 +593,7 @@ func (m *MsgDeposit) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.Creator)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -611,8 +616,8 @@ func (m *MsgDepositResponse) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.ParticipantID != 0 {
-		n += 1 + sovTx(uint64(m.ParticipantID))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovTx(uint64(m.ParticipationIndex))
 	}
 	return n
 }
@@ -623,7 +628,7 @@ func (m *MsgWithdraw) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.DepositorAddress)
+	l = len(m.Creator)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
@@ -631,8 +636,8 @@ func (m *MsgWithdraw) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.ParticipantID != 0 {
-		n += 1 + sovTx(uint64(m.ParticipantID))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovTx(uint64(m.ParticipationIndex))
 	}
 	if m.Mode != 0 {
 		n += 1 + sovTx(uint64(m.Mode))
@@ -648,15 +653,15 @@ func (m *MsgWithdrawResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
+	if m.ID != 0 {
+		n += 1 + sovTx(uint64(m.ID))
+	}
 	l = len(m.SportEventUID)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.ParticipantID != 0 {
-		n += 1 + sovTx(uint64(m.ParticipantID))
-	}
-	if m.WithdrawalNumber != 0 {
-		n += 1 + sovTx(uint64(m.WithdrawalNumber))
+	if m.ParticipationIndex != 0 {
+		n += 1 + sovTx(uint64(m.ParticipationIndex))
 	}
 	return n
 }
@@ -698,7 +703,7 @@ func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -726,7 +731,7 @@ func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.Creator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -764,7 +769,7 @@ func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -774,15 +779,16 @@ func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthTx
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTx
 			}
@@ -877,9 +883,9 @@ func (m *MsgDepositResponse) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantID", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.ParticipantID = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -889,7 +895,7 @@ func (m *MsgDepositResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ParticipantID |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -946,7 +952,7 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field DepositorAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -974,7 +980,7 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.DepositorAddress = string(dAtA[iNdEx:postIndex])
+			m.Creator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -1010,9 +1016,9 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantID", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.ParticipantID = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1022,7 +1028,7 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.ParticipantID |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1050,7 +1056,7 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1060,15 +1066,16 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthTx
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTx
 			}
@@ -1130,6 +1137,25 @@ func (m *MsgWithdrawResponse) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ID", wireType)
+			}
+			m.ID = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ID |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field SportEventUID", wireType)
 			}
@@ -1161,30 +1187,11 @@ func (m *MsgWithdrawResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.SportEventUID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantID", wireType)
-			}
-			m.ParticipantID = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ParticipantID |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		case 3:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field WithdrawalNumber", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
 			}
-			m.WithdrawalNumber = 0
+			m.ParticipationIndex = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1194,7 +1201,7 @@ func (m *MsgWithdrawResponse) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.WithdrawalNumber |= uint64(b&0x7F) << shift
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

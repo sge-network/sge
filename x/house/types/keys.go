@@ -1,9 +1,6 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/address"
-
 	"github.com/sge-network/sge/utils"
 )
 
@@ -32,22 +29,22 @@ var (
 	WithdrawalKeyPrefix = []byte{0x01} // prefix for keys that store withdrawals
 )
 
-// GetDepositKey creates the key for deposit bond with sport event and participant
-func GetDepositKey(depAddr sdk.AccAddress, sportEventUID string, participantID uint64) []byte {
-	return append(GetDepositsKey(depAddr), append(utils.StrBytes(sportEventUID), utils.Uint64ToBytes(participantID)...)...)
+// GetDepositKey creates the key for deposit bond with sport event and participation
+func GetDepositKey(depositorAddr string, sportEventUID string, participationIndex uint64) []byte {
+	return append(GetDepositListPrefix(depositorAddr), append(utils.StrBytes(sportEventUID), utils.Uint64ToBytes(participationIndex)...)...)
 }
 
-// GetDepositsKey creates the key for deposit bond with sport event
-func GetDepositsKey(depAddr sdk.AccAddress) []byte {
-	return address.MustLengthPrefix(depAddr)
+// GetDepositListPrefix creates the key for deposit bond with sport event
+func GetDepositListPrefix(depositorAddr string) []byte {
+	return utils.StrBytes(depositorAddr)
 }
 
 // GetWithdrawalKey creates the key for withdrawal bond with sport event and deposit
-func GetWithdrawalKey(depAddr sdk.AccAddress, sportEventUID string, participantID uint64, withdrawalNumber uint64) []byte {
-	return append(GetDepositKey(depAddr, sportEventUID, participantID), utils.Uint64ToBytes(withdrawalNumber)...)
+func GetWithdrawalKey(depositorAddr string, sportEventUID string, participationIndex uint64, id uint64) []byte {
+	return append(GetDepositKey(depositorAddr, sportEventUID, participationIndex), utils.Uint64ToBytes(id)...)
 }
 
-// GetWithdrawalsKey creates the key for withdrawals bond with sport event
-func GetWithdrawalsKey(depAddr sdk.AccAddress) []byte {
-	return address.MustLengthPrefix(depAddr)
+// GetWithdrawalListPrefix creates the key for withdrawals bond with sport event
+func GetWithdrawalListPrefix(depositorAddr string) []byte {
+	return utils.StrBytes(depositorAddr)
 }

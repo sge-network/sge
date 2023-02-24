@@ -1,81 +1,77 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// GetDeposit returns a specific deposit.
-func (k Keeper) GetDeposit(ctx sdk.Context, depositIDBytes []byte) (deposit types.Deposit, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
-	value := store.Get(depositIDBytes)
-	if value == nil {
-		return deposit, false
-	}
+// SetDeposit sets a deposit.
+func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
+	depoistKey := types.GetDepositKey(deposit.Creator, deposit.SportEventUID, deposit.ParticipationIndex)
 
-	deposit = types.MustUnmarshalDeposit(k.cdc, value)
-
-	return deposit, true
+	store := k.getDepositsStore(ctx)
+	b := k.cdc.MustMarshal(&deposit)
+	store.Set(depoistKey, b)
 }
 
-// IterateAllDeposits iterates through all of the deposits.
-func (k Keeper) IterateAllDeposits(ctx sdk.Context, cb func(deposit types.Deposit) (stop bool)) {
-	iterator := sdk.KVStorePrefixIterator(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		delegation := types.MustUnmarshalDeposit(k.cdc, iterator.Value())
-		if cb(delegation) {
-			break
-		}
+// GetDeposit returns a specific deposit.
+func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, sportEventUID string, participationIndex uint64) (val types.Deposit, found bool) {
+	sportEventsStore := k.getDepositsStore(ctx)
+	depoistKey := types.GetDepositKey(depositorAddress, sportEventUID, participationIndex)
+	b := sportEventsStore.Get(depoistKey)
+	if b == nil {
+		return val, false
 	}
+
+	k.cdc.MustUnmarshal(b, &val)
+
+	return val, true
 }
 
 // GetAllDeposits returns all deposits used during genesis dump.
-func (k Keeper) GetAllDeposits(ctx sdk.Context) (deposits []types.Deposit) {
-	k.IterateAllDeposits(ctx, func(deposit types.Deposit) bool {
-		deposits = append(deposits, deposit)
-		return false
-	})
+func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
+	store := k.getDepositsStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
-	return deposits
-}
+	defer func() {
+		err = iterator.Close()
+	}()
 
-// SetDeposit sets a deposit.
-func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) error {
-	depAddress := sdk.MustAccAddressFromBech32(deposit.DepositorAddress)
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.Deposit
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.DepositKeyPrefix)
-	b := types.MustMarshalDeposit(k.cdc, deposit)
-
-	depoistKey := types.GetDepositKey(depAddress, deposit.SportEventUID, deposit.ParticipantID)
-	store.Set(depoistKey, b)
-	return nil
+	return
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, depAddr sdk.AccAddress, sportEventUID string, depAmt sdk.Int) (uint64, error) {
+func (k Keeper) Deposit(ctx sdk.Context, creator string, sportEventUID string, amount sdk.Int) (participationIndex uint64, err error) {
 	// Create the deposit object
-	deposit := types.NewDeposit(depAddr, sportEventUID, depAmt, sdk.ZeroInt(), 0)
+	deposit := types.NewDeposit(creator, sportEventUID, amount, sdk.ZeroInt(), 0)
 
-	// Set the house participation fee
-	deposit.SetHouseParticipationFee(k.HouseParticipationFee(ctx))
+	deposit.SetHouseParticipationFee(k.GetHouseParticipationFee(ctx))
 
-	participantID, err := k.orderBookKeeper.AddBookParticipant(
-		ctx, depAddr, sportEventUID, deposit.Liquidity, deposit.Fee, types.HouseParticipationFeeName,
+	creatorAddr, err := sdk.AccAddressFromBech32(creator)
+	if err != nil {
+		err = sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return
+	}
+
+	participationIndex, err = k.orderBookKeeper.InitiateBookParticipation(
+		ctx, creatorAddr, sportEventUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
-		return participantID, sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
+		err = sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
+		return
 	}
 
-	deposit.ParticipantID = participantID
+	deposit.ParticipationIndex = participationIndex
 
-	if err = k.SetDeposit(ctx, deposit); err != nil {
-		return participantID, err
-	}
+	k.SetDeposit(ctx, deposit)
 
-	return participantID, nil
+	return participationIndex, err
 }

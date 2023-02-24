@@ -9,46 +9,95 @@ import (
 
 // InitGenesis sets the parameters for the provided keeper.
 func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState) {
-	// TODO
-	keeper.SetParams(ctx, data.Params)
-
-	for _, book := range data.Books {
+	for _, book := range data.BookList {
 		keeper.SetBook(ctx, book)
 	}
 
-	for _, bp := range data.BookParticipants {
-		keeper.SetBookParticipant(ctx, bp)
+	for _, bp := range data.BookParticipationList {
+		keeper.SetBookParticipation(ctx, bp)
 	}
 
-	for _, be := range data.BookExposures {
+	for _, be := range data.BookExposureList {
 		keeper.SetBookOddsExposure(ctx, be)
 	}
 
-	for _, pe := range data.ParticipantExposures {
-		keeper.SetParticipantExposure(ctx, pe)
+	for _, pe := range data.ParticipationExposureList {
+		keeper.SetParticipationExposure(ctx, pe)
+	}
+
+	for _, pe := range data.ParticipationExposureByIndexList {
+		keeper.SetParticipationExposureByIndex(ctx, pe)
+	}
+
+	for _, pe := range data.HistoricalParticipationExposureList {
+		keeper.SetHistoricalParticipationExposure(ctx, pe)
+	}
+
+	for _, pb := range data.ParticipationBetPairExposureList {
+		betID, found := keeper.BetKeeper.GetBetID(ctx, pb.BetUID)
+		if !found {
+			panic("bet uid %s of the participation bet pair list not found")
+		}
+		keeper.SetParticipationBetPair(ctx, pb, betID.ID)
+	}
+
+	for _, pl := range data.PayoutLock {
+		keeper.SetPayoutLock(ctx, string(pl))
 	}
 
 	keeper.SetOrderBookStats(ctx, data.Stats)
+
+	keeper.SetParams(ctx, data.Params)
 }
 
 // ExportGenesis returns a GenesisState for a given context and keeper. The
 // GenesisState will contain the params found in the keeper.
-func ExportGenesis(ctx sdk.Context, keeper keeper.Keeper) *types.GenesisState {
-	// TODO
-	return &types.GenesisState{
-		Params:               keeper.GetParams(ctx),
-		Books:                keeper.GetAllBooks(ctx),
-		BookParticipants:     keeper.GetAllBookParticipants(ctx),
-		BookExposures:        keeper.GetAllBookExposures(ctx),
-		ParticipantExposures: keeper.GetAllParticipantExposures(ctx),
-		Stats:                keeper.GetOrderBookStats(ctx),
+func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
+	genesis := types.DefaultGenesis()
+	genesis.Params = k.GetParams(ctx)
+
+	var err error
+	genesis.BookList, err = k.GetAllBooks(ctx)
+	if err != nil {
+		panic(err)
 	}
-}
 
-// ValidateGenesis validates the provided orderbook genesis state to ensure the
-// expected invariants holds. (i.e. params in correct bounds)
-func ValidateGenesis(data *types.GenesisState) error {
-	// TODO
+	genesis.BookParticipationList, err = k.GetAllBookParticipations(ctx)
+	if err != nil {
+		panic(err)
+	}
 
-	return data.Params.Validate()
+	genesis.BookExposureList, err = k.GetAllBookExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.ParticipationExposureList, err = k.GetAllParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.ParticipationExposureByIndexList, err = k.GetAllParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.HistoricalParticipationExposureList, err = k.GetAllHistoricalParticipationExposures(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.ParticipationBetPairExposureList, err = k.GetAllParticipationBetPair(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.PayoutLock, err = k.GetAllPayoutLock(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	genesis.Stats = k.GetOrderBookStats(ctx)
+
+	return genesis
 }

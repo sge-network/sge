@@ -28,10 +28,10 @@ var (
 	DefaultMinBetAmount = sdk.NewInt(1000000)
 
 	// DefaultMaxSRContribution is the default maximum sr contribution allowed
-	DefaultMaxSRContribution = sdk.NewInt(100000000)
+	DefaultMaxSRContribution = sdk.NewInt(10000000)
 
 	// DefaultMinBetFee is the default minimum bet fee amount allowed
-	DefaultMinBetFee = sdk.NewInt(100000)
+	DefaultMinBetFee = sdk.NewInt(0)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -92,4 +92,20 @@ func validateMaxSRContribution(i interface{}) error {
 	}
 
 	return nil
+}
+
+// NewEventBetConstraints creates new bet constraint pointer
+func (p *Params) NewEventBetConstraints(minAmount, betFee sdk.Int) *EventBetConstraints {
+	if minAmount.IsNil() {
+		minAmount = p.EventMinBetAmount
+	}
+
+	if betFee.IsNil() {
+		betFee = p.EventMinBetFee
+	}
+
+	return &EventBetConstraints{
+		MinAmount: minAmount,
+		BetFee:    betFee,
+	}
 }

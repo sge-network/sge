@@ -31,11 +31,11 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, 
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
 		return sdk.ZeroInt(),
-			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeNegative, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1
-	if oddsDecVal.LT(sdk.NewDec(1)) {
+	if oddsDecVal.LTE(sdk.NewDec(1)) {
 		return sdk.ZeroInt(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
@@ -59,7 +59,7 @@ func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
 		return sdk.ZeroInt(),
-			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeNegative, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1

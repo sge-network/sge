@@ -51,18 +51,19 @@ message SportEvent {
   bool active = 10;
   // meta contains human-readable metadata of the sport-event.
   string meta = 11;
-  // sr_contribution_for_house is the amount of contibution of house in the sr 
-  string sr_contribution_for_house = 12[
-    (gogoproto.customname) = "SrContributionForHouse" ,
+  // sr_contribution_for_house is the amount of contibution of house in the sr
+  string sr_contribution_for_house = 12 [
+    (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
     json_name = "sr_contribution_for_house",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
+    (gogoproto.nullable) = false
+  ];
   // book_id is the id of book
   string book_id = 13 [
-    (gogoproto.customname) = "BookID" ,
+    (gogoproto.customname) = "BookID",
     (gogoproto.jsontag) = "book_id",
-     json_name = "book_id"
+    json_name = "book_id"
   ];
 }
 
@@ -71,7 +72,7 @@ enum SportEventStatus {
   // event is pending
   SPORT_EVENT_STATUS_UNSPECIFIED = 0;
   // invalid event
-  SPORT_EVENT_STATUS_INVALID = 1;
+  SPORT_EVENT_STATUS_PENDING = 1;
   // event canceled
   SPORT_EVENT_STATUS_CANCELLED = 2;
   // event aborted

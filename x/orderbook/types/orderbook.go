@@ -5,15 +5,15 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// NewBook creates a new orderbook object
+// NewOrderBook creates a new orderbook object
 //
 //nolint:interfacer
-func NewBook(bookID string, participants, numberOfOdds uint64, status OrderBookStatus) OrderBook {
+func NewOrderBook(bookID string, participationCount, oddsCount uint64, status OrderBookStatus) OrderBook {
 	return OrderBook{
-		ID:           bookID,
-		Participants: participants,
-		Status:       status,
-		NumberOfOdds: numberOfOdds,
+		ID:                 bookID,
+		ParticipationCount: participationCount,
+		Status:             status,
+		OddsCount:          oddsCount,
 	}
 }
 

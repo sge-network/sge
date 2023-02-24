@@ -47,9 +47,9 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	stats.Count++
 	betID := stats.Count
 
-	betFullfillment, err := k.obKeeper.ProcessBetPlacement(
-		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, payoutProfit, bettorAddress, bet.BetFee, bet.Amount,
-		bet.OddsType, bet.OddsValue, betID,
+	betFulfillment, err := k.obKeeper.ProcessBetPlacement(
+		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, payoutProfit,
+		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
 	)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
@@ -65,7 +65,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bet.Verified = true
 
 	bet.CreatedAt = ctx.BlockTime().Unix()
-	bet.BetFullfillment = betFullfillment
+	bet.BetFulfillment = betFulfillment
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet, betID)
@@ -90,7 +90,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
 	}
 
-	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
+	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
@@ -101,9 +101,9 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 }
 
 // oddsExists checks if bet odds id is present in the sport-event list of odds uids
-func oddsExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
+func oddsExists(betOddsUID string, odds []*sporteventtypes.Odds) bool {
 	for _, o := range odds {
-		if betOddsID == o.UID {
+		if betOddsUID == o.UID {
 			return true
 		}
 	}

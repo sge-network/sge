@@ -1,7 +1,6 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -11,14 +10,14 @@ import (
 
 // SetOrderBookStats sets bet statistics in the store
 func (k Keeper) SetOrderBookStats(ctx sdk.Context, stats types.OrderBookStats) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookStatsKeyPrefix)
+	store := k.getBookStatsStore(ctx)
 	b := k.cdc.MustMarshal(&stats)
 	store.Set(utils.StrBytes("0"), b)
 }
 
 // GetOrderBookStats returns order-book stats
 func (k Keeper) GetOrderBookStats(ctx sdk.Context) (val types.OrderBookStats) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookStatsKeyPrefix)
+	store := k.getBookStatsStore(ctx)
 	b := store.Get(utils.StrBytes("0"))
 	if b == nil {
 		return val

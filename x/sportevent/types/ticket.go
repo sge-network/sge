@@ -14,6 +14,10 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		return err
 	}
 
+	if payload.Status != SportEventStatus_SPORT_EVENT_STATUS_PENDING {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "acceptable status is pending")
+	}
+
 	if !utils.IsValidUID(payload.UID) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport-event")
 	}
@@ -51,7 +55,7 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		oddsSet[o.UID] = Odds{}
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err
@@ -71,7 +75,7 @@ func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Param
 		return err
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err
@@ -84,7 +88,7 @@ func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Param
 // Validate validates sport-event resolution ticket payload.
 func (payload *SportEventResolutionTicketPayload) Validate() error {
 	if payload.Status == SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED ||
-		payload.Status == SportEventStatus_SPORT_EVENT_STATUS_INVALID {
+		payload.Status == SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
 

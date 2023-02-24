@@ -2,32 +2,37 @@ syntax = "proto3";
 package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
-import "cosmos/base/v1beta1/coin.proto";
-import "sge/house/house.proto";
+import "sge/house/withdraw.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
 // Msg defines the house Msg service.
 service Msg {
-  // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+  // Deposit defines a method for performing a deposit of coins to become part
+  // of the house corresponding to a sport event.
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
 
-  // Withdraw defines a method for performing a withdrawal of coins of unused amount corresponding to a deposit.
+  // Withdraw defines a method for performing a withdrawal of coins of unused
+  // amount corresponding to a deposit.
   rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
 }
 
-// MsgDeposit defines a SDK message for performing a deposit of coins to become part of the house corresponding to a sport event.
+// MsgDeposit defines a SDK message for performing a deposit of coins to become
+// part of the house corresponding to a sport event.
 message MsgDeposit {
-  option (gogoproto.equal)           = false;
+  option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string                   depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
-  string                   sport_event_uid = 2 [
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+  string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
-  cosmos.base.v1beta1.Coin amount            = 3 [(gogoproto.nullable) = false];
+  string amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MsgDepositResponse defines the Msg/Deposit response type.
@@ -38,46 +43,46 @@ message MsgDepositResponse {
     json_name = "sport_event_uid"
   ];
 
-  uint64 participant_id = 2 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
+  uint64 participation_index = 2
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 }
 
-// MsgWithdraw defines a SDK message for performing a withdrawal of coins of unused amount corresponding to a deposit.
+// MsgWithdraw defines a SDK message for performing a withdrawal of coins of
+// unused amount corresponding to a deposit.
 message MsgWithdraw {
-  option (gogoproto.equal)           = false;
+  option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  string depositor_address = 1 [(gogoproto.moretags) = "yaml:\"depositor_address\""];
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
   string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
-  uint64 participant_id = 3 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
+  uint64 participation_index = 3
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
+  WithdrawalMode mode = 4 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
+  string amount = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
   ];
-  WithdrawalMode mode = 4 [(gogoproto.moretags) = "yaml:\"mode\""];
-  cosmos.base.v1beta1.Coin amount            = 5 [(gogoproto.nullable) = false];
 }
 
 // MsgWithdrawResponse defines the Msg/Withdraw response type.
 message MsgWithdrawResponse {
-  string sport_event_uid = 1 [
+  uint64 id = 1 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id",
+    (gogoproto.moretags) = "yaml:\"id\""
+  ];
+
+  string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
 
-  uint64 participant_id = 2 [
-    (gogoproto.customname) = "ParticipantID",
-    (gogoproto.jsontag) = "participant_id",
-    json_name = "participant_id"
-  ];
-
-  uint64 withdrawal_number = 3 [(gogoproto.moretags) = "yaml:\"withdrawal_number\""];
+  uint64 participation_index = 3
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 }

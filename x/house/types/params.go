@@ -11,7 +11,7 @@ import (
 // House params default values
 const (
 	// Default minimum deposit acceptable.
-	DefaultMinDeposit uint64 = 100
+	DefaultMinDeposit int64 = 100
 
 	// Default house participation fee.
 	DefaultHouseParticipationFee string = "0.1"
@@ -28,9 +28,9 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minDeposit uint64, houseParticipationFee sdk.Dec) Params {
+func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 	return Params{
-		MinimumDeposit:        minDeposit,
+		MinDeposit:            minDeposit,
 		HouseParticipationFee: houseParticipationFee,
 	}
 }
@@ -38,7 +38,7 @@ func NewParams(minDeposit uint64, houseParticipationFee sdk.Dec) Params {
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinimumDeposit, validateMinimumDeposit),
+		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinDeposit, validateMinimumDeposit),
 		paramtypes.NewParamSetPair(KeyHouseParticipationFee, &p.HouseParticipationFee, validateHouseParticipationFee),
 	}
 }
@@ -46,7 +46,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultMinDeposit,
+		sdk.NewInt(DefaultMinDeposit),
 		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
 	)
 }
@@ -59,7 +59,7 @@ func (p Params) String() string {
 
 // validate a set of params
 func (p Params) Validate() error {
-	if err := validateMinimumDeposit(p.MinimumDeposit); err != nil {
+	if err := validateMinimumDeposit(p.MinDeposit); err != nil {
 		return err
 	}
 
@@ -71,13 +71,13 @@ func (p Params) Validate() error {
 }
 
 func validateMinimumDeposit(i interface{}) error {
-	v, ok := i.(uint64)
+	v, ok := i.(sdk.Int)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v == 0 {
-		return fmt.Errorf("minimum deposit must be positive: %d", v)
+	if v.LTE(sdk.OneInt()) {
+		return fmt.Errorf("minimum deposit must be positive and more than one: %d", v)
 	}
 
 	return nil

@@ -63,7 +63,7 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 		return types.ErrNoMatchingSportEvent
 	}
 
-	if storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
+	if storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
 		return types.ErrCanNotBeAltered
 	}
 

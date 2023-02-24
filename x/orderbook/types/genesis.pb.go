@@ -27,16 +27,29 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type GenesisState struct {
 	// params defines all the parameters related to orderbook.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	// books defines the books active at genesis.
-	Books []OrderBook `protobuf:"bytes,2,rep,name=books,proto3" json:"books"`
-	// book_participants defines the book participants active at genesis.
-	BookParticipants []BookParticipant `protobuf:"bytes,3,rep,name=book_participants,json=bookParticipants,proto3" json:"book_participants"`
-	// book_exposures defines the book exposures active at genesis.
-	BookExposures []BookOddsExposure `protobuf:"bytes,4,rep,name=book_exposures,json=bookExposures,proto3" json:"book_exposures"`
-	// participant_exposures defines the participant exposures active at genesis.
-	ParticipantExposures []ParticipantExposure `protobuf:"bytes,5,rep,name=participant_exposures,json=participantExposures,proto3" json:"participant_exposures"`
+	// book_list defines the books active at genesis.
+	BookList []OrderBook `protobuf:"bytes,2,rep,name=book_list,json=bookList,proto3" json:"book_list"`
+	// book_participation_list defines the book participations active at genesis.
+	BookParticipationList []BookParticipation `protobuf:"bytes,3,rep,name=book_participation_list,json=bookParticipationList,proto3" json:"book_participation_list"`
+	// book_exposure_list defines the book exposures active at genesis.
+	BookExposureList []BookOddsExposure `protobuf:"bytes,4,rep,name=book_exposure_list,json=bookExposureList,proto3" json:"book_exposure_list"`
+	// participation_exposure_list defines the participation exposures active at
+	// genesis.
+	ParticipationExposureList []ParticipationExposure `protobuf:"bytes,5,rep,name=participation_exposure_list,json=participationExposureList,proto3" json:"participation_exposure_list"`
+	// participation_exposure_by_index_list defines the participation exposures by
+	// index active at genesis.
+	ParticipationExposureByIndexList []ParticipationExposure `protobuf:"bytes,6,rep,name=participation_exposure_by_index_list,json=participationExposureByIndexList,proto3" json:"participation_exposure_by_index_list"`
+	// historical_participation_exposure_list defines the historical participation
+	// exposures active at
+	// genesis.
+	HistoricalParticipationExposureList []ParticipationExposure `protobuf:"bytes,7,rep,name=historical_participation_exposure_list,json=historicalParticipationExposureList,proto3" json:"historical_participation_exposure_list"`
+	// historical_participation_exposure_list defines the historical participation
+	// exposures active at
+	// genesis.
+	ParticipationBetPairExposureList []ParticipationBetPair `protobuf:"bytes,8,rep,name=participation_bet_pair_exposure_list,json=participationBetPairExposureList,proto3" json:"participation_bet_pair_exposure_list"`
+	PayoutLock                       [][]byte               `protobuf:"bytes,9,rep,name=payout_lock,json=payoutLock,proto3" json:"payout_lock,omitempty"`
 	// stats is the statistics of the order-book
-	Stats OrderBookStats `protobuf:"bytes,6,opt,name=stats,proto3" json:"stats"`
+	Stats OrderBookStats `protobuf:"bytes,10,opt,name=stats,proto3" json:"stats"`
 }
 
 func (m *GenesisState) Reset()         { *m = GenesisState{} }
@@ -79,30 +92,58 @@ func (m *GenesisState) GetParams() Params {
 	return Params{}
 }
 
-func (m *GenesisState) GetBooks() []OrderBook {
+func (m *GenesisState) GetBookList() []OrderBook {
 	if m != nil {
-		return m.Books
+		return m.BookList
 	}
 	return nil
 }
 
-func (m *GenesisState) GetBookParticipants() []BookParticipant {
+func (m *GenesisState) GetBookParticipationList() []BookParticipation {
 	if m != nil {
-		return m.BookParticipants
+		return m.BookParticipationList
 	}
 	return nil
 }
 
-func (m *GenesisState) GetBookExposures() []BookOddsExposure {
+func (m *GenesisState) GetBookExposureList() []BookOddsExposure {
 	if m != nil {
-		return m.BookExposures
+		return m.BookExposureList
 	}
 	return nil
 }
 
-func (m *GenesisState) GetParticipantExposures() []ParticipantExposure {
+func (m *GenesisState) GetParticipationExposureList() []ParticipationExposure {
 	if m != nil {
-		return m.ParticipantExposures
+		return m.ParticipationExposureList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetParticipationExposureByIndexList() []ParticipationExposure {
+	if m != nil {
+		return m.ParticipationExposureByIndexList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetHistoricalParticipationExposureList() []ParticipationExposure {
+	if m != nil {
+		return m.HistoricalParticipationExposureList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetParticipationBetPairExposureList() []ParticipationBetPair {
+	if m != nil {
+		return m.ParticipationBetPairExposureList
+	}
+	return nil
+}
+
+func (m *GenesisState) GetPayoutLock() [][]byte {
+	if m != nil {
+		return m.PayoutLock
 	}
 	return nil
 }
@@ -121,29 +162,38 @@ func init() {
 func init() { proto.RegisterFile("sge/orderbook/genesis.proto", fileDescriptor_b54e9379cfb7d94d) }
 
 var fileDescriptor_b54e9379cfb7d94d = []byte{
-	// 348 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4f, 0x4b, 0x02, 0x41,
-	0x18, 0xc6, 0x77, 0xf3, 0xcf, 0x61, 0xac, 0xa8, 0xc1, 0x60, 0x31, 0xda, 0xa4, 0x2e, 0x16, 0xb9,
-	0x0b, 0x76, 0x2f, 0x90, 0xfe, 0x1c, 0x95, 0x3a, 0x04, 0x11, 0xc4, 0xae, 0x0e, 0xe3, 0x22, 0xfa,
-	0x0e, 0xf3, 0x8e, 0x64, 0xdf, 0xa2, 0x8f, 0xe5, 0xd1, 0x63, 0xa7, 0x08, 0xfd, 0x0e, 0x9d, 0x63,
-	0x66, 0x47, 0xd3, 0x42, 0xe9, 0xf6, 0xec, 0x3c, 0xcf, 0xf3, 0x7b, 0x97, 0x79, 0x87, 0xec, 0x23,
-	0x67, 0x21, 0xc8, 0x36, 0x93, 0x31, 0x40, 0x37, 0xe4, 0xac, 0xcf, 0x30, 0xc1, 0x40, 0x48, 0x50,
-	0x40, 0x3d, 0xd4, 0xdf, 0xea, 0x05, 0x64, 0x37, 0x40, 0xce, 0x82, 0x79, 0xae, 0x54, 0xe4, 0xc0,
-	0xc1, 0x84, 0x42, 0xad, 0xd2, 0x7c, 0xe9, 0x60, 0x19, 0x36, 0x57, 0xa9, 0x7d, 0xf4, 0x95, 0x21,
-	0x9b, 0xb7, 0xe9, 0x80, 0x7b, 0x15, 0x29, 0x46, 0x2f, 0x48, 0x5e, 0x44, 0x32, 0xea, 0xa1, 0xe7,
-	0x96, 0xdd, 0x4a, 0xa1, 0x56, 0x0e, 0x56, 0x0d, 0x0c, 0x9a, 0x26, 0x57, 0xcf, 0x8e, 0x3e, 0x0e,
-	0x9d, 0x3b, 0xdb, 0xa2, 0x97, 0x24, 0xa7, 0x4d, 0xf4, 0x36, 0xca, 0x99, 0x4a, 0xa1, 0x76, 0xbc,
-	0xba, 0xde, 0xd0, 0xaa, 0x0e, 0xd0, 0xb5, 0x84, 0xb4, 0x47, 0x9f, 0xc8, 0xae, 0x16, 0xcf, 0x22,
-	0x92, 0x2a, 0x69, 0x25, 0x22, 0xea, 0x2b, 0xf4, 0x32, 0x06, 0x76, 0xb2, 0x1a, 0xa6, 0x39, 0xcd,
-	0x9f, 0x86, 0x45, 0xee, 0xc4, 0xcb, 0xc7, 0x48, 0x1f, 0xc8, 0xb6, 0xa1, 0xb3, 0xa1, 0x00, 0x1c,
-	0x48, 0x86, 0x5e, 0xd6, 0xa0, 0x4f, 0xd7, 0xa3, 0x1b, 0xed, 0x36, 0x5e, 0xdb, 0x8a, 0x65, 0x6f,
-	0x69, 0x73, 0x76, 0x86, 0xb4, 0x43, 0xf6, 0x16, 0xfe, 0x78, 0x81, 0x9f, 0x33, 0xfc, 0xea, 0xda,
-	0x6b, 0x9c, 0xd5, 0x7e, 0x8d, 0x28, 0x8a, 0xbf, 0x16, 0xd2, 0x2b, 0x92, 0x43, 0x15, 0x29, 0xf4,
-	0xf2, 0x66, 0x41, 0x95, 0x7f, 0xdc, 0xb0, 0x5e, 0xed, 0x6c, 0x51, 0x69, 0xb9, 0x7e, 0x33, 0x9a,
-	0xf8, 0xee, 0x78, 0xe2, 0xbb, 0x9f, 0x13, 0xdf, 0x7d, 0x9b, 0xfa, 0xce, 0x78, 0xea, 0x3b, 0xef,
-	0x53, 0xdf, 0x79, 0x3c, 0xe3, 0x89, 0xea, 0x0c, 0xe2, 0xa0, 0x05, 0xbd, 0x10, 0x39, 0xab, 0x5a,
-	0xb6, 0xd6, 0xe1, 0x70, 0xe1, 0x29, 0xa9, 0x57, 0xc1, 0x30, 0xce, 0x9b, 0x77, 0x74, 0xfe, 0x1d,
-	0x00, 0x00, 0xff, 0xff, 0x4b, 0x4b, 0x0b, 0xa4, 0xb5, 0x02, 0x00, 0x00,
+	// 495 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0x4b, 0x6f, 0xd3, 0x40,
+	0x10, 0x8e, 0x49, 0x9b, 0xb6, 0x9b, 0x1e, 0x90, 0x05, 0xc2, 0x4d, 0xc1, 0x18, 0x0a, 0x28, 0xe2,
+	0x61, 0x4b, 0xe5, 0xce, 0xc1, 0x82, 0x22, 0xa4, 0x4a, 0x8d, 0xe0, 0xc6, 0x01, 0x6b, 0xed, 0xac,
+	0xdc, 0x95, 0xd3, 0x8c, 0xb5, 0x3b, 0x11, 0xc9, 0x1d, 0x2e, 0x9c, 0xf8, 0x59, 0x3d, 0xf6, 0xc8,
+	0x09, 0x41, 0xf2, 0x47, 0xaa, 0x7d, 0xa4, 0xad, 0xd3, 0x38, 0xaa, 0xd4, 0xdb, 0xd8, 0xdf, 0x7c,
+	0x8f, 0x19, 0x69, 0x96, 0xec, 0xca, 0x9c, 0x45, 0x20, 0xfa, 0x4c, 0xa4, 0x00, 0x45, 0x94, 0xb3,
+	0x21, 0x93, 0x5c, 0x86, 0xa5, 0x00, 0x04, 0xd7, 0x93, 0xea, 0x1b, 0xbf, 0x83, 0x28, 0x42, 0x99,
+	0xb3, 0xf0, 0xa2, 0xaf, 0x73, 0x2f, 0x87, 0x1c, 0x74, 0x53, 0xa4, 0x2a, 0xd3, 0xdf, 0xe9, 0x54,
+	0xc5, 0x4a, 0x2a, 0xe8, 0x89, 0xd5, 0xea, 0x3c, 0xaa, 0x62, 0x17, 0x95, 0x85, 0x9f, 0x5c, 0xa3,
+	0x22, 0xcf, 0x78, 0x49, 0x91, 0xc3, 0xd0, 0xb6, 0xec, 0x54, 0x5b, 0x24, 0x52, 0x9c, 0x8b, 0x3f,
+	0xac, 0x42, 0x6c, 0x5c, 0x82, 0x1c, 0x09, 0x66, 0xd0, 0xa7, 0xff, 0x37, 0xc8, 0xf6, 0x47, 0x33,
+	0xd8, 0x17, 0xa4, 0xc8, 0xdc, 0x77, 0xa4, 0x65, 0xb2, 0x79, 0x4e, 0xe0, 0x74, 0xdb, 0xfb, 0x41,
+	0x58, 0x37, 0x68, 0xd8, 0xd3, 0x7d, 0xf1, 0xda, 0xe9, 0xdf, 0xc7, 0x8d, 0xcf, 0x96, 0xe5, 0x1e,
+	0x90, 0x2d, 0x05, 0x26, 0x03, 0x2e, 0xd1, 0xbb, 0x13, 0x34, 0xbb, 0xed, 0xfd, 0xbd, 0x7a, 0x89,
+	0x23, 0x55, 0xc5, 0x00, 0x85, 0x55, 0xd9, 0x54, 0x7f, 0x0f, 0xb9, 0x44, 0x97, 0x93, 0x07, 0x5a,
+	0xa7, 0x32, 0xad, 0x51, 0x6d, 0x6a, 0xd5, 0x57, 0xf5, 0xaa, 0x4a, 0xb0, 0x77, 0x95, 0x67, 0xd5,
+	0xef, 0xa7, 0x8b, 0x80, 0xb6, 0xfa, 0x46, 0x5c, 0x6d, 0x35, 0x5f, 0x8d, 0x71, 0x59, 0xd3, 0x2e,
+	0x2f, 0x57, 0xbb, 0x1c, 0xf5, 0xfb, 0xf2, 0x83, 0xa5, 0x59, 0x93, 0xbb, 0x0a, 0x9c, 0xff, 0xd3,
+	0xfa, 0x23, 0xb2, 0x5b, 0x9d, 0xa2, 0x6a, 0xb4, 0xae, 0x8d, 0xa2, 0x95, 0x7b, 0xbe, 0x24, 0x2f,
+	0xb8, 0xed, 0x94, 0xcb, 0x40, 0x6d, 0xfb, 0xd3, 0x21, 0xcf, 0x6a, 0x7c, 0xd3, 0x49, 0xc2, 0x87,
+	0x7d, 0x36, 0x36, 0x01, 0x5a, 0xb7, 0x09, 0x10, 0x2c, 0x0d, 0x10, 0x4f, 0x3e, 0x29, 0x7d, 0x9d,
+	0xe3, 0x97, 0x43, 0x5e, 0x1c, 0x73, 0x89, 0x20, 0x78, 0x46, 0x07, 0xc9, 0xaa, 0x55, 0x6c, 0xdc,
+	0x26, 0xc9, 0xde, 0xa5, 0x49, 0xaf, 0x76, 0x29, 0x3f, 0xae, 0x2d, 0x25, 0x65, 0x98, 0x94, 0x94,
+	0x8b, 0x85, 0x28, 0x9b, 0x3a, 0x4a, 0x78, 0xc3, 0x28, 0x31, 0xc3, 0x1e, 0xe5, 0x62, 0xe9, 0x4e,
+	0x2c, 0x56, 0x89, 0xf1, 0x9c, 0xb4, 0x4b, 0x3a, 0x81, 0x11, 0x26, 0x03, 0xc8, 0x0a, 0x6f, 0x2b,
+	0x68, 0x76, 0xb7, 0x2d, 0x99, 0x18, 0xe0, 0x10, 0xb2, 0xc2, 0x7d, 0x4f, 0xd6, 0xf5, 0x29, 0x7b,
+	0x44, 0xdf, 0x62, 0xf7, 0x06, 0x87, 0xa4, 0xae, 0x78, 0x7e, 0x93, 0x86, 0x1c, 0x1f, 0x9c, 0x4e,
+	0x7d, 0xe7, 0x6c, 0xea, 0x3b, 0xff, 0xa6, 0xbe, 0xf3, 0x7b, 0xe6, 0x37, 0xce, 0x66, 0x7e, 0xe3,
+	0xcf, 0xcc, 0x6f, 0x7c, 0x7d, 0x9d, 0x73, 0x3c, 0x1e, 0xa5, 0x61, 0x06, 0x27, 0x91, 0xcc, 0xd9,
+	0x1b, 0xab, 0xad, 0xea, 0x68, 0x7c, 0xe5, 0xd1, 0xc0, 0x49, 0xc9, 0x64, 0xda, 0xd2, 0x4f, 0xc6,
+	0xdb, 0xf3, 0x00, 0x00, 0x00, 0xff, 0xff, 0x43, 0x7f, 0x22, 0xc2, 0x18, 0x05, 0x00, 0x00,
 }
 
 func (m *GenesisState) Marshal() (dAtA []byte, err error) {
@@ -175,11 +225,62 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i = encodeVarintGenesis(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x32
-	if len(m.ParticipantExposures) > 0 {
-		for iNdEx := len(m.ParticipantExposures) - 1; iNdEx >= 0; iNdEx-- {
+	dAtA[i] = 0x52
+	if len(m.PayoutLock) > 0 {
+		for iNdEx := len(m.PayoutLock) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.PayoutLock[iNdEx])
+			copy(dAtA[i:], m.PayoutLock[iNdEx])
+			i = encodeVarintGenesis(dAtA, i, uint64(len(m.PayoutLock[iNdEx])))
+			i--
+			dAtA[i] = 0x4a
+		}
+	}
+	if len(m.ParticipationBetPairExposureList) > 0 {
+		for iNdEx := len(m.ParticipationBetPairExposureList) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.ParticipantExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.ParticipationBetPairExposureList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x42
+		}
+	}
+	if len(m.HistoricalParticipationExposureList) > 0 {
+		for iNdEx := len(m.HistoricalParticipationExposureList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.HistoricalParticipationExposureList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x3a
+		}
+	}
+	if len(m.ParticipationExposureByIndexList) > 0 {
+		for iNdEx := len(m.ParticipationExposureByIndexList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ParticipationExposureByIndexList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintGenesis(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0x32
+		}
+	}
+	if len(m.ParticipationExposureList) > 0 {
+		for iNdEx := len(m.ParticipationExposureList) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ParticipationExposureList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -190,10 +291,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x2a
 		}
 	}
-	if len(m.BookExposures) > 0 {
-		for iNdEx := len(m.BookExposures) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.BookExposureList) > 0 {
+		for iNdEx := len(m.BookExposureList) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.BookExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.BookExposureList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -204,10 +305,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x22
 		}
 	}
-	if len(m.BookParticipants) > 0 {
-		for iNdEx := len(m.BookParticipants) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.BookParticipationList) > 0 {
+		for iNdEx := len(m.BookParticipationList) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.BookParticipants[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.BookParticipationList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -218,10 +319,10 @@ func (m *GenesisState) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0x1a
 		}
 	}
-	if len(m.Books) > 0 {
-		for iNdEx := len(m.Books) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.BookList) > 0 {
+		for iNdEx := len(m.BookList) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.Books[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.BookList[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -264,27 +365,51 @@ func (m *GenesisState) Size() (n int) {
 	_ = l
 	l = m.Params.Size()
 	n += 1 + l + sovGenesis(uint64(l))
-	if len(m.Books) > 0 {
-		for _, e := range m.Books {
+	if len(m.BookList) > 0 {
+		for _, e := range m.BookList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.BookParticipants) > 0 {
-		for _, e := range m.BookParticipants {
+	if len(m.BookParticipationList) > 0 {
+		for _, e := range m.BookParticipationList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.BookExposures) > 0 {
-		for _, e := range m.BookExposures {
+	if len(m.BookExposureList) > 0 {
+		for _, e := range m.BookExposureList {
 			l = e.Size()
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
-	if len(m.ParticipantExposures) > 0 {
-		for _, e := range m.ParticipantExposures {
+	if len(m.ParticipationExposureList) > 0 {
+		for _, e := range m.ParticipationExposureList {
 			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.ParticipationExposureByIndexList) > 0 {
+		for _, e := range m.ParticipationExposureByIndexList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.HistoricalParticipationExposureList) > 0 {
+		for _, e := range m.HistoricalParticipationExposureList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.ParticipationBetPairExposureList) > 0 {
+		for _, e := range m.ParticipationBetPairExposureList {
+			l = e.Size()
+			n += 1 + l + sovGenesis(uint64(l))
+		}
+	}
+	if len(m.PayoutLock) > 0 {
+		for _, b := range m.PayoutLock {
+			l = len(b)
 			n += 1 + l + sovGenesis(uint64(l))
 		}
 	}
@@ -363,7 +488,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Books", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BookList", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -390,14 +515,14 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Books = append(m.Books, OrderBook{})
-			if err := m.Books[len(m.Books)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.BookList = append(m.BookList, OrderBook{})
+			if err := m.BookList[len(m.BookList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 3:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipants", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipationList", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -424,14 +549,14 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookParticipants = append(m.BookParticipants, BookParticipant{})
-			if err := m.BookParticipants[len(m.BookParticipants)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.BookParticipationList = append(m.BookParticipationList, BookParticipation{})
+			if err := m.BookParticipationList[len(m.BookParticipationList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookExposures", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field BookExposureList", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -458,14 +583,14 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookExposures = append(m.BookExposures, BookOddsExposure{})
-			if err := m.BookExposures[len(m.BookExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.BookExposureList = append(m.BookExposureList, BookOddsExposure{})
+			if err := m.BookExposureList[len(m.BookExposureList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipantExposures", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposureList", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -492,12 +617,146 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.ParticipantExposures = append(m.ParticipantExposures, ParticipantExposure{})
-			if err := m.ParticipantExposures[len(m.ParticipantExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.ParticipationExposureList = append(m.ParticipationExposureList, ParticipationExposure{})
+			if err := m.ParticipationExposureList[len(m.ParticipationExposureList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposureByIndexList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ParticipationExposureByIndexList = append(m.ParticipationExposureByIndexList, ParticipationExposure{})
+			if err := m.ParticipationExposureByIndexList[len(m.ParticipationExposureByIndexList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field HistoricalParticipationExposureList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.HistoricalParticipationExposureList = append(m.HistoricalParticipationExposureList, ParticipationExposure{})
+			if err := m.HistoricalParticipationExposureList[len(m.HistoricalParticipationExposureList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationBetPairExposureList", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ParticipationBetPairExposureList = append(m.ParticipationBetPairExposureList, ParticipationBetPair{})
+			if err := m.ParticipationBetPairExposureList[len(m.ParticipationBetPairExposureList)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PayoutLock", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenesis
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenesis
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PayoutLock = append(m.PayoutLock, make([]byte, postIndex-iNdEx))
+			copy(m.PayoutLock[len(m.PayoutLock)-1], dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Stats", wireType)
 			}

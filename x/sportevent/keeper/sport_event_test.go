@@ -121,7 +121,7 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
 		}
 		k.SetSportEvent(ctx, item)
 
