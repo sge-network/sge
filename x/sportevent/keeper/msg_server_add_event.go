@@ -57,7 +57,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		Error: "",
 		Data:  &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, addPayload.UID, msg.Creator)
 
 	return response, nil
 }

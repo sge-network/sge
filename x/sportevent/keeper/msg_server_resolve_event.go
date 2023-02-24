@@ -26,7 +26,7 @@ func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolv
 	response := &types.MsgResolveSportEventResponse{
 		Data: &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response.Data.UID, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response.Data.UID, response.Data.BookID, msg.Creator)
 	return response, nil
 }
 
