@@ -46,7 +46,8 @@ type SportEventAddTicketPayload struct {
 	Active bool `protobuf:"varint,9,opt,name=active,proto3" json:"active,omitempty"`
 	// meta contains human-readable metadata of the sport-event.
 	Meta string `protobuf:"bytes,10,opt,name=meta,proto3" json:"meta,omitempty"`
-	// sr_contribution_for_house is the portion of payout that should be paid by sr
+	// sr_contribution_for_house is the portion of payout that should be paid by
+	// sr
 	SrContributionForHouse github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=sr_contribution_for_house,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"sr_contribution_for_house"`
 }
 

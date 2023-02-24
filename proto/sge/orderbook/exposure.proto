@@ -18,11 +18,11 @@ message BookOddsExposure {
     json_name = "book_id"
   ];
 
-  // odds_id is odd'd uid
-  string odds_id = 2 [
-    (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+  // odds_uid is odds uid
+  string odds_uid = 2 [
+    (gogoproto.customname) = "OddsUID",
+    (gogoproto.jsontag) = "odds_uid",
+    json_name = "odds_uid"
   ];
 
   repeated uint64 fulfillment_queue = 3
@@ -43,11 +43,11 @@ message ParticipationExposure {
     json_name = "book_id"
   ];
 
-  // odds_id is odd's uid
-  string odds_id = 2 [
-    (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+  // odds_uid is odd's uid
+  string odds_uid = 2 [
+    (gogoproto.customname) = "OddsUID",
+    (gogoproto.jsontag) = "odds_uid",
+    json_name = "odds_uid"
   ];
 
   // participation_index is the id of initial participation queue

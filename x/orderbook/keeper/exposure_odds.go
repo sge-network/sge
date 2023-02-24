@@ -8,7 +8,7 @@ import (
 
 // SetBookOddsExposure sets a book odds exposure.
 func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure) {
-	bookKey := types.GetBookOddsExposureKey(boe.BookID, boe.OddsID)
+	bookKey := types.GetBookOddsExposureKey(boe.BookID, boe.OddsUID)
 
 	store := k.getBookOddsExposureStore(ctx)
 	b := k.cdc.MustMarshal(&boe)
@@ -16,9 +16,9 @@ func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure)
 }
 
 // GetBookOddsExposure returns a specific book odds exposure.
-func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookID, oddsID string) (val types.BookOddsExposure, found bool) {
+func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookID, oddsUID string) (val types.BookOddsExposure, found bool) {
 	sportEventsStore := k.getBookOddsExposureStore(ctx)
-	exposureKey := types.GetBookOddsExposureKey(bookID, oddsID)
+	exposureKey := types.GetBookOddsExposureKey(bookID, oddsUID)
 	b := sportEventsStore.Get(exposureKey)
 	if b == nil {
 		return val, false

@@ -40,7 +40,7 @@ func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayloa
 		return sdkerrors.Wrap(err, "getting sport-event")
 	}
 
-	if err := extractWinnerOddsIDs(&sportEvent, resolutionPayload); err != nil {
+	if err := extractWinnerOddsUIDs(&sportEvent, resolutionPayload); err != nil {
 		return sdkerrors.Wrap(err, "extract winner odds id")
 	}
 
@@ -64,7 +64,7 @@ func (k msgServer) getSportEventToResolve(ctx sdk.Context, resolutionPayload typ
 	return sportEvent, nil
 }
 
-func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.SportEventResolutionTicketPayload) error {
+func extractWinnerOddsUIDs(sportEvent *types.SportEvent, event *types.SportEventResolutionTicketPayload) error {
 	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		if event.ResolutionTS < sportEvent.StartTS {
 			return types.ErrResolutionTimeLessTnStart

@@ -140,13 +140,13 @@ message BookParticipation {
     (gogoproto.moretags) = "yaml:\"current_round_max_loss\""
   ];
 
-  // current_round_max_loss_odds_id is the total bet amount corresponding to all
+  // current_round_max_loss_odds_uid is the total bet amount corresponding to all
   // exposure
-  string current_round_max_loss_odds_id = 12 [
-    (gogoproto.customname) = "CurrentRoundMaxLossOddsID",
-    (gogoproto.jsontag) = "current_round_max_loss_odds_id",
-    json_name = "current_round_max_loss_odds_id",
-    (gogoproto.moretags) = "yaml:\"current_round_max_loss_odds_id\""
+  string current_round_max_loss_odds_uid = 12 [
+    (gogoproto.customname) = "CurrentRoundMaxLossOddsUID",
+    (gogoproto.jsontag) = "current_round_max_loss_odds_uid",
+    json_name = "current_round_max_loss_odds_uid",
+    (gogoproto.moretags) = "yaml:\"current_round_max_loss_odds_uid\""
   ];
 
   // actual_profit is the actual profit
@@ -207,11 +207,11 @@ message BookOddsExposure {
     json_name = "book_id"
   ];
 
-  // odds_id is odd'd uid
-  string odds_id = 2 [
-    (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+  // odds_uid is odd'd uid
+  string odds_uid = 2 [
+    (gogoproto.customname) = "OddsUID",
+    (gogoproto.jsontag) = "odds_uid",
+    json_name = "odds_uid"
   ];
 
   repeated uint64 fulfillment_queue = 3
@@ -239,11 +239,11 @@ message ParticipationExposure {
     json_name = "book_id"
   ];
 
-  // odds_id is odd's uid
-  string odds_id = 2 [
-    (gogoproto.customname) = "OddsID",
-    (gogoproto.jsontag) = "odds_id",
-    json_name = "odds_id"
+  // odds_uid is odd's uid
+  string odds_uid = 2 [
+    (gogoproto.customname) = "OddsUID",
+    (gogoproto.jsontag) = "odds_uid",
+    json_name = "odds_uid"
   ];
 
   // participation_index is the id of initial participation queue

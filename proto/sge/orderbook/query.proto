@@ -46,7 +46,7 @@ service Query {
   rpc BookExposure(QueryBookExposureRequest)
       returns (QueryBookExposureResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/exposures/{odds_id}";
+        "/sge/orderbooks/{book_id}/exposures/{odds_uid}";
   }
 
   // ParticipationExposures queries exposures info for given orderbook
@@ -176,8 +176,8 @@ message QueryBookExposureRequest {
   // book_id defines the book id to query for.
   string book_id = 1;
 
-  // odds_id defines the odds id to query for.
-  string odds_id = 2;
+  // odds_uid defines the odds id to query for.
+  string odds_uid = 2;
 }
 
 // QueryBookExposureResponse is response type for the Query/BookExposure RPC

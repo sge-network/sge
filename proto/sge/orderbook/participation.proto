@@ -78,13 +78,13 @@ message BookParticipation {
     (gogoproto.moretags) = "yaml:\"current_round_max_loss\""
   ];
 
-  // current_round_max_loss_odds_id is the total bet amount corresponding to all
+  // current_round_max_loss_odds_uid is the total bet amount corresponding to all
   // exposure
-  string current_round_max_loss_odds_id = 12 [
-    (gogoproto.customname) = "CurrentRoundMaxLossOddsID",
-    (gogoproto.jsontag) = "current_round_max_loss_odds_id",
-    json_name = "current_round_max_loss_odds_id",
-    (gogoproto.moretags) = "yaml:\"current_round_max_loss_odds_id\""
+  string current_round_max_loss_odds_uid = 12 [
+    (gogoproto.customname) = "CurrentRoundMaxLossOddsUID",
+    (gogoproto.jsontag) = "current_round_max_loss_odds_uid",
+    json_name = "current_round_max_loss_odds_uid",
+    (gogoproto.moretags) = "yaml:\"current_round_max_loss_odds_uid\""
   ];
 
   // actual_profit is the actual profit

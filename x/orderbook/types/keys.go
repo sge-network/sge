@@ -52,8 +52,8 @@ func GetBookParticipationsKey(bookID string) []byte {
 }
 
 // GetBookOddsExposureKey creates the key for book exposure for an odd
-func GetBookOddsExposureKey(bookID, oddsID string) []byte {
-	return append(GetBookOddsExposuresKey(bookID), utils.StrBytes(oddsID)...)
+func GetBookOddsExposureKey(bookID, oddsUID string) []byte {
+	return append(GetBookOddsExposuresKey(bookID), utils.StrBytes(oddsUID)...)
 }
 
 // GetBookOddsExposuresKey creates the key for book exposure for an book
@@ -62,13 +62,13 @@ func GetBookOddsExposuresKey(bookID string) []byte {
 }
 
 // GetParticipationExposureKey creates the key for participation exposure for an odd
-func GetParticipationExposureKey(bookID, oddsID string, index uint64) []byte {
-	return append(GetParticipationExposuresKey(bookID, oddsID), utils.Uint64ToBytes(index)...)
+func GetParticipationExposureKey(bookID, oddsUID string, index uint64) []byte {
+	return append(GetParticipationExposuresKey(bookID, oddsUID), utils.Uint64ToBytes(index)...)
 }
 
 // GetParticipationExposuresKey creates the key for exposures for a book id and odds id
-func GetParticipationExposuresKey(bookID, oddsID string) []byte {
-	return append(GetParticipationExposuresByBookKey(bookID), utils.StrBytes(oddsID)...)
+func GetParticipationExposuresKey(bookID, oddsUID string) []byte {
+	return append(GetParticipationExposuresByBookKey(bookID), utils.StrBytes(oddsUID)...)
 }
 
 // GetParticipationExposuresByBookKey creates the key for exposures for a book id
@@ -77,8 +77,8 @@ func GetParticipationExposuresByBookKey(bookID string) []byte {
 }
 
 // GetParticipationExposureByIndexKey creates the key for participation exposure for an odds by participation number
-func GetParticipationExposureByIndexKey(bookID, oddsID string, index uint64) []byte {
-	return append(GetParticipationByIndexKey(bookID, index), utils.StrBytes(oddsID)...)
+func GetParticipationExposureByIndexKey(bookID, oddsUID string, index uint64) []byte {
+	return append(GetParticipationByIndexKey(bookID, index), utils.StrBytes(oddsUID)...)
 }
 
 // GetParticipationByIndexKey creates the key for exposures for a book id and participation number
@@ -87,8 +87,8 @@ func GetParticipationByIndexKey(bookID string, index uint64) []byte {
 }
 
 // GetHistoricalParticipationExposureKey creates the key for participation exposure for an odd
-func GetHistoricalParticipationExposureKey(bookID, oddsID string, index, round uint64) []byte {
-	return append(GetParticipationExposureKey(bookID, oddsID, index), utils.Uint64ToBytes(round)...)
+func GetHistoricalParticipationExposureKey(bookID, oddsUID string, index, round uint64) []byte {
+	return append(GetParticipationExposureKey(bookID, oddsUID, index), utils.Uint64ToBytes(round)...)
 }
 
 // GetParticipationBetPairKey creates the bond between participation and bet

@@ -12,7 +12,7 @@ func NewBookParticipation(
 	index uint64, bookID string, participantAddress string,
 	exposuresNotFilled uint64, isModuleAccount bool,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
-	currentRoundMaxLossOddsID string, actualProfit sdk.Int,
+	currentRoundMaxLossOddsUID string, actualProfit sdk.Int,
 ) BookParticipation {
 	return BookParticipation{
 		Index:                      index,
@@ -26,7 +26,7 @@ func NewBookParticipation(
 		CurrentRoundTotalBetAmount: currentRoundTotalBetAmount,
 		MaxLoss:                    maxLoss,
 		CurrentRoundMaxLoss:        currentRoundMaxLoss,
-		CurrentRoundMaxLossOddsID:  currentRoundMaxLossOddsID,
+		CurrentRoundMaxLossOddsUID: currentRoundMaxLossOddsUID,
 		ActualProfit:               actualProfit,
 	}
 }

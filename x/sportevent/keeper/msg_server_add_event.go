@@ -29,8 +29,8 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 	}
 
 	var oddsUIDs []string
-	for _, oddsID := range addPayload.Odds {
-		oddsUIDs = append(oddsUIDs, oddsID.UID)
+	for _, odds := range addPayload.Odds {
+		oddsUIDs = append(oddsUIDs, odds.UID)
 	}
 	err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
 	if err != nil {

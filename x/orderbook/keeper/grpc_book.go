@@ -175,14 +175,14 @@ func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequ
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
-	if req.OddsId == "" {
+	if req.OddsUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "odds id can not be empty")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	bookExposure, found := k.GetBookOddsExposure(ctx, req.BookId, req.OddsId)
+	bookExposure, found := k.GetBookOddsExposure(ctx, req.BookId, req.OddsUid)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookId, req.OddsId)
+		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookId, req.OddsUid)
 	}
 
 	return &types.QueryBookExposureResponse{BookExposure: bookExposure}, nil

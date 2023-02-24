@@ -131,7 +131,7 @@ func (k Keeper) InitiateBookParticipation(
 		boe.FulfillmentQueue = append(boe.FulfillmentQueue, index)
 		k.SetBookOddsExposure(ctx, boe)
 
-		pe := types.NewParticipationExposure(book.ID, boe.OddsID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
+		pe := types.NewParticipationExposure(book.ID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
 		k.SetParticipationExposure(ctx, pe)
 	}
 

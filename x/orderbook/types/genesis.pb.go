@@ -36,13 +36,15 @@ type GenesisState struct {
 	// participation_exposure_list defines the participation exposures active at
 	// genesis.
 	ParticipationExposureList []ParticipationExposure `protobuf:"bytes,5,rep,name=participation_exposure_list,json=participationExposureList,proto3" json:"participation_exposure_list"`
-	// participation_exposure_by_index_list defines the participation exposures by index active at
-	// genesis.
+	// participation_exposure_by_index_list defines the participation exposures by
+	// index active at genesis.
 	ParticipationExposureByIndexList []ParticipationExposure `protobuf:"bytes,6,rep,name=participation_exposure_by_index_list,json=participationExposureByIndexList,proto3" json:"participation_exposure_by_index_list"`
-	// historical_participation_exposure_list defines the historical participation exposures active at
+	// historical_participation_exposure_list defines the historical participation
+	// exposures active at
 	// genesis.
 	HistoricalParticipationExposureList []ParticipationExposure `protobuf:"bytes,7,rep,name=historical_participation_exposure_list,json=historicalParticipationExposureList,proto3" json:"historical_participation_exposure_list"`
-	// historical_participation_exposure_list defines the historical participation exposures active at
+	// historical_participation_exposure_list defines the historical participation
+	// exposures active at
 	// genesis.
 	ParticipationBetPairExposureList []ParticipationBetPair `protobuf:"bytes,8,rep,name=participation_bet_pair_exposure_list,json=participationBetPairExposureList,proto3" json:"participation_bet_pair_exposure_list"`
 	PayoutLock                       [][]byte               `protobuf:"bytes,9,rep,name=payout_lock,json=payoutLock,proto3" json:"payout_lock,omitempty"`

@@ -101,9 +101,9 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 }
 
 // oddsExists checks if bet odds id is present in the sport-event list of odds uids
-func oddsExists(betOddsID string, odds []*sporteventtypes.Odds) bool {
+func oddsExists(betOddsUID string, odds []*sporteventtypes.Odds) bool {
 	for _, o := range odds {
-		if betOddsID == o.UID {
+		if betOddsUID == o.UID {
 			return true
 		}
 	}

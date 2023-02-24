@@ -240,7 +240,7 @@ $ %s query orderbook book-exposures %s
 // GetCmdQueryBookExposure implements the bookexposure query command.
 func GetCmdQueryBookExposure() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "book-exposure [order-book-id] [odd-id]",
+		Use:   "book-exposure [order-book-id] [odd-uid]",
 		Short: "Query a book exposure",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a book exposure.
@@ -260,9 +260,9 @@ $ %s query orderbook book-exposure %s %s
 			queryClient := types.NewQueryClient(clientCtx)
 
 			orderBookID := args[0]
-			oddsID := args[1]
+			oddsUID := args[1]
 
-			params := &types.QueryBookExposureRequest{BookId: orderBookID, OddsId: oddsID}
+			params := &types.QueryBookExposureRequest{BookId: orderBookID, OddsUid: oddsUID}
 			res, err := queryClient.BookExposure(cmd.Context(), params)
 			if err != nil {
 				return err

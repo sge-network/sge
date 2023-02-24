@@ -11,7 +11,7 @@ import (
 // ProcessBetPlacement processes bet placement
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
-	betUID, bookID, oddsID string,
+	betUID, bookID, oddsUID string,
 	maxLossMultiplier sdk.Dec,
 	payoutProfit sdk.Int,
 	bettorAddress sdk.AccAddress,
@@ -33,9 +33,9 @@ func (k Keeper) ProcessBetPlacement(
 		return
 	}
 	// get exposures of the odds user is placing the bet
-	bookExposure, found := k.GetBookOddsExposure(ctx, bookID, oddsID)
+	bookExposure, found := k.GetBookOddsExposure(ctx, bookID, oddsUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsUID)
 		return
 	}
 
@@ -55,12 +55,12 @@ func (k Keeper) ProcessBetPlacement(
 		participationMap[bp.Index] = bp
 	}
 
-	pes, err := k.GetExposureByBookAndOdds(ctx, bookID, oddsID)
+	pes, err := k.GetExposureByBookAndOdds(ctx, bookID, oddsUID)
 	if err != nil {
 		return
 	}
 	if int(book.ParticipationCount) != len(pes) {
-		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookID, oddsID)
+		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookID, oddsUID)
 		return
 	}
 	for _, pe := range pes {
@@ -119,14 +119,14 @@ func (k Keeper) ProcessBetPlacement(
 			switch {
 			case participation.CurrentRoundMaxLoss.IsNil():
 				participation.CurrentRoundMaxLoss = maxLoss
-				participation.CurrentRoundMaxLossOddsID = oddsID
-			case participation.CurrentRoundMaxLossOddsID == oddsID:
+				participation.CurrentRoundMaxLossOddsUID = oddsUID
+			case participation.CurrentRoundMaxLossOddsUID == oddsUID:
 				participation.CurrentRoundMaxLoss = maxLoss
 			default:
 				originalMaxLoss := participation.CurrentRoundMaxLoss.Sub(expectedBetAmount)
 				if maxLoss.GT(originalMaxLoss) {
 					participation.CurrentRoundMaxLoss = maxLoss
-					participation.CurrentRoundMaxLossOddsID = oddsID
+					participation.CurrentRoundMaxLossOddsUID = oddsUID
 				} else {
 					participation.CurrentRoundMaxLoss = originalMaxLoss
 				}
@@ -158,9 +158,9 @@ func (k Keeper) ProcessBetPlacement(
 			for _, pe := range participationExposures {
 				k.MoveToHistoricalParticipationExposure(ctx, pe)
 				if eligibleForNextRound {
-					newPe := types.NewParticipationExposure(book.ID, pe.OddsID, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipationIndex, pe.Round+1, false)
+					newPe := types.NewParticipationExposure(book.ID, pe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipationIndex, pe.Round+1, false)
 					k.SetParticipationExposure(ctx, newPe)
-					if pe.OddsID == participationExposure.OddsID {
+					if pe.OddsUID == participationExposure.OddsUID {
 						participationExposure = newPe
 						participationExposureMap[pe.ParticipationIndex] = participationExposure
 					}
@@ -182,7 +182,7 @@ func (k Keeper) ProcessBetPlacement(
 				}
 				for _, boe := range boes {
 					boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
-					if boe.OddsID == participationExposure.OddsID {
+					if boe.OddsUID == participationExposure.OddsUID {
 						bookExposure = boe
 					}
 
