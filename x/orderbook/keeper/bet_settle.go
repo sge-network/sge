@@ -6,7 +6,6 @@ import (
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
-	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // RefundBettor process bets in case sports event gets cancelled or aborted.
@@ -17,7 +16,7 @@ func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betA
 	}
 
 	// Transfer bet amount from `bet_reserve` to bettor's account
-	err := k.transferFundsFromModuleToUser(ctx, srtypes.BetReserveName, bettorAddress, betAmount)
+	err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
 	if err != nil {
 		return err
 	}
