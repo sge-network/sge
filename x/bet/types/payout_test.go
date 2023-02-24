@@ -32,7 +32,7 @@ func TestCalculateDecimalPayout(t *testing.T) {
 			oddsValue: "1",
 			betAmount: defaultBetAmount,
 
-			expVal: 0,
+			err: types.ErrDecimalOddsCanNotBeLessThanOne,
 		},
 		{
 			desc:      "negative",
