@@ -104,9 +104,6 @@ message Bet {
 
     // the bet is settled
     STATUS_SETTLED = 6;
-
-    // the bet placement failed
-    STATUS_FAILED = 7;
   }
 
   // Result of the bet.
