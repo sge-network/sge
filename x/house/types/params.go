@@ -77,7 +77,7 @@ func validateMinimumDeposit(i interface{}) error {
 	}
 
 	if v.LTE(sdk.OneInt()) {
-		return fmt.Errorf("minimum deposit must be positive and more than %d", v)
+		return fmt.Errorf("minimum deposit must be positive and more than one: %d", v)
 	}
 
 	return nil

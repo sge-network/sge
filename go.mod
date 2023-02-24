@@ -7,7 +7,7 @@ require (
 	github.com/cosmos/ibc-go/v3 v3.4.0
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v4 v4.4.3
+	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/protobuf v1.5.2
 	github.com/golangci/golangci-lint v1.50.1
 	github.com/google/uuid v1.3.0
