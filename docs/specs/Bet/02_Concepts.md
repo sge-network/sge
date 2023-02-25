@@ -11,22 +11,22 @@ Bet module is tasked with placement and settlement of the bets. the user can pla
 Before accepting bet some validation should take place:
 
 - Sport-Event level validation:
-  - Event is active for bet placement
-    - Event is not already resolved or cancelled
-    - Maximum cap for sport-event has not already reached (based on bet amount deducted by betting fee)
-    - Bet amount (deducted by betting fee) is not less than the minimum allowed bet amount
-- OrderBook level validation:
-  - Maximum bet placement cap of SR has not reached
+  - Event is active for bet placement.
+    - Event is not already resolved or canceled.
+    - Maximum cap for sport-event has not already reached (based on bet amount deducted by betting fee).
+    - Bet amount (deducted by betting fee) is not less than the minimum allowed bet amount.
+- Bet level validation:
+  - Odds Value and the validations according to the American, British and decimal odds.
 - DVM level validation:
-  - All data provided in placement request is valid e.g. odds value
+  - All data provided in placement request is valid e.g. odds value.
 - KYC Validation:
-  - If KycRequired is true in bet ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a bet to be placed
-    - If KycRequired is false, then kyc validation is not required and bet can be placed without kyc check
+  - If Required is true in bet ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a bet to be placed.
+  - If Required is false in bet ticket payload, then kyc validation is not required and bet can be placed without kyc check.
 
 After a bet is accepted:
 
 - Corresponding betting fee will be deducted from total bet amount
-- Betting fee will be transferred to the module account of bet module
+- Betting fee will be transferred to the module account of bet module. this is done by the order book module.
 - The rest of bet amount will be transferred and locked in Order Book module
 
 For bet placement user can raise a request to place a single bet. Also, the same for bet settlement, it can be done for a single bet only.

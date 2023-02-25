@@ -132,9 +132,9 @@ The transaction will fail if:
 - Result of corresponding sport-event is not declared
 - There is an error in SR module functions
 
-### **What Happens if settlement fails**
+### **Settlement failure treatment**
 
-- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding sport-event is aborted or canceled, the bet will be updated in the module state as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
@@ -143,6 +143,6 @@ The transaction will fail if:
 
 - Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
 - Call `Order Book module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
-- Store the updated bet in the `bet module's KVStore`.
+- Store the updated bet in the module state.
 
 ---

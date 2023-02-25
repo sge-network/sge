@@ -11,19 +11,21 @@ When this is processed:
 
 ```go
 newBet := &types.Bet{
-    Creator:       msg.Creator,
-    Uid:           msg.Uid,
-    SportEventUID: <msg.Ticket.SportEventUID>,
-    OddsUid:       <msg.Ticket.OddsUid>,
-    OddsType:      <msg.OddsType>,
-    OddsValue:     <msg.Ticket.OddsValue>,
-    Amount:        msg.Amount,
-    BetFee         <will be calculated>,
-    Ticket:        msg.Ticket,
-    Status:        types.Bet_STATUS_PLACED
-    Result:        types.Bet_RESULT_PENDING
-    Verified:      true,
-    CreatedAt:     <current timestamp of block time>,
+    Creator:            msg.Creator,
+    UID:                msg.UID,
+    SportEventUID:      <msg.Ticket.SportEventUID>,
+    OddsUID:            <msg.Ticket.OddsUID>,
+    OddsType:           <msg.OddsType>,
+    OddsValue:          <msg.Ticket.OddsValue>,
+    Amount:             msg.Amount,
+    BetFee:             <will be calculated>,
+    Ticket:             msg.Ticket,
+    Status:             types.Bet_STATUS_PLACED
+    Result:             types.Bet_RESULT_PENDING
+    Verified:           true,
+    CreatedAt:          <current timestamp of block time>,
+    MaxLossMultiplier:  <the coefficient of multiplicitation of the maximum loss>,
+    BetFulfillment:     <bet fulfilment by the order book>
 }
 ```
 

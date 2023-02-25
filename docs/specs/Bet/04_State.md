@@ -111,7 +111,7 @@ message Bet {
     STATUS_PLACED = 1;
 
     // bet is canceled by Bettor
-    STATUS_CANCELLED = 2;
+    STATUS_CANCELED = 2;
 
     // bet is aborted
     STATUS_ABORTED = 3;
