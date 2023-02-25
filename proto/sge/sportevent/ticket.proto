@@ -49,13 +49,11 @@ message SportEventAddTicketPayload {
     (gogoproto.nullable) = false
   ];
 
-  // active is the status of active or inactive sport-event.
-  bool active = 9;
   // meta contains human-readable metadata of the sport-event.
-  string meta = 10;
+  string meta = 9;
   // sr_contribution_for_house is the portion of payout that should be paid by
   // sr
-  string sr_contribution_for_house = 11 [
+  string sr_contribution_for_house = 10 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
     json_name = "sr_contribution_for_house",
@@ -95,8 +93,9 @@ message SportEventUpdateTicketPayload {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // active is the status of active or inactive sport-event
-  bool active = 6;
+
+  // status is the status of the resolution.
+  SportEventStatus status = 6;
 }
 
 // SportEventResolutionTicketPayload indicates data of the

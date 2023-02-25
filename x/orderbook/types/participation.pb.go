@@ -49,8 +49,8 @@ type BookParticipation struct {
 	// current_round_max_loss is the total bet amount corresponding to all
 	// exposure
 	CurrentRoundMaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=current_round_max_loss,json=currentRoundMaxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_max_loss" yaml:"current_round_max_loss"`
-	// current_round_max_loss_odds_uid is the total bet amount corresponding to all
-	// exposure
+	// current_round_max_loss_odds_uid is the total bet amount corresponding to
+	// all exposure
 	CurrentRoundMaxLossOddsUID string `protobuf:"bytes,12,opt,name=current_round_max_loss_odds_uid,proto3" json:"current_round_max_loss_odds_uid" yaml:"current_round_max_loss_odds_uid"`
 	// actual_profit is the actual profit
 	ActualProfit github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=actual_profit,json=actualProfit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"actual_profit" yaml:"actual_profit"`

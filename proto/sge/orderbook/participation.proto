@@ -78,8 +78,8 @@ message BookParticipation {
     (gogoproto.moretags) = "yaml:\"current_round_max_loss\""
   ];
 
-  // current_round_max_loss_odds_uid is the total bet amount corresponding to all
-  // exposure
+  // current_round_max_loss_odds_uid is the total bet amount corresponding to
+  // all exposure
   string current_round_max_loss_odds_uid = 12 [
     (gogoproto.customname) = "CurrentRoundMaxLossOddsUID",
     (gogoproto.jsontag) = "current_round_max_loss_odds_uid",

@@ -44,7 +44,6 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		addPayload.EndTS,
 		addPayload.Odds,
 		params.NewEventBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
-		addPayload.Active,
 		addPayload.Meta,
 		addPayload.UID,
 		addPayload.SrContributionForHouse,

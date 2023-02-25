@@ -22,6 +22,13 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 		return nil, types.ErrEventNotFound
 	}
 
+	// if current data is not active or inactive it is not updatable
+	// active status can be changed to inactive or vice versa in the updating
+	if currentData.Status != types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE &&
+		currentData.Status != types.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE {
+		return nil, types.ErrCanNotBeAltered
+	}
+
 	// if update event is not valid so it is failed
 	params := k.GetParams(ctx)
 
@@ -29,16 +36,11 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 		return nil, sdkerrors.Wrap(err, "validate update data")
 	}
 
-	// if the status is still pending so it is failed
-	if currentData.Status != types.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
-		return nil, types.ErrCanNotBeAltered
-	}
-
 	// replace current data with payload values
 	currentData.StartTS = updatePayload.StartTS
 	currentData.EndTS = updatePayload.EndTS
 	currentData.BetConstraints = params.NewEventBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
-	currentData.Active = updatePayload.Active
+	currentData.Status = updatePayload.Status
 
 	// the update event is successful so update the module state
 	k.Keeper.SetSportEvent(ctx, currentData)

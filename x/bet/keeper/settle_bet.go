@@ -49,7 +49,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 	}
 
 	if sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED ||
-		sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED {
+		sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED {
 		bet.Result = types.Bet_RESULT_ABORTED
 
 		payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -206,7 +206,7 @@ func checkBetStatus(betstatus types.Bet_Status) error {
 	switch betstatus {
 	case types.Bet_STATUS_SETTLED:
 		return types.ErrBetIsSettled
-	case types.Bet_STATUS_CANCELLED:
+	case types.Bet_STATUS_CANCELED:
 		return types.ErrBetIsCanceled
 	}
 

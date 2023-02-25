@@ -86,12 +86,8 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrNoMatchingSportEvent
 	}
 
-	if !sportevent.Active {
+	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
-	}
-
-	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING {
-		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
 	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {

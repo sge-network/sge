@@ -42,7 +42,7 @@ func TestPlaceBet(t *testing.T) {
 			desc: "inactive sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_inactive",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
@@ -57,11 +57,10 @@ func TestPlaceBet(t *testing.T) {
 			err: types.ErrInactiveSportEvent,
 		},
 		{
-			desc: "not pending sport-event",
+			desc: "not active sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_declared",
 				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
-				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
@@ -73,15 +72,14 @@ func TestPlaceBet(t *testing.T) {
 				SportEventUID: "uid_declared",
 				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			err: types.ErrSportEventStatusNotPending,
+			err: types.ErrInactiveSportEvent,
 		},
 		{
 			desc: "expired sport-event",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_expired",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 				EndTS:  0o00000000,
-				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
@@ -99,13 +97,12 @@ func TestPlaceBet(t *testing.T) {
 			desc: "not exist odds",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_oddsNotexist",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
@@ -131,13 +128,12 @@ func TestPlaceBet(t *testing.T) {
 			desc: "low bet amount",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_lowBetAmount",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1000),
 					BetFee:    sdk.NewInt(1),
@@ -163,13 +159,12 @@ func TestPlaceBet(t *testing.T) {
 			desc: "success",
 			sportEvent: &sporteventtypes.SportEvent{
 				UID:    "uid_success",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
 				Odds: []*sporteventtypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				Active: true,
 				BetConstraints: &sporteventtypes.EventBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
