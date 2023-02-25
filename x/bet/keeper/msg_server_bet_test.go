@@ -139,8 +139,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			StartTS: 1111111111,
 			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 			Odds:    testEventOdds,
-			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
-			Active:  true,
+			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 			BetConstraints: &sporteventtypes.EventBetConstraints{
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewInt(1),

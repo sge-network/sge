@@ -120,7 +120,7 @@ func TestMsgServerAddEventResponse(t *testing.T) {
 			"iat":                       1111111111,
 			"meta":                      "Winner of x:y",
 			"sr_contribution_for_house": "2",
-			"status":                    types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+			"status":                    types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
@@ -138,12 +138,12 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u1,
 		Creator: sample.AccAddress(),
-		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 	})
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u3,
 		Creator: sample.AccAddress(),
-		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
+		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
@@ -179,7 +179,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		assert.Nil(t, response)
 	})
 
-	t.Run("non pending event resolution", func(t *testing.T) {
+	t.Run("non active event resolution", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
 			"uid":              u3,
 			"status":           types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
@@ -192,7 +192,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventIsNotPending)
+		assert.ErrorIs(t, err, types.ErrEventIsNotActive)
 		assert.Nil(t, response)
 	})
 

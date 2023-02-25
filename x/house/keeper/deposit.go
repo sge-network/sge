@@ -3,6 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/house/types"
 )
@@ -72,6 +73,22 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string, sportEventUID string, a
 	deposit.ParticipationIndex = participationIndex
 
 	k.SetDeposit(ctx, deposit)
+	emitTransactionEvent(ctx, types.TypeMsgDeposit, cast.ToString(participationIndex), creator)
 
 	return participationIndex, err
+}
+
+func emitTransactionEvent(ctx sdk.Context, emitType string, particpationIndex, creator string) {
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			emitType,
+			sdk.NewAttribute(types.AttributeKeyParticipationIndex, particpationIndex),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+			sdk.NewAttribute(sdk.AttributeKeyAction, emitType),
+			sdk.NewAttribute(sdk.AttributeKeySender, creator),
+		),
+	})
 }

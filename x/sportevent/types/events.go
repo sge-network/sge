@@ -4,6 +4,7 @@ const (
 	AttributeKeyEventsCreator = "events_creator"
 
 	AttributeKeySportEventsSuccessUID = "sport_events_success_uid"
+	AttributeKeyOrderBookUID          = "sport_events_book_uid"
 	AttributeKeySportEventsFailedUID  = "sport_events_failed_uid"
 
 	// AttributeValueCategory is the event attribute for category as module name

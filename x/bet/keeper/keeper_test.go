@@ -72,7 +72,7 @@ func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) 
 		"iat":                       7777777777,
 		"meta":                      "Winner of x:y",
 		"sr_contribution_for_house": sdk.NewInt(500000),
-		"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+		"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 	}
 	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 	require.Nil(t, err)
@@ -102,7 +102,7 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 			"iat":                       7777777777,
 			"meta":                      "Winner of x:y",
 			"sr_contribution_for_house": sdk.NewInt(500000),
-			"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_PENDING,
+			"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 		}
 		testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
 		require.Nil(t, err)

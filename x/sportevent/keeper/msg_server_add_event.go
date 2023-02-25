@@ -44,7 +44,6 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		addPayload.EndTS,
 		addPayload.Odds,
 		params.NewEventBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
-		addPayload.Active,
 		addPayload.Meta,
 		addPayload.UID,
 		addPayload.SrContributionForHouse,
@@ -57,7 +56,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		Error: "",
 		Data:  &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, addPayload.UID, msg.Creator)
 
 	return response, nil
 }

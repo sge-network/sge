@@ -14,7 +14,6 @@ message BetOdds {
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
-
   // sport_event_uid is the parent, used for fast retrieving.
   // Required | NonUnique | -
   string sport_event_uid = 2 [
@@ -22,11 +21,9 @@ message BetOdds {
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
-
   // value of the odds in corresponding odds type proposed in bet placement
   // message. Required | NonUnique | "1.286" or "2/7" or "+500"
   string value = 3;
-
   // max_loss_multiplier is the factor for calculating max loss for given odds
   string max_loss_multiplier = 4 [
     (gogoproto.customname) = "MaxLossMultiplier",
