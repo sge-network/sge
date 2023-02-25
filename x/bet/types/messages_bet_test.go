@@ -79,7 +79,6 @@ func TestNewBet(t *testing.T) {
 			OddsUID:       inputBetOdds.UID,
 			OddsValue:     inputBetOdds.Value,
 			Amount:        inputBet.Amount,
-			Ticket:        inputBet.Ticket,
 		}
 		res, err := types.NewBet(creator, inputBet, inputBetOdds)
 		require.Equal(t, expectedBet, res)
