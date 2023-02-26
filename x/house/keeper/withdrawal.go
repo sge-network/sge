@@ -43,7 +43,7 @@ func (k Keeper) Withdraw(ctx sdk.Context, creator string, sportEventUID string, 
 	}
 
 	if deposit.Creator != creator {
-		return 0, sdkerrors.Wrapf(types.ErrWrongWithdrawCreator, ": %s, %s", creator)
+		return 0, sdkerrors.Wrapf(types.ErrWrongWithdrawCreator, ": %s", creator)
 	}
 
 	if mode == types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
