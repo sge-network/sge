@@ -56,29 +56,23 @@ message Bet {
   // result is the result of the bet, such as `won` or `lost`.
   Result result = 9;
   
-  // verified shows bet is verified or not.
-  bool verified = 10;
-  
-  // ticket is a signed string containing important info such as `odds_value`.
-  string ticket = 11;
-  
   // creator is the bettor address.
-  string creator = 12;
+  string creator = 10;
   
   // created_at is the bet placement timestamp.
-  int64 created_at = 13;
+  int64 created_at = 11;
   
   // settlement_height is the block height that the bet is settled.
-  int64 settlement_height = 14;
+  int64 settlement_height = 12;
   
   // max_loss_multiplier is the multiplier coefficient of max loss.
-  string max_loss_multiplier = 15 [
+  string max_loss_multiplier = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
   
   // bet_fulfillment is the fulfillment data.
-  repeated BetFulfillment bet_fulfillment = 16;
+  repeated BetFulfillment bet_fulfillment = 14;
 
   // Status of the Bet.
   enum Status {

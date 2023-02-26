@@ -99,7 +99,6 @@ func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
 		Amount:            bet.Amount,
-		Ticket:            bet.Ticket,
 		OddsType:          bet.OddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
 	}, nil

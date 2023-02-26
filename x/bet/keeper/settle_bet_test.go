@@ -52,10 +52,7 @@ func TestSettleBet(t *testing.T) {
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
-
-				Verified: true,
-				Status:   types.Bet_STATUS_SETTLED,
+				Status:        types.Bet_STATUS_SETTLED,
 			},
 			err: types.ErrBetIsSettled,
 		},
@@ -77,7 +74,6 @@ func TestSettleBet(t *testing.T) {
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
 				UID:                    testSportEventUID,
@@ -99,7 +95,6 @@ func TestSettleBet(t *testing.T) {
 				Amount:        sdk.NewInt(300),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
 				UID:                    testSportEventUID,
@@ -121,7 +116,6 @@ func TestSettleBet(t *testing.T) {
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
 			},
 			updateSportEvent: &sporteventtypes.SportEvent{
 				UID:                    testSportEventUID,
@@ -144,7 +138,6 @@ func TestSettleBet(t *testing.T) {
 				Amount:        sdk.NewInt(500),
 				Creator:       testCreator,
 				OddsUID:       testOddsUID1,
-				Ticket:        "Ticket",
 
 				Result: types.Bet_RESULT_WON,
 			},

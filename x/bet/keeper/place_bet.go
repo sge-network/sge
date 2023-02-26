@@ -61,9 +61,6 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	// put bet in the result pending status
 	bet.Result = types.Bet_RESULT_PENDING
 
-	// set data verification status as valid
-	bet.Verified = true
-
 	bet.CreatedAt = ctx.BlockTime().Unix()
 	bet.BetFulfillment = betFulfillment
 
