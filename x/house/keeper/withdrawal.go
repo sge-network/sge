@@ -36,16 +36,20 @@ func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err
 
 // Withdraw performs a withdrawal of coins of unused amount corresponding to a deposit.
 func (k Keeper) Withdraw(ctx sdk.Context, creator string, sportEventUID string, participationIndex uint64, mode types.WithdrawalMode, witAmt sdk.Int) (uint64, error) {
-	var withdrawalNumber uint64
+	var withdrawalId uint64
 	// Get the deposit object
 	deposit, found := k.GetDeposit(ctx, creator, sportEventUID, participationIndex)
 	if !found {
-		return withdrawalNumber, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", sportEventUID, participationIndex)
+		return withdrawalId, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", sportEventUID, participationIndex)
+	}
+
+	if deposit.Creator != creator {
+		return withdrawalId, sdkerrors.Wrapf(types.ErrWrongWithdrawCreator, ": %s, %d", creator)
 	}
 
 	if mode == types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if deposit.Liquidity.Sub(deposit.TotalWithdrawalAmount).LT(witAmt) {
-			return withdrawalNumber, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", witAmt.Int64())
+			return withdrawalId, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", witAmt.Int64())
 		}
 	}
 
@@ -66,5 +70,5 @@ func (k Keeper) Withdraw(ctx sdk.Context, creator string, sportEventUID string, 
 	deposit.TotalWithdrawalAmount = deposit.TotalWithdrawalAmount.Add(withdrawalAmt)
 	k.SetDeposit(ctx, deposit)
 
-	return withdrawalNumber, nil
+	return withdrawalId, nil
 }

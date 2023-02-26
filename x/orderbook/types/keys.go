@@ -76,12 +76,12 @@ func GetParticipationExposuresByBookKey(bookUID string) []byte {
 	return utils.StrBytes(bookUID)
 }
 
-// GetParticipationExposureByIndexKey creates the key for participation exposure for an odds by participation number
+// GetParticipationExposureByIndexKey creates the key for participation exposure for an odds by participation index
 func GetParticipationExposureByIndexKey(bookUID, oddsUID string, index uint64) []byte {
 	return append(GetParticipationByIndexKey(bookUID, index), utils.StrBytes(oddsUID)...)
 }
 
-// GetParticipationByIndexKey creates the key for exposures for a book id and participation number
+// GetParticipationByIndexKey creates the key for exposures for a book id and participation index
 func GetParticipationByIndexKey(bookUID string, index uint64) []byte {
 	return append(utils.StrBytes(bookUID), utils.Uint64ToBytes(index)...)
 }

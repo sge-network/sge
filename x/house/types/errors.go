@@ -21,6 +21,7 @@ var (
 	ErrDepositNotFound              = sdkerrors.Register(ModuleName, 5011, "deposit not found")
 	ErrWithdrawalTooLarge           = sdkerrors.Register(ModuleName, 5012, "withdrawal is more than unused amount")
 	ErrOrderBookLiquidateProcessing = sdkerrors.Register(ModuleName, 5013, "internal error in processing liquidation in OB")
+	ErrWrongWithdrawCreator         = sdkerrors.Register(ModuleName, 5014, "withdrawal is only allowed from the depositor account")
 )
 
 const (

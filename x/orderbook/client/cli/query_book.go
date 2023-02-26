@@ -147,7 +147,7 @@ $ %s query orderbook book-participations %s
 // GetCmdQueryBookParticipation implements the bookparticipation query command.
 func GetCmdQueryBookParticipation() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "book-participation [order-book-id] [participation-number]",
+		Use:   "book-participation [order-book-id] [participation-index]",
 		Short: "Query a book participation",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a book participation.
@@ -170,7 +170,7 @@ $ %s query orderbook book-participation %s %d
 
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf("particiapnt index argument provided must be a non-negative-integer: %v", err)
 			}
 
 			params := &types.QueryBookParticipationRequest{BookUid: orderBookUID, ParticipationIndex: particiapationIndex}

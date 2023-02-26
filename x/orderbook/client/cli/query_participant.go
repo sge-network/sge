@@ -64,7 +64,7 @@ $ %s query orderbook participation-exposures %s
 // GetCmdQueryParticipationExposure implements the participationexposure query command.
 func GetCmdQueryParticipationExposure() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "participation-exposure [order-book-id] [participation-number]",
+		Use:   "participation-exposure [order-book-id] [participation-index]",
 		Short: "Query a participation exposure",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a participation exposure.
@@ -86,7 +86,7 @@ $ %s query orderbook participation-exposure %s %d
 			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("participation number argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf("participation index argument provided must be a non-negative-integer: %v", err)
 			}
 
 			params := &types.QueryParticipationExposureRequest{BookUid: orderBookUID, ParticipationIndex: particiapationIndex}
@@ -156,7 +156,7 @@ $ %s query orderbook historical-participation-exposures %s
 // GetCmdQueryParticipationBets implements the command to query all the participation fulfilled bets to a specific orderbook.
 func GetCmdQueryParticipationBets() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "participation-bets [order-book-id] [participation-number]",
+		Use:   "participation-bets [order-book-id] [participation-index]",
 		Short: "Query all participation fulfilled bets for a specific order book",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query participation fulfilled bets on an individual order book.
@@ -178,7 +178,7 @@ $ %s query orderbook participation-bets %s %d
 			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf("particiapnt index argument provided must be a non-negative-integer: %v", err)
 			}
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

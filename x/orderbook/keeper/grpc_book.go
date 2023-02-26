@@ -107,7 +107,7 @@ func (k Keeper) BookParticipations(c context.Context, req *types.QueryBookPartic
 	}, nil
 }
 
-// BookParticipation queries book participation info for given order book id and participation number
+// BookParticipation queries book participation info for given order book id and participation index
 func (k Keeper) BookParticipation(c context.Context, req *types.QueryBookParticipationRequest) (*types.QueryBookParticipationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
@@ -118,7 +118,7 @@ func (k Keeper) BookParticipation(c context.Context, req *types.QueryBookPartici
 	}
 
 	if req.ParticipationIndex < 1 {
-		return nil, status.Error(codes.InvalidArgument, "participation number can not be less than 1")
+		return nil, status.Error(codes.InvalidArgument, "participation index can not be less than 1")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)

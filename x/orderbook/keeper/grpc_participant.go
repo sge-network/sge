@@ -46,7 +46,7 @@ func (k Keeper) ParticipationExposures(c context.Context, req *types.QueryPartic
 	}, nil
 }
 
-// ParticipationExposure queries participation exposure info for given order book id and participation number
+// ParticipationExposure queries participation exposure info for given order book id and participation index
 func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryParticipationExposureRequest) (*types.QueryParticipationExposureResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
@@ -57,7 +57,7 @@ func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryPartici
 	}
 
 	if req.ParticipationIndex < 1 {
-		return nil, status.Error(codes.InvalidArgument, "participation number can not be less than 1")
+		return nil, status.Error(codes.InvalidArgument, "participation index can not be less than 1")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
@@ -121,7 +121,7 @@ func (k Keeper) HistoricalParticipationExposures(c context.Context, req *types.Q
 	}, nil
 }
 
-// ParticipationFulfilledBets queries participation fulfilled bets info for given order book id and participation number
+// ParticipationFulfilledBets queries participation fulfilled bets info for given order book id and participation index
 func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryParticipationFulfilledBetsRequest) (*types.QueryParticipationFulfilledBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
@@ -132,7 +132,7 @@ func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryPa
 	}
 
 	if req.ParticipationIndex < 1 {
-		return nil, status.Error(codes.InvalidArgument, "participation number can not be less than 1")
+		return nil, status.Error(codes.InvalidArgument, "participation index can not be less than 1")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
