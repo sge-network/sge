@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -10,8 +9,6 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 	"github.com/spf13/cobra"
 )
-
-var _ = strconv.Itoa(0)
 
 // CmdListSportEvents implements a command to return all sport-events
 func CmdListSportEvents() *cobra.Command {

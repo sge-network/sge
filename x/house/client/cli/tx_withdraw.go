@@ -2,7 +2,6 @@ package cli
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -11,6 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/sge-network/sge/x/house/types"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -36,12 +36,12 @@ func CmdWithdrawal() *cobra.Command {
 
 			sportEventUID := args[0]
 
-			particiapntNumber, err := strconv.ParseUint(args[1], 10, 64)
-			if err != nil || particiapntNumber < 1 {
+			particiapntIndex, err := cast.ToUint64E(args[1])
+			if err != nil || particiapntIndex < 1 {
 				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
 			}
 
-			mode, err := strconv.ParseInt(args[2], 10, 32)
+			mode, err := cast.ToInt64E(args[2])
 			if err != nil {
 				return fmt.Errorf("mode argument provided must be a non-negative-integer: %v", mode)
 			}
@@ -61,7 +61,7 @@ func CmdWithdrawal() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgWithdraw(depAddr.String(), sportEventUID, argAmountCosmosInt, particiapntNumber, types.WithdrawalMode(mode))
+			msg := types.NewMsgWithdraw(depAddr.String(), sportEventUID, argAmountCosmosInt, particiapntIndex, types.WithdrawalMode(mode))
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

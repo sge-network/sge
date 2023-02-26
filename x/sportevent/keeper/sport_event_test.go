@@ -1,23 +1,20 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/sportevent/keeper"
 	"github.com/sge-network/sge/x/sportevent/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNSportEvent(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.SportEvent {
 	items := make([]types.SportEvent, n)
 	for i := range items {
-		items[i].UID = strconv.Itoa(i)
+		items[i].UID = cast.ToString(i)
 		items[i].SrContributionForHouse = sdk.NewInt(0)
 
 		keeper.SetSportEvent(ctx, items[i])

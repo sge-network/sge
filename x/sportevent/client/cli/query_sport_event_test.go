@@ -2,11 +2,11 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -18,9 +18,6 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func networkWithSportEventObjects(t *testing.T, n int) (*network.Network, []types.SportEvent) {
 	t.Helper()
 	cfg := network.DefaultConfig()
@@ -29,7 +26,7 @@ func networkWithSportEventObjects(t *testing.T, n int) (*network.Network, []type
 
 	for i := 0; i < n; i++ {
 		sportEvent := types.SportEvent{
-			UID:                    strconv.Itoa(i),
+			UID:                    cast.ToString(i),
 			WinnerOddsUIDs:         []string{},
 			SrContributionForHouse: sdk.NewInt(2),
 		}
@@ -67,7 +64,7 @@ func TestQuerySportEventCLI(t *testing.T) {
 			},
 			{
 				desc:  "not found",
-				idUID: strconv.Itoa(100000),
+				idUID: cast.ToString(100000),
 
 				args: common,
 				err:  status.Error(codes.NotFound, "not found"),

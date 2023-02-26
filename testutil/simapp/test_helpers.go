@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"encoding/hex"
 	"fmt"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	"github.com/spf13/cast"
 )
 
 // PKs is a slice of public keys for test
@@ -25,7 +25,7 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 
 	// start at 100 so we can make up to 999 test addresses with valid test addresses
 	for i := 100; i < (accNum + 100); i++ {
-		numString := strconv.Itoa(i)
+		numString := cast.ToString(i)
 		buffer.WriteString("A58856F0FD53BF058B4909A21AEC019107BA6") // base address string
 
 		buffer.WriteString(numString) // adding on final two digits to make addresses unique
@@ -122,7 +122,7 @@ func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
 	for i := 100; i < (numPubKeys + 100); i++ {
-		numString := strconv.Itoa(i)
+		numString := cast.ToString(i)
 		buffer.WriteString("0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF") // base pubkey string
 		buffer.WriteString(numString)                                                       // adding on final two digits to make pubkeys unique
 		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))

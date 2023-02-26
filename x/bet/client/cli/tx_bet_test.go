@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -13,9 +12,6 @@ import (
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/x/bet/client/cli"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestTXBetCLI(t *testing.T) {
 	net := network.New(t)

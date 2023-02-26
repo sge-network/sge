@@ -2,7 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -11,10 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
+	"github.com/spf13/cast"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 // SimulateMsgPlaceBet returns an Operation function to run a state machine transition
 func SimulateMsgPlaceBet(
@@ -30,7 +27,7 @@ func SimulateMsgPlaceBet(
 		msg := &types.MsgPlaceBet{
 			Creator: simAccount.Address.String(),
 			Bet: &types.PlaceBetFields{
-				UID: strconv.Itoa(i),
+				UID: cast.ToString(i),
 			},
 		}
 

@@ -1,20 +1,17 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/sportevent/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestSportEventQuerySingle(t *testing.T) {
 	k, ctx := setupKeeper(t)
@@ -43,7 +40,7 @@ func TestSportEventQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QuerySportEventRequest{
-				Uid: strconv.Itoa(100000),
+				Uid: cast.ToString(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
