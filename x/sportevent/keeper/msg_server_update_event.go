@@ -48,6 +48,6 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	response := &types.MsgUpdateSportEventResponse{
 		Data: &currentData,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgUpdateSportEvents, response.Data.UID, response.Data.BookID, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgUpdateSportEvents, response.Data.UID, response.Data.BookUID, msg.Creator)
 	return response, nil
 }

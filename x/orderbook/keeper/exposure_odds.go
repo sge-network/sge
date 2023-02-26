@@ -8,7 +8,7 @@ import (
 
 // SetBookOddsExposure sets a book odds exposure.
 func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure) {
-	bookKey := types.GetBookOddsExposureKey(boe.BookID, boe.OddsUID)
+	bookKey := types.GetBookOddsExposureKey(boe.BookUID, boe.OddsUID)
 
 	store := k.getBookOddsExposureStore(ctx)
 	b := k.cdc.MustMarshal(&boe)
@@ -16,9 +16,9 @@ func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure)
 }
 
 // GetBookOddsExposure returns a specific book odds exposure.
-func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookID, oddsUID string) (val types.BookOddsExposure, found bool) {
+func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (val types.BookOddsExposure, found bool) {
 	sportEventsStore := k.getBookOddsExposureStore(ctx)
-	exposureKey := types.GetBookOddsExposureKey(bookID, oddsUID)
+	exposureKey := types.GetBookOddsExposureKey(bookUID, oddsUID)
 	b := sportEventsStore.Get(exposureKey)
 	if b == nil {
 		return val, false
@@ -30,9 +30,9 @@ func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookID, oddsUID string) (va
 }
 
 // GetOddsExposuresByBook returns all exposures for a book
-func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookID string) (list []types.BookOddsExposure, err error) {
+func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookUID string) (list []types.BookOddsExposure, err error) {
 	store := k.getBookOddsExposureStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddsExposuresKey(bookID))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddsExposuresKey(bookUID))
 
 	defer func() {
 		err = iterator.Close()

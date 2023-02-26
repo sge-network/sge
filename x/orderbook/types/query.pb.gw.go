@@ -116,15 +116,15 @@ func request_Query_OrderBook_0(ctx context.Context, marshaler runtime.Marshaler,
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	msg, err := client.OrderBook(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -143,15 +143,15 @@ func local_request_Query_OrderBook_0(ctx context.Context, marshaler runtime.Mars
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	msg, err := server.OrderBook(ctx, &protoReq)
@@ -160,7 +160,7 @@ func local_request_Query_OrderBook_0(ctx context.Context, marshaler runtime.Mars
 }
 
 var (
-	filter_Query_BookParticipations_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_BookParticipations_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_BookParticipations_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -174,15 +174,15 @@ func request_Query_BookParticipations_0(ctx context.Context, marshaler runtime.M
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -208,15 +208,15 @@ func local_request_Query_BookParticipations_0(ctx context.Context, marshaler run
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -242,15 +242,15 @@ func request_Query_BookParticipation_0(ctx context.Context, marshaler runtime.Ma
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -280,15 +280,15 @@ func local_request_Query_BookParticipation_0(ctx context.Context, marshaler runt
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -308,7 +308,7 @@ func local_request_Query_BookParticipation_0(ctx context.Context, marshaler runt
 }
 
 var (
-	filter_Query_BookExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_BookExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_BookExposures_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -322,15 +322,15 @@ func request_Query_BookExposures_0(ctx context.Context, marshaler runtime.Marsha
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -356,15 +356,15 @@ func local_request_Query_BookExposures_0(ctx context.Context, marshaler runtime.
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -390,15 +390,15 @@ func request_Query_BookExposure_0(ctx context.Context, marshaler runtime.Marshal
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["odds_uid"]
@@ -428,15 +428,15 @@ func local_request_Query_BookExposure_0(ctx context.Context, marshaler runtime.M
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["odds_uid"]
@@ -456,7 +456,7 @@ func local_request_Query_BookExposure_0(ctx context.Context, marshaler runtime.M
 }
 
 var (
-	filter_Query_ParticipationExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_ParticipationExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_ParticipationExposures_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -470,15 +470,15 @@ func request_Query_ParticipationExposures_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -504,15 +504,15 @@ func local_request_Query_ParticipationExposures_0(ctx context.Context, marshaler
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -528,7 +528,7 @@ func local_request_Query_ParticipationExposures_0(ctx context.Context, marshaler
 }
 
 var (
-	filter_Query_ParticipationExposure_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0, "participation_index": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Query_ParticipationExposure_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0, "participation_index": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Query_ParticipationExposure_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -542,15 +542,15 @@ func request_Query_ParticipationExposure_0(ctx context.Context, marshaler runtim
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -587,15 +587,15 @@ func local_request_Query_ParticipationExposure_0(ctx context.Context, marshaler 
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -622,7 +622,7 @@ func local_request_Query_ParticipationExposure_0(ctx context.Context, marshaler 
 }
 
 var (
-	filter_Query_HistoricalParticipationExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_HistoricalParticipationExposures_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
 )
 
 func request_Query_HistoricalParticipationExposures_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -636,15 +636,15 @@ func request_Query_HistoricalParticipationExposures_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -670,15 +670,15 @@ func local_request_Query_HistoricalParticipationExposures_0(ctx context.Context,
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	if err := req.ParseForm(); err != nil {
@@ -694,7 +694,7 @@ func local_request_Query_HistoricalParticipationExposures_0(ctx context.Context,
 }
 
 var (
-	filter_Query_ParticipationFulfilledBets_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_id": 0, "participation_index": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Query_ParticipationFulfilledBets_0 = &utilities.DoubleArray{Encoding: map[string]int{"book_uid": 0, "participation_index": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Query_ParticipationFulfilledBets_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -708,15 +708,15 @@ func request_Query_ParticipationFulfilledBets_0(ctx context.Context, marshaler r
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -753,15 +753,15 @@ func local_request_Query_ParticipationFulfilledBets_0(ctx context.Context, marsh
 		_   = err
 	)
 
-	val, ok = pathParams["book_id"]
+	val, ok = pathParams["book_uid"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "book_uid")
 	}
 
-	protoReq.BookId, err = runtime.String(val)
+	protoReq.BookUid, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "book_uid", err)
 	}
 
 	val, ok = pathParams["participation_index"]
@@ -1270,23 +1270,23 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 var (
 	pattern_Query_OrderBooks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbooks", "status"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_OrderBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbooks", "book_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbooks", "book_uid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BookParticipations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "participations"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BookParticipations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_uid", "participations"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BookParticipation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_id", "participations", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BookParticipation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_uid", "participations", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BookExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BookExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_uid", "exposures"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_id", "exposures", "odds_uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_uid", "exposures", "odds_uid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_uid", "participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ParticipationExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_id", "participation-exposures", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ParticipationExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbooks", "book_uid", "participation-exposures", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_HistoricalParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_id", "historical-participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_HistoricalParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbooks", "book_uid", "historical-participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ParticipationFulfilledBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"sge", "orderbooks", "book_id", "participations", "participation_index", "fulfilled_bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ParticipationFulfilledBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"sge", "orderbooks", "book_uid", "participations", "participation_index", "fulfilled_bets"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

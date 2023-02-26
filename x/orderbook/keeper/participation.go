@@ -10,7 +10,7 @@ import (
 
 // SetBookParticipation sets a book participation.
 func (k Keeper) SetBookParticipation(ctx sdk.Context, participation types.BookParticipation) {
-	participationKey := types.GetBookParticipationKey(participation.BookID, participation.Index)
+	participationKey := types.GetBookParticipationKey(participation.BookUID, participation.Index)
 
 	store := k.getParticipationStore(ctx)
 	b := k.cdc.MustMarshal(&participation)
@@ -18,9 +18,9 @@ func (k Keeper) SetBookParticipation(ctx sdk.Context, participation types.BookPa
 }
 
 // GetBook GetBookParticipation a specific participation.
-func (k Keeper) GetBookParticipation(ctx sdk.Context, bookID string, index uint64) (val types.BookParticipation, found bool) {
+func (k Keeper) GetBookParticipation(ctx sdk.Context, bookUID string, index uint64) (val types.BookParticipation, found bool) {
 	store := k.getParticipationStore(ctx)
-	aprticipationKey := types.GetBookParticipationKey(bookID, index)
+	aprticipationKey := types.GetBookParticipationKey(bookUID, index)
 	b := store.Get(aprticipationKey)
 	if b == nil {
 		return val, false
@@ -32,9 +32,9 @@ func (k Keeper) GetBookParticipation(ctx sdk.Context, bookID string, index uint6
 }
 
 // GetParticipationsOfBook returns all participations for a book
-func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookID string) (list []types.BookParticipation, err error) {
+func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookUID string) (list []types.BookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipationsKey(bookID))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipationsKey(bookUID))
 
 	defer func() {
 		err = iterator.Close()
@@ -69,11 +69,11 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 
 // InitiateBookParticipation starts a participation on a book for a certain account.
 func (k Keeper) InitiateBookParticipation(
-	ctx sdk.Context, addr sdk.AccAddress, bookID string, liquidity, fee sdk.Int,
+	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
 ) (index uint64, err error) {
-	book, found := k.GetBook(ctx, bookID)
+	book, found := k.GetBook(ctx, bookUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
 		return
 	}
 
@@ -123,7 +123,7 @@ func (k Keeper) InitiateBookParticipation(
 	k.SetBookParticipation(ctx, bookParticipation)
 
 	// Update book odds exposures and add particiapnt exposures
-	boes, err := k.GetOddsExposuresByBook(ctx, bookParticipation.BookID)
+	boes, err := k.GetOddsExposuresByBook(ctx, bookParticipation.BookUID)
 	if err != nil {
 		return
 	}
@@ -142,7 +142,7 @@ func (k Keeper) InitiateBookParticipation(
 }
 
 func (k Keeper) LiquidateBookParticipation(
-	ctx sdk.Context, depositorAddr, bookID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
+	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	var withdrawalAmt sdk.Int
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
@@ -150,13 +150,13 @@ func (k Keeper) LiquidateBookParticipation(
 		return withdrawalAmt, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
-	bp, found := k.GetBookParticipation(ctx, bookID, participationIndex)
+	bp, found := k.GetBookParticipation(ctx, bookUID, participationIndex)
 	if !found {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, participationIndex)
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
 	}
 
 	if bp.IsSettled {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookID, participationIndex)
+		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookUID, participationIndex)
 	}
 
 	if bp.ParticipantAddress != depositorAddr {
@@ -198,7 +198,7 @@ func (k Keeper) LiquidateBookParticipation(
 	k.SetBookParticipation(ctx, bp)
 
 	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
-		boes, err := k.GetOddsExposuresByBook(ctx, bookID)
+		boes, err := k.GetOddsExposuresByBook(ctx, bookUID)
 		if err != nil {
 			return withdrawalAmt, err
 		}

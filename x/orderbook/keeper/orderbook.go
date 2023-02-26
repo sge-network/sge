@@ -18,9 +18,9 @@ func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
 }
 
 // GetBook returns a specific order book.
-func (k Keeper) GetBook(ctx sdk.Context, bookID string) (val types.OrderBook, found bool) {
+func (k Keeper) GetBook(ctx sdk.Context, bookUID string) (val types.OrderBook, found bool) {
 	sportEventsStore := k.getBookStore(ctx)
-	bookKey := types.GetBookKey(bookID)
+	bookKey := types.GetBookKey(bookUID)
 	b := sportEventsStore.Get(bookKey)
 	if b == nil {
 		return val, false
@@ -52,17 +52,17 @@ func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error)
 // InitiateBook initiates a book for a given sport event
 func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
 	// book and sport event have one-to-one relationship
-	bookID := sportEventUID
+	bookUID := sportEventUID
 
 	// check for existing book with id
-	book, found := k.GetBook(ctx, bookID)
+	book, found := k.GetBook(ctx, bookUID)
 	if found {
 		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
 	}
 
 	// create new active book object
 	book = types.NewOrderBook(
-		bookID,
+		bookUID,
 		1, // sr participation is the only participation of the new book
 		uint64(len(oddsUIDs)),
 		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
@@ -93,7 +93,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContributi
 		boe := types.NewBookOddsExposure(book.ID, oddsUID, fulfillmentQueue)
 		k.SetBookOddsExposure(ctx, boe)
 
-		pe := types.NewParticipationExposure(srParticipation.BookID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
+		pe := types.NewParticipationExposure(srParticipation.BookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
 		k.SetParticipationExposure(ctx, pe)
 	}
 

@@ -57,11 +57,11 @@ message SportEvent {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // book_id is the id of book
-  string book_id = 12 [
-    (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+  // book_uid is the unique identifier corresponding to the book
+  string book_uid = 12 [
+    (gogoproto.customname) = "BookUID",
+    (gogoproto.jsontag) = "book_uid",
+    json_name = "book_uid"
   ];
 }
 

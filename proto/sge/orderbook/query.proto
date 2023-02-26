@@ -19,13 +19,13 @@ service Query {
 
   // OrderBook queries orderbook info for given order book id.
   rpc OrderBook(QueryOrderBookRequest) returns (QueryOrderBookResponse) {
-    option (google.api.http).get = "/sge/orderbooks/{book_id}";
+    option (google.api.http).get = "/sge/orderbooks/{book_uid}";
   }
 
   // BookParticipations queries participation info for given orderbook.
   rpc BookParticipations(QueryBookParticipationsRequest)
       returns (QueryBookParticipationsResponse) {
-    option (google.api.http).get = "/sge/orderbooks/{book_id}/participations";
+    option (google.api.http).get = "/sge/orderbooks/{book_uid}/participations";
   }
 
   // BookParticipation queries participation info for given orderbook and
@@ -33,20 +33,20 @@ service Query {
   rpc BookParticipation(QueryBookParticipationRequest)
       returns (QueryBookParticipationResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/participations/{participation_index}";
+        "/sge/orderbooks/{book_uid}/participations/{participation_index}";
   }
 
   // BookExposures queries exposures info for given orderbook.
   rpc BookExposures(QueryBookExposuresRequest)
       returns (QueryBookExposuresResponse) {
-    option (google.api.http).get = "/sge/orderbooks/{book_id}/exposures";
+    option (google.api.http).get = "/sge/orderbooks/{book_uid}/exposures";
   }
 
   // BookExposure queries exposure info for given orderbook and odds id.
   rpc BookExposure(QueryBookExposureRequest)
       returns (QueryBookExposureResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/exposures/{odds_uid}";
+        "/sge/orderbooks/{book_uid}/exposures/{odds_uid}";
   }
 
   // ParticipationExposures queries exposures info for given orderbook
@@ -54,7 +54,7 @@ service Query {
   rpc ParticipationExposures(QueryParticipationExposuresRequest)
       returns (QueryParticipationExposuresResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/participation-exposures";
+        "/sge/orderbooks/{book_uid}/participation-exposures";
   }
 
   // ParticipationExposure queries exposure info for given orderbook
@@ -62,7 +62,7 @@ service Query {
   rpc ParticipationExposure(QueryParticipationExposureRequest)
       returns (QueryParticipationExposureResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/participation-exposures/"
+        "/sge/orderbooks/{book_uid}/participation-exposures/"
         "{participation_index}";
   }
 
@@ -72,14 +72,14 @@ service Query {
       QueryHistoricalParticipationExposuresRequest)
       returns (QueryHistoricalParticipationExposuresResponse) {
     option (google.api.http).get =
-        "/sge/orderbooks/{book_id}/historical-participation-exposures";
+        "/sge/orderbooks/{book_uid}/historical-participation-exposures";
   }
 
   // ParticipationFulfilledBets queries fulfilled bets for given orderbook
   // participation.
   rpc ParticipationFulfilledBets(QueryParticipationFulfilledBetsRequest)
       returns (QueryParticipationFulfilledBetsResponse) {
-    option (google.api.http).get = "/sge/orderbooks/{book_id}/participations/"
+    option (google.api.http).get = "/sge/orderbooks/{book_uid}/participations/"
                                    "{participation_index}/fulfilled_bets";
   }
 }
@@ -104,8 +104,8 @@ message QueryOrderBooksResponse {
 
 // QueryOrderBookRequest is request type for the Query/OrderBook RPC method
 message QueryOrderBookRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 }
 
 // QueryOrderBookResponse is response type for the Query/OrderBook RPC method
@@ -117,8 +117,8 @@ message QueryOrderBookResponse {
 // QueryBookParticipationsRequest is request type for the
 // Query/BookParticipations RPC method
 message QueryBookParticipationsRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
@@ -137,8 +137,8 @@ message QueryBookParticipationsResponse {
 // QueryBookParticipationRequest is request type for the Query/BookParticipation
 // RPC method
 message QueryBookParticipationRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // participation_index defines the participation index to query for
   uint64 participation_index = 2;
@@ -154,8 +154,8 @@ message QueryBookParticipationResponse {
 // QueryBookExposuresRequest is request type for the Query/BookExposures RPC
 // method
 message QueryBookExposuresRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
@@ -173,8 +173,8 @@ message QueryBookExposuresResponse {
 // QueryBookExposureRequest is request type for the Query/BookExposure RPC
 // method
 message QueryBookExposureRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // odds_uid defines the odds id to query for.
   string odds_uid = 2;
@@ -190,8 +190,8 @@ message QueryBookExposureResponse {
 // QueryParticipationExposuresRequest is request type for the
 // Query/ParticipationExposures RPC method
 message QueryParticipationExposuresRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
@@ -210,8 +210,8 @@ message QueryParticipationExposuresResponse {
 // QueryParticipationExposureRequest is request type for the
 // Query/ParticipationExposure RPC method
 message QueryParticipationExposureRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   uint64 participation_index = 2;
 
@@ -233,8 +233,8 @@ message QueryParticipationExposureResponse {
 // QueryHistoricalParticipationExposuresRequest is request type for the
 // Query/HistoricalParticipationExposures RPC method
 message QueryHistoricalParticipationExposuresRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
@@ -253,8 +253,8 @@ message QueryHistoricalParticipationExposuresResponse {
 // QueryParticipationFulfilledBetsRequest is request type for the
 // Query/ParticipationFulfilledBets RPC method
 message QueryParticipationFulfilledBetsRequest {
-  // book_id defines the book id to query for.
-  string book_id = 1;
+  // book_uid defines the book id to query for.
+  string book_uid = 1;
 
   uint64 participation_index = 2;
 
