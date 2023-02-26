@@ -1,15 +1,12 @@
 package cli_test
 
 import (
-	"crypto/ed25519"
-	"crypto/rand"
-	"crypto/x509"
-	"encoding/pem"
 	"fmt"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/sge-network/sge/testutil/network"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/dvm/client/cli"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
@@ -17,31 +14,27 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *ed25519.PrivateKey) {
+func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	pubKey, privKey, _ := ed25519.GenerateKey(rand.Reader)
+	pubkeys := simappUtil.GenerateDvmPublicKeys(5)
 
-	bs, err := x509.MarshalPKIXPublicKey(pubKey)
-	if err != nil {
-		panic(err)
-	}
-	state.PublicKeys = &types.PublicKeys{
-		List: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+	state.KeyVault = types.KeyVault{
+		PublicKeys: pubkeys,
 	}
 
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
 
-	return network.New(t, cfg), state.PublicKeys, &privKey
+	return network.New(t, cfg), &state.KeyVault
 }
 
 func TestCmdPubKeysList(t *testing.T) {
-	net, _, _ := networkWithPublicKeys(t)
+	net, _ := networkWithPublicKeys(t)
 
 	t.Run("PubKeysList", func(t *testing.T) {
 		ctx := net.Validators[0].ClientCtx

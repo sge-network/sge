@@ -4,7 +4,6 @@ import (
 	"crypto/ed25519"
 	"crypto/rand"
 	"crypto/x509"
-	"encoding/pem"
 	"fmt"
 	"testing"
 	"time"
@@ -13,13 +12,14 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/stretchr/testify/require"
-
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/client/cli"
+	"github.com/stretchr/testify/require"
 )
 
-func TestCmdMutation(t *testing.T) {
-	net, _, pri := networkWithPublicKeys(t)
+func TestCmdChangePubkeysListProposal(t *testing.T) {
+	net, _ := networkWithPublicKeys(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
 
@@ -29,23 +29,22 @@ func TestCmdMutation(t *testing.T) {
 		fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastBlock),
 		fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdk.NewInt(10))).String()),
 	}
-	Pub2, Pri2, err := ed25519.GenerateKey(rand.Reader)
-	_ = Pri2
+	pub, _, err := ed25519.GenerateKey(rand.Reader)
 	require.NoError(t, err)
-	bs, err := x509.MarshalPKIXPublicKey(Pub2)
+	bs, err := x509.MarshalPKIXPublicKey(pub)
 	require.NoError(t, err)
 
-	T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
+	t1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
 		Additions []string
 		Deletions []string
 		jwt.RegisteredClaims
 	}{
-		Additions: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+		Additions: []string{string(utils.NewPubKeyMemory(bs))},
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
 	})
-	singedT1, err := T1.SignedString(pri)
+	singedT1, err := t1.SignedString(simappUtil.TestDVMPrivateKeys[0])
 	require.NoError(t, err)
 
 	TestCases := []struct {
@@ -68,7 +67,7 @@ func TestCmdMutation(t *testing.T) {
 				tc.ticket,
 			}
 			args = append(args, commonArgs...)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdMutation(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdChangePubkeysListProposal(), args)
 			if tc.err != nil {
 				require.Error(t, err, "")
 			} else {

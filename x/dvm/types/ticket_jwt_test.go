@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
@@ -25,7 +26,7 @@ func TestVerifyWithKey(t *testing.T) {
 		Deletions []string
 		jwt.RegisteredClaims
 	}{
-		Additions: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+		Additions: []string{string(utils.NewPubKeyMemory(bs))},
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
@@ -34,10 +35,10 @@ func TestVerifyWithKey(t *testing.T) {
 	require.NoError(t, err)
 	ss := strings.Split(singedT1, ".")
 
-	ticket := types.NewTestJwtToken(ss[0], ss[1], []string{ss[2]})
+	ticket := types.NewTestJwtToken(ss[0], ss[1], ss[2])
 	require.Nil(t, err)
 	t.Run("Success", func(t *testing.T) {
-		_, err = ticket.VerifyWithKey(string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs})))
+		_, err = ticket.VerifyWithKey(string(utils.NewPubKeyMemory(bs)))
 		require.NoError(t, err)
 	})
 	t.Run("Error", func(t *testing.T) {
@@ -66,14 +67,14 @@ func TestNewTicket(t *testing.T) {
 		tkn, err := Token.SignedString(Pri)
 		require.Nil(t, err)
 		t.Log(err)
-		it, err := types.NewTicket(tkn)
+		it, err := types.NewJwtTicket(tkn)
 		t.Log(err)
 		require.Nil(t, err)
 		require.NotNil(t, it)
 	})
 
 	t.Run("invalid", func(t *testing.T) {
-		it, err := types.NewTicket("invlaid.Token")
+		it, err := types.NewJwtTicket("invlaid.Token")
 		require.Error(t, err)
 		// require.Nil(t, it)
 		_ = it
@@ -105,7 +106,7 @@ func TestUnmarshal(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := types.NewTicket(tkn)
+	it, err := types.NewJwtTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 
@@ -144,7 +145,7 @@ func TestVerify(t *testing.T) {
 	tkn, err := Token.SignedString(Pri)
 	require.Nil(t, err)
 
-	it, err := types.NewTicket(tkn)
+	it, err := types.NewJwtTicket(tkn)
 	require.Nil(t, err)
 	require.NotNil(t, it)
 

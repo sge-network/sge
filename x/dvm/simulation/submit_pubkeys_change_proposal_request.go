@@ -10,8 +10,8 @@ import (
 	"github.com/sge-network/sge/x/dvm/types"
 )
 
-// SimulateMsgMutation simulates mutation message registration
-func SimulateMsgMutation(
+// SimulateMsgChangePubkeysListProposal simulates MsgChangePubkeysListProposal message registration
+func SimulateMsgChangePubkeysListProposal(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -19,12 +19,12 @@ func SimulateMsgMutation(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgMutation{
+		msg := &types.MsgSubmitPubkeysChangeProposalRequest{
 			Creator: simAccount.Address.String(),
 		}
 
-		// TODO: Handling the Mutation simulation
+		// TODO: Handling the change pubkeys proposal simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Mutation simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ChangePubkeysListProposal simulation not implemented"), nil, nil
 	}
 }

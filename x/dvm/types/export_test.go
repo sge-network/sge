@@ -7,11 +7,11 @@ type JwtTestToken = jwtTicket
 // NewTestJwtToken create new jwt token object
 //
 //nolint:revive
-func NewTestJwtToken(header, payload string, signatures []string) *JwtTestToken {
+func NewTestJwtToken(header, payload string, signature string) *JwtTestToken {
 	return &jwtTicket{
-		header:     header,
-		payload:    payload,
-		signatures: signatures,
+		header:    header,
+		payload:   payload,
+		signature: signature,
 	}
 }
 

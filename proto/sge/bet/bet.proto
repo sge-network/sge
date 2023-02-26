@@ -22,7 +22,7 @@ message Bet {
     (gogoproto.jsontag) = "sport_event_uid",
     json_name = "sport_event_uid"
   ];
-  
+
   // odds_uid is the unique universal unique identifier,
   // of the odds on which the bet is placed.
   string odds_uid = 3 [
@@ -30,47 +30,47 @@ message Bet {
     (gogoproto.jsontag) = "odds_uid",
     json_name = "odds_uid"
   ];
-  
+
   // odds_type is the type of odds that
   // user choose such as decimal, fractional.
   sgenetwork.sge.bet.OddsType odds_type = 4;
-  
+
   // odds_value is the odds on which the bet is placed.
   string odds_value = 5;
-  
+
   // amount is the wager amount.
   string amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  
+
   // bet_fee is the betting fee calculated by the bet amount.
   string bet_fee = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  
+
   // status is the status of the bet, such as `unspecified` or `settled`.
   Status status = 8;
-  
+
   // result is the result of the bet, such as `won` or `lost`.
   Result result = 9;
-  
+
   // creator is the bettor address.
   string creator = 10;
-  
+
   // created_at is the bet placement timestamp.
   int64 created_at = 11;
-  
+
   // settlement_height is the block height that the bet is settled.
   int64 settlement_height = 12;
-  
+
   // max_loss_multiplier is the multiplier coefficient of max loss.
   string max_loss_multiplier = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  
+
   // bet_fulfillment is the fulfillment data.
   repeated BetFulfillment bet_fulfillment = 14;
 

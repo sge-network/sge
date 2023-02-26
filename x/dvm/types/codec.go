@@ -9,13 +9,15 @@ import (
 
 // RegisterCodec registers module codec to the app codec
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgMutation{}, "dvm/Mutation", nil)
+	cdc.RegisterConcrete(&MsgSubmitPubkeysChangeProposalRequest{}, "dvm/SubmitPubkeysChangeProposal", nil)
+	cdc.RegisterConcrete(&MsgVotePubkeysChangeRequest{}, "dvm/VotePubkeysChange", nil)
 }
 
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgMutation{},
+		&MsgSubmitPubkeysChangeProposalRequest{},
+		&MsgVotePubkeysChangeRequest{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

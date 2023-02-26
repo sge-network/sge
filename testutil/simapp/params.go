@@ -34,9 +34,9 @@ var (
 	// TestParamValidatorAddresses represents the map of test validators
 	TestParamValidatorAddresses = make(map[string]TestValidator)
 
-	// TestDVMPublicKey represents test public keys needed for dvm
-	TestDVMPublicKey ed25519.PublicKey
+	// TestDVMPublicKeys represents test public keys needed for dvm
+	TestDVMPublicKeys []ed25519.PublicKey
 
-	// TestDVMPrivateKey represents test private keys needed for dvm
-	TestDVMPrivateKey ed25519.PrivateKey
+	// TestDVMPrivateKeys represents test private keys needed for dvm
+	TestDVMPrivateKeys []ed25519.PrivateKey
 )
