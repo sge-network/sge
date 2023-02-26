@@ -2,13 +2,13 @@ package cli
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/sge-network/sge/x/orderbook/types"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -84,7 +84,7 @@ $ %s query orderbook participation-exposure %s %d
 			queryClient := types.NewQueryClient(clientCtx)
 
 			orderBookID := args[0]
-			particiapationIndex, err := strconv.ParseUint(args[1], 10, 64)
+			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
 				return fmt.Errorf("participation number argument provided must be a non-negative-integer: %v", err)
 			}
@@ -176,7 +176,7 @@ $ %s query orderbook participation-bets %s %d
 			queryClient := types.NewQueryClient(clientCtx)
 
 			orderBookID := args[0]
-			particiapationIndex, err := strconv.ParseUint(args[1], 10, 64)
+			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
 				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
 			}

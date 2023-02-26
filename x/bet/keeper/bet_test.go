@@ -1,10 +1,10 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/testutil/nullify"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -13,16 +13,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
 func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Context, n int) []types.Bet {
 	items := make([]types.Bet, n)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	tApp.SporteventKeeper.SetSportEvent(ctx, testSportEvent)
 
 	for i := range items {
-		items[i].UID = strconv.Itoa(i)
+		items[i].UID = cast.ToString(i)
 		items[i].Creator = testCreator
 		items[i].OddsValue = "10"
 		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL

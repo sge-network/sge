@@ -1,16 +1,12 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/sge-network/sge/x/sportevent/types"
 	"github.com/spf13/cobra"
 )
-
-var _ = strconv.Itoa(0)
 
 // CmdAddEvent CLI registration for add-events command
 func CmdAddEvent() *cobra.Command {

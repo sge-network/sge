@@ -1,13 +1,12 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/bet/types"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ func CmdPlaceBet() *cobra.Command {
 			argOddsType := args[2]
 			argTicket := args[3]
 
-			oddsType, err := strconv.ParseInt(argOddsType, 10, 32)
+			oddsType, err := cast.ToInt32E(argOddsType)
 			if err != nil {
 				return types.ErrInvalidOddsType
 			}

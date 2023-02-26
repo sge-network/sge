@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"strconv"
 	"testing"
 	"time"
 
@@ -18,9 +17,6 @@ import (
 
 	"github.com/sge-network/sge/x/dvm/client/cli"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestCmdMutation(t *testing.T) {
 	net, _, pri := networkWithPublicKeys(t)

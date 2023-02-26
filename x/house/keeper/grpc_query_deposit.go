@@ -47,7 +47,7 @@ func (k Keeper) DepositorDeposits(c context.Context, req *types.QueryDepositorDe
 	var deposits []types.Deposit
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.GetDepositListPrefix(req.DepositorAddress))
+	store := prefix.NewStore(k.getDepositsStore(ctx), types.GetDepositListPrefix(req.DepositorAddress))
 	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {

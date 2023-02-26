@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,9 +12,6 @@ import (
 
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestBetMsgServerPlaceBet(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)

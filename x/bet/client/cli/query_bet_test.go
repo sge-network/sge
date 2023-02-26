@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -11,6 +10,7 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -23,9 +23,6 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 const testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
 
@@ -117,7 +114,7 @@ func TestQueryBet(t *testing.T) {
 			{
 				desc:    "not found",
 				creator: "",
-				uid:     strconv.Itoa(100000),
+				uid:     cast.ToString(100000),
 
 				args: common,
 				err:  status.Error(codes.NotFound, "not found"),
