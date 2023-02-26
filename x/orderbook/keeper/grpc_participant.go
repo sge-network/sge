@@ -17,14 +17,14 @@ func (k Keeper) ParticipationExposures(c context.Context, req *types.QueryPartic
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookId == "" {
+	if req.BookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
 	}
 	var participationExposures []types.ParticipationExposure
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByBookKey(req.BookId))
+	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByBookKey(req.BookUid))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		var participationExposure types.ParticipationExposure
 		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
@@ -52,7 +52,7 @@ func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryPartici
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookId == "" {
+	if req.BookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
@@ -64,7 +64,7 @@ func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryPartici
 	var participationExposures []types.ParticipationExposure
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationExposureByIndexKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.BookId, req.ParticipationIndex))
+	exposureStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.BookUid, req.ParticipationIndex))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		var participationExposure types.ParticipationExposure
 		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
@@ -92,14 +92,14 @@ func (k Keeper) HistoricalParticipationExposures(c context.Context, req *types.Q
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookId == "" {
+	if req.BookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
 	}
 	var historicalParticipationExposures []types.ParticipationExposure
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.HistoricalParticipationExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByBookKey(req.BookId))
+	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByBookKey(req.BookUid))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		var participationExposure types.ParticipationExposure
 		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
@@ -127,7 +127,7 @@ func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryPa
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookId == "" {
+	if req.BookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
@@ -139,7 +139,7 @@ func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryPa
 	var participationBets []types.ParticipationBetPair
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationBetPairKeyPrefix)
-	betsStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.BookId, req.ParticipationIndex))
+	betsStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.BookUid, req.ParticipationIndex))
 	pageRes, err := query.FilteredPaginate(betsStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
 		var participationBet types.ParticipationBetPair
 		if err := k.cdc.Unmarshal(value, &participationBet); err != nil {

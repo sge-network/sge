@@ -10,7 +10,7 @@ func NewSportEvent(
 	odds []*Odds,
 	betConstraits *EventBetConstraints,
 	meta string,
-	bookID string,
+	bookUID string,
 	srContributionForHouse sdk.Int,
 	status SportEventStatus,
 ) SportEvent {
@@ -22,7 +22,7 @@ func NewSportEvent(
 		Odds:                   odds,
 		BetConstraints:         betConstraits,
 		Meta:                   meta,
-		BookID:                 bookID,
+		BookUID:                bookUID,
 		SrContributionForHouse: srContributionForHouse,
 		Status:                 status,
 	}

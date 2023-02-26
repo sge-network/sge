@@ -27,19 +27,19 @@ func (k Keeper) GetOrderBookStats(ctx sdk.Context) (val types.OrderBookStats) {
 	return val
 }
 
-func (k Keeper) AddBookSettlement(ctx sdk.Context, orderBookID string) error {
-	book, found := k.GetBook(ctx, orderBookID)
+func (k Keeper) AddBookSettlement(ctx sdk.Context, orderBookUID string) error {
+	book, found := k.GetBook(ctx, orderBookUID)
 	if !found {
-		return sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", orderBookID)
+		return sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", orderBookUID)
 	}
 	if book.Status != types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE {
-		return sdkerrors.Wrapf(types.ErrOrderBookNotActive, "%s", orderBookID)
+		return sdkerrors.Wrapf(types.ErrOrderBookNotActive, "%s", orderBookUID)
 	}
 	book.Status = types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_RESOLVED
 	k.SetBook(ctx, book)
 
 	stats := k.GetOrderBookStats(ctx)
-	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, orderBookID)
+	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, orderBookUID)
 	k.SetOrderBookStats(ctx, stats)
 	return nil
 }
@@ -54,11 +54,11 @@ func (k Keeper) GetFirstUnsettledResolvedOrderBook(ctx sdk.Context) (string, boo
 }
 
 // RemoveUnsettledResolvedOrderBook removes resolved order-book from the statistics
-func (k Keeper) RemoveUnsettledResolvedOrderBook(ctx sdk.Context, orderBookID string) {
+func (k Keeper) RemoveUnsettledResolvedOrderBook(ctx sdk.Context, orderBookUID string) {
 	stats := k.GetOrderBookStats(ctx)
 	if len(stats.ResolvedUnsettled) > 0 {
 		for i, e := range stats.ResolvedUnsettled {
-			if e == orderBookID {
+			if e == orderBookUID {
 				stats.ResolvedUnsettled = append(stats.ResolvedUnsettled[:i], stats.ResolvedUnsettled[i+1:]...)
 			}
 		}

@@ -37,61 +37,61 @@ var (
 )
 
 // GetBookKey returns the bytes of an book key
-func GetBookKey(bookID string) []byte {
-	return utils.StrBytes(bookID)
+func GetBookKey(bookUID string) []byte {
+	return utils.StrBytes(bookUID)
 }
 
 // GetBookParticipationKey creates the key for book participation bond with book
-func GetBookParticipationKey(bookID string, participationIndex uint64) []byte {
-	return append(GetBookParticipationsKey(bookID), utils.Uint64ToBytes(participationIndex)...)
+func GetBookParticipationKey(bookUID string, participationIndex uint64) []byte {
+	return append(GetBookParticipationsKey(bookUID), utils.Uint64ToBytes(participationIndex)...)
 }
 
 // GetBookParticipationsKey creates the key for book participations for an book
-func GetBookParticipationsKey(bookID string) []byte {
-	return utils.StrBytes(bookID)
+func GetBookParticipationsKey(bookUID string) []byte {
+	return utils.StrBytes(bookUID)
 }
 
 // GetBookOddsExposureKey creates the key for book exposure for an odd
-func GetBookOddsExposureKey(bookID, oddsUID string) []byte {
-	return append(GetBookOddsExposuresKey(bookID), utils.StrBytes(oddsUID)...)
+func GetBookOddsExposureKey(bookUID, oddsUID string) []byte {
+	return append(GetBookOddsExposuresKey(bookUID), utils.StrBytes(oddsUID)...)
 }
 
 // GetBookOddsExposuresKey creates the key for book exposure for an book
-func GetBookOddsExposuresKey(bookID string) []byte {
-	return utils.StrBytes(bookID)
+func GetBookOddsExposuresKey(bookUID string) []byte {
+	return utils.StrBytes(bookUID)
 }
 
 // GetParticipationExposureKey creates the key for participation exposure for an odd
-func GetParticipationExposureKey(bookID, oddsUID string, index uint64) []byte {
-	return append(GetParticipationExposuresKey(bookID, oddsUID), utils.Uint64ToBytes(index)...)
+func GetParticipationExposureKey(bookUID, oddsUID string, index uint64) []byte {
+	return append(GetParticipationExposuresKey(bookUID, oddsUID), utils.Uint64ToBytes(index)...)
 }
 
 // GetParticipationExposuresKey creates the key for exposures for a book id and odds id
-func GetParticipationExposuresKey(bookID, oddsUID string) []byte {
-	return append(GetParticipationExposuresByBookKey(bookID), utils.StrBytes(oddsUID)...)
+func GetParticipationExposuresKey(bookUID, oddsUID string) []byte {
+	return append(GetParticipationExposuresByBookKey(bookUID), utils.StrBytes(oddsUID)...)
 }
 
 // GetParticipationExposuresByBookKey creates the key for exposures for a book id
-func GetParticipationExposuresByBookKey(bookID string) []byte {
-	return utils.StrBytes(bookID)
+func GetParticipationExposuresByBookKey(bookUID string) []byte {
+	return utils.StrBytes(bookUID)
 }
 
 // GetParticipationExposureByIndexKey creates the key for participation exposure for an odds by participation number
-func GetParticipationExposureByIndexKey(bookID, oddsUID string, index uint64) []byte {
-	return append(GetParticipationByIndexKey(bookID, index), utils.StrBytes(oddsUID)...)
+func GetParticipationExposureByIndexKey(bookUID, oddsUID string, index uint64) []byte {
+	return append(GetParticipationByIndexKey(bookUID, index), utils.StrBytes(oddsUID)...)
 }
 
 // GetParticipationByIndexKey creates the key for exposures for a book id and participation number
-func GetParticipationByIndexKey(bookID string, index uint64) []byte {
-	return append(utils.StrBytes(bookID), utils.Uint64ToBytes(index)...)
+func GetParticipationByIndexKey(bookUID string, index uint64) []byte {
+	return append(utils.StrBytes(bookUID), utils.Uint64ToBytes(index)...)
 }
 
 // GetHistoricalParticipationExposureKey creates the key for participation exposure for an odd
-func GetHistoricalParticipationExposureKey(bookID, oddsUID string, index, round uint64) []byte {
-	return append(GetParticipationExposureKey(bookID, oddsUID, index), utils.Uint64ToBytes(round)...)
+func GetHistoricalParticipationExposureKey(bookUID, oddsUID string, index, round uint64) []byte {
+	return append(GetParticipationExposureKey(bookUID, oddsUID, index), utils.Uint64ToBytes(round)...)
 }
 
 // GetParticipationBetPairKey creates the bond between participation and bet
-func GetParticipationBetPairKey(bookID string, bookParticipationIndex uint64, betID uint64) []byte {
-	return append(GetParticipationByIndexKey(bookID, bookParticipationIndex), utils.Uint64ToBytes(betID)...)
+func GetParticipationBetPairKey(bookUID string, bookParticipationIndex uint64, betID uint64) []byte {
+	return append(GetParticipationByIndexKey(bookUID, bookParticipationIndex), utils.Uint64ToBytes(betID)...)
 }

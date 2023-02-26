@@ -11,7 +11,7 @@ import (
 // ProcessBetPlacement processes bet placement
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
-	betUID, bookID, oddsUID string,
+	betUID, bookUID, oddsUID string,
 	maxLossMultiplier sdk.Dec,
 	payoutProfit sdk.Int,
 	bettorAddress sdk.AccAddress,
@@ -27,15 +27,15 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// get book data by its id
-	book, found := k.GetBook(ctx, bookID)
+	book, found := k.GetBook(ctx, bookUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
 		return
 	}
 	// get exposures of the odds user is placing the bet
-	bookExposure, found := k.GetBookOddsExposure(ctx, bookID, oddsUID)
+	bookExposure, found := k.GetBookOddsExposure(ctx, bookUID, oddsUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookID, oddsUID)
+		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
 		return
 	}
 
@@ -48,19 +48,19 @@ func (k Keeper) ProcessBetPlacement(
 		return
 	}
 	if int(book.ParticipationCount) != len(bps) {
-		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookID)
+		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookUID)
 		return
 	}
 	for _, bp := range bps {
 		participationMap[bp.Index] = bp
 	}
 
-	pes, err := k.GetExposureByBookAndOdds(ctx, bookID, oddsUID)
+	pes, err := k.GetExposureByBookAndOdds(ctx, bookUID, oddsUID)
 	if err != nil {
 		return
 	}
 	if int(book.ParticipationCount) != len(pes) {
-		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookID, oddsUID)
+		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookUID, oddsUID)
 		return
 	}
 	for _, pe := range pes {
@@ -79,14 +79,14 @@ func (k Keeper) ProcessBetPlacement(
 		getQueueItemParticipation := func() error {
 			participation, found = participationMap[participationIndex]
 			if !found {
-				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
 			}
 			participationExposure, found = participationExposureMap[participationIndex]
 			if !found {
-				return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookUID, participationIndex)
 			}
 			if participationExposure.IsFulfilled {
-				return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookUID, participationIndex)
 			}
 			return nil
 		}
@@ -139,7 +139,7 @@ func (k Keeper) ProcessBetPlacement(
 				PayoutAmount:       expectedPayout,
 			})
 			remainingPayoutProfit = remainingPayoutProfit.Sub(expectedPayout)
-			participationBetPair := types.NewParticipationBetPair(participation.BookID, betUID, participation.Index)
+			participationBetPair := types.NewParticipationBetPair(participation.BookUID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)
 			return nil
 		}
@@ -151,7 +151,7 @@ func (k Keeper) ProcessBetPlacement(
 			// check if there is more liquidity amount
 			eligibleForNextRound := participation.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
-			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, bookID, participationIndex)
+			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, bookUID, participationIndex)
 			if err != nil {
 				return
 			}
@@ -176,7 +176,7 @@ func (k Keeper) ProcessBetPlacement(
 
 			if eligibleForNextRound {
 				var boes []types.BookOddsExposure
-				boes, err = k.GetOddsExposuresByBook(ctx, bookID)
+				boes, err = k.GetOddsExposuresByBook(ctx, bookUID)
 				if err != nil {
 					return
 				}

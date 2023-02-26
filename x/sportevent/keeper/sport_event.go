@@ -90,12 +90,12 @@ func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportE
 	return &storedEvent, nil
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, uid, bookID, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, uid, bookUID, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,
 			sdk.NewAttribute(types.AttributeKeySportEventsSuccessUID, uid),
-			sdk.NewAttribute(types.AttributeKeyOrderBookUID, bookID),
+			sdk.NewAttribute(types.AttributeKeyOrderBookUID, bookUID),
 			sdk.NewAttribute(types.AttributeKeyEventsCreator, creator),
 		),
 		sdk.NewEvent(

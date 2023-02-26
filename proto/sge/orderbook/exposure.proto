@@ -11,11 +11,11 @@ message BookOddsExposure {
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = false;
 
-  // book_id is id corresponding to the book
-  string book_id = 1 [
-    (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+  // book_uid is the unique identifier corresponding to the book
+  string book_uid = 1 [
+    (gogoproto.customname) = "BookUID",
+    (gogoproto.jsontag) = "book_uid",
+    json_name = "book_uid"
   ];
 
   // odds_uid is odds uid
@@ -36,11 +36,11 @@ message ParticipationExposure {
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = false;
 
-  // book_id is id corresponding to the book
-  string book_id = 1 [
-    (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
+  // book_uid is the unique identifier corresponding to the book
+  string book_uid = 1 [
+    (gogoproto.customname) = "BookUID",
+    (gogoproto.jsontag) = "book_uid",
+    json_name = "book_uid"
   ];
 
   // odds_uid is odd's uid

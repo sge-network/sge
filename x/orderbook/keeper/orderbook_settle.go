@@ -15,42 +15,42 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
 	// get the first resolved orderbook to process corresponding active deposits.
-	orderBookID, found := k.GetFirstUnsettledResolvedOrderBook(ctx)
+	orderBookUID, found := k.GetFirstUnsettledResolvedOrderBook(ctx)
 
 	// return if there is no resolved orderbook.
 	if !found {
 		return nil
 	}
 
-	book, found := k.GetBook(ctx, orderBookID)
+	book, found := k.GetBook(ctx, orderBookUID)
 	if !found {
-		return fmt.Errorf("orderbook not found %s", orderBookID)
+		return fmt.Errorf("orderbook not found %s", orderBookUID)
 	}
 	if book.Status != types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_RESOLVED {
-		return fmt.Errorf("orderbook status not resolved %s", orderBookID)
+		return fmt.Errorf("orderbook status not resolved %s", orderBookUID)
 	}
 
 	// settle order book active deposits.
-	allSettled, err := k.batchSettlementOfDeposit(ctx, orderBookID, toFetch)
+	allSettled, err := k.batchSettlementOfDeposit(ctx, orderBookUID, toFetch)
 	if err != nil {
-		return fmt.Errorf("could not settle orderbook %s %s", orderBookID, err)
+		return fmt.Errorf("could not settle orderbook %s %s", orderBookUID, err)
 	}
 
 	// if there is not any active deposit for orderbook
 	// we need to remove its uid from the list of unsettled resolved orderbooks.
 	if allSettled {
-		k.RemoveUnsettledResolvedOrderBook(ctx, orderBookID)
+		k.RemoveUnsettledResolvedOrderBook(ctx, orderBookUID)
 	}
 
 	return nil
 }
 
 // batchSettlementOfDeposit settles active deposits of a orderbook
-func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookID string, countToBeSettled uint64) (allSettled bool, err error) {
+func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
-	bookParticipations, err := k.GetParticipationsOfBook(ctx, orderBookID)
+	bookParticipations, err := k.GetParticipationsOfBook(ctx, orderBookUID)
 	if err != nil {
 		return false, err
 	}
@@ -73,7 +73,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookID string, co
 
 func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipation) error {
 	if bp.IsSettled {
-		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.BookID, bp.Index)
+		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.BookUID, bp.Index)
 	}
 
 	if bp.IsModuleAccount {

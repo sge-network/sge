@@ -9,14 +9,14 @@ import (
 //
 //nolint:interfacer
 func NewBookParticipation(
-	index uint64, bookID string, participantAddress string,
+	index uint64, bookUID string, participantAddress string,
 	exposuresNotFilled uint64, isModuleAccount bool,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
 	currentRoundMaxLossOddsUID string, actualProfit sdk.Int,
 ) BookParticipation {
 	return BookParticipation{
 		Index:                      index,
-		BookID:                     bookID,
+		BookUID:                    bookUID,
 		ParticipantAddress:         participantAddress,
 		IsModuleAccount:            isModuleAccount,
 		Liquidity:                  liquidity,

@@ -8,9 +8,9 @@ import (
 // NewBookOddsExposure creates a new book odds exposure object
 //
 //nolint:interfacer
-func NewBookOddsExposure(bookID, oddsUID string, fulfillmentQueue []uint64) BookOddsExposure {
+func NewBookOddsExposure(bookUID, oddsUID string, fulfillmentQueue []uint64) BookOddsExposure {
 	return BookOddsExposure{
-		BookID:           bookID,
+		BookUID:          bookUID,
 		OddsUID:          oddsUID,
 		FulfillmentQueue: fulfillmentQueue,
 	}
@@ -25,9 +25,9 @@ func (boe BookOddsExposure) String() string {
 // NewParticipationExposure creates a new participation exposure object
 //
 //nolint:interfacer
-func NewParticipationExposure(bookID, oddsUID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
+func NewParticipationExposure(bookUID, oddsUID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
 	return ParticipationExposure{
-		BookID:             bookID,
+		BookUID:            bookUID,
 		OddsUID:            oddsUID,
 		ParticipationIndex: participationIndex,
 		Exposure:           exposure,

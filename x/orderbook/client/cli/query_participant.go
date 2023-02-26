@@ -34,7 +34,7 @@ $ %s query orderbook participation-exposures %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookID := args[0]
+			orderBookUID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -42,7 +42,7 @@ $ %s query orderbook participation-exposures %s
 			}
 
 			params := &types.QueryParticipationExposuresRequest{
-				BookId:     orderBookID,
+				BookUid:    orderBookUID,
 				Pagination: pageReq,
 			}
 
@@ -83,13 +83,13 @@ $ %s query orderbook participation-exposure %s %d
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookID := args[0]
+			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
 				return fmt.Errorf("participation number argument provided must be a non-negative-integer: %v", err)
 			}
 
-			params := &types.QueryParticipationExposureRequest{BookId: orderBookID, ParticipationIndex: particiapationIndex}
+			params := &types.QueryParticipationExposureRequest{BookUid: orderBookUID, ParticipationIndex: particiapationIndex}
 			res, err := queryClient.ParticipationExposure(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -126,7 +126,7 @@ $ %s query orderbook historical-participation-exposures %s
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookID := args[0]
+			orderBookUID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -134,7 +134,7 @@ $ %s query orderbook historical-participation-exposures %s
 			}
 
 			params := &types.QueryHistoricalParticipationExposuresRequest{
-				BookId:     orderBookID,
+				BookUid:    orderBookUID,
 				Pagination: pageReq,
 			}
 
@@ -175,7 +175,7 @@ $ %s query orderbook participation-bets %s %d
 			}
 			queryClient := types.NewQueryClient(clientCtx)
 
-			orderBookID := args[0]
+			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
 				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
@@ -187,7 +187,7 @@ $ %s query orderbook participation-bets %s %d
 			}
 
 			params := &types.QueryParticipationFulfilledBetsRequest{
-				BookId:             orderBookID,
+				BookUid:            orderBookUID,
 				ParticipationIndex: particiapationIndex,
 				Pagination:         pageReq,
 			}
