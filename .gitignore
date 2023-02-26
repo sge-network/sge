@@ -22,3 +22,6 @@
 
 # ignore visual studio code local config
 .vscode
+
+# ignore visual studio code dev container config
+.devcontainer
