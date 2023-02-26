@@ -5,6 +5,7 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -33,20 +34,19 @@ type SportEventAddTicketPayload struct {
 	EndTS uint64 `protobuf:"varint,3,opt,name=end_ts,proto3" json:"end_ts"`
 	// odds is the list of odds of the sport-event.
 	Odds []*Odds `protobuf:"bytes,4,rep,name=odds,proto3" json:"odds,omitempty"`
-	// winner_odds_uids is the list of winner odds universal unique identifiers.
-	WinnerOddsUIDs []string `protobuf:"bytes,5,rep,name=winner_odds_uids,proto3" json:"winner_odds_uids"`
 	// status is the current status of the sport-event.
-	Status SportEventStatus `protobuf:"varint,6,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
-	// resolution_ts is the timestamp of the resolution of sport-event.
-	ResolutionTS uint64 `protobuf:"varint,7,opt,name=resolution_ts,proto3" json:"resolution_ts"`
+	Status SportEventStatus `protobuf:"varint,5,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
 	// creator is the address of the creator of sport-event.
-	Creator string `protobuf:"bytes,8,opt,name=creator,proto3" json:"creator,omitempty"`
-	// bet_constraints holds the constraints of sport-event to accept bets.
-	BetConstraints *EventBetConstraints `protobuf:"bytes,9,opt,name=bet_constraints,json=betConstraints,proto3" json:"bet_constraints,omitempty"`
-	// active is the status of active or inactive sport-event.
-	Active bool `protobuf:"varint,10,opt,name=active,proto3" json:"active,omitempty"`
+	Creator string `protobuf:"bytes,6,opt,name=creator,proto3" json:"creator,omitempty"`
+	// min_bet_amount is the minimum allowed bet amount for a sport-event.
+	MinBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,7,opt,name=min_bet_amount,json=minBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_bet_amount"`
+	// bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+	BetFee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=bet_fee,json=betFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_fee"`
 	// meta contains human-readable metadata of the sport-event.
-	Meta string `protobuf:"bytes,11,opt,name=meta,proto3" json:"meta,omitempty"`
+	Meta string `protobuf:"bytes,9,opt,name=meta,proto3" json:"meta,omitempty"`
+	// sr_contribution_for_house is the portion of payout that should be paid by
+	// sr
+	SrContributionForHouse github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=sr_contribution_for_house,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"sr_contribution_for_house"`
 }
 
 func (m *SportEventAddTicketPayload) Reset()         { *m = SportEventAddTicketPayload{} }
@@ -110,13 +110,6 @@ func (m *SportEventAddTicketPayload) GetOdds() []*Odds {
 	return nil
 }
 
-func (m *SportEventAddTicketPayload) GetWinnerOddsUIDs() []string {
-	if m != nil {
-		return m.WinnerOddsUIDs
-	}
-	return nil
-}
-
 func (m *SportEventAddTicketPayload) GetStatus() SportEventStatus {
 	if m != nil {
 		return m.Status
@@ -124,32 +117,11 @@ func (m *SportEventAddTicketPayload) GetStatus() SportEventStatus {
 	return SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED
 }
 
-func (m *SportEventAddTicketPayload) GetResolutionTS() uint64 {
-	if m != nil {
-		return m.ResolutionTS
-	}
-	return 0
-}
-
 func (m *SportEventAddTicketPayload) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
-}
-
-func (m *SportEventAddTicketPayload) GetBetConstraints() *EventBetConstraints {
-	if m != nil {
-		return m.BetConstraints
-	}
-	return nil
-}
-
-func (m *SportEventAddTicketPayload) GetActive() bool {
-	if m != nil {
-		return m.Active
-	}
-	return false
 }
 
 func (m *SportEventAddTicketPayload) GetMeta() string {
@@ -167,10 +139,12 @@ type SportEventUpdateTicketPayload struct {
 	StartTS uint64 `protobuf:"varint,2,opt,name=start_ts,proto3" json:"start_ts"`
 	// end_ts is the end timestamp of the sport-event
 	EndTS uint64 `protobuf:"varint,3,opt,name=end_ts,proto3" json:"end_ts"`
-	// bet_constraints holds the constraints of sport-event to accept bets
-	BetConstraints *EventBetConstraints `protobuf:"bytes,4,opt,name=bet_constraints,json=betConstraints,proto3" json:"bet_constraints,omitempty"`
-	// active is the status of active or inactive sport-event
-	Active bool `protobuf:"varint,5,opt,name=active,proto3" json:"active,omitempty"`
+	// min_bet_amount is the minimum allowed bet amount for a sport-event.
+	MinBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=min_bet_amount,json=minBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_bet_amount"`
+	// bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+	BetFee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=bet_fee,json=betFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_fee"`
+	// status is the status of the resolution.
+	Status SportEventStatus `protobuf:"varint,6,opt,name=status,proto3,enum=sgenetwork.sge.sportevent.SportEventStatus" json:"status,omitempty"`
 }
 
 func (m *SportEventUpdateTicketPayload) Reset()         { *m = SportEventUpdateTicketPayload{} }
@@ -227,18 +201,11 @@ func (m *SportEventUpdateTicketPayload) GetEndTS() uint64 {
 	return 0
 }
 
-func (m *SportEventUpdateTicketPayload) GetBetConstraints() *EventBetConstraints {
+func (m *SportEventUpdateTicketPayload) GetStatus() SportEventStatus {
 	if m != nil {
-		return m.BetConstraints
+		return m.Status
 	}
-	return nil
-}
-
-func (m *SportEventUpdateTicketPayload) GetActive() bool {
-	if m != nil {
-		return m.Active
-	}
-	return false
+	return SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED
 }
 
 // SportEventResolutionTicketPayload indicates data of the
@@ -325,41 +292,45 @@ func init() {
 func init() { proto.RegisterFile("sge/sportevent/ticket.proto", fileDescriptor_b7e970e0fce71fcc) }
 
 var fileDescriptor_b7e970e0fce71fcc = []byte{
-	// 543 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x54, 0xcd, 0x6e, 0xd3, 0x40,
-	0x10, 0x8e, 0x63, 0xe7, 0x6f, 0x03, 0x01, 0x2d, 0x08, 0xb6, 0x41, 0xd8, 0x6e, 0x0e, 0xc8, 0x52,
-	0x55, 0x47, 0x4a, 0x9e, 0x80, 0xb4, 0x55, 0xd5, 0x13, 0x68, 0xd3, 0xa8, 0x12, 0x97, 0xc8, 0xc9,
-	0xae, 0x8c, 0xd5, 0xd6, 0x1b, 0x79, 0x27, 0x2d, 0x7d, 0x0b, 0x0e, 0xbc, 0x03, 0xaf, 0xc2, 0xb1,
-	0x27, 0xc4, 0xc9, 0x42, 0xce, 0x2d, 0x4f, 0x81, 0x76, 0x6b, 0x92, 0xa6, 0x29, 0x95, 0xa8, 0x7a,
-	0xe8, 0xc5, 0xfe, 0x66, 0xe6, 0xfb, 0xac, 0xf1, 0xb7, 0x33, 0x8b, 0xde, 0xc8, 0x90, 0xb7, 0xe5,
-	0x44, 0x24, 0xc0, 0xcf, 0x78, 0x0c, 0x6d, 0x88, 0xc6, 0xc7, 0x1c, 0xfc, 0x49, 0x22, 0x40, 0xe0,
-	0x0d, 0x19, 0xf2, 0x98, 0xc3, 0xb9, 0x48, 0x8e, 0x7d, 0x19, 0x72, 0x7f, 0xc9, 0x6b, 0xba, 0x37,
-	0x74, 0x1a, 0x0e, 0x35, 0xbe, 0x12, 0x37, 0x37, 0x6e, 0x30, 0x04, 0x63, 0x32, 0x2f, 0xbd, 0x0c,
-	0x45, 0x28, 0x34, 0x6c, 0x2b, 0x74, 0x95, 0x6d, 0xfd, 0xb4, 0x50, 0xb3, 0xaf, 0xf8, 0x7b, 0x8a,
-	0xff, 0x9e, 0xb1, 0x43, 0xdd, 0xcb, 0xc7, 0xe0, 0xe2, 0x44, 0x04, 0x0c, 0xbb, 0xc8, 0x9c, 0x46,
-	0x8c, 0x18, 0xae, 0xe1, 0xd5, 0x7a, 0x8d, 0x2c, 0x75, 0xcc, 0xc1, 0xc1, 0xee, 0x3c, 0x75, 0x54,
-	0x96, 0xaa, 0x07, 0xee, 0xa2, 0xaa, 0x84, 0x20, 0x81, 0x21, 0x48, 0x52, 0x74, 0x0d, 0xcf, 0xea,
-	0xbd, 0xce, 0x52, 0xa7, 0xd2, 0x57, 0xb9, 0xc3, 0xfe, 0x3c, 0x75, 0x16, 0x65, 0xba, 0x40, 0x78,
-	0x0b, 0x95, 0x79, 0xcc, 0x94, 0xc4, 0xd4, 0x92, 0x17, 0x59, 0xea, 0x94, 0xf6, 0x62, 0xa6, 0x05,
-	0x79, 0x89, 0xe6, 0x6f, 0xdc, 0x45, 0x96, 0xfa, 0x0d, 0x62, 0xb9, 0xa6, 0x57, 0xef, 0x38, 0xfe,
-	0x3f, 0xfd, 0xf1, 0x3f, 0x30, 0x26, 0xa9, 0x26, 0x63, 0x8a, 0x9e, 0x9f, 0x47, 0x71, 0xcc, 0x93,
-	0xa1, 0x0a, 0x87, 0xd3, 0x88, 0x49, 0x52, 0x72, 0x4d, 0xaf, 0xd6, 0x7b, 0x97, 0xa5, 0x4e, 0xe3,
-	0x48, 0xd7, 0x14, 0x7f, 0x70, 0xb0, 0x2b, 0xe7, 0xa9, 0xb3, 0xc6, 0xa6, 0x6b, 0x19, 0xbc, 0x83,
-	0xca, 0x12, 0x02, 0x98, 0x4a, 0x52, 0x76, 0x0d, 0xaf, 0xd1, 0xd9, 0xba, 0xa3, 0x95, 0xa5, 0xa7,
-	0x7d, 0x2d, 0xa1, 0xb9, 0x14, 0xef, 0xa3, 0xa7, 0x09, 0x97, 0xe2, 0x64, 0x0a, 0x91, 0x88, 0x95,
-	0x03, 0x15, 0xed, 0xc0, 0x66, 0x96, 0x3a, 0x4f, 0xe8, 0xa2, 0xa0, 0x8d, 0x58, 0x25, 0xd2, 0xd5,
-	0x10, 0x13, 0x54, 0x19, 0x27, 0x3c, 0x00, 0x91, 0x90, 0xaa, 0x3a, 0x1e, 0xfa, 0x37, 0xc4, 0x47,
-	0xe8, 0xd9, 0x88, 0xc3, 0x70, 0x2c, 0x62, 0x09, 0x49, 0x10, 0xc5, 0x20, 0x49, 0xcd, 0x35, 0xbc,
-	0x7a, 0xc7, 0xbf, 0xa3, 0x61, 0xdd, 0x6b, 0x8f, 0xc3, 0xce, 0x52, 0x45, 0x1b, 0xa3, 0x95, 0x18,
-	0xbf, 0x42, 0xe5, 0x60, 0x0c, 0xd1, 0x19, 0x27, 0xc8, 0x35, 0xbc, 0x2a, 0xcd, 0x23, 0x8c, 0x91,
-	0x75, 0xca, 0x21, 0x20, 0x75, 0xdd, 0x87, 0xc6, 0xad, 0x6f, 0x45, 0xf4, 0x76, 0x69, 0xc2, 0x60,
-	0xc2, 0x02, 0xe0, 0x8f, 0x6f, 0xb6, 0x6e, 0xb1, 0xca, 0x7a, 0x60, 0xab, 0x4a, 0xd7, 0xad, 0x6a,
-	0x7d, 0x2f, 0xa2, 0xcd, 0xa5, 0x2d, 0xd7, 0x0e, 0xfc, 0x3f, 0xad, 0x59, 0x1b, 0xa3, 0xe2, 0x3d,
-	0xc7, 0xe8, 0xb6, 0x45, 0x31, 0x1f, 0x6c, 0x51, 0xac, 0x7b, 0x2f, 0x4a, 0x6f, 0xff, 0x47, 0x66,
-	0x1b, 0x97, 0x99, 0x6d, 0xfc, 0xce, 0x6c, 0xe3, 0xeb, 0xcc, 0x2e, 0x5c, 0xce, 0xec, 0xc2, 0xaf,
-	0x99, 0x5d, 0xf8, 0xb4, 0x1d, 0x46, 0xf0, 0x79, 0x3a, 0xf2, 0xc7, 0xe2, 0xb4, 0x2d, 0x43, 0xbe,
-	0x9d, 0x7f, 0x59, 0xe1, 0xf6, 0x97, 0x95, 0x7b, 0xf5, 0x62, 0xc2, 0xe5, 0xa8, 0xac, 0x6f, 0xba,
-	0xee, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x95, 0xcf, 0xf2, 0x21, 0x76, 0x05, 0x00, 0x00,
+	// 605 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0xcb, 0x4e, 0x1b, 0x31,
+	0x14, 0xcd, 0x90, 0x17, 0xb8, 0x34, 0xaa, 0xdc, 0xaa, 0x1d, 0xa8, 0x1a, 0x07, 0x16, 0x28, 0x12,
+	0x62, 0x22, 0xc1, 0x17, 0x10, 0x5e, 0x65, 0xd5, 0xca, 0x01, 0x55, 0xea, 0x66, 0x34, 0x89, 0x2f,
+	0xc3, 0x08, 0x62, 0x47, 0xb6, 0xa7, 0x94, 0x2f, 0xe8, 0xaa, 0x52, 0xff, 0xa1, 0x8b, 0xfe, 0x0a,
+	0x4b, 0x96, 0x55, 0x17, 0x56, 0x35, 0xec, 0xf2, 0x15, 0x95, 0xcd, 0x94, 0x09, 0x20, 0x2a, 0x41,
+	0xbb, 0xe8, 0x26, 0xbe, 0xbe, 0xf7, 0x9c, 0x63, 0xfb, 0x1e, 0xc7, 0x83, 0x5e, 0xaa, 0x18, 0x3a,
+	0x6a, 0x24, 0xa4, 0x86, 0x0f, 0xc0, 0x75, 0x47, 0x27, 0x83, 0x23, 0xd0, 0xc1, 0x48, 0x0a, 0x2d,
+	0xf0, 0x9c, 0x8a, 0x81, 0x83, 0x3e, 0x11, 0xf2, 0x28, 0x50, 0x31, 0x04, 0x05, 0x6e, 0xbe, 0x75,
+	0x83, 0xe7, 0xc2, 0xd0, 0xc5, 0x97, 0xe4, 0xf9, 0xb9, 0x1b, 0x08, 0xc1, 0x98, 0xca, 0x4b, 0xcf,
+	0x62, 0x11, 0x0b, 0x17, 0x76, 0x6c, 0x74, 0x99, 0x5d, 0xfc, 0x5c, 0x45, 0xf3, 0x3d, 0x8b, 0xdf,
+	0xb2, 0xf8, 0x75, 0xc6, 0xf6, 0xdc, 0x5e, 0xde, 0x46, 0xa7, 0xc7, 0x22, 0x62, 0xb8, 0x85, 0xca,
+	0x69, 0xc2, 0x7c, 0xaf, 0xe5, 0xb5, 0x67, 0xba, 0x8d, 0xcc, 0x90, 0xf2, 0xfe, 0xee, 0xe6, 0xd8,
+	0x10, 0x9b, 0xa5, 0xf6, 0x07, 0xaf, 0xa1, 0x69, 0xa5, 0x23, 0xa9, 0x43, 0xad, 0xfc, 0xa9, 0x96,
+	0xd7, 0xae, 0x74, 0x5f, 0x64, 0x86, 0xd4, 0x7b, 0x36, 0xb7, 0xd7, 0x1b, 0x1b, 0x72, 0x55, 0xa6,
+	0x57, 0x11, 0x5e, 0x46, 0x35, 0xe0, 0xcc, 0x52, 0xca, 0x8e, 0xf2, 0x34, 0x33, 0xa4, 0xba, 0xc5,
+	0x99, 0x23, 0xe4, 0x25, 0x9a, 0x8f, 0x78, 0x0d, 0x55, 0xec, 0x31, 0xfc, 0x4a, 0xab, 0xdc, 0x7e,
+	0xb4, 0x4a, 0x82, 0x3b, 0xfb, 0x13, 0xbc, 0x61, 0x4c, 0x51, 0x07, 0xc6, 0x1b, 0xa8, 0xa6, 0x74,
+	0xa4, 0x53, 0xe5, 0x57, 0x5b, 0x5e, 0xbb, 0xb1, 0xba, 0xfc, 0x07, 0x5a, 0x71, 0xfe, 0x9e, 0xa3,
+	0xd0, 0x9c, 0x8a, 0x7d, 0x54, 0x1f, 0x48, 0x88, 0xb4, 0x90, 0x7e, 0xcd, 0x76, 0x80, 0xfe, 0x9e,
+	0xe2, 0x3d, 0xd4, 0x18, 0x26, 0x3c, 0xec, 0x83, 0x0e, 0xa3, 0xa1, 0x48, 0xb9, 0xf6, 0xeb, 0xae,
+	0x45, 0xc1, 0x99, 0x21, 0xa5, 0x1f, 0x86, 0x2c, 0xc5, 0x89, 0x3e, 0x4c, 0xfb, 0xc1, 0x40, 0x0c,
+	0x3b, 0x03, 0xa1, 0x86, 0x42, 0xe5, 0xc3, 0x8a, 0x62, 0x47, 0x1d, 0x7d, 0x3a, 0x02, 0x15, 0xec,
+	0x72, 0x4d, 0x67, 0x87, 0x09, 0xef, 0x82, 0x5e, 0x77, 0x1a, 0x78, 0x07, 0xd5, 0xad, 0xe2, 0x01,
+	0x80, 0x3f, 0xfd, 0x20, 0xb9, 0x5a, 0x1f, 0xf4, 0x36, 0x00, 0xc6, 0xa8, 0x32, 0x04, 0x1d, 0xf9,
+	0x33, 0x6e, 0xd7, 0x2e, 0xc6, 0x5f, 0x3d, 0x34, 0xa7, 0x64, 0x38, 0x10, 0x5c, 0xcb, 0xa4, 0x9f,
+	0xea, 0x44, 0xf0, 0xf0, 0x40, 0xc8, 0xf0, 0x50, 0xa4, 0x0a, 0x7c, 0xe4, 0xd6, 0x83, 0xfb, 0xad,
+	0x97, 0x19, 0xf2, 0xbc, 0x27, 0x37, 0x26, 0x14, 0xb7, 0x85, 0x7c, 0x6d, 0xf5, 0xc6, 0x86, 0xdc,
+	0xbd, 0x18, 0xbd, 0xbb, 0xb4, 0xf8, 0xa9, 0x8c, 0x5e, 0x15, 0x7e, 0xec, 0x8f, 0x58, 0xa4, 0xe1,
+	0xff, 0xbb, 0x92, 0xb7, 0xed, 0xaf, 0xfc, 0x5b, 0xfb, 0xab, 0x7f, 0x65, 0x7f, 0x71, 0xf9, 0x6b,
+	0x0f, 0xbe, 0xfc, 0x8b, 0xdf, 0xa6, 0xd0, 0x42, 0x51, 0xa4, 0xa0, 0xc4, 0xb1, 0x33, 0xeb, 0xbe,
+	0x6e, 0xec, 0xa0, 0xc7, 0xf2, 0x8a, 0x5c, 0x58, 0xb2, 0x90, 0x19, 0x32, 0x3b, 0xa1, 0x6a, 0xdb,
+	0x7c, 0x1d, 0x48, 0xaf, 0x4f, 0x31, 0x45, 0x4f, 0x4e, 0x12, 0xce, 0x41, 0x86, 0xf6, 0x1f, 0x1e,
+	0xa6, 0x09, 0xb3, 0x5e, 0x95, 0xdb, 0x33, 0xdd, 0xa5, 0xcc, 0x90, 0xc6, 0x3b, 0x57, 0xb3, 0x4f,
+	0xc0, 0xfe, 0xee, 0xa6, 0x1a, 0x1b, 0x72, 0x0b, 0x4d, 0x6f, 0x65, 0x26, 0x3a, 0x55, 0x79, 0x70,
+	0xa7, 0xba, 0x3b, 0x67, 0x59, 0xd3, 0x3b, 0xcf, 0x9a, 0xde, 0xcf, 0xac, 0xe9, 0x7d, 0xb9, 0x68,
+	0x96, 0xce, 0x2f, 0x9a, 0xa5, 0xef, 0x17, 0xcd, 0xd2, 0xfb, 0x95, 0x09, 0xe3, 0x54, 0x0c, 0x2b,
+	0xb9, 0xb2, 0x8d, 0x3b, 0x1f, 0xaf, 0x7d, 0x01, 0xac, 0x87, 0xfd, 0x9a, 0x7b, 0x93, 0xd7, 0x7e,
+	0x05, 0x00, 0x00, 0xff, 0xff, 0xd6, 0x7b, 0x43, 0xf8, 0x20, 0x06, 0x00, 0x00,
 }
 
 func (m *SportEventAddTicketPayload) Marshal() (dAtA []byte, err error) {
@@ -382,60 +353,54 @@ func (m *SportEventAddTicketPayload) MarshalToSizedBuffer(dAtA []byte) (int, err
 	_ = i
 	var l int
 	_ = l
+	{
+		size := m.SrContributionForHouse.Size()
+		i -= size
+		if _, err := m.SrContributionForHouse.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTicket(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x52
 	if len(m.Meta) > 0 {
 		i -= len(m.Meta)
 		copy(dAtA[i:], m.Meta)
 		i = encodeVarintTicket(dAtA, i, uint64(len(m.Meta)))
 		i--
-		dAtA[i] = 0x5a
-	}
-	if m.Active {
-		i--
-		if m.Active {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x50
-	}
-	if m.BetConstraints != nil {
-		{
-			size, err := m.BetConstraints.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintTicket(dAtA, i, uint64(size))
-		}
-		i--
 		dAtA[i] = 0x4a
 	}
+	{
+		size := m.BetFee.Size()
+		i -= size
+		if _, err := m.BetFee.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTicket(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x42
+	{
+		size := m.MinBetAmount.Size()
+		i -= size
+		if _, err := m.MinBetAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTicket(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x3a
 	if len(m.Creator) > 0 {
 		i -= len(m.Creator)
 		copy(dAtA[i:], m.Creator)
 		i = encodeVarintTicket(dAtA, i, uint64(len(m.Creator)))
 		i--
-		dAtA[i] = 0x42
-	}
-	if m.ResolutionTS != 0 {
-		i = encodeVarintTicket(dAtA, i, uint64(m.ResolutionTS))
-		i--
-		dAtA[i] = 0x38
+		dAtA[i] = 0x32
 	}
 	if m.Status != 0 {
 		i = encodeVarintTicket(dAtA, i, uint64(m.Status))
 		i--
-		dAtA[i] = 0x30
-	}
-	if len(m.WinnerOddsUIDs) > 0 {
-		for iNdEx := len(m.WinnerOddsUIDs) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.WinnerOddsUIDs[iNdEx])
-			copy(dAtA[i:], m.WinnerOddsUIDs[iNdEx])
-			i = encodeVarintTicket(dAtA, i, uint64(len(m.WinnerOddsUIDs[iNdEx])))
-			i--
-			dAtA[i] = 0x2a
-		}
+		dAtA[i] = 0x28
 	}
 	if len(m.Odds) > 0 {
 		for iNdEx := len(m.Odds) - 1; iNdEx >= 0; iNdEx-- {
@@ -491,28 +456,31 @@ func (m *SportEventUpdateTicketPayload) MarshalToSizedBuffer(dAtA []byte) (int, 
 	_ = i
 	var l int
 	_ = l
-	if m.Active {
+	if m.Status != 0 {
+		i = encodeVarintTicket(dAtA, i, uint64(m.Status))
 		i--
-		if m.Active {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
-		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x30
 	}
-	if m.BetConstraints != nil {
-		{
-			size, err := m.BetConstraints.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintTicket(dAtA, i, uint64(size))
+	{
+		size := m.BetFee.Size()
+		i -= size
+		if _, err := m.BetFee.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
 		}
-		i--
-		dAtA[i] = 0x22
+		i = encodeVarintTicket(dAtA, i, uint64(size))
 	}
+	i--
+	dAtA[i] = 0x2a
+	{
+		size := m.MinBetAmount.Size()
+		i -= size
+		if _, err := m.MinBetAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTicket(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x22
 	if m.EndTS != 0 {
 		i = encodeVarintTicket(dAtA, i, uint64(m.EndTS))
 		i--
@@ -615,33 +583,23 @@ func (m *SportEventAddTicketPayload) Size() (n int) {
 			n += 1 + l + sovTicket(uint64(l))
 		}
 	}
-	if len(m.WinnerOddsUIDs) > 0 {
-		for _, s := range m.WinnerOddsUIDs {
-			l = len(s)
-			n += 1 + l + sovTicket(uint64(l))
-		}
-	}
 	if m.Status != 0 {
 		n += 1 + sovTicket(uint64(m.Status))
-	}
-	if m.ResolutionTS != 0 {
-		n += 1 + sovTicket(uint64(m.ResolutionTS))
 	}
 	l = len(m.Creator)
 	if l > 0 {
 		n += 1 + l + sovTicket(uint64(l))
 	}
-	if m.BetConstraints != nil {
-		l = m.BetConstraints.Size()
-		n += 1 + l + sovTicket(uint64(l))
-	}
-	if m.Active {
-		n += 2
-	}
+	l = m.MinBetAmount.Size()
+	n += 1 + l + sovTicket(uint64(l))
+	l = m.BetFee.Size()
+	n += 1 + l + sovTicket(uint64(l))
 	l = len(m.Meta)
 	if l > 0 {
 		n += 1 + l + sovTicket(uint64(l))
 	}
+	l = m.SrContributionForHouse.Size()
+	n += 1 + l + sovTicket(uint64(l))
 	return n
 }
 
@@ -661,12 +619,12 @@ func (m *SportEventUpdateTicketPayload) Size() (n int) {
 	if m.EndTS != 0 {
 		n += 1 + sovTicket(uint64(m.EndTS))
 	}
-	if m.BetConstraints != nil {
-		l = m.BetConstraints.Size()
-		n += 1 + l + sovTicket(uint64(l))
-	}
-	if m.Active {
-		n += 2
+	l = m.MinBetAmount.Size()
+	n += 1 + l + sovTicket(uint64(l))
+	l = m.BetFee.Size()
+	n += 1 + l + sovTicket(uint64(l))
+	if m.Status != 0 {
+		n += 1 + sovTicket(uint64(m.Status))
 	}
 	return n
 }
@@ -836,38 +794,6 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 5:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field WinnerOddsUIDs", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTicket
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.WinnerOddsUIDs = append(m.WinnerOddsUIDs, string(dAtA[iNdEx:postIndex]))
-			iNdEx = postIndex
-		case 6:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
@@ -886,26 +812,7 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ResolutionTS", wireType)
-			}
-			m.ResolutionTS = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ResolutionTS |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 8:
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
@@ -937,11 +844,11 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 			}
 			m.Creator = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 9:
+		case 7:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BetConstraints", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinBetAmount", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTicket
@@ -951,33 +858,31 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthTicket
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTicket
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.BetConstraints == nil {
-				m.BetConstraints = &EventBetConstraints{}
-			}
-			if err := m.BetConstraints.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MinBetAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 10:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Active", wireType)
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BetFee", wireType)
 			}
-			var v int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTicket
@@ -987,13 +892,27 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Active = bool(v != 0)
-		case 11:
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTicket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTicket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BetFee.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 9:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Meta", wireType)
 			}
@@ -1024,6 +943,40 @@ func (m *SportEventAddTicketPayload) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			m.Meta = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SrContributionForHouse", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTicket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTicket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTicket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SrContributionForHouse.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1147,9 +1100,9 @@ func (m *SportEventUpdateTicketPayload) Unmarshal(dAtA []byte) error {
 			}
 		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BetConstraints", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field MinBetAmount", wireType)
 			}
-			var msglen int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTicket
@@ -1159,33 +1112,31 @@ func (m *SportEventUpdateTicketPayload) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				msglen |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			if msglen < 0 {
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
 				return ErrInvalidLengthTicket
 			}
-			postIndex := iNdEx + msglen
+			postIndex := iNdEx + intStringLen
 			if postIndex < 0 {
 				return ErrInvalidLengthTicket
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.BetConstraints == nil {
-				m.BetConstraints = &EventBetConstraints{}
-			}
-			if err := m.BetConstraints.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.MinBetAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
 		case 5:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Active", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BetFee", wireType)
 			}
-			var v int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTicket
@@ -1195,12 +1146,45 @@ func (m *SportEventUpdateTicketPayload) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.Active = bool(v != 0)
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTicket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTicket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BetFee.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTicket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= SportEventStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTicket(dAtA[iNdEx:])

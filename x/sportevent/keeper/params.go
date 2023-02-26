@@ -19,5 +19,5 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 // GetDefaultBetConstraints get bet constraint values of the bet constraints
 func (k Keeper) GetDefaultBetConstraints(ctx sdk.Context) (params *types.EventBetConstraints) {
 	p := k.GetParams(ctx)
-	return types.NewEventBetConstraints(p.EventMinBetAmount, p.EventMinBetFee)
+	return p.NewEventBetConstraints(p.EventMinBetAmount, p.EventMinBetFee)
 }

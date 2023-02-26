@@ -28,22 +28,16 @@ type SporteventKeeper interface {
 	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }
 
-// StrategicreserveKeeper defines the expected interface needed to unlock fund and pay out
-type StrategicreserveKeeper interface {
-	ProcessBetPlacement(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betFee sdk.Int, betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
-
-	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
-
-	BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-		betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
-
-	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string) error
-}
-
 // DVMKeeper defines the expected interface needed to verify ticket and unmarshal it
 type DVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
+}
+
+// OrderBookKeeper defines the expected interface needed to process bet placement
+type OrderBookKeeper interface {
+	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookID, oddsUID string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Int, oddsType OddsType, oddsVal string, betID uint64) ([]*BetFulfillment, error)
+	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
+	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookID string) error
+	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookID string) error
+	AddBookSettlement(ctx sdk.Context, orderBookID string) error
 }

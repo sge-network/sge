@@ -9,7 +9,7 @@ import (
 )
 
 // AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
-func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEventRequest) (*types.MsgAddSportEventResponse, error) {
+func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.MsgAddSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.SportEventAddTicketPayload
@@ -28,15 +28,26 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		return nil, types.ErrEventAlreadyExist
 	}
 
-	sportEvent := types.NewSpoerEvent(
+	var oddsUIDs []string
+	for _, odds := range addPayload.Odds {
+		oddsUIDs = append(oddsUIDs, odds.UID)
+	}
+	err := k.bookKeeper.InitiateBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
+	}
+
+	sportEvent := types.NewSportEvent(
 		addPayload.UID,
 		msg.Creator,
 		addPayload.StartTS,
 		addPayload.EndTS,
 		addPayload.Odds,
-		addPayload.BetConstraints,
-		addPayload.Active,
+		params.NewEventBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Meta,
+		addPayload.UID,
+		addPayload.SrContributionForHouse,
+		addPayload.Status,
 	)
 
 	k.Keeper.SetSportEvent(ctx, sportEvent)
@@ -45,7 +56,7 @@ func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEv
 		Error: "",
 		Data:  &sportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgCreateSportEvents, response.Data.UID, addPayload.UID, msg.Creator)
 
 	return response, nil
 }

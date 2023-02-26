@@ -1,13 +1,12 @@
 package cli
 
 import (
-	"strconv"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/bet/types"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ func CmdPlaceBet() *cobra.Command {
 			argOddsType := args[2]
 			argTicket := args[3]
 
-			oddsType, err := strconv.ParseInt(argOddsType, 10, 32)
+			oddsType, err := cast.ToInt32E(argOddsType)
 			if err != nil {
 				return types.ErrInvalidOddsType
 			}
@@ -48,38 +47,6 @@ func CmdPlaceBet() *cobra.Command {
 					OddsType: types.OddsType(oddsType),
 					Ticket:   argTicket,
 				},
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
-
-// CmdSettleBet implements a command to settle a bet
-func CmdSettleBet() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "settle-bet [bet-creator-address] [bet-uid]",
-		Short: "Settle a bet",
-		Args:  cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argBetCreator := args[0]
-			argBetUID := args[1]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgSettleBet(
-				clientCtx.GetFromAddress().String(),
-				argBetCreator,
-				argBetUID,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

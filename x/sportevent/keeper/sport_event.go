@@ -57,36 +57,45 @@ func (k Keeper) GetSportEventAll(ctx sdk.Context) (list []types.SportEvent, err 
 }
 
 // ResolveSportEvent updates a sport-event with its resolution
-func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportEventResolutionTicketPayload) error {
+func (k Keeper) ResolveSportEvent(ctx sdk.Context, resolutionEvent *types.SportEventResolutionTicketPayload) (*types.SportEvent, error) {
 	storedEvent, found := k.GetSportEvent(ctx, resolutionEvent.UID)
 	if !found {
-		return types.ErrNoMatchingSportEvent
+		return nil, types.ErrNoMatchingSportEvent
 	}
 
-	if storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED {
-		return types.ErrCanNotBeAltered
+	if storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE &&
+		storedEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE {
+		return nil, types.ErrCanNotBeAltered
 	}
 
-	storedEvent.Active = false
 	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
 	storedEvent.Status = resolutionEvent.Status
 
+	// if the result is declared for the sport-event, we need to update the winner odds uids.
 	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
+	}
 
-		k.appendUnsettledResovedSportEvent(ctx, storedEvent.UID)
+	// if the result is declared or the sport-event is canceled or aborted, it should be added
+	// to the unsettled resolved sport-event list  in the state.
+	if resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED ||
+		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED ||
+		resolutionEvent.Status == types.SportEventStatus_SPORT_EVENT_STATUS_ABORTED {
+		// append sport-event id to the unsettled resolved in statistics.
+		k.appendUnsettledResolvedSportEvent(ctx, storedEvent.UID)
 	}
 
 	k.SetSportEvent(ctx, storedEvent)
 
-	return nil
+	return &storedEvent, nil
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, uid, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, uid, bookID, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,
 			sdk.NewAttribute(types.AttributeKeySportEventsSuccessUID, uid),
+			sdk.NewAttribute(types.AttributeKeyOrderBookUID, bookID),
 			sdk.NewAttribute(types.AttributeKeyEventsCreator, creator),
 		),
 		sdk.NewEvent(

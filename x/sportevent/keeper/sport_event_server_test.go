@@ -17,7 +17,7 @@ import (
 func TestMsgServerAddEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgAddSportEventRequest
+		msg *types.MsgAddSportEvent
 	}
 
 	u1 := uuid.NewString()
@@ -53,7 +53,7 @@ func TestMsgServerAddEvent(t *testing.T) {
 func TestMsgServerResolveEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgResolveSportEventRequest
+		msg *types.MsgResolveSportEvent
 	}
 
 	u1 := uuid.NewString()
@@ -112,13 +112,15 @@ func TestMsgServerAddEventResponse(t *testing.T) {
 
 	t.Run("pre existing uid", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
-			"uid":      u1,
-			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
-			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"meta":     "Winner of x:y",
+			"uid":                       u1,
+			"start_ts":                  uint64(time.Now().Add(time.Minute).Unix()),
+			"end_ts":                    uint64(time.Now().Add(time.Minute * 5).Unix()),
+			"odds":                      []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
+			"exp":                       9999999999,
+			"iat":                       1111111111,
+			"meta":                      "Winner of x:y",
+			"sr_contribution_for_house": "2",
+			"status":                    types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
@@ -136,11 +138,12 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u1,
 		Creator: sample.AccAddress(),
+		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 	})
 	k.SetSportEvent(ctx, types.SportEvent{
 		UID:     u3,
 		Creator: sample.AccAddress(),
-		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
+		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
@@ -176,7 +179,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		assert.Nil(t, response)
 	})
 
-	t.Run("non pending event resolution", func(t *testing.T) {
+	t.Run("non active event resolution", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
 			"uid":              u3,
 			"status":           types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
@@ -189,7 +192,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventIsNotPending)
+		assert.ErrorIs(t, err, types.ErrEventIsNotActive)
 		assert.Nil(t, response)
 	})
 
@@ -223,7 +226,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdd)
+		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)
 	})
 }
@@ -231,7 +234,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 func TestMsgServerUpdateEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgUpdateSportEventRequest
+		msg *types.MsgUpdateSportEvent
 	}
 
 	u1 := uuid.NewString()

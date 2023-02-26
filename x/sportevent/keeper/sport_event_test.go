@@ -1,23 +1,21 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/sportevent/keeper"
 	"github.com/sge-network/sge/x/sportevent/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNSportEvent(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.SportEvent {
 	items := make([]types.SportEvent, n)
 	for i := range items {
-		items[i].UID = strconv.Itoa(i)
+		items[i].UID = cast.ToString(i)
+		items[i].SrContributionForHouse = sdk.NewInt(0)
 
 		keeper.SetSportEvent(ctx, items[i])
 	}
@@ -94,7 +92,7 @@ func TestResolveSportEvents(t *testing.T) {
 		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: "NotExistUid",
 		}
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrNoMatchingSportEvent, err)
 	})
 
@@ -103,7 +101,7 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_SPORT_EVENT_STATUS_CANCELLED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 		}
 		k.SetSportEvent(ctx, item)
 
@@ -111,7 +109,7 @@ func TestResolveSportEvents(t *testing.T) {
 			UID: item.UID,
 		}
 
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrCanNotBeAltered, err)
 	})
 
@@ -120,7 +118,7 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 		}
 		k.SetSportEvent(ctx, item)
 
@@ -130,7 +128,7 @@ func TestResolveSportEvents(t *testing.T) {
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
 			Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 		}
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Nil(t, err)
 		val, found := k.GetSportEvent(ctx, item.UID)
 		require.True(t, found)

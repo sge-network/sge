@@ -26,7 +26,6 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdPlaceBet())
-	cmd.AddCommand(CmdSettleBet())
 
 	return cmd
 }

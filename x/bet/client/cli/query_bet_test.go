@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -11,6 +10,7 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
@@ -23,9 +23,6 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 const testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
 
@@ -47,7 +44,8 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		Status:                 sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		SrContributionForHouse: sdk.NewInt(5000000),
 	}
 	nullify.Fill(&sportEvent)
 	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}
@@ -62,12 +60,13 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Creator:       testAddress,
-			UID:           uuid.NewString(),
-			SportEventUID: sportEvent.UID,
-			OddsValue:     "10",
-			Amount:        sdk.NewInt(10),
-			BetFee:        sdk.NewInt(1),
+			Creator:           testAddress,
+			UID:               uuid.NewString(),
+			SportEventUID:     sportEvent.UID,
+			OddsValue:         "10",
+			Amount:            sdk.NewInt(10),
+			BetFee:            sdk.NewInt(1),
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)
 
@@ -115,7 +114,7 @@ func TestQueryBet(t *testing.T) {
 			{
 				desc:    "not found",
 				creator: "",
-				uid:     strconv.Itoa(100000),
+				uid:     cast.ToString(100000),
 
 				args: common,
 				err:  status.Error(codes.NotFound, "not found"),

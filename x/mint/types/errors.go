@@ -8,7 +8,7 @@ import (
 
 // x/mint module sentinel errors
 var (
-	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 1100, "mint denom cannot be blank")
+	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 3001, "mint denom cannot be blank")
 )
 
 const (

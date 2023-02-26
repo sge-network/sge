@@ -26,8 +26,8 @@ func (k Keeper) GetSportEventStats(ctx sdk.Context) (val types.SportEventStats) 
 	return val
 }
 
-// appendUnsettledResovedSportEvent appends sport-event to the unsettled slice
-func (k Keeper) appendUnsettledResovedSportEvent(ctx sdk.Context, storedEventUID string) {
+// appendUnsettledResolvedSportEvent appends sport-event to the unsettled slice
+func (k Keeper) appendUnsettledResolvedSportEvent(ctx sdk.Context, storedEventUID string) {
 	stats := k.GetSportEventStats(ctx)
 	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, storedEventUID)
 	k.SetSportEventStats(ctx, stats)

@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 	"fmt"
-	"strconv"
 	"testing"
 	"time"
 
@@ -18,9 +17,6 @@ import (
 	"github.com/sge-network/sge/x/dvm/client/cli"
 	"github.com/stretchr/testify/require"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestCmdChangePubkeysListProposal(t *testing.T) {
 	net, _ := networkWithPublicKeys(t)

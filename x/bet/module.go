@@ -90,12 +90,12 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd(type
 type AppModule struct {
 	AppModuleBasic
 
-	keeper                 keeper.Keeper
-	accountKeeper          types.AccountKeeper
-	bankKeeper             types.BankKeeper
-	sporteventKeeper       types.SporteventKeeper
-	strategicreserveKeeper types.StrategicreserveKeeper
-	dvmKeeper              types.DVMKeeper
+	keeper           keeper.Keeper
+	accountKeeper    types.AccountKeeper
+	bankKeeper       types.BankKeeper
+	sporteventKeeper types.SporteventKeeper
+	orderbookKeeper  types.OrderBookKeeper
+	dvmKeeper        types.DVMKeeper
 }
 
 // NewAppModule creates new app module object
@@ -105,17 +105,17 @@ func NewAppModule(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	sporteventKeeper types.SporteventKeeper,
-	strategicreserveKeeper types.StrategicreserveKeeper,
+	obKeeper types.OrderBookKeeper,
 	dvmKeeper types.DVMKeeper,
 ) AppModule {
 	return AppModule{
-		AppModuleBasic:         NewAppModuleBasic(cdc),
-		keeper:                 keeper,
-		accountKeeper:          accountKeeper,
-		bankKeeper:             bankKeeper,
-		sporteventKeeper:       sporteventKeeper,
-		strategicreserveKeeper: strategicreserveKeeper,
-		dvmKeeper:              dvmKeeper,
+		AppModuleBasic:   NewAppModuleBasic(cdc),
+		keeper:           keeper,
+		accountKeeper:    accountKeeper,
+		bankKeeper:       bankKeeper,
+		sporteventKeeper: sporteventKeeper,
+		orderbookKeeper:  obKeeper,
+		dvmKeeper:        dvmKeeper,
 	}
 }
 

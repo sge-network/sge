@@ -98,94 +98,100 @@ func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc    string
 		betOdds *types.BetOdds
-		kyc     *types.KycDataPayload
+		kyc     types.KycDataPayload
 		err     error
 	}{
 		{
 			desc: "space in odds UID",
 			betOdds: &types.BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           " ",
-				Value:         "10",
+				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:               " ",
+				Value:             "10",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
+			kyc: types.KycDataPayload{
+				Required: false,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrInvalidOddsUID,
 		},
 		{
 			desc: "space in sport-event UID",
 			betOdds: &types.BetOdds{
-				SportEventUID: " ",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "10",
+				SportEventUID:     " ",
+				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:             "10",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
+			kyc: types.KycDataPayload{
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrInvalidSportEventUID,
 		},
 		{
 			desc: "empty odds value",
 			betOdds: &types.BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "",
+				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:             "",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
+			kyc: types.KycDataPayload{
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 			err: types.ErrEmptyOddsValue,
 		},
 		{
 			desc: "no kyc",
 			betOdds: &types.BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "10",
+				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:             "10",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			err: types.ErrNoKycField,
 		},
 		{
 			desc: "no kyc ID field",
 			betOdds: &types.BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "10",
+				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:             "10",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "",
+			kyc: types.KycDataPayload{
+				Required: true,
+				Approved: true,
+				ID:       "",
 			},
-			err: types.ErrNoKycIDField,
+			err: types.ErrUserKycFailed,
 		},
 		{
 			desc: "valid message",
 			betOdds: &types.BetOdds{
-				SportEventUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				UID:           "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Value:         "10",
+				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Value:             "10",
+				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: &types.KycDataPayload{
-				KycRequired: true,
-				KycApproved: true,
-				KycId:       "creator",
+			kyc: types.KycDataPayload{
+				Required: true,
+				Approved: true,
+				ID:       testAddress,
 			},
 		},
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := types.TicketFieldsValidation(&types.BetPlacementTicketPayload{
+			p := types.BetPlacementTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
-			})
+			}
+			err := p.Validate(testAddress)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

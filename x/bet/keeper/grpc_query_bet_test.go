@@ -1,11 +1,11 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -15,9 +15,6 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestBetQuerySingle(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
@@ -48,7 +45,7 @@ func TestBetQuerySingle(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryBetRequest{
-				Uid: strconv.Itoa(100000),
+				Uid: cast.ToString(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},

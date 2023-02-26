@@ -18,11 +18,13 @@ type Keeper struct {
 	memKey     sdk.StoreKey
 	paramstore paramtypes.Subspace
 	dvmKeeper  types.DVMKeeper
+	bookKeeper types.BookKeeper
 }
 
 // ExpectedKeepers contains expected keepers parameter needed by NewKeeper
 type ExpectedKeepers struct {
-	DVMKeeper types.DVMKeeper
+	DVMKeeper  types.DVMKeeper
+	BookKeeper types.BookKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -44,6 +46,7 @@ func NewKeeper(
 		memKey:     memKey,
 		paramstore: ps,
 		dvmKeeper:  expectedKeepers.DVMKeeper,
+		bookKeeper: expectedKeepers.BookKeeper,
 	}
 }
 

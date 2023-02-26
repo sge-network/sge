@@ -47,36 +47,50 @@ message SportEvent {
   string creator = 8;
   // bet_constraints holds the constraints of sport-event to accept bets.
   EventBetConstraints bet_constraints = 9;
-  // active is the status of active or inactive sport-event.
-  bool active = 10;
   // meta contains human-readable metadata of the sport-event.
-  string meta = 11;
+  string meta = 10;
+  // sr_contribution_for_house is the amount of contibution of house in the sr
+  string sr_contribution_for_house = 11 [
+    (gogoproto.customname) = "SrContributionForHouse",
+    (gogoproto.jsontag) = "sr_contribution_for_house",
+    json_name = "sr_contribution_for_house",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+  // book_id is the id of book
+  string book_id = 12 [
+    (gogoproto.customname) = "BookID",
+    (gogoproto.jsontag) = "book_id",
+    json_name = "book_id"
+  ];
 }
 
 // SportEventStatus is the sport-event status enumeration
 enum SportEventStatus {
-  // event is pending
+  // unspecified event
   SPORT_EVENT_STATUS_UNSPECIFIED = 0;
-  // invalid event
-  SPORT_EVENT_STATUS_INVALID = 1;
-  // event canceled
-  SPORT_EVENT_STATUS_CANCELLED = 2;
-  // event aborted
-  SPORT_EVENT_STATUS_ABORTED = 3;
+  // event is active
+  SPORT_EVENT_STATUS_ACTIVE = 1;
+  // event is inactive
+  SPORT_EVENT_STATUS_INACTIVE = 2;
+  // event is canceled
+  SPORT_EVENT_STATUS_CANCELED = 3;
+  // event is aborted
+  SPORT_EVENT_STATUS_ABORTED = 4;
   // result of the event is declared
-  SPORT_EVENT_STATUS_RESULT_DECLARED = 4;
+  SPORT_EVENT_STATUS_RESULT_DECLARED = 5;
 }
 
 // Bet constraints parent group for a sport-event
 message EventBetConstraints {
   // min_amount is the minimum allowed bet amount for a sport-event.
-  string min_amount = 2 [
+  string min_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
-  string bet_fee = 3 [
+  string bet_fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

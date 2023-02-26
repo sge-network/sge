@@ -2,6 +2,9 @@ package types
 
 import (
 	"strings"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // BetFieldsValidation validates fields of the given bet
@@ -26,14 +29,14 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 	return nil
 }
 
-// TicketFieldsValidation validates fields of the given ticketData
-func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
+// Validate validates fields of the given ticketData
+func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 	if ticketData.SelectedOdds == nil {
 		return ErrOddsDataNotFound
 	}
 
-	if ticketData.KycData == nil {
-		return ErrNoKycField
+	if !ticketData.KycData.validate(creator) {
+		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
 	if !IsValidUID(ticketData.SelectedOdds.SportEventUID) {
@@ -48,9 +51,27 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 		return ErrEmptyOddsValue
 	}
 
-	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
-		return ErrNoKycIDField
+	if ticketData.SelectedOdds.MaxLossMultiplier.IsNil() || ticketData.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+		return ErrMaxLossMultiplierCanNotBeZero
+	}
+
+	if ticketData.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+		return ErrMaxLossMultiplierCanNotBeMoreThanOne
 	}
 
 	return nil
+}
+
+// validate checks whether the kyc data is valid for a particular bettor
+// if the kyc is required
+func (payload KycDataPayload) validate(address string) bool {
+	if !payload.Required {
+		return true
+	}
+
+	if payload.Approved && payload.ID == address {
+		return true
+	}
+
+	return false
 }

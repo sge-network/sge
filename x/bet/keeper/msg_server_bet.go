@@ -31,19 +31,12 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 			sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	if err = types.TicketFieldsValidation(ticketData); err != nil {
+	if err = ticketData.Validate(msg.Creator); err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: err.Error(),
 				Bet:   msg.Bet,
 			},
 			err
-	}
-
-	// Kyc validation is done only when the KYC is required
-	if ticketData.KycData.KycRequired {
-		if !KycValidation(msg.Creator, ticketData) {
-			return nil, sdkerrors.Wrapf(types.ErrUserKycFailed, "%s", msg.Creator)
-		}
 	}
 
 	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData.SelectedOdds)
@@ -69,19 +62,6 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 			Bet:   msg.Bet,
 		},
 		nil
-}
-
-func (k msgServer) SettleBet(goCtx context.Context, msg *types.MsgSettleBet) (*types.MsgSettleBetResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	if err := k.Keeper.SettleBet(ctx, msg.BettorAddress, msg.BetUID); err != nil {
-		return &types.MsgSettleBetResponse{
-			Error:  err.Error(),
-			BetUID: msg.BetUID,
-		}, err
-	}
-	emitBetEvent(ctx, types.TypeMsgSettleBet, msg.BetUID, msg.Creator)
-	return &types.MsgSettleBetResponse{}, nil
 }
 
 func emitBetEvent(ctx sdk.Context, msgType string, betUID string, betCreator string) {

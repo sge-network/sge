@@ -17,6 +17,9 @@ func TestValidateCreationEvent(t *testing.T) {
 	t1 := time.Now()
 	params := k.GetParams(wctx)
 
+	negativeBetAmount := sdk.NewInt(-5)
+	lowerBetAmount := params.EventMinBetAmount.Sub(sdk.NewInt(5))
+
 	tests := []struct {
 		name string
 		msg  types.SportEventAddTicketPayload
@@ -33,7 +36,9 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Meta: "Winner of x:y",
+				Meta:                   "Winner of x:y",
+				SrContributionForHouse: sdk.NewInt(2),
+				Status:                 types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 			},
 		},
 		{
@@ -81,7 +86,7 @@ func TestValidateCreationEvent(t *testing.T) {
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "invalid odd id",
+			name: "invalid odds id",
 			msg: types.SportEventAddTicketPayload{
 				Creator: sample.AccAddress(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
@@ -119,7 +124,7 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{MinAmount: sdk.NewInt(-5)},
+				MinBetAmount: negativeBetAmount,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -134,7 +139,7 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5))},
+				MinBetAmount: lowerBetAmount,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -149,11 +154,11 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMinBetAmount,
-					BetFee:    params.EventMinBetFee,
-				},
-				Meta: "Winner of x:y",
+				MinBetAmount:           params.EventMinBetAmount,
+				BetFee:                 params.EventMinBetFee,
+				Meta:                   "Winner of x:y",
+				SrContributionForHouse: sdk.NewInt(2),
+				Status:                 types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 			},
 		},
 		{
@@ -202,7 +207,7 @@ func TestValidateResolveEvent(t *testing.T) {
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         4,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 		},
 		{
@@ -211,7 +216,7 @@ func TestValidateResolveEvent(t *testing.T) {
 				UID:            uuid.NewString(),
 				ResolutionTS:   0,
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         4,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -221,7 +226,7 @@ func TestValidateResolveEvent(t *testing.T) {
 				UID:            "invalid uid",
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         4,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -230,7 +235,7 @@ func TestValidateResolveEvent(t *testing.T) {
 			msg: types.SportEventResolutionTicketPayload{
 				UID:          uuid.NewString(),
 				ResolutionTS: uint64(t1.Unix()),
-				Status:       4,
+				Status:       types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -240,17 +245,17 @@ func TestValidateResolveEvent(t *testing.T) {
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{"invalid winner odds"},
-				Status:         4,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "msg status pending",
+			name: "msg status inactive",
 			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         0,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -260,17 +265,17 @@ func TestValidateResolveEvent(t *testing.T) {
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         5,
+				Status:         6,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "msg invalid enum status, pending",
+			name: "msg invalid enum status, active",
 			msg: types.SportEventResolutionTicketPayload{
 				UID:            uuid.NewString(),
 				ResolutionTS:   uint64(t1.Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         1,
+				Status:         types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -293,6 +298,9 @@ func TestUpdateEventValidation(t *testing.T) {
 
 	t1 := time.Now()
 
+	negativeBetAmount := sdk.NewInt(-5)
+	lowerBetAmount := params.EventMinBetAmount.Sub(sdk.NewInt(5))
+
 	sportEvent := types.SportEvent{
 		Creator: sample.AccAddress(),
 		StartTS: uint64(t1.Add(time.Minute).Unix()),
@@ -311,12 +319,62 @@ func TestUpdateEventValidation(t *testing.T) {
 		err  error
 	}{
 		{
-			name: "valid request",
+			name: "valid request active",
 			msg: types.SportEventUpdateTicketPayload{
 				UID:     uuid.NewString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 			},
+		},
+		{
+			name: "valid request inactive",
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE,
+			},
+		},
+		{
+			name: "invalid status, declared",
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid status, canceled",
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid status, aborted",
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid status, unpecified",
+			msg: types.SportEventUpdateTicketPayload{
+				UID:     uuid.NewString(),
+				StartTS: uint64(t1.Add(time.Minute).Unix()),
+				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				Status:  types.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
+			},
+			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "same timestamp",
@@ -336,26 +394,22 @@ func TestUpdateEventValidation(t *testing.T) {
 		{
 			name: "invalid min amount, negative",
 			msg: types.SportEventUpdateTicketPayload{
-				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: sdk.NewInt(-5),
-					BetFee:    params.EventMinBetFee,
-				},
+				UID:          uuid.NewString(),
+				StartTS:      uint64(t1.Add(time.Minute).Unix()),
+				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
+				MinBetAmount: negativeBetAmount,
+				BetFee:       params.EventMinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid min amount, less than required",
 			msg: types.SportEventUpdateTicketPayload{
-				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				BetConstraints: &types.EventBetConstraints{
-					MinAmount: params.EventMinBetAmount.Sub(sdk.NewInt(5)),
-					BetFee:    params.EventMinBetFee,
-				},
+				UID:          uuid.NewString(),
+				StartTS:      uint64(t1.Add(time.Minute).Unix()),
+				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
+				MinBetAmount: lowerBetAmount,
+				BetFee:       params.EventMinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},

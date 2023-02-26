@@ -168,7 +168,7 @@ func TestBettorLoses(t *testing.T) {
 		{
 			desc:         "Failure! Insufficient balance in Bet Reserve Account",
 			address:      user.Address,
-			betAmount:    sdk.NewInt(5000),
+			betAmount:    sdk.NewInt(500000),
 			payoutProfit: sdk.NewInt(5000),
 			uniqueLock:   "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:          types.ErrInsufficientBalanceInModuleAccount,
@@ -229,7 +229,7 @@ func TestRefundBettor(t *testing.T) {
 		{
 			desc:          "Failure! Insufficient balance in Bet Reserve Account",
 			bettorAddress: user.Address,
-			betAmount:     sdk.NewInt(5000),
+			betAmount:     sdk.NewInt(500000),
 			payoutProfit:  sdk.NewInt(5000),
 			uniqueLock:    "32932b20-8737-490b-b00b-8c16eccd8e7f",
 			err:           sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, types.BetReserveName),
@@ -364,7 +364,7 @@ func TestTransferFundsFromModuleToUser(t *testing.T) {
 			desc:          "Failure! Insufficient balance in module account",
 			moduleAccName: types.BetReserveName,
 			address:       user.Address,
-			amount:        sdk.NewInt(4500),
+			amount:        sdk.NewInt(450000),
 			err:           sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, types.BetReserveName),
 		},
 	}
@@ -418,7 +418,7 @@ func TestTransferFundsFromModuleToModule(t *testing.T) {
 			desc:            "Failure! Insufficient balance in module account",
 			senderModule:    types.BetReserveName,
 			recipientModule: types.SRPoolName,
-			amount:          sdk.NewInt(4500),
+			amount:          sdk.NewInt(450000),
 			err:             sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, types.BetReserveName),
 		},
 	}

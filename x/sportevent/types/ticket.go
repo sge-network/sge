@@ -14,6 +14,11 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		return err
 	}
 
+	if payload.Status != SportEventStatus_SPORT_EVENT_STATUS_ACTIVE &&
+		payload.Status != SportEventStatus_SPORT_EVENT_STATUS_INACTIVE {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "acceptable status is active or inactive")
+	}
+
 	if !utils.IsValidUID(payload.UID) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport-event")
 	}
@@ -28,6 +33,10 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 
 	if len(payload.Meta) > MaxAllowedCharactersForMeta {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", MaxAllowedCharactersForMeta)
+	}
+
+	if payload.SrContributionForHouse.IsNil() || payload.SrContributionForHouse.LT(sdk.OneInt()) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be nil or less than 1")
 	}
 
 	oddsSet := make(map[string]Odds, len(payload.Odds))
@@ -47,11 +56,15 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 		oddsSet[o.UID] = Odds{}
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err
 		}
+	}
+
+	if payload.SrContributionForHouse.GT(p.EventMaxSrContribution) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be more than %d", p.EventMaxSrContribution.Int64())
 	}
 
 	return nil
@@ -59,11 +72,17 @@ func (payload *SportEventAddTicketPayload) Validate(ctx sdk.Context, p *Params) 
 
 // Validate validates sport-event update ticket payload.
 func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) error {
+	// updating the status to something other than active and inactive
+	if payload.Status != SportEventStatus_SPORT_EVENT_STATUS_ACTIVE &&
+		payload.Status != SportEventStatus_SPORT_EVENT_STATUS_INACTIVE {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "supported update status is active or inactive")
+	}
+
 	if err := validateEventTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
 
-	betConstraints := payload.GetBetConstraints()
+	betConstraints := p.NewEventBetConstraints(payload.MinBetAmount, payload.BetFee)
 	if betConstraints != nil {
 		if err := betConstraints.validate(p); err != nil {
 			return err
@@ -75,8 +94,10 @@ func (payload *SportEventUpdateTicketPayload) Validate(ctx sdk.Context, p *Param
 
 // Validate validates sport-event resolution ticket payload.
 func (payload *SportEventResolutionTicketPayload) Validate() error {
-	if payload.Status == SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED ||
-		payload.Status == SportEventStatus_SPORT_EVENT_STATUS_INVALID {
+	// resolution status should be canceled, aborted or result declared
+	if payload.Status != SportEventStatus_SPORT_EVENT_STATUS_CANCELED &&
+		payload.Status != SportEventStatus_SPORT_EVENT_STATUS_ABORTED &&
+		payload.Status != SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
 
@@ -96,10 +117,6 @@ func (payload *SportEventResolutionTicketPayload) Validate() error {
 		if !utils.IsValidUID(wid) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "odds-uid passed is invalid")
 		}
-	}
-
-	if payload.Status > SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid event resolution status ")
 	}
 
 	return nil
