@@ -53,7 +53,7 @@ func CmdWithdrawal() *cobra.Command {
 				}
 
 				var ok bool
-				argAmountCosmosInt, ok = sdk.NewIntFromString(args[1])
+				argAmountCosmosInt, ok = sdk.NewIntFromString(args[3])
 				if !ok {
 					return types.ErrInvalidAmount
 				}
