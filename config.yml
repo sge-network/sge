@@ -25,7 +25,7 @@ genesis:
         amount: "1000"
     dvm:
       key_vault:
-        public_keys: ["-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzoP3SVo1tUEhd+cF/zw+8XxtOScdJyD7T3QqKzpC9x0=\n-----END PUBLIC KEY-----"]
+        public_keys: []
     gov:
       deposit_params:
         min_deposit: [{ amount: "1", denom: "usge" }]
