@@ -22,11 +22,11 @@ repos:
       - id: go-unit-tests
       - id: go-build
       - id: go-mod-tidy
-#      - id: go-fmt
-#      - id: go-vet
-#      - id: go-imports
-#      - id: go-cyclo
-#        args: [ -over=15 ]
-#      - id: validate-toml
-#      - id: no-go-testing
-#      - id: go-critic
+      - id: go-fmt
+      - id: go-vet
+      - id: go-imports
+      - id: go-cyclo
+        args: [ -over=15 ]
+      - id: validate-toml
+      - id: no-go-testing
+      - id: go-critic
