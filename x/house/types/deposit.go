@@ -20,7 +20,10 @@ func NewDeposit(creator, sportEventUID string, amount, totalAmount sdk.Int, with
 
 // String returns a human readable string representation of a Deposit.
 func (d Deposit) String() string {
-	out, _ := yaml.Marshal(d)
+	out, err := yaml.Marshal(d)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 

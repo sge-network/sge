@@ -1,6 +1,7 @@
 package mint
 
 import (
+	//#nosec
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"

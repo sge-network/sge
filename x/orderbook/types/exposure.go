@@ -18,7 +18,10 @@ func NewBookOddsExposure(bookUID, oddsUID string, fulfillmentQueue []uint64) Boo
 
 // String returns a human readable string representation of a BookOddsExposure.
 func (boe BookOddsExposure) String() string {
-	out, _ := yaml.Marshal(boe)
+	out, err := yaml.Marshal(boe)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 
@@ -39,6 +42,9 @@ func NewParticipationExposure(bookUID, oddsUID string, exposure, betAmount sdk.I
 
 // String returns a human readable string representation of a participationExposure.
 func (pe ParticipationExposure) String() string {
-	out, _ := yaml.Marshal(pe)
+	out, err := yaml.Marshal(pe)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }

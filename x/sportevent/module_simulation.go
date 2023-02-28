@@ -1,6 +1,7 @@
 package sportevent
 
 import (
+	//#nosec
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -24,17 +25,17 @@ var (
 )
 
 const (
-	//nolint:gosec
+	//#nosec
 	opWeightMsgAddEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddEvent int = 100
 
-	//nolint:gosec
+	//#nosec
 	opWeightMsgResolveEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResolveEvent int = 100
 
-	//nolint:gosec
+	//#nosec
 	opWeightMsgUpdateEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateEvent int = 100

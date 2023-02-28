@@ -6,6 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 // Validate validates sport-event add ticket payload.
@@ -135,7 +136,7 @@ func (payload *SportEventResolutionTicketPayload) Validate() error {
 
 // validateEventTS validates start and end timestamp of a sport-event.
 func validateEventTS(ctx sdk.Context, startTS, endTS uint64) error {
-	if endTS <= uint64(ctx.BlockTime().Unix()) {
+	if endTS <= cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the sport-event")
 	}
 

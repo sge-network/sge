@@ -1,6 +1,7 @@
 package bet
 
 import (
+	//#nosec
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -24,7 +25,7 @@ var (
 )
 
 const (
-	//nolint:gosec
+	//#nosec
 	opWeightMsgPlaceBet = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPlaceBet int = 100

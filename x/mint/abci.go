@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
 	"github.com/sge-network/sge/x/mint/keeper"
 	sgeMintTypes "github.com/sge-network/sge/x/mint/types"
+	"github.com/spf13/cast"
 )
 
 var guageKeys = []string{"minted_tokens"}
@@ -27,13 +28,13 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	currentPhase, currentPhaseStep := minter.CurrentPhase(params, currentBlock)
 
 	// set the new minter properties if the phase has changed or inflation has changed
-	if int32(currentPhaseStep) != minter.PhaseStep || !minter.Inflation.Equal(currentPhase.Inflation) {
+	if currentPhaseStep != cast.ToInt(minter.PhaseStep) || !minter.Inflation.Equal(currentPhase.Inflation) {
 		// set new inflation rate
 		newInflation := currentPhase.Inflation
 		minter.Inflation = newInflation
 
 		// set new phase step
-		minter.PhaseStep = int32(currentPhaseStep)
+		minter.PhaseStep = cast.ToInt32(currentPhaseStep)
 
 		// set phase provisions of new phase step
 		totalSupply := k.TokenSupply(ctx, params.MintDenom)

@@ -2,6 +2,7 @@ package keeper_test
 
 import (
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,7 +14,7 @@ import (
 
 func TestPlaceBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-
+	ctx = ctx.WithBlockTime(time.Now())
 	tcs := []struct {
 		desc          string
 		bet           *types.Bet

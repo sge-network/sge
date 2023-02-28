@@ -2,6 +2,7 @@ package types_test
 
 import (
 	math "math"
+	//#nosec
 	"math/rand"
 	"testing"
 
@@ -274,7 +275,7 @@ func BenchmarkBlockProvision(b *testing.B) {
 	params := types.DefaultParams()
 
 	s1 := rand.NewSource(100)
-	//nolint:gosec
+	//#nosec
 	r1 := rand.New(s1)
 	minter.PhaseProvisions = sdk.NewDec(r1.Int63n(1000000))
 
