@@ -23,11 +23,11 @@ var (
 	_ = baseapp.Paramspace
 )
 
-// nolint
 const (
-	opWeightMsgMutation = "op_weight_msg_mutation"
+	//nolint:gosec
+	opWeightMsgChangePubkeysListProposal = "op_weight_msg_change_pubkeys_list_proposal"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgMutation int = 100
+	defaultWeightMsgChangePubkeysListProposal int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -49,7 +49,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 
@@ -60,15 +59,15 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgMutation int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgMutation, &weightMsgMutation, nil,
+	var weightMsgChangePubkeysListProposal int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgChangePubkeysListProposal, &weightMsgChangePubkeysListProposal, nil,
 		func(_ *rand.Rand) {
-			weightMsgMutation = defaultWeightMsgMutation
+			weightMsgChangePubkeysListProposal = defaultWeightMsgChangePubkeysListProposal
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgMutation,
-		dvmsimulation.SimulateMsgMutation(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgChangePubkeysListProposal,
+		dvmsimulation.SimulateMsgChangePubkeysListProposal(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations

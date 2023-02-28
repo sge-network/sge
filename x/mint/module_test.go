@@ -3,7 +3,7 @@ package mint_test
 import (
 	"testing"
 
-	cosmosSimapp "github.com/cosmos/cosmos-sdk/simapp"
+	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/sge-network/sge/x/mint/types"
 	"github.com/stretchr/testify/require"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
-	app := cosmosSimapp.Setup(false)
+	app := sdksimapp.Setup(false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	app.InitChain(

@@ -17,7 +17,8 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 		return ErrInvalidAmount
 	}
 
-	if bet.OddsType < 1 || bet.OddsType > 3 {
+	if bet.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
+		bet.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
 		return ErrInvalidOddsType
 	}
 
@@ -28,15 +29,14 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 	return nil
 }
 
-// TicketFieldsValidation validates fields of the given ticketData
-func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
-
+// Validate validates fields of the given ticketData
+func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 	if ticketData.SelectedOdds == nil {
 		return ErrOddsDataNotFound
 	}
 
-	if ticketData.KycData == nil {
-		return ErrNoKycField
+	if !ticketData.KycData.validate(creator) {
+		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
 	if !IsValidUID(ticketData.SelectedOdds.SportEventUID) {
@@ -47,22 +47,31 @@ func TicketFieldsValidation(ticketData *BetPlacementTicketPayload) error {
 		return ErrInvalidOddsUID
 	}
 
-	if ticketData.SelectedOdds.Value == "" {
-		return ErrInvalidOddsValue
+	if len(strings.TrimSpace(ticketData.SelectedOdds.Value)) == 0 {
+		return ErrEmptyOddsValue
 	}
 
-	ticketOddsValue, err := sdk.NewDecFromStr(ticketData.SelectedOdds.Value)
-	if err != nil {
-		return sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
+	if ticketData.SelectedOdds.MaxLossMultiplier.IsNil() || ticketData.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+		return ErrMaxLossMultiplierCanNotBeZero
 	}
 
-	if ticketOddsValue.IsNil() || ticketOddsValue.LTE(sdk.OneDec()) {
-		return ErrInvalidOddsValue
-	}
-
-	if ticketData.KycData.KycRequired && ticketData.KycData.KycId == "" {
-		return ErrNoKycIdField
+	if ticketData.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+		return ErrMaxLossMultiplierCanNotBeMoreThanOne
 	}
 
 	return nil
+}
+
+// validate checks whether the kyc data is valid for a particular bettor
+// if the kyc is required
+func (payload KycDataPayload) validate(address string) bool {
+	if !payload.Required {
+		return true
+	}
+
+	if payload.Approved && payload.ID == address {
+		return true
+	}
+
+	return false
 }

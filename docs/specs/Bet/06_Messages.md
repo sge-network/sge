@@ -6,12 +6,17 @@ In this section, we describe the processing of the Bet messages.
 
 Within this message, the user specifies the bet information they wish to place.
 
-```
-// PlaceBet defines a method to place a bet with the given data
+```proto
+// Msg defines the Msg service.
+service Msg {
+
+  // PlaceBet defines a method to place a bet with the given data
   rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
+
+}
 ```
 
-```
+```proto
 // MsgPlaceBet defines a message to place a bet with the given data
 message MsgPlaceBet {
   // creator is the bettor address
@@ -43,10 +48,13 @@ message MsgPlaceBetResponse {
     string error = 1;
     PlaceBetFields bet = 2;
 }
+
 ```
 
-### **Failure cases**
+### **Placement Failure cases**
+
 The transaction will fail if:
+
 - Basic validation fails:
   - Invalid creator address
   - Empty or invalid bet UID
@@ -56,31 +64,38 @@ The transaction will fail if:
 - Provided bet UID is already set
 - Empty or invalid odds UID in ticket
 - Empty, negative or invalid odds value in ticket
-- Empty or invalid sport event UID in ticket
-- There is no any sport event with the given sportEventUID
-- Sport event is not active for accepting bet (it's not active or status in not `PENDING`)
-- Sport event has expired
-- Sport event maximum betting capacity has been reached
-- The sport event does not contain the selected odds
+- Invalid bet value according to the selected `OddsType`
+- There is no any sport-event with the given sportEventUID
+- The sport-event is not active for accepting bet (it's not active or status in not `PENDING`)
+- The sport-event has expired
+- The sport-event maximum betting capacity has been reached
+- The sport-event does not contain the selected odds
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
-- There is an error in AddExtraPayoutToEvent in sportEvent module
-- There is an error in ProcessBetPlacement in SR module
+- There is an error in AddPayoutProfitToEvent in sportEvent module
+- There is an error in ProcessBetPlacement in Order Book module
 
-### **What Happens**
+### **What Happens if bet fails**
+
 - A new bet will be created with the given data and will be added to the `bet module's KVStore`.
+
 ---
 
 ## **MsgSettleBet**
 
 Within this message, the user provides a bet UID they wish to settle its corresponding bet.
 
-```
-// SettleBet defines a method to settle the given bet
+```proto
+// Msg defines the Msg service.
+service Msg {
+
+  // SettleBet defines a method to settle the given bet
   rpc SettleBet(MsgSettleBet) returns (MsgSettleBetResponse);
+
+}
 ```
 
-```
+```proto
 // MsgSettleBet defines a message to settle the given bet
 message MsgSettleBet {
   // creator is the bettor address
@@ -88,6 +103,9 @@ message MsgSettleBet {
 
   // bet_uid is the unique uuid of the bet to settle
   string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
+
+  // bettor_address is sthe bec32 address of the bettor
+  string bettor_address = 3;
 }
 
 // MsgSettleBetResponse is the returning value in the response of MsgSettleBet request
@@ -95,29 +113,36 @@ message MsgSettleBetResponse {
     string error = 1;
     string bet_uid = 2 [(gogoproto.customname) = "BetUID" ,(gogoproto.jsontag) = "bet_uid", json_name = "bet_uid"];
 }
+
 ```
 
-### **Failure cases**
+### **Bet Settlement Failure cases**
+
 The transaction will fail if:
+
 - Basic validation fail:
   - Invalid creator address
+  - Invalid bettor address
   - Empty bet UID
 - Bet UID in invalid
-- There is no matching bet
+- There is no matching bet for the bettor address
 - Bet is canceled
 - Bet is already settled
-- Corresponding sport event not found
-- Result of corresponding sport event is not declared
+- Corresponding sport-event not found
+- Result of corresponding sport-event is not declared
 - There is an error in SR module functions
 
-### **What Happens**
-- If corresponding sport event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
-    ```
+### **What Happens if settlement fails**
+
+- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+
+    ```go
     bet.Result = types.Bet_RESULT_ABORTED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
-- Resolve the bet result based on the sport event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
-- Call `Strategic Reserve module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
+
+- Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
+- Call `Order Book module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
 - Store the updated bet in the `bet module's KVStore`.
 
 ---

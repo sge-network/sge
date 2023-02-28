@@ -2,7 +2,6 @@ package simulation
 
 import (
 	"math/rand"
-	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
@@ -11,10 +10,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/simulation"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
+	"github.com/spf13/cast"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 // SimulateMsgPlaceBet returns an Operation function to run a state machine transition
 func SimulateMsgPlaceBet(
@@ -30,11 +27,11 @@ func SimulateMsgPlaceBet(
 		msg := &types.MsgPlaceBet{
 			Creator: simAccount.Address.String(),
 			Bet: &types.PlaceBetFields{
-				UID: strconv.Itoa(i),
+				UID: cast.ToString(i),
 			},
 		}
 
-		_, found := k.GetBet(ctx, msg.Bet.UID)
+		_, found := k.GetBet(ctx, simAccount.Address.String(), 1)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Bet already exist"), nil, nil
 		}
@@ -54,24 +51,5 @@ func SimulateMsgPlaceBet(
 			Bankkeeper:      bk,
 		}
 		return simulation.GenAndDeliverTxWithRandFees(txCtx)
-	}
-}
-
-// SimulateMsgSettleBet returns an Operation function to run a state machine transition
-func SimulateMsgSettleBet(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	k keeper.Keeper,
-) simtypes.Operation {
-	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
-	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgSettleBet{
-			Creator: simAccount.Address.String(),
-		}
-
-		// TODO: Handling the SettleBet simulation
-
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "SettleBet simulation not implemented"), nil, nil
 	}
 }

@@ -16,3 +16,12 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# ignore auto-generated files for code quality assurance
+.audit
+
+# ignore visual studio code local config
+.vscode
+
+# ignore visual studio code dev container config
+.devcontainer

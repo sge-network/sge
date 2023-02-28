@@ -27,7 +27,7 @@ func setupMsgServerAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest
 }
 
 func TestNewMsgServerImpl(t *testing.T) {
-	_, _, msgk, _, _ := setupMsgServerAndApp(t)
+	msgk, _, _ := setupMsgServer(t)
 
 	require.True(t, msgk != nil)
 }

@@ -28,7 +28,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 	// set the new minter properties if the phase has changed or inflation has changed
 	if int32(currentPhaseStep) != minter.PhaseStep || !minter.Inflation.Equal(currentPhase.Inflation) {
-
 		// set new inflation rate
 		newInflation := currentPhase.Inflation
 		minter.Inflation = newInflation
@@ -42,7 +41,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 		// store minter
 		k.SetMinter(ctx, minter)
-
 	}
 
 	// if the inflation rate is zero, means that we have no minting, so the rest of the code should not be called

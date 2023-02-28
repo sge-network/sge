@@ -1,23 +1,21 @@
 package keeper_test
 
 import (
-	"strconv"
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/sportevent/keeper"
 	"github.com/sge-network/sge/x/sportevent/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func createNSportEvent(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.SportEvent {
 	items := make([]types.SportEvent, n)
 	for i := range items {
-		items[i].UID = strconv.Itoa(i)
+		items[i].UID = cast.ToString(i)
+		items[i].SrContributionForHouse = sdk.NewInt(0)
 
 		keeper.SetSportEvent(ctx, items[i])
 	}
@@ -91,10 +89,10 @@ func TestSportEventGetAll(t *testing.T) {
 func TestResolveSportEvents(t *testing.T) {
 	t.Run("NotFound", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: "NotExistUid",
 		}
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrNoMatchingSportEvent, err)
 	})
 
@@ -103,15 +101,15 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_CANCELLED,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID: item.UID,
 		}
 
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Equal(t, types.ErrCanNotBeAltered, err)
 	})
 
@@ -120,17 +118,17 @@ func TestResolveSportEvents(t *testing.T) {
 
 		item := types.SportEvent{
 			UID:    "uid",
-			Status: types.SportEventStatus_STATUS_PENDING,
+			Status: types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
 		}
 		k.SetSportEvent(ctx, item)
 
-		resEventsIn := types.ResolutionEvent{
+		resEventsIn := types.SportEventResolutionTicketPayload{
 			UID:            item.UID,
 			ResolutionTS:   123456,
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
-			Status:         types.SportEventStatus_STATUS_RESULT_DECLARED,
+			Status:         types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
 		}
-		err := k.ResolveSportEvent(ctx, &resEventsIn)
+		_, err := k.ResolveSportEvent(ctx, &resEventsIn)
 		require.Nil(t, err)
 		val, found := k.GetSportEvent(ctx, item.UID)
 		require.True(t, found)
@@ -145,7 +143,6 @@ func TestSportEventExist(t *testing.T) {
 		k, ctx := setupKeeper(t)
 		found := k.SportEventExists(ctx, "notExistSportEventUID")
 		require.False(t, found)
-
 	})
 
 	t.Run("Found", func(t *testing.T) {
@@ -156,6 +153,5 @@ func TestSportEventExist(t *testing.T) {
 		k.SetSportEvent(ctx, item)
 		found := k.SportEventExists(ctx, item.UID)
 		require.True(t, found)
-
 	})
 }

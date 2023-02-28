@@ -5,9 +5,8 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 	"encoding/pem"
-	"time"
-
 	"testing"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -31,7 +30,7 @@ func TestVerifyTicket(t *testing.T) {
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 			},
 		})
-		tkn, err := Token.SignedString(&simappUtil.TestDVMPrivateKey)
+		tkn, err := Token.SignedString(&simappUtil.TestDVMPrivateKeys[0])
 		require.Nil(t, err)
 
 		err = k.VerifyTicket(wctx, tkn)
@@ -87,8 +86,8 @@ func TestVerifyTicketUnmarshal(t *testing.T) {
 		Bytes: bs,
 	})
 
-	k.SetPublicKeys(ctx, types.PublicKeys{
-		List: []string{string(Pbs)},
+	k.SetKeyVault(ctx, types.KeyVault{
+		PublicKeys: []string{string(Pbs)},
 	})
 
 	t.Run("valid", func(t *testing.T) {

@@ -23,16 +23,18 @@ var (
 	_ = baseapp.Paramspace
 )
 
-// nolint
 const (
+	//nolint:gosec
 	opWeightMsgAddEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgAddEvent int = 100
 
+	//nolint:gosec
 	opWeightMsgResolveEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgResolveEvent int = 100
 
+	//nolint:gosec
 	opWeightMsgUpdateEvent = "op_weight_msg_create_chain"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateEvent int = 100
@@ -67,7 +69,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 
 // RandomizedParams creates randomized  param changes for the simulator
 func (am AppModule) RandomizedParams(_ *rand.Rand) []simtypes.ParamChange {
-
 	return []simtypes.ParamChange{}
 }
 

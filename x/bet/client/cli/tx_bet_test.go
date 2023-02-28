@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
@@ -12,11 +11,7 @@ import (
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/x/bet/client/cli"
-	"github.com/sge-network/sge/x/bet/types"
 )
-
-// Prevent strconv unused error
-var _ = strconv.IntSize
 
 func TestTXBetCLI(t *testing.T) {
 	net := network.New(t)
@@ -84,51 +79,6 @@ func TestTXBetCLI(t *testing.T) {
 					require.NoError(t, err)
 					var resp sdk.TxResponse
 					require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
-					//require.Equal(t, tc.code, resp.Code)
-				}
-			})
-		}
-	})
-
-	t.Run("Settle bet", func(t *testing.T) {
-		for _, tc := range []struct {
-			desc   string
-			betUID string
-
-			err    error
-			errMsg string
-			code   uint32
-		}{
-			{
-				betUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
-
-				desc: "valid",
-			},
-			{
-				betUID: "",
-
-				desc:   "validation failed",
-				err:    fmt.Errorf("any error"),
-				errMsg: types.ErrInvalidBetUID.Error(),
-			},
-		} {
-			tc := tc
-			t.Run(tc.desc, func(t *testing.T) {
-				args := []string{
-					tc.betUID,
-				}
-				args = append(args, commonArgs...)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdSettleBet(), args)
-				if tc.err != nil {
-					require.NotNil(t, err)
-					if tc.errMsg != "" {
-						require.Equal(t, tc.errMsg, err.Error())
-					}
-				} else {
-					require.NoError(t, err)
-					var resp sdk.TxResponse
-					require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
-					//require.Equal(t, tc.code, resp.Code)
 				}
 			})
 		}

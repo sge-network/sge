@@ -12,7 +12,6 @@ import (
 )
 
 func TestQueryParams(t *testing.T) {
-
 	net := network.New(t)
 	val := net.Validators[0]
 	ctx := val.ClientCtx
@@ -40,7 +39,8 @@ func TestQueryParams(t *testing.T) {
 			}
 
 			var params types.QueryParamsResponse
-			json.Unmarshal(res.Bytes(), &params)
+			err = json.Unmarshal(res.Bytes(), &params)
+			require.NoError(t, err)
 
 			defaultParams := types.DefaultParams()
 			defaultParams.CommitteeMembers = []string{}

@@ -96,7 +96,6 @@ func TestNextPhase(t *testing.T) {
 		require.True(t, phaseStep == tc.expPhase,
 			"Test Index: %v\nPhase Step:  %v\nExpected: %v\n", i, phaseStep, tc.expPhase)
 	}
-
 }
 
 func TestNextPhaseAfterAppendToEndPhase(t *testing.T) {
@@ -181,7 +180,6 @@ func TestMaxComulativeBlocksPerYear(t *testing.T) {
 }
 
 func TestBlockProvisions(t *testing.T) {
-
 	minter := types.DefaultInitialMinter()
 	params := types.DefaultParams()
 
@@ -221,9 +219,7 @@ func TestBlockProvisions(t *testing.T) {
 
 		currentPhaseProvision := sdk.NewInt(0)
 		if !types.IsEndPhase(phase) {
-
 			for phaseStep == currentPhaseStep {
-
 				blockIProvision, truncatedToken := minter.BlockProvisions(params, phaseStep)
 				minter.TruncatedTokens = truncatedToken
 
@@ -241,7 +237,6 @@ func TestBlockProvisions(t *testing.T) {
 		allowedPhaseDeviation := int64(4)
 		require.LessOrEqual(t, phaseDeviation, allowedPhaseDeviation,
 			"Test Index: %v\nPhaseProvisions: %v\nPhaseProvision: %v\nExpected: %v\n", i, minter.PhaseProvisions, currentPhaseProvision, tc.expProvision)
-
 	}
 
 	expTotalSupply := sdk.NewInt(1600000000000000)
@@ -279,6 +274,7 @@ func BenchmarkBlockProvision(b *testing.B) {
 	params := types.DefaultParams()
 
 	s1 := rand.NewSource(100)
+	//nolint:gosec
 	r1 := rand.New(s1)
 	minter.PhaseProvisions = sdk.NewDec(r1.Int63n(1000000))
 
@@ -299,7 +295,6 @@ func BenchmarkPhaseInflation(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		params.GetPhaseAtStep(phase)
 	}
-
 }
 
 // Next phase provisions benchmarking
@@ -315,5 +310,4 @@ func BenchmarkNextPhaseProvisions(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		minter.NextPhaseProvisions(totalSupply, types.DefaultExcludeAmount, phase)
 	}
-
 }

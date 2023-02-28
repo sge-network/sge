@@ -24,9 +24,14 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// SRPool defines the locked amount and the unlocked amount in the SR Pool Account.
+// SRPool defines the locked amount and the unlocked amount in the
+// sr pool Account.
 type SRPool struct {
-	LockedAmount   github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=locked_amount,json=lockedAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"locked_amount" yaml:"locked_amount"`
+	// locked_amount holds the amount of locked tokens in
+	// sr pool module account balance.
+	LockedAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=locked_amount,json=lockedAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"locked_amount" yaml:"locked_amount"`
+	// unlocked_amount holds the amount of unlocked tokens in
+	// sr pool module account balance.
 	UnlockedAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=unlocked_amount,json=unlockedAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"unlocked_amount" yaml:"unlocked_amount"`
 }
 

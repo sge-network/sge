@@ -9,12 +9,10 @@ import (
 
 // RegisterCodec registers the codec for the SR module
 func RegisterCodec(cdc *codec.LegacyAmino) {
-
 }
 
 // RegisterInterfaces registers the interface registry
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
-
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 

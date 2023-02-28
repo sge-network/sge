@@ -23,24 +23,21 @@ type BankKeeper interface {
 // SporteventKeeper defines the expected interface needed to get sportEvents from KVStore
 type SporteventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
-}
-
-// StrategicreserveKeeper defines the expected interface needed to unlock fund and pay out
-type StrategicreserveKeeper interface {
-	ProcessBetPlacement(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betFee sdk.Coin, betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error
-
-	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error
-
-	BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-		betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error
-
-	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
-		betAmount sdk.Int, extraPayout sdk.Int, uniqueLock string) error
+	GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool)
+	GetDefaultBetConstraints(ctx sdk.Context) (params *sporteventtypes.EventBetConstraints)
+	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }
 
 // DVMKeeper defines the expected interface needed to verify ticket and unmarshal it
 type DVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
+}
+
+// OrderBookKeeper defines the expected interface needed to process bet placement
+type OrderBookKeeper interface {
+	ProcessBetPlacement(ctx sdk.Context, uniqueLock, bookUID, oddsUID string, maxLossMultiplier sdk.Dec, payoutProfit sdk.Int, bettorAddress sdk.AccAddress, betFee sdk.Int, oddsType OddsType, oddsVal string, betID uint64) ([]*BetFulfillment, error)
+	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
+	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
+	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
+	AddBookSettlement(ctx sdk.Context, orderBookUID string) error
 }

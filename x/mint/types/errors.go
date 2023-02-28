@@ -8,10 +8,9 @@ import (
 
 // x/mint module sentinel errors
 var (
-	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 1100, "mint denom cannot be blank")
+	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 3001, "mint denom cannot be blank")
 )
 
-// nolint
 const (
 	ErrTextInvalidParamType                   = "invalid parameter type: %T"
 	ErrTextBlocksPerYearMustBePositive        = "blocks per year must be positive: %d"

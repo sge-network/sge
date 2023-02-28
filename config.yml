@@ -24,8 +24,8 @@ genesis:
         denom: "usge"
         amount: "1000"
     dvm:
-      publicKeys:
-        list: ["-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzoP3SVo1tUEhd+cF/zw+8XxtOScdJyD7T3QqKzpC9x0=\n-----END PUBLIC KEY-----"]
+      key_vault:
+        public_keys: []
     gov:
       deposit_params:
         min_deposit: [{ amount: "1", denom: "usge" }]
@@ -52,4 +52,5 @@ genesis:
     sportevent:
       params:
         event_min_bet_amount: "1000000"
-        event_min_bet_fee: {"denom": "usge", "amount": "100000"}
+        event_min_bet_fee: "0"
+        event_max_sr_contribution: "100000000"

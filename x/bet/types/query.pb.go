@@ -10,6 +10,7 @@ import (
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/sge-network/sge/x/sportevent/types"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -30,8 +31,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// QueryBetRequest is the request type for a single bet query
+// Query/Bet RPC method.
 type QueryBetRequest struct {
-	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Uid     string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid"`
 }
 
 func (m *QueryBetRequest) Reset()         { *m = QueryBetRequest{} }
@@ -67,6 +71,13 @@ func (m *QueryBetRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryBetRequest proto.InternalMessageInfo
 
+func (m *QueryBetRequest) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
 func (m *QueryBetRequest) GetUid() string {
 	if m != nil {
 		return m.Uid
@@ -74,8 +85,11 @@ func (m *QueryBetRequest) GetUid() string {
 	return ""
 }
 
+// QueryBetResponse is the response type for single bet query
+// Query/Bet RPC method.
 type QueryBetResponse struct {
-	Bet Bet `protobuf:"bytes,1,opt,name=bet,proto3" json:"bet"`
+	Bet        Bet              `protobuf:"bytes,1,opt,name=bet,proto3" json:"bet"`
+	SportEvent types.SportEvent `protobuf:"bytes,2,opt,name=sport_event,json=sportEvent,proto3" json:"sport_event"`
 }
 
 func (m *QueryBetResponse) Reset()         { *m = QueryBetResponse{} }
@@ -118,6 +132,15 @@ func (m *QueryBetResponse) GetBet() Bet {
 	return Bet{}
 }
 
+func (m *QueryBetResponse) GetSportEvent() types.SportEvent {
+	if m != nil {
+		return m.SportEvent
+	}
+	return types.SportEvent{}
+}
+
+// QueryBetsRequest is the request type for the bets list query
+// Query/Bets RPC method.
 type QueryBetsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -162,6 +185,8 @@ func (m *QueryBetsRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
+// QueryBetsResponse is the response type for the bets list query
+// Query/Bets RPC method.
 type QueryBetsResponse struct {
 	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -214,44 +239,502 @@ func (m *QueryBetsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
+// QueryBetsByUIDsResponse is the request type for bets list of all bets of a
+// bettor Query/BetsByCreator RPC method.
+type QueryBetsByCreatorRequest struct {
+	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Creator    string             `protobuf:"bytes,2,opt,name=creator,proto3" json:"creator,omitempty"`
+}
+
+func (m *QueryBetsByCreatorRequest) Reset()         { *m = QueryBetsByCreatorRequest{} }
+func (m *QueryBetsByCreatorRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBetsByCreatorRequest) ProtoMessage()    {}
+func (*QueryBetsByCreatorRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{4}
+}
+func (m *QueryBetsByCreatorRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBetsByCreatorRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBetsByCreatorRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBetsByCreatorRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBetsByCreatorRequest.Merge(m, src)
+}
+func (m *QueryBetsByCreatorRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBetsByCreatorRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBetsByCreatorRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBetsByCreatorRequest proto.InternalMessageInfo
+
+func (m *QueryBetsByCreatorRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+func (m *QueryBetsByCreatorRequest) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+// QueryBetsByCreatorResponse is the response type for the bets list of all bets
+// of a bettor Query/BetsByCreator RPC method.
+type QueryBetsByCreatorResponse struct {
+	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryBetsByCreatorResponse) Reset()         { *m = QueryBetsByCreatorResponse{} }
+func (m *QueryBetsByCreatorResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBetsByCreatorResponse) ProtoMessage()    {}
+func (*QueryBetsByCreatorResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{5}
+}
+func (m *QueryBetsByCreatorResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBetsByCreatorResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBetsByCreatorResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBetsByCreatorResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBetsByCreatorResponse.Merge(m, src)
+}
+func (m *QueryBetsByCreatorResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBetsByCreatorResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBetsByCreatorResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBetsByCreatorResponse proto.InternalMessageInfo
+
+func (m *QueryBetsByCreatorResponse) GetBet() []Bet {
+	if m != nil {
+		return m.Bet
+	}
+	return nil
+}
+
+func (m *QueryBetsByCreatorResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
+// list input Query/BetsByUIDs RPC method.
+type QueryBetsByUIDsRequest struct {
+	Items []*QueryBetRequest `protobuf:"bytes,1,rep,name=items,proto3" json:"items"`
+}
+
+func (m *QueryBetsByUIDsRequest) Reset()         { *m = QueryBetsByUIDsRequest{} }
+func (m *QueryBetsByUIDsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryBetsByUIDsRequest) ProtoMessage()    {}
+func (*QueryBetsByUIDsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{6}
+}
+func (m *QueryBetsByUIDsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBetsByUIDsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBetsByUIDsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBetsByUIDsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBetsByUIDsRequest.Merge(m, src)
+}
+func (m *QueryBetsByUIDsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBetsByUIDsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBetsByUIDsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBetsByUIDsRequest proto.InternalMessageInfo
+
+func (m *QueryBetsByUIDsRequest) GetItems() []*QueryBetRequest {
+	if m != nil {
+		return m.Items
+	}
+	return nil
+}
+
+// QueryBetsByUIDsResponse is the response type for the bets list of a certain
+// UID list input Query/BetsByUIDs RPC method.
+type QueryBetsByUIDsResponse struct {
+	Bets           []Bet    `protobuf:"bytes,1,rep,name=bets,proto3" json:"bets"`
+	NotFoundEvents []string `protobuf:"bytes,2,rep,name=not_found_events,json=notFoundEvents,proto3" json:"not_found_events,omitempty"`
+}
+
+func (m *QueryBetsByUIDsResponse) Reset()         { *m = QueryBetsByUIDsResponse{} }
+func (m *QueryBetsByUIDsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryBetsByUIDsResponse) ProtoMessage()    {}
+func (*QueryBetsByUIDsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{7}
+}
+func (m *QueryBetsByUIDsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryBetsByUIDsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryBetsByUIDsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryBetsByUIDsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryBetsByUIDsResponse.Merge(m, src)
+}
+func (m *QueryBetsByUIDsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryBetsByUIDsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryBetsByUIDsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryBetsByUIDsResponse proto.InternalMessageInfo
+
+func (m *QueryBetsByUIDsResponse) GetBets() []Bet {
+	if m != nil {
+		return m.Bets
+	}
+	return nil
+}
+
+func (m *QueryBetsByUIDsResponse) GetNotFoundEvents() []string {
+	if m != nil {
+		return m.NotFoundEvents
+	}
+	return nil
+}
+
+// QueryActiveBetsRequest is the request type for the active bets list query
+// Query/ActiveBets RPC method.
+type QueryActiveBetsRequest struct {
+	Pagination    *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	SportEventUid string             `protobuf:"bytes,2,opt,name=sport_event_uid,json=sportEventUid,proto3" json:"sport_event_uid,omitempty"`
+}
+
+func (m *QueryActiveBetsRequest) Reset()         { *m = QueryActiveBetsRequest{} }
+func (m *QueryActiveBetsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryActiveBetsRequest) ProtoMessage()    {}
+func (*QueryActiveBetsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{8}
+}
+func (m *QueryActiveBetsRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryActiveBetsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryActiveBetsRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryActiveBetsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryActiveBetsRequest.Merge(m, src)
+}
+func (m *QueryActiveBetsRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryActiveBetsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryActiveBetsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryActiveBetsRequest proto.InternalMessageInfo
+
+func (m *QueryActiveBetsRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+func (m *QueryActiveBetsRequest) GetSportEventUid() string {
+	if m != nil {
+		return m.SportEventUid
+	}
+	return ""
+}
+
+// QueryActiveBetsResponse is the response type for the active bets list query
+// Query/ActiveBets RPC method.
+type QueryActiveBetsResponse struct {
+	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryActiveBetsResponse) Reset()         { *m = QueryActiveBetsResponse{} }
+func (m *QueryActiveBetsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryActiveBetsResponse) ProtoMessage()    {}
+func (*QueryActiveBetsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{9}
+}
+func (m *QueryActiveBetsResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryActiveBetsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryActiveBetsResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryActiveBetsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryActiveBetsResponse.Merge(m, src)
+}
+func (m *QueryActiveBetsResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryActiveBetsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryActiveBetsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryActiveBetsResponse proto.InternalMessageInfo
+
+func (m *QueryActiveBetsResponse) GetBet() []Bet {
+	if m != nil {
+		return m.Bet
+	}
+	return nil
+}
+
+func (m *QueryActiveBetsResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QuerySettledBetsOfHeightRequest is the request type for the settled bets of a
+// certain height list query.
+// Query/ActiveBets RPC method.
+type QuerySettledBetsOfHeightRequest struct {
+	Pagination  *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	BlockHeight int64              `protobuf:"varint,2,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
+}
+
+func (m *QuerySettledBetsOfHeightRequest) Reset()         { *m = QuerySettledBetsOfHeightRequest{} }
+func (m *QuerySettledBetsOfHeightRequest) String() string { return proto.CompactTextString(m) }
+func (*QuerySettledBetsOfHeightRequest) ProtoMessage()    {}
+func (*QuerySettledBetsOfHeightRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{10}
+}
+func (m *QuerySettledBetsOfHeightRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QuerySettledBetsOfHeightRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QuerySettledBetsOfHeightRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QuerySettledBetsOfHeightRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySettledBetsOfHeightRequest.Merge(m, src)
+}
+func (m *QuerySettledBetsOfHeightRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QuerySettledBetsOfHeightRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySettledBetsOfHeightRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuerySettledBetsOfHeightRequest proto.InternalMessageInfo
+
+func (m *QuerySettledBetsOfHeightRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+func (m *QuerySettledBetsOfHeightRequest) GetBlockHeight() int64 {
+	if m != nil {
+		return m.BlockHeight
+	}
+	return 0
+}
+
+// QuerySettledBetsOfHeightResponse is the response type for the settled bets of
+// a certain height list query Query/ActiveBets RPC method.
+type QuerySettledBetsOfHeightResponse struct {
+	Bet        []Bet               `protobuf:"bytes,1,rep,name=bet,proto3" json:"bet"`
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QuerySettledBetsOfHeightResponse) Reset()         { *m = QuerySettledBetsOfHeightResponse{} }
+func (m *QuerySettledBetsOfHeightResponse) String() string { return proto.CompactTextString(m) }
+func (*QuerySettledBetsOfHeightResponse) ProtoMessage()    {}
+func (*QuerySettledBetsOfHeightResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9b93ca36013f0806, []int{11}
+}
+func (m *QuerySettledBetsOfHeightResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QuerySettledBetsOfHeightResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QuerySettledBetsOfHeightResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QuerySettledBetsOfHeightResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySettledBetsOfHeightResponse.Merge(m, src)
+}
+func (m *QuerySettledBetsOfHeightResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QuerySettledBetsOfHeightResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySettledBetsOfHeightResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuerySettledBetsOfHeightResponse proto.InternalMessageInfo
+
+func (m *QuerySettledBetsOfHeightResponse) GetBet() []Bet {
+	if m != nil {
+		return m.Bet
+	}
+	return nil
+}
+
+func (m *QuerySettledBetsOfHeightResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*QueryBetRequest)(nil), "sgenetwork.sge.bet.QueryBetRequest")
 	proto.RegisterType((*QueryBetResponse)(nil), "sgenetwork.sge.bet.QueryBetResponse")
 	proto.RegisterType((*QueryBetsRequest)(nil), "sgenetwork.sge.bet.QueryBetsRequest")
 	proto.RegisterType((*QueryBetsResponse)(nil), "sgenetwork.sge.bet.QueryBetsResponse")
+	proto.RegisterType((*QueryBetsByCreatorRequest)(nil), "sgenetwork.sge.bet.QueryBetsByCreatorRequest")
+	proto.RegisterType((*QueryBetsByCreatorResponse)(nil), "sgenetwork.sge.bet.QueryBetsByCreatorResponse")
+	proto.RegisterType((*QueryBetsByUIDsRequest)(nil), "sgenetwork.sge.bet.QueryBetsByUIDsRequest")
+	proto.RegisterType((*QueryBetsByUIDsResponse)(nil), "sgenetwork.sge.bet.QueryBetsByUIDsResponse")
+	proto.RegisterType((*QueryActiveBetsRequest)(nil), "sgenetwork.sge.bet.QueryActiveBetsRequest")
+	proto.RegisterType((*QueryActiveBetsResponse)(nil), "sgenetwork.sge.bet.QueryActiveBetsResponse")
+	proto.RegisterType((*QuerySettledBetsOfHeightRequest)(nil), "sgenetwork.sge.bet.QuerySettledBetsOfHeightRequest")
+	proto.RegisterType((*QuerySettledBetsOfHeightResponse)(nil), "sgenetwork.sge.bet.QuerySettledBetsOfHeightResponse")
 }
 
 func init() { proto.RegisterFile("sge/bet/query.proto", fileDescriptor_9b93ca36013f0806) }
 
 var fileDescriptor_9b93ca36013f0806 = []byte{
-	// 419 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x4f, 0xeb, 0xd3, 0x30,
-	0x1c, 0xc6, 0xdb, 0x5f, 0xa7, 0xb2, 0x0c, 0x74, 0x8b, 0xc3, 0x3f, 0x45, 0x3a, 0xa9, 0x3a, 0x45,
-	0x34, 0x61, 0xf3, 0x0d, 0x48, 0x05, 0xbd, 0x6a, 0x8f, 0xbb, 0x25, 0xdb, 0xd7, 0xac, 0xe8, 0x9a,
-	0xae, 0x49, 0xd5, 0x21, 0x5e, 0xbc, 0x0b, 0x82, 0x6f, 0x6a, 0xc7, 0x81, 0x17, 0xbd, 0x0c, 0xd9,
-	0x3c, 0xf9, 0x2a, 0x24, 0x69, 0xcb, 0xe6, 0x94, 0xcd, 0x4b, 0x69, 0x93, 0xe7, 0xfb, 0x3c, 0x9f,
-	0x27, 0x29, 0xba, 0xac, 0x04, 0x50, 0x0e, 0x9a, 0xce, 0x0b, 0xc8, 0x17, 0x24, 0xcb, 0xa5, 0x96,
-	0x18, 0x2b, 0x01, 0x29, 0xe8, 0xb7, 0x32, 0x7f, 0x45, 0x94, 0x00, 0xc2, 0x41, 0xfb, 0x5d, 0x21,
-	0x85, 0xb4, 0xdb, 0xd4, 0xbc, 0x95, 0x4a, 0xff, 0x86, 0x90, 0x52, 0xbc, 0x06, 0xca, 0xb2, 0x84,
-	0xb2, 0x34, 0x95, 0x9a, 0xe9, 0x44, 0xa6, 0xaa, 0xda, 0xbd, 0x3f, 0x96, 0x6a, 0x26, 0x15, 0xe5,
-	0x4c, 0x41, 0x19, 0x40, 0xdf, 0x0c, 0x38, 0x68, 0x36, 0xa0, 0x19, 0x13, 0x49, 0x6a, 0xc5, 0x95,
-	0xb6, 0x5b, 0x83, 0x64, 0x2c, 0x67, 0xb3, 0xda, 0xa1, 0x53, 0xaf, 0x72, 0xd0, 0xe5, 0x52, 0xf8,
-	0x00, 0x5d, 0x7a, 0x61, 0xac, 0x22, 0xd0, 0x31, 0xcc, 0x0b, 0x50, 0x1a, 0x5f, 0x47, 0x5e, 0x91,
-	0x4c, 0xae, 0xb9, 0x37, 0xdd, 0x7b, 0xcd, 0xe8, 0xc2, 0xaf, 0x75, 0xcf, 0x7c, 0xc6, 0xe6, 0x11,
-	0x3e, 0x41, 0xed, 0x9d, 0x5a, 0x65, 0x32, 0x55, 0x80, 0x29, 0xf2, 0x38, 0x68, 0x2b, 0x6f, 0x0d,
-	0xaf, 0x92, 0xbf, 0xcb, 0x92, 0x08, 0x74, 0xd4, 0x58, 0xae, 0x7b, 0x4e, 0x6c, 0x94, 0xe1, 0x68,
-	0x67, 0xa2, 0xea, 0xcc, 0xa7, 0x08, 0xed, 0x3a, 0x54, 0x5e, 0x7d, 0x52, 0x16, 0x26, 0xa6, 0x30,
-	0x29, 0x4f, 0xb4, 0x2a, 0x4c, 0x9e, 0x33, 0x01, 0xd5, 0x6c, 0xbc, 0x37, 0x19, 0x7e, 0x72, 0x51,
-	0x67, 0xcf, 0xfc, 0x10, 0xd1, 0xfb, 0x3f, 0x44, 0xfc, 0xec, 0x0f, 0x9c, 0x33, 0x8b, 0x73, 0xf7,
-	0x24, 0x4e, 0x99, 0xb6, 0xcf, 0x33, 0xfc, 0xee, 0xa2, 0x73, 0x96, 0x07, 0x4f, 0x91, 0x17, 0x81,
-	0xc6, 0xb7, 0xfe, 0x95, 0x7e, 0x70, 0x03, 0xfe, 0xed, 0xe3, 0xa2, 0x32, 0x27, 0xbc, 0xf2, 0xf1,
-	0xeb, 0xcf, 0x2f, 0x67, 0x6d, 0x7c, 0x91, 0xd6, 0xd7, 0xfa, 0xbe, 0x48, 0x26, 0x1f, 0xf0, 0x4b,
-	0xd4, 0x30, 0xed, 0xf1, 0x51, 0x97, 0xfa, 0xe4, 0xfd, 0x3b, 0x27, 0x54, 0x55, 0x58, 0xc7, 0x86,
-	0xb5, 0x70, 0xb3, 0x0e, 0x53, 0xd1, 0xe3, 0xe5, 0x26, 0x70, 0x57, 0x9b, 0xc0, 0xfd, 0xb1, 0x09,
-	0xdc, 0xcf, 0xdb, 0xc0, 0x59, 0x6d, 0x03, 0xe7, 0xdb, 0x36, 0x70, 0x46, 0x7d, 0x91, 0xe8, 0x69,
-	0xc1, 0xc9, 0x58, 0xce, 0x8c, 0xfc, 0x61, 0x65, 0x6f, 0x47, 0xdf, 0x59, 0x52, 0xbd, 0xc8, 0x40,
-	0xf1, 0xf3, 0xf6, 0x1f, 0x7c, 0xf4, 0x3b, 0x00, 0x00, 0xff, 0xff, 0x2a, 0x94, 0x10, 0xcb, 0x37,
-	0x03, 0x00, 0x00,
+	// 824 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x96, 0x4f, 0x4f, 0x13, 0x4f,
+	0x18, 0xc7, 0x3b, 0x2d, 0x7f, 0xd2, 0xe9, 0x8f, 0x1f, 0x74, 0x30, 0x52, 0x56, 0x6d, 0xeb, 0xf2,
+	0x47, 0x52, 0x65, 0x37, 0x14, 0x5f, 0x80, 0xae, 0x88, 0x9a, 0x98, 0xa8, 0x4b, 0xb8, 0x70, 0xb0,
+	0xd9, 0x6d, 0xa7, 0xcb, 0x06, 0xd8, 0x29, 0x9d, 0x69, 0xb5, 0x69, 0x9a, 0x18, 0x4f, 0x1e, 0x34,
+	0x91, 0x90, 0x78, 0xf2, 0x65, 0xf8, 0x1e, 0xe4, 0x48, 0xe2, 0xc5, 0x13, 0x31, 0xe0, 0x89, 0x57,
+	0x61, 0x66, 0x76, 0xda, 0x6e, 0x5b, 0x28, 0x35, 0xc1, 0x70, 0x69, 0x67, 0x67, 0x9f, 0x3f, 0x9f,
+	0xe7, 0x99, 0xf9, 0x3e, 0x2d, 0x9c, 0xa4, 0x0e, 0xd6, 0x6d, 0xcc, 0xf4, 0xdd, 0x0a, 0x2e, 0xd7,
+	0xb4, 0x52, 0x99, 0x30, 0x82, 0x10, 0x75, 0xb0, 0x87, 0xd9, 0x1b, 0x52, 0xde, 0xd2, 0xa8, 0x83,
+	0x35, 0x1b, 0x33, 0xe5, 0x9a, 0x43, 0x1c, 0x22, 0x5e, 0xeb, 0x7c, 0xe5, 0x5b, 0x2a, 0x37, 0x1d,
+	0x42, 0x9c, 0x6d, 0xac, 0x5b, 0x25, 0x57, 0xb7, 0x3c, 0x8f, 0x30, 0x8b, 0xb9, 0xc4, 0xa3, 0xf2,
+	0x6d, 0x26, 0x4f, 0xe8, 0x0e, 0xa1, 0xba, 0x6d, 0x51, 0xec, 0x27, 0xd0, 0xab, 0x4b, 0x36, 0x66,
+	0xd6, 0x92, 0x5e, 0xb2, 0x1c, 0xd7, 0x13, 0xc6, 0xd2, 0x36, 0xde, 0x04, 0xb1, 0x31, 0x93, 0x5b,
+	0x69, 0xbe, 0x45, 0x4b, 0xa4, 0xcc, 0x70, 0x15, 0x7b, 0xcc, 0x5f, 0xe6, 0xc4, 0xda, 0xb7, 0x50,
+	0x57, 0xe1, 0xf8, 0x2b, 0x1e, 0xd6, 0xc0, 0xcc, 0xc4, 0xbb, 0x15, 0x4c, 0x19, 0x4a, 0xc0, 0xd1,
+	0x7c, 0x19, 0x5b, 0x8c, 0x94, 0x13, 0x20, 0x0d, 0x16, 0xa2, 0x66, 0xf3, 0x11, 0x4d, 0xc3, 0x48,
+	0xc5, 0x2d, 0x24, 0xc2, 0x7c, 0xd7, 0x18, 0x3d, 0x3d, 0x4a, 0xf1, 0x47, 0x93, 0x7f, 0xa8, 0x7b,
+	0x00, 0x4e, 0xb4, 0x03, 0xd1, 0x12, 0xf1, 0x28, 0x46, 0x3a, 0x8c, 0xd8, 0x98, 0x89, 0x28, 0xb1,
+	0xec, 0x94, 0xd6, 0xdb, 0x13, 0xcd, 0xc0, 0xcc, 0x18, 0x3a, 0x38, 0x4a, 0x85, 0x4c, 0x6e, 0x89,
+	0x9e, 0xc3, 0x58, 0x00, 0x51, 0x24, 0x8a, 0x65, 0xe7, 0xba, 0x1d, 0xdb, 0x05, 0x69, 0x6b, 0x7c,
+	0xf9, 0x98, 0x2f, 0x65, 0x18, 0x48, 0x5b, 0x3b, 0xea, 0x46, 0x1b, 0x89, 0x36, 0x8b, 0x5b, 0x85,
+	0xb0, 0xdd, 0x38, 0x49, 0x36, 0xaf, 0xf9, 0x5d, 0xd6, 0x78, 0x97, 0x35, 0xff, 0x18, 0x65, 0x97,
+	0xb5, 0x97, 0x96, 0x83, 0xa5, 0xaf, 0x19, 0xf0, 0x54, 0x3f, 0x01, 0x18, 0x0f, 0x04, 0xef, 0x2e,
+	0x38, 0x32, 0x60, 0xc1, 0x4f, 0x3a, 0x70, 0xfc, 0x7a, 0xef, 0x5c, 0x88, 0xe3, 0x67, 0xeb, 0xe0,
+	0x69, 0xc0, 0xe9, 0x16, 0x8e, 0x51, 0x7b, 0xe4, 0x1f, 0xd8, 0x25, 0x17, 0x1d, 0xbc, 0x19, 0xe1,
+	0x8e, 0x9b, 0xa1, 0x7e, 0x01, 0x50, 0x39, 0x2b, 0xff, 0x95, 0xf7, 0xe5, 0x35, 0xbc, 0x1e, 0xe0,
+	0x5a, 0x7f, 0xb6, 0xd2, 0xba, 0x09, 0x2b, 0x70, 0xd8, 0x65, 0x78, 0x87, 0x4a, 0xaa, 0x99, 0xb3,
+	0xa8, 0xba, 0xa4, 0x61, 0x44, 0x4f, 0x8f, 0x52, 0xbe, 0x97, 0xe9, 0x7f, 0xa9, 0x55, 0x38, 0xd5,
+	0x13, 0x5f, 0x16, 0xbd, 0x04, 0x87, 0x6c, 0xcc, 0xe8, 0x60, 0x55, 0x0b, 0x53, 0xb4, 0x00, 0x27,
+	0x3c, 0xc2, 0x72, 0x45, 0x52, 0xf1, 0x0a, 0xbe, 0x06, 0x68, 0x22, 0x9c, 0x8e, 0x2c, 0x44, 0xcd,
+	0xff, 0x3d, 0xc2, 0x56, 0xf9, 0xb6, 0xb8, 0xda, 0x54, 0xfd, 0x00, 0x64, 0x61, 0x0f, 0xf3, 0xcc,
+	0xad, 0xe2, 0x7f, 0x70, 0xc5, 0xd1, 0x3c, 0x1c, 0x0f, 0x88, 0x31, 0xd7, 0x52, 0xbe, 0x39, 0xd6,
+	0xd6, 0xd8, 0xba, 0x5b, 0x50, 0xf7, 0x81, 0xec, 0x41, 0x10, 0xe5, 0xca, 0x0f, 0xfe, 0x23, 0x80,
+	0x29, 0x41, 0xb5, 0x86, 0x19, 0xdb, 0xc6, 0x05, 0x8e, 0xf5, 0xa2, 0xf8, 0x14, 0xbb, 0xce, 0x26,
+	0xbb, 0xec, 0x4e, 0xdd, 0x86, 0xff, 0xd9, 0xdb, 0x24, 0xbf, 0x95, 0xdb, 0x14, 0xe1, 0x05, 0x76,
+	0xc4, 0x8c, 0x89, 0x3d, 0x3f, 0xa3, 0xfa, 0x15, 0xc0, 0xf4, 0xf9, 0x38, 0x57, 0xdd, 0xad, 0xec,
+	0xf7, 0x11, 0x38, 0x2c, 0xf0, 0x50, 0x19, 0x46, 0x0c, 0xcc, 0xd0, 0x20, 0x72, 0x50, 0x66, 0xfb,
+	0x1b, 0xf9, 0x79, 0xd4, 0xf4, 0xfb, 0x1f, 0xbf, 0xf7, 0xc3, 0x0a, 0x4a, 0xe8, 0xcd, 0x1f, 0xa8,
+	0xba, 0x1c, 0x1b, 0x0d, 0xbd, 0x5e, 0x71, 0x0b, 0x0d, 0xb4, 0x0f, 0xe0, 0x58, 0xc7, 0xe0, 0x40,
+	0x8b, 0xfd, 0x22, 0xf7, 0x0c, 0x38, 0x45, 0x1b, 0xd4, 0x5c, 0x22, 0xcd, 0x08, 0xa4, 0x5b, 0xe8,
+	0x86, 0x40, 0x92, 0x34, 0x01, 0x2c, 0x21, 0xc6, 0x22, 0x1c, 0xe2, 0xde, 0xa8, 0x6f, 0x95, 0x4d,
+	0xd5, 0x29, 0x73, 0x17, 0x58, 0xc9, 0xcc, 0x71, 0x91, 0x39, 0x86, 0xa2, 0xcd, 0x66, 0x50, 0xf4,
+	0x0e, 0x40, 0xd8, 0x1e, 0x1f, 0x28, 0x73, 0x41, 0x2d, 0x81, 0x19, 0xa6, 0xdc, 0x1d, 0xc8, 0x56,
+	0xa6, 0x9e, 0x16, 0xa9, 0x27, 0x51, 0xbc, 0x95, 0x3a, 0x67, 0xd7, 0xb8, 0xac, 0x29, 0xda, 0x03,
+	0x10, 0xb6, 0xd5, 0xdb, 0x07, 0xa1, 0x67, 0xda, 0xf4, 0x41, 0xe8, 0x1d, 0x07, 0x6a, 0x46, 0x20,
+	0xcc, 0x22, 0x55, 0x20, 0x58, 0xc2, 0x20, 0xc7, 0x49, 0xf4, 0x7a, 0xd7, 0xa8, 0x69, 0xa0, 0x6f,
+	0x00, 0x4e, 0x9e, 0x21, 0x16, 0xb4, 0x7c, 0x6e, 0xc2, 0xf3, 0x95, 0xae, 0xdc, 0xff, 0x3b, 0x27,
+	0x89, 0x9b, 0x15, 0xb8, 0xf7, 0x50, 0x46, 0xe0, 0x52, 0xdf, 0x52, 0xf0, 0xe6, 0x48, 0x51, 0x8a,
+	0x5d, 0xaf, 0x07, 0xa5, 0xdf, 0x30, 0x1e, 0x1c, 0x1c, 0x27, 0xc1, 0xe1, 0x71, 0x12, 0xfc, 0x3a,
+	0x4e, 0x82, 0xcf, 0x27, 0xc9, 0xd0, 0xe1, 0x49, 0x32, 0xf4, 0xf3, 0x24, 0x19, 0xda, 0x98, 0x77,
+	0x5c, 0xb6, 0x59, 0xb1, 0xb5, 0x3c, 0xd9, 0xe1, 0xf1, 0x16, 0x25, 0x8e, 0x88, 0xfd, 0x56, 0xe8,
+	0x82, 0xd5, 0x4a, 0x98, 0xda, 0x23, 0xe2, 0x9f, 0xd9, 0xf2, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff,
+	0xa1, 0x73, 0x42, 0x12, 0x59, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -268,8 +751,16 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Queries a Bet by uid.
 	Bet(ctx context.Context, in *QueryBetRequest, opts ...grpc.CallOption) (*QueryBetResponse, error)
-	// Queries a list of Bet items.
+	// Queries list of Bet items of a certain creator sorted by timestamp.
+	BetsByCreator(ctx context.Context, in *QueryBetsByCreatorRequest, opts ...grpc.CallOption) (*QueryBetsByCreatorResponse, error)
+	// Queries list of Bet items.
 	Bets(ctx context.Context, in *QueryBetsRequest, opts ...grpc.CallOption) (*QueryBetsResponse, error)
+	// Queries a list of Bet items filtered by uid list.
+	BetsByUIDs(ctx context.Context, in *QueryBetsByUIDsRequest, opts ...grpc.CallOption) (*QueryBetsByUIDsResponse, error)
+	// Queries list of Active Bet items.
+	ActiveBets(ctx context.Context, in *QueryActiveBetsRequest, opts ...grpc.CallOption) (*QueryActiveBetsResponse, error)
+	// Queries list of Settled Bet items.
+	SettledBetsOfHeight(ctx context.Context, in *QuerySettledBetsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledBetsOfHeightResponse, error)
 }
 
 type queryClient struct {
@@ -289,9 +780,45 @@ func (c *queryClient) Bet(ctx context.Context, in *QueryBetRequest, opts ...grpc
 	return out, nil
 }
 
+func (c *queryClient) BetsByCreator(ctx context.Context, in *QueryBetsByCreatorRequest, opts ...grpc.CallOption) (*QueryBetsByCreatorResponse, error) {
+	out := new(QueryBetsByCreatorResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Query/BetsByCreator", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *queryClient) Bets(ctx context.Context, in *QueryBetsRequest, opts ...grpc.CallOption) (*QueryBetsResponse, error) {
 	out := new(QueryBetsResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Query/Bets", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) BetsByUIDs(ctx context.Context, in *QueryBetsByUIDsRequest, opts ...grpc.CallOption) (*QueryBetsByUIDsResponse, error) {
+	out := new(QueryBetsByUIDsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Query/BetsByUIDs", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) ActiveBets(ctx context.Context, in *QueryActiveBetsRequest, opts ...grpc.CallOption) (*QueryActiveBetsResponse, error) {
+	out := new(QueryActiveBetsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Query/ActiveBets", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *queryClient) SettledBetsOfHeight(ctx context.Context, in *QuerySettledBetsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledBetsOfHeightResponse, error) {
+	out := new(QuerySettledBetsOfHeightResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Query/SettledBetsOfHeight", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -302,8 +829,16 @@ func (c *queryClient) Bets(ctx context.Context, in *QueryBetsRequest, opts ...gr
 type QueryServer interface {
 	// Queries a Bet by uid.
 	Bet(context.Context, *QueryBetRequest) (*QueryBetResponse, error)
-	// Queries a list of Bet items.
+	// Queries list of Bet items of a certain creator sorted by timestamp.
+	BetsByCreator(context.Context, *QueryBetsByCreatorRequest) (*QueryBetsByCreatorResponse, error)
+	// Queries list of Bet items.
 	Bets(context.Context, *QueryBetsRequest) (*QueryBetsResponse, error)
+	// Queries a list of Bet items filtered by uid list.
+	BetsByUIDs(context.Context, *QueryBetsByUIDsRequest) (*QueryBetsByUIDsResponse, error)
+	// Queries list of Active Bet items.
+	ActiveBets(context.Context, *QueryActiveBetsRequest) (*QueryActiveBetsResponse, error)
+	// Queries list of Settled Bet items.
+	SettledBetsOfHeight(context.Context, *QuerySettledBetsOfHeightRequest) (*QuerySettledBetsOfHeightResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -313,8 +848,20 @@ type UnimplementedQueryServer struct {
 func (*UnimplementedQueryServer) Bet(ctx context.Context, req *QueryBetRequest) (*QueryBetResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Bet not implemented")
 }
+func (*UnimplementedQueryServer) BetsByCreator(ctx context.Context, req *QueryBetsByCreatorRequest) (*QueryBetsByCreatorResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BetsByCreator not implemented")
+}
 func (*UnimplementedQueryServer) Bets(ctx context.Context, req *QueryBetsRequest) (*QueryBetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Bets not implemented")
+}
+func (*UnimplementedQueryServer) BetsByUIDs(ctx context.Context, req *QueryBetsByUIDsRequest) (*QueryBetsByUIDsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BetsByUIDs not implemented")
+}
+func (*UnimplementedQueryServer) ActiveBets(ctx context.Context, req *QueryActiveBetsRequest) (*QueryActiveBetsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ActiveBets not implemented")
+}
+func (*UnimplementedQueryServer) SettledBetsOfHeight(ctx context.Context, req *QuerySettledBetsOfHeightRequest) (*QuerySettledBetsOfHeightResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SettledBetsOfHeight not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -339,6 +886,24 @@ func _Query_Bet_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_BetsByCreator_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBetsByCreatorRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).BetsByCreator(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.bet.Query/BetsByCreator",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).BetsByCreator(ctx, req.(*QueryBetsByCreatorRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_Bets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryBetsRequest)
 	if err := dec(in); err != nil {
@@ -357,6 +922,60 @@ func _Query_Bets_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_BetsByUIDs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryBetsByUIDsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).BetsByUIDs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.bet.Query/BetsByUIDs",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).BetsByUIDs(ctx, req.(*QueryBetsByUIDsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_ActiveBets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryActiveBetsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).ActiveBets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.bet.Query/ActiveBets",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).ActiveBets(ctx, req.(*QueryActiveBetsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Query_SettledBetsOfHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySettledBetsOfHeightRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).SettledBetsOfHeight(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.bet.Query/SettledBetsOfHeight",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).SettledBetsOfHeight(ctx, req.(*QuerySettledBetsOfHeightRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "sgenetwork.sge.bet.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -366,8 +985,24 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Bet_Handler,
 		},
 		{
+			MethodName: "BetsByCreator",
+			Handler:    _Query_BetsByCreator_Handler,
+		},
+		{
 			MethodName: "Bets",
 			Handler:    _Query_Bets_Handler,
+		},
+		{
+			MethodName: "BetsByUIDs",
+			Handler:    _Query_BetsByUIDs_Handler,
+		},
+		{
+			MethodName: "ActiveBets",
+			Handler:    _Query_ActiveBets_Handler,
+		},
+		{
+			MethodName: "SettledBetsOfHeight",
+			Handler:    _Query_SettledBetsOfHeight_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -399,6 +1034,13 @@ func (m *QueryBetRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Uid)
 		i = encodeVarintQuery(dAtA, i, uint64(len(m.Uid)))
 		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Creator)))
+		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
@@ -424,6 +1066,16 @@ func (m *QueryBetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	{
+		size, err := m.SportEvent.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
+			return 0, err
+		}
+		i -= size
+		i = encodeVarintQuery(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x12
 	{
 		size, err := m.Bet.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
@@ -521,6 +1173,360 @@ func (m *QueryBetsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryBetsByCreatorRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBetsByCreatorRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBetsByCreatorRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBetsByCreatorResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBetsByCreatorResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBetsByCreatorResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Bet) > 0 {
+		for iNdEx := len(m.Bet) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Bet[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBetsByUIDsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBetsByUIDsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBetsByUIDsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Items) > 0 {
+		for iNdEx := len(m.Items) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Items[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryBetsByUIDsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryBetsByUIDsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryBetsByUIDsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.NotFoundEvents) > 0 {
+		for iNdEx := len(m.NotFoundEvents) - 1; iNdEx >= 0; iNdEx-- {
+			i -= len(m.NotFoundEvents[iNdEx])
+			copy(dAtA[i:], m.NotFoundEvents[iNdEx])
+			i = encodeVarintQuery(dAtA, i, uint64(len(m.NotFoundEvents[iNdEx])))
+			i--
+			dAtA[i] = 0x12
+		}
+	}
+	if len(m.Bets) > 0 {
+		for iNdEx := len(m.Bets) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Bets[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryActiveBetsRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryActiveBetsRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryActiveBetsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.SportEventUid) > 0 {
+		i -= len(m.SportEventUid)
+		copy(dAtA[i:], m.SportEventUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.SportEventUid)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryActiveBetsResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryActiveBetsResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryActiveBetsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Bet) > 0 {
+		for iNdEx := len(m.Bet) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Bet[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QuerySettledBetsOfHeightRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QuerySettledBetsOfHeightRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QuerySettledBetsOfHeightRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.BlockHeight != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.BlockHeight))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QuerySettledBetsOfHeightResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QuerySettledBetsOfHeightResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QuerySettledBetsOfHeightResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Bet) > 0 {
+		for iNdEx := len(m.Bet) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.Bet[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	offset -= sovQuery(v)
 	base := offset
@@ -538,6 +1544,10 @@ func (m *QueryBetRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
 	l = len(m.Uid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
@@ -552,6 +1562,8 @@ func (m *QueryBetResponse) Size() (n int) {
 	var l int
 	_ = l
 	l = m.Bet.Size()
+	n += 1 + l + sovQuery(uint64(l))
+	l = m.SportEvent.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -570,6 +1582,149 @@ func (m *QueryBetsRequest) Size() (n int) {
 }
 
 func (m *QueryBetsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Bet) > 0 {
+		for _, e := range m.Bet {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryBetsByCreatorRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryBetsByCreatorResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Bet) > 0 {
+		for _, e := range m.Bet {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryBetsByUIDsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Items) > 0 {
+		for _, e := range m.Items {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryBetsByUIDsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Bets) > 0 {
+		for _, e := range m.Bets {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if len(m.NotFoundEvents) > 0 {
+		for _, s := range m.NotFoundEvents {
+			l = len(s)
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	return n
+}
+
+func (m *QueryActiveBetsRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	l = len(m.SportEventUid)
+	if l > 0 {
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QueryActiveBetsResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Bet) > 0 {
+		for _, e := range m.Bet {
+			l = e.Size()
+			n += 1 + l + sovQuery(uint64(l))
+		}
+	}
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	return n
+}
+
+func (m *QuerySettledBetsOfHeightRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		l = m.Pagination.Size()
+		n += 1 + l + sovQuery(uint64(l))
+	}
+	if m.BlockHeight != 0 {
+		n += 1 + sovQuery(uint64(m.BlockHeight))
+	}
+	return n
+}
+
+func (m *QuerySettledBetsOfHeightResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -624,6 +1779,38 @@ func (m *QueryBetRequest) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
 			}
@@ -735,6 +1922,39 @@ func (m *QueryBetResponse) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if err := m.Bet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SportEvent", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.SportEvent.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -872,6 +2092,907 @@ func (m *QueryBetsResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: QueryBetsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Bet = append(m.Bet, Bet{})
+			if err := m.Bet[len(m.Bet)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBetsByCreatorRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBetsByCreatorRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBetsByCreatorRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBetsByCreatorResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBetsByCreatorResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBetsByCreatorResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Bet = append(m.Bet, Bet{})
+			if err := m.Bet[len(m.Bet)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBetsByUIDsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBetsByUIDsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBetsByUIDsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Items", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Items = append(m.Items, &QueryBetRequest{})
+			if err := m.Items[len(m.Items)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryBetsByUIDsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryBetsByUIDsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryBetsByUIDsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Bets", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Bets = append(m.Bets, Bet{})
+			if err := m.Bets[len(m.Bets)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NotFoundEvents", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.NotFoundEvents = append(m.NotFoundEvents, string(dAtA[iNdEx:postIndex]))
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryActiveBetsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryActiveBetsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryActiveBetsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field SportEventUid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.SportEventUid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryActiveBetsResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryActiveBetsResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryActiveBetsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Bet = append(m.Bet, Bet{})
+			if err := m.Bet[len(m.Bet)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QuerySettledBetsOfHeightRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QuerySettledBetsOfHeightRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QuerySettledBetsOfHeightRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockHeight", wireType)
+			}
+			m.BlockHeight = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.BlockHeight |= int64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QuerySettledBetsOfHeightResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QuerySettledBetsOfHeightResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QuerySettledBetsOfHeightResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

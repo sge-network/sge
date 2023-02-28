@@ -24,4 +24,7 @@ const (
 var (
 	// SportEventKeyPrefix is the prefix to retrieve all SportEvent
 	SportEventKeyPrefix = []byte{0x00}
+
+	// SportEventStatsKey is the key for the sport-event statistics
+	SportEventStatsKey = []byte{0x01}
 )

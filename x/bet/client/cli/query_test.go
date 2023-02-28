@@ -10,6 +10,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const testAddress = "cosmos1s4ycalgh3gjemd4hmqcvcgmnf647rnd0tpg2w9"
+
 func TestGetQueryCmd(t *testing.T) {
 	net := network.New(t)
 	val := net.Validators[0]
@@ -37,7 +39,7 @@ func TestGetQueryCmd(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			require.True(t, strings.HasPrefix(string(res.Bytes()[:]), "Querying commands for the bet module"))
+			require.True(t, strings.HasPrefix(string(res.Bytes()), "Querying commands for the bet module"))
 		})
 	}
 }

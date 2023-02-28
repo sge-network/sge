@@ -46,10 +46,9 @@ func TestQueryInflation(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 			} else {
 				require.NoError(t, err)
-				inflation := strings.Replace(string(res.Bytes()[:]), "\n", "", 1)
+				inflation := strings.Replace(string(res.Bytes()), "\n", "", 1)
 				require.Equal(t, types.DefaultParams().Phases[0].Inflation.String(), inflation)
 			}
-
 		})
 	}
 }
@@ -88,10 +87,9 @@ func TestQueryPhaseStep(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 			} else {
 				require.NoError(t, err)
-				phaseStep := strings.Replace(string(res.Bytes()[:]), "\n", "", 1)
+				phaseStep := strings.Replace(string(res.Bytes()), "\n", "", 1)
 				require.Equal(t, "1", phaseStep)
 			}
-
 		})
 	}
 }
@@ -130,10 +128,9 @@ func TestQueryPhaseProvision(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 			} else {
 				require.NoError(t, err)
-				phaseProvision := strings.Replace(string(res.Bytes()[:]), "\n", "", 1)
+				phaseProvision := strings.Replace(string(res.Bytes()), "\n", "", 1)
 				require.Equal(t, "0.000000000000000000", phaseProvision)
 			}
-
 		})
 	}
 }
@@ -172,7 +169,7 @@ func TestQueryEndPhaseStatus(t *testing.T) {
 				require.EqualError(t, err, tc.err.Error())
 			} else {
 				require.NoError(t, err)
-				phaseProvision := strings.Replace(string(res.Bytes()[:]), "\n", "", 1)
+				phaseProvision := strings.Replace(string(res.Bytes()), "\n", "", 1)
 				require.Equal(t, "false", phaseProvision)
 			}
 		})

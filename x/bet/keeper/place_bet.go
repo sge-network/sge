@@ -20,11 +20,16 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check if selected odds is valid
-	if !oddExists(bet.OddsUID, sportEvent.OddsUIDs) {
+	if !oddsExists(bet.OddsUID, sportEvent.Odds) {
 		return types.ErrOddsUIDNotExist
 	}
 
 	// check minimum bet amount allowed
+	betConstraints := sportEvent.GetBetConstraints()
+	if betConstraints == nil {
+		sportEvent.BetConstraints = k.sporteventKeeper.GetDefaultBetConstraints(ctx)
+	}
+
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
@@ -32,11 +37,20 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	// modify the bet fee and subtracted amount
 	setBetFee(bet, sportEvent.BetConstraints.BetFee)
 
-	// calculate extraPayout
-	extraPayout := calculateExtraPayout(bet)
+	// calculate payoutProfit
+	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	if err != nil {
+		return err
+	}
 
-	err = k.strategicreserveKeeper.ProcessBetPlacement(ctx, bettorAddress,
-		bet.BetFee, bet.Amount, extraPayout, bet.UID)
+	stats := k.GetBetStats(ctx)
+	stats.Count++
+	betID := stats.Count
+
+	betFulfillment, err := k.obKeeper.ProcessBetPlacement(
+		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, payoutProfit,
+		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
+	)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrInSRPlacementProcessing, "%s", err)
 	}
@@ -47,29 +61,30 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	// put bet in the result pending status
 	bet.Result = types.Bet_RESULT_PENDING
 
-	// set data verification status as valid
-	bet.Verified = true
-
 	bet.CreatedAt = ctx.BlockTime().Unix()
+	bet.BetFulfillment = betFulfillment
 
 	// store bet in the module state
-	k.SetBet(ctx, *bet)
+	k.SetBet(ctx, *bet, betID)
+
+	// set bet as an active bet
+	k.SetActiveBet(ctx, types.NewActiveBet(bet.UID, bet.Creator), betID, bet.SportEventUID)
+
+	// set bet stats
+	k.SetBetStats(ctx, stats)
+
 	return nil
 }
 
-// getSportEvent returns sport event with id
+// getSportEvent returns sport-event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
 	sportevent, found := k.sporteventKeeper.GetSportEvent(ctx, sportEventID)
 	if !found {
 		return sporteventtypes.SportEvent{}, types.ErrNoMatchingSportEvent
 	}
 
-	if !sportevent.Active {
+	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
-	}
-
-	if sportevent.Status != sporteventtypes.SportEventStatus_STATUS_PENDING {
-		return sporteventtypes.SportEvent{}, types.ErrSportEventStatusNotPending
 	}
 
 	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {
@@ -78,10 +93,10 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 	return sportevent, nil
 }
 
-// oddExists checks if bet odds id is present in the sport event list of odds uids
-func oddExists(betOddsID string, oddsUIDs []string) bool {
-	for _, uid := range oddsUIDs {
-		if betOddsID == uid {
+// oddsExists checks if bet odds id is present in the sport-event list of odds uids
+func oddsExists(betOddsUID string, odds []*sporteventtypes.Odds) bool {
+	for _, o := range odds {
+		if betOddsUID == o.UID {
 			return true
 		}
 	}
@@ -89,7 +104,7 @@ func oddExists(betOddsID string, oddsUIDs []string) bool {
 }
 
 // setBetFee sets the bet fee and subtraceted amount of bet object pointer
-func setBetFee(bet *types.Bet, betFee sdk.Coin) {
-	bet.Amount = bet.Amount.Sub(betFee.Amount)
+func setBetFee(bet *types.Bet, betFee sdk.Int) {
+	bet.Amount = bet.Amount.Sub(betFee)
 	bet.BetFee = betFee
 }

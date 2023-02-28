@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"strconv"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -11,14 +10,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var _ = strconv.Itoa(0)
-
-// CmdListSportEvents implements a command to return all sport events
+// CmdListSportEvents implements a command to return all sport-events
 func CmdListSportEvents() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sport-events",
-		Short: "list sport events",
-		Long:  "Get list of sport events in paginated response.",
+		Short: "list sport-events",
+		Long:  "Get list of sport-events in paginated response.",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -48,12 +45,12 @@ func CmdListSportEvents() *cobra.Command {
 	return cmd
 }
 
-// CmdShowSportEvent implements a command to return a specific sport events based on its UID
+// CmdShowSportEvent implements a command to return a specific sport-events based on its UID
 func CmdShowSportEvent() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sport-event [uid]",
-		Short: "get sport event",
-		Long:  "Get sport event details by uid.",
+		Short: "get sport-event",
+		Long:  "Get sport-event meta by uid.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -80,12 +77,12 @@ func CmdShowSportEvent() *cobra.Command {
 	return cmd
 }
 
-// CmdSportEventListByUIDs returns command object for querying sport events by uid list
+// CmdSportEventListByUIDs returns command object for querying sport-events by uid list
 func CmdSportEventListByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sport-events-by-uids [uid]",
-		Short: "Query sport events list by UIDs",
-		Long:  "Get list of sport events by list of uids.",
+		Short: "Query sport-events list by UIDs",
+		Long:  "Get list of sport-events by list of uids.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			reqUID := strings.Split(args[0], listSeparator)
@@ -98,7 +95,6 @@ func CmdSportEventListByUIDs() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QuerySportEventsByUIDsRequest{
-
 				Uids: reqUID,
 			}
 

@@ -13,8 +13,8 @@ import (
 func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
-		PublicKeys: &types.PublicKeys{
-			List: []string{"Key1"},
+		KeyVault: types.KeyVault{
+			PublicKeys: []string{"Key1"},
 		},
 	}
 
@@ -27,5 +27,4 @@ func TestGenesis(t *testing.T) {
 
 	nullify.Fill(&genesisState)
 	nullify.Fill(got)
-
 }

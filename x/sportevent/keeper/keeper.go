@@ -18,11 +18,13 @@ type Keeper struct {
 	memKey     sdk.StoreKey
 	paramstore paramtypes.Subspace
 	dvmKeeper  types.DVMKeeper
+	bookKeeper types.BookKeeper
 }
 
 // ExpectedKeepers contains expected keepers parameter needed by NewKeeper
 type ExpectedKeepers struct {
-	DVMKeeper types.DVMKeeper
+	DVMKeeper  types.DVMKeeper
+	BookKeeper types.BookKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -32,7 +34,6 @@ func NewKeeper(
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
 	expectedKeepers ExpectedKeepers,
-
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -40,16 +41,16 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
 		dvmKeeper:  expectedKeepers.DVMKeeper,
+		bookKeeper: expectedKeepers.BookKeeper,
 	}
 }
 
-// Logger retuns the logger of the keeper
+// Logger returns the logger of the keeper
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }

@@ -1,104 +1,174 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
+
 import "gogoproto/gogo.proto";
-import "cosmos/base/v1beta1/coin.proto";
 import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
+// Bet is the main type of bet in the blockchain state.
 message Bet {
+  // uid is the universal unique identifier assigned to a bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
 
-  // uid is the unique uuid assigned to bet
-  string uid = 1 [(gogoproto.customname) = "UID" ,(gogoproto.jsontag) = "uid", json_name = "uid"];
+  // sport_event_uid is the universal unique identifier of
+  // the sport-event on which the bet is placed.
+  string sport_event_uid = 2 [
+    (gogoproto.customname) = "SportEventUID",
+    (gogoproto.jsontag) = "sport_event_uid",
+    json_name = "sport_event_uid"
+  ];
 
-  // sport_event_uid is the unique uuid of the sportevent on which bet is placed
-  string sport_event_uid = 2 [(gogoproto.customname) = "SportEventUID" ,(gogoproto.jsontag) = "sport_event_uid", json_name = "sport_event_uid"];
+  // odds_uid is the unique universal unique identifier,
+  // of the odds on which the bet is placed.
+  string odds_uid = 3 [
+    (gogoproto.customname) = "OddsUID",
+    (gogoproto.jsontag) = "odds_uid",
+    json_name = "odds_uid"
+  ];
 
-  // odds_uid is the unique uuid of the odds on which bet is placed
-  string odds_uid = 3 [(gogoproto.customname) = "OddsUID" ,(gogoproto.jsontag) = "odds_uid", json_name = "odds_uid"];
+  // odds_type is the type of odds that
+  // user choose such as decimal, fractional.
+  sgenetwork.sge.bet.OddsType odds_type = 4;
 
-  // odds_value is the odds on which bet is placed
-  string odds_value = 4[
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
+  // odds_value is the odds on which the bet is placed.
+  string odds_value = 5;
 
-  // amount is the wager amount
-  string amount = 5[
+  // amount is the wager amount.
+  string amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
+    (gogoproto.nullable) = false
+  ];
 
-  // betFee is the betting fee
-  cosmos.base.v1beta1.Coin bet_fee = 6[
-    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin",
-    (gogoproto.nullable) = false];
+  // bet_fee is the betting fee calculated by the bet amount.
+  string bet_fee = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 
+  // status is the status of the bet, such as `unspecified` or `settled`.
+  Status status = 8;
 
-  // status is the status of the bet, such as `pending` or `settled`
-  Status status = 7;
+  // result is the result of the bet, such as `won` or `lost`.
+  Result result = 9;
 
-  // result is the result of bet, such as `won` or `lost`
-  Result result = 8;
+  // creator is the bettor address.
+  string creator = 10;
 
-  // verified shows bet is verified or not
-  bool verified = 9;
+  // created_at is the bet placement timestamp.
+  int64 created_at = 11;
 
-  // ticket is a signed string containing important info such as `oddsValue`
-  string ticket = 10;
+  // settlement_height is the block height that the bet is settled.
+  int64 settlement_height = 12;
 
-  // creator is the bettor address
-  string creator = 11;
+  // max_loss_multiplier is the multiplier coefficient of max loss.
+  string max_loss_multiplier = 13 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 
-  // created_at is bet placement timestamp
-  int64 created_at = 12;
+  // bet_fulfillment is the fulfillment data.
+  repeated BetFulfillment bet_fulfillment = 14;
 
-  // odds_type is the type of odds user chose such as decimal, fractional
-  sgenetwork.sge.bet.OddsType odds_type = 13;
-
-  //Status of the Bet.
+  // Status of the Bet.
   enum Status {
-
-    //the unknown status
-    STATUS_INVALID = 0;
-
-    //bet is placed
+    // the invalid or unknown
+    STATUS_UNSPECIFIED = 0;
+    // bet is placed
     STATUS_PLACED = 1;
-
-    //bet is canceled by Bettor
-    STATUS_CANCELLED = 2;
-
-    //bet is aborted
+    // bet is canceled by Bettor
+    STATUS_CANCELED = 2;
+    // bet is aborted
     STATUS_ABORTED = 3;
-
-    //pending for getting placed
+    // bet is pending for getting placed
     STATUS_PENDING = 4;
-
-    //bet result is declared
+    // bet result is declared
     STATUS_RESULT_DECLARED = 5;
-
-    //the bet is settled
+    // the bet is settled
     STATUS_SETTLED = 6;
   }
 
-  //Result of the bet.
+  // Result of the bet.
   enum Result {
-
-    //the invalid or unknown
-    RESULT_INVALID = 0;
-
+    // the invalid or unknown
+    RESULT_UNSPECIFIED = 0;
     // bet result is pending
     RESULT_PENDING = 1;
-
     // bet won by the bettor
     RESULT_WON = 2;
-
     // bet lost by the bettor
     RESULT_LOST = 3;
-
     // bet is draw
     RESULT_DRAW = 4;
-
     // bet is aborted
     RESULT_ABORTED = 5;
   }
+}
 
+// UID2ID is the type for mapping UIDs and Sequencial IDs of bets.
+message UID2ID {
+  // uid is the universal unique identifier assigned to the bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
+  // id is an autogenerated sequential id for a bet.
+  uint64 id = 2 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id"
+  ];
+}
+
+// ActiveBet is the type for an active bet
+message ActiveBet {
+  // uid is the universal unique identifier for the bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // creator is the bettor address.
+  string creator = 2;
+}
+
+// SettledBet is the type for a settled bet.
+message SettledBet {
+  // uid is the universal unique identifier for the bet.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // bettor_address is the bech32 address of the bettor account.
+  string bettor_address = 2;
+}
+
+// BetFulfillment is the type for bet fulfillment
+message BetFulfillment {
+  // participant_address is the bech32-encoded address of the participant
+  // fulfilling bet.
+  string participant_address = 1
+      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
+  // participation_index is the index in initial participation queue index
+  uint64 participation_index = 2
+      [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
+  // bet amount fulfilled by the participation
+  string bet_amount = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"bet_amount\""
+  ];
+  // payout amount fulfilled by the participation
+  string payout_amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"payout_amount\""
+  ];
 }

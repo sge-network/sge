@@ -5,116 +5,88 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
 // ResolveSportEvent accepts ticket containing multiple resolution events and return batch response after processing
-func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.SportEventResponse, error) {
+func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.MsgResolveSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	var resolvedEvent types.ResolutionEvent
-	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolvedEvent)
+	var resolutionPayload types.SportEventResolutionTicketPayload
+	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolutionPayload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	if err := k.processEvents(ctx, &resolvedEvent); err != nil {
+	resolvedSportEvent, err := k.processSportEventResolution(ctx, &resolutionPayload)
+	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process resolution event")
 	}
 
-	sportEvent, _ := k.getSportEvent(ctx, resolvedEvent)
-	response := &types.SportEventResponse{
-		Data: &sportEvent,
+	response := &types.MsgResolveSportEventResponse{
+		Data: resolvedSportEvent,
 	}
-	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response, msg.Creator)
+	emitTransactionEvent(ctx, types.TypeMsgResolveSportEvents, response.Data.UID, response.Data.BookUID, msg.Creator)
 	return response, nil
 }
 
-func (k msgServer) processEvents(ctx sdk.Context, resolvedEvent *types.ResolutionEvent) error {
-	sportEvent, err := k.getSportEvent(ctx, *resolvedEvent)
+func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayload *types.SportEventResolutionTicketPayload) (*types.SportEvent, error) {
+	if err := resolutionPayload.Validate(); err != nil {
+		return nil, sdkerrors.Wrap(err, "validate update data")
+	}
+
+	sportEvent, err := k.getSportEventToResolve(ctx, *resolutionPayload)
 	if err != nil {
-		return sdkerrors.Wrap(err, "getting sport event")
+		return nil, sdkerrors.Wrap(err, "getting sport-event")
 	}
 
-	if err := extractWinnerOddsIDs(&sportEvent, resolvedEvent); err != nil {
-		return sdkerrors.Wrap(err, "extract winner odds id")
+	if err := extractWinnerOddsUIDs(&sportEvent, resolutionPayload); err != nil {
+		return nil, sdkerrors.Wrap(err, "extract winner odds id")
 	}
 
-	if err := k.Keeper.ResolveSportEvent(ctx, resolvedEvent); err != nil {
-		return sdkerrors.Wrap(err, "resolve sport event")
+	resolvedSportEvent, err := k.Keeper.ResolveSportEvent(ctx, resolutionPayload)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "resolve sport-event")
 	}
 
-	return nil
+	return resolvedSportEvent, nil
 }
 
-func (k msgServer) getSportEvent(ctx sdk.Context, event types.ResolutionEvent) (types.SportEvent, error) {
-	if err := validateResolutionEvent(event); err != nil {
-		return types.SportEvent{}, err
-	}
-
-	sportEvent, found := k.Keeper.GetSportEvent(ctx, event.UID)
+func (k msgServer) getSportEventToResolve(ctx sdk.Context, resolutionPayload types.SportEventResolutionTicketPayload) (types.SportEvent, error) {
+	sportEvent, found := k.Keeper.GetSportEvent(ctx, resolutionPayload.UID)
 	if !found {
 		return types.SportEvent{}, types.ErrEventNotFound
 	}
 
-	if sportEvent.Status != types.SportEventStatus_STATUS_PENDING {
-
-		return types.SportEvent{}, types.ErrEventIsNotPending
+	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
+		return types.SportEvent{}, types.ErrEventIsNotActive
 	}
 
 	return sportEvent, nil
 }
 
-func extractWinnerOddsIDs(sportEvent *types.SportEvent, event *types.ResolutionEvent) error {
-	if event.Status == types.SportEventStatus_STATUS_RESULT_DECLARED {
+func extractWinnerOddsUIDs(sportEvent *types.SportEvent, event *types.SportEventResolutionTicketPayload) error {
+	if event.Status == types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
 		if event.ResolutionTS < sportEvent.StartTS {
 			return types.ErrResolutionTimeLessTnStart
 		}
 
 		validWinnerOdds := true
 		for _, wid := range event.WinnerOddsUIDs {
-			if !utils.StrSliceContains(sportEvent.OddsUIDs, wid) {
-				validWinnerOdds = false
+			validWinnerOdds = false
+			for _, o := range sportEvent.Odds {
+				if o.UID == wid {
+					validWinnerOdds = true
+				}
+			}
+			if !validWinnerOdds {
 				break
 			}
 		}
 
 		if !validWinnerOdds {
-			return types.ErrInvalidWinnerOdd
+			return types.ErrInvalidWinnerOdds
 		}
-	}
-
-	return nil
-}
-
-// validateResolutionEvent validates individual event acceptability
-func validateResolutionEvent(event types.ResolutionEvent) error {
-	// NOTE: Will have discussion for this in future, according to real scenerios
-	if event.Status == types.SportEventStatus_STATUS_PENDING || event.Status == types.SportEventStatus_STATUS_INVALID {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
-	}
-
-	if event.ResolutionTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid resolution timestamp for the sport event")
-	}
-
-	if !utils.IsValidUID(event.UID) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the sport event")
-	}
-
-	if event.Status == types.SportEventStatus_STATUS_RESULT_DECLARED && len(event.WinnerOddsUIDs) < 1 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough winner odds for the sports event")
-	}
-
-	for _, wid := range event.WinnerOddsUIDs {
-		if !utils.IsValidUID(wid) {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "odds-uid passed is invalid")
-		}
-	}
-
-	if event.Status > 4 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid event resolution status ")
 	}
 
 	return nil

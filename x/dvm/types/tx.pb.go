@@ -27,23 +27,27 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type MsgMutation struct {
+// MsgPubkeysChangeProposalRequest is the type of request for modification of
+// public keys.
+type MsgSubmitPubkeysChangeProposalRequest struct {
+	// creator is the account address of the creator.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Txs     string `protobuf:"bytes,2,opt,name=txs,proto3" json:"txs,omitempty"`
+	// ticket is the jwt ticket data.
+	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgMutation) Reset()         { *m = MsgMutation{} }
-func (m *MsgMutation) String() string { return proto.CompactTextString(m) }
-func (*MsgMutation) ProtoMessage()    {}
-func (*MsgMutation) Descriptor() ([]byte, []int) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) Reset()         { *m = MsgSubmitPubkeysChangeProposalRequest{} }
+func (m *MsgSubmitPubkeysChangeProposalRequest) String() string { return proto.CompactTextString(m) }
+func (*MsgSubmitPubkeysChangeProposalRequest) ProtoMessage()    {}
+func (*MsgSubmitPubkeysChangeProposalRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_78e7f1885428b6a5, []int{0}
 }
-func (m *MsgMutation) XXX_Unmarshal(b []byte) error {
+func (m *MsgSubmitPubkeysChangeProposalRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgMutation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgMutation.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSubmitPubkeysChangeProposalRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -53,48 +57,52 @@ func (m *MsgMutation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-func (m *MsgMutation) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMutation.Merge(m, src)
+func (m *MsgSubmitPubkeysChangeProposalRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSubmitPubkeysChangeProposalRequest.Merge(m, src)
 }
-func (m *MsgMutation) XXX_Size() int {
+func (m *MsgSubmitPubkeysChangeProposalRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgMutation) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMutation.DiscardUnknown(m)
+func (m *MsgSubmitPubkeysChangeProposalRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSubmitPubkeysChangeProposalRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgMutation proto.InternalMessageInfo
+var xxx_messageInfo_MsgSubmitPubkeysChangeProposalRequest proto.InternalMessageInfo
 
-func (m *MsgMutation) GetCreator() string {
+func (m *MsgSubmitPubkeysChangeProposalRequest) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgMutation) GetTxs() string {
+func (m *MsgSubmitPubkeysChangeProposalRequest) GetTicket() string {
 	if m != nil {
-		return m.Txs
+		return m.Ticket
 	}
 	return ""
 }
 
-type MsgMutationResponse struct {
+// MsgPubkeysChangeProposalResponse is the type of response for modification of
+// public keys.
+type MsgSubmitPubkeysChangeProposalResponse struct {
 	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 }
 
-func (m *MsgMutationResponse) Reset()         { *m = MsgMutationResponse{} }
-func (m *MsgMutationResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgMutationResponse) ProtoMessage()    {}
-func (*MsgMutationResponse) Descriptor() ([]byte, []int) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) Reset() {
+	*m = MsgSubmitPubkeysChangeProposalResponse{}
+}
+func (m *MsgSubmitPubkeysChangeProposalResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgSubmitPubkeysChangeProposalResponse) ProtoMessage()    {}
+func (*MsgSubmitPubkeysChangeProposalResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_78e7f1885428b6a5, []int{1}
 }
-func (m *MsgMutationResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgSubmitPubkeysChangeProposalResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgMutationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgMutationResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSubmitPubkeysChangeProposalResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -104,19 +112,130 @@ func (m *MsgMutationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *MsgMutationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgMutationResponse.Merge(m, src)
+func (m *MsgSubmitPubkeysChangeProposalResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSubmitPubkeysChangeProposalResponse.Merge(m, src)
 }
-func (m *MsgMutationResponse) XXX_Size() int {
+func (m *MsgSubmitPubkeysChangeProposalResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgMutationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgMutationResponse.DiscardUnknown(m)
+func (m *MsgSubmitPubkeysChangeProposalResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSubmitPubkeysChangeProposalResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgMutationResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgSubmitPubkeysChangeProposalResponse proto.InternalMessageInfo
 
-func (m *MsgMutationResponse) GetSuccess() bool {
+func (m *MsgSubmitPubkeysChangeProposalResponse) GetSuccess() bool {
+	if m != nil {
+		return m.Success
+	}
+	return false
+}
+
+// MsgVotePubkeysChangeRequest is the type of request to vote on the
+// modification of public keys proposal.
+type MsgVotePubkeysChangeRequest struct {
+	// creator is the account address of the creator.
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// ticket is the jwt ticket data.
+	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// public_key is the public key of the voter.
+	PublicKey string `protobuf:"bytes,3,opt,name=public_key,json=publicKey,proto3" json:"public_key,omitempty"`
+}
+
+func (m *MsgVotePubkeysChangeRequest) Reset()         { *m = MsgVotePubkeysChangeRequest{} }
+func (m *MsgVotePubkeysChangeRequest) String() string { return proto.CompactTextString(m) }
+func (*MsgVotePubkeysChangeRequest) ProtoMessage()    {}
+func (*MsgVotePubkeysChangeRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78e7f1885428b6a5, []int{2}
+}
+func (m *MsgVotePubkeysChangeRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgVotePubkeysChangeRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgVotePubkeysChangeRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgVotePubkeysChangeRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgVotePubkeysChangeRequest.Merge(m, src)
+}
+func (m *MsgVotePubkeysChangeRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgVotePubkeysChangeRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgVotePubkeysChangeRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgVotePubkeysChangeRequest proto.InternalMessageInfo
+
+func (m *MsgVotePubkeysChangeRequest) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgVotePubkeysChangeRequest) GetTicket() string {
+	if m != nil {
+		return m.Ticket
+	}
+	return ""
+}
+
+func (m *MsgVotePubkeysChangeRequest) GetPublicKey() string {
+	if m != nil {
+		return m.PublicKey
+	}
+	return ""
+}
+
+// MsgVotePubkeysChangeResponse is the type of response vote for public keys
+// modification.
+type MsgVotePubkeysChangeResponse struct {
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+}
+
+func (m *MsgVotePubkeysChangeResponse) Reset()         { *m = MsgVotePubkeysChangeResponse{} }
+func (m *MsgVotePubkeysChangeResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgVotePubkeysChangeResponse) ProtoMessage()    {}
+func (*MsgVotePubkeysChangeResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_78e7f1885428b6a5, []int{3}
+}
+func (m *MsgVotePubkeysChangeResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgVotePubkeysChangeResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgVotePubkeysChangeResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgVotePubkeysChangeResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgVotePubkeysChangeResponse.Merge(m, src)
+}
+func (m *MsgVotePubkeysChangeResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgVotePubkeysChangeResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgVotePubkeysChangeResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgVotePubkeysChangeResponse proto.InternalMessageInfo
+
+func (m *MsgVotePubkeysChangeResponse) GetSuccess() bool {
 	if m != nil {
 		return m.Success
 	}
@@ -124,29 +243,37 @@ func (m *MsgMutationResponse) GetSuccess() bool {
 }
 
 func init() {
-	proto.RegisterType((*MsgMutation)(nil), "sgenetwork.sge.dvm.MsgMutation")
-	proto.RegisterType((*MsgMutationResponse)(nil), "sgenetwork.sge.dvm.MsgMutationResponse")
+	proto.RegisterType((*MsgSubmitPubkeysChangeProposalRequest)(nil), "sgenetwork.sge.dvm.MsgSubmitPubkeysChangeProposalRequest")
+	proto.RegisterType((*MsgSubmitPubkeysChangeProposalResponse)(nil), "sgenetwork.sge.dvm.MsgSubmitPubkeysChangeProposalResponse")
+	proto.RegisterType((*MsgVotePubkeysChangeRequest)(nil), "sgenetwork.sge.dvm.MsgVotePubkeysChangeRequest")
+	proto.RegisterType((*MsgVotePubkeysChangeResponse)(nil), "sgenetwork.sge.dvm.MsgVotePubkeysChangeResponse")
 }
 
 func init() { proto.RegisterFile("sge/dvm/tx.proto", fileDescriptor_78e7f1885428b6a5) }
 
 var fileDescriptor_78e7f1885428b6a5 = []byte{
-	// 228 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x28, 0x4e, 0x4f, 0xd5,
-	0x4f, 0x29, 0xcb, 0xd5, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2a, 0x4e,
-	0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6, 0x2b, 0x4e, 0x4f, 0xd5, 0x4b, 0x29, 0xcb,
-	0x55, 0xb2, 0xe4, 0xe2, 0xf6, 0x2d, 0x4e, 0xf7, 0x2d, 0x2d, 0x49, 0x2c, 0xc9, 0xcc, 0xcf, 0x13,
-	0x92, 0xe0, 0x62, 0x4f, 0x2e, 0x4a, 0x4d, 0x2c, 0xc9, 0x2f, 0x92, 0x60, 0x54, 0x60, 0xd4, 0xe0,
-	0x0c, 0x82, 0x71, 0x85, 0x04, 0xb8, 0x98, 0x4b, 0x2a, 0x8a, 0x25, 0x98, 0xc0, 0xa2, 0x20, 0xa6,
-	0x92, 0x3e, 0x97, 0x30, 0x92, 0xd6, 0xa0, 0xd4, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0x90, 0x11,
-	0xc5, 0xa5, 0xc9, 0xc9, 0xa9, 0xc5, 0xc5, 0x60, 0x23, 0x38, 0x82, 0x60, 0x5c, 0xa3, 0x68, 0x2e,
-	0x66, 0xdf, 0xe2, 0x74, 0xa1, 0x10, 0x2e, 0x0e, 0xb8, 0x7d, 0xf2, 0x7a, 0x98, 0x6e, 0xd2, 0x43,
-	0x32, 0x55, 0x4a, 0x9d, 0x80, 0x02, 0x98, 0xb5, 0x4e, 0x0e, 0x27, 0x1e, 0xc9, 0x31, 0x5e, 0x78,
-	0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc,
-	0x78, 0x2c, 0xc7, 0x10, 0xa5, 0x96, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab,
-	0x5f, 0x9c, 0x9e, 0xaa, 0x0b, 0x35, 0x0d, 0xc4, 0xd6, 0xaf, 0x80, 0x84, 0x50, 0x65, 0x41, 0x6a,
-	0x71, 0x12, 0x1b, 0x38, 0x94, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0x90, 0x0e, 0x67, 0xe1,
-	0x39, 0x01, 0x00, 0x00,
+	// 325 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x92, 0x4f, 0x4f, 0xf2, 0x40,
+	0x10, 0xc6, 0x29, 0x24, 0xbc, 0x2f, 0x73, 0xd2, 0x3d, 0x98, 0x06, 0xb4, 0x31, 0x4d, 0x24, 0x5e,
+	0xdc, 0x1a, 0xbd, 0xa8, 0x27, 0x83, 0x47, 0x43, 0x42, 0x30, 0x31, 0xd1, 0x8b, 0xa1, 0xcb, 0x64,
+	0x69, 0x4a, 0xbb, 0xb5, 0xb3, 0x8b, 0xf4, 0x5b, 0x78, 0xe0, 0x43, 0x79, 0xe4, 0xe8, 0xd1, 0xc0,
+	0x17, 0x31, 0x14, 0x38, 0x18, 0x44, 0x08, 0xb7, 0x7d, 0x76, 0x32, 0xbf, 0x79, 0xe6, 0x0f, 0xec,
+	0x91, 0x44, 0xaf, 0x3b, 0x88, 0x3c, 0x3d, 0xe4, 0x49, 0xaa, 0xb4, 0x62, 0x8c, 0x24, 0xc6, 0xa8,
+	0xdf, 0x54, 0x1a, 0x72, 0x92, 0xc8, 0xbb, 0x83, 0xc8, 0x7d, 0x82, 0x93, 0x26, 0xc9, 0x07, 0xe3,
+	0x47, 0x81, 0x6e, 0x19, 0x3f, 0xc4, 0x8c, 0xee, 0x7a, 0x9d, 0x58, 0x62, 0x2b, 0x55, 0x89, 0xa2,
+	0x4e, 0xbf, 0x8d, 0xaf, 0x06, 0x49, 0x33, 0x1b, 0xfe, 0x89, 0x14, 0x3b, 0x5a, 0xa5, 0xb6, 0x75,
+	0x6c, 0x9d, 0x56, 0xda, 0x4b, 0xc9, 0x0e, 0xa0, 0xac, 0x03, 0x11, 0xa2, 0xb6, 0x8b, 0x79, 0x60,
+	0xa1, 0xdc, 0x06, 0xd4, 0x37, 0xa1, 0x29, 0x51, 0x31, 0xe1, 0x8c, 0x4d, 0x46, 0x08, 0x24, 0xca,
+	0xd9, 0xff, 0xdb, 0x4b, 0xe9, 0xc6, 0x50, 0x6b, 0x92, 0x7c, 0x54, 0x1a, 0x7f, 0x10, 0x76, 0x36,
+	0xc5, 0x8e, 0x00, 0x12, 0xe3, 0xf7, 0x03, 0xf1, 0x12, 0x62, 0x66, 0x97, 0xf2, 0x58, 0x65, 0xfe,
+	0x73, 0x8f, 0x99, 0x7b, 0x05, 0x87, 0xbf, 0xd7, 0xdb, 0xe4, 0xf4, 0x62, 0x54, 0x84, 0x52, 0x93,
+	0x24, 0x1b, 0x59, 0x50, 0xfb, 0xa3, 0x67, 0x76, 0xcd, 0x57, 0xb7, 0xc0, 0xb7, 0x5a, 0x41, 0xf5,
+	0x66, 0x97, 0xd4, 0x85, 0xf1, 0x01, 0xec, 0xaf, 0x74, 0xc5, 0xbc, 0x35, 0xc0, 0x75, 0xf3, 0xae,
+	0x9e, 0x6f, 0x9f, 0x30, 0xaf, 0xdb, 0xb8, 0xfd, 0x98, 0x38, 0xd6, 0x78, 0xe2, 0x58, 0x5f, 0x13,
+	0xc7, 0x7a, 0x9f, 0x3a, 0x85, 0xf1, 0xd4, 0x29, 0x7c, 0x4e, 0x9d, 0xc2, 0x73, 0x5d, 0x06, 0xba,
+	0x67, 0x7c, 0x2e, 0x54, 0xe4, 0x91, 0xc4, 0xb3, 0x05, 0x76, 0xf6, 0xf6, 0x86, 0xf3, 0xc3, 0xcd,
+	0x12, 0x24, 0xbf, 0x9c, 0x1f, 0xef, 0xe5, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x0f, 0xaf, 0x59,
+	0x03, 0xd0, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -161,7 +288,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.CallOption) (*MsgMutationResponse, error)
+	// PubkeysChangeProposal defines a method to submit a proposal for changing
+	// the allowed public keys.
+	SubmitPubkeysChangeProposal(ctx context.Context, in *MsgSubmitPubkeysChangeProposalRequest, opts ...grpc.CallOption) (*MsgSubmitPubkeysChangeProposalResponse, error)
+	// VotePubkeysChange defines a method to vote for a proposal for changing the
+	// allowed public keys.
+	VotePubkeysChange(ctx context.Context, in *MsgVotePubkeysChangeRequest, opts ...grpc.CallOption) (*MsgVotePubkeysChangeResponse, error)
 }
 
 type msgClient struct {
@@ -172,9 +304,18 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.CallOption) (*MsgMutationResponse, error) {
-	out := new(MsgMutationResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Msg/Mutation", in, out, opts...)
+func (c *msgClient) SubmitPubkeysChangeProposal(ctx context.Context, in *MsgSubmitPubkeysChangeProposalRequest, opts ...grpc.CallOption) (*MsgSubmitPubkeysChangeProposalResponse, error) {
+	out := new(MsgSubmitPubkeysChangeProposalResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Msg/SubmitPubkeysChangeProposal", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) VotePubkeysChange(ctx context.Context, in *MsgVotePubkeysChangeRequest, opts ...grpc.CallOption) (*MsgVotePubkeysChangeResponse, error) {
+	out := new(MsgVotePubkeysChangeResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Msg/VotePubkeysChange", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -183,35 +324,61 @@ func (c *msgClient) Mutation(ctx context.Context, in *MsgMutation, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	Mutation(context.Context, *MsgMutation) (*MsgMutationResponse, error)
+	// PubkeysChangeProposal defines a method to submit a proposal for changing
+	// the allowed public keys.
+	SubmitPubkeysChangeProposal(context.Context, *MsgSubmitPubkeysChangeProposalRequest) (*MsgSubmitPubkeysChangeProposalResponse, error)
+	// VotePubkeysChange defines a method to vote for a proposal for changing the
+	// allowed public keys.
+	VotePubkeysChange(context.Context, *MsgVotePubkeysChangeRequest) (*MsgVotePubkeysChangeResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) Mutation(ctx context.Context, req *MsgMutation) (*MsgMutationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Mutation not implemented")
+func (*UnimplementedMsgServer) SubmitPubkeysChangeProposal(ctx context.Context, req *MsgSubmitPubkeysChangeProposalRequest) (*MsgSubmitPubkeysChangeProposalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubmitPubkeysChangeProposal not implemented")
+}
+func (*UnimplementedMsgServer) VotePubkeysChange(ctx context.Context, req *MsgVotePubkeysChangeRequest) (*MsgVotePubkeysChangeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VotePubkeysChange not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_Mutation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgMutation)
+func _Msg_SubmitPubkeysChangeProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSubmitPubkeysChangeProposalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).Mutation(ctx, in)
+		return srv.(MsgServer).SubmitPubkeysChangeProposal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.dvm.Msg/Mutation",
+		FullMethod: "/sgenetwork.sge.dvm.Msg/SubmitPubkeysChangeProposal",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).Mutation(ctx, req.(*MsgMutation))
+		return srv.(MsgServer).SubmitPubkeysChangeProposal(ctx, req.(*MsgSubmitPubkeysChangeProposalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_VotePubkeysChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgVotePubkeysChangeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).VotePubkeysChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.dvm.Msg/VotePubkeysChange",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).VotePubkeysChange(ctx, req.(*MsgVotePubkeysChangeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -221,15 +388,19 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Mutation",
-			Handler:    _Msg_Mutation_Handler,
+			MethodName: "SubmitPubkeysChangeProposal",
+			Handler:    _Msg_SubmitPubkeysChangeProposal_Handler,
+		},
+		{
+			MethodName: "VotePubkeysChange",
+			Handler:    _Msg_VotePubkeysChange_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sge/dvm/tx.proto",
 }
 
-func (m *MsgMutation) Marshal() (dAtA []byte, err error) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -239,20 +410,20 @@ func (m *MsgMutation) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgMutation) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgMutation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Txs) > 0 {
-		i -= len(m.Txs)
-		copy(dAtA[i:], m.Txs)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Txs)))
+	if len(m.Ticket) > 0 {
+		i -= len(m.Ticket)
+		copy(dAtA[i:], m.Ticket)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Ticket)))
 		i--
 		dAtA[i] = 0x12
 	}
@@ -266,7 +437,7 @@ func (m *MsgMutation) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgMutationResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -276,12 +447,89 @@ func (m *MsgMutationResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgMutationResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgMutationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Success {
+		i--
+		if m.Success {
+			dAtA[i] = 1
+		} else {
+			dAtA[i] = 0
+		}
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgVotePubkeysChangeRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgVotePubkeysChangeRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgVotePubkeysChangeRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.PublicKey) > 0 {
+		i -= len(m.PublicKey)
+		copy(dAtA[i:], m.PublicKey)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.PublicKey)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Ticket) > 0 {
+		i -= len(m.Ticket)
+		copy(dAtA[i:], m.Ticket)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Ticket)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgVotePubkeysChangeResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgVotePubkeysChangeResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgVotePubkeysChangeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -310,7 +558,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgMutation) Size() (n int) {
+func (m *MsgSubmitPubkeysChangeProposalRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -320,14 +568,47 @@ func (m *MsgMutation) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Txs)
+	l = len(m.Ticket)
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
 
-func (m *MsgMutationResponse) Size() (n int) {
+func (m *MsgSubmitPubkeysChangeProposalResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Success {
+		n += 2
+	}
+	return n
+}
+
+func (m *MsgVotePubkeysChangeRequest) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Ticket)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.PublicKey)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgVotePubkeysChangeResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -345,7 +626,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgMutation) Unmarshal(dAtA []byte) error {
+func (m *MsgSubmitPubkeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -368,10 +649,10 @@ func (m *MsgMutation) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMutation: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSubmitPubkeysChangeProposalRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMutation: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSubmitPubkeysChangeProposalRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -408,7 +689,7 @@ func (m *MsgMutation) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Txs", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Ticket", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -436,7 +717,7 @@ func (m *MsgMutation) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Txs = string(dAtA[iNdEx:postIndex])
+			m.Ticket = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -459,7 +740,7 @@ func (m *MsgMutation) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgMutationResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgSubmitPubkeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -482,10 +763,226 @@ func (m *MsgMutationResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgMutationResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSubmitPubkeysChangeProposalResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgMutationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSubmitPubkeysChangeProposalResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Success", wireType)
+			}
+			var v int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				v |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			m.Success = bool(v != 0)
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgVotePubkeysChangeRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgVotePubkeysChangeRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgVotePubkeysChangeRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Ticket", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Ticket = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field PublicKey", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.PublicKey = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgVotePubkeysChangeResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgVotePubkeysChangeResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgVotePubkeysChangeResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

@@ -15,13 +15,17 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	icacontrollertypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
+
+	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 	sporteventmoduletypes "github.com/sge-network/sge/x/sportevent/types"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
@@ -38,10 +42,13 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
-		icahosttypes.StoreKey, strategicreservemoduletypes.StoreKey,
+		icacontrollertypes.StoreKey, icahosttypes.StoreKey,
+		strategicreservemoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
 		sporteventmoduletypes.StoreKey,
 		dvmmoduletypes.StoreKey,
+		orderbookmoduletypes.StoreKey,
+		housemoduletypes.StoreKey,
 	)
 
 	// Define transient store keys

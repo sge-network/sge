@@ -2,7 +2,6 @@ package simapp
 
 import (
 	"crypto/ed25519"
-	"crypto/rand"
 
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -34,11 +33,10 @@ var (
 
 	// TestParamValidatorAddresses represents the map of test validators
 	TestParamValidatorAddresses = make(map[string]TestValidator)
-)
 
-// nolint
-var (
-	// TestDVMPublicKey represents test public keys needed for dvm
-	// TestDVMPrivateKey represents test private keys needed for dvm
-	TestDVMPublicKey, TestDVMPrivateKey, _ = ed25519.GenerateKey(rand.Reader)
+	// TestDVMPublicKeys represents test public keys needed for dvm
+	TestDVMPublicKeys []ed25519.PublicKey
+
+	// TestDVMPrivateKeys represents test private keys needed for dvm
+	TestDVMPrivateKeys []ed25519.PrivateKey
 )

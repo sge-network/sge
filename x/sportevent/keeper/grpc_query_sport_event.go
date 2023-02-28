@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// SportEvents returns all the sport events
+// SportEvents returns all the sport-events
 func (k Keeper) SportEvents(c context.Context, req *types.QuerySportEventsRequest) (*types.QuerySportEventsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
@@ -31,7 +31,6 @@ func (k Keeper) SportEvents(c context.Context, req *types.QuerySportEventsReques
 		sportEvents = append(sportEvents, sportEvent)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -39,7 +38,7 @@ func (k Keeper) SportEvents(c context.Context, req *types.QuerySportEventsReques
 	return &types.QuerySportEventsResponse{SportEvent: sportEvents, Pagination: pageRes}, nil
 }
 
-// SportEvent returns a specific sport events by its UID
+// SportEvent returns a specific sport-events by its UID
 func (k Keeper) SportEvent(c context.Context, req *types.QuerySportEventRequest) (*types.QuerySportEventResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)

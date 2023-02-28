@@ -2,9 +2,10 @@ syntax = "proto3";
 package sgenetwork.sge.dvm;
 
 import "gogoproto/gogo.proto";
-import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "google/api/annotations.proto";
 import "sge/dvm/params.proto";
+import "sge/dvm/proposal.proto";
 
 option go_package = "github.com/sge-network/sge/x/dvm/types";
 
@@ -15,24 +16,105 @@ service Query {
     option (google.api.http).get = "/sge/dvm/params";
   }
   // Queries a list of PubKeys items.
-	rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
-		option (google.api.http).get = "/sge/dvm/pub_keys";
-	}
+  rpc PubKeys(QueryPubKeysRequest) returns (QueryPubKeysResponse) {
+    option (google.api.http).get = "/sge/dvm/pub_keys";
+  }
+  // Queries an active proposal by id.
+  rpc ActivePublicKeysChangeProposal(QueryActivePublicKeysChangeProposalRequest)
+      returns (QueryActivePublicKeysChangeProposalResponse) {
+    option (google.api.http).get = "/sge/dvm/active_pubkeys_proposal/{id}";
+  }
+  // Queries a list of active proposal items.
+  rpc ActivePublicKeysChangeProposals(
+      QueryActivePublicKeysChangeProposalsRequest)
+      returns (QueryActivePublicKeysChangeProposalsResponse) {
+    option (google.api.http).get = "/sge/dvm/active_pubkeys_proposals";
+  }
+  // Queries a finished proposal by id.
+  rpc FinishedPublicKeysChangeProposal(
+      QueryFinishedPublicKeysChangeProposalRequest)
+      returns (QueryFinishedPublicKeysChangeProposalResponse) {
+    option (google.api.http).get = "/sge/dvm/finished_pubkeys_proposal/{id}";
+  }
+  // Queries a list of finished proposal items.
+  rpc FinishedPublicKeysChangeProposals(
+      QueryFinishedPublicKeysChangeProposalsRequest)
+      returns (QueryFinishedPublicKeysChangeProposalsResponse) {
+    option (google.api.http).get = "/sge/dvm/finished_pubkeys_proposals";
+  }
 }
 
-// QueryParamsRequest is request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsRequest {}
 
-// QueryParamsResponse is response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
 message QueryParamsResponse {
   // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-message QueryPubKeysRequest {
-}
+// QueryPubKeysRequest is the request type for the public keys list query.
+// Query/PubKeys RPC method.
+message QueryPubKeysRequest {}
 
+// QueryPubKeysResponse is the response type for the public keys list query.
+// Query/PubKeys RPC method.
 message QueryPubKeysResponse {
+  // list is the list of allowed public keys.
   repeated string list = 1;
 }
 
+// QueryActivePublicKeysChangeProposalRequest is the request type for the
+// Query/ActivePublicKeysChangeProposal RPC method.
+message QueryActivePublicKeysChangeProposalRequest { uint64 id = 1; }
+
+// QueryActivePublicKeysChangeProposalResponse is the response type for the
+// Query/ActivePublicKeysChangeProposal RPC method.
+message QueryActivePublicKeysChangeProposalResponse {
+  // proposal holds the active proposal.
+  PublicKeysChangeProposal proposal = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryActivePublicKeysChangeProposalsRequest is the request type for the
+// Query/ActivePublicKeysChangeProposals RPC method.
+message QueryActivePublicKeysChangeProposalsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryActivePublicKeysChangeProposalsResponse is the response type for the
+// Query/ActivePublicKeysChangeProposals RPC method.
+message QueryActivePublicKeysChangeProposalsResponse {
+  // proposals hold the active proposals.
+  repeated PublicKeysChangeProposal proposals = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// FinishedPublicKeysChangeProposal is the request type for the
+// Query/FinishedPublicKeysChangeProposal RPC method.
+message QueryFinishedPublicKeysChangeProposalRequest { uint64 id = 1; }
+
+// FinishedPublicKeysChangeProposal is the response type for the
+// Query/FinishedPublicKeysChangeProposal RPC method.
+message QueryFinishedPublicKeysChangeProposalResponse {
+  // proposal holds the finished proposal.
+  PublicKeysChangeFinishedProposal proposal = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+// QueryFinishedPublicKeysChangeProposalsRequest is the request type for the
+// Query/FinishedPublicKeysChangeProposals RPC method.
+message QueryFinishedPublicKeysChangeProposalsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryFinishedPublicKeysChangeProposalsResponse is the response type for the
+// Query/FinishedPublicKeysChangeProposals RPC method.
+message QueryFinishedPublicKeysChangeProposalsResponse {
+  // proposals hold the finished proposals.
+  repeated PublicKeysChangeFinishedProposal proposals = 1
+      [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

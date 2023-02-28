@@ -23,15 +23,11 @@ var (
 	_ = baseapp.Paramspace
 )
 
-// nolint
 const (
+	//nolint:gosec
 	opWeightMsgPlaceBet = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgPlaceBet int = 100
-
-	opWeightMsgSettleBet = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgSettleBet int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -82,17 +78,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgPlaceBet,
 		betsimulation.SimulateMsgPlaceBet(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgSettleBet int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgSettleBet, &weightMsgSettleBet, nil,
-		func(_ *rand.Rand) {
-			weightMsgSettleBet = defaultWeightMsgSettleBet
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgSettleBet,
-		betsimulation.SimulateMsgSettleBet(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations

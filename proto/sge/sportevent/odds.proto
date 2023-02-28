@@ -1,0 +1,18 @@
+syntax = "proto3";
+package sgenetwork.sge.sportevent;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/sportevent/types";
+
+// Odds is a representation of and sport-event odds items.
+message Odds {
+  // uid is the universal unique identifier of the odds.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // meta contains any human-readable metadata of the odds.
+  string meta = 2;
+}

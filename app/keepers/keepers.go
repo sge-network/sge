@@ -35,6 +35,8 @@ import (
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ica "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts"
+	icacontrollerkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/keeper"
+	icacontrollertypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/types"
 	icahost "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
@@ -65,6 +67,14 @@ import (
 	dvmmodulekeeper "github.com/sge-network/sge/x/dvm/keeper"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
 
+	housemodule "github.com/sge-network/sge/x/house"
+	housemodulekeeper "github.com/sge-network/sge/x/house/keeper"
+	housemoduletypes "github.com/sge-network/sge/x/house/types"
+
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -76,31 +86,36 @@ type AppKeepers struct {
 	memKeys map[string]*sdk.MemoryStoreKey
 
 	// keepers
-	AccountKeeper    authkeeper.AccountKeeper
-	BankKeeper       bankkeeper.Keeper
-	CapabilityKeeper *capabilitykeeper.Keeper
-	StakingKeeper    stakingkeeper.Keeper
-	SlashingKeeper   slashingkeeper.Keeper
-	MintKeeper       mintkeeper.Keeper
-	DistrKeeper      distrkeeper.Keeper
-	GovKeeper        govkeeper.Keeper
-	CrisisKeeper     crisiskeeper.Keeper
-	UpgradeKeeper    upgradekeeper.Keeper
-	ParamsKeeper     paramskeeper.Keeper
-	IBCKeeper        *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
-	ICAHostKeeper    icahostkeeper.Keeper
-	EvidenceKeeper   evidencekeeper.Keeper
-	TransferKeeper   ibctransferkeeper.Keeper
-	FeeGrantKeeper   feegrantkeeper.Keeper
-	AuthzKeeper      authzkeeper.Keeper
+	AccountKeeper       authkeeper.AccountKeeper
+	BankKeeper          bankkeeper.Keeper
+	CapabilityKeeper    *capabilitykeeper.Keeper
+	StakingKeeper       stakingkeeper.Keeper
+	SlashingKeeper      slashingkeeper.Keeper
+	MintKeeper          mintkeeper.Keeper
+	DistrKeeper         distrkeeper.Keeper
+	GovKeeper           govkeeper.Keeper
+	CrisisKeeper        crisiskeeper.Keeper
+	UpgradeKeeper       upgradekeeper.Keeper
+	ParamsKeeper        paramskeeper.Keeper
+	IBCKeeper           *ibckeeper.Keeper
+	ICAControllerKeeper icacontrollerkeeper.Keeper
+	ICAHostKeeper       icahostkeeper.Keeper
+	EvidenceKeeper      evidencekeeper.Keeper
+	TransferKeeper      ibctransferkeeper.Keeper
+	FeeGrantKeeper      feegrantkeeper.Keeper
+	AuthzKeeper         authzkeeper.Keeper
 
 	StrategicreserveKeeper strategicreservemodulekeeper.Keeper
 	SporteventKeeper       sporteventmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
+	OrderBookKeeper        orderbookmodulekeeper.Keeper
+	HouseKeeper            housemodulekeeper.Keeper
 	SporteventModule       sporteventmodule.AppModule
 	StrategicreserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
+	OrderBookModule        orderbookmodule.AppModule
+	HouseModule            housemodule.AppModule
 
 	// modules
 	ICAModule      ica.AppModule
@@ -125,7 +140,6 @@ func NewAppKeeper(
 	invCheckPeriod uint,
 	appOpts servertypes.AppOptions,
 ) AppKeepers {
-
 	appKeepers := AppKeepers{}
 	// Set keys KVStoreKey, TransientStoreKey, MemoryStoreKey
 	appKeepers.GenerateKeys()
@@ -148,6 +162,7 @@ func NewAppKeeper(
 	// grant capabilities for the ibc and ibc-transfer modules
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
+	appKeepers.ScopedICAControllerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
 	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 
 	appKeepers.CapabilityKeeper.Seal()
@@ -243,6 +258,7 @@ func NewAppKeeper(
 		),
 	)
 
+	// UpgradeKeeper must be created before IBCKeeper
 	appKeepers.UpgradeKeeper = upgradekeeper.NewKeeper(
 		skipUpgradeHeights,
 		appKeepers.keys[upgradetypes.StoreKey],
@@ -294,12 +310,12 @@ func NewAppKeeper(
 	appKeepers.TransferModule = transfer.NewAppModule(appKeepers.TransferKeeper)
 	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
 
-	// appKeepers.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
-	// 	appCodec, appKeepers.keys[icacontrollertypes.StoreKey], appKeepers.GetSubspace(icacontrollertypes.SubModuleName),
-	// 	appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
-	// 	appKeepers.IBCKeeper.ChannelKeeper, &appKeepers.IBCKeeper.PortKeeper,
-	// 	appKeepers.ScopedICAControllerKeeper, bApp.MsgServiceRouter(),
-	// )
+	appKeepers.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
+		appCodec, appKeepers.keys[icacontrollertypes.StoreKey], appKeepers.GetSubspace(icacontrollertypes.SubModuleName),
+		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
+		appKeepers.IBCKeeper.ChannelKeeper, &appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedICAControllerKeeper, bApp.MsgServiceRouter(),
+	)
 
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
 		appCodec, appKeepers.keys[icahosttypes.StoreKey],
@@ -311,18 +327,7 @@ func NewAppKeeper(
 		bApp.MsgServiceRouter(),
 	)
 
-	// appKeepers.ICAModule = ica.NewAppModule(&appKeepers.ICAControllerKeeper, &appKeepers.ICAHostKeeper)
-
-	// appKeepers.ICAMauthKeeper = icamauthkeeper.NewKeeper(
-	// 	appCodec,
-	// 	appKeepers.keys[icamauthtypes.StoreKey],
-	// 	appKeepers.ICAControllerKeeper,
-	// 	appKeepers.ScopedICAMauthKeeper,
-	// )
-	// appKeepers.ICAMauthModule = icamauth.NewAppModule(appCodec, appKeepers.ICAMauthKeeper)
-	// icaMauthIBCModule := icamauth.NewIBCModule(appKeepers.ICAMauthKeeper)
-
-	// icaControllerIBCModule := icacontroller.NewIBCMiddleware(icaMauthIBCModule, appKeepers.ICAControllerKeeper)
+	appKeepers.ICAModule = ica.NewAppModule(&appKeepers.ICAControllerKeeper, &appKeepers.ICAHostKeeper)
 	icaHostIBCModule := icahost.NewIBCModule(appKeepers.ICAHostKeeper)
 
 	// Create evidence Keeper for to register the IBC light client misbehaviour evidence route
@@ -341,13 +346,24 @@ func NewAppKeeper(
 	)
 	appKeepers.DVMModule = dvmmodule.NewAppModule(appCodec, appKeepers.DVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
+	appKeepers.OrderBookKeeper = *orderbookmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[orderbookmoduletypes.StoreKey],
+		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
+		appKeepers.BankKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BetKeeper,
+	)
+	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
+
 	appKeepers.SporteventKeeper = *sporteventmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[sporteventmoduletypes.StoreKey],
 		appKeepers.keys[sporteventmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(sporteventmoduletypes.ModuleName),
 		sporteventmodulekeeper.ExpectedKeepers{
-			DVMKeeper: appKeepers.DVMKeeper,
+			DVMKeeper:  appKeepers.DVMKeeper,
+			BookKeeper: appKeepers.OrderBookKeeper,
 		},
 	)
 	appKeepers.SporteventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SporteventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
@@ -360,12 +376,20 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
 		betmodulekeeper.ExpectedKeepers{
-			SporteventKeeper:       appKeepers.SporteventKeeper,
-			StrategicreserveKeeper: appKeepers.StrategicreserveKeeper,
-			DVMKeeper:              appKeepers.DVMKeeper,
+			SporteventKeeper: appKeepers.SporteventKeeper,
+			OrderBookKeeper:  appKeepers.OrderBookKeeper,
+			DVMKeeper:        appKeepers.DVMKeeper,
 		},
 	)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.StrategicreserveKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
+
+	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[housemoduletypes.StoreKey],
+		appKeepers.OrderBookKeeper,
+		appKeepers.GetSubspace(housemoduletypes.ModuleName),
+	)
+	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
@@ -376,7 +400,6 @@ func NewAppKeeper(
 
 	/****  Module Options ****/
 	return appKeepers
-
 }
 
 // GetSubspace returns a param subspace for a given module name.
@@ -387,9 +410,9 @@ func (appKeepers *AppKeepers) GetSubspace(moduleName string) paramstypes.Subspac
 
 // initParamsKeeper init params keeper and its subspaces
 func initParamsKeeper(appCodec codec.BinaryCodec,
-	// nolint
 	legacyAmino *codec.LegacyAmino,
-	key, tkey sdk.StoreKey) paramskeeper.Keeper {
+	key, tkey sdk.StoreKey,
+) paramskeeper.Keeper {
 	paramsKeeper := paramskeeper.NewKeeper(appCodec, legacyAmino, key, tkey)
 
 	paramsKeeper.Subspace(authtypes.ModuleName)
@@ -402,11 +425,14 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(crisistypes.ModuleName)
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
+	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(betmoduletypes.ModuleName)
 	paramsKeeper.Subspace(sporteventmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
+	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
+	paramsKeeper.Subspace(housemoduletypes.ModuleName)
 
 	return paramsKeeper
 }

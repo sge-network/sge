@@ -11,6 +11,7 @@ import (
 
 func TestParamChangest(t *testing.T) {
 	s := rand.NewSource(1)
+	//nolint:gosec
 	r := rand.New(s)
 
 	expected := []struct {
@@ -31,5 +32,4 @@ func TestParamChangest(t *testing.T) {
 		require.Equal(t, expected[i].simValue, p.SimValue()(r))
 		require.Equal(t, expected[i].subspace, p.Subspace())
 	}
-
 }

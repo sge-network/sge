@@ -1,11 +1,7 @@
 package cli_test
 
 import (
-	"crypto/ed25519"
-	"crypto/x509"
-	"encoding/pem"
 	"fmt"
-	"strconv"
 	"testing"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
@@ -18,32 +14,27 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Prevent strconv unused error
-var _ = strconv.IntSize
-
-func networkWithPublicKeys(t *testing.T) (*network.Network, *types.PublicKeys, *ed25519.PrivateKey) {
+func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	bs, err := x509.MarshalPKIXPublicKey(simappUtil.TestDVMPublicKey)
-	if err != nil {
-		panic(err)
-	}
-	state.PublicKeys = &types.PublicKeys{
-		List: []string{string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: bs}))},
+	pubkeys := simappUtil.GenerateDvmPublicKeys(5)
+
+	state.KeyVault = types.KeyVault{
+		PublicKeys: pubkeys,
 	}
 
 	buf, err := cfg.Codec.MarshalJSON(&state)
 	require.NoError(t, err)
 	cfg.GenesisState[types.ModuleName] = buf
 
-	return network.New(t, cfg), state.PublicKeys, &simappUtil.TestDVMPrivateKey
+	return network.New(t, cfg), &state.KeyVault
 }
 
 func TestCmdPubKeysList(t *testing.T) {
-	net, _, _ := networkWithPublicKeys(t)
+	net, _ := networkWithPublicKeys(t)
 
 	t.Run("PubKeysList", func(t *testing.T) {
 		ctx := net.Validators[0].ClientCtx
@@ -74,7 +65,6 @@ func TestCmdPubKeysList(t *testing.T) {
 					require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 					require.True(t, len(resp.List) > 0)
 					t.Log(resp.List)
-
 				}
 			})
 		}
