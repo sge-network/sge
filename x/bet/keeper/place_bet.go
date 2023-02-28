@@ -91,6 +91,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 	if sportevent.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
+
 	return sportevent, nil
 }
 
