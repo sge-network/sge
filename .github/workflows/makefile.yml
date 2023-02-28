@@ -26,7 +26,7 @@ jobs:
     - name: Checkout destination repository
       uses: actions/checkout@v3.0.0
       with:     
-        ref: osmonauts-lcd-package-added
+        ref: master
         repository: ${{ secrets.ST_REPO }}/sgejs
         path: sgejs
         token: ${{ secrets.ST_TOKEN }}
@@ -39,7 +39,6 @@ jobs:
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-        npm install @osmonauts/lcd --prefix sgejs
         npm install --prefix sgejs
 
     - name: Delete src/codegen and types
