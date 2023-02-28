@@ -1,6 +1,7 @@
 package keeper_test
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -146,7 +147,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		Status:  types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 	})
 
-	t.Run("Error in ticket fields validation", func(t *testing.T) {
+	t.Run("invalid uid for the sport event", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
 			"uid":           "invalid uid",
 			"status":        types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
@@ -209,6 +210,41 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
+		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.Nil(t, response)
+	})
+
+	t.Run("lots of winner odds uid", func(t *testing.T) {
+		validEmptyTicketClaims := jwt.MapClaims{
+			"uid":              u1,
+			"status":           types.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+			"resolution_ts":    uint64(time.Now().Unix()),
+			"winner_odds_uids": []string{uuid.NewString(), uuid.NewString()},
+			"exp":              9999999999,
+			"iat":              1111111111,
+		}
+		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
+		require.NoError(t, err)
+
+		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
+		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.Nil(t, response)
+	})
+
+	t.Run("canceled or aborted with winner id", func(t *testing.T) {
+		validEmptyTicketClaims := jwt.MapClaims{
+			"uid":              u1,
+			"status":           types.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
+			"resolution_ts":    uint64(time.Now().Unix()),
+			"winner_odds_uids": []string{uuid.NewString()},
+			"exp":              9999999999,
+			"iat":              1111111111,
+		}
+		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
+		require.NoError(t, err)
+
+		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
+		fmt.Println(err)
 		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
 		assert.Nil(t, response)
 	})
