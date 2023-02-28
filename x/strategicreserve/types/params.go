@@ -61,19 +61,28 @@ func (p Params) Validate() error {
 
 // String implements the Stringer interface.
 func (p Params) String() string {
-	out, _ := yaml.Marshal(p)
+	out, err := yaml.Marshal(p)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 
 // String implements the Stringer interface.
 func (sp SRPool) String() string {
-	out, _ := yaml.Marshal(sp)
+	out, err := yaml.Marshal(sp)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 
 // String implements the Stringer interface.
 func (r Reserver) String() string {
-	out, _ := yaml.Marshal(r)
+	out, err := yaml.Marshal(r)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 

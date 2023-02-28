@@ -2,6 +2,7 @@ package simulation_test
 
 import (
 	"encoding/json"
+	//#nosec
 	"math/rand"
 	"testing"
 
@@ -29,7 +30,7 @@ func TestRandomizedGenState(t *testing.T) {
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	s := rand.NewSource(1)
-	//nolint:gosec
+	//#nosec
 	r := rand.New(s)
 
 	simState := module.SimulationState{
@@ -76,7 +77,7 @@ func TestRandomizedGenState1(t *testing.T) {
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
 	s := rand.NewSource(1)
-	//nolint:gosec
+	//#nosec
 	r := rand.New(s)
 	// all these tests will panic
 	tests := []struct {

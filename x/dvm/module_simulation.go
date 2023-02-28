@@ -1,6 +1,7 @@
 package dvm
 
 import (
+	//#nosec
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -24,7 +25,7 @@ var (
 )
 
 const (
-	//nolint:gosec
+	//#nosec
 	opWeightMsgChangePubkeysListProposal = "op_weight_msg_change_pubkeys_list_proposal"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgChangePubkeysListProposal int = 100

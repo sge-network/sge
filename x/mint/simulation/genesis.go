@@ -4,6 +4,7 @@ package simulation
 
 import (
 	"encoding/json"
+	//#nosec
 	"math/rand"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"

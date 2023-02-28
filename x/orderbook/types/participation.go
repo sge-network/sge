@@ -33,6 +33,9 @@ func NewBookParticipation(
 
 // String returns a human readable string representation of a BookParticipation.
 func (bp BookParticipation) String() string {
-	out, _ := yaml.Marshal(bp)
+	out, err := yaml.Marshal(bp)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }

@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/orderbook/types"
 	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
@@ -63,7 +64,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 			settled++
 			allSettled = false
 		}
-		if settled >= int(countToBeSettled) {
+		if cast.ToUint64(settled) >= countToBeSettled {
 			break
 		}
 	}

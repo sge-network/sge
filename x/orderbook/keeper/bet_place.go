@@ -3,6 +3,7 @@ package keeper
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -47,7 +48,7 @@ func (k Keeper) ProcessBetPlacement(
 	if err != nil {
 		return
 	}
-	if int(book.ParticipationCount) != len(bps) {
+	if book.ParticipationCount != cast.ToUint64(len(bps)) {
 		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookUID)
 		return
 	}
@@ -59,7 +60,7 @@ func (k Keeper) ProcessBetPlacement(
 	if err != nil {
 		return
 	}
-	if int(book.ParticipationCount) != len(pes) {
+	if book.ParticipationCount != cast.ToUint64(len(pes)) {
 		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookUID, oddsUID)
 		return
 	}

@@ -4,6 +4,7 @@ package simulation
 
 import (
 	"fmt"
+	//#nosec
 	"math/rand"
 
 	"github.com/cosmos/cosmos-sdk/x/simulation"

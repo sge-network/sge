@@ -41,6 +41,9 @@ func UnmarshalBook(cdc codec.BinaryCodec, value []byte) (book OrderBook, err err
 
 // String returns a human readable string representation of a OrderBook.
 func (ob OrderBook) String() string {
-	out, _ := yaml.Marshal(ob)
+	out, err := yaml.Marshal(ob)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }

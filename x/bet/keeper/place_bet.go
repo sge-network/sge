@@ -5,6 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
 	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	"github.com/spf13/cast"
 )
 
 // PlaceBet stores a new bet in KVStore
@@ -87,7 +88,7 @@ func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventt
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
 	}
 
-	if sportevent.EndTS < uint64(ctx.BlockTime().Unix()) {
+	if sportevent.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
 	return sportevent, nil
