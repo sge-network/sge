@@ -101,6 +101,17 @@ func (payload *SportEventResolutionTicketPayload) Validate() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the sports event is invalid")
 	}
 
+	switch payload.Status {
+	case SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED:
+		if len(payload.WinnerOddsUIDs) > maxWinnerUIDs {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "currently only %d winner uid is allowed", maxWinnerUIDs)
+		}
+	default:
+		if len(payload.WinnerOddsUIDs) > 0 {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "winner odds should be set if the status is 'result declared'")
+		}
+	}
+
 	if payload.ResolutionTS == 0 {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid resolution timestamp for the sport-event")
 	}
