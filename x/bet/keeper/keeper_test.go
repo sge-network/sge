@@ -140,6 +140,7 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
+		"odds_type":     1,
 	}
 	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
 	require.Nil(t, err)
@@ -147,10 +148,9 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	testBet = &types.MsgPlaceBet{
 		Creator: testCreator,
 		Bet: &types.PlaceBetFields{
-			UID:      betUID,
-			Amount:   sdk.NewInt(500),
-			Ticket:   testPlaceBetTicket,
-			OddsType: 1,
+			UID:    betUID,
+			Amount: sdk.NewInt(500),
+			Ticket: testPlaceBetTicket,
 		},
 	}
 	resPlaceBet, err := betSrv.PlaceBet(wctx, testBet)

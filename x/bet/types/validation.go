@@ -17,11 +17,6 @@ func BetFieldsValidation(bet *PlaceBetFields) error {
 		return ErrInvalidAmount
 	}
 
-	if bet.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
-		bet.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
-		return ErrInvalidOddsType
-	}
-
 	if bet.Ticket == "" || strings.Contains(bet.Ticket, " ") {
 		return ErrInvalidTicket
 	}
@@ -57,6 +52,11 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 
 	if ticketData.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
 		return ErrMaxLossMultiplierCanNotBeMoreThanOne
+	}
+
+	if ticketData.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
+		ticketData.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
+		return ErrInvalidOddsType
 	}
 
 	return nil

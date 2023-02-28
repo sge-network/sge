@@ -91,7 +91,7 @@ func IsValidUID(uid string) bool {
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
+func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdds) (*Bet, error) {
 	return &Bet{
 		Creator:           creator,
 		UID:               bet.UID,
@@ -99,7 +99,7 @@ func NewBet(creator string, bet *PlaceBetFields, odds *BetOdds) (*Bet, error) {
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
 		Amount:            bet.Amount,
-		OddsType:          bet.OddsType,
+		OddsType:          oddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
 	}, nil
 }
