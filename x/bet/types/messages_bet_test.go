@@ -28,10 +28,9 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 			msg: types.MsgPlaceBet{
 				Creator: sample.AccAddress(),
 				Bet: &types.PlaceBetFields{
-					UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
-					Amount:   sdk.NewInt(int64(10)),
-					Ticket:   "Ticket",
-					OddsType: 1,
+					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+					Amount: sdk.NewInt(int64(10)),
+					Ticket: "Ticket",
 				},
 			},
 		},
@@ -79,8 +78,9 @@ func TestNewBet(t *testing.T) {
 			OddsUID:       inputBetOdds.UID,
 			OddsValue:     inputBetOdds.Value,
 			Amount:        inputBet.Amount,
+			OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
 		}
-		res, err := types.NewBet(creator, inputBet, inputBetOdds)
+		res, err := types.NewBet(creator, inputBet, types.OddsType_ODDS_TYPE_DECIMAL, inputBetOdds)
 		require.Equal(t, expectedBet, res)
 		require.Nil(t, err)
 	})

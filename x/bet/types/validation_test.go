@@ -17,51 +17,37 @@ func TestBetFieldsValidation(t *testing.T) {
 		{
 			desc: "space in UID",
 			bet: &types.PlaceBetFields{
-				UID:      " ",
-				Amount:   sdk.NewInt(int64(10)),
-				Ticket:   "Ticket",
-				OddsType: 1,
+				UID:    " ",
+				Amount: sdk.NewInt(int64(10)),
+				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid UID",
 			bet: &types.PlaceBetFields{
-				UID:      "invalidUID",
-				Amount:   sdk.NewInt(int64(10)),
-				Ticket:   "Ticket",
-				OddsType: 1,
+				UID:    "invalidUID",
+				Amount: sdk.NewInt(int64(10)),
+				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidBetUID,
 		},
 		{
 			desc: "invalid amount",
 			bet: &types.PlaceBetFields{
-				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount:   sdk.NewInt(int64(-1)),
-				Ticket:   "Ticket",
-				OddsType: 1,
+				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount: sdk.NewInt(int64(-1)),
+				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidAmount,
 		},
 		{
 			desc: "empty amount",
 			bet: &types.PlaceBetFields{
-				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Ticket:   "Ticket",
-				OddsType: 1,
+				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidAmount,
-		},
-		{
-			desc: "space in ticket",
-			bet: &types.PlaceBetFields{
-				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount:   sdk.NewInt(int64(10)),
-				Ticket:   " ",
-				OddsType: 1,
-			},
-			err: types.ErrInvalidTicket,
 		},
 		{
 			desc: "space in ticket",
@@ -70,15 +56,14 @@ func TestBetFieldsValidation(t *testing.T) {
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: " ",
 			},
-			err: types.ErrInvalidOddsType,
+			err: types.ErrInvalidTicket,
 		},
 		{
 			desc: "valid message",
 			bet: &types.PlaceBetFields{
-				UID:      "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount:   sdk.NewInt(int64(10)),
-				Ticket:   "Ticket",
-				OddsType: 1,
+				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				Amount: sdk.NewInt(int64(10)),
+				Ticket: "Ticket",
 			},
 		},
 	}
@@ -96,10 +81,11 @@ func TestBetFieldsValidation(t *testing.T) {
 
 func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
-		desc    string
-		betOdds *types.BetOdds
-		kyc     types.KycDataPayload
-		err     error
+		desc     string
+		betOdds  *types.BetOdds
+		kyc      types.KycDataPayload
+		oddsType types.OddsType
+		err      error
 	}{
 		{
 			desc: "space in odds UID",
@@ -114,7 +100,8 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			err: types.ErrInvalidOddsUID,
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrInvalidOddsUID,
 		},
 		{
 			desc: "space in sport-event UID",
@@ -129,7 +116,8 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			err: types.ErrInvalidSportEventUID,
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrInvalidSportEventUID,
 		},
 		{
 			desc: "empty odds value",
@@ -144,7 +132,8 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			err: types.ErrEmptyOddsValue,
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrEmptyOddsValue,
 		},
 		{
 			desc: "no kyc",
@@ -154,6 +143,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
 		},
 		{
 			desc: "no kyc ID field",
@@ -168,7 +158,8 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       "",
 			},
-			err: types.ErrUserKycFailed,
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrUserKycFailed,
 		},
 		{
 			desc: "valid message",
@@ -183,6 +174,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
 		},
 	}
 	for _, tc := range tcs {
@@ -190,6 +182,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 			p := types.BetPlacementTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
+				OddsType:     tc.oddsType,
 			}
 			err := p.Validate(testAddress)
 			if tc.err != nil {

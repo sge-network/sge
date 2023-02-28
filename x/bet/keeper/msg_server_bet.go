@@ -39,7 +39,7 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 			err
 	}
 
-	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData.SelectedOdds)
+	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData.OddsType, ticketData.SelectedOdds)
 	if err != nil {
 		return &types.MsgPlaceBetResponse{
 				Error: err.Error(),
