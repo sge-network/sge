@@ -46,7 +46,6 @@ message BookParticipation {
 
   uint64 exposures_not_filled = 7
       [ (gogoproto.moretags) = "yaml:\"exposures_not_filled\"" ];
-  ;
 
   // total_bet_amount is the total bet amount corresponding to all exposure
   string total_bet_amount = 8 [
