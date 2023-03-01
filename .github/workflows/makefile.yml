@@ -37,20 +37,29 @@ jobs:
       run: |
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
-        git -C sgejs config user.email "action@github.com"
-        git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit -am "Proto Deployment [skip ci]"          
+     
 
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
 
-#     - name: Git commit
-#       run: |
-#         git -C sgejs config user.email "action@github.com"
-#         git -C sgejs config user.name "GitHub Action"
-#         git -C sgejs commit -am "Proto Deployment [skip ci]"          
+    - name: Check for changes
+      id: git-status
+      run: echo "STATUS=${git status --porcelain}" >> $GITHUB_OUTPUT
+
+    - name: Commit changes
+      if: steps.git-status.outputs.status != ''
+      run: |
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"  
+
+    - name: Git commit
+      run: |
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"  --allow-empty-commit        
 
     - name: Npm Run Codegen
       run: |
@@ -69,6 +78,7 @@ jobs:
         
     - name: Bump NPM version
       run: |
+        git status
         cd sgejs    
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
