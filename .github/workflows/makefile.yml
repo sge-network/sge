@@ -42,55 +42,57 @@ jobs:
 
 
 
-#     - name: Copy Proto Files
-#       run: |
-#         cp -r sge/proto sgejs
-#         git -C sgejs add .
+    - name: Copy Proto Files
+      run: |
+        cp -r sge/proto sgejs
+        git -C sgejs add .
 
-#     - name: Npm Install
-#       run: |
-#         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-#         npm install --prefix sgejs
+    - name: Npm Install
+      run: |
+        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+        npm install --prefix sgejs
 
-#     - name: Delete src/codegen and types
-#       run: |
-#         git -C sgejs rm -rf src/codegen
-#         git -C sgejs rm -rf types
+    - name: Delete src/codegen and types
+      run: |
+        git -C sgejs rm -rf src/codegen
+        git -C sgejs rm -rf types
         
 #     - name: Npm Run Codegen
 #       run: |
 #         npm run codegen --prefix sgejs
         
-#     - name: Commit files & push sgejs
-#       run: |
-#         cd sgejs
-#         git add .
-#         git config user.email "action@github.com"
-#         git config user.name "GitHub Action"
-#         git commit -am "Proto Deployment [skip ci]"
+    - name: Commit files & push sgejs
+      run: |
+        cd sgejs
+        git add .
+        git config user.email "action@github.com"
+        git config user.name "GitHub Action"
+        git commit -am "Proto Deployment [skip ci]"
 ##          git push
 
-#     - name: Determine NPM version
-#       run: |
-#         if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
-#           echo "::set-env name=NPM_VERSION::major"
-#         elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
-#           echo "::set-env name=NPM_VERSION::minor"
-#         elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
-#           echo "::set-env name=NPM_VERSION::patch"
-#         fi
+    - name: Determine NPM version
+      run: |
+        if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
+          echo "::set-env name=NPM_VERSION::major"
+        elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
+          echo "::set-env name=NPM_VERSION::minor"
+        elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
+          echo "::set-env name=NPM_VERSION::patch"
+        fi
         
-#     - name: Bump NPM version
-#       run: |
-#         ls -a
-#         cd sgejs
-#         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
-#           npm version major
-#         elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
-#           npm version minor
-#         elif [ "${{ env.NPM_VERSION }}" == "patch" ]; then
-#           npm version patch
-#         fi
+    - name: Bump NPM version
+      run: |
+        ls -a
+        cd sgejs
+        if [ "${{ env.NPM_VERSION }}" == "major" ]; then
+          npm version major
+        elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
+          npm version minor
+        elif [ "${{ env.NPM_VERSION }}" == "patch" ]; then
+          npm version patch
+        fi
+        ####
+        jq -r '.version' package.json
         
 #     - name: Publish NPM Package
 #       run: |
