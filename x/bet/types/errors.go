@@ -33,7 +33,7 @@ var (
 	ErrInConvertingOddsToDec                = sdkerrors.Register(ModuleName, 2022, "internal error in converting odds value from string to sdk.Dec")
 	ErrInConvertingOddsToInt                = sdkerrors.Register(ModuleName, 2023, "internal error in converting odds value from string to sdk.Int")
 	ErrOddsDataNotFound                     = sdkerrors.Register(ModuleName, 2024, "odds does not exist in ticket payload")
-	ErrInvalidOddsType                      = sdkerrors.Register(ModuleName, 2025, "valid odds type should be provided, 1: decimal, 2: fractional, 3: monyline")
+	ErrInvalidOddsType                      = sdkerrors.Register(ModuleName, 2025, "valid odds type should be provided, 1: decimal, 2: fractional, 3: moneyline")
 	ErrUserKycFailed                        = sdkerrors.Register(ModuleName, 2026, "the bettor failed the KYC Validation")
 	ErrCanNotQueryLargeNumberOfBets         = sdkerrors.Register(ModuleName, 2027, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
 	ErrDecimalOddsShouldBePositive          = sdkerrors.Register(ModuleName, 2028, "decimal odds value should be positive")

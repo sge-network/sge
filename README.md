@@ -153,13 +153,13 @@ Coming Soon!!
 - Place the genesis file  with the genesis file of the chain.
 
 ```shell
-wget https://github.com/sge-network/networks/blob/master/sge-network-1/genesis.json -O ~/.sged/config/genesis.json
+wget https://github.com/sge-network/networks/blob/master/sge-network-1/genesis.json -O ~/.sge/config/genesis.json
 ```
 
 Verify genesis hash sum
 
 ```shell
-sha256sum ~/.sged/config/genesis.json
+sha256sum ~/.sge/config/genesis.json
 ```
 
 Correct sha256 sum for sge-network-1 is - 2bea72699f9c1afd6217f7e76f14f07c1fbe849d090fc37cd008a42d14d5d30c

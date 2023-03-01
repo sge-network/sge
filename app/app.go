@@ -266,6 +266,8 @@ func (app *SgeApp) LoadHeight(height int64) error {
 // ModuleAccountAddrs returns all the app's module account addresses.
 func (app *SgeApp) ModuleAccountAddrs() map[string]bool {
 	modAccAddrs := make(map[string]bool)
+
+	//#nosec
 	for acc := range mAccPerms {
 		modAccAddrs[authtypes.NewModuleAddress(acc).String()] = true
 	}

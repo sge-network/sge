@@ -1,6 +1,7 @@
 package simulation_test
 
 import (
+	//#nosec
 	"math/rand"
 	"testing"
 
@@ -11,7 +12,7 @@ import (
 
 func TestParamChangest(t *testing.T) {
 	s := rand.NewSource(1)
-	//nolint:gosec
+	//#nosec
 	r := rand.New(s)
 
 	expected := []struct {

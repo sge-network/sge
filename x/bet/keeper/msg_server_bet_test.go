@@ -87,6 +87,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			"iat":           1111111111,
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
+			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -115,6 +116,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			"iat":           1111111111,
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
+			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
 		}
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
@@ -122,10 +124,9 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		inputBet := &types.MsgPlaceBet{
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
-				UID:      "BetUID_2",
-				Amount:   sdk.NewInt(500),
-				OddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-				Ticket:   placeBetTicket,
+				UID:    "BetUID_2",
+				Amount: sdk.NewInt(500),
+				Ticket: placeBetTicket,
 			},
 		}
 

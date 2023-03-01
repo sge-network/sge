@@ -33,6 +33,9 @@ func UnmarshalWithdrawal(cdc codec.BinaryCodec, value []byte) (withdrawal Withdr
 
 // String returns a human readable string representation of a Withdrawal.
 func (w Withdrawal) String() string {
-	out, _ := yaml.Marshal(w)
+	out, err := yaml.Marshal(w)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }

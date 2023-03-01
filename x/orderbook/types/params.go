@@ -53,7 +53,10 @@ func DefaultParams() Params {
 
 // String returns a human readable string representation of the parameters.
 func (p Params) String() string {
-	out, _ := yaml.Marshal(p)
+	out, err := yaml.Marshal(p)
+	if err != nil {
+		panic(err)
+	}
 	return string(out)
 }
 
