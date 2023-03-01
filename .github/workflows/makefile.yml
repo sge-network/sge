@@ -55,11 +55,11 @@ jobs:
       run: |
         cd sgejs      
         if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
-          echo "::set-env name=NPM_VERSION::major"
+          echo "NPM_VERSION=major" >> $GITHUB_ENV
         elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
-          echo "::set-env name=NPM_VERSION::minor"
+          echo "NPM_VERSION=minor" >> $GITHUB_ENV
         elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
-          echo "::set-env name=NPM_VERSION::patch"
+          echo "NPM_VERSION=patch" >> $GITHUB_ENV
         fi
         
     - name: Bump NPM version
