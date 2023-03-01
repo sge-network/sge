@@ -65,7 +65,8 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 // validate checks whether the kyc data is valid for a particular bettor
 // if the kyc is required
 func (payload KycDataPayload) validate(address string) bool {
-	if !payload.Required {
+	// ignore is true means that kyc check should be ignored
+	if payload.Ignore {
 		return true
 	}
 

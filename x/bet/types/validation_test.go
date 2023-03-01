@@ -96,7 +96,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				Required: false,
+				Ignore:   true,
 				Approved: true,
 				ID:       testAddress,
 			},
@@ -112,7 +112,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				Required: true,
 				Approved: true,
 				ID:       testAddress,
 			},
@@ -128,7 +127,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				Required: true,
 				Approved: true,
 				ID:       testAddress,
 			},
@@ -144,6 +142,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrUserKycFailed,
 		},
 		{
 			desc: "no kyc ID field",
@@ -154,7 +153,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				Required: true,
 				Approved: true,
 				ID:       "",
 			},
@@ -170,7 +168,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			kyc: types.KycDataPayload{
-				Required: true,
 				Approved: true,
 				ID:       testAddress,
 			},

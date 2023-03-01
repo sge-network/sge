@@ -126,7 +126,6 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
 	testKyc := &types.KycDataPayload{
-		Required: true,
 		Approved: true,
 		ID:       testCreator,
 	}
