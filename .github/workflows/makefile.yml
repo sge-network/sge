@@ -37,10 +37,10 @@ jobs:
         cp -r sge/proto sgejs
         git -C sgejs add .
 
-    - name: Npm Install
-      run: |
-        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-        npm install --prefix sgejs
+#    - name: Npm Install
+#      run: |
+#        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+#        npm install --prefix sgejs
 
     - name: Delete src/codegen and types
       run: |
@@ -77,7 +77,7 @@ jobs:
         
     - name: Commit files & push sgejs
       run: |
-        cd sgejs
+        ls -la
         git add .
         git config user.email "action@github.com"
         git config user.name "GitHub Action"
