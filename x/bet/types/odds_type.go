@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -9,10 +10,10 @@ import (
 
 type OddsTypeI interface {
 	// CalculatePayout calculates total payout of a certain bet amount
-	CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error)
+	CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error)
 
 	// CalculateBetAmount calculates bet amount
-	CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (sdk.Int, error)
+	CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error)
 }
 
 // decimalOdds is the type to define OddsTypeI interface
@@ -20,23 +21,23 @@ type OddsTypeI interface {
 type decimalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by decimal odds calculations
-func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error) {
+func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
 	}
 
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1
 	if oddsDecVal.LTE(sdk.OneDec()) {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
 
@@ -44,35 +45,35 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, 
 	payout := oddsDecVal.MulInt(amount)
 
 	// get the integer part of the payout
-	return payout.RoundInt(), nil
+	return payout, nil
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (sdk.Int, error) {
+func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
 	}
 
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1
 	if oddsDecVal.LTE(sdk.OneDec()) {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
 
 	// calculate bet amount
-	betAmount := payoutProfit.ToDec().Quo(oddsDecVal.Sub(sdk.OneDec()))
+	betAmount := payoutProfit.Quo(oddsDecVal.Sub(sdk.OneDec()))
 
 	// get the integer part of the bet amount
-	return betAmount.RoundInt(), nil
+	return betAmount, nil
 }
 
 // fractionalOdds is the type to define OddsTypeI interface
@@ -80,32 +81,32 @@ func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (
 type fractionalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by fractional odds calculations
-func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error) {
+func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (firstpart)/secondpart)
 	if len(fraction) != 2 {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			ErrFractionalOddsIncorrectFormat
 	}
 
 	// the fraction part should be an integer, values such as 1.5/2 is not accepted
 	firstPart, ok := sdk.NewIntFromString(fraction[0])
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
 	secondPart, ok := sdk.NewIntFromString(fraction[1])
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// fraction parts should be positive
 	if !firstPart.IsPositive() || !secondPart.IsPositive() {
-		return sdk.ZeroInt(), ErrFractionalOddsCanNotBeNegativeOrZero
+		return sdk.ZeroDec(), ErrFractionalOddsCanNotBeNegativeOrZero
 	}
 
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
@@ -115,37 +116,38 @@ func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.In
 	// calculate payout
 	payout := amount.ToDec().Add(amount.ToDec().Mul(coefficient))
 
+	fmt.Println(payout)
 	// get the integer part of the payout
-	return payout.RoundInt(), nil
+	return payout, nil
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (sdk.Int, error) {
+func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (firstpart)/secondpart)
 	if len(fraction) != 2 {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			ErrFractionalOddsIncorrectFormat
 	}
 
 	// the fraction part should be an integer, values such as 1.5/2 is not accepted
 	firstPart, ok := sdk.NewIntFromString(fraction[0])
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
 	secondPart, ok := sdk.NewIntFromString(fraction[1])
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// fraction parts should be positive
 	if !firstPart.IsPositive() || !secondPart.IsPositive() {
-		return sdk.ZeroInt(), ErrFractionalOddsCanNotBeNegativeOrZero
+		return sdk.ZeroDec(), ErrFractionalOddsCanNotBeNegativeOrZero
 	}
 
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
@@ -153,10 +155,12 @@ func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int
 	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
 
 	// calculate bet amount
-	betAmount := payoutProfit.ToDec().Quo(coefficient)
+	betAmount := payoutProfit.Quo(coefficient)
+
+	fmt.Println(betAmount)
 
 	// get the integer part of the bet amount
-	return betAmount.RoundInt(), nil
+	return betAmount.Ceil(), nil
 }
 
 // moneylineOdds is the type to define OddsTypeI interface
@@ -164,17 +168,17 @@ func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int
 type moneylineOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
-func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, error) {
+func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// moneyline values can be negative or positive, but zero is not acceptable
 	if oddsValue.IsZero() {
-		return sdk.ZeroInt(), ErrMoneylineOddsCanNotBeZero
+		return sdk.ZeroDec(), ErrMoneylineOddsCanNotBeZero
 	}
 
 	// calculate payout
@@ -191,21 +195,21 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int
 	payout = amount.ToDec().Add(amount.ToDec().Mul(coefficient))
 
 	// get the integer part of the payout
-	return payout.RoundInt(), nil
+	return payout, nil
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (sdk.Int, error) {
+func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
-		return sdk.ZeroInt(),
+		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
 	}
 
 	// moneyline values can be negative or positive, but zero is not acceptable
 	if oddsValue.IsZero() {
-		return sdk.ZeroInt(), ErrMoneylineOddsCanNotBeZero
+		return sdk.ZeroDec(), ErrMoneylineOddsCanNotBeZero
 	}
 
 	// calculate payout
@@ -219,8 +223,8 @@ func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int)
 	}
 
 	// calculate bet amount
-	betAmount := payoutProfit.ToDec().Quo(coefficient)
+	betAmount := payoutProfit.Quo(coefficient)
 
 	// get the integer part of the bet amount
-	return betAmount.RoundInt(), nil
+	return betAmount, nil
 }

@@ -14,7 +14,7 @@ func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
 	betUID, bookUID, oddsUID string,
 	maxLossMultiplier sdk.Dec,
-	payoutProfit sdk.Int,
+	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
 	betFee sdk.Int,
 	oddsType bettypes.OddsType,
@@ -69,7 +69,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	remainingPayoutProfit, updatedFulfillmentQueue := payoutProfit, bookExposure.FulfillmentQueue
-	liquidatedBetAmount := sdk.ZeroInt()
+	fulfiledBetAmount := sdk.ZeroDec()
 
 	// continue until updatedFulfillmentQueue gets empty
 	for len(updatedFulfillmentQueue) > 0 {
@@ -101,14 +101,18 @@ func (k Keeper) ProcessBetPlacement(
 			participation.ExposuresNotFilled--
 		}
 
-		processBetFulfillment := func(expectedPayout sdk.Int, noMoreLiquidity bool) error {
+		processBetFulfillment := func(expectedPayoutDec sdk.Dec, noMoreLiquidity bool) error {
+			expectedPayout := expectedPayoutDec.TruncateInt()
 			participationExposure.Exposure = participationExposure.Exposure.Add(expectedPayout)
-			expectedBetAmount, err := bettypes.CalculateBetAmount(oddsType, oddsVal, expectedPayout)
+
+			expectedBetAmountDec, err := bettypes.CalculateBetAmount(oddsType, oddsVal, expectedPayoutDec)
 			if err != nil {
 				return err
 			}
 
-			liquidatedBetAmount = liquidatedBetAmount.Add(expectedBetAmount)
+			fulfiledBetAmount = fulfiledBetAmount.Add(expectedBetAmountDec)
+
+			expectedBetAmount := expectedBetAmountDec.Ceil().RoundInt()
 			participationExposure.BetAmount = participationExposure.BetAmount.Add(expectedBetAmount)
 			if noMoreLiquidity {
 				setFulfilled()
@@ -139,7 +143,7 @@ func (k Keeper) ProcessBetPlacement(
 				BetAmount:          expectedBetAmount,
 				PayoutAmount:       expectedPayout,
 			})
-			remainingPayoutProfit = remainingPayoutProfit.Sub(expectedPayout)
+			remainingPayoutProfit = remainingPayoutProfit.Sub(expectedPayoutDec)
 			participationBetPair := types.NewParticipationBetPair(participation.BookUID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)
 			return nil
@@ -204,11 +208,11 @@ func (k Keeper) ProcessBetPlacement(
 
 		// availableLiquidty is the available amount of tokens to be used from the participation exposure
 		availableLiquidty := maxLossMultiplier.
-			MulInt(participation.CurrentRoundLiquidity).TruncateInt().
-			Sub(participationExposure.Exposure)
+			MulInt(participation.CurrentRoundLiquidity).
+			Sub(sdk.NewDecFromInt(participationExposure.Exposure))
 
 		switch {
-		case availableLiquidty.LTE(sdk.ZeroInt()):
+		case availableLiquidty.LTE(sdk.ZeroDec()):
 			setFulfilled()
 			removeQueueItem()
 		case availableLiquidty.LTE(remainingPayoutProfit):
@@ -239,12 +243,12 @@ func (k Keeper) ProcessBetPlacement(
 			}
 		}
 
-		if remainingPayoutProfit.LTE(sdk.ZeroInt()) || len(updatedFulfillmentQueue) == 0 {
+		if remainingPayoutProfit.LTE(sdk.ZeroDec()) || len(updatedFulfillmentQueue) == 0 {
 			break
 		}
 	}
 
-	if remainingPayoutProfit.GT(sdk.ZeroInt()) {
+	if remainingPayoutProfit.GT(sdk.ZeroDec()) {
 		return betFulfillments, sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
 	}
 
@@ -258,7 +262,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, liquidatedBetAmount)
+	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, fulfiledBetAmount.TruncateInt())
 	if err != nil {
 		return betFulfillments, err
 	}
