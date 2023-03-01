@@ -46,7 +46,7 @@ jobs:
       run: |
         rm -rf sgejs/src/codegen
         rm -rf sgejs/types
-      
+
 #     - name: Npm Run Codegen
 #       run: |
 #         npm run codegen --prefix sgejs
