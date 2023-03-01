@@ -37,12 +37,13 @@ jobs:
       run: |
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
+        git -C sgejs status
      
 
-    - name: Npm Install
-      run: |
-        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-        npm install --prefix sgejs
+#    - name: Npm Install
+#      run: |
+#        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+#        npm install --prefix sgejs
 
     - name: Check for changes
       id: git-status
