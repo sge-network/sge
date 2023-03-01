@@ -78,6 +78,7 @@ jobs:
     - name: Commit files & push sgejs
       run: |
         cd sgejs
+        cat package.json
         ls -la
         git status
         git add .
