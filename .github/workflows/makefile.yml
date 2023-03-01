@@ -46,20 +46,14 @@ jobs:
 
     - name: Check for changes
       id: git-status
-      run: echo "STATUS=$(git status --porcelain)" >> $GITHUB_OUTPUT
+      run: echo "STATUS=$(git -C sgejs status --porcelain)" >> $GITHUB_OUTPUT
 
     - name: Commit changes
       if: steps.git-status.outputs.status != ''
       run: |
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit -am "Proto Deployment [skip ci]"  
-
-    - name: Git commit
-      run: |
-        git -C sgejs config user.email "action@github.com"
-        git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit -am "Proto Deployment [skip ci]"  --allow-empty-commit        
+        git -C sgejs commit -am "Proto Deployment [skip ci]"          
 
     - name: Npm Run Codegen
       run: |
