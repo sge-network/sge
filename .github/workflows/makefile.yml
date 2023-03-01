@@ -75,7 +75,7 @@ jobs:
           npm version patch
         fi
         
-    - name: push sgejs
+#    - name: push sgejs
 #      run: git push        
         
 #     - name: Publish NPM Package
