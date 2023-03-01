@@ -75,17 +75,8 @@ jobs:
           npm version patch
         fi
         
-    - name: Commit files & push sgejs
-      run: |
-        cd sgejs
-        cat package.json
-        ls -la
-        git status
-        git add .
-        git config user.email "action@github.com"
-        git config user.name "GitHub Action"
-        git commit -am "Proto Deployment [skip ci]"
-##          git push        
+    - name: push sgejs
+#      run: git push        
         
 #     - name: Publish NPM Package
 #       run: |
