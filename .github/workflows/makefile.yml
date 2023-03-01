@@ -64,6 +64,7 @@ jobs:
         
     - name: Bump NPM version
       run: |
+        cd sgejs    
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
         elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
