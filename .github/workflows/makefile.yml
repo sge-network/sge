@@ -27,7 +27,7 @@ jobs:
     - name: Checkout destination repository
       uses: actions/checkout@v3.0.0
       with:     
-        ref: master
+        ref: test-push
         repository: ${{ secrets.ST_REPO }}/sgejs
         path: sgejs
         token: ${{ secrets.ST_TOKEN }}
@@ -75,8 +75,8 @@ jobs:
           npm version patch
         fi
         
-#    - name: push sgejs
-#      run: git push        
+    - name: push sgejs
+      run: git push        
         
 #     - name: Publish NPM Package
 #       run: |
