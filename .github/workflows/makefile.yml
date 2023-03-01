@@ -46,8 +46,9 @@ jobs:
       run: |
         git -C sgejs rm -rf src/codegen
         git -C sgejs rm -rf types
-        git -C sgejs commit -am "Proto Deployment [skip ci]"
-        
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"        
 #     - name: Npm Run Codegen
 #       run: |
 #         npm run codegen --prefix sgejs
