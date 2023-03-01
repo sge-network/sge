@@ -36,9 +36,7 @@ jobs:
       run: |
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
-        git -C sgejs config user.email "action@github.com"
-        git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit -am "Proto Deployment [skip ci]"           
+         
 
 #    - name: Npm Install
 #      run: |
@@ -49,6 +47,9 @@ jobs:
       run: |
         rm -rf sgejs/src/codegen
         rm -rf sgejs/types
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"          
 
 #     - name: Npm Run Codegen
 #       run: |
