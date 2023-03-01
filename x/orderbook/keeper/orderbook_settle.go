@@ -53,13 +53,14 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	allSettled, settled := true, 0
 	bookParticipations, err := k.GetParticipationsOfBook(ctx, orderBookUID)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("batch settlement of book %s failed: %s", orderBookUID, err)
 	}
 	for _, bookParticipation := range bookParticipations {
 		if !bookParticipation.IsSettled {
 			err = k.settleDeposit(ctx, bookParticipation)
 			if err != nil {
-				return allSettled, err
+				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
+					bookParticipation, err)
 			}
 			settled++
 			allSettled = false
