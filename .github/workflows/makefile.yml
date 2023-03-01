@@ -27,7 +27,7 @@ jobs:
     - name: Checkout destination repository
       uses: actions/checkout@v3.0.0
       with:     
-        ref: master
+        ref: test-push
         repository: ${{ secrets.ST_REPO }}/sgejs
         path: sgejs
         token: ${{ secrets.ST_TOKEN }}
@@ -37,16 +37,18 @@ jobs:
         cp -r sge/proto sgejs
         git -C sgejs add .
 
-    - name: Npm Install
-      run: |
-        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-        npm install --prefix sgejs
+#    - name: Npm Install
+#      run: |
+#        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+#        npm install --prefix sgejs
 
     - name: Delete src/codegen and types
       run: |
         git -C sgejs rm -rf src/codegen
         git -C sgejs rm -rf types
-        
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"        
 #     - name: Npm Run Codegen
 #       run: |
 #         npm run codegen --prefix sgejs
@@ -55,16 +57,16 @@ jobs:
       run: |
         cd sgejs      
         if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
-          echo "::set-env name=NPM_VERSION::major"
+          echo "NPM_VERSION=major" >> $GITHUB_ENV
         elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
-          echo "::set-env name=NPM_VERSION::minor"
+          echo "NPM_VERSION=minor" >> $GITHUB_ENV
         elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
-          echo "::set-env name=NPM_VERSION::patch"
+          echo "NPM_VERSION=patch" >> $GITHUB_ENV
         fi
         
     - name: Bump NPM version
       run: |
-        cd sgejs       
+        cd sgejs    
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
         elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
@@ -73,14 +75,8 @@ jobs:
           npm version patch
         fi
         
-    - name: Commit files & push sgejs
-      run: |
-        cd sgejs
-        git add .
-        git config user.email "action@github.com"
-        git config user.name "GitHub Action"
-        git commit -am "Proto Deployment [skip ci]"
-##          git push        
+    - name: Push sgejs
+      run: git -C sgejs push        
         
 #     - name: Publish NPM Package
 #       run: |
