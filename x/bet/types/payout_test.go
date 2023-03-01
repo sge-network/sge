@@ -8,6 +8,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+var ecceptedTruncatedValue = sdk.NewInt(7)
+
 var defaultBetAmount = int64(35625789)
 
 func TestCalculateDecimalPayout(t *testing.T) {
@@ -59,6 +61,14 @@ func TestCalculateDecimalPayout(t *testing.T) {
 				require.NoError(t, err)
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payout), "expected: %d, actual: %d", tc.expVal, payout.Int64())
 			}
+
+			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_DECIMAL, tc.oddsValue, payout)
+			if tc.err != nil {
+				require.ErrorIs(t, tc.err, err)
+			} else {
+				require.NoError(t, err)
+				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount).LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount.Int64())
+			}
 		})
 	}
 }
@@ -80,21 +90,21 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			expVal: 89064473,
 		},
 		{
-			desc:      "positive outcome",
+			desc:      "positive outcome 1",
 			oddsValue: "7/2",
 			betAmount: defaultBetAmount,
 
 			expVal: 124690261,
 		},
 		{
-			desc:      "negative outcome",
+			desc:      "positive outcome 2",
 			oddsValue: "2/7",
 			betAmount: defaultBetAmount,
 
 			expVal: 10178797,
 		},
 		{
-			desc:      "negative outcome",
+			desc:      "positive outcome 3",
 			oddsValue: "1/17",
 			betAmount: defaultBetAmount,
 
@@ -166,6 +176,14 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payout), "expected: %d, actual: %d", tc.expVal, payout.Int64())
+			}
+
+			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_FRACTIONAL, tc.oddsValue, payout)
+			if tc.err != nil {
+				require.ErrorIs(t, tc.err, err)
+			} else {
+				require.NoError(t, err)
+				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount).Abs().LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount.Int64())
 			}
 		})
 	}
@@ -239,6 +257,14 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payout), "expected: %d, actual: %d", tc.expVal, payout.Int64())
+			}
+
+			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_MONEYLINE, tc.oddsValue, payout)
+			if tc.err != nil {
+				require.ErrorIs(t, tc.err, err)
+			} else {
+				require.NoError(t, err)
+				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount).Abs().LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount.Int64())
 			}
 		})
 	}

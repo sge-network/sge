@@ -28,7 +28,6 @@ message BookParticipation {
   // if participation is a module account
   bool is_module_account = 4
       [ (gogoproto.moretags) = "yaml:\"is_module_account\"" ];
-  ;
 
   // liquidity is the total initial liquidity provided
   string liquidity = 5 [
@@ -95,7 +94,6 @@ message BookParticipation {
 
   // if participation is settled
   bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
-  ;
 }
 
 // ParticipationBetPair represents the book participation and bet bond

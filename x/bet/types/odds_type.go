@@ -35,7 +35,7 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Int, 
 	}
 
 	// odds value should not be less than 1
-	if oddsDecVal.LTE(sdk.NewDec(1)) {
+	if oddsDecVal.LTE(sdk.OneDec()) {
 		return sdk.ZeroInt(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
@@ -63,7 +63,7 @@ func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int) (
 	}
 
 	// odds value should not be less than 1
-	if oddsDecVal.LT(sdk.NewDec(1)) {
+	if oddsDecVal.LTE(sdk.OneDec()) {
 		return sdk.ZeroInt(),
 			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
@@ -153,7 +153,7 @@ func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int
 	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
 
 	// calculate bet amount
-	betAmount := payoutProfit.ToDec().Quo(coefficient.Sub(sdk.OneDec()))
+	betAmount := payoutProfit.ToDec().Quo(coefficient)
 
 	// get the integer part of the bet amount
 	return betAmount.RoundInt(), nil
@@ -219,7 +219,7 @@ func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Int)
 	}
 
 	// calculate bet amount
-	betAmount := payoutProfit.ToDec().Quo(coefficient.Sub(sdk.OneDec()))
+	betAmount := payoutProfit.ToDec().Quo(coefficient)
 
 	// get the integer part of the bet amount
 	return betAmount.RoundInt(), nil
