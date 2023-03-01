@@ -28,7 +28,6 @@ message BookParticipation {
   // if participation is a module account
   bool is_module_account = 4
       [ (gogoproto.moretags) = "yaml:\"is_module_account\"" ];
-  ;
 
   // liquidity is the total initial liquidity provided
   string liquidity = 5 [
