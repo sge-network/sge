@@ -46,7 +46,7 @@ jobs:
       run: |
         git -C sgejs rm -rf src/codegen
         git -C sgejs rm -rf types
-        git -C commit -am "Proto Deployment [skip ci]"
+        git -C sgejs commit -am "Proto Deployment [skip ci]"
         
 #     - name: Npm Run Codegen
 #       run: |
