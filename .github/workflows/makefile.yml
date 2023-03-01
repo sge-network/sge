@@ -33,7 +33,10 @@ jobs:
         token: ${{ secrets.ST_TOKEN }}
         
     - name: Get version from package.json
-      run: echo "::set-output name=version::$(jq -r '.version' sgejs/package.json)"    
+      run: |
+        echo "::set-output name=version::$(jq -r '.version' sgejs/package.json)"
+        echo "Version: ${{ steps.extract-version.outputs.version }}"
+
 
 #     - name: Copy Proto Files
 #       run: |
