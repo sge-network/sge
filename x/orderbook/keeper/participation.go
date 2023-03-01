@@ -144,7 +144,6 @@ func (k Keeper) InitiateBookParticipation(
 func (k Keeper) LiquidateBookParticipation(
 	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
-
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
 	if err != nil {
 		return sdk.Int{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
