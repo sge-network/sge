@@ -7,8 +7,8 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // KycDataPayload is the KYC info.
 message KycDataPayload {
-  // approved is true if kyc validation is required.
-  bool required = 1;
+  // ignore is true if kyc validation is not required.
+  bool ignore = 1;
   // approved represent if kvc validation is approved or not.
   bool approved = 2;
   // id is the id of the kyc.
