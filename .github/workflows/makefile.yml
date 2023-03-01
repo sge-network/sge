@@ -5,6 +5,7 @@ on:
     branches:
      - master
      - proto-to-sgejs
+     - test pull
   pull_request:
     types: [opened, edited, synchronize]
 env:
@@ -36,24 +37,24 @@ jobs:
       run: |
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
-         
-
-#    - name: Npm Install
-#      run: |
-#        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-#        npm install --prefix sgejs
-
-    - name: Delete src/codegen and types
-      run: |
-        rm -rf sgejs/src/codegen
-        rm -rf sgejs/types
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
         git -C sgejs commit -am "Proto Deployment [skip ci]"          
 
-#     - name: Npm Run Codegen
+    - name: Npm Install
+      run: |
+        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+        npm install --prefix sgejs
+
+#     - name: Git commit
 #       run: |
-#         npm run codegen --prefix sgejs
+#         git -C sgejs config user.email "action@github.com"
+#         git -C sgejs config user.name "GitHub Action"
+#         git -C sgejs commit -am "Proto Deployment [skip ci]"          
+
+    - name: Npm Run Codegen
+      run: |
+        npm run codegen --prefix sgejs
         
     - name: Determine NPM version
       run: |
