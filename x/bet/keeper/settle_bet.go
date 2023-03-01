@@ -52,12 +52,12 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED {
 		bet.Result = types.Bet_RESULT_ABORTED
 
-		payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
 		if err != nil {
 			return err
 		}
 
-		if err := k.obKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payout, bet.UID); err != nil {
+		if err := k.obKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payoutProfit.TruncateInt(), bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRRefund, "%s", err)
 		}
 
@@ -111,12 +111,12 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.obKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.obKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.obKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout, bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.obKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED

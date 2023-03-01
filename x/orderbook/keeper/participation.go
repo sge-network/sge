@@ -144,53 +144,53 @@ func (k Keeper) InitiateBookParticipation(
 func (k Keeper) LiquidateBookParticipation(
 	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
-	var withdrawalAmt sdk.Int
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
 	if err != nil {
-		return withdrawalAmt, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+		return sdk.Int{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
 	bp, found := k.GetBookParticipation(ctx, bookUID, participationIndex)
 	if !found {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
 	}
 
 	if bp.IsSettled {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookUID, participationIndex)
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookUID, participationIndex)
 	}
 
 	if bp.ParticipantAddress != depositorAddr {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
 	}
 
 	if bp.IsModuleAccount {
-		return withdrawalAmt, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
 	}
 
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
 
+	var withdrawalAmt sdk.Int
 	switch mode {
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
-			return withdrawalAmt, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity.Int64(), bp.CurrentRoundMaxLoss.Int64())
+			return sdk.Int{}, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity, bp.CurrentRoundMaxLoss)
 		}
 		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, maxTransferableAmount)
 		if err != nil {
-			return withdrawalAmt, err
+			return sdk.Int{}, err
 		}
 		withdrawalAmt = maxTransferableAmount
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
-			return withdrawalAmt, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
+			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
 		}
 		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, amount)
 		if err != nil {
-			return withdrawalAmt, err
+			return sdk.Int{}, err
 		}
 		withdrawalAmt = amount
 	default:
-		return withdrawalAmt, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
+		return sdk.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
 	}
 
 	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)
@@ -200,7 +200,7 @@ func (k Keeper) LiquidateBookParticipation(
 	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
 		boes, err := k.GetOddsExposuresByBook(ctx, bookUID)
 		if err != nil {
-			return withdrawalAmt, err
+			return sdk.Int{}, err
 		}
 		for _, boe := range boes {
 			for i, pn := range boe.FulfillmentQueue {
