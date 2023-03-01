@@ -141,8 +141,8 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-      oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err: types.ErrUserKycFailed,
+			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
+			err:      types.ErrUserKycFailed,
 		},
 		{
 			desc: "no kyc ID field",
