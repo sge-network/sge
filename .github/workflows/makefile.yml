@@ -40,19 +40,19 @@ jobs:
         git -C sgejs status
      
 
-    - name: Npm Install
-      run: |
-        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
-        npm install --prefix sgejs
+#    - name: Npm Install
+#      run: |
+#        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+#        npm install --prefix sgejs
     
     - name: Delete src/codegen and types
       run: |
         rm -rf sgejs/src/codegen
         rm -rf sgejs/types        
 
-    - name: Npm Run Codegen
-      run: |
-        npm run codegen --prefix sgejs
+#    - name: Npm Run Codegen
+#      run: |
+#        npm run codegen --prefix sgejs
  
     - name: Commit changes
       run: |
@@ -85,8 +85,8 @@ jobs:
         fi
         git status
         
-#   - name: Push sgejs
-#     run: git -C sgejs push        
+    - name: Push sgejs
+      run: git -C sgejs push        
         
 #     - name: Publish NPM Package
 #       run: |
