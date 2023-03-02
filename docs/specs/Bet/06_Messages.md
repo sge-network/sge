@@ -48,7 +48,29 @@ message MsgPlaceBetResponse {
     string error = 1;
     PlaceBetFields bet = 2;
 }
+```
 
+### **Sample Place bet ticket**
+
+```json
+{
+ "selected_odds": {
+   "uid": "9991c60f-2025-48ce-ae79-1dc110f16990",
+   "sport_event_uid": "5531c60f-2025-48ce-ae79-1dc110f16000",
+   "value": "2.0",
+   "max_loss_multiplier": "1.0"
+ },
+ "kyc_data": {
+   "ignore": false,
+   "approved": true,
+   "id": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
+ },
+ "odds_type":1,
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "CreateSportEvent"
+}
 ```
 
 ### **Placement Failure cases**
@@ -132,9 +154,9 @@ The transaction will fail if:
 - Result of corresponding sport-event is not declared
 - There is an error in SR module functions
 
-### **What Happens if settlement fails**
+### **Settlement failure treatment**
 
-- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding sport-event is aborted or canceled, the bet will be updated in the module state as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
@@ -143,6 +165,6 @@ The transaction will fail if:
 
 - Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
 - Call `Order Book module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
-- Store the updated bet in the `bet module's KVStore`.
+- Store the updated bet in the module state.
 
 ---
