@@ -88,5 +88,5 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
         cat sgejs/.npmrc
         cd sgejs
-        ls -la sgejs
+        ls -la
         npm publish --access=restricted --force
