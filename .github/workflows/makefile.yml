@@ -33,13 +33,16 @@ jobs:
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
         git -C sgejs status
-     
-
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
+        
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
-    
+        git -C sgejs checkout .
+        
     - name: Delete src/codegen and types
       run: |
         rm -rf sgejs/src/codegen
@@ -51,10 +54,10 @@ jobs:
  
     - name: Commit changes
       run: |
-        git -C sgejs checkout .      
+        git -C sgejs add .     
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
+        git -C sgejs commit --allow-empty -am "Codegen Deployment [skip ci]"
         
     - name: Determine NPM version
       run: |
@@ -88,4 +91,5 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
         cat sgejs/.npmrc
         cd sgejs
+        ls -la
         npm publish --access=restricted --force
