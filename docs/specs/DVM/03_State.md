@@ -1,10 +1,12 @@
 # **State**
 
-## **PublicKeys**
+## **KeyVault**
 
 ```proto
-message PublicKeys {
-  repeated string list = 1;
+// KeyVault is the information of important keys stored in dvm state.
+message KeyVault {
+  // public_keys contains allowed public keys.
+  repeated string public_keys = 1 [ (gogoproto.nullable) = false ];
 }
 ```
 

@@ -2,24 +2,71 @@
 
 In this section, we describe the processing of the DVM messages.
 
-## **MsgMutation**
+## **SubmitPubkeysChangeProposal**
+
+This endpoint accepts the message for creating a proposal for the pubkeys change.
 
 ```proto
-// Msg defines the Msg service.
 service Msg {
-      rpc Mutation(MsgMutation) returns (MsgMutationResponse);
-}
-
-message MsgMutation {
-  string creator = 1;
-  string txs = 2;
-}
-
-message MsgMutationResponse {
-  bool success = 1;
+  // PubkeysChangeProposal defines a method to submit a proposal for changing
+  // the allowed public keys.
+  rpc SubmitPubkeysChangeProposal(MsgSubmitPubkeysChangeProposalRequest)
+      returns (MsgSubmitPubkeysChangeProposalResponse);
 }
 ```
 
-This message is used to add or delete the trusted public keys to the DVM. In the absence of any keys, there is no verification for adding a new key to the DVM. However, once at least one key exsts, for adding or deleting keys, the signature needs to be verified by at least one already existing public key.
+### **MsgSubmitPubkeysChangeProposalRequest**
+
+```proto
+// MsgPubkeysChangeProposalRequest is the type of request for modification of
+// public keys.
+message MsgSubmitPubkeysChangeProposalRequest {
+  // creator is the account address of the creator.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+}
+```
+
+```proto
+// MsgPubkeysChangeProposalResponse is the type of response for modification of
+// public keys.
+message MsgSubmitPubkeysChangeProposalResponse { bool success = 1; }
+```
+
+## **VaotePubbkeysChange**
+
+This endpoint accepts the message to vote on a proposal for the pubkeys change.
+
+```proto
+service Msg {
+  // VotePubkeysChange defines a method to vote for a proposal for changing the
+  // allowed public keys.
+  rpc VotePubkeysChange(MsgVotePubkeysChangeRequest)
+      returns (MsgVotePubkeysChangeResponse);
+}
+```
+
+### **MsgVotePubkeysChangeRequest**
+
+```proto
+// MsgVotePubkeysChangeRequest is the type of request to vote on the
+// modification of public keys proposal.
+message MsgVotePubkeysChangeRequest {
+  // creator is the account address of the creator.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+  // public_key is the public key of the voter.
+  string public_key = 3;
+}
+```
+
+```proto
+// MsgVotePubkeysChangeResponse is the type of response vote for public keys
+// modification.
+message MsgVotePubkeysChangeResponse { bool success = 1; }
+```
+
 
 > **NOTE:** In the absence of public keys, signatures cannot be verified for any transaction.
