@@ -69,7 +69,7 @@ jobs:
         
     - name: Bump NPM version
       run: |
-        git status
+        git -C sgejs status
         cd sgejs    
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
