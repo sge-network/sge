@@ -1,9 +1,6 @@
 name: Deploy Proto & NPM publish
 
 on:
-  push:
-    branches:
-     - master
   pull_request:
     types: [opened, edited, synchronize]
 env:
@@ -35,24 +32,29 @@ jobs:
       run: |
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
-         
+        git -C sgejs status
+     
 
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
-
+    
     - name: Delete src/codegen and types
       run: |
         rm -rf sgejs/src/codegen
         rm -rf sgejs/types
-        git -C sgejs config user.email "action@github.com"
-        git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit -am "Proto Deployment [skip ci]"          
-
+        
     - name: Npm Run Codegen
       run: |
         npm run codegen --prefix sgejs
+ 
+    - name: Commit changes
+      run: |
+        git -C sgejs checkout .      
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
         
     - name: Determine NPM version
       run: |
@@ -67,7 +69,8 @@ jobs:
         
     - name: Bump NPM version
       run: |
-        cd sgejs    
+        cd sgejs          
+        git status
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
         elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
@@ -75,6 +78,7 @@ jobs:
         elif [ "${{ env.NPM_VERSION }}" == "patch" ]; then
           npm version patch
         fi
+        git status
         
     - name: Push sgejs
       run: git -C sgejs push        
