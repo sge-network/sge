@@ -48,7 +48,29 @@ message MsgPlaceBetResponse {
     string error = 1;
     PlaceBetFields bet = 2;
 }
+```
 
+### **Sample Place bet ticket**
+
+```json
+{
+ "selected_odds": {
+   "uid": "9991c60f-2025-48ce-ae79-1dc110f16990",
+   "sport_event_uid": "5531c60f-2025-48ce-ae79-1dc110f16000",
+   "value": "2.0",
+   "max_loss_multiplier": "1.0"
+ },
+ "kyc_data": {
+   "ignore": false,
+   "approved": true,
+   "id": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
+ },
+ "odds_type":1,
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "CreateSportEvent"
+}
 ```
 
 ### **Placement Failure cases**

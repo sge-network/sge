@@ -68,5 +68,4 @@ message MsgVotePubkeysChangeRequest {
 message MsgVotePubkeysChangeResponse { bool success = 1; }
 ```
 
-
 > **NOTE:** In the absence of public keys, signatures cannot be verified for any transaction.
