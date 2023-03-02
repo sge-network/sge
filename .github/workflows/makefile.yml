@@ -39,22 +39,20 @@ jobs:
         git -C sgejs add .
         git -C sgejs status
      
+    - name: Commit changes
+      run: |
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
 
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
 
-
-    - name: Commit changes
-      run: |
-        git -C sgejs config user.email "action@github.com"
-        git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"          
-
     - name: Npm Run Codegen
       run: |
-        npm run codegen --prefix sgejs
+        npm run codegen --prefix sgejs --exclude src/codegen types
         
     - name: Determine NPM version
       run: |
@@ -79,8 +77,8 @@ jobs:
           npm version patch
         fi
         
-    - name: Push sgejs
-      run: git -C sgejs push        
+#    - name: Push sgejs
+#      run: git -C sgejs push        
         
 #     - name: Publish NPM Package
 #       run: |
