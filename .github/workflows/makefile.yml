@@ -40,20 +40,15 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
     
-    - name: Move src/codegen and types
+    - name: Delete src/codegen and types
       run: |
-        mv sgejs/src/codegen ~/
-        mv sgejs/types ~/
+        rm -rf sgejs/src/codegen
+        rm -rf sgejs/types
         
     - name: Npm Run Codegen
       run: |
         npm run codegen --prefix sgejs
-        
-    - name: Move src/codegen and types
-      run: |
-        mv codegen sgejs/src/
-        mv types sgejs/
-
+ 
     - name: Commit changes
       run: |
         git -C sgejs checkout .      
@@ -93,4 +88,5 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
         cat sgejs/.npmrc
         cd sgejs
+        ls -la sgejs
         npm publish --access=restricted --force
