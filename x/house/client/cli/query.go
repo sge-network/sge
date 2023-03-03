@@ -18,6 +18,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	houseQueryCmd.AddCommand(
+		CmdQueryParams(),
 		GetCmdQueryDepsoits(),
 		GetCmdQueryDepositorDepsoits(),
 		GetCmdQueryDepositorWithdrawals(),
