@@ -9,7 +9,7 @@ import (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(queryRoute string) *cobra.Command {
-	houseQueryCmd := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      "Querying commands for the house module",
 		DisableFlagParsing:         true,
@@ -17,12 +17,12 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	houseQueryCmd.AddCommand(
+	cmd.AddCommand(
 		CmdQueryParams(),
 		GetCmdQueryDepsoits(),
 		GetCmdQueryDepositorDepsoits(),
 		GetCmdQueryDepositorWithdrawals(),
 	)
 
-	return houseQueryCmd
+	return cmd
 }

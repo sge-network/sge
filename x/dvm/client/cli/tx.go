@@ -20,8 +20,10 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdChangePubkeysListProposal())
-	cmd.AddCommand(CmdChangePubkeysListVote())
+	cmd.AddCommand(
+		CmdChangePubkeysListProposal(),
+		CmdChangePubkeysListVote(),
+	)
 
 	return cmd
 }
