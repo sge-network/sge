@@ -106,10 +106,6 @@ func (k Keeper) ProcessBetPlacement(
 		processBetFulfillment := func(payoutToFulfill sdk.Int, isLastFulfillment bool) error {
 			var betAmountToFulfill sdk.Int
 			if isLastFulfillment {
-				// subtract the sum of amounts ofprevious fulfillments
-				for _, f := range betFulfillments {
-					betAmount = betAmount.Sub(f.BetAmount)
-				}
 				// the bet amount
 				betAmountToFulfill = betAmount
 			} else {
@@ -153,6 +149,7 @@ func (k Keeper) ProcessBetPlacement(
 				BetAmount:          betAmountToFulfill,
 				PayoutAmount:       payoutToFulfill,
 			})
+			betAmount.Sub(betAmountToFulfill)
 
 			fulfiledBetAmount = fulfiledBetAmount.Add(betAmountToFulfill)
 			remainingPayoutProfit = remainingPayoutProfit.Sub(payoutToFulfill.ToDec())
