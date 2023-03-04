@@ -25,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // KycDataPayload is the KYC info.
 type KycDataPayload struct {
-	// ignored is true if kyc validation is not required.
+	// ignore is true if kyc validation is not required.
 	Ignore bool `protobuf:"varint,1,opt,name=ignore,proto3" json:"ignore,omitempty"`
 	// approved represent if kvc validation is approved or not.
 	Approved bool `protobuf:"varint,2,opt,name=approved,proto3" json:"approved,omitempty"`
