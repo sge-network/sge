@@ -255,12 +255,12 @@ func (k Keeper) ProcessBetPlacement(
 		}
 
 		// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-		if remainingPayoutProfit.LTE(sdk.OneDec()) || len(updatedFulfillmentQueue) == 0 {
+		if remainingPayoutProfit.LT(sdk.OneDec()) || len(updatedFulfillmentQueue) == 0 {
 			break
 		}
 	}
 
-	if remainingPayoutProfit.GT(sdk.OneDec()) {
+	if remainingPayoutProfit.GTE(sdk.OneDec()) {
 		return betFulfillments, sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
 	}
 
