@@ -149,7 +149,7 @@ func (k Keeper) ProcessBetPlacement(
 				BetAmount:          betAmountToFulfill,
 				PayoutAmount:       payoutToFulfill,
 			})
-			betAmount.Sub(betAmountToFulfill)
+			betAmount = betAmount.Sub(betAmountToFulfill)
 
 			fulfiledBetAmount = fulfiledBetAmount.Add(betAmountToFulfill)
 			remainingPayoutProfit = remainingPayoutProfit.Sub(payoutToFulfill.ToDec())
