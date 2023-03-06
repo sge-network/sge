@@ -18,8 +18,8 @@ func TestGenesis(t *testing.T) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	strategicreserve.InitGenesis(ctx, tApp.StrategicreserveKeeper, genesisState)
-	got := strategicreserve.ExportGenesis(ctx, tApp.StrategicreserveKeeper)
+	strategicreserve.InitGenesis(ctx, tApp.StrategicReserveKeeper, genesisState)
+	got := strategicreserve.ExportGenesis(ctx, tApp.StrategicReserveKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)

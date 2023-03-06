@@ -13,7 +13,7 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, s
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, &tApp.StrategicreserveKeeper, ctx
+	return tApp, &tApp.StrategicReserveKeeper, ctx
 }
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {

@@ -149,7 +149,7 @@ func appModules(
 
 		app.BetModule,
 		app.SportEventModule,
-		app.StrategicreserveModule,
+		app.StrategicReserveModule,
 		app.DVMModule,
 		app.HouseModule,
 		app.OrderBookModule,
@@ -184,7 +184,7 @@ func simulationModules(
 
 		app.BetModule,
 		app.SportEventModule,
-		app.StrategicreserveModule,
+		app.StrategicReserveModule,
 		app.DVMModule,
 	}
 }

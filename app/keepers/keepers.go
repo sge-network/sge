@@ -105,14 +105,14 @@ type AppKeepers struct {
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
 
-	StrategicreserveKeeper strategicreservemodulekeeper.Keeper
+	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
 	SportEventKeeper       sporteventmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
 	OrderBookKeeper        orderbookmodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
 	SportEventModule       sporteventmodule.AppModule
-	StrategicreserveModule strategicreservemodule.AppModule
+	StrategicReserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
 	OrderBookModule        orderbookmodule.AppModule
 	HouseModule            housemodule.AppModule
@@ -209,7 +209,7 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(stakingtypes.ModuleName),
 	)
 
-	appKeepers.StrategicreserveKeeper = *strategicreservemodulekeeper.NewKeeper(
+	appKeepers.StrategicReserveKeeper = *strategicreservemodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[strategicreservemoduletypes.StoreKey],
 		appKeepers.keys[strategicreservemoduletypes.MemStoreKey],
@@ -367,7 +367,7 @@ func NewAppKeeper(
 	appKeepers.SportEventKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
 	appKeepers.SportEventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SportEventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
 
-	appKeepers.StrategicreserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicreserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
+	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
 	appKeepers.BetKeeper = *betmodulekeeper.NewKeeper(
 		appCodec,
