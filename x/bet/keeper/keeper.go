@@ -17,7 +17,7 @@ type Keeper struct {
 	storeKey         sdk.StoreKey
 	memKey           sdk.StoreKey
 	paramstore       paramtypes.Subspace
-	sporteventKeeper types.SporteventKeeper
+	sportEventKeeper types.SportEventKeeper
 	orderbookKeeper  types.OrderBookKeeper
 	dvmKeeper        types.DVMKeeper
 }
@@ -42,8 +42,8 @@ func NewKeeper(
 	}
 }
 
-func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SporteventKeeper) {
-	k.sporteventKeeper = sportEventKeeper
+func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
+	k.sportEventKeeper = sportEventKeeper
 }
 
 func (k *Keeper) SetOrderBookKeeper(orderBookKeeper types.OrderBookKeeper) {

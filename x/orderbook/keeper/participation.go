@@ -72,7 +72,7 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 func (k Keeper) InitiateBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
 ) (index uint64, err error) {
-	sportEvent, found := k.sporteventKeeper.GetSportEvent(ctx, bookUID)
+	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, bookUID)
 	if !found {
 		err = sdkerrors.Wrapf(types.ErrSportEventNotFound, "%s", bookUID)
 		return

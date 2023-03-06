@@ -19,7 +19,7 @@ type Keeper struct {
 	bankKeeper       types.BankKeeper
 	accountKeeper    types.AccountKeeper
 	BetKeeper        types.BetKeeper
-	sporteventKeeper types.SportEventKeeper
+	sportEventKeeper types.SportEventKeeper
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -54,7 +54,7 @@ func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
 }
 
 func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
-	k.sporteventKeeper = sportEventKeeper
+	k.sportEventKeeper = sportEventKeeper
 }
 
 // Logger returns the logger of the keeper

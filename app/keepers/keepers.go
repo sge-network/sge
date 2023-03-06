@@ -111,7 +111,7 @@ type AppKeepers struct {
 	DVMKeeper              dvmmodulekeeper.Keeper
 	OrderBookKeeper        orderbookmodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
-	SporteventModule       sporteventmodule.AppModule
+	SportEventModule       sporteventmodule.AppModule
 	StrategicreserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
 	OrderBookModule        orderbookmodule.AppModule
@@ -365,7 +365,7 @@ func NewAppKeeper(
 	)
 	appKeepers.SportEventKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
 	appKeepers.SportEventKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
-	appKeepers.SporteventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SportEventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
+	appKeepers.SportEventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SportEventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
 
 	appKeepers.StrategicreserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicreserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 

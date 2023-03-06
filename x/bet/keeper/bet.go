@@ -94,8 +94,8 @@ func (k Keeper) SetActiveBet(ctx sdk.Context, activeBet *types.ActiveBet, id uin
 	store.Set(types.ActiveBeOfSportEventKey(sportEventUID, id), b)
 }
 
-// IsAnyActiveBetForSportevent checks if there is any active bet for the sport-event
-func (k Keeper) IsAnyActiveBetForSportevent(ctx sdk.Context, sportEventUID string) (thereIs bool, err error) {
+// IsAnyActiveBetForSportEvent checks if there is any active bet for the sport-event
+func (k Keeper) IsAnyActiveBetForSportEvent(ctx sdk.Context, sportEventUID string) (thereIs bool, err error) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfSportEventPrefix(sportEventUID))
 
 	// create iterator for all existing records
