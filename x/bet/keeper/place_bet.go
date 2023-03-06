@@ -28,7 +28,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	// check minimum bet amount allowed
 	betConstraints := sportEvent.GetBetConstraints()
 	if betConstraints == nil {
-		sportEvent.BetConstraints = k.sporteventKeeper.GetDefaultBetConstraints(ctx)
+		sportEvent.BetConstraints = k.sportEventKeeper.GetDefaultBetConstraints(ctx)
 	}
 
 	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
@@ -48,7 +48,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	stats.Count++
 	betID := stats.Count
 
-	betFulfillment, err := k.obKeeper.ProcessBetPlacement(
+	betFulfillment, err := k.orderbookKeeper.ProcessBetPlacement(
 		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
 	)
@@ -79,20 +79,20 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 
 // getSportEvent returns sport-event with id
 func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
-	sportevent, found := k.sporteventKeeper.GetSportEvent(ctx, sportEventID)
+	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, sportEventID)
 	if !found {
 		return sporteventtypes.SportEvent{}, types.ErrNoMatchingSportEvent
 	}
 
-	if sportevent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
+	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
 		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
 	}
 
-	if sportevent.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
+	if sportEvent.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
 	}
 
-	return sportevent, nil
+	return sportEvent, nil
 }
 
 // oddsExists checks if bet odds id is present in the sport-event list of odds uids

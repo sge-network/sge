@@ -16,7 +16,7 @@ import (
 func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Context, n int) []types.Bet {
 	items := make([]types.Bet, n)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
-	tApp.SporteventKeeper.SetSportEvent(ctx, testSportEvent)
+	tApp.SportEventKeeper.SetSportEvent(ctx, testSportEvent)
 
 	for i := range items {
 		items[i].UID = cast.ToString(i)

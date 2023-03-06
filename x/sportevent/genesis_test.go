@@ -27,8 +27,8 @@ func TestGenesis(t *testing.T) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	sportevent.InitGenesis(ctx, tApp.SporteventKeeper, genesisState)
-	got := sportevent.ExportGenesis(ctx, tApp.SporteventKeeper)
+	sportevent.InitGenesis(ctx, tApp.SportEventKeeper, genesisState)
+	got := sportevent.ExportGenesis(ctx, tApp.SportEventKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)

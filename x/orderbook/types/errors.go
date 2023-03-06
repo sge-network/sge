@@ -33,6 +33,8 @@ var (
 	ErrDepositorIsModuleAccount             = sdkerrors.Register(ModuleName, 6023, "depositor is module account")
 	ErrWithdrawalAmountIsTooLarge           = sdkerrors.Register(ModuleName, 6024, "withdrawal amount more than available amount for withdrawal")
 	ErrMaxWithdrawableAmountIsZero          = sdkerrors.Register(ModuleName, 6025, "maximum withdrawable amount is zero")
+	ErrParticipationOnInactiveSportEvent    = sdkerrors.Register(ModuleName, 6026, "participation is allowed on an active sport-event only")
+	ErrSportEventNotFound                   = sdkerrors.Register(ModuleName, 6027, "sport-event not found to initialize participation")
 )
 
 // x/orderbook module sentinel error text

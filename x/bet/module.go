@@ -93,8 +93,8 @@ type AppModule struct {
 	keeper           keeper.Keeper
 	accountKeeper    types.AccountKeeper
 	bankKeeper       types.BankKeeper
-	sporteventKeeper types.SporteventKeeper
-	orderbookKeeper  types.OrderBookKeeper
+	sportEventKeeper types.SportEventKeeper
+	orderBookKeeper  types.OrderBookKeeper
 	dvmKeeper        types.DVMKeeper
 }
 
@@ -104,7 +104,7 @@ func NewAppModule(
 	keeper keeper.Keeper,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
-	sporteventKeeper types.SporteventKeeper,
+	sportEventKeeper types.SportEventKeeper,
 	obKeeper types.OrderBookKeeper,
 	dvmKeeper types.DVMKeeper,
 ) AppModule {
@@ -113,8 +113,8 @@ func NewAppModule(
 		keeper:           keeper,
 		accountKeeper:    accountKeeper,
 		bankKeeper:       bankKeeper,
-		sporteventKeeper: sporteventKeeper,
-		orderbookKeeper:  obKeeper,
+		sportEventKeeper: sportEventKeeper,
+		orderBookKeeper:  obKeeper,
 		dvmKeeper:        dvmKeeper,
 	}
 }

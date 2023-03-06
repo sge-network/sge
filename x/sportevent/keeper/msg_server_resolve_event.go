@@ -58,8 +58,9 @@ func (k msgServer) getSportEventToResolve(ctx sdk.Context, resolutionPayload typ
 		return types.SportEvent{}, types.ErrEventNotFound
 	}
 
-	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
-		return types.SportEvent{}, types.ErrEventIsNotActive
+	if sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE &&
+		sportEvent.Status != types.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE {
+		return types.SportEvent{}, types.ErrEventIsNotActiveOrInactive
 	}
 
 	return sportEvent, nil

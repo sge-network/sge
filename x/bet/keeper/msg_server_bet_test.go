@@ -144,7 +144,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			SrContributionForHouse: sdk.NewInt(50000),
 		}
 
-		tApp.SporteventKeeper.SetSportEvent(ctx, sportEventItem)
+		tApp.SportEventKeeper.SetSportEvent(ctx, sportEventItem)
 
 		var oddsUIDs []string
 		for _, v := range sportEventItem.Odds {

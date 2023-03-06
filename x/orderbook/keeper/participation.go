@@ -6,6 +6,7 @@ import (
 
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/orderbook/types"
+	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
 
 // SetBookParticipation sets a book participation.
@@ -71,6 +72,17 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 func (k Keeper) InitiateBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
 ) (index uint64, err error) {
+	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, bookUID)
+	if !found {
+		err = sdkerrors.Wrapf(types.ErrSportEventNotFound, "%s", bookUID)
+		return
+	}
+
+	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
+		err = sdkerrors.Wrapf(types.ErrParticipationOnInactiveSportEvent, "%s", bookUID)
+		return
+	}
+
 	book, found := k.GetBook(ctx, bookUID)
 	if !found {
 		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)

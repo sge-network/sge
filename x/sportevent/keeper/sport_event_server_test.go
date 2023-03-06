@@ -1,7 +1,6 @@
 package keeper_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -193,7 +192,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventIsNotActive)
+		assert.ErrorIs(t, err, types.ErrEventIsNotActiveOrInactive)
 		assert.Nil(t, response)
 	})
 
@@ -244,7 +243,6 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveSportEvent(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		fmt.Println(err)
 		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
 		assert.Nil(t, response)
 	})

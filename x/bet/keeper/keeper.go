@@ -17,16 +17,9 @@ type Keeper struct {
 	storeKey         sdk.StoreKey
 	memKey           sdk.StoreKey
 	paramstore       paramtypes.Subspace
-	sporteventKeeper types.SporteventKeeper
-	obKeeper         types.OrderBookKeeper
+	sportEventKeeper types.SportEventKeeper
+	orderbookKeeper  types.OrderBookKeeper
 	dvmKeeper        types.DVMKeeper
-}
-
-// ExpectedKeepers contains expected keepers parameter needed by NewKeeper
-type ExpectedKeepers struct {
-	SporteventKeeper types.SporteventKeeper
-	OrderBookKeeper  types.OrderBookKeeper
-	DVMKeeper        types.DVMKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -35,7 +28,6 @@ func NewKeeper(
 	storeKey,
 	memKey sdk.StoreKey,
 	ps paramtypes.Subspace,
-	expectedKeepers ExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -43,14 +35,26 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:              cdc,
-		storeKey:         storeKey,
-		memKey:           memKey,
-		paramstore:       ps,
-		sporteventKeeper: expectedKeepers.SporteventKeeper,
-		obKeeper:         expectedKeepers.OrderBookKeeper,
-		dvmKeeper:        expectedKeepers.DVMKeeper,
+		cdc:        cdc,
+		storeKey:   storeKey,
+		memKey:     memKey,
+		paramstore: ps,
 	}
+}
+
+// SetSportEventKeeper sets sport-event keeper to the bet keeper.
+func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
+	k.sportEventKeeper = sportEventKeeper
+}
+
+// SetOrderBookKeeper sets order book keeper to the bet keeper.
+func (k *Keeper) SetOrderBookKeeper(orderBookKeeper types.OrderBookKeeper) {
+	k.orderbookKeeper = orderBookKeeper
+}
+
+// SetDVMKeeper sets dvm keeper to the bet keeper.
+func (k *Keeper) SetDVMKeeper(dvmKeeper types.DVMKeeper) {
+	k.dvmKeeper = dvmKeeper
 }
 
 // Logger returns the logger of the keeper
