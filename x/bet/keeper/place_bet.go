@@ -49,7 +49,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	betID := stats.Count
 
 	betFulfillment, err := k.obKeeper.ProcessBetPlacement(
-		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, payoutProfit,
+		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
 	)
 	if err != nil {
