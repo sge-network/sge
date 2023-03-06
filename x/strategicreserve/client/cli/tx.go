@@ -9,7 +9,7 @@ import (
 
 // GetTxCmd returns a root CLI command handler for all x/strategicreserve transaction commands.
 func GetTxCmd() *cobra.Command {
-	srTxCmd := &cobra.Command{
+	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
 		Short:                      "Strategic Reserve transaction subcommands",
 		DisableFlagParsing:         true,
@@ -17,5 +17,5 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	return srTxCmd
+	return cmd
 }

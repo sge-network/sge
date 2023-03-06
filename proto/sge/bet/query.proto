@@ -4,6 +4,7 @@ package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
 import "sge/sportevent/sport_event.proto";
 
@@ -11,6 +12,11 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/bet/params";
+  }
+
   // Queries a Bet by uid.
   rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
     option (google.api.http).get = "/sge/bet/{creator}/{uid}";
@@ -42,6 +48,17 @@ service Query {
       returns (QuerySettledBetsOfHeightResponse) {
     option (google.api.http).get = "/sge/settled_bets_of_height/{block_height}";
   }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // QueryBetRequest is the request type for a single bet query

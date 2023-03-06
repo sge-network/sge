@@ -110,11 +110,14 @@ func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.De
 	}
 
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
-	// this helps not to lost precision in the division
-	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
+	// this helps not to lost precision in the division and calculate the payout
 
-	// calculate payout
-	payout := amount.ToDec().Add(amount.ToDec().Mul(coefficient))
+	profit := amount.ToDec().
+		// the coefficient
+		Mul(firstPart.ToDec()).
+		Quo(secondPart.ToDec())
+
+	payout := amount.ToDec().Add(profit)
 
 	fmt.Println(payout)
 	// get the integer part of the payout
@@ -151,16 +154,14 @@ func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec
 	}
 
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
-	// this helps not to lost precision in the division
-	coefficient := firstPart.ToDec().Quo(secondPart.ToDec())
-
-	// calculate bet amount
-	betAmount := payoutProfit.Quo(coefficient)
-
-	fmt.Println(betAmount)
+	// this helps not to lost precision in the division and calculate the bet amount
+	betAmount := payoutProfit.
+		// the coefficient
+		Mul(secondPart.ToDec()).
+		Quo(firstPart.ToDec())
 
 	// get the integer part of the bet amount
-	return betAmount.Ceil(), nil
+	return betAmount, nil
 }
 
 // moneylineOdds is the type to define OddsTypeI interface
@@ -182,17 +183,21 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec
 	}
 
 	// calculate payout
-	var payout, coefficient sdk.Dec
+	var payout, profit sdk.Dec
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
 	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
-		coefficient = oddsValue.ToDec().Quo(sdk.NewDec(100)).Abs()
+		profit = amount.ToDec().
+			Mul(oddsValue.ToDec()).
+			Quo(sdk.NewDec(100)).Abs()
 	} else {
-		coefficient = sdk.NewDec(100).QuoInt(oddsValue).Abs()
+		profit = amount.ToDec().
+			Mul(sdk.NewDec(100)).
+			QuoInt(oddsValue).Abs()
 	}
 
 	// bet amount should be multiplied by the coefficient
-	payout = amount.ToDec().Add(amount.ToDec().Mul(coefficient))
+	payout = amount.ToDec().Add(profit)
 
 	// get the integer part of the payout
 	return payout, nil
@@ -213,17 +218,20 @@ func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec)
 	}
 
 	// calculate payout
-	var coefficient sdk.Dec
+	var betAmount sdk.Dec
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
 	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
-		coefficient = oddsValue.ToDec().Quo(sdk.NewDec(100)).Abs()
+		betAmount = payoutProfit.
+			Mul(sdk.NewDec(100)).
+			Quo(oddsValue.ToDec()).
+			Abs()
 	} else {
-		coefficient = sdk.NewDec(100).QuoInt(oddsValue).Abs()
+		betAmount = payoutProfit.
+			Mul(oddsValue.ToDec()).
+			Quo(sdk.NewDec(100)).
+			Abs()
 	}
-
-	// calculate bet amount
-	betAmount := payoutProfit.Quo(coefficient)
 
 	// get the integer part of the bet amount
 	return betAmount, nil

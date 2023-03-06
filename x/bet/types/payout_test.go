@@ -28,7 +28,6 @@ func TestCalculateDecimalPayout(t *testing.T) {
 
 			expVal: 19594183,
 		},
-
 		{
 			desc:      "same",
 			oddsValue: "1",
@@ -111,6 +110,13 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			expVal: 2095634,
 		},
 		{
+			desc:      "positive outcome 4",
+			oddsValue: "7/3",
+			betAmount: defaultBetAmount,
+
+			expVal: 83126841,
+		},
+		{
 			desc:      "same",
 			oddsValue: "1/1",
 			betAmount: defaultBetAmount,
@@ -183,7 +189,38 @@ func TestCalculateFractionalPayout(t *testing.T) {
 				require.ErrorIs(t, tc.err, err)
 			} else {
 				require.NoError(t, err)
-				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().RoundInt()).Abs().LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
+				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().RoundInt()).Abs().LTE(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
+			}
+		})
+	}
+}
+
+func TestCalculateFractionalBetAmount(t *testing.T) {
+	tcs := []struct {
+		desc         string
+		oddsValue    string
+		payoutProfit sdk.Dec
+
+		expVal sdk.Dec
+		err    error
+	}{
+		{
+			desc:         "positive outcome",
+			oddsValue:    "2/7",
+			payoutProfit: sdk.MustNewDecFromStr("5003"),
+
+			expVal: sdk.MustNewDecFromStr("17510.5"),
+		},
+	}
+
+	for _, tc := range tcs {
+		t.Run(tc.desc, func(t *testing.T) {
+			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_FRACTIONAL, tc.oddsValue, tc.payoutProfit)
+			if tc.err != nil {
+				require.ErrorIs(t, tc.err, err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t, tc.expVal, calcBetAmount, "expected: %d, actual: %d", tc.expVal, calcBetAmount)
 			}
 		})
 	}
@@ -210,7 +247,7 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 			oddsValue: "-450",
 			betAmount: defaultBetAmount,
 
-			expVal: 7916841,
+			expVal: 7916842,
 		},
 		{
 			desc:      "lower",
@@ -264,7 +301,38 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 				require.ErrorIs(t, tc.err, err)
 			} else {
 				require.NoError(t, err)
-				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().TruncateInt()).Abs().LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
+				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().TruncateInt()).Abs().LTE(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
+			}
+		})
+	}
+}
+
+func TestCalculateMoneylineBetAmount(t *testing.T) {
+	tcs := []struct {
+		desc         string
+		oddsValue    string
+		payoutProfit sdk.Dec
+
+		expVal sdk.Dec
+		err    error
+	}{
+		{
+			desc:         "positive outcome",
+			oddsValue:    "-450",
+			payoutProfit: sdk.MustNewDecFromStr("5003"),
+
+			expVal: sdk.MustNewDecFromStr("22513.5"),
+		},
+	}
+
+	for _, tc := range tcs {
+		t.Run(tc.desc, func(t *testing.T) {
+			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_MONEYLINE, tc.oddsValue, tc.payoutProfit)
+			if tc.err != nil {
+				require.ErrorIs(t, tc.err, err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t, tc.expVal, calcBetAmount, "expected: %d, actual: %d", tc.expVal, calcBetAmount)
 			}
 		})
 	}

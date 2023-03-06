@@ -4,6 +4,7 @@ package sgenetwork.sge.orderbook;
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "sge/orderbook/params.proto";
 import "sge/orderbook/orderbook.proto";
 import "sge/orderbook/participation.proto";
 import "sge/orderbook/exposure.proto";
@@ -12,6 +13,11 @@ option go_package = "github.com/sge-network/sge/x/orderbook/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/orderbooks/params";
+  }
+
   // OrderBooks queries all order books that match the given status.
   rpc OrderBooks(QueryOrderBooksRequest) returns (QueryOrderBooksResponse) {
     option (google.api.http).get = "/sge/orderbooks/{status}";
@@ -82,6 +88,17 @@ service Query {
     option (google.api.http).get = "/sge/orderbooks/{book_uid}/participations/"
                                    "{participation_index}/fulfilled_bets";
   }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // QueryOrderBooksRequest is request type for Query/OrderBooks RPC method.

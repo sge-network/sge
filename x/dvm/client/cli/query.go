@@ -24,12 +24,13 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdQueryParams())
-	cmd.AddCommand(CmdPubKeysList())
-	cmd.AddCommand(CmdActivePubkeysChangeProposal())
-	cmd.AddCommand(CmdActivePubkeysChangeProposalList())
-	cmd.AddCommand(CmdFinishedPubkeysChangeProposal())
-	cmd.AddCommand(CmdFinishedPubkeysChangeProposalList())
+	cmd.AddCommand(CmdQueryParams(),
+		CmdPubKeysList(),
+		CmdActivePubkeysChangeProposal(),
+		CmdActivePubkeysChangeProposalList(),
+		CmdFinishedPubkeysChangeProposal(),
+		CmdFinishedPubkeysChangeProposalList(),
+	)
 
 	return cmd
 }

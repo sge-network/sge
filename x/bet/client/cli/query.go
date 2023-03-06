@@ -24,11 +24,14 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdListBet())
-	cmd.AddCommand(CmdListBetByCreator())
-	cmd.AddCommand(CmdListActiveBets())
-	cmd.AddCommand(CmdListBetByUIDs())
-	cmd.AddCommand(CmdShowBet())
+	cmd.AddCommand(
+		CmdQueryParams(),
+		CmdListBet(),
+		CmdListBetByCreator(),
+		CmdListActiveBets(),
+		CmdListBetByUIDs(),
+		CmdShowBet(),
+	)
 
 	return cmd
 }
