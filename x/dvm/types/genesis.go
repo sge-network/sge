@@ -19,7 +19,6 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
-
 	pubkeyChangeProposalCount := len(gs.ActivePubkeysChangeProposals) +
 		len(gs.FinishedPubkeysChangeProposals)
 	if cast.ToUint64(pubkeyChangeProposalCount) != gs.ProposalStats.PubkeysChangeCount {
