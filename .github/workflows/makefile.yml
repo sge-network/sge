@@ -5,8 +5,7 @@ on:
     branches:
      - master
      - proto-to-sgejs
-     - test pull
-  pull_request:
+  pull_request_target:
     types: [opened, edited, synchronize]
 env:
   NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -38,29 +37,32 @@ jobs:
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
         git -C sgejs status
-     
-
+        git -C sgejs config user.email "action@github.com"
+        git -C sgejs config user.name "GitHub Action"
+        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
+        
     - name: Npm Install
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
         npm install --prefix sgejs
-    
+        git -C sgejs checkout .
+        
     - name: Delete src/codegen and types
       run: |
         rm -rf sgejs/src/codegen
-        rm -rf sgejs/types        
-
+        rm -rf sgejs/types
+        
     - name: Npm Run Codegen
       run: |
         npm run codegen --prefix sgejs
  
     - name: Commit changes
       run: |
-        git -C sgejs checkout .      
+        git -C sgejs add .     
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
-        git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
-
+        git -C sgejs commit --allow-empty -am "Codegen Deployment [skip ci]"
+        
     - name: Determine NPM version
       run: |
         cd sgejs      
@@ -74,8 +76,8 @@ jobs:
         
     - name: Bump NPM version
       run: |
-        git -C sgejs status
-        cd sgejs    
+        cd sgejs          
+        git status
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
         elif [ "${{ env.NPM_VERSION }}" == "minor" ]; then
@@ -87,6 +89,10 @@ jobs:
         
     - name: Push sgejs
       run: git -C sgejs push        
+
+    - name: Check git
+      run: |
+        git -C sgejs status
         
 #     - name: Publish NPM Package
 #       run: |
