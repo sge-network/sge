@@ -22,9 +22,11 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdAddEvent())
-	cmd.AddCommand(CmdResolveEvent())
-	cmd.AddCommand(CmdUpdateEvent())
+	cmd.AddCommand(
+		CmdAddEvent(),
+		CmdResolveEvent(),
+		CmdUpdateEvent(),
+	)
 
 	return cmd
 }

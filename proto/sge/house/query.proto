@@ -4,6 +4,7 @@ package sgenetwork.sge.house;
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
+import "sge/house/params.proto";
 import "sge/house/deposit.proto";
 import "sge/house/withdraw.proto";
 
@@ -11,6 +12,11 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/house/params";
+  }
+
   // Deposits queries all deposits.
   rpc Deposits(QueryDepositsRequest) returns (QueryDepositsResponse) {
     option (google.api.http).get = "/sge/deposits";
@@ -27,6 +33,17 @@ service Query {
       returns (QueryDepositorWithdrawalsResponse) {
     option (google.api.http).get = "/sge/withdrawals/{depositor_address}";
   }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
 // QueryDepositsRequest is request type for Query/Deposits RPC method.

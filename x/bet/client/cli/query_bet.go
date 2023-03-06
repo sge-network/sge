@@ -2,6 +2,7 @@ package cli
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -143,6 +144,10 @@ func CmdListBetByUIDs() *cobra.Command {
 			var items []*types.QueryBetRequest
 			for _, val := range reqItems {
 				pair := strings.Split(val, mapSeparator)
+				if len(pair) != 2 {
+					return fmt.Errorf("each pair should be separated by colon ex. creator:uid")
+				}
+
 				items = append(items, &types.QueryBetRequest{
 					Creator: pair[0],
 					Uid:     pair[1],

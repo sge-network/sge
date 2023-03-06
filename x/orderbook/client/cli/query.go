@@ -18,6 +18,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	}
 
 	orderBookQueryCmd.AddCommand(
+		CmdQueryParams(),
 		GetCmdQueryOrderBooks(),
 		GetCmdQueryOrderBook(),
 		GetCmdQueryBookParticipations(),
