@@ -102,10 +102,8 @@ message Bet {
     RESULT_WON = 2;
     // bet lost by the bettor
     RESULT_LOST = 3;
-    // bet is draw
-    RESULT_DRAW = 4;
-    // bet is aborted
-    RESULT_ABORTED = 5;
+    // bet is refunded
+    RESULT_REFUNDED = 4;
   }
 }
 
