@@ -82,7 +82,7 @@ func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) 
 		Ticket:  testAddSportEventTicket,
 	}
 	wctx := sdk.WrapSDKContext(ctx)
-	sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SporteventKeeper)
+	sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SportEventKeeper)
 	resAddEvent, err := sporteventSrv.AddSportEvent(wctx, testAddSportEvent)
 	require.Nil(t, err)
 	require.NotNil(t, resAddEvent)
@@ -112,7 +112,7 @@ func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Cont
 			Ticket:  testAddSportEventTicket,
 		}
 		wctx := sdk.WrapSDKContext(ctx)
-		sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SporteventKeeper)
+		sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SportEventKeeper)
 		resAddEvent, err := sporteventSrv.AddSportEvent(wctx, testAddSportEvent)
 		require.Nil(t, err)
 		require.NotNil(t, resAddEvent)

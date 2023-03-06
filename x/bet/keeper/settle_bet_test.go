@@ -172,14 +172,14 @@ func TestSettleBet(t *testing.T) {
 					},
 					SrContributionForHouse: sdk.NewInt(500000),
 				}
-				tApp.SporteventKeeper.SetSportEvent(ctx, resetSportEvent)
+				tApp.SportEventKeeper.SetSportEvent(ctx, resetSportEvent)
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
 			}
 
 			if tc.updateSportEvent != nil {
-				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.updateSportEvent)
+				tApp.SportEventKeeper.SetSportEvent(ctx, *tc.updateSportEvent)
 			}
 
 			if tc.betUID != "" {
@@ -217,7 +217,7 @@ func TestBatchSettleBet(t *testing.T) {
 
 	sportEventUIDs := addTestSportEventBatch(t, tApp, ctx, sportEventCount)
 	for _, sportEventUID := range sportEventUIDs {
-		sportEvent, found := tApp.SporteventKeeper.GetSportEvent(ctx, sportEventUID)
+		sportEvent, found := tApp.SportEventKeeper.GetSportEvent(ctx, sportEventUID)
 		require.True(t, found)
 
 		sportEvent.Status = sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE
@@ -225,7 +225,7 @@ func TestBatchSettleBet(t *testing.T) {
 			MinAmount: sdk.NewInt(1),
 			BetFee:    sdk.NewInt(1),
 		}
-		tApp.SporteventKeeper.SetSportEvent(ctx, sportEvent)
+		tApp.SportEventKeeper.SetSportEvent(ctx, sportEvent)
 
 		for i := 0; i < sportEventBetCount; i++ {
 			placeTestBet(ctx, t, tApp,
@@ -245,7 +245,7 @@ func TestBatchSettleBet(t *testing.T) {
 	require.Equal(t, allBetCount, len(allActiveBets))
 
 	for _, sportEventUID := range sportEventUIDs[:len(sportEventUIDs)-2] {
-		_, err := tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+		_, err := tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
 			UID:            sportEventUID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID1, testOddsUID2, testOddsUID3},
@@ -254,14 +254,14 @@ func TestBatchSettleBet(t *testing.T) {
 		require.NoError(t, err)
 	}
 
-	_, err = tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+	_, err = tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
 		UID:          sportEventUIDs[len(sportEventUIDs)-2],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
 		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
 	})
 	require.NoError(t, err)
 
-	_, err = tApp.SporteventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
+	_, err = tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
 		UID:          sportEventUIDs[len(sportEventUIDs)-1],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
 		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
@@ -279,7 +279,7 @@ func TestBatchSettleBet(t *testing.T) {
 		settledBets, err := k.GetSettledBets(ctx)
 		require.NoError(t, err)
 
-		sportEventStats := tApp.SporteventKeeper.GetSportEventStats(ctx)
+		sportEventStats := tApp.SportEventKeeper.GetSportEventStats(ctx)
 
 		t.Logf("block: %d, active bets: %d, settled bets: %d, resolved events: %v\n", i, len(activeBets), len(settledBets), sportEventStats.ResolvedUnsettled)
 		require.GreaterOrEqual(t, int(p.BatchSettlementCount)*i, len(settledBets))

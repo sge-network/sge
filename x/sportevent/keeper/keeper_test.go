@@ -15,14 +15,14 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, s
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, &tApp.SporteventKeeper, ctx.WithBlockTime(time.Now())
+	return tApp, &tApp.SportEventKeeper, ctx.WithBlockTime(time.Now())
 }
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return &tApp.SporteventKeeper, ctx
+	return &tApp.SportEventKeeper, ctx
 }
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {

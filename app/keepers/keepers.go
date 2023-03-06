@@ -106,7 +106,7 @@ type AppKeepers struct {
 	AuthzKeeper         authzkeeper.Keeper
 
 	StrategicreserveKeeper strategicreservemodulekeeper.Keeper
-	SporteventKeeper       sporteventmodulekeeper.Keeper
+	SportEventKeeper       sporteventmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
 	OrderBookKeeper        orderbookmodulekeeper.Keeper
@@ -350,23 +350,22 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.keys[orderbookmoduletypes.StoreKey],
 		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
-		appKeepers.BankKeeper,
-		appKeepers.AccountKeeper,
-		appKeepers.BetKeeper,
+		orderbookmodulekeeper.SdkExpectedKeepers{
+			BankKeeper:    appKeepers.BankKeeper,
+			AccountKeeper: appKeepers.AccountKeeper,
+		},
 	)
 	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
 
-	appKeepers.SporteventKeeper = *sporteventmodulekeeper.NewKeeper(
+	appKeepers.SportEventKeeper = *sporteventmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[sporteventmoduletypes.StoreKey],
 		appKeepers.keys[sporteventmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(sporteventmoduletypes.ModuleName),
-		sporteventmodulekeeper.ExpectedKeepers{
-			DVMKeeper:  appKeepers.DVMKeeper,
-			BookKeeper: appKeepers.OrderBookKeeper,
-		},
 	)
-	appKeepers.SporteventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SporteventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
+	appKeepers.SportEventKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
+	appKeepers.SportEventKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
+	appKeepers.SporteventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SportEventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
 
 	appKeepers.StrategicreserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicreserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
@@ -375,13 +374,14 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.StoreKey],
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
-		betmodulekeeper.ExpectedKeepers{
-			SporteventKeeper: appKeepers.SporteventKeeper,
-			OrderBookKeeper:  appKeepers.OrderBookKeeper,
-			DVMKeeper:        appKeepers.DVMKeeper,
-		},
 	)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SporteventKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetKeeper.SetSportEventKeeper(appKeepers.SportEventKeeper)
+	appKeepers.BetKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
+	appKeepers.BetKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SportEventKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
+
+	appKeepers.OrderBookKeeper.SetBetKeeper(appKeepers.BetKeeper)
+	appKeepers.OrderBookKeeper.SetSportEventKeeper(appKeepers.SportEventKeeper)
 
 	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
 		appCodec,

@@ -13,12 +13,19 @@ import (
 
 // keeper of the orderbook store
 type Keeper struct {
-	storeKey      sdk.StoreKey
-	cdc           codec.BinaryCodec
-	paramstore    paramtypes.Subspace
-	bankKeeper    types.BankKeeper
-	accountKeeper types.AccountKeeper
-	BetKeeper     types.BetKeeper
+	storeKey         sdk.StoreKey
+	cdc              codec.BinaryCodec
+	paramstore       paramtypes.Subspace
+	bankKeeper       types.BankKeeper
+	accountKeeper    types.AccountKeeper
+	BetKeeper        types.BetKeeper
+	sporteventKeeper types.SportEventKeeper
+}
+
+// SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
+type SdkExpectedKeepers struct {
+	BankKeeper    types.BankKeeper
+	AccountKeeper types.AccountKeeper
 }
 
 // NewKeeper creates a new orderbook Keeper instance
@@ -26,9 +33,7 @@ func NewKeeper(
 	cdc codec.BinaryCodec,
 	key sdk.StoreKey,
 	ps paramtypes.Subspace,
-	bnkKeeper types.BankKeeper,
-	accKeeper types.AccountKeeper,
-	betKeeper types.BetKeeper,
+	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -39,10 +44,17 @@ func NewKeeper(
 		storeKey:      key,
 		cdc:           cdc,
 		paramstore:    ps,
-		bankKeeper:    bnkKeeper,
-		accountKeeper: accKeeper,
-		BetKeeper:     betKeeper,
+		bankKeeper:    expectedKeepers.BankKeeper,
+		accountKeeper: expectedKeepers.AccountKeeper,
 	}
+}
+
+func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
+	k.BetKeeper = betKeeper
+}
+
+func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
+	k.sporteventKeeper = sportEventKeeper
 }
 
 // Logger returns the logger of the keeper

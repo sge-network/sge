@@ -192,7 +192,7 @@ func TestPlaceBet(t *testing.T) {
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
 			if tc.sportEvent != nil {
-				tApp.SporteventKeeper.SetSportEvent(ctx, *tc.sportEvent)
+				tApp.SportEventKeeper.SetSportEvent(ctx, *tc.sportEvent)
 
 				var oddsUIDs []string
 				for _, v := range tc.sportEvent.Odds {

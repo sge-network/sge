@@ -57,7 +57,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 			return err
 		}
 
-		if err := k.obKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.orderbookKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payoutProfit.TruncateInt(), bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRRefund, "%s", err)
 		}
 
@@ -111,12 +111,12 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.obKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.obKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
@@ -154,7 +154,7 @@ func (k Keeper) BatchSportEventSettlements(ctx sdk.Context) error {
 		// we need to remove its uid from the list of unsettled resolved bets.
 		if !isThereAnyActiveBet {
 			k.sporteventKeeper.RemoveUnsettledResolvedSportEvent(ctx, sportEventUID)
-			err = k.obKeeper.AddBookSettlement(ctx, sportEventUID)
+			err = k.orderbookKeeper.AddBookSettlement(ctx, sportEventUID)
 			if err != nil {
 				return fmt.Errorf("could not resolve orderbook %s %s", sportEventUID, err)
 			}
