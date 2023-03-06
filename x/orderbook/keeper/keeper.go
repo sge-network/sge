@@ -49,10 +49,12 @@ func NewKeeper(
 	}
 }
 
+// SetBetKeeper sets the bet module keeper to the order book keeper.
 func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
 	k.BetKeeper = betKeeper
 }
 
+// SetSportEventKeeper sets the sport-event module keeper to the order book keeper.
 func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
 	k.sportEventKeeper = sportEventKeeper
 }

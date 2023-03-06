@@ -42,14 +42,17 @@ func NewKeeper(
 	}
 }
 
+// SetSportEventKeeper sets sport-event keeper to the bet keeper.
 func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
 	k.sportEventKeeper = sportEventKeeper
 }
 
+// SetOrderBookKeeper sets order book keeper to the bet keeper.
 func (k *Keeper) SetOrderBookKeeper(orderBookKeeper types.OrderBookKeeper) {
 	k.orderbookKeeper = orderBookKeeper
 }
 
+// SetDVMKeeper sets dvm keeper to the bet keeper.
 func (k *Keeper) SetDVMKeeper(dvmKeeper types.DVMKeeper) {
 	k.dvmKeeper = dvmKeeper
 }

@@ -41,10 +41,12 @@ func NewKeeper(
 	}
 }
 
+// SetOrderBookKeeper sets the order book module keeper to the sport-event keeper.
 func (k *Keeper) SetOrderBookKeeper(orderBookKeeper types.OrderBookKeeper) {
 	k.orderBookKeeper = orderBookKeeper
 }
 
+// SetDVMKeeper sets the dvm module keeper to the sport-event keeper.
 func (k *Keeper) SetDVMKeeper(dvmKeeper types.DVMKeeper) {
 	k.dvmKeeper = dvmKeeper
 }
