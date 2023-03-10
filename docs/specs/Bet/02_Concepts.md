@@ -42,8 +42,9 @@ When a user is raising a transaction to place a bet, the creator of the transact
 - ***Decimal(European):*** Calculated as `bet_amount * oddsValue` ex. `3564819 * 1.29 = 4598616.51`.
 - ***Fractional(British):*** Calculated as `bet_amount +  (bet_amount * fraction)` ex. `3564819 + (3564819 * 2/7) = 4583338.71`.
 - ***Moneyline(American):*** Calculated as:
-  - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `3564819 + 3564819 * |+350/100| = 16041685.50`.
-  - Negative odds value: `bet_amount + (bet_amount * |100/oddsValue|)` ex. `3564819 + 3564819 * |100/-350| = 4583338.71`.
+  - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `3564819 + 3564819 * |+350/100| = 16041685.50` the result will be rounded to floor.
+  - Negative odds value: `bet_amount + (bet_amount * |100/oddsValue|)` ex. `3564819 + 3564819 * |100/-350| = 4583338.71` the result will be rounded to floor.
+
 
 ### Precision
 
