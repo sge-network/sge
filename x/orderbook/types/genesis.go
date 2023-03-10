@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cast"
 )
 
@@ -26,6 +27,11 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	for _, p := range gs.BookParticipationList {
+		_, err := sdk.AccAddressFromBech32(p.ParticipantAddress)
+		if err != nil {
+			return fmt.Errorf("invalid participant address %s", p.ParticipantAddress)
+		}
+
 		bookFound := false
 
 		for _, b := range gs.BookList {

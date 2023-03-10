@@ -1,6 +1,10 @@
 package types
 
-import "fmt"
+import (
+	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
 // DefaultGenesis returns the default  genesis state
 func DefaultGenesis() *GenesisState {
@@ -15,8 +19,18 @@ func DefaultGenesis() *GenesisState {
 // failure.
 func (gs GenesisState) Validate() error {
 	for _, w := range gs.WithdrawalList {
+		_, err := sdk.AccAddressFromBech32(w.DepositorAddress)
+		if err != nil {
+			return fmt.Errorf("invalid withdrawal address %s", w.DepositorAddress)
+		}
+
 		found := false
 		for _, d := range gs.DepositList {
+			_, err := sdk.AccAddressFromBech32(w.DepositorAddress)
+			if err != nil {
+				return fmt.Errorf("invalid deposit address %s", d.Creator)
+			}
+
 			if w.DepositorAddress == d.Creator &&
 				w.SportEventUID == d.SportEventUID &&
 				w.ParticipationIndex == d.ParticipationIndex {
