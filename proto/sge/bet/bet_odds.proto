@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// BetOdds is the type to store odds of an sport-event.
+// BetOdds is the type to store odds of a sport-event(market).
 message BetOdds {
   // uid is universal unique identifier of odds.
   // Required | Unique | uuid-v4 or code
@@ -14,7 +14,7 @@ message BetOdds {
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
-  // sport_event_uid is the parent, used for fast retrieving.
+  // sport_event_uid is the parent of the given odd
   // Required | NonUnique | -
   string sport_event_uid = 2 [
     (gogoproto.customname) = "SportEventUID",

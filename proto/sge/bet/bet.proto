@@ -6,7 +6,7 @@ import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// Bet is the main type of bet in the blockchain state.
+// Bet is the transaction order placed by a bettor on a specific event and odd
 message Bet {
   // uid is the universal unique identifier assigned to a bet.
   string uid = 1 [
@@ -32,7 +32,7 @@ message Bet {
   ];
 
   // odds_type is the type of odds that
-  // user choose such as decimal, fractional.
+  // user choose such as decimal, fractional, etc
   sgenetwork.sge.bet.OddsType odds_type = 4;
 
   // odds_value is the odds on which the bet is placed.
@@ -44,7 +44,7 @@ message Bet {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the betting fee calculated by the bet amount.
+  // bet_fee is the betting fee user needs to pay for placing a bet
   string bet_fee = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -148,7 +148,10 @@ message SettledBet {
   string bettor_address = 2;
 }
 
-// BetFulfillment is the type for bet fulfillment
+// BetFulfillment: A bet can be fulfilled by multiple users participating as a house
+// Every participant is exposed to a share of risk or payout associated with the bet
+// For the risk exposure on a bet, an estimated bet amount is also allocated to the participant
+// This bet amount is the amount participant receive if the bettor loose the bet
 message BetFulfillment {
   // participant_address is the bech32-encoded address of the participant
   // fulfilling bet.

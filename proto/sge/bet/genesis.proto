@@ -10,7 +10,7 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // GenesisState defines the bet module's genesis state.
 message GenesisState {
-  // params contains parameters of dvm module.
+  // params contains parameters of bet module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 
   // bet_list contains the bet list in the genesis init.

@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// PlaceBetFields contains necessary fields which come in Place bet tx request.
+// PlaceBetFields contains attributes which come in Place bet tx request.
 message PlaceBetFields {
   // uid is the universal unique identifier assigned to bet.
   string uid = 1 [
