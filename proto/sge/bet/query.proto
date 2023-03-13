@@ -25,29 +25,29 @@ service Query {
   // Queries list of Bet items of a certain creator sorted by timestamp.
   rpc BetsByCreator(QueryBetsByCreatorRequest)
       returns (QueryBetsByCreatorResponse) {
-    option (google.api.http).get = "/sge/creator/{creator}/bets";
+    option (google.api.http).get = "/sge/bet/creator/{creator}/bets";
   }
 
   // Queries list of Bet items.
   rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
-    option (google.api.http).get = "/sge/bets";
+    option (google.api.http).get = "/sge/bet/bets";
   }
 
   // Queries a list of Bet items filtered by uid list.
   rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
-    option (google.api.http).get = "/sge/bets_by_uids";
+    option (google.api.http).get = "/sge/bet/bets_by_uids/{uids}";
   }
 
   // Queries list of Active Bet items.
   rpc ActiveBets(QueryActiveBetsRequest) returns (QueryActiveBetsResponse) {
-    option (google.api.http).get = "/sge/active_bets/{market_uid}";
-  }
+    option (google.api.http).get = "/sge/bet/active-bets/{market_uid}";
+  }// TODO: Change status as argument
 
   // Queries list of Settled Bet items.
   rpc SettledBetsOfHeight(QuerySettledBetsOfHeightRequest)
       returns (QuerySettledBetsOfHeightResponse) {
-    option (google.api.http).get = "/sge/settled_bets_of_height/{block_height}";
-  }
+    option (google.api.http).get = "/sge/bet/active-bets/{block_height}";
+  } // TODO: Change arguments in API
 }
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
@@ -113,10 +113,11 @@ message QueryBetsByUIDsRequest {
 // UID list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsResponse {
   repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
-  repeated string not_found_markets = 2;
+  repeated string uids_not_found = 2;
 }
 
 // QueryActiveBetsRequest is the request type for the active bets list query
+// for a market
 // Query/ActiveBets RPC method.
 message QueryActiveBetsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;

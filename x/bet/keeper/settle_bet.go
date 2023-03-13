@@ -38,7 +38,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 	}
 
 	if err := checkBetStatus(bet.Status); err != nil {
-		// bet cancelation logic will reside here if this feature is requested
+		// bet cancellation logic will reside here if this feature is requested
 		return err
 	}
 
@@ -83,7 +83,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 
 // updateSettlementState settles bet in the store
 func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint64) {
-	// set current height as settlement heigth
+	// set current height as settlement height
 	bet.SettlementHeight = ctx.BlockHeight()
 
 	// store bet in the module state
@@ -124,7 +124,7 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 }
 
 // BatchMarketSettlements settles bets of resolved markets
-// in batch. The markets get into account according in FIFO.
+// in batch. The markets get into account in FIFO manner.
 func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
@@ -144,14 +144,14 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 		}
 
 		// check if still there is any active bet for the market.
-		isThereAnyActiveBet, err := k.IsAnyActiveBetForMarket(ctx, marketUID)
+		activeBetExists, err := k.IsAnyActiveBetForMarket(ctx, marketUID)
 		if err != nil {
 			return fmt.Errorf("could not check the active bets %s %s", marketUID, err)
 		}
 
 		// if there is not any active bet for the market
 		// we need to remove its uid from the list of unsettled resolved bets.
-		if !isThereAnyActiveBet {
+		if !activeBetExists {
 			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
 			err = k.srKeeper.AddBookSettlement(ctx, marketUID)
 			if err != nil {
@@ -166,7 +166,7 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfMarket settles active of a markets
+// batchSettlementOfMarket settles active bets of a markets
 func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, countToBeSettled uint32) (settledCount uint32, err error) {
 	// initialize iterator for the certain number of active bets
 	// equal to countToBeSettled

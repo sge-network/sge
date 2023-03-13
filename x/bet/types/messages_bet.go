@@ -11,6 +11,7 @@ import (
 const (
 	// TypeMsgPlaceBet is type of message MsgPlaceBet
 	TypeMsgPlaceBet = "place_bet"
+	// TODO: Below types are unused
 	// TypeMsgSettleBet is type of message MsgSettleBet
 	TypeMsgSettleBet = "settle_bet"
 
@@ -76,8 +77,6 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 func isValidUUID(uid string) bool {
 	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
 	return r.MatchString(uid)
-	// _, err := uuid.Parse(uid)
-	// return err == nil
 }
 
 // IsValidUID validates the uid

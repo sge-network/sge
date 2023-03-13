@@ -105,7 +105,7 @@ func oddsExists(betOddsUID string, odds []*markettypes.Odds) bool {
 	return false
 }
 
-// setBetFee sets the bet fee and subtraceted amount of bet object pointer
+// setBetFee sets the bet fee and subtracted amount of bet object pointer
 func setBetFee(bet *types.Bet, betFee sdk.Int) {
 	bet.Amount = bet.Amount.Sub(betFee)
 	bet.BetFee = betFee

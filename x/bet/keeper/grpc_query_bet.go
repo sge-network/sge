@@ -16,6 +16,7 @@ import (
 func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.QueryBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+		// TODO: Registered errors?
 	}
 
 	var bets []types.Bet
@@ -39,7 +40,7 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 	return &types.QueryBetsResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
-// Bets returns all bets of certain creator sort-able by pagination attributes
+// BetsByCreator returns all bets of certain creator sort-able by pagination attributes
 func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsByCreatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
@@ -66,7 +67,7 @@ func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRe
 	return &types.QueryBetsByCreatorResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
-// Bets returns bets with selected uids
+// BetsByUIDs returns bets with selected uids
 func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest) (*types.QueryBetsByUIDsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
@@ -102,6 +103,7 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	return &types.QueryBetsByUIDsResponse{
 		Bets:            foundBets,
 		NotFoundMarkets: notFoundBets,
+		// TODO: NotFoundBets
 	}, nil
 }
 

@@ -50,9 +50,12 @@ func CmdListBet() *cobra.Command {
 func CmdListBetByCreator() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bets-by-creator [creator]",
-		Short: "get list of bets of a bet-creator-address",
-		Long:  "Get list of bets of a creator address in paginated response.",
-		Args:  cobra.ExactArgs(1),
+		Short: "get list of bets for a creator-address",
+		Long:  "Get list of bets for a creator address in paginated response.",
+		//Example: fmt.Sprintf("%s tx %s postprice bnb:usd 25 9999999999 --from validator",
+		//	version.AppName, types.ModuleName),
+		// TODO: Put example
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -176,7 +179,7 @@ func CmdListBetByUIDs() *cobra.Command {
 func CmdShowBet() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bet [creator] [uid]",
-		Short: "bet details by bet-creator-address and uid",
+		Short: "bet details by creator-address and uid",
 		Long:  "Get bet details by bet-creator-address address and uid.",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

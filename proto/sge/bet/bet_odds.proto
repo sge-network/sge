@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// BetOdds is the type to store odds of an market.
+// BetOdds is the type to store odds of a market.
 message BetOdds {
   // uid is universal unique identifier of odds.
   // Required | Unique | uuid-v4 or code

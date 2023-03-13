@@ -9,6 +9,6 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // batch_settlement_count is the batch settlement bet counts.
+  // batch_settlement_count is the batch settlement bet count.
   uint32 batch_settlement_count = 1;
 }
