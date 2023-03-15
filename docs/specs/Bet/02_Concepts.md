@@ -45,7 +45,6 @@ When a user is raising a transaction to place a bet, the creator of the transact
   - Positive odds value: `bet_amount + (bet_amount * |oddsValue/100|)` ex. `3564819 + 3564819 * |+350/100| = 16041685.50` the result will be rounded to floor.
   - Negative odds value: `bet_amount + (bet_amount * |100/oddsValue|)` ex. `3564819 + 3564819 * |100/-350| = 4583338.71` the result will be rounded to floor.
 
-
 ### Precision
 
 Some of the Online Calculators round the division result to two-digit precision in Fractional and Moneyline calculations. In other words, these online calculators try to convert Moneyline and Fractional odds to Decimal odds and then calculate the payout according to the calculated rounded decimal value. This approach makes a big difference in the resulting payout. SGE-Network is accepting bets with usge that may have a high value in the market. For this kind of value, it is better to have a high-precision calculation in the blockchain code.
