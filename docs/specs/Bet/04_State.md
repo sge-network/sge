@@ -103,49 +103,34 @@ message Bet {
 
   // Status of the Bet.
   enum Status {
-
-    // unknown status
+    // the invalid or unknown
     STATUS_UNSPECIFIED = 0;
-
     // bet is placed
     STATUS_PLACED = 1;
-
     // bet is canceled by Bettor
     STATUS_CANCELED = 2;
-
     // bet is aborted
     STATUS_ABORTED = 3;
-
     // bet is pending for getting placed
     STATUS_PENDING = 4;
-
     // bet result is declared
     STATUS_RESULT_DECLARED = 5;
-
     // the bet is settled
     STATUS_SETTLED = 6;
   }
 
   // Result of the bet.
   enum Result {
-
     // the invalid or unknown
     RESULT_UNSPECIFIED = 0;
-
     // bet result is pending
     RESULT_PENDING = 1;
-
     // bet won by the bettor
     RESULT_WON = 2;
-
     // bet lost by the bettor
     RESULT_LOST = 3;
-
-    // bet is draw
-    RESULT_DRAW = 4;
-
-    // bet is aborted
-    RESULT_ABORTED = 5;
+    // bet is refunded
+    RESULT_REFUNDED = 4;
   }
 }
 
