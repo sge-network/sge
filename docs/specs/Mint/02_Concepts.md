@@ -10,5 +10,5 @@ Phases are nothing but specific discreet time frames during which a certain infl
 
 The duration and inflation rate of phases can be modified via governance.
 
-> If all the specified phases are over, the chain enters a special phase called the final_phase, where the phase duration is infinite and the phase inflation is zero.
+> If all the specified phases are over, the chain enters a special phase called the end_phase, where the phase duration is infinite and the phase inflation is zero.
 > Note that the inflation rate does not depend on the number of bonded and unbonded tokens
