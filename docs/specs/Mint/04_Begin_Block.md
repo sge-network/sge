@@ -49,14 +49,13 @@ If the phase has changed, set the minter with the changed parameters:
 
 ```go
 // set the new minter properties if the phase has changed or inflation has changed
- if int32(currentPhaseStep) != minter.PhaseStep || !minter.Inflation.Equal(currentPhase.Inflation) {
-
+ if currentPhaseStep != cast.ToInt(minter.PhaseStep) || !minter.Inflation.Equal(currentPhase.Inflation) {
   // set new inflation rate
   newInflation := currentPhase.Inflation
   minter.Inflation = newInflation
 
   // set new phase step
-  minter.PhaseStep = int32(currentPhaseStep)
+  minter.PhaseStep = cast.ToInt32(currentPhaseStep)
 
   // set phase provisions of new phase step
   totalSupply := k.TokenSupply(ctx, params.MintDenom)
@@ -64,7 +63,6 @@ If the phase has changed, set the minter with the changed parameters:
 
   // store minter
   k.SetMinter(ctx, minter)
-
  }
 ```
 
@@ -100,7 +98,6 @@ Calculate the provisions generated for each block based on current phase provisi
 // BlockProvisions returns the provisions for a block based on the phase
 // provisions rate.
 func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec) {
-
  // get total blocks in this phase
  blocksPerPhase := params.getPhaseBlocks(phaseStep).TruncateDec()
 

@@ -7,25 +7,25 @@ The minter is a space for holding the current phase and inflation information.
 ```proto
 // Minter represents the minting state.
 message Minter {
-  // current annual inflation rate
+  // inflation is the current annual inflation rate.
   string inflation = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-  // phase step is the index of phases slice + 1
+  // phase_step is the index of phases slice + 1.
   int32 phase_step = 2;
-  // current phase expected provisions
+  // phase_provisions is the current phase expected provisions.
   string phase_provisions = 3 [
-    (gogoproto.moretags)   = "yaml:\"phase_provisions\"",
+    (gogoproto.moretags) = "yaml:\"phase_provisions\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
-  // returns current truncated tokens because of Dec to Int conversion in the minting
+  // truncated_tokens holds current truncated tokens because of Dec to Int
+  // conversion in the minting.
   string truncated_tokens = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
-
 }
 ```
 
@@ -48,41 +48,47 @@ Minting params are held in the global params store.
 4. Exclude Amount: This parameter defines the number of tokens that will not incur inflation.
 
 ```proto
-// Params defines the parameters for the module.
+// Params define the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // type of coin to mint
+  // mint_denom is the type of coin to mint.
   string mint_denom = 1;
-  // expected blocks per year
-  int64 blocks_per_year = 2 [(gogoproto.moretags) = "yaml:\"blocks_per_year\""];
+  // blocks_per_year is expected blocks per year.
+  int64 blocks_per_year = 2
+      [ (gogoproto.moretags) = "yaml:\"blocks_per_year\"" ];
 
-  // phases
-  repeated Phase phases = 3 [(gogoproto.moretags) = "yaml:\"phases\"", (gogoproto.nullable) = false];
+  // phases contains phases of inflation.
+  repeated Phase phases = 3 [
+    (gogoproto.moretags) = "yaml:\"phases\"",
+    (gogoproto.nullable) = false
+  ];
 
+  // exclude_amount is the excluded amount form being calculated in inflation.
   string exclude_amount = 4 [
-    (gogoproto.moretags)   = "yaml:\"exclude_amount\"",
+    (gogoproto.moretags) = "yaml:\"exclude_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false
+    (gogoproto.nullable) = false
   ];
 }
 ```
 
 ```proto
-// Params defines the phase parameters for the module.
+// Phase defines the phase parameters for the module.
 message Phase {
   option (gogoproto.goproto_stringer) = false;
 
-  // the phase inflation rate
-  string inflation = 1  [
+  // inflation is the current phase inflation rate.
+  string inflation = 1 [
     (gogoproto.moretags) = "yaml:\"inflation\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
-  // total coefficient from the beginning
+    (gogoproto.nullable) = false
+  ];
+  // year_coefficient is the proportion of a complete year.
   string year_coefficient = 2 [
     (gogoproto.moretags) = "yaml:\"year_coefficient\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
-    (gogoproto.nullable)   = false];
-
+    (gogoproto.nullable) = false
+  ];
 }
 ```
