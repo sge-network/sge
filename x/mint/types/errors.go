@@ -12,11 +12,11 @@ var (
 )
 
 const (
-	ErrTextInvalidParamType                   = "invalid parameter type: %T"
-	ErrTextBlocksPerYearMustBePositive        = "blocks per year must be positive: %d"
-	ErrTextExcludeAmountMustBePositive        = "exclude amount must be positive: %s"
-	ErrTextPhasesShouldHaveValue              = "phases should have value: %v"
-	ErrTextMintParamInflationShouldBePositive = "mint parameter Inflation should be positive, is %s"
+	ErrTextInvalidParamType                   = "invalid parameter type"
+	ErrTextBlocksPerYearMustBePositive        = "blocks per year must be positive"
+	ErrTextExcludeAmountMustBePositive        = "exclude amount must be positive"
+	ErrTextPhasesShouldHaveValue              = "phases should have value"
+	ErrTextMintParamInflationShouldBePositive = "mint parameter Inflation should be positive"
 	ErrTextYearCoefficientMustBePositive      = "year coefficient should be non-zero and positive value"
 	ErrTextEndPhaseParamNotAllowed            = "adding phase with equal values with end phase is not allowed"
 	ErrTextNilMinter                          = "stored minter should not be nil"

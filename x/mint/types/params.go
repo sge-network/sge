@@ -193,7 +193,7 @@ func (p Params) getPhaseBlocks(phaseStep int) sdk.Dec {
 func validateMintDenom(i interface{}) error {
 	v, ok := i.(string)
 	if !ok {
-		return fmt.Errorf(ErrTextInvalidParamType, i)
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
 	if strings.TrimSpace(v) == "" {
@@ -209,11 +209,11 @@ func validateMintDenom(i interface{}) error {
 func validateExcludeAmount(i interface{}) error {
 	v, ok := i.(sdk.Int)
 	if !ok {
-		return fmt.Errorf(ErrTextInvalidParamType, i)
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
 	if v.LT(sdk.ZeroInt()) {
-		return fmt.Errorf(ErrTextExcludeAmountMustBePositive, v)
+		return fmt.Errorf("%s: %s", ErrTextExcludeAmountMustBePositive, v)
 	}
 
 	return nil
@@ -222,11 +222,11 @@ func validateExcludeAmount(i interface{}) error {
 func validateBlocksPerYear(i interface{}) error {
 	v, ok := i.(int64)
 	if !ok {
-		return fmt.Errorf(ErrTextInvalidParamType, i)
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
 	if v <= 0 {
-		return fmt.Errorf(ErrTextBlocksPerYearMustBePositive, v)
+		return fmt.Errorf("%s: %d", ErrTextBlocksPerYearMustBePositive, v)
 	}
 
 	return nil
@@ -235,11 +235,11 @@ func validateBlocksPerYear(i interface{}) error {
 func validatePhases(i interface{}) error {
 	v, ok := i.([]Phase)
 	if !ok {
-		return fmt.Errorf(ErrTextInvalidParamType, i)
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
 	if len(v) == 0 {
-		return fmt.Errorf(ErrTextPhasesShouldHaveValue, v)
+		return fmt.Errorf("%s: %v", ErrTextPhasesShouldHaveValue, v)
 	}
 
 	for _, p := range v {

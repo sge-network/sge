@@ -38,7 +38,7 @@ func DefaultInitialMinter() Minter {
 // ValidateMinter validates minter
 func ValidateMinter(minter Minter) error {
 	if minter.Inflation.IsNegative() {
-		return fmt.Errorf(ErrTextMintParamInflationShouldBePositive,
+		return fmt.Errorf("%s: %s", ErrTextMintParamInflationShouldBePositive,
 			minter.Inflation.String())
 	}
 	return nil
