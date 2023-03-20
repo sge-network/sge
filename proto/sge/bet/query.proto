@@ -6,7 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/bet/params.proto";
 import "sge/bet/bet.proto";
-import "sge/sportevent/sport_event.proto";
+import "sge/market/market.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
@@ -40,7 +40,7 @@ service Query {
 
   // Queries list of Active Bet items.
   rpc ActiveBets(QueryActiveBetsRequest) returns (QueryActiveBetsResponse) {
-    option (google.api.http).get = "/sge/active_bets/{sport_event_uid}";
+    option (google.api.http).get = "/sge/active_bets/{market_uid}";
   }
 
   // Queries list of Settled Bet items.
@@ -72,8 +72,7 @@ message QueryBetRequest {
 // Query/Bet RPC method.
 message QueryBetResponse {
   Bet bet = 1 [ (gogoproto.nullable) = false ];
-  sgenetwork.sge.sportevent.SportEvent sport_event = 2
-      [ (gogoproto.nullable) = false ];
+  sgenetwork.sge.market.Market market = 2 [ (gogoproto.nullable) = false ];
 }
 
 // QueryBetsRequest is the request type for the bets list query
@@ -114,14 +113,14 @@ message QueryBetsByUIDsRequest {
 // UID list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsResponse {
   repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
-  repeated string not_found_events = 2;
+  repeated string not_found_markets = 2;
 }
 
 // QueryActiveBetsRequest is the request type for the active bets list query
 // Query/ActiveBets RPC method.
 message QueryActiveBetsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
-  string sport_event_uid = 2;
+  string market_uid = 2;
 }
 
 // QueryActiveBetsResponse is the response type for the active bets list query

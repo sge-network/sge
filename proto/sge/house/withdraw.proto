@@ -23,12 +23,12 @@ message Withdrawal {
   string depositor_address = 2
       [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 
-  // sport_event_uid is the uid of sport-event against which the deposit is
+  // market_uid is the uid of market against which the deposit is
   // being made.
-  string sport_event_uid = 3 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 3 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   // participation_index is the id corresponding to the book participation

@@ -15,12 +15,12 @@ message Bet {
     json_name = "uid"
   ];
 
-  // sport_event_uid is the universal unique identifier of
-  // the sport-event on which the bet is placed.
-  string sport_event_uid = 2 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  // market_uid is the universal unique identifier of
+  // the market on which the bet is placed.
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   // odds_uid is the unique universal unique identifier,
