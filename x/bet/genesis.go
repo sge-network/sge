@@ -24,7 +24,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		for i := range genState.ActiveBetList {
 			active := genState.ActiveBetList[i]
 			if genState.ActiveBetList[i].UID == bet.UID {
-				k.SetActiveBet(ctx, &active, id, bet.SportEventUID)
+				k.SetActiveBet(ctx, &active, id, bet.MarketUID)
 			}
 		}
 

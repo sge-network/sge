@@ -13,21 +13,21 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	sportEventUID := uuid.NewString()
+	marketUID := uuid.NewString()
 	betUID1, betUID2 := uuid.NewString(), uuid.NewString()
 	betID1, betID2 := uint64(1), uint64(2)
 
 	validState := &types.GenesisState{
 		BetList: []types.Bet{
 			{
-				UID:           betUID1,
-				Creator:       testAddress,
-				SportEventUID: sportEventUID,
+				UID:       betUID1,
+				Creator:   testAddress,
+				MarketUID: marketUID,
 			},
 			{
 				UID:              betUID2,
 				Creator:          testAddress,
-				SportEventUID:    sportEventUID,
+				MarketUID:        marketUID,
 				SettlementHeight: 1,
 			},
 		},

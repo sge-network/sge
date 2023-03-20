@@ -95,7 +95,7 @@ func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdd
 	return &Bet{
 		Creator:           creator,
 		UID:               bet.UID,
-		SportEventUID:     odds.SportEventUID,
+		MarketUID:         odds.MarketUID,
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
 		Amount:            bet.Amount,

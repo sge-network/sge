@@ -52,16 +52,16 @@ func BetIDKey(creator string, id uint64) []byte {
 	return append(utils.StrBytes(creator), utils.Uint64ToBytes(id)...)
 }
 
-// ActiveBetListOfSportEventPrefix returns prefix of
-// the certain sport-event active bet list.
-func ActiveBetListOfSportEventPrefix(sportEventID string) []byte {
-	return append(ActiveBetListPrefix, utils.StrBytes(sportEventID)...)
+// ActiveBetListOfMarketPrefix returns prefix of
+// the certain market active bet list.
+func ActiveBetListOfMarketPrefix(marketID string) []byte {
+	return append(ActiveBetListPrefix, utils.StrBytes(marketID)...)
 }
 
-// ActiveBeOfSportEventKey return the key of
-// a certain active bet of a sport-event.
-func ActiveBeOfSportEventKey(sportEventID string, id uint64) []byte {
-	return append(utils.StrBytes(sportEventID), utils.Uint64ToBytes(id)...)
+// ActiveBeOfMarketKey return the key of
+// a certain active bet of a market.
+func ActiveBeOfMarketKey(marketID string, id uint64) []byte {
+	return append(utils.StrBytes(marketID), utils.Uint64ToBytes(id)...)
 }
 
 // SettledBetListOfBlockHeightPrefix returns prefix of
@@ -70,8 +70,8 @@ func SettledBetListOfBlockHeightPrefix(blockHeight int64) []byte {
 	return append(SettledBetListPrefix, utils.Int64ToBytes(blockHeight)...)
 }
 
-// SettledBeOfSportEventKey return the key of
+// SettledBeOfMarketKey return the key of
 // settled bet list on a certain block height.
-func SettledBeOfSportEventKey(blockHeight int64, id uint64) []byte {
+func SettledBeOfMarketKey(blockHeight int64, id uint64) []byte {
 	return append(utils.Int64ToBytes(blockHeight), utils.Uint64ToBytes(id)...)
 }

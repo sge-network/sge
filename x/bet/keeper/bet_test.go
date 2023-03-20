@@ -16,7 +16,7 @@ import (
 func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Context, n int) []types.Bet {
 	items := make([]types.Bet, n)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
-	tApp.SportEventKeeper.SetSportEvent(ctx, testSportEvent)
+	tApp.MarketKeeper.SetMarket(ctx, testMarket)
 
 	for i := range items {
 		items[i].UID = cast.ToString(i)
@@ -25,7 +25,7 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
 		items[i].BetFee = sdk.NewInt(1)
-		items[i].SportEventUID = testSportEventUID
+		items[i].MarketUID = testMarketUID
 		items[i].MaxLossMultiplier = sdk.NewDec(10)
 
 		id := uint64(i + 1)
@@ -33,7 +33,7 @@ func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Con
 		keeper.SetActiveBet(ctx, &types.ActiveBet{
 			UID:     items[i].UID,
 			Creator: testCreator,
-		}, id, testSportEventUID)
+		}, id, testMarketUID)
 	}
 	return items
 }

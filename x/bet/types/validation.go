@@ -34,8 +34,8 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
-	if !IsValidUID(ticketData.SelectedOdds.SportEventUID) {
-		return ErrInvalidSportEventUID
+	if !IsValidUID(ticketData.SelectedOdds.MarketUID) {
+		return ErrInvalidMarketUID
 	}
 
 	if !IsValidUID(ticketData.SelectedOdds.UID) {

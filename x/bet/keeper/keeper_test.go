@@ -12,38 +12,38 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventkeeper "github.com/sge-network/sge/x/sportevent/keeper"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	marketkeeper "github.com/sge-network/sge/x/market/keeper"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
-	testOddsUID1      = "6db09053-2901-4110-8fb5-c14e21f8d666"
-	testOddsUID2      = "5e31c60f-2025-48ce-ae79-1dc110f16358"
-	testOddsUID3      = "6e31c60f-2025-48ce-ae79-1dc110f16354"
-	testEventOdds     = []*sporteventtypes.Odds{
+	testMarketUID  = "5db09053-2901-4110-8fb5-c14e21f8d555"
+	testOddsUID1   = "6db09053-2901-4110-8fb5-c14e21f8d666"
+	testOddsUID2   = "5e31c60f-2025-48ce-ae79-1dc110f16358"
+	testOddsUID3   = "6e31c60f-2025-48ce-ae79-1dc110f16354"
+	testMarketOdds = []*markettypes.Odds{
 		{UID: testOddsUID1, Meta: "Odds 1"},
 		{UID: testOddsUID2, Meta: "Odds 2"},
 		{UID: testOddsUID3, Meta: "Odds 3"},
 	}
 	testSelectedBetOdds = &types.BetOdds{
 		UID:               testOddsUID1,
-		SportEventUID:     testSportEventUID,
+		MarketUID:         testMarketUID,
 		Value:             "4.20",
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
-	testCreator       string
-	testBet           *types.MsgPlaceBet
-	testAddSportEvent *sporteventtypes.MsgAddSportEvent
+	testCreator   string
+	testBet       *types.MsgPlaceBet
+	testAddMarket *markettypes.MsgAddMarket
 
-	testSportEvent = sporteventtypes.SportEvent{
-		UID:                    testSportEventUID,
+	testMarket = markettypes.Market{
+		UID:                    testMarketUID,
 		Creator:                simappUtil.TestParamUsers["user1"].Address.String(),
 		StartTS:                1111111111,
 		EndTS:                  uint64(time.Now().Unix()) + 5000,
-		Odds:                   testEventOdds,
-		Status:                 sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		Odds:                   testMarketOdds,
+		Status:                 markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 		SrContributionForHouse: sdk.NewInt(5),
 	}
 )
@@ -61,61 +61,61 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	return k, ctx
 }
 
-func addTestSportEvent(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
+func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
-	testAddSportEventClaim := jwt.MapClaims{
-		"uid":                       testSportEventUID,
+	testAddMarketClaim := jwt.MapClaims{
+		"uid":                       testMarketUID,
 		"start_ts":                  1111111111,
 		"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
-		"odds":                      testEventOdds,
+		"odds":                      testMarketOdds,
 		"exp":                       9999999999,
 		"iat":                       7777777777,
 		"meta":                      "Winner of x:y",
 		"sr_contribution_for_house": sdk.NewInt(500000),
-		"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+		"status":                    markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 	}
-	testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
+	testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 	require.Nil(t, err)
 
-	testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
+	testAddMarket = &markettypes.MsgAddMarket{
 		Creator: testCreator,
-		Ticket:  testAddSportEventTicket,
+		Ticket:  testAddMarketTicket,
 	}
 	wctx := sdk.WrapSDKContext(ctx)
-	sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SportEventKeeper)
-	resAddEvent, err := sporteventSrv.AddSportEvent(wctx, testAddSportEvent)
+	marketSrv := marketkeeper.NewMsgServerImpl(tApp.MarketKeeper)
+	resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
 	require.Nil(t, err)
-	require.NotNil(t, resAddEvent)
+	require.NotNil(t, resAddMarket)
 }
 
-func addTestSportEventBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, count int) (uids []string) {
+func addTestMarketBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, count int) (uids []string) {
 	for i := 0; i < count; i++ {
 		testCreator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
 		uid := uuid.NewString()
 		uids = append(uids, uid)
-		testAddSportEventClaim := jwt.MapClaims{
+		testAddMarketClaim := jwt.MapClaims{
 			"uid":                       uid,
 			"start_ts":                  1111111111,
 			"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
-			"odds":                      testEventOdds,
+			"odds":                      testMarketOdds,
 			"exp":                       9999999999,
 			"iat":                       7777777777,
 			"meta":                      "Winner of x:y",
 			"sr_contribution_for_house": sdk.NewInt(500000),
-			"status":                    sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+			"status":                    markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 		}
-		testAddSportEventTicket, err := createJwtTicket(testAddSportEventClaim)
+		testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 		require.Nil(t, err)
 
-		testAddSportEvent = &sporteventtypes.MsgAddSportEvent{
+		testAddMarket = &markettypes.MsgAddMarket{
 			Creator: testCreator,
-			Ticket:  testAddSportEventTicket,
+			Ticket:  testAddMarketTicket,
 		}
 		wctx := sdk.WrapSDKContext(ctx)
-		sporteventSrv := sporteventkeeper.NewMsgServerImpl(tApp.SportEventKeeper)
-		resAddEvent, err := sporteventSrv.AddSportEvent(wctx, testAddSportEvent)
+		marketSrv := marketkeeper.NewMsgServerImpl(tApp.MarketKeeper)
+		resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
 		require.Nil(t, err)
-		require.NotNil(t, resAddEvent)
+		require.NotNil(t, resAddMarket)
 	}
 
 	return uids

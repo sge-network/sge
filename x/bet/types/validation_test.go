@@ -90,7 +90,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 		{
 			desc: "space in odds UID",
 			betOdds: &types.BetOdds{
-				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               " ",
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
@@ -104,9 +104,9 @@ func TestTicketFieldsValidation(t *testing.T) {
 			err:      types.ErrInvalidOddsUID,
 		},
 		{
-			desc: "space in sport-event UID",
+			desc: "space in market UID",
 			betOdds: &types.BetOdds{
-				SportEventUID:     " ",
+				MarketUID:         " ",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
@@ -116,12 +116,12 @@ func TestTicketFieldsValidation(t *testing.T) {
 				ID:       testAddress,
 			},
 			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrInvalidSportEventUID,
+			err:      types.ErrInvalidMarketUID,
 		},
 		{
 			desc: "empty odds value",
 			betOdds: &types.BetOdds{
-				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
@@ -136,7 +136,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 		{
 			desc: "no kyc",
 			betOdds: &types.BetOdds{
-				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
@@ -147,7 +147,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 		{
 			desc: "no kyc ID field",
 			betOdds: &types.BetOdds{
-				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
@@ -162,7 +162,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 		{
 			desc: "valid message",
 			betOdds: &types.BetOdds{
-				SportEventUID:     "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
