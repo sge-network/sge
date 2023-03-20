@@ -19,7 +19,7 @@ service Msg {
 
 ## **MsgAddSportEvent**
 
-This message is used to add one or more new sportevent to the chain
+This message is used to add new sportevent to the chain
 
 ```proto
 message MsgAddSportEvent {
@@ -123,7 +123,7 @@ message SportEventAddTicketPayload {
 
 ## **MsgResolveSportEvent**
 
-This message is used to resolve one or more already existent events on the chain
+This message is used to resolve already existent events on the chain
 
 ```proto
 message MsgResolveSportEvent {
@@ -184,7 +184,7 @@ message SportEventResolutionTicketPayload {
 
 ## **MsgUpdateSportEvent**
 
-This message is used to update one or more already existent events on the chain
+This message is used to update already existent events on the chain
 
 ```proto
 message MsgUpdateSportEvent {

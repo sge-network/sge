@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// ResolveSportEvent accepts ticket containing multiple resolution events and return batch response after processing
+// ResolveSportEvent accepts ticket containing resolution events and return response after processing
 func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolveSportEvent) (*types.MsgResolveSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -32,7 +32,7 @@ func (k msgServer) ResolveSportEvent(goCtx context.Context, msg *types.MsgResolv
 
 func (k msgServer) processSportEventResolution(ctx sdk.Context, resolutionPayload *types.SportEventResolutionTicketPayload) (*types.SportEvent, error) {
 	if err := resolutionPayload.Validate(); err != nil {
-		return nil, sdkerrors.Wrap(err, "validate update data")
+		return nil, sdkerrors.Wrap(err, "validate resolution data")
 	}
 
 	sportEvent, err := k.getSportEventToResolve(ctx, *resolutionPayload)

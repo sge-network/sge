@@ -50,7 +50,7 @@ func (AppModuleBasic) RegisterCodec(cdc *codec.LegacyAmino) {
 	types.RegisterCodec(cdc)
 }
 
-// RegisterLegacyAminoCodec registers the lagacy amino codec for the app module basic
+// RegisterLegacyAminoCodec registers the legacy amino codec for the app module basic
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	types.RegisterCodec(cdc)
 }

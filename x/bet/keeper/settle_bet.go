@@ -131,7 +131,7 @@ func (k Keeper) BatchSportEventSettlements(ctx sdk.Context) error {
 	// continue looping until reach batch settlement count parameter
 	for toFetch > 0 {
 		// get the first resolved sport-event to process corresponding active bets.
-		sportEventUID, found := k.sportEventKeeper.GetFirstUnsettledResovedSportEvent(ctx)
+		sportEventUID, found := k.sportEventKeeper.GetFirstUnsettledResolvedSportEvent(ctx)
 		// exit loop if there is no resolved bet.
 		if !found {
 			return nil

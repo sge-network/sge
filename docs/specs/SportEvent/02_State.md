@@ -155,7 +155,7 @@ message EventBetConstraints {
 
 **Meta**: Human-Readable data of the event.
 
-**SrContriButionForHouse** The amount percentage of contribution of sr in payouts
+**SrContributionForHouse** The contribution of SR for the house corresponding to the sport event.
 
 **BookID** The ID of the created order book
 

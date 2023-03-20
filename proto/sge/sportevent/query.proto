@@ -15,17 +15,18 @@ service Query {
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sge/sport-event/params";
   }
+
   // Queries a SportEvent by uid.
   rpc SportEvent(QuerySportEventRequest) returns (QuerySportEventResponse) {
     option (google.api.http).get = "/sge/sport-event/{uid}";
   }
 
-  // Queries a list of SportEvent items.
+  // Queries a list of SportEvent.
   rpc SportEvents(QuerySportEventsRequest) returns (QuerySportEventsResponse) {
     option (google.api.http).get = "/sge/sport-event/sport_events";
   }
 
-  // Queries a list of SportEventsByUIDs items.
+  // Queries a list of SportEvents by UIDs.
   rpc SportEventsByUIDs(QuerySportEventsByUIDsRequest)
       returns (QuerySportEventsByUIDsResponse) {
     option (google.api.http).get =
@@ -70,14 +71,14 @@ message QuerySportEventsResponse {
 }
 
 // QuerySportEventsByUIDsRequest is the request type for the
-// Query/sposport_events_by_uids  RPC method.
+// Query/sport_events_by_uids  RPC method.
 // Query/SportEventsByUIDs RPC method.
 message QuerySportEventsByUIDsRequest {
   repeated string uids = 1 [ (gogoproto.jsontag) = "uids", json_name = "uids" ];
 }
 
 // QuerySportEventsByUIDsResponse is the response type for the
-// Query/sposport_events_by_uids  RPC method.
+// Query/sport_events_by_uids  RPC method.
 // Query/SportEventsByUIDs RPC method.
 message QuerySportEventsByUIDsResponse {
   repeated SportEvent sport_events = 1 [ (gogoproto.nullable) = false ];

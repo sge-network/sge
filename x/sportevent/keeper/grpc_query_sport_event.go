@@ -56,7 +56,7 @@ func (k Keeper) SportEvent(c context.Context, req *types.QuerySportEventRequest)
 	return &types.QuerySportEventResponse{SportEvent: val}, nil
 }
 
-// SportEventsByUIDs return success events and failed events id only back to the caller
+// SportEventsByUIDs return success events and failed events by uids back to the caller
 func (k Keeper) SportEventsByUIDs(goCtx context.Context, req *types.QuerySportEventsByUIDsRequest) (*types.QuerySportEventsByUIDsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)

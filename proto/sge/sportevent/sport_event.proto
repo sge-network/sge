@@ -49,7 +49,7 @@ message SportEvent {
   EventBetConstraints bet_constraints = 9;
   // meta contains human-readable metadata of the sport-event.
   string meta = 10;
-  // sr_contribution_for_house is the amount of contibution of house in the sr
+  // sr_contribution_for_house is the amount of contribution by sr for the house
   string sr_contribution_for_house = 11 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
@@ -89,7 +89,7 @@ message EventBetConstraints {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  // bet_fee is the fee that the bettor needs to pay to bet on the sport-event.
   string bet_fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false

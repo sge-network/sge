@@ -23,7 +23,7 @@ type BankKeeper interface {
 // SportEventKeeper defines the expected interface needed to get sportEvents from KVStore
 type SportEventKeeper interface {
 	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
-	GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool)
+	GetFirstUnsettledResolvedSportEvent(ctx sdk.Context) (string, bool)
 	GetDefaultBetConstraints(ctx sdk.Context) (params *sporteventtypes.EventBetConstraints)
 	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
 }

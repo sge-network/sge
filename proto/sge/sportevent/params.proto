@@ -6,23 +6,23 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
 // Params defines the parameters for the module.
-// contains bet constraints associated to a sport-event.
+// It contains bet constraints associated to a sport-event.
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // event_min_bet_amount default minimum bet amount for a sport-event.
+  // event_min_bet_amount is the default minimum bet amount for a sport-event.
   string event_min_bet_amount = 1 [
     (gogoproto.moretags) = "yaml:\"event_min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // event_min_bet_fee default minimum bet fee for a sport-event.
+  // event_min_bet_fee is the default minimum bet fee for a sport-event.
   string event_min_bet_fee = 3 [
     (gogoproto.moretags) = "yaml:\"event_min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // event_max_sr_contribution default max sr contribution for a sport-event.
+  // event_max_sr_contribution is the default max sr contribution for a sport-event.
   string event_max_sr_contribution = 4 [
     (gogoproto.moretags) = "yaml:\"event_max_sr_contribution\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",

@@ -16,7 +16,7 @@ type Keeper struct {
 	cdc             codec.BinaryCodec
 	storeKey        sdk.StoreKey
 	memKey          sdk.StoreKey
-	paramstore      paramtypes.Subspace
+	paramStore      paramtypes.Subspace
 	dvmKeeper       types.DVMKeeper
 	orderBookKeeper types.OrderBookKeeper
 }
@@ -37,7 +37,7 @@ func NewKeeper(
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
-		paramstore: ps,
+		paramStore: ps,
 	}
 }
 
