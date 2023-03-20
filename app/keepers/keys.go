@@ -24,9 +24,9 @@ import (
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
 
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
+	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
-	sporteventmoduletypes "github.com/sge-network/sge/x/sportevent/types"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
 	// unnamed import of statik for swagger UI support
@@ -45,7 +45,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		icacontrollertypes.StoreKey, icahosttypes.StoreKey,
 		strategicreservemoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
-		sporteventmoduletypes.StoreKey,
+		marketmoduletypes.StoreKey,
 		dvmmoduletypes.StoreKey,
 		orderbookmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
