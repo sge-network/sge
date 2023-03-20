@@ -6,7 +6,7 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// SetSportEventStats sets bet statistics in the store
+// SetSportEventStats sets sport-event statistics in the store
 func (k Keeper) SetSportEventStats(ctx sdk.Context, stats types.SportEventStats) {
 	store := k.getSportEventStatsStore(ctx)
 	b := k.cdc.MustMarshal(&stats)
@@ -33,9 +33,9 @@ func (k Keeper) appendUnsettledResolvedSportEvent(ctx sdk.Context, storedEventUI
 	k.SetSportEventStats(ctx, stats)
 }
 
-// GetFirstUnsettledResovedSportEvent returns first element of resolved
+// GetFirstUnsettledResolvedSportEvent returns first element of resolved
 // sport-events that have active bets
-func (k Keeper) GetFirstUnsettledResovedSportEvent(ctx sdk.Context) (string, bool) {
+func (k Keeper) GetFirstUnsettledResolvedSportEvent(ctx sdk.Context) (string, bool) {
 	stats := k.GetSportEventStats(ctx)
 	if len(stats.ResolvedUnsettled) > 0 {
 		return stats.ResolvedUnsettled[0], true

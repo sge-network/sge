@@ -43,7 +43,7 @@ message SportEventAddTicketPayload {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  // bet_fee is the fee that the bettor needs to pay to bet on the sport-event.
   string bet_fee = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -51,8 +51,7 @@ message SportEventAddTicketPayload {
 
   // meta contains human-readable metadata of the sport-event.
   string meta = 9;
-  // sr_contribution_for_house is the portion of payout that should be paid by
-  // sr
+  // sr_contribution_for_house is the amount of contribution by sr for the house
   string sr_contribution_for_house = 10 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
@@ -88,7 +87,7 @@ message SportEventUpdateTicketPayload {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  // bet_fee is the fee that the bettor needs to pay to bet on the sport-event.
   string bet_fee = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false

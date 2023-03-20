@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// UpdateSportEvent accepts ticket containing multiple update events and return batch response after processing
+// UpdateSportEvent accepts ticket containing update event and return response after processing
 func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateSportEvent) (*types.MsgUpdateSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -29,7 +29,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 		return nil, types.ErrCanNotBeAltered
 	}
 
-	// if update event is not valid so it is failed
+	// update event is not valid, return error
 	params := k.GetParams(ctx)
 
 	if err := updatePayload.Validate(ctx, &params); err != nil {
@@ -42,7 +42,7 @@ func (k msgServer) UpdateSportEvent(goCtx context.Context, msg *types.MsgUpdateS
 	currentData.BetConstraints = params.NewEventBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
 	currentData.Status = updatePayload.Status
 
-	// the update event is successful so update the module state
+	// update event is successful, update the module state
 	k.Keeper.SetSportEvent(ctx, currentData)
 
 	response := &types.MsgUpdateSportEventResponse{

@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/sportevent/types"
 )
 
-// AddSportEvent accepts ticket containing multiple creation events and return batch response after processing
+// AddSportEvent accepts ticket containing creation event and return response after processing
 func (k msgServer) AddSportEvent(goCtx context.Context, msg *types.MsgAddSportEvent) (*types.MsgAddSportEventResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 

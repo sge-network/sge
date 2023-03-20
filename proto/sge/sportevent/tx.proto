@@ -45,7 +45,7 @@ message MsgResolveSportEvent {
 
 // MsgResolveSportEventResponse response for resolving a sport-event.
 message MsgResolveSportEventResponse {
-  // error contains an error if adding a sport-event faces any issues.
+  // error contains an error if resolving a sport-event faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of sport-event.
   SportEvent data = 2 [ (gogoproto.nullable) = true ];
@@ -62,7 +62,7 @@ message MsgUpdateSportEvent {
 
 // MsgUpdateSportEventResponse response for updating a sport-event.
 message MsgUpdateSportEventResponse {
-  // error contains an error if adding a sport-event faces any issues.
+  // error contains an error if updating a sport-event faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of sport-event
   SportEvent data = 2 [ (gogoproto.nullable) = true ];

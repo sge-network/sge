@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/sportevent/types";
 
-// Odds is a representation of and sport-event odds items.
+// Odds is a representation of sport-event odds.
 message Odds {
   // uid is the universal unique identifier of the odds.
   string uid = 1 [
