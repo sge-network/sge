@@ -24,12 +24,12 @@ jobs:
 
     - name: Checkout destination repository
       uses: actions/checkout@v3.0.0
-      with:     
+      with:
         ref: master
         repository: ${{ secrets.ST_REPO }}/sgejs
         path: sgejs
         token: ${{ secrets.ST_TOKEN }}
-        
+
     - name: Copy Proto Files
       run: |
         cp -r sge/proto/sge sgejs/proto
@@ -38,32 +38,32 @@ jobs:
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
         git -C sgejs commit --allow-empty -am "Proto Deployment [skip ci]"
-        
+
     - name: Npm Install
       run: |
-        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc      
+        echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
         npm install --prefix sgejs
         git -C sgejs checkout .
-        
+
     - name: Delete src/codegen and types
       run: |
         rm -rf sgejs/src/codegen
         rm -rf sgejs/types
-        
+
     - name: Npm Run Codegen
       run: |
         npm run codegen --prefix sgejs
- 
+
     - name: Commit changes
       run: |
-        git -C sgejs add .     
+        git -C sgejs add .
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
         git -C sgejs commit --allow-empty -am "Codegen Deployment [skip ci]"
-        
+
     - name: Determine NPM version
       run: |
-        cd sgejs      
+        cd sgejs
         if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
           echo "NPM_VERSION=major" >> $GITHUB_ENV
         elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
@@ -71,10 +71,10 @@ jobs:
         elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
           echo "NPM_VERSION=patch" >> $GITHUB_ENV
         fi
-        
+
     - name: Bump NPM version
       run: |
-        cd sgejs          
+        cd sgejs
         git status
         if [ "${{ env.NPM_VERSION }}" == "major" ]; then
           npm version major
@@ -84,10 +84,10 @@ jobs:
           npm version patch
         fi
         git status
-        
+
     - name: Push sgejs
-      run: git -C sgejs push        
-        
+      run: git -C sgejs push
+
     - name: Publish NPM Package
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
