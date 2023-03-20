@@ -1,3 +1,3 @@
 # **Overview**
 
-The Order Book module maintains an order book for sport events.
+The Order Book module maintains an order book for markets.

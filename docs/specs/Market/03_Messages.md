@@ -1,80 +1,80 @@
 # **Messages**
 
-The Sportevent module exposes the following services:
+The Market module exposes the following services:
 
-- AddEvent
-- ResolveEvent
-- UpdateEvent
+- AddMarket
+- ResolveMarket
+- UpdateMarket
 
 ```proto
 // Msg defines the Msg service.
 service Msg {
-    rpc AddSportEvent(MsgAddSportEvent) returns (SportEventResponse);
-    rpc ResolveSportEvent(MsgResolveSportEvent) returns (SportEventResponse);
-    rpc UpdateSportEvent(MsgUpdateSportEvent) returns (SportEventResponse);
+    rpc AddMarket(MsgAddMarket) returns (MarketResponse);
+    rpc ResolveMarket(MsgResolveMarket) returns (MarketResponse);
+    rpc UpdateMarket(MsgUpdateMarket) returns (MarketResponse);
 }
 ```
 
 ---
 
-## **MsgAddSportEvent**
+## **MsgAddMarket**
 
-This message is used to add new sportevent to the chain
+This message is used to add new market to the chain
 
 ```proto
-message MsgAddSportEvent {
+message MsgAddMarket {
   string creator = 1;
   string ticket = 2;
 }
 ```
 
-### Add Sport Event Ticked Payload
+### Add Market Ticked Payload
 
-The ticket data for sport-event addition is as follows:
+The ticket data for market addition is as follows:
 
 ```proto
-// SportEventAddTicketPayload indicates data of add sport-event ticket
-message SportEventAddTicketPayload {
-  // uid is the universal unique identifier of the sport-event.
+// MarketAddTicketPayload indicates data of add market ticket
+message MarketAddTicketPayload {
+  // uid is the universal unique identifier of the market.
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
-  // start_ts is the start timestamp of the sport-event.
+  // start_ts is the start timestamp of the market.
   uint64 start_ts = 2 [
     (gogoproto.customname) = "StartTS",
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
-  // end_ts is the end timestamp of the sport-event.
+  // end_ts is the end timestamp of the market.
   uint64 end_ts = 3 [
     (gogoproto.customname) = "EndTS",
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
-  // odds is the list of odds of the sport-event.
+  // odds is the list of odds of the market.
   repeated Odds odds = 4;
 
-  // status is the current status of the sport-event.
-  SportEventStatus status = 5;
+  // status is the current status of the market.
+  MarketStatus status = 5;
 
-  // creator is the address of the creator of sport-event.
+  // creator is the address of the creator of market.
   string creator = 6;
 
-  // min_bet_amount is the minimum allowed bet amount for a sport-event.
+  // min_bet_amount is the minimum allowed bet amount for a market.
   string min_bet_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  // bet_fee is the fee that thebettor needs to pay to bet on the market.
   string bet_fee = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // meta contains human-readable metadata of the sport-event.
+  // meta contains human-readable metadata of the market.
   string meta = 9;
   // sr_contribution_for_house is the portion of payout that should be paid by
   // sr
@@ -121,31 +121,31 @@ message SportEventAddTicketPayload {
 
 ---
 
-## **MsgResolveSportEvent**
+## **MsgResolveMarket**
 
-This message is used to resolve already existent events on the chain
+This message is used to resolve already existent markets on the chain
 
 ```proto
-message MsgResolveSportEvent {
+message MsgResolveMarket {
   string creator = 1;
   string ticket = 2;
 }
 ```
 
-### Resolve Sport Event Ticked Payload
+### Resolve Market Ticked Payload
 
 ```proto
-// SportEventResolutionTicketPayload indicates data of the
-// resolution of the sport-event ticket.
-message SportEventResolutionTicketPayload {
-  // uid is the universal unique identifier of sport-event.
+// MarketResolutionTicketPayload indicates data of the
+// resolution of the market ticket.
+message MarketResolutionTicketPayload {
+  // uid is the universal unique identifier of market.
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
 
-  // resolution_ts is the resolution timestamp of the sport-event.
+  // resolution_ts is the resolution timestamp of the market.
   uint64 resolution_ts = 2 [
     (gogoproto.customname) = "ResolutionTS",
     (gogoproto.jsontag) = "resolution_ts",
@@ -161,7 +161,7 @@ message SportEventResolutionTicketPayload {
   ];
 
   // status is the status of the resolution.
-  SportEventStatus status = 4;
+  MarketStatus status = 4;
 }
 ```
 
@@ -182,54 +182,54 @@ message SportEventResolutionTicketPayload {
 
 ---
 
-## **MsgUpdateSportEvent**
+## **MsgUpdateMarket**
 
-This message is used to update already existent events on the chain
+This message is used to update already existent markets on the chain
 
 ```proto
-message MsgUpdateSportEvent {
+message MsgUpdateMarket {
   string creator = 1;
   string ticket = 2;
 }
 ```
 
-### Update Sport Event Ticked Payload
+### Update Market Ticked Payload
 
 ```proto
-// SportEventUpdateTicketPayload indicates data of update sport-event ticket
-message SportEventUpdateTicketPayload {
-  // uid is the uuid of the sport-event
+// MarketUpdateTicketPayload indicates data of update market ticket
+message MarketUpdateTicketPayload {
+  // uid is the uuid of the market
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
-  // start_ts is the start timestamp of the sport-event
+  // start_ts is the start timestamp of the market
   uint64 start_ts = 2 [
     (gogoproto.customname) = "StartTS",
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
-  // end_ts is the end timestamp of the sport-event
+  // end_ts is the end timestamp of the market
   uint64 end_ts = 3 [
     (gogoproto.customname) = "EndTS",
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
-  // min_bet_amount is the minimum allowed bet amount for a sport-event.
+  // min_bet_amount is the minimum allowed bet amount for a market.
   string min_bet_amount = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the sport-event.
+  // bet_fee is the fee that thebettor needs to pay to bet on the market.
   string bet_fee = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // status is the status of the resolution.
-  SportEventStatus status = 6;
+  MarketStatus status = 6;
 }
 ```
 
@@ -250,16 +250,16 @@ message SportEventUpdateTicketPayload {
 
 ---
 
-## **SportEventResponse**
+## **MarketResponse**
 
 This is the common response to all the messages
 
 ```proto
-// MsgAddSportEventResponse response for adding sport-event.
-message MsgAddSportEventResponse {
-  // error contains an error if adding a sport-event faces any issues.
+// MsgAddMarketResponse response for adding market.
+message MsgAddMarketResponse {
+  // error contains an error if adding a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
-  // data is the data of sport-event.
-  SportEvent data = 2 [ (gogoproto.nullable) = true ];
+  // data is the data of market.
+  Market data = 2 [ (gogoproto.nullable) = true ];
 }
 ```

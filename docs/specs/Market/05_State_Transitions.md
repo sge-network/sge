@@ -2,30 +2,30 @@
 
 This section defines the state transitions of the sport module's KVStore in all scenarios:
 
-## **Add SportEvent**
+## **Add Market**
 
 When this is processed:
 
 - Validate the creator address and validate the ticket format.
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
-- If the ticket is valid, check if the event already exists.
+- If the ticket is valid, check if the market already exists.
 - Use default bet constraints if the `bet_fee` and `min_bet_amount` are not available in the ticket.
-- Initiate order book for the sport-event.
-- If the sport-event does not already exist, a new sport-event should be
+- Initiate order book for the market.
+- If the market does not already exist, a new market should be
   created with the given data and will be added to the module state.
 
 ```go
-newEvent := &type.SportEvent{
+newMarket := &type.Market{
  Uid                    : <string>
  StartTS                : <uint64>
  EndTS                  : <uint64>
  Odds                   : <[]*Odds>
  WinnerOddsUIDs         : <map[string][]byte>
- Status                 : <SportEventStatus>
+ Status                 : <MarketStatus>
  ResolutionTS           : <uint64>
  Creator                : <string>
- BetConstraints         : <*EventBetConstraints>
+ BetConstraints         : <*MarketBetConstraints>
  Meta                   : <string>
  SrContriButionForHouse : <sdk.Int>
  BookID                 : <string>
@@ -34,40 +34,40 @@ newEvent := &type.SportEvent{
 
 ---
 
-## **Update SportEvent**
+## **Update Market**
 
 When this is processed:
 
-For each event:
+For each market:
 
 - Validate the creator address and validate the ticket format.
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
-- If the ticket is valid, check that the sport-event already exists or not.
-- The event status should be active or inactive to be updatable, if not
+- If the ticket is valid, check that the market already exists or not.
+- The market status should be active or inactive to be updatable, if not
 returns appropriate error.
-- Then update the sport-event in the module state.
+- Then update the market in the module state.
 
 ---
 
-## **Resolve SportEvent**
+## **Resolve Market**
 
 When this is processed:
 
-For each event:
+For each market:
 
 - Validate the creator address and validate the ticket format.
 - Call the DVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
-- If the ticket is valid, check that the event already exist or not.
-- The sport-event should exist and the status should be active otherwise proper error returned.
-- Then resolve the sport-event and set in the module state.
+- If the ticket is valid, check that the market already exist or not.
+- The market should exist and the status should be active otherwise proper error returned.
+- Then resolve the market and set in the module state.
 
 ```go
-resolvedEvent := types.ResolutionEvent{
+resolvedMarket := types.ResolutionMarket{
  Uid            : <string>
  ResolutionTs   : <uint64>
  WinnerOddsUIDs : <map>[string][]byte
- Status         : <SportEventStatus>
+ Status         : <MarketStatus>
 }
 ```

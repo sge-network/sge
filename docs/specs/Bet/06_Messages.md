@@ -56,7 +56,7 @@ message MsgPlaceBetResponse {
 {
  "selected_odds": {
    "uid": "9991c60f-2025-48ce-ae79-1dc110f16990",
-   "sport_event_uid": "5531c60f-2025-48ce-ae79-1dc110f16000",
+   "market_uid": "5531c60f-2025-48ce-ae79-1dc110f16000",
    "value": "2.0",
    "max_loss_multiplier": "1.0"
  },
@@ -69,7 +69,7 @@ message MsgPlaceBetResponse {
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
- "sub": "CreateSportEvent"
+ "sub": "CreateMarket"
 }
 ```
 
@@ -87,14 +87,14 @@ The transaction will fail if:
 - Empty or invalid odds UID in ticket
 - Empty, negative or invalid odds value in ticket
 - Invalid bet value according to the selected `OddsType`
-- There is no any sport-event with the given sportEventUID
-- The sport-event is not active for accepting bet (it's not active or status in not `PENDING`)
-- The sport-event has expired
-- The sport-event maximum betting capacity has been reached
-- The sport-event does not contain the selected odds
+- There is no any market with the given marketUID
+- The market is not active for accepting bet (it's not active or status in not `PENDING`)
+- The market has expired
+- The market maximum betting capacity has been reached
+- The market does not contain the selected odds
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
-- There is an error in AddPayoutProfitToEvent in sportEvent module
+- There is an error in AddPayoutProfitToMarket in market module
 - There is an error in ProcessBetPlacement in Order Book module
 
 ### **What Happens if bet fails**
@@ -150,20 +150,20 @@ The transaction will fail if:
 - There is no matching bet for the bettor address
 - Bet is canceled
 - Bet is already settled
-- Corresponding sport-event not found
-- Result of corresponding sport-event is not declared
+- Corresponding market not found
+- Result of corresponding market is not declared
 - There is an error in SR module functions
 
 ### **Settlement failure treatment**
 
-- If corresponding sport-event is aborted or canceled, the bet will be updated in the module state as below:
+- If corresponding market is aborted or canceled, the bet will be updated in the module state as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
+- Resolve the bet result based on the market result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared.
 - Call `Order Book module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled.
 - Store the updated bet in the module state.
 

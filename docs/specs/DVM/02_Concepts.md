@@ -20,7 +20,7 @@ Details of the algorithm can be found [here](https://ed25519.cr.yp.to/)
 
 ---
 
-After generating the encrypted signed `ticket`, this signature data is included in the transactions. This includes transaction for adding/editing betting events on the chain, as well as verifying odds when user places on these events. All tickets come with an expiry timestamp which invalidates the ticket after a certain duration. This facility prevents use or abuse of old and expired tickets.
+After generating the encrypted signed `ticket`, this signature data is included in the transactions. This includes transaction for adding/editing betting markets on the chain, as well as verifying odds when user places on these markets. All tickets come with an expiry timestamp which invalidates the ticket after a certain duration. This facility prevents use or abuse of old and expired tickets.
 
 The `DVM Module` essentially stores a list of trusted public keys. These public keys are just the counterpart to the privatekeys that were used to sign and encrypt the tickets off-chain. When a transaction is made to the chain that necessitates verification of the origin of the data, the corresponding module invokes the DVM module for the verification and decryption purpose. The DVM Module works as an interface, which can decode any signed data passed to it when supplied with the encryption algorithm and the decrypted type. This design completely nullifes the need to change the structue of the DVM if the ticket structure changes. This essentially enables the DVM to be a global verification module.
 
