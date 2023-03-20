@@ -100,12 +100,12 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	}
 
 	return &types.QueryBetsByUIDsResponse{
-		Bets:           foundBets,
-		NotFoundEvents: notFoundBets,
+		Bets:            foundBets,
+		NotFoundMarkets: notFoundBets,
 	}, nil
 }
 
-// ActiveBets returns active bets of a sport-event
+// ActiveBets returns active bets of a market
 func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest) (*types.QueryActiveBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
@@ -114,7 +114,7 @@ func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest)
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	activeBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfSportEventPrefix(req.SportEventUid))
+	activeBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfMarketPrefix(req.MarketUid))
 
 	pageRes, err := query.Paginate(activeBetStore, req.Pagination, func(key []byte, value []byte) error {
 		var activeBet types.ActiveBet
@@ -194,12 +194,12 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, val.SportEventUID)
+	market, found := k.marketKeeper.GetMarket(ctx, val.MarketUID)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "corresponding sport-event with id %s not found", val.SportEventUID)
+		return nil, status.Errorf(codes.NotFound, "corresponding market with id %s not found", val.MarketUID)
 	}
 
-	return &types.QueryBetResponse{Bet: val, SportEvent: sportEvent}, nil
+	return &types.QueryBetResponse{Bet: val, Market: market}, nil
 }
 
 // removeDuplicateUIDs returns input array without duplicates

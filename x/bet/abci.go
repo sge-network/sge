@@ -7,9 +7,9 @@ import (
 	"github.com/sge-network/sge/x/bet/keeper"
 )
 
-// EndBlocker settles the active bets of resolved sport events
+// EndBlocker settles the active bets of resolved markets
 func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
-	err := k.BatchSportEventSettlements(ctx)
+	err := k.BatchMarketSettlements(ctx)
 	if err != nil {
 		panic(fmt.Sprintf("end block no %d failed : %s", ctx.BlockHeight(), err.Error()))
 	}

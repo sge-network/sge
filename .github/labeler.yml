@@ -14,8 +14,8 @@
   - x/dvm/**/*
 "C:x/mint":
   - x/mint/**/*
-"C:x/sportevent":
-  - x/sportevent/**/*
+"C:x/market":
+  - x/market/**/*
 "C:x/strategicreserve":
   - x/strategicreserve/**/*
 "T:build":

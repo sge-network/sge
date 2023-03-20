@@ -17,9 +17,9 @@ func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure)
 
 // GetBookOddsExposure returns a specific book odds exposure.
 func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (val types.BookOddsExposure, found bool) {
-	sportEventsStore := k.getBookOddsExposureStore(ctx)
+	marketsStore := k.getBookOddsExposureStore(ctx)
 	exposureKey := types.GetBookOddsExposureKey(bookUID, oddsUID)
-	b := sportEventsStore.Get(exposureKey)
+	b := marketsStore.Get(exposureKey)
 	if b == nil {
 		return val, false
 	}

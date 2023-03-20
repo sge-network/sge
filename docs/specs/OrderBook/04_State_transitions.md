@@ -4,19 +4,19 @@ This section defines the state transitions of the order book module's KVStore in
 
 ## **Book Initiazation**
 
-When this sport-event is being created:
+When this market is being created:
 
-1. Creates a order book corresponding to the sport-event
-2. Transfer the sr contibution of sport-event to the liquidity name.
+1. Creates a order book corresponding to the market
+2. Transfer the sr contibution of market to the liquidity name.
 3. Creates the first participation for the sr module account.
 4. Set the exposures for the bet odds.
 5. Set the exposures for the participations.
 
 ```go
 newOrderBook := &types.Deposit{
-    BookID:                 <sportEventID>,
+    BookID:                 <marketID>,
     ParticipantCount:       1, // this is sr module account
-    OddsCount:              <Count of bet odds og sport event>
+    OddsCount:              <Count of bet odds og market>
     Status:                 Active
 }
 ```

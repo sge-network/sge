@@ -32,20 +32,20 @@ func (gs GenesisState) Validate() error {
 			}
 
 			if w.DepositorAddress == d.Creator &&
-				w.SportEventUID == d.SportEventUID &&
+				w.MarketUID == d.MarketUID &&
 				w.ParticipationIndex == d.ParticipationIndex {
 				found = true
 			}
 		}
 		if !found {
-			return fmt.Errorf("the deposit for the depositor address %s, sport event uid %s and participation index %d not found for the withdrawal",
+			return fmt.Errorf("the deposit for the depositor address %s, market uid %s and participation index %d not found for the withdrawal",
 				w.DepositorAddress,
-				w.SportEventUID,
+				w.MarketUID,
 				w.ParticipationIndex)
 		}
 	}
 
-	// TODO: extend validations for sport-event existence
+	// TODO: extend validations for market existence
 	// and etc.
 
 	return gs.Params.Validate()

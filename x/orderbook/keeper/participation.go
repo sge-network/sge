@@ -5,8 +5,8 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
 )
 
 // SetBookParticipation sets a book participation.
@@ -72,14 +72,14 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 func (k Keeper) InitiateBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
 ) (index uint64, err error) {
-	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, bookUID)
+	market, found := k.marketKeeper.GetMarket(ctx, bookUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrSportEventNotFound, "%s", bookUID)
+		err = sdkerrors.Wrapf(types.ErrMarketNotFound, "%s", bookUID)
 		return
 	}
 
-	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
-		err = sdkerrors.Wrapf(types.ErrParticipationOnInactiveSportEvent, "%s", bookUID)
+	if market.Status != markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
+		err = sdkerrors.Wrapf(types.ErrParticipationOnInactiveMarket, "%s", bookUID)
 		return
 	}
 

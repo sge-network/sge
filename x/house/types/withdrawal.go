@@ -9,11 +9,11 @@ import (
 // NewWithdrawal creates a new withdrawal object
 //
 //nolint:interfacer
-func NewWithdrawal(id uint64, depositorAddr, sportEventUID string, participationIndex uint64, amount sdk.Int, mode WithdrawalMode) Withdrawal {
+func NewWithdrawal(id uint64, depositorAddr, marketUID string, participationIndex uint64, amount sdk.Int, mode WithdrawalMode) Withdrawal {
 	return Withdrawal{
 		ID:                 id,
 		DepositorAddress:   depositorAddr,
-		SportEventUID:      sportEventUID,
+		MarketUID:          marketUID,
 		ParticipationIndex: participationIndex,
 		Mode:               mode,
 		Amount:             amount,

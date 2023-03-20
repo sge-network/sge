@@ -38,9 +38,9 @@ func (k Keeper) ActivePublicKeysChangeProposals(goCtx context.Context, req *type
 	var proposals []types.PublicKeysChangeProposal
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	sportEventStore := k.getActivePubKeysChangeProposalStore(ctx)
+	MarketStore := k.getActivePubKeysChangeProposalStore(ctx)
 
-	pageRes, err := query.Paginate(sportEventStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(MarketStore, req.Pagination, func(key []byte, value []byte) error {
 		var proposal types.PublicKeysChangeProposal
 		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
 			return err
@@ -83,9 +83,9 @@ func (k Keeper) FinishedPublicKeysChangeProposals(goCtx context.Context, req *ty
 	var proposals []types.PublicKeysChangeFinishedProposal
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	sportEventStore := k.getActivePubKeysChangeProposalStore(ctx)
+	MarketStore := k.getActivePubKeysChangeProposalStore(ctx)
 
-	pageRes, err := query.Paginate(sportEventStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(MarketStore, req.Pagination, func(key []byte, value []byte) error {
 		var proposal types.PublicKeysChangeFinishedProposal
 		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
 			return err

@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/spf13/cast"
 )
 
@@ -15,28 +15,28 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
 	}
 
-	sportEvent, err := k.getSportEvent(ctx, bet.SportEventUID)
+	market, err := k.getMarket(ctx, bet.MarketUID)
 	if err != nil {
 		return err
 	}
 
 	// check if selected odds is valid
-	if !oddsExists(bet.OddsUID, sportEvent.Odds) {
+	if !oddsExists(bet.OddsUID, market.Odds) {
 		return types.ErrOddsUIDNotExist
 	}
 
 	// check minimum bet amount allowed
-	betConstraints := sportEvent.GetBetConstraints()
+	betConstraints := market.GetBetConstraints()
 	if betConstraints == nil {
-		sportEvent.BetConstraints = k.sportEventKeeper.GetDefaultBetConstraints(ctx)
+		market.BetConstraints = k.marketKeeper.GetDefaultBetConstraints(ctx)
 	}
 
-	if bet.Amount.LT(sportEvent.BetConstraints.MinAmount) {
+	if bet.Amount.LT(market.BetConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
 
 	// modify the bet fee and subtracted amount
-	setBetFee(bet, sportEvent.BetConstraints.BetFee)
+	setBetFee(bet, market.BetConstraints.BetFee)
 
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -49,7 +49,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	betID := stats.Count
 
 	betFulfillment, err := k.orderbookKeeper.ProcessBetPlacement(
-		ctx, bet.UID, bet.SportEventUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
+		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
 	)
 	if err != nil {
@@ -69,7 +69,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	k.SetBet(ctx, *bet, betID)
 
 	// set bet as an active bet
-	k.SetActiveBet(ctx, types.NewActiveBet(bet.UID, bet.Creator), betID, bet.SportEventUID)
+	k.SetActiveBet(ctx, types.NewActiveBet(bet.UID, bet.Creator), betID, bet.MarketUID)
 
 	// set bet stats
 	k.SetBetStats(ctx, stats)
@@ -77,26 +77,26 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	return nil
 }
 
-// getSportEvent returns sport-event with id
-func (k Keeper) getSportEvent(ctx sdk.Context, sportEventID string) (sporteventtypes.SportEvent, error) {
-	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, sportEventID)
+// getMarket returns market with id
+func (k Keeper) getMarket(ctx sdk.Context, marketID string) (markettypes.Market, error) {
+	market, found := k.marketKeeper.GetMarket(ctx, marketID)
 	if !found {
-		return sporteventtypes.SportEvent{}, types.ErrNoMatchingSportEvent
+		return markettypes.Market{}, types.ErrNoMatchingMarket
 	}
 
-	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE {
-		return sporteventtypes.SportEvent{}, types.ErrInactiveSportEvent
+	if market.Status != markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
+		return markettypes.Market{}, types.ErrInactiveMarket
 	}
 
-	if sportEvent.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
-		return sporteventtypes.SportEvent{}, types.ErrEndTSIsPassed
+	if market.EndTS < cast.ToUint64(ctx.BlockTime().Unix()) {
+		return markettypes.Market{}, types.ErrEndTSIsPassed
 	}
 
-	return sportEvent, nil
+	return market, nil
 }
 
-// oddsExists checks if bet odds id is present in the sport-event list of odds uids
-func oddsExists(betOddsUID string, odds []*sporteventtypes.Odds) bool {
+// oddsExists checks if bet odds id is present in the market list of odds uids
+func oddsExists(betOddsUID string, odds []*markettypes.Odds) bool {
 	for _, o := range odds {
 		if betOddsUID == o.UID {
 			return true

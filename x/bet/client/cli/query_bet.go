@@ -85,17 +85,17 @@ func CmdListBetByCreator() *cobra.Command {
 	return cmd
 }
 
-// CmdListActiveBets implements a command to return all active bets of a sport-event
+// CmdListActiveBets implements a command to return all active bets of a market
 func CmdListActiveBets() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "active-bets [sport-event-uid]",
-		Short: "get list of active bets of a sport-event",
-		Long:  "Get list of active bets of a sport-event in paginated response.",
+		Use:   "active-bets [market-uid]",
+		Short: "get list of active bets of a market",
+		Long:  "Get list of active bets of a market in paginated response.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
-			argSportEventUID := args[0]
+			argMarketUID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -105,8 +105,8 @@ func CmdListActiveBets() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			params := &types.QueryActiveBetsRequest{
-				SportEventUid: argSportEventUID,
-				Pagination:    pageReq,
+				MarketUid:  argMarketUID,
+				Pagination: pageReq,
 			}
 
 			res, err := queryClient.ActiveBets(context.Background(), params)

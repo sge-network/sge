@@ -13,7 +13,7 @@ When this is processed:
 newBet := &types.Bet{
     Creator:            msg.Creator,
     UID:                msg.UID,
-    SportEventUID:      <msg.Ticket.SportEventUID>,
+    MarketUID:      <msg.Ticket.MarketUID>,
     OddsUID:            <msg.Ticket.OddsUID>,
     OddsType:           <msg.OddsType>,
     OddsValue:          <msg.Ticket.OddsValue>,
@@ -35,14 +35,14 @@ newBet := &types.Bet{
 
 When this  is processed:
 
-- If corresponding sport-event is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding market is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
 
     ```go
     bet.Result = types.Bet_RESULT_ABORTED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- Resolve the bet result based on the sport-event result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
+- Resolve the bet result based on the market result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
 
     ```go
     bet.Result = types.Bet_RESULT_WON
@@ -63,9 +63,9 @@ When this  is processed:
 
 Batch bet settlement happens in the end-blocker of the bet module:
 
-1. Get resolved sport events that have the unsettled bets.
-    - for each sport-event:
-        1. Settle the bets one by by querying the sport-event bets.
-        2. Remove the resolved sport event from the list if there is no more active bet.
+1. Get resolved markets that have the unsettled bets.
+    - for each market:
+        1. Settle the bets one by by querying the market bets.
+        2. Remove the resolved market from the list if there is no more active bet.
         3. Call order book method to set the order book as settled
 2. Check the `BatchSettlementCount` parameter of bet module and let the rest of bets for the nex block.

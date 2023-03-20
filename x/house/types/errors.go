@@ -9,7 +9,7 @@ import (
 // x/house module sentinel errors
 var (
 	ErrEmptyDepositorAddr           = sdkerrors.Register(ModuleName, 5001, "empty depositor address")
-	ErrInvalidSportEventUID         = sdkerrors.Register(ModuleName, 5002, "invalid sport event uid")
+	ErrInvalidMarketUID             = sdkerrors.Register(ModuleName, 5002, "invalid market uid")
 	ErrInvalidWithdrawMode          = sdkerrors.Register(ModuleName, 5003, "invalid withdrawal mode")
 	ErrInvalidIndex                 = sdkerrors.Register(ModuleName, 5004, "invalid participant index")
 	ErrInvalidAmount                = sdkerrors.Register(ModuleName, 5005, "valid amount should be provided")

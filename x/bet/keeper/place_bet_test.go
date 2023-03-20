@@ -8,7 +8,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -19,166 +19,166 @@ func TestPlaceBet(t *testing.T) {
 		desc          string
 		bet           *types.Bet
 		err           error
-		sportEvent    *sporteventtypes.SportEvent
+		market        *markettypes.Market
 		activeBetOdds []*types.BetOdds
 	}{
 		{
 			desc: "invalid creator address",
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "notExistSportEventUID",
+				UID:       "betUID",
+				MarketUID: "notExistMarketUID",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			desc: "not found sport-event",
+			desc: "not found market",
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "notExistSportEventUID",
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "notExistMarketUID",
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			err: types.ErrNoMatchingSportEvent,
+			err: types.ErrNoMatchingMarket,
 		},
 		{
-			desc: "inactive sport-event",
-			sportEvent: &sporteventtypes.SportEvent{
+			desc: "inactive market",
+			market: &markettypes.Market{
 				UID:    "uid_inactive",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_INACTIVE,
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				Status: markettypes.MarketStatus_MARKET_STATUS_INACTIVE,
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "uid_inactive",
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "uid_inactive",
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			err: types.ErrInactiveSportEvent,
+			err: types.ErrInactiveMarket,
 		},
 		{
-			desc: "not active sport-event",
-			sportEvent: &sporteventtypes.SportEvent{
+			desc: "not active market",
+			market: &markettypes.Market{
 				UID:    "uid_declared",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "uid_declared",
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "uid_declared",
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			err: types.ErrInactiveSportEvent,
+			err: types.ErrInactiveMarket,
 		},
 		{
-			desc: "expired sport-event",
-			sportEvent: &sporteventtypes.SportEvent{
+			desc: "expired market",
+			market: &markettypes.Market{
 				UID:    "uid_expired",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 				EndTS:  0o00000000,
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "uid_expired",
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "uid_expired",
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrEndTSIsPassed,
 		},
 		{
 			desc: "not exist odds",
-			sportEvent: &sporteventtypes.SportEvent{
+			market: &markettypes.Market{
 				UID:    "uid_oddsNotexist",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds: []*sporteventtypes.Odds{
+				Odds: []*markettypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
-				{UID: "odds1", SportEventUID: "uid_oddsNotexist", Value: "2.52"},
-				{UID: "odds2", SportEventUID: "uid_oddsNotexist", Value: "1.50"},
+				{UID: "odds1", MarketUID: "uid_oddsNotexist", Value: "2.52"},
+				{UID: "odds2", MarketUID: "uid_oddsNotexist", Value: "1.50"},
 			},
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "uid_oddsNotexist",
-				OddsUID:       "notExistOdds",
-				Amount:        sdk.NewInt(1000),
-				OddsValue:     "5",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "uid_oddsNotexist",
+				OddsUID:   "notExistOdds",
+				Amount:    sdk.NewInt(1000),
+				OddsValue: "5",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrOddsUIDNotExist,
 		},
 		{
 			desc: "low bet amount",
-			sportEvent: &sporteventtypes.SportEvent{
+			market: &markettypes.Market{
 				UID:    "uid_lowBetAmount",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds: []*sporteventtypes.Odds{
+				Odds: []*markettypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1000),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
-				{UID: "odds1", SportEventUID: "uid_lowBetAmount", Value: "2.52"},
-				{UID: "odds2", SportEventUID: "uid_lowBetAmount", Value: "1.50"},
+				{UID: "odds1", MarketUID: "uid_lowBetAmount", Value: "2.52"},
+				{UID: "odds2", MarketUID: "uid_lowBetAmount", Value: "1.50"},
 			},
 			bet: &types.Bet{
-				UID:           "betUID",
-				SportEventUID: "uid_lowBetAmount",
-				OddsUID:       "odds1",
-				Amount:        sdk.NewInt(100),
-				OddsValue:     "5",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Creator:       simappUtil.TestParamUsers["user1"].Address.String(),
+				UID:       "betUID",
+				MarketUID: "uid_lowBetAmount",
+				OddsUID:   "odds1",
+				Amount:    sdk.NewInt(100),
+				OddsValue: "5",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrBetAmountIsLow,
 		},
 		{
 			desc: "success",
-			sportEvent: &sporteventtypes.SportEvent{
+			market: &markettypes.Market{
 				UID:    "uid_success",
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 				EndTS:  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds: []*sporteventtypes.Odds{
+				Odds: []*markettypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				BetConstraints: &sporteventtypes.EventBetConstraints{
+				BetConstraints: &markettypes.MarketBetConstraints{
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
 				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
-				{UID: "odds1", SportEventUID: "uid_success", Value: "2.52", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				{UID: "odds2", SportEventUID: "uid_success", Value: "1.50", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				{UID: "odds1", MarketUID: "uid_success", Value: "2.52", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				{UID: "odds2", MarketUID: "uid_success", Value: "1.50", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
 			},
 			bet: &types.Bet{
 				UID:               "betUID",
-				SportEventUID:     "uid_success",
+				MarketUID:         "uid_success",
 				OddsUID:           "odds1",
 				Amount:            sdk.NewInt(1000),
 				OddsValue:         "5",
@@ -191,14 +191,14 @@ func TestPlaceBet(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			if tc.sportEvent != nil {
-				tApp.SportEventKeeper.SetSportEvent(ctx, *tc.sportEvent)
+			if tc.market != nil {
+				tApp.MarketKeeper.SetMarket(ctx, *tc.market)
 
 				var oddsUIDs []string
-				for _, v := range tc.sportEvent.Odds {
+				for _, v := range tc.market.Odds {
 					oddsUIDs = append(oddsUIDs, v.UID)
 				}
-				err := tApp.OrderBookKeeper.InitiateBook(ctx, tc.sportEvent.UID, tc.sportEvent.SrContributionForHouse, oddsUIDs)
+				err := tApp.OrderBookKeeper.InitiateBook(ctx, tc.market.UID, tc.market.SrContributionForHouse, oddsUIDs)
 				require.NoError(t, err)
 			}
 

@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/orderbook/types";
 
-// OrderBook represents the order book maintained against a sport event.
+// OrderBook represents the order book maintained against a market.
 message OrderBook {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;

@@ -46,8 +46,8 @@ import (
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 
-	sporteventmodule "github.com/sge-network/sge/x/sportevent"
-	sporteventmoduletypes "github.com/sge-network/sge/x/sportevent/types"
+	marketmodule "github.com/sge-network/sge/x/market"
+	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 
 	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
@@ -107,7 +107,7 @@ var ModuleBasics = module.NewBasicManager(
 	vesting.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	betmodule.AppModuleBasic{},
-	sporteventmodule.AppModuleBasic{},
+	marketmodule.AppModuleBasic{},
 	strategicreservemodule.AppModuleBasic{},
 	dvmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
@@ -148,7 +148,7 @@ func appModules(
 		app.ICAModule,
 
 		app.BetModule,
-		app.SportEventModule,
+		app.MarketModule,
 		app.StrategicReserveModule,
 		app.DVMModule,
 		app.HouseModule,
@@ -183,7 +183,7 @@ func simulationModules(
 		app.TransferModule,
 
 		app.BetModule,
-		app.SportEventModule,
+		app.MarketModule,
 		app.StrategicReserveModule,
 		app.DVMModule,
 	}
@@ -214,7 +214,7 @@ func orderBeginBlockers() []string {
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
-		sporteventmoduletypes.ModuleName,
+		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
@@ -244,7 +244,7 @@ func orderEndBlockers() []string {
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
-		sporteventmoduletypes.ModuleName,
+		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
@@ -274,7 +274,7 @@ func orderInitBlockers() []string {
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
-		sporteventmoduletypes.ModuleName,
+		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,

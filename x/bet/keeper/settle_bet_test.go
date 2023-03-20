@@ -8,21 +8,21 @@ import (
 	"github.com/google/uuid"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
-	addTestSportEvent(t, tApp, ctx)
+	addTestMarket(t, tApp, ctx)
 
 	tcs := []struct {
-		desc             string
-		betUID           string
-		updateSportEvent *sporteventtypes.SportEvent
-		bet              *types.Bet
-		err              error
+		desc         string
+		betUID       string
+		updateMarket *markettypes.Market
+		bet          *types.Bet
+		err          error
 	}{
 		{
 			desc:   "invalid betUID",
@@ -37,119 +37,119 @@ func TestSettleBet(t *testing.T) {
 		{
 			desc: "invalid creator",
 			bet: &types.Bet{
-				UID:           "0db09053-2901-4110-8fb5-c14e21f8d400",
-				SportEventUID: "nonExistSportEvent",
-				Creator:       "invalid creator",
+				UID:       "0db09053-2901-4110-8fb5-c14e21f8d400",
+				MarketUID: "nonExistMarket",
+				Creator:   "invalid creator",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			desc: "failed in checking status",
 			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(500),
-				Creator:       testCreator,
-				OddsUID:       testOddsUID1,
-				Status:        types.Bet_STATUS_SETTLED,
+				MarketUID: testMarketUID,
+				OddsValue: "10",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Amount:    sdk.NewInt(500),
+				Creator:   testCreator,
+				OddsUID:   testOddsUID1,
+				Status:    types.Bet_STATUS_SETTLED,
 			},
 			err: types.ErrBetIsSettled,
 		},
 		{
-			desc: "not found sport-event",
+			desc: "not found market",
 			bet: &types.Bet{
-				UID:           "0db09053-2901-4110-8fb5-c14e21f8d400",
-				SportEventUID: "nonExistSportEvent",
-				Creator:       testCreator,
+				UID:       "0db09053-2901-4110-8fb5-c14e21f8d400",
+				MarketUID: "nonExistMarket",
+				Creator:   testCreator,
 			},
-			err: types.ErrNoMatchingSportEvent,
+			err: types.ErrNoMatchingMarket,
 		},
 		{
-			desc: "sport-event is aborted",
+			desc: "market is aborted",
 			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(500),
-				Creator:       testCreator,
-				OddsUID:       testOddsUID1,
+				MarketUID: testMarketUID,
+				OddsValue: "10",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Amount:    sdk.NewInt(500),
+				Creator:   testCreator,
+				OddsUID:   testOddsUID1,
 			},
-			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:                    testSportEventUID,
+			updateMarket: &markettypes.Market{
+				UID:                    testMarketUID,
 				Creator:                testCreator,
 				StartTS:                1111111111,
 				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testEventOdds,
+				Odds:                   testMarketOdds,
 				SrContributionForHouse: sdk.NewInt(500000),
 
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ABORTED,
 			},
 		},
 		{
-			desc: "sport-event is canceled",
+			desc: "market is canceled",
 			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(300),
-				Creator:       testCreator,
-				OddsUID:       testOddsUID1,
+				MarketUID: testMarketUID,
+				OddsValue: "10",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Amount:    sdk.NewInt(300),
+				Creator:   testCreator,
+				OddsUID:   testOddsUID1,
 			},
-			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:                    testSportEventUID,
+			updateMarket: &markettypes.Market{
+				UID:                    testMarketUID,
 				Creator:                testCreator,
 				StartTS:                1111111111,
 				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testEventOdds,
+				Odds:                   testMarketOdds,
 				SrContributionForHouse: sdk.NewInt(500000),
 
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
+				Status: markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 			},
 		},
 		{
 			desc: "result is not declared",
 			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(500),
-				Creator:       testCreator,
-				OddsUID:       testOddsUID1,
+				MarketUID: testMarketUID,
+				OddsValue: "10",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Amount:    sdk.NewInt(500),
+				Creator:   testCreator,
+				OddsUID:   testOddsUID1,
 			},
-			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:                    testSportEventUID,
+			updateMarket: &markettypes.Market{
+				UID:                    testMarketUID,
 				Creator:                testCreator,
 				StartTS:                1111111111,
 				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testEventOdds,
+				Odds:                   testMarketOdds,
 				SrContributionForHouse: sdk.NewInt(500000),
 
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
+				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 			err: types.ErrResultNotDeclared,
 		},
 		{
 			desc: "success",
 			bet: &types.Bet{
-				SportEventUID: testSportEventUID,
-				OddsValue:     "10",
-				OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:        sdk.NewInt(500),
-				Creator:       testCreator,
-				OddsUID:       testOddsUID1,
+				MarketUID: testMarketUID,
+				OddsValue: "10",
+				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				Amount:    sdk.NewInt(500),
+				Creator:   testCreator,
+				OddsUID:   testOddsUID1,
 
 				Result: types.Bet_RESULT_WON,
 			},
-			updateSportEvent: &sporteventtypes.SportEvent{
-				UID:                    testSportEventUID,
+			updateMarket: &markettypes.Market{
+				UID:                    testMarketUID,
 				Creator:                testCreator,
 				StartTS:                1111111111,
 				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testEventOdds,
+				Odds:                   testMarketOdds,
 				SrContributionForHouse: sdk.NewInt(500000),
 
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+				Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
 		},
 	}
@@ -159,27 +159,27 @@ func TestSettleBet(t *testing.T) {
 			betUID := uuid.NewString()
 
 			if tc.bet != nil {
-				resetSportEvent := sporteventtypes.SportEvent{
-					UID:     testSportEventUID,
+				resetMarket := markettypes.Market{
+					UID:     testMarketUID,
 					Creator: testCreator,
 					StartTS: 1111111111,
 					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-					Odds:    testEventOdds,
-					Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
-					BetConstraints: &sporteventtypes.EventBetConstraints{
+					Odds:    testMarketOdds,
+					Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
+					BetConstraints: &markettypes.MarketBetConstraints{
 						MinAmount: sdk.NewInt(1),
 						BetFee:    sdk.NewInt(1),
 					},
 					SrContributionForHouse: sdk.NewInt(500000),
 				}
-				tApp.SportEventKeeper.SetSportEvent(ctx, resetSportEvent)
+				tApp.MarketKeeper.SetMarket(ctx, resetMarket)
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
 			}
 
-			if tc.updateSportEvent != nil {
-				tApp.SportEventKeeper.SetSportEvent(ctx, *tc.updateSportEvent)
+			if tc.updateMarket != nil {
+				tApp.MarketKeeper.SetMarket(ctx, *tc.updateMarket)
 			}
 
 			if tc.betUID != "" {
@@ -210,29 +210,29 @@ func TestBatchSettleBet(t *testing.T) {
 	p.BatchSettlementCount = 7
 	k.SetParams(ctx, p)
 
-	sportEventCount := 5
-	sportEventBetCount := 10
-	allBetCount := sportEventCount * sportEventBetCount
+	marketCount := 5
+	marketBetCount := 10
+	allBetCount := marketCount * marketBetCount
 	blockCount := allBetCount/int(p.BatchSettlementCount) + 1
 
-	sportEventUIDs := addTestSportEventBatch(t, tApp, ctx, sportEventCount)
-	for _, sportEventUID := range sportEventUIDs {
-		sportEvent, found := tApp.SportEventKeeper.GetSportEvent(ctx, sportEventUID)
+	marketUIDs := addTestMarketBatch(t, tApp, ctx, marketCount)
+	for _, marketUID := range marketUIDs {
+		market, found := tApp.MarketKeeper.GetMarket(ctx, marketUID)
 		require.True(t, found)
 
-		sportEvent.Status = sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE
-		sportEvent.BetConstraints = &sporteventtypes.EventBetConstraints{
+		market.Status = markettypes.MarketStatus_MARKET_STATUS_ACTIVE
+		market.BetConstraints = &markettypes.MarketBetConstraints{
 			MinAmount: sdk.NewInt(1),
 			BetFee:    sdk.NewInt(1),
 		}
-		tApp.SportEventKeeper.SetSportEvent(ctx, sportEvent)
+		tApp.MarketKeeper.SetMarket(ctx, market)
 
-		for i := 0; i < sportEventBetCount; i++ {
+		for i := 0; i < marketBetCount; i++ {
 			placeTestBet(ctx, t, tApp,
 				uuid.NewString(),
 				&types.BetOdds{
 					UID:               testOddsUID1,
-					SportEventUID:     sportEventUID,
+					MarketUID:         marketUID,
 					Value:             "4.20",
 					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 				},
@@ -244,33 +244,33 @@ func TestBatchSettleBet(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, allBetCount, len(allActiveBets))
 
-	for _, sportEventUID := range sportEventUIDs[:len(sportEventUIDs)-2] {
-		_, err := tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
-			UID:            sportEventUID,
+	for _, marketUID := range marketUIDs[:len(marketUIDs)-2] {
+		_, err := tApp.MarketKeeper.ResolveMarket(ctx, &markettypes.MarketResolutionTicketPayload{
+			UID:            marketUID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID1, testOddsUID2, testOddsUID3},
-			Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+			Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 		})
 		require.NoError(t, err)
 	}
 
-	_, err = tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
-		UID:          sportEventUIDs[len(sportEventUIDs)-2],
+	_, err = tApp.MarketKeeper.ResolveMarket(ctx, &markettypes.MarketResolutionTicketPayload{
+		UID:          marketUIDs[len(marketUIDs)-2],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
-		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED,
+		Status:       markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 	})
 	require.NoError(t, err)
 
-	_, err = tApp.SportEventKeeper.ResolveSportEvent(ctx, &sporteventtypes.SportEventResolutionTicketPayload{
-		UID:          sportEventUIDs[len(sportEventUIDs)-1],
+	_, err = tApp.MarketKeeper.ResolveMarket(ctx, &markettypes.MarketResolutionTicketPayload{
+		UID:          marketUIDs[len(marketUIDs)-1],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
-		Status:       sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED,
+		Status:       markettypes.MarketStatus_MARKET_STATUS_ABORTED,
 	})
 	require.NoError(t, err)
 
 	for i := 1; i <= blockCount; i++ {
 		ctx = ctx.WithBlockHeight(int64(i))
-		err := k.BatchSportEventSettlements(ctx)
+		err := k.BatchMarketSettlements(ctx)
 		require.NoError(t, err)
 
 		activeBets, err := k.GetActiveBets(ctx)
@@ -279,9 +279,9 @@ func TestBatchSettleBet(t *testing.T) {
 		settledBets, err := k.GetSettledBets(ctx)
 		require.NoError(t, err)
 
-		sportEventStats := tApp.SportEventKeeper.GetSportEventStats(ctx)
+		marketStats := tApp.MarketKeeper.GetMarketStats(ctx)
 
-		t.Logf("block: %d, active bets: %d, settled bets: %d, resolved events: %v\n", i, len(activeBets), len(settledBets), sportEventStats.ResolvedUnsettled)
+		t.Logf("block: %d, active bets: %d, settled bets: %d, resolved markets: %v\n", i, len(activeBets), len(settledBets), marketStats.ResolvedUnsettled)
 		require.GreaterOrEqual(t, int(p.BatchSettlementCount)*i, len(settledBets))
 	}
 
@@ -343,24 +343,24 @@ func TestCheckBetStatus(t *testing.T) {
 func TestProcessBetResultAndStatus(t *testing.T) {
 	k, _ := setupKeeper(t)
 	tcs := []struct {
-		desc       string
-		bet        *types.Bet
-		sportEvent sporteventtypes.SportEvent
-		err        error
-		result     types.Bet_Result
+		desc   string
+		bet    *types.Bet
+		market markettypes.Market
+		err    error
+		result types.Bet_Result
 	}{
 		{
 			desc: "not declared",
-			sportEvent: sporteventtypes.SportEvent{
-				Status: sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_UNSPECIFIED,
+			market: markettypes.Market{
+				Status: markettypes.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
 			bet: &types.Bet{},
 			err: types.ErrResultNotDeclared,
 		},
 		{
 			desc: "won",
-			sportEvent: sporteventtypes.SportEvent{
-				Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+			market: markettypes.Market{
+				Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet: &types.Bet{
@@ -370,8 +370,8 @@ func TestProcessBetResultAndStatus(t *testing.T) {
 		},
 		{
 			desc: "lost",
-			sportEvent: sporteventtypes.SportEvent{
-				Status:         sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+			market: markettypes.Market{
+				Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 				WinnerOddsUIDs: []string{"oddsUID"},
 			},
 			bet:    &types.Bet{},
@@ -380,7 +380,7 @@ func TestProcessBetResultAndStatus(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := k.ProcessBetResultAndStatus(tc.bet, tc.sportEvent)
+			err := k.ProcessBetResultAndStatus(tc.bet, tc.market)
 			if tc.err != nil {
 				require.Equal(t, tc.err, err)
 			} else {

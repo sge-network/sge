@@ -9,7 +9,7 @@ import (
 
 // SetWithdrawal sets a withdrawal.
 func (k Keeper) SetWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
-	withdrawalKey := types.GetWithdrawalKey(withdrawal.DepositorAddress, withdrawal.SportEventUID, withdrawal.ParticipationIndex, withdrawal.ID)
+	withdrawalKey := types.GetWithdrawalKey(withdrawal.DepositorAddress, withdrawal.MarketUID, withdrawal.ParticipationIndex, withdrawal.ID)
 
 	store := k.getWithdrawalsStore(ctx)
 	b := k.cdc.MustMarshal(&withdrawal)
@@ -35,11 +35,11 @@ func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err
 }
 
 // Withdraw performs a withdrawal of coins of unused amount corresponding to a deposit.
-func (k Keeper) Withdraw(ctx sdk.Context, creator string, sportEventUID string, participationIndex uint64, mode types.WithdrawalMode, witAmt sdk.Int) (uint64, error) {
+func (k Keeper) Withdraw(ctx sdk.Context, creator string, marketUID string, participationIndex uint64, mode types.WithdrawalMode, witAmt sdk.Int) (uint64, error) {
 	// Get the deposit object
-	deposit, found := k.GetDeposit(ctx, creator, sportEventUID, participationIndex)
+	deposit, found := k.GetDeposit(ctx, creator, marketUID, participationIndex)
 	if !found {
-		return 0, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", sportEventUID, participationIndex)
+		return 0, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", marketUID, participationIndex)
 	}
 
 	if deposit.Creator != creator {
@@ -55,9 +55,9 @@ func (k Keeper) Withdraw(ctx sdk.Context, creator string, sportEventUID string, 
 	withdrawalID := deposit.WithdrawalCount + 1
 
 	// Create the withdrawal object
-	withdrawal := types.NewWithdrawal(withdrawalID, creator, sportEventUID, participationIndex, witAmt, mode)
+	withdrawal := types.NewWithdrawal(withdrawalID, creator, marketUID, participationIndex, witAmt, mode)
 
-	withdrawalAmt, err := k.orderBookKeeper.LiquidateBookParticipation(ctx, creator, sportEventUID, participationIndex, mode, witAmt)
+	withdrawalAmt, err := k.orderBookKeeper.LiquidateBookParticipation(ctx, creator, marketUID, participationIndex, mode, witAmt)
 	if err != nil {
 		return participationIndex, sdkerrors.Wrapf(types.ErrOrderBookLiquidateProcessing, "%s", err)
 	}

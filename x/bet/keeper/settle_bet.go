@@ -6,7 +6,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 // singlePageNum used to return single page result in pagination.
@@ -42,14 +42,14 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
-	// get the respective sport-event for the bet
-	sportEvent, found := k.sportEventKeeper.GetSportEvent(ctx, bet.SportEventUID)
+	// get the respective market for the bet
+	market, found := k.marketKeeper.GetMarket(ctx, bet.MarketUID)
 	if !found {
-		return types.ErrNoMatchingSportEvent
+		return types.ErrNoMatchingMarket
 	}
 
-	if sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ABORTED ||
-		sportEvent.Status == sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_CANCELED {
+	if market.Status == markettypes.MarketStatus_MARKET_STATUS_ABORTED ||
+		market.Status == markettypes.MarketStatus_MARKET_STATUS_CANCELED {
 		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
 		if err != nil {
 			return err
@@ -68,7 +68,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 	}
 
 	// check if the bet odds is a winner odds or not and set the bet pointer states
-	if err := processBetResultAndStatus(&bet, sportEvent); err != nil {
+	if err := processBetResultAndStatus(&bet, market); err != nil {
 		return err
 	}
 
@@ -90,7 +90,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 	k.SetBet(ctx, bet, betID)
 
 	// remove active bet
-	k.RemoveActiveBet(ctx, bet.SportEventUID, betID)
+	k.RemoveActiveBet(ctx, bet.MarketUID, betID)
 
 	// store settled bet in the module state
 	k.SetSettledBet(ctx, types.NewSettledBet(bet.UID, bet.Creator), betID, ctx.BlockHeight())
@@ -110,12 +110,12 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.orderbookKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.SportEventUID); err != nil {
+		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
@@ -123,39 +123,39 @@ func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	return nil
 }
 
-// BatchSportEventSettlements settles bets of resolved sport-events
-// in batch. The sport-events get into account according in FIFO.
-func (k Keeper) BatchSportEventSettlements(ctx sdk.Context) error {
+// BatchMarketSettlements settles bets of resolved markets
+// in batch. The markets get into account according in FIFO.
+func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
 	// continue looping until reach batch settlement count parameter
 	for toFetch > 0 {
-		// get the first resolved sport-event to process corresponding active bets.
-		sportEventUID, found := k.sportEventKeeper.GetFirstUnsettledResolvedSportEvent(ctx)
+		// get the first resolved market to process corresponding active bets.
+		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx)
 		// exit loop if there is no resolved bet.
 		if !found {
 			return nil
 		}
 
-		// settle sport event active bets.
-		settledCount, err := k.batchSettlementOfSportEvent(ctx, sportEventUID, toFetch)
+		// settle market active bets.
+		settledCount, err := k.batchSettlementOfMarket(ctx, marketUID, toFetch)
 		if err != nil {
-			return fmt.Errorf("could not settle sport event %s %s", sportEventUID, err)
+			return fmt.Errorf("could not settle market %s %s", marketUID, err)
 		}
 
-		// check if still there is any active bet for the sport-event.
-		isThereAnyActiveBet, err := k.IsAnyActiveBetForSportEvent(ctx, sportEventUID)
+		// check if still there is any active bet for the market.
+		isThereAnyActiveBet, err := k.IsAnyActiveBetForMarket(ctx, marketUID)
 		if err != nil {
-			return fmt.Errorf("could not check the active bets %s %s", sportEventUID, err)
+			return fmt.Errorf("could not check the active bets %s %s", marketUID, err)
 		}
 
-		// if there is not any active bet for the sport-event
+		// if there is not any active bet for the market
 		// we need to remove its uid from the list of unsettled resolved bets.
 		if !isThereAnyActiveBet {
-			k.sportEventKeeper.RemoveUnsettledResolvedSportEvent(ctx, sportEventUID)
-			err = k.orderbookKeeper.AddBookSettlement(ctx, sportEventUID)
+			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
+			err = k.orderbookKeeper.AddBookSettlement(ctx, marketUID)
 			if err != nil {
-				return fmt.Errorf("could not resolve orderbook %s %s", sportEventUID, err)
+				return fmt.Errorf("could not resolve orderbook %s %s", marketUID, err)
 			}
 		}
 
@@ -166,13 +166,13 @@ func (k Keeper) BatchSportEventSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfSportEvent settles active of a sport-events
-func (k Keeper) batchSettlementOfSportEvent(ctx sdk.Context, sportEventUID string, countToBeSettled uint32) (settledCount uint32, err error) {
+// batchSettlementOfMarket settles active of a markets
+func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, countToBeSettled uint32) (settledCount uint32, err error) {
 	// initialize iterator for the certain number of active bets
 	// equal to countToBeSettled
 	iterator := sdk.KVStorePrefixIteratorPaginated(
 		ctx.KVStore(k.storeKey),
-		types.ActiveBetListOfSportEventPrefix(sportEventUID),
+		types.ActiveBetListOfMarketPrefix(marketUID),
 		singlePageNum,
 		uint(countToBeSettled))
 	defer func() {
@@ -213,14 +213,14 @@ func checkBetStatus(betstatus types.Bet_Status) error {
 }
 
 // processBetResultAndStatus determines the result and status of the given bet, it can be lost or won.
-func processBetResultAndStatus(bet *types.Bet, sportEvent sporteventtypes.SportEvent) error {
-	// check if sport-event result is declared or not
-	if sportEvent.Status != sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED {
+func processBetResultAndStatus(bet *types.Bet, market markettypes.Market) error {
+	// check if market result is declared or not
+	if market.Status != markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
 		return types.ErrResultNotDeclared
 	}
 
 	var exist bool
-	for _, wid := range sportEvent.WinnerOddsUIDs {
+	for _, wid := range market.WinnerOddsUIDs {
 		if wid == bet.OddsUID {
 			exist = true
 			break

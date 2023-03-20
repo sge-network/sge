@@ -33,7 +33,7 @@ message Params {
 The deposit keeps track of the deposits made byt the users.
 
 ```proto
-// Deposit represents the deposit against a sport event held by an account.
+// Deposit represents the deposit against a market held by an account.
 message Deposit {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
@@ -42,12 +42,12 @@ message Deposit {
   // creator is the bech32-encoded address of the depositor.
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
 
-  // sport_event_uid is the uid of sport event against which deposit is being
+  // market_uid is the uid of market against which deposit is being
   // made.
-  string sport_event_uid = 2 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   // participation_index index corresponding to the book participation
@@ -111,12 +111,12 @@ message Withdrawal {
   // creator is the bech32-encoded address of the depositor.
   string creator = 2 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
 
-  // sport_event_uid is the uid of sport-event against which the deposit is
+  // market_uid is the uid of market against which the deposit is
   // being made.
-  string sport_event_uid = 3 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 3 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   // participation_index is the id corresponding to the book participation

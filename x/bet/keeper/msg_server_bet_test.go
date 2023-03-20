@@ -10,7 +10,7 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 func TestBetMsgServerPlaceBet(t *testing.T) {
@@ -49,7 +49,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
 		selectedBetOdds := *testSelectedBetOdds
 
-		selectedBetOdds.SportEventUID = ""
+		selectedBetOdds.MarketUID = ""
 		testKyc := &types.KycDataPayload{
 			Approved: true,
 			ID:       creator.Address.String(),
@@ -74,10 +74,10 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		_, err = msgk.PlaceBet(wctx, inputBet)
-		require.Equal(t, types.ErrInvalidSportEventUID, err)
+		require.Equal(t, types.ErrInvalidMarketUID, err)
 	})
 
-	t.Run("No matching sportEvent", func(t *testing.T) {
+	t.Run("No matching market", func(t *testing.T) {
 		testKyc := &types.KycDataPayload{
 			Approved: true,
 			ID:       creator.Address.String(),
@@ -103,7 +103,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		_, err = msgk.PlaceBet(wctx, inputBet)
-		require.Equal(t, types.ErrNoMatchingSportEvent, err)
+		require.Equal(t, types.ErrNoMatchingMarket, err)
 	})
 
 	t.Run("Success", func(t *testing.T) {
@@ -130,27 +130,27 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
-		sportEventItem := sporteventtypes.SportEvent{
-			UID:     testSportEventUID,
+		marketItem := markettypes.Market{
+			UID:     testMarketUID,
 			Creator: testCreator,
 			StartTS: 1111111111,
 			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
-			Odds:    testEventOdds,
-			Status:  sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_ACTIVE,
-			BetConstraints: &sporteventtypes.EventBetConstraints{
+			Odds:    testMarketOdds,
+			Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
+			BetConstraints: &markettypes.MarketBetConstraints{
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewInt(1),
 			},
 			SrContributionForHouse: sdk.NewInt(50000),
 		}
 
-		tApp.SportEventKeeper.SetSportEvent(ctx, sportEventItem)
+		tApp.MarketKeeper.SetMarket(ctx, marketItem)
 
 		var oddsUIDs []string
-		for _, v := range sportEventItem.Odds {
+		for _, v := range marketItem.Odds {
 			oddsUIDs = append(oddsUIDs, v.UID)
 		}
-		err = tApp.OrderBookKeeper.InitiateBook(ctx, sportEventItem.UID, sportEventItem.SrContributionForHouse, oddsUIDs)
+		err = tApp.OrderBookKeeper.InitiateBook(ctx, marketItem.UID, marketItem.SrContributionForHouse, oddsUIDs)
 		require.NoError(t, err)
 
 		_, err = msgk.PlaceBet(wctx, inputBet)

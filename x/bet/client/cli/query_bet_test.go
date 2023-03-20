@@ -21,38 +21,38 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/client/cli"
 	"github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
-const testSportEventUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
+const testMarketUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
 
 func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 
-	// sport-event module state
-	sportEventState := sporteventtypes.GenesisState{}
-	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[sporteventtypes.ModuleName], &sportEventState))
+	// market module state
+	marketState := markettypes.GenesisState{}
+	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[markettypes.ModuleName], &marketState))
 
-	sportEvent := sporteventtypes.SportEvent{
-		UID:     testSportEventUID,
+	market := markettypes.Market{
+		UID:     testMarketUID,
 		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
-		Odds: []*sporteventtypes.Odds{
+		Odds: []*markettypes.Odds{
 			{UID: "6db09053-2901-4110-8fb5-c14e21f8d666", Meta: "Odds 1"},
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status:                 sporteventtypes.SportEventStatus_SPORT_EVENT_STATUS_RESULT_DECLARED,
+		Status:                 markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 		SrContributionForHouse: sdk.NewInt(5000000),
 	}
-	nullify.Fill(&sportEvent)
-	sportEventState.SportEventList = []sporteventtypes.SportEvent{sportEvent}
+	nullify.Fill(&market)
+	marketState.MarketList = []markettypes.Market{market}
 
-	sportEventBuf, err := cfg.Codec.MarshalJSON(&sportEventState)
+	marketBuf, err := cfg.Codec.MarshalJSON(&marketState)
 	require.NoError(t, err)
-	cfg.GenesisState[sporteventtypes.ModuleName] = sportEventBuf
+	cfg.GenesisState[markettypes.ModuleName] = marketBuf
 
 	// bet module state
 	state := types.GenesisState{}
@@ -62,7 +62,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 		bet := types.Bet{
 			Creator:           testAddress,
 			UID:               uuid.NewString(),
-			SportEventUID:     sportEvent.UID,
+			MarketUID:         market.UID,
 			OddsValue:         "10",
 			Amount:            sdk.NewInt(10),
 			BetFee:            sdk.NewInt(1),
@@ -275,11 +275,11 @@ func TestQueryBet(t *testing.T) {
 		})
 	})
 
-	t.Run("ListActiveBetOfSportEvent", func(t *testing.T) {
+	t.Run("ListActiveBetOfMarket", func(t *testing.T) {
 		ctx := net.Validators[0].ClientCtx
 		request := func(next []byte, offset, limit uint64, total bool) []string {
 			args := []string{
-				testSportEventUID,
+				testMarketUID,
 				fmt.Sprintf("--%s=json", tmcli.OutputFlag),
 			}
 			if next == nil {

@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
@@ -20,12 +20,12 @@ type BankKeeper interface {
 	// Methods imported from bank should be defined here
 }
 
-// SportEventKeeper defines the expected interface needed to get sportEvents from KVStore
-type SportEventKeeper interface {
-	GetSportEvent(ctx sdk.Context, sportEventUID string) (sporteventtypes.SportEvent, bool)
-	GetFirstUnsettledResolvedSportEvent(ctx sdk.Context) (string, bool)
-	GetDefaultBetConstraints(ctx sdk.Context) (params *sporteventtypes.EventBetConstraints)
-	RemoveUnsettledResolvedSportEvent(ctx sdk.Context, sportEventUID string)
+// MarketKeeper defines the expected interface needed to get markets from KVStore
+type MarketKeeper interface {
+	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
+	GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool)
+	GetDefaultBetConstraints(ctx sdk.Context) (params *markettypes.MarketBetConstraints)
+	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 }
 
 // DVMKeeper defines the expected interface needed to verify ticket and unmarshal it

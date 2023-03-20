@@ -13,13 +13,13 @@ import (
 
 // Keeper is the type for module properties
 type Keeper struct {
-	cdc              codec.BinaryCodec
-	storeKey         sdk.StoreKey
-	memKey           sdk.StoreKey
-	paramstore       paramtypes.Subspace
-	sportEventKeeper types.SportEventKeeper
-	orderbookKeeper  types.OrderBookKeeper
-	dvmKeeper        types.DVMKeeper
+	cdc             codec.BinaryCodec
+	storeKey        sdk.StoreKey
+	memKey          sdk.StoreKey
+	paramstore      paramtypes.Subspace
+	marketKeeper    types.MarketKeeper
+	orderbookKeeper types.OrderBookKeeper
+	dvmKeeper       types.DVMKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -42,9 +42,9 @@ func NewKeeper(
 	}
 }
 
-// SetSportEventKeeper sets sport-event keeper to the bet keeper.
-func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
-	k.sportEventKeeper = sportEventKeeper
+// SetMarketKeeper sets market keeper to the bet keeper.
+func (k *Keeper) SetMarketKeeper(marketKeeper types.MarketKeeper) {
+	k.marketKeeper = marketKeeper
 }
 
 // SetOrderBookKeeper sets order book keeper to the bet keeper.

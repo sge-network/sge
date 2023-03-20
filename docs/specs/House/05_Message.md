@@ -9,23 +9,23 @@ Within this message, the user specifies the deposit information they wish to mak
 ```proto
 // Msg defines the house Msg service.
 service Msg {
-  // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a sport event.
+  // Deposit defines a method for performing a deposit of coins to become part of the house corresponding to a market.
   rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
 }
 ```
 
 ```proto
 // MsgDepositRequest defines a SDK message for performing a deposit of coins to become
-// part of the house corresponding to a sport event.
+// part of the house corresponding to a market.
 message MsgDeposit {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
-  string sport_event_uid = 2 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
   string amount = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -35,10 +35,10 @@ message MsgDeposit {
 
 // MsgDepositResponse defines the Msg/Deposit response type.
 message MsgDepositResponse {
-  string sport_event_uid = 1 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 1 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   uint64 participation_index = 2
@@ -52,7 +52,7 @@ The transaction will fail if:
 
 - Basic validation fails:
   - Invalid creator address
-  - Empty or invalid sport event uid
+  - Empty or invalid market uid
   - Invalid amount
 
 ---
@@ -77,10 +77,10 @@ message MsgWithdraw {
   option (gogoproto.goproto_getters) = false;
 
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
-  string sport_event_uid = 2 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
   uint64 participation_index = 3
       [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
@@ -100,10 +100,10 @@ message MsgWithdrawResponse {
     (gogoproto.moretags) = "yaml:\"id\""
   ];
 
-  string sport_event_uid = 2 [
-    (gogoproto.customname) = "SportEventUID",
-    (gogoproto.jsontag) = "sport_event_uid",
-    json_name = "sport_event_uid"
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
   ];
 
   uint64 participation_index = 3

@@ -23,7 +23,7 @@ message Params {
 
 ## **OrderBook**
 
-The OrderBook keeps track of the order book for a sport-event.
+The OrderBook keeps track of the order book for a market.
 
 ```proto
 message OrderBook {
@@ -191,7 +191,7 @@ message ParticipationBetPair {
 
 ## **BetOddsExposure**
 
-Keeps track if Exposures of each odds of order book and sport-event.
+Keeps track if Exposures of each odds of order book and market.
 
 ```proto
 // BookOddsExposure represents the exposures taken on odds

@@ -7,7 +7,7 @@ import (
 	"github.com/sge-network/sge/x/dvm/keeper"
 )
 
-// EndBlocker settles the active bets of resolved sport events
+// EndBlocker settles the active bets of resolved markets
 func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 	err := k.FinishProposals(ctx)
 	if err != nil {

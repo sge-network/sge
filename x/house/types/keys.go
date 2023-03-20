@@ -29,22 +29,22 @@ var (
 	WithdrawalKeyPrefix = []byte{0x01} // prefix for keys that store withdrawals
 )
 
-// GetDepositKey creates the key for deposit bond with sport event and participation
-func GetDepositKey(depositorAddr string, sportEventUID string, participationIndex uint64) []byte {
-	return append(GetDepositListPrefix(depositorAddr), append(utils.StrBytes(sportEventUID), utils.Uint64ToBytes(participationIndex)...)...)
+// GetDepositKey creates the key for deposit bond with market and participation
+func GetDepositKey(depositorAddr string, marketUID string, participationIndex uint64) []byte {
+	return append(GetDepositListPrefix(depositorAddr), append(utils.StrBytes(marketUID), utils.Uint64ToBytes(participationIndex)...)...)
 }
 
-// GetDepositListPrefix creates the key for deposit bond with sport event
+// GetDepositListPrefix creates the key for deposit bond with market
 func GetDepositListPrefix(depositorAddr string) []byte {
 	return utils.StrBytes(depositorAddr)
 }
 
-// GetWithdrawalKey creates the key for withdrawal bond with sport event and deposit
-func GetWithdrawalKey(depositorAddr string, sportEventUID string, participationIndex uint64, id uint64) []byte {
-	return append(GetDepositKey(depositorAddr, sportEventUID, participationIndex), utils.Uint64ToBytes(id)...)
+// GetWithdrawalKey creates the key for withdrawal bond with market and deposit
+func GetWithdrawalKey(depositorAddr string, marketUID string, participationIndex uint64, id uint64) []byte {
+	return append(GetDepositKey(depositorAddr, marketUID, participationIndex), utils.Uint64ToBytes(id)...)
 }
 
-// GetWithdrawalListPrefix creates the key for withdrawals bond with sport event
+// GetWithdrawalListPrefix creates the key for withdrawals bond with market
 func GetWithdrawalListPrefix(depositorAddr string) []byte {
 	return utils.StrBytes(depositorAddr)
 }

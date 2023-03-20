@@ -49,10 +49,10 @@ When this  is processed:
 
 ## **Refund Bettor (called by the `bet` module)**
 
-In case the sport-event gets cancelled or aborted, the amount of the bets placed in the system should be returned to the bettor.
+In case the market gets cancelled or aborted, the amount of the bets placed in the system should be returned to the bettor.
 
 When this is processed:
 
-- Refund back the bettor's bet amount from the `bet_reserve` to the bettor in case a sports event gets cancelled or aborted.
+- Refund back the bettor's bet amount from the `bet_reserve` to the bettor in case a market gets cancelled or aborted.
 
 ---

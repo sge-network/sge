@@ -13,13 +13,13 @@ import (
 
 // keeper of the orderbook store
 type Keeper struct {
-	storeKey         sdk.StoreKey
-	cdc              codec.BinaryCodec
-	paramstore       paramtypes.Subspace
-	bankKeeper       types.BankKeeper
-	accountKeeper    types.AccountKeeper
-	BetKeeper        types.BetKeeper
-	sportEventKeeper types.SportEventKeeper
+	storeKey      sdk.StoreKey
+	cdc           codec.BinaryCodec
+	paramstore    paramtypes.Subspace
+	bankKeeper    types.BankKeeper
+	accountKeeper types.AccountKeeper
+	BetKeeper     types.BetKeeper
+	marketKeeper  types.MarketKeeper
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -54,9 +54,9 @@ func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
 	k.BetKeeper = betKeeper
 }
 
-// SetSportEventKeeper sets the sport-event module keeper to the order book keeper.
-func (k *Keeper) SetSportEventKeeper(sportEventKeeper types.SportEventKeeper) {
-	k.sportEventKeeper = sportEventKeeper
+// SetMarketKeeper sets the market module keeper to the order book keeper.
+func (k *Keeper) SetMarketKeeper(marketKeeper types.MarketKeeper) {
+	k.marketKeeper = marketKeeper
 }
 
 // Logger returns the logger of the keeper

@@ -66,19 +66,19 @@ func TestNewBet(t *testing.T) {
 		}
 		creator := "creator"
 		inputBetOdds := &types.BetOdds{
-			UID:           "Oddsuid",
-			SportEventUID: "sportEventUID",
-			Value:         "1000",
+			UID:       "Oddsuid",
+			MarketUID: "marketUID",
+			Value:     "1000",
 		}
 
 		expectedBet := &types.Bet{
-			UID:           inputBet.UID,
-			Creator:       creator,
-			SportEventUID: inputBetOdds.SportEventUID,
-			OddsUID:       inputBetOdds.UID,
-			OddsValue:     inputBetOdds.Value,
-			Amount:        inputBet.Amount,
-			OddsType:      types.OddsType_ODDS_TYPE_DECIMAL,
+			UID:       inputBet.UID,
+			Creator:   creator,
+			MarketUID: inputBetOdds.MarketUID,
+			OddsUID:   inputBetOdds.UID,
+			OddsValue: inputBetOdds.Value,
+			Amount:    inputBet.Amount,
+			OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 		}
 		res, err := types.NewBet(creator, inputBet, types.OddsType_ODDS_TYPE_DECIMAL, inputBetOdds)
 		require.Equal(t, expectedBet, res)

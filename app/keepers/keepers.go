@@ -55,9 +55,9 @@ import (
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 
-	sporteventmodule "github.com/sge-network/sge/x/sportevent"
-	sporteventmodulekeeper "github.com/sge-network/sge/x/sportevent/keeper"
-	sporteventmoduletypes "github.com/sge-network/sge/x/sportevent/types"
+	marketmodule "github.com/sge-network/sge/x/market"
+	marketmodulekeeper "github.com/sge-network/sge/x/market/keeper"
+	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 
 	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
 	strategicreservemodulekeeper "github.com/sge-network/sge/x/strategicreserve/keeper"
@@ -106,12 +106,12 @@ type AppKeepers struct {
 	AuthzKeeper         authzkeeper.Keeper
 
 	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
-	SportEventKeeper       sporteventmodulekeeper.Keeper
+	MarketKeeper           marketmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
 	OrderBookKeeper        orderbookmodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
-	SportEventModule       sporteventmodule.AppModule
+	MarketModule           marketmodule.AppModule
 	StrategicReserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
 	OrderBookModule        orderbookmodule.AppModule
@@ -357,15 +357,15 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
 
-	appKeepers.SportEventKeeper = *sporteventmodulekeeper.NewKeeper(
+	appKeepers.MarketKeeper = *marketmodulekeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[sporteventmoduletypes.StoreKey],
-		appKeepers.keys[sporteventmoduletypes.MemStoreKey],
-		appKeepers.GetSubspace(sporteventmoduletypes.ModuleName),
+		appKeepers.keys[marketmoduletypes.StoreKey],
+		appKeepers.keys[marketmoduletypes.MemStoreKey],
+		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
 	)
-	appKeepers.SportEventKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
-	appKeepers.SportEventKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
-	appKeepers.SportEventModule = sporteventmodule.NewAppModule(appCodec, appKeepers.SportEventKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
+	appKeepers.MarketKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
+	appKeepers.MarketKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
+	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
 
 	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
@@ -375,13 +375,13 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
 	)
-	appKeepers.BetKeeper.SetSportEventKeeper(appKeepers.SportEventKeeper)
+	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.BetKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
 	appKeepers.BetKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.SportEventKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
 
 	appKeepers.OrderBookKeeper.SetBetKeeper(appKeepers.BetKeeper)
-	appKeepers.OrderBookKeeper.SetSportEventKeeper(appKeepers.SportEventKeeper)
+	appKeepers.OrderBookKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 
 	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
 		appCodec,
@@ -428,7 +428,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(betmoduletypes.ModuleName)
-	paramsKeeper.Subspace(sporteventmoduletypes.ModuleName)
+	paramsKeeper.Subspace(marketmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)

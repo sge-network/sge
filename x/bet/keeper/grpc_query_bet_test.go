@@ -32,7 +32,7 @@ func TestBetQuerySingle(t *testing.T) {
 				Creator: testCreator,
 				Uid:     msgs[0].UID,
 			},
-			response: &types.QueryBetResponse{Bet: msgs[0], SportEvent: testSportEvent},
+			response: &types.QueryBetResponse{Bet: msgs[0], Market: testMarket},
 		},
 		{
 			desc: "Second",
@@ -40,7 +40,7 @@ func TestBetQuerySingle(t *testing.T) {
 				Creator: testCreator,
 				Uid:     msgs[1].UID,
 			},
-			response: &types.QueryBetResponse{Bet: msgs[1], SportEvent: testSportEvent},
+			response: &types.QueryBetResponse{Bet: msgs[1], Market: testMarket},
 		},
 		{
 			desc: "KeyNotFound",
@@ -291,7 +291,7 @@ func TestBetByUIDsQuery(t *testing.T) {
 					Uid:     "100000",
 				}},
 			},
-			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundEvents: []string{"100000"}},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundMarkets: []string{"100000"}},
 		},
 		{
 			desc: "InvalidRequest",
@@ -313,14 +313,14 @@ func TestBetByUIDsQuery(t *testing.T) {
 	}
 }
 
-func TestActiveBetsOfSportEventQueryPaginated(t *testing.T) {
+func TestActiveBetsOfMarketQueryPaginated(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNBet(tApp, k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryActiveBetsRequest {
 		return &types.QueryActiveBetsRequest{
-			SportEventUid: testSportEventUID,
+			MarketUid: testMarketUID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
