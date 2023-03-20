@@ -65,12 +65,12 @@ func TestGetAllActivePubkeysChangeProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNActiveProposal(k, ctx, 10)
 
-	sportEvents, err := k.GetAllActivePubkeysChangeProposals(ctx)
+	Markets, err := k.GetAllActivePubkeysChangeProposals(ctx)
 	require.NoError(t, err)
 
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(sportEvents),
+		nullify.Fill(Markets),
 	)
 }
 
