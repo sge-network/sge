@@ -2,9 +2,9 @@
 
 ## **Params**
 
-1. `market_min_bet_amount`: The minimum allowed bet amount that can be set in the whole system.
-2. `market_min_bet_fee`: The minimum bet fee allowed across the system.
-3. `market_max_sr_contribution`: The maximum allowed contribution by th sr module across the system.
+1. `min_bet_amount`: The minimum allowed bet amount that can be set in the whole system.
+2. `min_bet_fee`: The minimum bet fee allowed across the system.
+3. `max_sr_contribution`: The maximum allowed contribution by th sr module across the system.
 
 ```proto
 // Params defines the parameters for the module.
@@ -12,21 +12,21 @@
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // market_min_bet_amount default minimum bet amount for a market.
-  string market_min_bet_amount = 1 [
-    (gogoproto.moretags) = "yaml:\"market_min_bet_amount\"",
+  // min_bet_amount default minimum bet amount for a market.
+  string min_bet_amount = 1 [
+    (gogoproto.moretags) = "yaml:\"min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // market_min_bet_fee default minimum bet fee for a market.
-  string market_min_bet_fee = 3 [
-    (gogoproto.moretags) = "yaml:\"market_min_bet_fee\"",
+  // min_bet_fee default minimum bet fee for a market.
+  string min_bet_fee = 3 [
+    (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // market_max_sr_contribution default max sr contribution for a market.
-  string market_max_sr_contribution = 4 [
-    (gogoproto.moretags) = "yaml:\"market_max_sr_contribution\"",
+  // max_sr_contribution default max sr contribution for a market.
+  string max_sr_contribution = 4 [
+    (gogoproto.moretags) = "yaml:\"max_sr_contribution\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

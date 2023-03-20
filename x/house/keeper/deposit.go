@@ -10,18 +10,18 @@ import (
 
 // SetDeposit sets a deposit.
 func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
-	depoistKey := types.GetDepositKey(deposit.Creator, deposit.MarketUID, deposit.ParticipationIndex)
+	depositKey := types.GetDepositKey(deposit.Creator, deposit.MarketUID, deposit.ParticipationIndex)
 
 	store := k.getDepositsStore(ctx)
 	b := k.cdc.MustMarshal(&deposit)
-	store.Set(depoistKey, b)
+	store.Set(depositKey, b)
 }
 
 // GetDeposit returns a specific deposit.
 func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val types.Deposit, found bool) {
 	MarketsStore := k.getDepositsStore(ctx)
-	depoistKey := types.GetDepositKey(depositorAddress, marketUID, participationIndex)
-	b := MarketsStore.Get(depoistKey)
+	depositKey := types.GetDepositKey(depositorAddress, marketUID, participationIndex)
+	b := MarketsStore.Get(depositKey)
 	if b == nil {
 		return val, false
 	}

@@ -51,6 +51,6 @@ genesis:
         committee_members: []
     market:
       params:
-        market_min_bet_amount: "1000000"
-        market_min_bet_fee: "0"
-        market_max_sr_contribution: "100000000"
+        min_bet_amount: "1000000"
+        min_bet_fee: "0"
+        max_sr_contribution: "100000000"

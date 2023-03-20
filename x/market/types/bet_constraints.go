@@ -10,7 +10,7 @@ func (bc *MarketBetConstraints) validate(params *Params) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "market bet fee can not be negative")
 	}
 
-	if bc.BetFee.LT(params.MarketMinBetFee) {
+	if bc.BetFee.LT(params.MinBetFee) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "market bet fee is out of threshold limit")
 	}
 
@@ -18,7 +18,7 @@ func (bc *MarketBetConstraints) validate(params *Params) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "market min amount can not be negative")
 	}
 
-	if bc.MinAmount.LT(params.MarketMinBetAmount) {
+	if bc.MinAmount.LT(params.MinBetAmount) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "market min bet amount is less than threshold")
 	}
 

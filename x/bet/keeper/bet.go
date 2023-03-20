@@ -91,7 +91,7 @@ func (k Keeper) GetBetIDs(ctx sdk.Context) (list []types.UID2ID, err error) {
 func (k Keeper) SetActiveBet(ctx sdk.Context, activeBet *types.ActiveBet, id uint64, marketUID string) {
 	store := k.getActiveStore(ctx)
 	b := k.cdc.MustMarshal(activeBet)
-	store.Set(types.ActiveBeOfMarketKey(marketUID, id), b)
+	store.Set(types.ActiveBetOfMarketKey(marketUID, id), b)
 }
 
 // IsAnyActiveBetForMarket checks if there is any active bet for the market
@@ -131,14 +131,14 @@ func (k Keeper) GetActiveBets(ctx sdk.Context) (list []types.ActiveBet, err erro
 // RemoveActiveBet removes an active bet
 func (k Keeper) RemoveActiveBet(ctx sdk.Context, marketUID string, betID uint64) {
 	store := k.getActiveStore(ctx)
-	store.Delete(types.ActiveBeOfMarketKey(marketUID, betID))
+	store.Delete(types.ActiveBetOfMarketKey(marketUID, betID))
 }
 
 // SetSettledBet sets a settled bet
 func (k Keeper) SetSettledBet(ctx sdk.Context, settledBet *types.SettledBet, id uint64, blockHeight int64) {
 	store := k.getSettledStore(ctx)
 	b := k.cdc.MustMarshal(settledBet)
-	store.Set(types.SettledBeOfMarketKey(blockHeight, id), b)
+	store.Set(types.SettledBetOfMarketKey(blockHeight, id), b)
 }
 
 // GetSettledBets returns list of the active bets

@@ -185,7 +185,7 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec
 	// calculate payout
 	var payout, profit sdk.Dec
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
-	// we should extract absolute number to prmarket negative payout
+	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
 		profit = amount.ToDec().
 			Mul(oddsValue.ToDec()).
@@ -220,7 +220,7 @@ func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec)
 	// calculate payout
 	var betAmount sdk.Dec
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
-	// we should extract absolute number to prmarket negative payout
+	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
 		betAmount = payoutProfit.
 			Mul(sdk.NewDec(100)).

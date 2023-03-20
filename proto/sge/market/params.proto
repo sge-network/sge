@@ -10,21 +10,21 @@ option go_package = "github.com/sge-network/sge/x/market/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // market_min_bet_amount is the default minimum bet amount for a market.
-  string market_min_bet_amount = 1 [
-    (gogoproto.moretags) = "yaml:\"market_min_bet_amount\"",
+  // min_bet_amount is the default minimum bet amount for a market.
+  string min_bet_amount = 1 [
+    (gogoproto.moretags) = "yaml:\"min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // market_min_bet_fee is the default minimum bet fee for a market.
-  string market_min_bet_fee = 3 [
-    (gogoproto.moretags) = "yaml:\"market_min_bet_fee\"",
+  // min_bet_fee is the default minimum bet fee for a market.
+  string min_bet_fee = 3 [
+    (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // market_max_sr_contribution is the default max sr contribution for a market.
-  string market_max_sr_contribution = 4 [
-    (gogoproto.moretags) = "yaml:\"market_max_sr_contribution\"",
+  // max_sr_contribution is the default max sr contribution for a market.
+  string max_sr_contribution = 4 [
+    (gogoproto.moretags) = "yaml:\"max_sr_contribution\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

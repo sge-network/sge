@@ -64,8 +64,8 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 		}
 	}
 
-	if payload.SrContributionForHouse.GT(p.MarketMaxSrContribution) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be more than %d", p.MarketMaxSrContribution.Int64())
+	if payload.SrContributionForHouse.GT(p.MaxSrContribution) {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be more than %d", p.MaxSrContribution.Int64())
 	}
 
 	return nil

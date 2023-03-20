@@ -58,9 +58,9 @@ func ActiveBetListOfMarketPrefix(marketID string) []byte {
 	return append(ActiveBetListPrefix, utils.StrBytes(marketID)...)
 }
 
-// ActiveBeOfMarketKey return the key of
+// ActiveBetOfMarketKey return the key of
 // a certain active bet of a market.
-func ActiveBeOfMarketKey(marketID string, id uint64) []byte {
+func ActiveBetOfMarketKey(marketID string, id uint64) []byte {
 	return append(utils.StrBytes(marketID), utils.Uint64ToBytes(id)...)
 }
 
@@ -70,8 +70,8 @@ func SettledBetListOfBlockHeightPrefix(blockHeight int64) []byte {
 	return append(SettledBetListPrefix, utils.Int64ToBytes(blockHeight)...)
 }
 
-// SettledBeOfMarketKey return the key of
+// SettledBetOfMarketKey return the key of
 // settled bet list on a certain block height.
-func SettledBeOfMarketKey(blockHeight int64, id uint64) []byte {
+func SettledBetOfMarketKey(blockHeight int64, id uint64) []byte {
 	return append(utils.Int64ToBytes(blockHeight), utils.Uint64ToBytes(id)...)
 }

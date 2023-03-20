@@ -18,7 +18,7 @@ func TestValidateCreationEvent(t *testing.T) {
 	params := k.GetParams(wctx)
 
 	negativeBetAmount := sdk.NewInt(-5)
-	lowerBetAmount := params.MarketMinBetAmount.Sub(sdk.NewInt(5))
+	lowerBetAmount := params.MinBetAmount.Sub(sdk.NewInt(5))
 
 	tests := []struct {
 		name string
@@ -154,8 +154,8 @@ func TestValidateCreationEvent(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				MinBetAmount:           params.MarketMinBetAmount,
-				BetFee:                 params.MarketMinBetFee,
+				MinBetAmount:           params.MinBetAmount,
+				BetFee:                 params.MinBetFee,
 				Meta:                   "Winner of x:y",
 				SrContributionForHouse: sdk.NewInt(2),
 				Status:                 types.MarketStatus_MARKET_STATUS_ACTIVE,
@@ -299,7 +299,7 @@ func TestUpdateEventValidation(t *testing.T) {
 	t1 := time.Now()
 
 	negativeBetAmount := sdk.NewInt(-5)
-	lowerBetAmount := params.MarketMinBetAmount.Sub(sdk.NewInt(5))
+	lowerBetAmount := params.MinBetAmount.Sub(sdk.NewInt(5))
 
 	market := types.Market{
 		Creator: sample.AccAddress(),
@@ -398,7 +398,7 @@ func TestUpdateEventValidation(t *testing.T) {
 				StartTS:      uint64(t1.Add(time.Minute).Unix()),
 				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
 				MinBetAmount: negativeBetAmount,
-				BetFee:       params.MarketMinBetFee,
+				BetFee:       params.MinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -409,7 +409,7 @@ func TestUpdateEventValidation(t *testing.T) {
 				StartTS:      uint64(t1.Add(time.Minute).Unix()),
 				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
 				MinBetAmount: lowerBetAmount,
-				BetFee:       params.MarketMinBetFee,
+				BetFee:       params.MinBetFee,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
