@@ -4,7 +4,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// validate validates the sport-event constraints
+// validate validates the bet constraints
 func (bc *EventBetConstraints) validate(params *Params) error {
 	if bc.BetFee.IsNegative() {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "event bet fee can not be negative")
