@@ -11,11 +11,11 @@ const typeMsgDeposit = "deposit"
 var _ sdk.Msg = &MsgDeposit{}
 
 // NewMsgDeposit creates the new input for adding deposit to blockchain
-func NewMsgDeposit(creator, sportEventUID string, amount sdk.Int) *MsgDeposit {
+func NewMsgDeposit(creator, MarketUID string, amount sdk.Int) *MsgDeposit {
 	return &MsgDeposit{
-		Creator:       creator,
-		SportEventUID: sportEventUID,
-		Amount:        amount,
+		Creator:   creator,
+		MarketUID: MarketUID,
+		Amount:    amount,
 	}
 }
 
@@ -24,7 +24,7 @@ func (msg *MsgDeposit) Route() string {
 	return RouterKey
 }
 
-// Type returns the msg add event type
+// Type returns the msg add market type
 func (msg *MsgDeposit) Type() string {
 	return typeMsgDeposit
 }
@@ -44,15 +44,15 @@ func (msg *MsgDeposit) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// ValidateBasic validates the input creation event
+// ValidateBasic validates the input creation market
 func (msg *MsgDeposit) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
-	if !utils.IsValidUID(msg.SportEventUID) {
-		return ErrInvalidSportEventUID
+	if !utils.IsValidUID(msg.MarketUID) {
+		return ErrInvalidMarketUID
 	}
 
 	if !msg.Amount.IsPositive() {

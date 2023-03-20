@@ -16,7 +16,7 @@ import (
 
 func CmdWithdrawal() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw [sport_event_uid] [participation_index] [mode] [amount]",
+		Use:   "withdraw [market_uid] [participation_index] [mode] [amount]",
 		Args:  cobra.RangeArgs(3, 4),
 		Short: "Withdraw tokens from a deposit",
 		Long: strings.TrimSpace(
@@ -34,7 +34,7 @@ func CmdWithdrawal() *cobra.Command {
 				return err
 			}
 
-			sportEventUID := args[0]
+			MarketUID := args[0]
 
 			particiapntIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapntIndex < 1 {
@@ -61,7 +61,7 @@ func CmdWithdrawal() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgWithdraw(depAddr.String(), sportEventUID, argAmountCosmosInt, particiapntIndex, types.WithdrawalMode(mode))
+			msg := types.NewMsgWithdraw(depAddr.String(), MarketUID, argAmountCosmosInt, particiapntIndex, types.WithdrawalMode(mode))
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

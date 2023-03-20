@@ -11,10 +11,10 @@ const typeMsgWithdraw = "withdraw"
 var _ sdk.Msg = &MsgWithdraw{}
 
 // NewMsgWithdraw creates the new input for withdrawal of a deposit
-func NewMsgWithdraw(creator string, sportEventUID string, amount sdk.Int, participationIndex uint64, mode WithdrawalMode) *MsgWithdraw {
+func NewMsgWithdraw(creator string, MarketUID string, amount sdk.Int, participationIndex uint64, mode WithdrawalMode) *MsgWithdraw {
 	return &MsgWithdraw{
 		Creator:            creator,
-		SportEventUID:      sportEventUID,
+		MarketUID:          MarketUID,
 		ParticipationIndex: participationIndex,
 		Mode:               mode,
 		Amount:             amount,
@@ -26,7 +26,7 @@ func (msg *MsgWithdraw) Route() string {
 	return RouterKey
 }
 
-// Type returns the msg add event type
+// Type returns the msg add market type
 func (msg *MsgWithdraw) Type() string {
 	return typeMsgWithdraw
 }
@@ -46,7 +46,7 @@ func (msg *MsgWithdraw) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// ValidateBasic validates the input creation event
+// ValidateBasic validates the input creation market
 func (msg *MsgWithdraw) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
@@ -58,8 +58,8 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 		return ErrInvalidWithdrawMode
 	}
 
-	if !utils.IsValidUID(msg.SportEventUID) {
-		return ErrInvalidSportEventUID
+	if !utils.IsValidUID(msg.MarketUID) {
+		return ErrInvalidMarketUID
 	}
 
 	if msg.ParticipationIndex < 1 {

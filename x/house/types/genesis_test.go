@@ -14,12 +14,12 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	sportEventUID := uuid.NewString()
+	MarketUID := uuid.NewString()
 	validState := types.GenesisState{
 		DepositList: []types.Deposit{
 			{
 				Creator:               testAddress,
-				SportEventUID:         sportEventUID,
+				MarketUID:             MarketUID,
 				ParticipationIndex:    1,
 				Amount:                sdk.NewInt(10),
 				Fee:                   sdk.NewInt(1),
@@ -32,7 +32,7 @@ func TestGenesisState_Validate(t *testing.T) {
 			{
 				ID:                 1,
 				DepositorAddress:   testAddress,
-				SportEventUID:      sportEventUID,
+				MarketUID:          MarketUID,
 				ParticipationIndex: 1,
 				Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 				Amount:             sdk.NewInt(10),
@@ -45,9 +45,9 @@ func TestGenesisState_Validate(t *testing.T) {
 	wrongIndex.WithdrawalList = []types.Withdrawal{validState.WithdrawalList[0]}
 	wrongIndex.WithdrawalList[0].ParticipationIndex = 2
 
-	wrongSportEvent := validState
-	wrongSportEvent.WithdrawalList = []types.Withdrawal{validState.WithdrawalList[0]}
-	wrongSportEvent.WithdrawalList[0].SportEventUID = uuid.NewString()
+	wrongMarket := validState
+	wrongMarket.WithdrawalList = []types.Withdrawal{validState.WithdrawalList[0]}
+	wrongMarket.WithdrawalList[0].MarketUID = uuid.NewString()
 
 	wrongCreator := validState
 	wrongCreator.WithdrawalList = []types.Withdrawal{validState.WithdrawalList[0]}
@@ -74,8 +74,8 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    false,
 		},
 		{
-			desc:     "wrong sport-event",
-			genState: &wrongSportEvent,
+			desc:     "wrong market",
+			genState: &wrongMarket,
 			valid:    false,
 		},
 		{

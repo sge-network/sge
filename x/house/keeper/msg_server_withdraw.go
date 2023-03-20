@@ -12,14 +12,14 @@ import (
 func (k msgServer) Withdraw(goCtx context.Context, msg *types.MsgWithdraw) (*types.MsgWithdrawResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.SportEventUID, msg.ParticipationIndex, msg.Mode, msg.Amount)
+	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.MarketUID, msg.ParticipationIndex, msg.Mode, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process withdrawal")
 	}
 
 	return &types.MsgWithdrawResponse{
 		ID:                 id,
-		SportEventUID:      msg.SportEventUID,
+		MarketUID:          msg.MarketUID,
 		ParticipationIndex: msg.ParticipationIndex,
 	}, nil
 }
