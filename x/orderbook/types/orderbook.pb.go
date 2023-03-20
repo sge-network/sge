@@ -59,7 +59,7 @@ func (OrderBookStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_7247ccc164993ca5, []int{0}
 }
 
-// OrderBook represents the order book maintained against a sport event.
+// OrderBook represents the order book maintained against a market.
 type OrderBook struct {
 	// id corresponding to the book
 	ID string `protobuf:"bytes,1,opt,name=id,proto3" json:"id"`

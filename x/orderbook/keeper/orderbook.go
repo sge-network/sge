@@ -19,9 +19,9 @@ func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
 
 // GetBook returns a specific order book.
 func (k Keeper) GetBook(ctx sdk.Context, bookUID string) (val types.OrderBook, found bool) {
-	sportEventsStore := k.getBookStore(ctx)
+	marketsStore := k.getBookStore(ctx)
 	bookKey := types.GetBookKey(bookUID)
-	b := sportEventsStore.Get(bookKey)
+	b := marketsStore.Get(bookKey)
 	if b == nil {
 		return val, false
 	}
@@ -49,10 +49,10 @@ func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error)
 	return
 }
 
-// InitiateBook initiates a book for a given sport event
-func (k Keeper) InitiateBook(ctx sdk.Context, sportEventUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
-	// book and sport event have one-to-one relationship
-	bookUID := sportEventUID
+// InitiateBook initiates a book for a given market
+func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
+	// book and market have one-to-one relationship
+	bookUID := marketUID
 
 	// check for existing book with id
 	book, found := k.GetBook(ctx, bookUID)

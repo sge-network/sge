@@ -13,12 +13,12 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	sportEventUID := uuid.NewString()
+	marketUID := uuid.NewString()
 	oddsUID := uuid.NewString()
 	validState := types.GenesisState{
 		BookList: []types.OrderBook{
 			{
-				ID:                 sportEventUID,
+				ID:                 marketUID,
 				ParticipationCount: 1,
 				OddsCount:          1,
 				Status:             types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
@@ -26,14 +26,14 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		BookExposureList: []types.BookOddsExposure{
 			{
-				BookUID:          sportEventUID,
+				BookUID:          marketUID,
 				OddsUID:          oddsUID,
 				FulfillmentQueue: []uint64{},
 			},
 		},
 		BookParticipationList: []types.BookParticipation{
 			{
-				BookUID:            sportEventUID,
+				BookUID:            marketUID,
 				Index:              1,
 				ParticipantAddress: testAddress,
 				IsModuleAccount:    true,
@@ -41,34 +41,34 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		ParticipationExposureList: []types.ParticipationExposure{
 			{
-				BookUID:            sportEventUID,
+				BookUID:            marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		ParticipationExposureByIndexList: []types.ParticipationExposure{
 			{
-				BookUID:            sportEventUID,
+				BookUID:            marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		HistoricalParticipationExposureList: []types.ParticipationExposure{
 			{
-				BookUID:            sportEventUID,
+				BookUID:            marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		ParticipationBetPairExposureList: []types.ParticipationBetPair{
 			{
-				BookUID:            sportEventUID,
+				BookUID:            marketUID,
 				ParticipationIndex: 1,
 			},
 		},
 		PayoutLock: [][]byte{},
 		Stats: types.OrderBookStats{
-			ResolvedUnsettled: []string{sportEventUID},
+			ResolvedUnsettled: []string{marketUID},
 		},
 		Params: types.DefaultParams(),
 	}

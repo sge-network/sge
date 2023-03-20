@@ -3,7 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
-	sporteventtypes "github.com/sge-network/sge/x/sportevent/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 // AccountKeeper defines the expected account keeper methods.
@@ -25,7 +25,7 @@ type BetKeeper interface {
 	GetBetID(ctx sdk.Context, uid string) (val bettypes.UID2ID, found bool)
 }
 
-// SportEventKeeper defines the expected sport-event keeper methods.
-type SportEventKeeper interface {
-	GetSportEvent(ctx sdk.Context, sportEventUID string) (val sporteventtypes.SportEvent, found bool)
+// MarketKeeper defines the expected market keeper methods.
+type MarketKeeper interface {
+	GetMarket(ctx sdk.Context, marketUID string) (val markettypes.Market, found bool)
 }

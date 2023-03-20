@@ -168,8 +168,8 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 }
 
 // RefundBettor refunds back the bet amount from the `bet_reserve` to
-// the bettor in case a sports event gets cancelled or aborted.
-// It should be called when a sports event is cancelled or aborted
+// the bettor in case a market gets cancelled or aborted.
+// It should be called when a market is cancelled or aborted
 // and the bet amount needs to be refunded back to the bettor.
 // payout = bet amount * odds value
 // payout profit = payout - bet amount

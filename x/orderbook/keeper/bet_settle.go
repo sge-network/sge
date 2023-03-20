@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
-// RefundBettor process bets in case sports event gets cancelled or aborted.
+// RefundBettor process bets in case market gets cancelled or aborted.
 func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error {
 	// Idempotency check: If lock does not exist, return error
 	if !k.payoutLockExists(ctx, uniqueLock) {
