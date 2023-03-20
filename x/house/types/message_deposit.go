@@ -11,10 +11,10 @@ const typeMsgDeposit = "deposit"
 var _ sdk.Msg = &MsgDeposit{}
 
 // NewMsgDeposit creates the new input for adding deposit to blockchain
-func NewMsgDeposit(creator, MarketUID string, amount sdk.Int) *MsgDeposit {
+func NewMsgDeposit(creator, marketUID string, amount sdk.Int) *MsgDeposit {
 	return &MsgDeposit{
 		Creator:   creator,
-		MarketUID: MarketUID,
+		MarketUID: marketUID,
 		Amount:    amount,
 	}
 }

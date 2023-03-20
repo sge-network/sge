@@ -18,9 +18,9 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
 }
 
 // GetDeposit returns a specific deposit.
-func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, MarketUID string, participationIndex uint64) (val types.Deposit, found bool) {
+func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val types.Deposit, found bool) {
 	MarketsStore := k.getDepositsStore(ctx)
-	depoistKey := types.GetDepositKey(depositorAddress, MarketUID, participationIndex)
+	depoistKey := types.GetDepositKey(depositorAddress, marketUID, participationIndex)
 	b := MarketsStore.Get(depoistKey)
 	if b == nil {
 		return val, false
@@ -50,9 +50,9 @@ func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error
 }
 
 // Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, creator string, MarketUID string, amount sdk.Int) (participationIndex uint64, err error) {
+func (k Keeper) Deposit(ctx sdk.Context, creator string, marketUID string, amount sdk.Int) (participationIndex uint64, err error) {
 	// Create the deposit object
-	deposit := types.NewDeposit(creator, MarketUID, amount, sdk.ZeroInt(), 0)
+	deposit := types.NewDeposit(creator, marketUID, amount, sdk.ZeroInt(), 0)
 
 	deposit.SetHouseParticipationFee(k.GetHouseParticipationFee(ctx))
 
@@ -63,7 +63,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string, MarketUID string, amoun
 	}
 
 	participationIndex, err = k.orderBookKeeper.InitiateBookParticipation(
-		ctx, creatorAddr, MarketUID, deposit.Liquidity, deposit.Fee,
+		ctx, creatorAddr, marketUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
 		err = sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)

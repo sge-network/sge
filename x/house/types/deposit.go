@@ -8,10 +8,10 @@ import (
 // NewDeposit creates a new deposit object
 //
 //nolint:interfacer
-func NewDeposit(creator, MarketUID string, amount, totalAmount sdk.Int, withdrawalCount uint64) Deposit {
+func NewDeposit(creator, marketUID string, amount, totalAmount sdk.Int, withdrawalCount uint64) Deposit {
 	return Deposit{
 		Creator:               creator,
-		MarketUID:             MarketUID,
+		MarketUID:             marketUID,
 		Amount:                amount,
 		WithdrawalCount:       withdrawalCount,
 		TotalWithdrawalAmount: totalAmount,
