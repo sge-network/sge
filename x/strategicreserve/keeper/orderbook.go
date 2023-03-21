@@ -5,7 +5,6 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/x/strategicreserve/types"
-	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // SetBook sets a book.
@@ -69,14 +68,14 @@ func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution s
 	)
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
-	err = k.transferFundsFromModuleToModule(ctx, srtypes.SRPoolName, types.BookLiquidityName, srContribution)
+	err = k.transferFundsFromModuleToModule(ctx, types.SRPoolName, types.BookLiquidityName, srContribution)
 	if err != nil {
 		return
 	}
 
 	// Add book participation
 	srParticipation := types.NewBookParticipation(
-		types.SrparticipationIndex, book.ID, k.accountKeeper.GetModuleAddress(srtypes.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
+		types.SrparticipationIndex, book.ID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
