@@ -48,7 +48,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	stats.Count++
 	betID := stats.Count
 
-	betFulfillment, err := k.orderbookKeeper.ProcessBetPlacement(
+	betFulfillment, err := k.srKeeper.ProcessBetPlacement(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
 	)

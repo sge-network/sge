@@ -1,65 +1,57 @@
 package types
 
 import (
-	fmt "fmt"
+	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"gopkg.in/yaml.v2"
+	yaml "gopkg.in/yaml.v2"
 )
 
-var _ paramtypes.ParamSet = (*Params)(nil)
+// SR params default values
+const (
+	// Default maximum book participations.
+	DefaultMaxBookParticipations uint64 = 100
 
-// params keys
+	// Default batch settlement count.
+	DefaultBatchSettlementCount uint64 = 100
+)
+
 var (
-	// KeyCommitteeMembers defines the key for committee members
-	KeyCommitteeMembers = []byte("CommitteeMembers")
+	KeyMaxBookParticipations = []byte("MaxBookParticipationss")
+
+	KeyBatchSettlementCount = []byte("BatchSettlementCount")
 )
 
-// default values
-var (
-	// DefaultCommitteeMembers defines the default value of committee members
-	DefaultCommitteeMembers = []string(nil)
-
-	// InitialSrPool defines the value of the locked amount
-	// and the unlocked amount in the SR_Pool account initially
-	// when the chain is started
-	InitialSrPool = SRPool{
-		LockedAmount:   sdk.ZeroInt(),
-		UnlockedAmount: sdk.NewInt(150000000000000),
-	}
-)
-
-// ParamKeyTable the param key table for launch module
+// ParamTable for strategicreserve module
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
 
 // NewParams creates a new Params instance
-func NewParams() Params {
+func NewParams(maxBookParticipations, batchSettlementCount uint64) Params {
 	return Params{
-		CommitteeMembers: DefaultCommitteeMembers,
+		MaxBookParticipations: maxBookParticipations,
+		BatchSettlementCount:  batchSettlementCount,
 	}
 }
 
-// DefaultParams returns a default set of parameters
-func DefaultParams() Params {
-	return NewParams()
-}
-
-// ParamSetPairs get the params.ParamSet
+// Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyCommitteeMembers, &p.CommitteeMembers, validateCommitteeMembers),
+		paramtypes.NewParamSetPair(KeyMaxBookParticipations, &p.MaxBookParticipations, validateMaxBookParticipations),
+		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
 	}
 }
 
-// Validate validates the set of params
-func (p Params) Validate() error {
-	return nil
+// DefaultParams returns a default set of parameters.
+func DefaultParams() Params {
+	return NewParams(
+		DefaultMaxBookParticipations,
+		DefaultBatchSettlementCount,
+	)
 }
 
-// String implements the Stringer interface.
+// String returns a human readable string representation of the parameters.
 func (p Params) String() string {
 	out, err := yaml.Marshal(p)
 	if err != nil {
@@ -68,28 +60,40 @@ func (p Params) String() string {
 	return string(out)
 }
 
-// String implements the Stringer interface.
-func (sp SRPool) String() string {
-	out, err := yaml.Marshal(sp)
-	if err != nil {
-		panic(err)
+// validate a set of params
+func (p Params) Validate() error {
+	if err := validateMaxBookParticipations(p.MaxBookParticipations); err != nil {
+		return err
 	}
-	return string(out)
+
+	if err := validateBatchSettlementCount(p.BatchSettlementCount); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-// String implements the Stringer interface.
-func (r Reserver) String() string {
-	out, err := yaml.Marshal(r)
-	if err != nil {
-		panic(err)
-	}
-	return string(out)
-}
-
-func validateCommitteeMembers(i interface{}) error {
-	_, ok := i.([]string)
+func validateMaxBookParticipations(i interface{}) error {
+	v, ok := i.(uint64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v == 0 {
+		return fmt.Errorf("maximum book participations must be positive: %d", v)
+	}
+
+	return nil
+}
+
+func validateBatchSettlementCount(i interface{}) error {
+	v, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v == 0 {
+		return fmt.Errorf("batch settlement count must be positive: %d", v)
 	}
 
 	return nil

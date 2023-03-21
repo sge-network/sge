@@ -46,9 +46,6 @@ genesis:
             { inflation: "0.100000000000000000", year_coefficient: "1" },
           ]
         exclude_amount: "500000000000"
-    strategicreserve:
-      params:
-        committee_members: []
     market:
       params:
         min_bet_amount: "1000000"

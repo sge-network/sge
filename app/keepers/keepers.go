@@ -59,10 +59,6 @@ import (
 	marketmodulekeeper "github.com/sge-network/sge/x/market/keeper"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 
-	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
-	strategicreservemodulekeeper "github.com/sge-network/sge/x/strategicreserve/keeper"
-	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
-
 	dvmmodule "github.com/sge-network/sge/x/dvm"
 	dvmmodulekeeper "github.com/sge-network/sge/x/dvm/keeper"
 	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
@@ -71,9 +67,9 @@ import (
 	housemodulekeeper "github.com/sge-network/sge/x/house/keeper"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 
-	orderbookmodule "github.com/sge-network/sge/x/orderbook"
-	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
-	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
+	strategicreservemodulekeeper "github.com/sge-network/sge/x/strategicreserve/keeper"
+	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -105,16 +101,14 @@ type AppKeepers struct {
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
 
-	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
 	MarketKeeper           marketmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
 	DVMKeeper              dvmmodulekeeper.Keeper
-	OrderBookKeeper        orderbookmodulekeeper.Keeper
+	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
 	MarketModule           marketmodule.AppModule
-	StrategicReserveModule strategicreservemodule.AppModule
 	BetModule              betmodule.AppModule
-	OrderBookModule        orderbookmodule.AppModule
+	StrategicReserveModule strategicreservemodule.AppModule
 	HouseModule            housemodule.AppModule
 
 	// modules
@@ -212,13 +206,13 @@ func NewAppKeeper(
 	appKeepers.StrategicReserveKeeper = *strategicreservemodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[strategicreservemoduletypes.StoreKey],
-		appKeepers.keys[strategicreservemoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(strategicreservemoduletypes.ModuleName),
-		strategicreservemodulekeeper.ExpectedKeepers{
+		strategicreservemodulekeeper.SdkExpectedKeepers{
 			BankKeeper:    appKeepers.BankKeeper,
 			AccountKeeper: appKeepers.AccountKeeper,
 		},
 	)
+	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper)
 
 	appKeepers.MintKeeper = *mintkeeper.NewKeeper(
 		appCodec,
@@ -346,17 +340,6 @@ func NewAppKeeper(
 	)
 	appKeepers.DVMModule = dvmmodule.NewAppModule(appCodec, appKeepers.DVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
-	appKeepers.OrderBookKeeper = *orderbookmodulekeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[orderbookmoduletypes.StoreKey],
-		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
-		orderbookmodulekeeper.SdkExpectedKeepers{
-			BankKeeper:    appKeepers.BankKeeper,
-			AccountKeeper: appKeepers.AccountKeeper,
-		},
-	)
-	appKeepers.OrderBookModule = orderbookmodule.NewAppModule(appCodec, appKeepers.OrderBookKeeper)
-
 	appKeepers.MarketKeeper = *marketmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[marketmoduletypes.StoreKey],
@@ -364,10 +347,8 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
 	)
 	appKeepers.MarketKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
-	appKeepers.MarketKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
+	appKeepers.MarketKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
 	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
-
-	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
 	appKeepers.BetKeeper = *betmodulekeeper.NewKeeper(
 		appCodec,
@@ -376,17 +357,17 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
 	)
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
-	appKeepers.BetKeeper.SetOrderBookKeeper(appKeepers.OrderBookKeeper)
+	appKeepers.BetKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
 	appKeepers.BetKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.OrderBookKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.DVMKeeper)
 
-	appKeepers.OrderBookKeeper.SetBetKeeper(appKeepers.BetKeeper)
-	appKeepers.OrderBookKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
+	appKeepers.StrategicReserveKeeper.SetBetKeeper(appKeepers.BetKeeper)
+	appKeepers.StrategicReserveKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 
 	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[housemoduletypes.StoreKey],
-		appKeepers.OrderBookKeeper,
+		appKeepers.StrategicReserveKeeper,
 		appKeepers.GetSubspace(housemoduletypes.ModuleName),
 	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
@@ -431,7 +412,6 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(marketmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
-	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
 
 	return paramsKeeper

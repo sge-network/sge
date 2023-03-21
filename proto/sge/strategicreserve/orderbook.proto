@@ -1,0 +1,42 @@
+syntax = "proto3";
+package sgenetwork.sge.strategicreserve;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
+
+// OrderBook represents the order book maintained against a market.
+message OrderBook {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // id corresponding to the book
+  string id = 1 [
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id"
+  ];
+
+  // participation_count is the count of participations in the order book
+  uint64 participation_count = 2
+      [ (gogoproto.moretags) = "yaml:\"participation_count\"" ];
+
+  // odds_count is the count of the odds in the order book
+  uint64 odds_count = 3 [ (gogoproto.moretags) = "yaml:\"odds_count\"" ];
+
+  // order book status
+  OrderBookStatus status = 4;
+}
+
+// OrderBookStatus is the enum type for the status of the orderbook.
+enum OrderBookStatus {
+  // invalid
+  ORDER_BOOK_STATUS_UNSPECIFIED = 0;
+  // active
+  ORDER_BOOK_STATUS_STATUS_ACTIVE = 1;
+  // resolved not settled
+  ORDER_BOOK_STATUS_STATUS_RESOLVED = 2;
+  // resolved and settled
+  ORDER_BOOK_STATUS_STATUS_SETTLED = 3;
+}
