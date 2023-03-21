@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/strategicreserve/types"
-	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // BatchOrderBookSettlements settles order books
@@ -82,13 +81,13 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipation) error
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, srtypes.SRPoolName, depositPlusProfit)
+			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRPoolName, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, srtypes.SRPoolName, bp.Liquidity)
+			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRPoolName, bp.Liquidity)
 			if err != nil {
 				return err
 			}
