@@ -153,7 +153,7 @@ func (k Keeper) InitiateBookParticipation(
 	return index, nil
 }
 
-func (k Keeper) LiquidateBookParticipation(
+func (k Keeper) WithdrawBookParticipation(
 	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
