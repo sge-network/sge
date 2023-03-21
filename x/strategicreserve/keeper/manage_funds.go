@@ -1,259 +1,65 @@
 package keeper
 
 import (
-	"fmt"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/app/params"
-	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
-
-// ProcessBetPlacement transfers the bet fee from the bettor's account
-// to the bet module account and the bet amount from the given bettor's
-// account to the `bet_reserve` account of SR and locks the payout
-// profit (or SR's contribution) in the `sr_pool` account of SR.
-// payout = bet amount * odds value
-// payout profit = payout - bet amount
-func (k Keeper) ProcessBetPlacement(
-	ctx sdk.Context,
-	bettorAddress sdk.AccAddress,
-	betFee sdk.Int,
-	betAmount sdk.Int,
-	payoutProfit sdk.Int,
-	uniqueLock string,
-) error {
-	// If lock exists, return error
-	// Lock already exists means the bet is already placed for the given bet-uid
-	if k.payoutLockExists(ctx, uniqueLock) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrLockAlreadyExists, uniqueLock))
-		return types.ErrLockAlreadyExists
-	}
-
-	reserver := k.GetReserver(ctx)
-
-	// If SR unlocked amount has insufficient balance, return error
-	// NOTE: This check may result in completely emptying the SR pool.
-	// replacement of SR pool capacity calculation to minimise risking
-	// the SR pool due to payout. Risk management should also be done here if requested.
-	if reserver.SrPool.UnlockedAmount.LT(payoutProfit) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientUnlockedAmountInSrPool,
-			reserver.SrPool.UnlockedAmount, payoutProfit))
-		return types.ErrInsufficientUnlockedAmountInSrPool
-	}
-
-	// Transfer bet fee from bettor to the `bet` module account
-	err := k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betFee,
-			bettorAddress, bettypes.ModuleName, err.Error()))
-		return err
-	}
-
-	// Transfer bet amount from bettor to `bet_reserve` Account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BetReserveName,
-		betAmount)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betAmount,
-			bettorAddress, types.BetReserveName, err.Error()))
-		return err
-	}
-
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Add(payoutProfit),
-		reserver.SrPool.UnlockedAmount.Sub(payoutProfit))
-
-	// Create a unique lock in the Payout Store for the bet
-	k.setPayoutLock(ctx, uniqueLock)
-
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoBetAccepted, betAmount.String()))
-
-	return nil
-}
-
-// BettorWins pays the payout to the bettor from the `bet_reserve`
-// of the SR. Also, it transfers the payout profit locked in the
-// `sr_pool` to the `bet_reserve`. It should be called when the
-// bettor wins the bet.
-// payout = bet amount * odds value
-// payout profit = payout - bet amount
-func (k Keeper) BettorWins(
-	ctx sdk.Context,
-	bettorAddress sdk.AccAddress,
-	betAmount sdk.Int,
-	payoutProfit sdk.Int,
-	uniqueLock string,
-) error {
-	// Idempotency check: If lock does not exist, return error
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist,
-			uniqueLock))
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
-	reserver := k.GetReserver(ctx)
-
-	// If SR locked amount has insufficient balance, return error
-	if reserver.SrPool.LockedAmount.LT(payoutProfit) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientLockedAmountInSrPool,
-			reserver.SrPool.LockedAmount, payoutProfit))
-		return types.ErrInsufficientLockedAmountInSrPool
-	}
-
-	// Transfer payout profit from `sr_pool` to `bet_reserve` account
-	err := k.transferFundsFromModuleToModule(ctx, types.SRPoolName,
-		types.BetReserveName, payoutProfit)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed,
-			payoutProfit, types.SRPoolName, types.BetReserveName, err))
-		return err
-	}
-
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
-		reserver.SrPool.UnlockedAmount)
-
-	payout := betAmount.Add(payoutProfit)
-
-	// Transfer payout from the `bet_reserve` account to bettor
-	err = k.transferFundsFromModuleToUser(ctx, types.BetReserveName, bettorAddress,
-		payout)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, payout,
-			types.BetReserveName, bettorAddress, err))
-		return err
-	}
-
-	// Delete lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
-
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoBettorReceivedPayout, bettorAddress,
-		payout))
-	return nil
-}
-
-// BettorLoses unlocks the payout profit in the `sr_pool`. It transfers the
-// bet amount (house winnings) from the `bet_reserve` to the `sr_pool`
-// module account of SR. It should be called when the bettor loses the bet.
-// payout = bet amount * odds value
-// payout profit = payout - bet amount
-func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string,
-) error {
-	// Idempotency check: If lock does not exist, return error
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist, uniqueLock))
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
-	// Transfer bet amount from `bet_reserve` to `sr_pool` module
-	// account of the SR
-	err := k.transferFundsFromModuleToModule(ctx, types.BetReserveName,
-		types.SRPoolName, betAmount)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betAmount,
-			types.BetReserveName, types.SRPoolName, err))
-		return err
-	}
-
-	reserver := k.GetReserver(ctx)
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
-		reserver.SrPool.UnlockedAmount.Add(betAmount.Add(payoutProfit)))
-
-	// Delete lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
-
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoHouseReceivedWinnings, betAmount,
-		types.SRPoolName))
-	return nil
-}
-
-// RefundBettor refunds back the bet amount from the `bet_reserve` to
-// the bettor in case a market gets cancelled or aborted.
-// It should be called when a market is cancelled or aborted
-// and the bet amount needs to be refunded back to the bettor.
-// payout = bet amount * odds value
-// payout profit = payout - bet amount
-func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string,
-) error {
-	// Idempotency check: If lock does not exist, return error
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrPayoutLockDoesnotExist, uniqueLock))
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
-	reserver := k.GetReserver(ctx)
-
-	// If SR locked amount has insufficient balance, return error
-	if reserver.SrPool.LockedAmount.LT(payoutProfit) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientLockedAmountInSrPool,
-			reserver.SrPool.LockedAmount, payoutProfit))
-		return types.ErrInsufficientLockedAmountInSrPool
-	}
-
-	// Transfer bet amount from `bet_reserve` to bettor's account
-	err := k.transferFundsFromModuleToUser(ctx, types.BetReserveName, bettorAddress,
-		betAmount)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrTransferOfFundsFailed, betAmount,
-			types.BetReserveName, bettorAddress, err))
-		return err
-	}
-
-	k.updateSrPool(ctx, reserver.SrPool.LockedAmount.Sub(payoutProfit),
-		reserver.SrPool.UnlockedAmount.Add(payoutProfit))
-
-	// Delete the lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
-
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoBettorRefunded, bettorAddress,
-		betAmount))
-	return nil
-}
-
-// updateSrPool updates the Reserver.SrPool with the new amounts
-func (k Keeper) updateSrPool(ctx sdk.Context, newLockedAmount sdk.Int,
-	newUnlockedAmount sdk.Int,
-) {
-	reserver := k.GetReserver(ctx)
-
-	// Update the Reserver.SrPool
-	reserver.SrPool.LockedAmount = newLockedAmount
-	reserver.SrPool.UnlockedAmount = newUnlockedAmount
-
-	// Set the updated reserver
-	k.SetReserver(ctx, reserver)
-}
 
 // transferFundsFromUserToModule transfers the given amount from
 // the given account address to the module account passed.
 // Returns an error if the account holder has insufficient balance.
-func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context,
-	address sdk.AccAddress, moduleAccName string, amount sdk.Int,
-) error {
+func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context, address sdk.AccAddress, moduleAccName string, amount sdk.Int) error {
 	// Get the spendable balance of the account holder
-	usgeCoins := k.bankKeeper.SpendableCoins(ctx,
-		address).AmountOf(params.DefaultBondDenom)
+	usgeCoins := k.bankKeeper.SpendableCoins(ctx, address).AmountOf(params.BaseCoinUnit)
 
 	// If account holder has insufficient balance, return error
 	if usgeCoins.LT(amount) {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrInsufficientUserBalance,
-			address, usgeCoins, amount))
-		return sdkerrors.Wrapf(types.ErrInsufficientUserBalance, address.String())
+		return sdkerrors.Wrapf(types.ErrInsufficientUserBalance, " User Address: %s", address.String())
 	}
 
-	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
+	amt := sdk.NewCoins(sdk.NewCoin(params.BaseCoinUnit, amount))
 
 	// Transfer funds
-	err := k.bankKeeper.SendCoinsFromAccountToModule(
-		ctx, address, moduleAccName, amt)
+	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, address, moduleAccName, amt)
 	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrFromBankModule, err))
+		return sdkerrors.Wrapf(types.ErrFromBankModule, ": %s", err)
+	}
+
+	return nil
+}
+
+// transferFundsFromModuleToModule transfers the given amount from a module
+// account to another module account.
+// Returns an error if the sender module has insufficient balance.
+func (k Keeper) transferFundsFromModuleToModule(
+	ctx sdk.Context,
+	senderModule string,
+	recipientModule string,
+	amount sdk.Int,
+) error {
+	if senderModule == recipientModule {
+		return types.ErrDuplicateSenderAndRecipientModule
+	}
+
+	amt := sdk.NewCoins(sdk.NewCoin(params.BaseCoinUnit, amount))
+
+	// Get the balance of the sender module account
+	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(senderModule), params.BaseCoinUnit)
+
+	// If sender module account has insufficient balance, return error
+	if balance.Amount.LT(amt.AmountOf(params.BaseCoinUnit)) {
+		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, "%s", senderModule)
+	}
+
+	// Transfer funds
+	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, senderModule, recipientModule, amt)
+	if err != nil {
 		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
 	}
 
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoFundsTransferred, amount,
-		address, moduleAccName))
 	return nil
 }
 
@@ -279,46 +85,8 @@ func (k Keeper) transferFundsFromModuleToUser(ctx sdk.Context,
 	err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, moduleAccName,
 		address, amt)
 	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrFromBankModule, err))
 		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
 	}
 
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoFundsTransferred, amount,
-		moduleAccName, address))
-	return nil
-}
-
-// transferFundsFromModuleToModule transfers the given amount from a module
-// account to another module account.
-// Returns an error if the sender module has insufficient balance.
-func (k Keeper) transferFundsFromModuleToModule(ctx sdk.Context,
-	senderModule string, recipientModule string, amount sdk.Int,
-) error {
-	if senderModule == recipientModule {
-		return types.ErrDuplicateSenderAndRecipientModule
-	}
-
-	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
-
-	// Get the balance of the sender module account
-	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(
-		senderModule), params.DefaultBondDenom)
-
-	// If module account has insufficient balance, return error
-	if balance.Amount.LT(amt.AmountOf(params.DefaultBondDenom)) {
-		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount,
-			senderModule)
-	}
-
-	// Transfer funds
-	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, senderModule,
-		recipientModule, amt)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf(types.LogErrFromBankModule, err))
-		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
-	}
-
-	k.Logger(ctx).Info(fmt.Sprintf(types.LogInfoFundsTransferred, amount,
-		senderModule, recipientModule))
 	return nil
 }

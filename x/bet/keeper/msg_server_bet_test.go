@@ -150,7 +150,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		for _, v := range marketItem.Odds {
 			oddsUIDs = append(oddsUIDs, v.UID)
 		}
-		err = tApp.OrderBookKeeper.InitiateBook(ctx, marketItem.UID, marketItem.SrContributionForHouse, oddsUIDs)
+		err = tApp.StrategicReserveKeeper.InitiateBook(ctx, marketItem.UID, marketItem.SrContributionForHouse, oddsUIDs)
 		require.NoError(t, err)
 
 		_, err = msgk.PlaceBet(wctx, inputBet)

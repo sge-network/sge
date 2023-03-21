@@ -12,6 +12,5 @@
     * [Messages](specs/Market/03_Messages.md)
     * [Events](specs/Market/04_Events.md)
     * [State Transitions](specs/Market/05_State_Transitions.md)
-  * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)
   * [House](specs/House/01_Overview.md)
-  * [Order Book](specs/OrderBook/01_Overview.md)
+  * [Strategic Reserve](specs/StrategicReserve/01_Overview.md)

@@ -62,11 +62,11 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string, marketUID string, amoun
 		return
 	}
 
-	participationIndex, err = k.orderBookKeeper.InitiateBookParticipation(
+	participationIndex, err = k.srKeeper.InitiateBookParticipation(
 		ctx, creatorAddr, marketUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
-		err = sdkerrors.Wrapf(types.ErrOrderBookDepositProcessing, "%s", err)
+		err = sdkerrors.Wrapf(types.ErrSRDepositProcessing, "%s", err)
 		return
 	}
 
@@ -78,11 +78,11 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string, marketUID string, amoun
 	return participationIndex, err
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, particpationIndex, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, participationIndex, creator string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,
-			sdk.NewAttribute(types.AttributeKeyParticipationIndex, particpationIndex),
+			sdk.NewAttribute(types.AttributeKeyParticipationIndex, participationIndex),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

@@ -33,4 +33,4 @@ When this  is processed:
     bet.TotalWithdrawalAmount = bet.TotalWithdrawalAmount + Withdrawal Amount
     ```
 
-- the order book participation will create in the backgroud and its index will be assigned to the deposit
+- the order book participation will create in the background and its index will be assigned to the deposit

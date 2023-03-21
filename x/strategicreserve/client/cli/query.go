@@ -1,28 +1,35 @@
 package cli
 
 import (
-	"fmt"
-
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/sge-network/sge/x/strategicreserve/types"
 	"github.com/spf13/cobra"
+
+	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd(queryRoute string) *cobra.Command {
-	// Group strategicreserve queries under a subcommand
-	cmd := &cobra.Command{
+	orderBookQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
+		Short:                      "Querying commands for the strategicreserve module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(
+	orderBookQueryCmd.AddCommand(
 		CmdQueryParams(),
-		GetCmdQueryReserver(),
+		GetCmdQueryOrderBooks(),
+		GetCmdQueryOrderBook(),
+		GetCmdQueryBookParticipations(),
+		GetCmdQueryBookParticipation(),
+		GetCmdQueryBookExposures(),
+		GetCmdQueryBookExposure(),
+		GetCmdQueryParticipationExposures(),
+		GetCmdQueryParticipationExposure(),
+		GetCmdQueryHistoricalParticipationExposures(),
+		GetCmdQueryParticipationBets(),
 	)
 
-	return cmd
+	return orderBookQueryCmd
 }

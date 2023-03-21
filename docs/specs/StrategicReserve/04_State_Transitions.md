@@ -1,58 +1,67 @@
 # **State Transitions**
 
-This section defines the state transitions of the Params
+This section defines the state transitions of the strategic reserve module's KVStore in all scenarios:
 
-## **Process Bet Placement of the SR pool (called by the `bet` module)**
+## **Book Initialization**
 
-When a bet is placed by a user, the potential winning payout amount is locked in the SR pool and is made unavailable for accepting further bets.
+When this market is being created:
 
-When this is processed:
+1. Creates a order book corresponding to the market
+2. Transfer the sr contribution of market to the liquidity name.
+3. Creates the first participation for the sr module account.
+4. Set the exposures for the bet odds.
+5. Set the exposures for the participations.
 
-- Transfer funds from the user’s account to the SR module account
-
-- Update the `locked_amount` and `unlocked_amount` params by locking the
-  SR's contribution in the SR Pool
-
-- The bet amount is kept in the `bet_reserve` module account of the SR
-
-- The bet fee is stored in the module account of the bet module
-
----
-
-## **Bettor wins (called by the `bet` module)**
-
-If the House loses the wager, the payout is made from the Strategic Reserve to the winner’s account directly.
-
-When this  is processed:
-
-- Unlock the corresponding locked amount in the SR
-
-- Transfer funds from the SR pool and the `bet_reserve` to the user
-
-- Modify `locked_amount` and `unlocked_amount` params
+```go
+newOrderBook := &types.Deposit{
+    BookID:                 <marketID>,
+    ParticipantCount:       1, // this is sr module account
+    OddsCount:              <Count of bet odds og market>
+    Status:                 Active
+}
+```
 
 ---
 
-## **Bettor Loses (called by the `bet` module)**
+## **Initiate Participation**
 
-If the House wins a wager, the funds locked in the Strategic Reserve for the corresponding bet are unlocked and transferred to the module account.
+When a user deposits tokens:
 
-When this  is processed:
-
-- Transfer the bet amount (house winnings) from the `bet_reserve` to the `sr_pool`
-  module account of SR
-
-- Unlock the payout profit or SR's contribution in the `sr_pool` by modifying
-  the `locked_amount` and `unlocked_amount` params
-
----
-
-## **Refund Bettor (called by the `bet` module)**
-
-In case the market gets cancelled or aborted, the amount of the bets placed in the system should be returned to the bettor.
-
-When this is processed:
-
-- Refund back the bettor's bet amount from the `bet_reserve` to the bettor in case a market gets cancelled or aborted.
+1. Retrieve the order book.
+2. Check if maximum allowed participant is reached or not.
+3. Set the participation equal to the liquidity amount of the deposition.
+4. Transfer the deposition fee to the house module account.
+5. Transfer the liquidity amount to the Book liquidity module account.
+6. Update the book odds exposures and add the participation into the fulfillment queue.
+7. Initialize the participation exposure as zero for round as 1 and set to the state.
 
 ---
+
+## **Process Bet Placement**
+
+1. Get order book and odds exposures.
+2. Check all fulfillment queue items:
+    1. Get participations and participation exposures
+    2. Check available liquidity and process fulfillment.
+    3. Set the Participation and exposures into the state.
+3. Remove the fulfillment queue item from the order book.
+4. Transfer bet fee to bet module.
+5. Transfer liquidated amount to the bet liquidity module account.
+6. Set the bet as paid out bet.
+
+## **Process Bet Settlement**
+
+1. BettorWins(called by the `bet` module):
+    - For all bet fulfilments:
+        1. Get participation.
+        2. Transfer fulfillment payout to the bettor account address from liquidity module account.
+        3. Transfer fulfillment bet amount to the bettor account address from liquidity module account.
+        4. Set the participation in the state.
+2. Bettor Loses(called by the `bet` module):
+    - For all bet fulfilments:
+        1. Get participation.
+        2. Update  actual profit to the paticipations.
+        3. Set the participation in the state.
+
+3. Refund bettor(called by the `bet` module):
+    - Transfer the bet amount from bet reserve module account to the user account address.

@@ -58,29 +58,26 @@ import (
 	housemodule "github.com/sge-network/sge/x/house"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 
-	orderbookmodule "github.com/sge-network/sge/x/orderbook"
-	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
-
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
 
 // module account permissions
 var mAccPerms = map[string][]string{
-	authtypes.FeeCollectorName:                 nil,
-	distrtypes.ModuleName:                      nil,
-	icatypes.ModuleName:                        nil,
-	minttypes.ModuleName:                       {authtypes.Minter},
-	stakingtypes.BondedPoolName:                {authtypes.Burner, authtypes.Staking},
-	stakingtypes.NotBondedPoolName:             {authtypes.Burner, authtypes.Staking},
-	govtypes.ModuleName:                        {authtypes.Burner},
-	ibctransfertypes.ModuleName:                {authtypes.Minter, authtypes.Burner},
-	strategicreservemoduletypes.SRPoolName:     nil,
-	strategicreservemoduletypes.BetReserveName: nil,
-	betmoduletypes.ModuleName:                  nil,
-	orderbookmoduletypes.SRProfitName:          nil,
-	orderbookmoduletypes.BookLiquidityName:     nil,
-	housemoduletypes.HouseParticipationFeeName: nil,
+	authtypes.FeeCollectorName:                    nil,
+	distrtypes.ModuleName:                         nil,
+	icatypes.ModuleName:                           nil,
+	minttypes.ModuleName:                          {authtypes.Minter},
+	stakingtypes.BondedPoolName:                   {authtypes.Burner, authtypes.Staking},
+	stakingtypes.NotBondedPoolName:                {authtypes.Burner, authtypes.Staking},
+	govtypes.ModuleName:                           {authtypes.Burner},
+	ibctransfertypes.ModuleName:                   {authtypes.Minter, authtypes.Burner},
+	strategicreservemoduletypes.SRPoolName:        nil,
+	strategicreservemoduletypes.BetReserveName:    nil,
+	strategicreservemoduletypes.SRProfitName:      nil,
+	strategicreservemoduletypes.BookLiquidityName: nil,
+	betmoduletypes.ModuleName:                     nil,
+	housemoduletypes.HouseParticipationFeeName:    nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,
@@ -111,7 +108,6 @@ var ModuleBasics = module.NewBasicManager(
 	strategicreservemodule.AppModuleBasic{},
 	dvmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
-	orderbookmodule.AppModuleBasic{},
 )
 
 func appModules(
@@ -152,7 +148,6 @@ func appModules(
 		app.StrategicReserveModule,
 		app.DVMModule,
 		app.HouseModule,
-		app.OrderBookModule,
 		// this line is u
 	}
 }
@@ -184,7 +179,6 @@ func simulationModules(
 
 		app.BetModule,
 		app.MarketModule,
-		app.StrategicReserveModule,
 		app.DVMModule,
 	}
 }
@@ -218,7 +212,6 @@ func orderBeginBlockers() []string {
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
-		orderbookmoduletypes.ModuleName,
 	}
 }
 
@@ -248,7 +241,6 @@ func orderEndBlockers() []string {
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
-		orderbookmoduletypes.ModuleName,
 	}
 }
 
@@ -278,6 +270,5 @@ func orderInitBlockers() []string {
 		strategicreservemoduletypes.ModuleName,
 		dvmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
-		orderbookmoduletypes.ModuleName,
 	}
 }
