@@ -48,7 +48,8 @@ func TestActivePubkeysChangeProposalQuerySingle(t *testing.T) {
 				Id:     msgs[1].Id,
 				Status: types.ProposalStatus_PROPOSAL_STATUS_FINISHED,
 			},
-			err: status.Error(codes.NotFound, "not found")},
+			err: status.Error(codes.NotFound, "not found"),
+		},
 		{
 			desc: "KeyNotFound",
 			request: &types.QueryPublicKeysChangeProposalRequest{
