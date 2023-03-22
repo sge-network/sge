@@ -8,10 +8,10 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 // PubkeysChangeProposalPayload indicates data of public keys changes proposal
 // ticket.
 message PubkeysChangeProposalPayload {
-  // additions contain new pub keys to be added to public keys.
-  repeated string additions = 1;
-  // deletions contain old pub keys to be removed from public keys.
-  repeated string deletions = 2;
+  // public_keys contain new pub keys to be added to public keys.
+  repeated string public_keys = 1;
+  // leader_index is the universal unique identifier of the public key.
+  uint32 leader_index = 2;
 }
 
 // ProposalVotePayload indicates vote data ticket.
