@@ -4,22 +4,21 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/types"
 )
 
-// SetActivePubkeysChangeProposal sets a pubkey list change proposal in the store.
-func (k Keeper) SetActivePubkeysChangeProposal(ctx sdk.Context, proposal types.PublicKeysChangeProposal) {
-	store := k.getActivePubKeysChangeProposalStore(ctx)
+// SetPubkeysChangeProposal sets a pubkey list change proposal in the store.
+func (k Keeper) SetPubkeysChangeProposal(ctx sdk.Context, proposal types.PublicKeysChangeProposal) {
+	store := k.getPubKeysChangeProposalStore(ctx)
 	b := k.cdc.MustMarshal(&proposal)
-	store.Set(utils.Uint64ToBytes(proposal.Id), b)
+	store.Set(types.PubkeysChangeProposalKey(proposal.Status, proposal.Id), b)
 }
 
-// GetActivePubkeysChangeProposal returns a pubkeys change proposat by its id
-func (k Keeper) GetActivePubkeysChangeProposal(ctx sdk.Context, id uint64) (val types.PublicKeysChangeProposal, found bool) {
-	store := k.getActivePubKeysChangeProposalStore(ctx)
+// GetPubkeysChangeProposal returns a pubkeys change proposat by its id
+func (k Keeper) GetPubkeysChangeProposal(ctx sdk.Context, status types.ProposalStatus, id uint64) (val types.PublicKeysChangeProposal, found bool) {
+	store := k.getPubKeysChangeProposalStore(ctx)
 
-	b := store.Get(utils.Uint64ToBytes(id))
+	b := store.Get(types.PubkeysChangeProposalKey(status, id))
 	if b == nil {
 		return val, false
 	}
@@ -28,9 +27,27 @@ func (k Keeper) GetActivePubkeysChangeProposal(ctx sdk.Context, id uint64) (val 
 	return val, true
 }
 
-// GetAllActivePubkeysChangeProposals returns list of all active pubkeys change proposals
-func (k Keeper) GetAllActivePubkeysChangeProposals(ctx sdk.Context) (list []types.PublicKeysChangeProposal, err error) {
-	store := k.getActivePubKeysChangeProposalStore(ctx)
+// GetAllPubkeysChangeProposalsByStatus returns list of all pubkeys change proposals
+func (k Keeper) GetAllPubkeysChangeProposalsByStatus(ctx sdk.Context, status types.ProposalStatus) (list []types.PublicKeysChangeProposal, err error) {
+	store := k.getPubKeysChangeProposalStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, types.PubkeysChangeProposalPrefix(status))
+
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.PublicKeysChangeProposal
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
+// GetAllPubkeysChangeProposals returns list of all pubkeys change proposals
+func (k Keeper) GetAllPubkeysChangeProposals(ctx sdk.Context) (list []types.PublicKeysChangeProposal, err error) {
+	store := k.getPubKeysChangeProposalStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -46,56 +63,20 @@ func (k Keeper) GetAllActivePubkeysChangeProposals(ctx sdk.Context) (list []type
 	return
 }
 
-// RemoveActiveProposal removes an active pubkeys change proposal.
-func (k Keeper) RemoveActiveProposal(ctx sdk.Context, id uint64) {
-	store := k.getActivePubKeysChangeProposalStore(ctx)
-	store.Delete(utils.Uint64ToBytes(id))
+// RemoveProposal removes an pubkeys change proposal.
+func (k Keeper) RemoveProposal(ctx sdk.Context, status types.ProposalStatus, id uint64) {
+	store := k.getPubKeysChangeProposalStore(ctx)
+	store.Delete(types.PubkeysChangeProposalKey(status, id))
 }
 
-// SetFinishedPubkeysChangeProposal sets a finished pubkey list change proposal in the store.
-func (k Keeper) SetFinishedPubkeysChangeProposal(ctx sdk.Context, finishedProposal types.PublicKeysChangeFinishedProposal) {
-	store := k.getFinishedPubKeysChangeProposalStore(ctx)
-	b := k.cdc.MustMarshal(&finishedProposal)
-	store.Set(utils.Uint64ToBytes(finishedProposal.Proposal.Id), b)
-}
-
-// GetFinishedPubkeysChangeProposal returns a finished pubkeys change proposat by its id
-func (k Keeper) GetFinishedPubkeysChangeProposal(ctx sdk.Context, id uint64) (val types.PublicKeysChangeFinishedProposal, found bool) {
-	store := k.getFinishedPubKeysChangeProposalStore(ctx)
-
-	b := store.Get(utils.Uint64ToBytes(id))
-	if b == nil {
-		return val, false
-	}
-
-	k.cdc.MustUnmarshal(b, &val)
-	return val, true
-}
-
-// GetAllFinishedPubkeysChangeProposals returns list of all finished pubkeys change proposals
-func (k Keeper) GetAllFinishedPubkeysChangeProposals(ctx sdk.Context) (list []types.PublicKeysChangeFinishedProposal, err error) {
-	store := k.getFinishedPubKeysChangeProposalStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
-
-	defer func() {
-		err = iterator.Close()
-	}()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.PublicKeysChangeFinishedProposal
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
-	}
-
-	return
-}
-
+// FinishProposals sets all of active proposals as finished.
 func (k Keeper) FinishProposals(ctx sdk.Context) error {
 	return k.finishPubkeysChangeProposals(ctx)
 }
 
+// finishPubkeysChangeProposals sets all of active pubkeys change proposals as finished.
 func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
-	activeProposals, err := k.GetAllActivePubkeysChangeProposals(ctx)
+	activeProposals, err := k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE)
 	if err != nil {
 		return fmt.Errorf("error while retrieving the active pubkeys change proposals: %s", err)
 	}
@@ -152,11 +133,7 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 				fmt.Printf("there is no publick keys record")
 			}
 
-			for _, deleted := range proposal.Modifications.Deletions {
-				keyVault.PublicKeys = utils.RemoveStr(keyVault.PublicKeys, deleted)
-			}
-
-			keyVault.PublicKeys = append(keyVault.PublicKeys, proposal.Modifications.Additions...)
+			keyVault.SetLeader(proposal.Modifications.LeaderIndex)
 
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
@@ -180,20 +157,18 @@ func (k Keeper) finishPubkeysChangeProposal(
 	result types.ProposalResult,
 	resultMetadata string,
 ) error {
-	proposal, found := k.GetActivePubkeysChangeProposal(ctx, proposalID)
+	proposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, proposalID)
 	if !found {
 		return fmt.Errorf("proposal not found with id %d", proposalID)
 	}
 
-	k.SetFinishedPubkeysChangeProposal(ctx,
-		types.NewFinishedPublicKeysChangeProposal(
-			proposal,
-			result,
-			resultMetadata,
-			ctx.BlockTime().Unix(),
-		),
-	)
-	k.RemoveActiveProposal(ctx, proposalID)
+	proposal.Result = result
+	proposal.ResultMeta = resultMetadata
+	proposal.FinishTS = ctx.BlockTime().Unix()
+	proposal.Status = types.ProposalStatus_PROPOSAL_STATUS_FINISHED
+
+	k.RemoveProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, proposalID)
+	k.SetPubkeysChangeProposal(ctx, proposal)
 
 	return nil
 }

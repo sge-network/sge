@@ -35,11 +35,12 @@ func TestCmdChangePubkeysListProposal(t *testing.T) {
 	require.NoError(t, err)
 
 	t1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
-		Additions []string
-		Deletions []string
+		PublicKeys  []string
+		LeaderIndex uint32
 		jwt.RegisteredClaims
 	}{
-		Additions: []string{string(utils.NewPubKeyMemory(bs))},
+		PublicKeys:  []string{string(utils.NewPubKeyMemory(bs))},
+		LeaderIndex: 0,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},

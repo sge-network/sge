@@ -20,11 +20,10 @@ func TestChangePubkeysVote(t *testing.T) {
 		require.NoError(t, err)
 
 		T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
-			Additions []string
-			Deletions []string
+			PublicKeys []string
 			jwt.RegisteredClaims
 		}{
-			Additions: pubs,
+			PublicKeys: pubs,
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 			},

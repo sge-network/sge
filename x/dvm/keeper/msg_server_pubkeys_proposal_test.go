@@ -37,21 +37,18 @@ func createNTestPubKeys(n int) ([]string, error) {
 
 func TestChangePubkeysListProposal(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
-		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
+		msgk, _, wctx := setupMsgServer(t)
 		creator := simappUtil.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(3)
 		require.NoError(t, err)
 
-		keyVault, found := k.GetKeyVault(ctx)
-		require.True(t, found)
-
 		T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
-			Additions []string
-			Deletions []string
+			PublicKeys  []string
+			LeaderIndex uint32
 			jwt.RegisteredClaims
 		}{
-			Additions: pubs,
-			Deletions: keyVault.PublicKeys[0:3],
+			PublicKeys:  pubs[2:],
+			LeaderIndex: 0,
 			RegisteredClaims: jwt.RegisteredClaims{
 				ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 			},

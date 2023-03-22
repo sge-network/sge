@@ -12,16 +12,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	// Set the key vault
 	k.SetKeyVault(ctx, genState.KeyVault)
 
-	// set active pubkeys change proposals
-	for i := range genState.ActivePubkeysChangeProposals {
-		proposal := genState.ActivePubkeysChangeProposals[i]
-		k.SetActivePubkeysChangeProposal(ctx, proposal)
-	}
-
-	// set finished pubkeys change proposals
-	for i := range genState.FinishedPubkeysChangeProposals {
-		proposal := genState.FinishedPubkeysChangeProposals[i]
-		k.SetFinishedPubkeysChangeProposal(ctx, proposal)
+	// set pubkeys change proposals
+	for i := range genState.PubkeysChangeProposals {
+		proposal := genState.PubkeysChangeProposals[i]
+		k.SetPubkeysChangeProposal(ctx, proposal)
 	}
 
 	// set proposal statistics
@@ -41,19 +35,12 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		genesis.KeyVault = keys
 	}
 
-	// load active pubkeys change proposals
-	activeProposals, err := k.GetAllActivePubkeysChangeProposals(ctx)
+	// load pubkeys change proposals
+	proposals, err := k.GetAllPubkeysChangeProposals(ctx)
 	if err != nil {
 		panic(err)
 	}
-	genesis.ActivePubkeysChangeProposals = append(genesis.ActivePubkeysChangeProposals, activeProposals...)
-
-	// load finished pubkeys change proposals
-	finishedProposals, err := k.GetAllFinishedPubkeysChangeProposals(ctx)
-	if err != nil {
-		panic(err)
-	}
-	genesis.FinishedPubkeysChangeProposals = append(genesis.FinishedPubkeysChangeProposals, finishedProposals...)
+	genesis.PubkeysChangeProposals = append(genesis.PubkeysChangeProposals, proposals...)
 
 	// load proposal statistics
 	genesis.ProposalStats = k.GetProposalStats(ctx)

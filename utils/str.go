@@ -30,3 +30,9 @@ func RemoveStr(s []string, r string) []string {
 	}
 	return s
 }
+
+// PopStrAtIndex pops an string item from string slice by index.
+func PopStrAtIndex(s []string, i uint32) ([]string, string) {
+	popElem := s[i]
+	return append(s[:i], s[i+1:]...), popElem
+}

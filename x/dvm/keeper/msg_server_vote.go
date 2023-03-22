@@ -18,7 +18,7 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket should be signed by the provided pub key: %s", err)
 	}
 
-	proposal, found := k.GetActivePubkeysChangeProposal(ctx, payload.ProposalId)
+	proposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, payload.ProposalId)
 	if !found {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "proposal not fount with id %d", &payload.ProposalId)
 	}

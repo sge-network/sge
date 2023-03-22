@@ -24,11 +24,10 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 		return nil, err
 	}
 
-	// remove duplicate additions and deletions
-	payload.Additions = utils.RemoveDuplicateStrs(payload.Additions)
-	payload.Deletions = utils.RemoveDuplicateStrs(payload.Deletions)
+	// remove duplicates in public keys
+	payload.PublicKeys = utils.RemoveDuplicateStrs(payload.PublicKeys)
 
-	err = payload.Validate(keys.PublicKeys)
+	err = payload.Validate(keys.PublicKeys, payload.LeaderIndex)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
@@ -36,8 +35,8 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	stats := k.GetProposalStats(ctx)
 	stats.PubkeysChangeCount++
 
-	// set active proposal
-	k.Keeper.SetActivePubkeysChangeProposal(ctx,
+	// set proposal
+	k.Keeper.SetPubkeysChangeProposal(ctx,
 		types.NewPublicKeysChangeProposal(
 			stats.PubkeysChangeCount,
 			msg.Creator,
