@@ -79,7 +79,6 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 	return baseapp.SetInterBlockCache(store.NewCommitKVStoreCacheManager())
 }
 
-// and doesn't depend on the application.
 func TestAppStateDeterminism(t *testing.T) {
 	if !sdksimapp.FlagEnabledValue {
 		t.Skip("skipping application simulation")
