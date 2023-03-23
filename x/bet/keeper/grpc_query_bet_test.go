@@ -288,7 +288,7 @@ func TestBetByUIDsQuery(t *testing.T) {
 					simappUtil.TestParamUsers["user1"].Address.String() + ":" + "100000",
 				},
 			},
-			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, UidsNotFound: []string{"100000"}},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundBetUids: []string{"100000"}},
 		},
 		{
 			desc: "InvalidRequest",

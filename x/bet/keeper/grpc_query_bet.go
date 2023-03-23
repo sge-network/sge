@@ -22,7 +22,6 @@ const (
 func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.QueryBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
-		// TODO: Registered errors?
 	}
 
 	var bets []types.Bet
@@ -120,9 +119,8 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	}
 
 	return &types.QueryBetsByUIDsResponse{
-		Bets:         foundBets,
-		UidsNotFound: notFoundBets,
-		// TODO: NotFoundBets
+		Bets:            foundBets,
+		NotFoundBetUids: notFoundBets,
 	}, nil
 }
 

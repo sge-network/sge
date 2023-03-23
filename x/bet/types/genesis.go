@@ -89,7 +89,5 @@ func (gs GenesisState) Validate() error {
 		}
 	}
 
-	// TODO: IMPORTANT there are a lot of edge cases to be validated
-
 	return gs.Params.Validate()
 }

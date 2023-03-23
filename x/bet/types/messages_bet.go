@@ -11,10 +11,6 @@ import (
 const (
 	// TypeMsgPlaceBet is type of message MsgPlaceBet
 	TypeMsgPlaceBet = "place_bet"
-	// TODO: Below types are unused
-	// TypeMsgSettleBet is type of message MsgSettleBet
-	TypeMsgSettleBet = "settle_bet"
-
 	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
 	SettlementUIDsThreshold = 10
 	// BetPlacementThreshold is the threshold for the number bets in bulk placement tx

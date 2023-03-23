@@ -113,7 +113,7 @@ message QueryBetsByUIDsRequest {
 // UID list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsResponse {
   repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
-  repeated string uids_not_found = 2;
+  repeated string not_found_bet_uids = 2;
 }
 
 // QueryActiveBetsRequest is the request type for the active bets list query

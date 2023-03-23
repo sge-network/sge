@@ -51,10 +51,7 @@ func CmdListBetByCreator() *cobra.Command {
 		Use:   "bets-by-creator [creator]",
 		Short: "get list of bets for a creator-address",
 		Long:  "Get list of bets for a creator address in paginated response.",
-		//Example: fmt.Sprintf("%s tx %s postprice bnb:usd 25 9999999999 --from validator",
-		//	version.AppName, types.ModuleName),
-		// TODO: Put example
-		Args: cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
