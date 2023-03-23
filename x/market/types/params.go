@@ -12,14 +12,14 @@ var _ paramtypes.ParamSet = (*Params)(nil)
 
 // param keys
 var (
-	// KeyEventMinBetAmount is the min bet amount param key
-	KeyEventMinBetAmount = []byte("EventMinBetAmount")
+	// KeyMinBetAmount is the min bet amount param key
+	KeyMinBetAmount = []byte("MinBetAmount")
 
 	// KeyMinBetFee is the minimum bet fee param key
-	KeyMinBetFee = []byte("EventMinBetFee")
+	KeyMinBetFee = []byte("MinBetFee")
 
 	// KeyMaxSRContribution is the min bet amount param key
-	KeyMaxSRContribution = []byte("EventMaxSRContribution")
+	KeyMaxSRContribution = []byte("MaxSRContribution")
 )
 
 // default params
@@ -56,7 +56,7 @@ func DefaultParams() Params {
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyEventMinBetAmount, &p.MinBetAmount, validateMinBetAmount),
+		paramtypes.NewParamSetPair(KeyMinBetAmount, &p.MinBetAmount, validateMinBetAmount),
 		paramtypes.NewParamSetPair(KeyMinBetFee, &p.MinBetFee, validateMinBetFeePercentage),
 		paramtypes.NewParamSetPair(KeyMaxSRContribution, &p.MaxSrContribution, validateMaxSRContribution),
 	}
@@ -97,7 +97,7 @@ func validateMaxSRContribution(i interface{}) error {
 	return nil
 }
 
-// NewEventBetConstraints creates new bet constraint pointer
+// NewMarketBetConstraints creates new bet constraint pointer
 func (p *Params) NewMarketBetConstraints(minAmount, betFee sdk.Int) *MarketBetConstraints {
 	if minAmount.IsNil() {
 		minAmount = p.MinBetAmount

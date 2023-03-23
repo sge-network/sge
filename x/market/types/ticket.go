@@ -11,14 +11,14 @@ import (
 
 // Validate validates market add ticket payload.
 func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) error {
-	if err := validateEventTS(ctx, payload.StartTS, payload.EndTS); err != nil {
+	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
 
 	if payload.Status != MarketStatus_MARKET_STATUS_ACTIVE &&
 		payload.Status != MarketStatus_MARKET_STATUS_INACTIVE {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "acceptable status is active or inactive")
-	}
+	} // TODO: Should it not be or check with reverse states
 
 	if !utils.IsValidUID(payload.UID) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid uid for the market")
@@ -77,9 +77,9 @@ func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) e
 	if payload.Status != MarketStatus_MARKET_STATUS_ACTIVE &&
 		payload.Status != MarketStatus_MARKET_STATUS_INACTIVE {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "supported update status is active or inactive")
-	}
+	} // TODO: Should it not be or check with reverse states
 
-	if err := validateEventTS(ctx, payload.StartTS, payload.EndTS); err != nil {
+	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
 
@@ -134,8 +134,8 @@ func (payload *MarketResolutionTicketPayload) Validate() error {
 	return nil
 }
 
-// validateEventTS validates start and end timestamp of a market.
-func validateEventTS(ctx sdk.Context, startTS, endTS uint64) error {
+// validateMarketTS validates start and end timestamp of a market.
+func validateMarketTS(ctx sdk.Context, startTS, endTS uint64) error {
 	if endTS <= cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the market")
 	}
