@@ -5,7 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/market/types";
 
-// Odds is a representation ofmarket odds.
+// Odds is a representation of market odds.
 message Odds {
   // uid is the universal unique identifier of the odds.
   string uid = 1 [

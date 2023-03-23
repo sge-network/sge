@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CmdAddEvent CLI registration for add-markets command
-func CmdAddEvent() *cobra.Command {
+// CmdAddMarket CLI registration for add market command
+func CmdAddMarket() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-market [ticket]",
+		Use:   "add [ticket]",
 		Short: "create new market",
 		Long:  "Create a market with ticket.",
 		Args:  cobra.ExactArgs(1),
@@ -21,7 +21,7 @@ func CmdAddEvent() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgAddEvent(
+			msg := types.NewMsgAddMarket(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)
@@ -37,10 +37,10 @@ func CmdAddEvent() *cobra.Command {
 	return cmd
 }
 
-// CmdUpdateEvent returns query for updating market transaction
-func CmdUpdateEvent() *cobra.Command {
+// CmdUpdateMarket returns query for updating market transaction
+func CmdUpdateMarket() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-market [ticket]",
+		Use:   "update [ticket]",
 		Short: "update market",
 		Long:  "Update a market with ticket.",
 		Args:  cobra.ExactArgs(1),
@@ -50,7 +50,7 @@ func CmdUpdateEvent() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateEvent(
+			msg := types.NewMsgUpdateMarket(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)

@@ -32,14 +32,8 @@ func (k Keeper) MarketExists(ctx sdk.Context, marketUID string) bool {
 	return found
 }
 
-// RemoveMarket removes a market from the store
-func (k Keeper) RemoveMarket(ctx sdk.Context, marketUID string) {
-	store := k.getMarketsStore(ctx)
-	store.Delete(utils.StrBytes(marketUID))
-}
-
-// GetMarketAll returns all markets
-func (k Keeper) GetMarketAll(ctx sdk.Context) (list []types.Market, err error) {
+// GetMarkets returns all markets
+func (k Keeper) GetMarkets(ctx sdk.Context) (list []types.Market, err error) {
 	store := k.getMarketsStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -57,37 +51,25 @@ func (k Keeper) GetMarketAll(ctx sdk.Context) (list []types.Market, err error) {
 }
 
 // ResolveMarket updates a market with its resolution
-func (k Keeper) ResolveMarket(ctx sdk.Context, resolutionEvent *types.MarketResolutionTicketPayload) (*types.Market, error) {
-	storedEvent, found := k.GetMarket(ctx, resolutionEvent.UID)
-	if !found {
-		return nil, types.ErrNoMatchingMarket
-	}
-
-	if storedEvent.Status != types.MarketStatus_MARKET_STATUS_ACTIVE &&
-		storedEvent.Status != types.MarketStatus_MARKET_STATUS_INACTIVE {
-		return nil, types.ErrCanNotBeAltered
-	}
-
-	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
-	storedEvent.Status = resolutionEvent.Status
+func (k Keeper) ResolveMarket(ctx sdk.Context, storedMarket types.Market, resolutionMarket *types.MarketResolutionTicketPayload) *types.Market {
+	storedMarket.ResolutionTS = resolutionMarket.ResolutionTS
+	storedMarket.Status = resolutionMarket.Status
 
 	// if the result is declared for the market, we need to update the winner odds uids.
-	if resolutionEvent.Status == types.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
-		storedEvent.WinnerOddsUIDs = resolutionEvent.WinnerOddsUIDs
+	if resolutionMarket.Status == types.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
+		storedMarket.WinnerOddsUIDs = resolutionMarket.WinnerOddsUIDs
 	}
 
 	// if the result is declared or the market is canceled or aborted, it should be added
 	// to the unsettled resolved market list  in the state.
-	if resolutionEvent.Status == types.MarketStatus_MARKET_STATUS_RESULT_DECLARED ||
-		resolutionEvent.Status == types.MarketStatus_MARKET_STATUS_CANCELED ||
-		resolutionEvent.Status == types.MarketStatus_MARKET_STATUS_ABORTED {
+	if storedMarket.IsResolved() {
 		// append market id to the unsettled resolved in statistics.
-		k.appendUnsettledResolvedMarket(ctx, storedEvent.UID)
+		k.appendUnsettledResolvedMarket(ctx, storedMarket.UID)
 	}
 
-	k.SetMarket(ctx, storedEvent)
+	k.SetMarket(ctx, storedMarket)
 
-	return &storedEvent, nil
+	return &storedMarket
 }
 
 func emitTransactionEvent(ctx sdk.Context, emitType string, uid, bookUID, creator string) {

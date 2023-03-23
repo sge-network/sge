@@ -45,7 +45,7 @@ func CmdListMarkets() *cobra.Command {
 	return cmd
 }
 
-// CmdShowMarket implements a command to return a specific markets based on its UID
+// CmdShowMarket implements a command to return a specific market based on its UID
 func CmdShowMarket() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "market [uid]",
@@ -77,8 +77,8 @@ func CmdShowMarket() *cobra.Command {
 	return cmd
 }
 
-// CmdMarketListByUIDs returns command object for querying markets by uid list
-func CmdMarketListByUIDs() *cobra.Command {
+// CmdListMarketByUIDs returns command object for querying markets by uid list
+func CmdListMarketByUIDs() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "markets-by-uids [uid]",
 		Short: "Query markets list by UIDs",

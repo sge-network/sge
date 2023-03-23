@@ -11,12 +11,12 @@ import (
 
 // Validate validates market add ticket payload.
 func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) error {
-	if err := validateEventTS(ctx, payload.StartTS, payload.EndTS); err != nil {
+	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
 
-	if payload.Status != MarketStatus_MARKET_STATUS_ACTIVE &&
-		payload.Status != MarketStatus_MARKET_STATUS_INACTIVE {
+	if !(payload.Status == MarketStatus_MARKET_STATUS_ACTIVE ||
+		payload.Status == MarketStatus_MARKET_STATUS_INACTIVE) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "acceptable status is active or inactive")
 	}
 
@@ -74,12 +74,12 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 // Validate validates market update ticket payload.
 func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) error {
 	// updating the status to something other than active and inactive
-	if payload.Status != MarketStatus_MARKET_STATUS_ACTIVE &&
-		payload.Status != MarketStatus_MARKET_STATUS_INACTIVE {
+	if !(payload.Status == MarketStatus_MARKET_STATUS_ACTIVE ||
+		payload.Status == MarketStatus_MARKET_STATUS_INACTIVE) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "supported update status is active or inactive")
 	}
 
-	if err := validateEventTS(ctx, payload.StartTS, payload.EndTS); err != nil {
+	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
 
@@ -96,9 +96,9 @@ func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) e
 // Validate validates market resolution ticket payload.
 func (payload *MarketResolutionTicketPayload) Validate() error {
 	// resolution status should be canceled, aborted or result declared
-	if payload.Status != MarketStatus_MARKET_STATUS_CANCELED &&
-		payload.Status != MarketStatus_MARKET_STATUS_ABORTED &&
-		payload.Status != MarketStatus_MARKET_STATUS_RESULT_DECLARED {
+	if !(payload.Status == MarketStatus_MARKET_STATUS_CANCELED ||
+		payload.Status == MarketStatus_MARKET_STATUS_ABORTED ||
+		payload.Status == MarketStatus_MARKET_STATUS_RESULT_DECLARED) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the market is invalid")
 	}
 
@@ -134,8 +134,36 @@ func (payload *MarketResolutionTicketPayload) Validate() error {
 	return nil
 }
 
-// validateEventTS validates start and end timestamp of a market.
-func validateEventTS(ctx sdk.Context, startTS, endTS uint64) error {
+// ValidateWinnerOdds validates market resolution ticket payload winner odds.
+func (payload *MarketResolutionTicketPayload) ValidateWinnerOdds(market *Market) error {
+	if payload.Status == MarketStatus_MARKET_STATUS_RESULT_DECLARED {
+		if payload.ResolutionTS < market.StartTS {
+			return ErrResolutionTimeLessThenStartTime
+		}
+
+		validWinnerOdds := true
+		for _, wid := range payload.WinnerOddsUIDs {
+			validWinnerOdds = false
+			for _, o := range market.Odds {
+				if o.UID == wid {
+					validWinnerOdds = true
+				}
+			}
+			if !validWinnerOdds {
+				break
+			}
+		}
+
+		if !validWinnerOdds {
+			return ErrInvalidWinnerOdds
+		}
+	}
+
+	return nil
+}
+
+// validateMarketTS validates start and end timestamp of a market.
+func validateMarketTS(ctx sdk.Context, startTS, endTS uint64) error {
 	if endTS <= cast.ToUint64(ctx.BlockTime().Unix()) {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid end timestamp for the market")
 	}

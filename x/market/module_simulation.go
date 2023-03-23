@@ -26,19 +26,16 @@ var (
 
 const (
 	//#nosec
-	opWeightMsgAddEvent = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgAddEvent int = 100
+	opWeightMsgAddMarket          = "op_weight_msg_create_chain"
+	defaultWeightMsgAddMarket int = 100
 
 	//#nosec
-	opWeightMsgResolveEvent = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgResolveEvent int = 100
+	opWeightMsgResolveMarket          = "op_weight_msg_create_chain"
+	defaultWeightMsgResolveMarket int = 100
 
 	//#nosec
-	opWeightMsgUpdateEvent = "op_weight_msg_create_chain"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgUpdateEvent int = 100
+	opWeightMsgUpdateMarket          = "op_weight_msg_create_chain"
+	defaultWeightMsgUpdateMarket int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -80,37 +77,37 @@ func (am AppModule) RegisterStoreDecoder(_ sdk.StoreDecoderRegistry) {}
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgAddEvent int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddEvent, &weightMsgAddEvent, nil,
+	var weightMsgAddMarket int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddMarket, &weightMsgAddMarket, nil,
 		func(_ *rand.Rand) {
-			weightMsgAddEvent = defaultWeightMsgAddEvent
+			weightMsgAddMarket = defaultWeightMsgAddMarket
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgAddEvent,
-		marketsimulation.SimulateMsgAddEvent(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgAddMarket,
+		marketsimulation.SimulateMsgAddMarket(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgResolveEvent int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResolveEvent, &weightMsgResolveEvent, nil,
+	var weightMsgResolveMarket int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResolveMarket, &weightMsgResolveMarket, nil,
 		func(_ *rand.Rand) {
-			weightMsgResolveEvent = defaultWeightMsgResolveEvent
+			weightMsgResolveMarket = defaultWeightMsgResolveMarket
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgResolveEvent,
-		marketsimulation.SimulateMsgResolveEvent(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgResolveMarket,
+		marketsimulation.SimulateMsgResolveMarket(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgUpdateEvent int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateEvent, &weightMsgUpdateEvent, nil,
+	var weightMsgUpdateMarket int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateMarket, &weightMsgUpdateMarket, nil,
 		func(_ *rand.Rand) {
-			weightMsgUpdateEvent = defaultWeightMsgUpdateEvent
+			weightMsgUpdateMarket = defaultWeightMsgUpdateMarket
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgUpdateEvent,
-		marketsimulation.SimulateMsgUpdateEvent(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgUpdateMarket,
+		marketsimulation.SimulateMsgUpdateMarket(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations
