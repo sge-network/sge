@@ -28,7 +28,7 @@ func NewMarket(
 	}
 }
 
-// IsResolved retuns true if the market is already resolved.
+// IsResolved returns true if the market is already resolved.
 func (m *Market) IsResolved() bool {
 	return m.Status == MarketStatus_MARKET_STATUS_RESULT_DECLARED ||
 		m.Status == MarketStatus_MARKET_STATUS_CANCELED ||
