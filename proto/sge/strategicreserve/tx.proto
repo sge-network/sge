@@ -1,7 +1,0 @@
-syntax = "proto3";
-package sgenetwork.sge.strategicreserve;
-
-option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
-
-// Msg defines the Msg service.
-service Msg {}

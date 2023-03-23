@@ -24,7 +24,7 @@ type DVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
 }
 
-// OrderBookKeeper defines the expected interface needed to initiate an order book for a market
-type OrderBookKeeper interface {
+// SRKeeper defines the expected interface needed to initiate an order book for a market
+type SRKeeper interface {
 	InitiateBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) error
 }

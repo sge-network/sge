@@ -26,14 +26,14 @@ Before accepting bet some validation should take place:
 After a bet is accepted:
 
 - Corresponding betting fee will be deducted from total bet amount
-- Betting fee will be transferred to the module account of bet module. this is done by the order book module.
-- The rest of bet amount will be transferred and locked in Order Book module
+- Betting fee will be transferred to the module account of bet module. this is done by the strategic reserve module.
+- The rest of bet amount will be transferred and locked in Strategic Reserve module
 
 For bet placement user can raise a request to place a single bet. Also, the same for bet settlement, it can be done for a single bet only.
 
 When a user is raising a transaction to place a bet, the creator of the transaction is the owner of the  bet. But in the case of bet settlement transaction, creator of the transaction can be different from owner of the bet, means that anyone can raise a settlement request for any bet.
 
-> Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Order Book to bettor's account.
+> Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Strategic Reserve to bettor's account.
 
 ## Supported Odds Types
 

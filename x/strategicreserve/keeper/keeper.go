@@ -3,64 +3,63 @@ package keeper
 import (
 	"fmt"
 
-	"github.com/tendermint/tendermint/libs/log"
-
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/sge-network/sge/consts"
+	"github.com/tendermint/tendermint/libs/log"
+
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// Keeper is the type for module properties
+// keeper of the strategicreserve store
 type Keeper struct {
-	cdc           codec.BinaryCodec
 	storeKey      sdk.StoreKey
-	memKey        sdk.StoreKey
+	cdc           codec.BinaryCodec
 	paramstore    paramtypes.Subspace
 	bankKeeper    types.BankKeeper
 	accountKeeper types.AccountKeeper
+	BetKeeper     types.BetKeeper
+	marketKeeper  types.MarketKeeper
 }
 
-// ExpectedKeepers contains expected keepers parameter needed by NewKeeper
-type ExpectedKeepers struct {
+// SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
+type SdkExpectedKeepers struct {
 	BankKeeper    types.BankKeeper
 	AccountKeeper types.AccountKeeper
 }
 
-// NewKeeper returns a new keeper object
+// NewKeeper creates a new strategicreserve Keeper instance
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	storeKey,
-	memKey sdk.StoreKey,
+	key sdk.StoreKey,
 	ps paramtypes.Subspace,
-	expectedKeepers ExpectedKeepers,
+	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
-	// Ensures that the `sr_pool`, and `bet_reserve` module accounts are set
-	if addr := expectedKeepers.AccountKeeper.GetModuleAddress(types.SRPoolName); addr == nil {
-		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.SRPoolName))
-	}
-
-	if addr := expectedKeepers.AccountKeeper.GetModuleAddress(types.BetReserveName); addr == nil {
-		panic(fmt.Sprintf(consts.ErrModuleAccountHasNotBeenSet, types.BetReserveName))
-	}
-
 	return &Keeper{
+		storeKey:      key,
 		cdc:           cdc,
-		storeKey:      storeKey,
-		memKey:        memKey,
 		paramstore:    ps,
 		bankKeeper:    expectedKeepers.BankKeeper,
 		accountKeeper: expectedKeepers.AccountKeeper,
 	}
 }
 
-// Logger returns a logger for logging error/debug/info logs
+// SetBetKeeper sets the bet module keeper to the order book keeper.
+func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
+	k.BetKeeper = betKeeper
+}
+
+// SetMarketKeeper sets the market module keeper to the order book keeper.
+func (k *Keeper) SetMarketKeeper(marketKeeper types.MarketKeeper) {
+	k.marketKeeper = marketKeeper
+}
+
+// Logger returns the logger of the keeper
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }

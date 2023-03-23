@@ -5,12 +5,16 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
-// Params defines the parameters for the strategic reserve module.
+// Params defines the parameters for the strategicreserve module.
 message Params {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;
 
-  // committee_members hold the list of committee members.
-  repeated string committee_members = 1
-      [ (gogoproto.moretags) = "yaml:\"committee_members\"" ];
+  // max_book_participations is the maximum number of participations per book.
+  uint64 max_book_participations = 1
+      [ (gogoproto.moretags) = "yaml:\"max_book_participations\"" ];
+
+  // batch_settlement_count is the batch settlement deposit counts.
+  uint64 batch_settlement_count = 2
+      [ (gogoproto.moretags) = "yaml:\"batch_settlement_count\"" ];
 }
