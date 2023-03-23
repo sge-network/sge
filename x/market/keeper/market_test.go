@@ -59,20 +59,6 @@ func TestGetMarket(t *testing.T) {
 	}
 }
 
-func TestMarketRemove(t *testing.T) {
-	k, ctx := setupKeeper(t)
-	items := createNMarket(k, ctx, 10)
-	for _, item := range items {
-		k.RemoveMarket(ctx,
-			item.UID,
-		)
-		_, found := k.GetMarket(ctx,
-			item.UID,
-		)
-		require.False(t, found)
-	}
-}
-
 func TestMarketGetAll(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNMarket(k, ctx, 10)
@@ -87,32 +73,6 @@ func TestMarketGetAll(t *testing.T) {
 }
 
 func TestResolveMarkets(t *testing.T) {
-	t.Run("NotFound", func(t *testing.T) {
-		k, ctx := setupKeeper(t)
-		resEventsIn := types.MarketResolutionTicketPayload{
-			UID: "NotExistUid",
-		}
-		_, err := k.ResolveMarket(ctx, &resEventsIn)
-		require.Equal(t, types.ErrNoMatchingMarket, err)
-	})
-
-	t.Run("NotPending", func(t *testing.T) {
-		k, ctx := setupKeeper(t)
-
-		item := types.Market{
-			UID:    "uid",
-			Status: types.MarketStatus_MARKET_STATUS_CANCELED,
-		}
-		k.SetMarket(ctx, item)
-
-		resEventsIn := types.MarketResolutionTicketPayload{
-			UID: item.UID,
-		}
-
-		_, err := k.ResolveMarket(ctx, &resEventsIn)
-		require.Equal(t, types.ErrMarketCanNotBeAltered, err)
-	})
-
 	t.Run("Success", func(t *testing.T) {
 		k, ctx := setupKeeper(t)
 
@@ -122,19 +82,18 @@ func TestResolveMarkets(t *testing.T) {
 		}
 		k.SetMarket(ctx, item)
 
-		resEventsIn := types.MarketResolutionTicketPayload{
+		resMarketsIn := types.MarketResolutionTicketPayload{
 			UID:            item.UID,
 			ResolutionTS:   123456,
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
 			Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 		}
-		_, err := k.ResolveMarket(ctx, &resEventsIn)
-		require.Nil(t, err)
+		k.ResolveMarket(ctx, item, &resMarketsIn)
 		val, found := k.GetMarket(ctx, item.UID)
 		require.True(t, found)
-		require.Equal(t, resEventsIn.ResolutionTS, val.ResolutionTS)
-		require.Equal(t, resEventsIn.WinnerOddsUIDs, val.WinnerOddsUIDs)
-		require.Equal(t, resEventsIn.Status, val.Status)
+		require.Equal(t, resMarketsIn.ResolutionTS, val.ResolutionTS)
+		require.Equal(t, resMarketsIn.WinnerOddsUIDs, val.WinnerOddsUIDs)
+		require.Equal(t, resMarketsIn.Status, val.Status)
 	})
 }
 

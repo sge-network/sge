@@ -11,8 +11,8 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// SimulateMsgAddEvent simulates the add market flow
-func SimulateMsgAddEvent(
+// SimulateMsgAddMarket simulates the add market flow
+func SimulateMsgAddMarket(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,

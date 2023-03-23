@@ -11,8 +11,8 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// SimulateMsgResolveEvent simulates the resolve market flow
-func SimulateMsgResolveEvent(
+// SimulateMsgResolveMarket simulates the resolve market flow
+func SimulateMsgResolveMarket(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,

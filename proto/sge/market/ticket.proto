@@ -85,14 +85,12 @@ message MarketUpdateTicketPayload {
   string min_bet_amount = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
-    // TODO: why is it nullable false?
   ];
 
   // bet_fee is the fee that the bettor needs to pay to bet on the market.
   string bet_fee = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
-    // TODO: why is it nullable false?
   ];
 
   // status is the status of the resolution.
