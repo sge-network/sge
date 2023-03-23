@@ -30,7 +30,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	if bet.Creator != bettorAddressStr {
@@ -89,8 +89,8 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 	// store bet in the module state
 	k.SetBet(ctx, bet, betID)
 
-	// remove active bet
-	k.RemoveActiveBet(ctx, bet.MarketUID, betID)
+	// remove pending bet
+	k.RemovePendingBet(ctx, bet.MarketUID, betID)
 
 	// store settled bet in the module state
 	k.SetSettledBet(ctx, types.NewSettledBet(bet.UID, bet.Creator), betID, ctx.BlockHeight())
@@ -101,7 +101,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -130,28 +130,28 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 
 	// continue looping until reach batch settlement count parameter
 	for toFetch > 0 {
-		// get the first resolved market to process corresponding active bets.
+		// get the first resolved market to process corresponding pending bets.
 		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx)
 		// exit loop if there is no resolved bet.
 		if !found {
 			return nil
 		}
 
-		// settle market active bets.
+		// settle market pending bets.
 		settledCount, err := k.batchSettlementOfMarket(ctx, marketUID, toFetch)
 		if err != nil {
 			return fmt.Errorf("could not settle market %s %s", marketUID, err)
 		}
 
-		// check if still there is any active bet for the market.
-		activeBetExists, err := k.IsAnyActiveBetForMarket(ctx, marketUID)
+		// check if still there is any pending bet for the market.
+		pendingBetExists, err := k.IsAnyPendingBetForMarket(ctx, marketUID)
 		if err != nil {
-			return fmt.Errorf("could not check the active bets %s %s", marketUID, err)
+			return fmt.Errorf("could not check the pending bets %s %s", marketUID, err)
 		}
 
-		// if there is not any active bet for the market
+		// if there is not any pending bet for the market
 		// we need to remove its uid from the list of unsettled resolved bets.
-		if !activeBetExists {
+		if !pendingBetExists {
 			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
 			err = k.srKeeper.AddBookSettlement(ctx, marketUID)
 			if err != nil {
@@ -166,13 +166,13 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfMarket settles active bets of a markets
+// batchSettlementOfMarket settles pending bets of a markets
 func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, countToBeSettled uint32) (settledCount uint32, err error) {
-	// initialize iterator for the certain number of active bets
+	// initialize iterator for the certain number of pending bets
 	// equal to countToBeSettled
 	iterator := sdk.KVStorePrefixIteratorPaginated(
 		ctx.KVStore(k.storeKey),
-		types.ActiveBetListOfMarketPrefix(marketUID),
+		types.PendingBetListOfMarketPrefix(marketUID),
 		singlePageNum,
 		uint(countToBeSettled))
 	defer func() {
@@ -182,9 +182,9 @@ func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, count
 		}
 	}()
 
-	// settle bets for the filtered active bets
+	// settle bets for the filtered pending bets
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ActiveBet
+		var val types.PendingBet
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
 		err = k.SettleBet(ctx, val.Creator, val.UID)

@@ -87,16 +87,16 @@ func (k Keeper) GetBetIDs(ctx sdk.Context) (list []types.UID2ID, err error) {
 	return
 }
 
-// SetActiveBet sets an active bet
-func (k Keeper) SetActiveBet(ctx sdk.Context, activeBet *types.ActiveBet, id uint64, marketUID string) {
-	store := k.getActiveStore(ctx)
-	b := k.cdc.MustMarshal(activeBet)
-	store.Set(types.ActiveBetOfMarketKey(marketUID, id), b)
+// SetPendingBet sets an pending bet
+func (k Keeper) SetPendingBet(ctx sdk.Context, pendingBet *types.PendingBet, id uint64, marketUID string) {
+	store := k.getPendingStore(ctx)
+	b := k.cdc.MustMarshal(pendingBet)
+	store.Set(types.PendingBetOfMarketKey(marketUID, id), b)
 }
 
-// IsAnyActiveBetForMarket checks if there is any active bet for the market
-func (k Keeper) IsAnyActiveBetForMarket(ctx sdk.Context, marketUID string) (thereIs bool, err error) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfMarketPrefix(marketUID))
+// IsAnyPendingBetForMarket checks if there is any pending bet for the market
+func (k Keeper) IsAnyPendingBetForMarket(ctx sdk.Context, marketUID string) (thereIs bool, err error) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingBetListOfMarketPrefix(marketUID))
 
 	// create iterator for all existing records
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
@@ -110,9 +110,9 @@ func (k Keeper) IsAnyActiveBetForMarket(ctx sdk.Context, marketUID string) (ther
 	return
 }
 
-// GetActiveBets returns list of the active bets
-func (k Keeper) GetActiveBets(ctx sdk.Context) (list []types.ActiveBet, err error) {
-	store := k.getActiveStore(ctx)
+// GetPendingBets returns list of the pending bets
+func (k Keeper) GetPendingBets(ctx sdk.Context) (list []types.PendingBet, err error) {
+	store := k.getPendingStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -120,7 +120,7 @@ func (k Keeper) GetActiveBets(ctx sdk.Context) (list []types.ActiveBet, err erro
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.ActiveBet
+		var val types.PendingBet
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -128,10 +128,10 @@ func (k Keeper) GetActiveBets(ctx sdk.Context) (list []types.ActiveBet, err erro
 	return
 }
 
-// RemoveActiveBet removes an active bet
-func (k Keeper) RemoveActiveBet(ctx sdk.Context, marketUID string, betID uint64) {
-	store := k.getActiveStore(ctx)
-	store.Delete(types.ActiveBetOfMarketKey(marketUID, betID))
+// RemovePendingBet removes an pending bet
+func (k Keeper) RemovePendingBet(ctx sdk.Context, marketUID string, betID uint64) {
+	store := k.getPendingStore(ctx)
+	store.Delete(types.PendingBetOfMarketKey(marketUID, betID))
 }
 
 // SetSettledBet sets a settled bet
@@ -141,7 +141,7 @@ func (k Keeper) SetSettledBet(ctx sdk.Context, settledBet *types.SettledBet, id 
 	store.Set(types.SettledBetOfMarketKey(blockHeight, id), b)
 }
 
-// GetSettledBets returns list of the active bets
+// GetSettledBets returns list of the pending bets
 func (k Keeper) GetSettledBets(ctx sdk.Context) (list []types.SettledBet, err error) {
 	store := k.getSettledStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})

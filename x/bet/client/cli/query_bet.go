@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -52,10 +51,7 @@ func CmdListBetByCreator() *cobra.Command {
 		Use:   "bets-by-creator [creator]",
 		Short: "get list of bets for a creator-address",
 		Long:  "Get list of bets for a creator address in paginated response.",
-		//Example: fmt.Sprintf("%s tx %s postprice bnb:usd 25 9999999999 --from validator",
-		//	version.AppName, types.ModuleName),
-		// TODO: Put example
-		Args: cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -88,12 +84,12 @@ func CmdListBetByCreator() *cobra.Command {
 	return cmd
 }
 
-// CmdListActiveBets implements a command to return all active bets of a market
-func CmdListActiveBets() *cobra.Command {
+// CmdListPendingBets implements a command to return all pending bets of a market
+func CmdListPendingBets() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "active-bets [market-uid]",
-		Short: "get list of active bets of a market",
-		Long:  "Get list of active bets of a market in paginated response.",
+		Use:   "pending-bets [market-uid]",
+		Short: "get list of pending bets of a market",
+		Long:  "Get list of pending bets of a market in paginated response.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -107,12 +103,12 @@ func CmdListActiveBets() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryActiveBetsRequest{
+			params := &types.QueryPendingBetsRequest{
 				MarketUid:  argMarketUID,
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.ActiveBets(context.Background(), params)
+			res, err := queryClient.PendingBets(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -135,8 +131,6 @@ func CmdListBetByUIDs() *cobra.Command {
 		Long:  "Get list of bets creator:UID comma separated list ex: \"address1:uid1,address2:uid2\" .",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqItems := strings.Split(args[0], listSeparator)
-
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -144,21 +138,10 @@ func CmdListBetByUIDs() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			var items []*types.QueryBetRequest
-			for _, val := range reqItems {
-				pair := strings.Split(val, mapSeparator)
-				if len(pair) != 2 {
-					return fmt.Errorf("each pair should be separated by colon ex. creator:uid")
-				}
-
-				items = append(items, &types.QueryBetRequest{
-					Creator: pair[0],
-					Uid:     pair[1],
-				})
-			}
+			reqItems := strings.Split(args[0], listSeparator)
 
 			params := &types.QueryBetsByUIDsRequest{
-				Items: items,
+				Items: reqItems,
 			}
 
 			res, err := queryClient.BetsByUIDs(cmd.Context(), params)

@@ -71,7 +71,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 		nullify.Fill(&bet)
 
 		state.BetList = append(state.BetList, bet)
-		state.ActiveBetList = append(state.ActiveBetList, types.ActiveBet{UID: bet.UID, Creator: testAddress})
+		state.PendingBetList = append(state.PendingBetList, types.PendingBet{UID: bet.UID, Creator: testAddress})
 		state.SettledBetList = append(state.SettledBetList, types.SettledBet{UID: bet.UID, BettorAddress: testAddress})
 
 		id := uint64(i + 1)
@@ -275,7 +275,7 @@ func TestQueryBet(t *testing.T) {
 		})
 	})
 
-	t.Run("ListActiveBetOfMarket", func(t *testing.T) {
+	t.Run("ListPendingBetOfMarket", func(t *testing.T) {
 		ctx := net.Validators[0].ClientCtx
 		request := func(next []byte, offset, limit uint64, total bool) []string {
 			args := []string{
@@ -297,9 +297,9 @@ func TestQueryBet(t *testing.T) {
 			step := 2
 			for i := 0; i < len(objs); i += step {
 				args := request(nil, uint64(i), uint64(step), false)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListPendingBets(), args)
 				require.NoError(t, err)
-				var resp types.QueryActiveBetsResponse
+				var resp types.QueryPendingBetsResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.LessOrEqual(t, len(resp.Bet), step)
 				require.Subset(t,
@@ -313,9 +313,9 @@ func TestQueryBet(t *testing.T) {
 			var next []byte
 			for i := 0; i < len(objs); i += step {
 				args := request(next, 0, uint64(step), false)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListPendingBets(), args)
 				require.NoError(t, err)
-				var resp types.QueryActiveBetsResponse
+				var resp types.QueryPendingBetsResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.LessOrEqual(t, len(resp.Bet), step)
 				require.Subset(t,
@@ -327,9 +327,9 @@ func TestQueryBet(t *testing.T) {
 		})
 		t.Run("Total", func(t *testing.T) {
 			args := request(nil, 0, uint64(len(objs)), true)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListActiveBets(), args)
+			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListPendingBets(), args)
 			require.NoError(t, err)
-			var resp types.QueryActiveBetsResponse
+			var resp types.QueryPendingBetsResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.NoError(t, err)
 			require.Equal(t, len(objs), int(resp.Pagination.Total))

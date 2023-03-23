@@ -11,10 +11,6 @@ import (
 const (
 	// TypeMsgPlaceBet is type of message MsgPlaceBet
 	TypeMsgPlaceBet = "place_bet"
-	// TODO: Below types are unused
-	// TypeMsgSettleBet is type of message MsgSettleBet
-	TypeMsgSettleBet = "settle_bet"
-
 	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
 	SettlementUIDsThreshold = 10
 	// BetPlacementThreshold is the threshold for the number bets in bulk placement tx
@@ -63,7 +59,7 @@ func (msg *MsgPlaceBet) GetSignBytes() []byte {
 func (msg *MsgPlaceBet) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	if err = BetFieldsValidation(msg.Bet); err != nil {
@@ -90,7 +86,7 @@ func IsValidUID(uid string) bool {
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdds) (*Bet, error) {
+func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdds) *Bet {
 	return &Bet{
 		Creator:           creator,
 		UID:               bet.UID,
@@ -100,5 +96,5 @@ func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdd
 		Amount:            bet.Amount,
 		OddsType:          oddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
-	}, nil
+	}
 }

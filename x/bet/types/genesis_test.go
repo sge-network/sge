@@ -31,7 +31,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				SettlementHeight: 1,
 			},
 		},
-		ActiveBetList: []types.ActiveBet{
+		PendingBetList: []types.PendingBet{
 			{
 				UID:     betUID1,
 				Creator: testAddress,
@@ -85,7 +85,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						UID: betUID1,
 					},
 				},
-				ActiveBetList:  validState.ActiveBetList,
+				PendingBetList: validState.PendingBetList,
 				SettledBetList: validState.SettledBetList,
 				Uid2IdList:     validState.Uid2IdList,
 				Stats:          validState.Stats,

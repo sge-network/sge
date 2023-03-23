@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -12,11 +14,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const (
+	mapSeparator = ":"
+)
+
 // Bets returns all bets
 func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.QueryBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
-		// TODO: Registered errors?
 	}
 
 	var bets []types.Bet
@@ -80,11 +85,24 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 
-	req.Items = removeDuplicateUIDs(req.Items)
+	var items []*types.QueryBetRequest
+	for _, val := range req.Items {
+		pair := strings.Split(val, mapSeparator)
+		if len(pair) != 2 {
+			return nil, fmt.Errorf("each pair should be separated by colon ex. creator:uid")
+		}
+
+		items = append(items, &types.QueryBetRequest{
+			Creator: pair[0],
+			Uid:     pair[1],
+		})
+	}
+
+	items = removeDuplicateUIDs(items)
 
 	foundBets := make([]types.Bet, 0, count)
 	notFoundBets := make([]string, 0)
-	for _, item := range req.GetItems() {
+	for _, item := range items {
 		uid2ID, found := k.GetBetID(ctx, item.Uid)
 		if !found {
 			notFoundBets = append(notFoundBets, item.Uid)
@@ -102,13 +120,12 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 
 	return &types.QueryBetsByUIDsResponse{
 		Bets:            foundBets,
-		NotFoundMarkets: notFoundBets,
-		// TODO: NotFoundBets
+		NotFoundBetUids: notFoundBets,
 	}, nil
 }
 
-// ActiveBets returns active bets of a market
-func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest) (*types.QueryActiveBetsResponse, error) {
+// PendingBets returns pending bets of a market
+func (k Keeper) PendingBets(c context.Context, req *types.QueryPendingBetsRequest) (*types.QueryPendingBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -116,17 +133,17 @@ func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest)
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	activeBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListOfMarketPrefix(req.MarketUid))
+	pendingBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingBetListOfMarketPrefix(req.MarketUid))
 
-	pageRes, err := query.Paginate(activeBetStore, req.Pagination, func(key []byte, value []byte) error {
-		var activeBet types.ActiveBet
-		if err := k.cdc.Unmarshal(value, &activeBet); err != nil {
+	pageRes, err := query.Paginate(pendingBetStore, req.Pagination, func(key []byte, value []byte) error {
+		var pendingBet types.PendingBet
+		if err := k.cdc.Unmarshal(value, &pendingBet); err != nil {
 			return err
 		}
 
-		uid2ID, found := k.GetBetID(ctx, activeBet.UID)
+		uid2ID, found := k.GetBetID(ctx, pendingBet.UID)
 		if found {
-			bet, found := k.GetBet(ctx, activeBet.Creator, uid2ID.ID)
+			bet, found := k.GetBet(ctx, pendingBet.Creator, uid2ID.ID)
 			if found {
 				bets = append(bets, bet)
 			}
@@ -138,7 +155,7 @@ func (k Keeper) ActiveBets(c context.Context, req *types.QueryActiveBetsRequest)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryActiveBetsResponse{Bet: bets, Pagination: pageRes}, nil
+	return &types.QueryPendingBetsResponse{Bet: bets, Pagination: pageRes}, nil
 }
 
 // SettledBetsOfHeight returns settled bets of a certain height

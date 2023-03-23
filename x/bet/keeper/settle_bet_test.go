@@ -240,9 +240,9 @@ func TestBatchSettleBet(t *testing.T) {
 		}
 	}
 
-	allActiveBets, err := k.GetActiveBets(ctx)
+	allPendingBets, err := k.GetPendingBets(ctx)
 	require.NoError(t, err)
-	require.Equal(t, allBetCount, len(allActiveBets))
+	require.Equal(t, allBetCount, len(allPendingBets))
 
 	for _, marketUID := range marketUIDs[:len(marketUIDs)-2] {
 		_, err := tApp.MarketKeeper.ResolveMarket(ctx, &markettypes.MarketResolutionTicketPayload{
@@ -273,7 +273,7 @@ func TestBatchSettleBet(t *testing.T) {
 		err := k.BatchMarketSettlements(ctx)
 		require.NoError(t, err)
 
-		activeBets, err := k.GetActiveBets(ctx)
+		pendingBets, err := k.GetPendingBets(ctx)
 		require.NoError(t, err)
 
 		settledBets, err := k.GetSettledBets(ctx)
@@ -281,13 +281,13 @@ func TestBatchSettleBet(t *testing.T) {
 
 		marketStats := tApp.MarketKeeper.GetMarketStats(ctx)
 
-		t.Logf("block: %d, active bets: %d, settled bets: %d, resolved markets: %v\n", i, len(activeBets), len(settledBets), marketStats.ResolvedUnsettled)
+		t.Logf("block: %d, pending bets: %d, settled bets: %d, resolved markets: %v\n", i, len(pendingBets), len(settledBets), marketStats.ResolvedUnsettled)
 		require.GreaterOrEqual(t, int(p.BatchSettlementCount)*i, len(settledBets))
 	}
 
-	allActiveBets, err = k.GetActiveBets(ctx)
+	allPendingBets, err = k.GetPendingBets(ctx)
 	require.NoError(t, err)
-	require.Equal(t, 0, len(allActiveBets))
+	require.Equal(t, 0, len(allPendingBets))
 
 	allSettledBets, err := k.GetSettledBets(ctx)
 	require.NoError(t, err)

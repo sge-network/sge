@@ -64,11 +64,11 @@ func (p Params) String() string {
 func validateBatchSettlementCount(i interface{}) error {
 	v, ok := i.(uint32)
 	if !ok {
-		return fmt.Errorf(ErrTextInvalidParamType, i)
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
 	if v <= 0 {
-		return fmt.Errorf(ErrTextBatchSettlementCountMustBePositive, v)
+		return fmt.Errorf("%s: %d", ErrTextBatchSettlementCountMustBePositive, v)
 	}
 
 	return nil

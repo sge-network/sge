@@ -12,7 +12,7 @@ import (
 func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	market, err := k.getMarket(ctx, bet.MarketUID)
@@ -68,8 +68,8 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	// store bet in the module state
 	k.SetBet(ctx, *bet, betID)
 
-	// set bet as an active bet
-	k.SetActiveBet(ctx, types.NewActiveBet(bet.UID, bet.Creator), betID, bet.MarketUID)
+	// set bet as a pending bet
+	k.SetPendingBet(ctx, types.NewPendingBet(bet.UID, bet.Creator), betID, bet.MarketUID)
 
 	// set bet stats
 	k.SetBetStats(ctx, stats)

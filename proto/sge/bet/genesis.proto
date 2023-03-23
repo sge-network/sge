@@ -16,9 +16,8 @@ message GenesisState {
   // bet_list contains the bet list in the genesis init.
   repeated Bet bet_list = 2 [ (gogoproto.nullable) = false ];
 
-  // active_bet_list contains the active bet list in the genesis init.
-  repeated ActiveBet active_bet_list = 3 [ (gogoproto.nullable) = false ];
-  // TODO: Where is active bets defined?
+  // pending_bet_list contains the pending bet list in the genesis init.
+  repeated PendingBet pending_bet_list = 3 [ (gogoproto.nullable) = false ];
 
   // settled_bet_list contains the settled bet list in the genesis init.
   repeated SettledBet settled_bet_list = 4 [ (gogoproto.nullable) = false ];
