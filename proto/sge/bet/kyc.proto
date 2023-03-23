@@ -9,9 +9,9 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 message KycDataPayload {
   // ignore is true if kyc validation is not required.
   bool ignore = 1;
-  // approved represent if kvc validation is approved or not.
+  // approved represent if kyc validation is approved or not.
   bool approved = 2;
-  // id is the id of the kyc.
+  // id is the id of the kyc user.
   string id = 3 [
     (gogoproto.customname) = "ID",
     (gogoproto.jsontag) = "id",

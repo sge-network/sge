@@ -13,7 +13,7 @@ func (k Keeper) SetBetStats(ctx sdk.Context, stats types.BetStats) {
 	store.Set(utils.StrBytes("0"), b)
 }
 
-// GetBet returns bet stats
+// GetBetStats returns bet stats
 func (k Keeper) GetBetStats(ctx sdk.Context) (val types.BetStats) {
 	store := k.getBetStatsStore(ctx)
 

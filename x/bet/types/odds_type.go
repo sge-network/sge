@@ -84,7 +84,7 @@ type fractionalOdds struct{}
 func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
-	// the fraction should contain two parts such as (firstpart)/secondpart)
+	// the fraction should contain two parts such as (first part)/secondary)
 	if len(fraction) != 2 {
 		return sdk.ZeroDec(),
 			ErrFractionalOddsIncorrectFormat

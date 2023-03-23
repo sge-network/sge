@@ -1,7 +1,7 @@
 package types
 
-func NewActiveBet(uid, creator string) *ActiveBet {
-	return &ActiveBet{
+func NewPendingBet(uid, creator string) *PendingBet {
+	return &PendingBet{
 		UID:     uid,
 		Creator: creator,
 	}

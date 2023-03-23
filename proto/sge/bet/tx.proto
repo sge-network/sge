@@ -16,7 +16,6 @@ service Msg {
 message MsgPlaceBet {
   // creator is the bettor address.
   string creator = 1;
-
   // PlaceBetFields contains bet fields.
   PlaceBetFields bet = 2;
 }
@@ -24,6 +23,5 @@ message MsgPlaceBet {
 // MsgPlaceBetResponse is the returning value in the response
 // of MsgPlaceBet request.
 message MsgPlaceBetResponse {
-  string error = 1;
-  PlaceBetFields bet = 2;
+  PlaceBetFields bet = 1;
 }

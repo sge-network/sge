@@ -25,28 +25,28 @@ service Query {
   // Queries list of Bet items of a certain creator sorted by timestamp.
   rpc BetsByCreator(QueryBetsByCreatorRequest)
       returns (QueryBetsByCreatorResponse) {
-    option (google.api.http).get = "/sge/creator/{creator}/bets";
+    option (google.api.http).get = "/sge/bet/creator/{creator}/bets";
   }
 
   // Queries list of Bet items.
   rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
-    option (google.api.http).get = "/sge/bets";
+    option (google.api.http).get = "/sge/bet/bets";
+  }
+
+  // Queries list of pending Bet items.
+  rpc PendingBets(QueryPendingBetsRequest) returns (QueryPendingBetsResponse) {
+    option (google.api.http).get = "/sge/bet/bets/pending/{market_uid}";
+  }
+
+  // Queries list of settled Bet items of a certain height.
+  rpc SettledBetsOfHeight(QuerySettledBetsOfHeightRequest)
+      returns (QuerySettledBetsOfHeightResponse) {
+    option (google.api.http).get = "/sge/bet/bets/settled/{block_height}";
   }
 
   // Queries a list of Bet items filtered by uid list.
   rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
-    option (google.api.http).get = "/sge/bets_by_uids";
-  }
-
-  // Queries list of Active Bet items.
-  rpc ActiveBets(QueryActiveBetsRequest) returns (QueryActiveBetsResponse) {
-    option (google.api.http).get = "/sge/active_bets/{market_uid}";
-  }
-
-  // Queries list of Settled Bet items.
-  rpc SettledBetsOfHeight(QuerySettledBetsOfHeightRequest)
-      returns (QuerySettledBetsOfHeightResponse) {
-    option (google.api.http).get = "/sge/settled_bets_of_height/{block_height}";
+    option (google.api.http).get = "/sge/bet/bets-by-uids/{items}";
   }
 }
 
@@ -105,7 +105,7 @@ message QueryBetsByCreatorResponse {
 // QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
 // list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsRequest {
-  repeated QueryBetRequest items = 1
+  repeated string items = 1
       [ (gogoproto.jsontag) = "items", json_name = "items" ];
 }
 
@@ -113,19 +113,20 @@ message QueryBetsByUIDsRequest {
 // UID list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsResponse {
   repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
-  repeated string not_found_markets = 2;
+  repeated string not_found_bet_uids = 2;
 }
 
-// QueryActiveBetsRequest is the request type for the active bets list query
+// QueryPendingBetsRequest is the request type for the active bets list query
+// for a market
 // Query/ActiveBets RPC method.
-message QueryActiveBetsRequest {
+message QueryPendingBetsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string market_uid = 2;
 }
 
-// QueryActiveBetsResponse is the response type for the active bets list query
-// Query/ActiveBets RPC method.
-message QueryActiveBetsResponse {
+// QueryPendingBetsResponse is the response type for the active bets list query
+// Query/PendingBets RPC method.
+message QueryPendingBetsResponse {
   repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

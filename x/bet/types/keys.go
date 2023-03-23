@@ -28,16 +28,12 @@ const (
 var (
 	// BetListPrefix is the prefix to retrieve all Bet
 	BetListPrefix = []byte{0x00}
-
 	// BetIDListPrefix is the prefix to retrieve all Bet IDs
 	BetIDListPrefix = []byte{0x01}
-
 	// BetStatsKey is the key for the bet statistics
 	BetStatsKey = []byte{0x02}
-
-	// ActiveBetListPrefix is the prefix to retrieve all active bets
-	ActiveBetListPrefix = []byte{0x03}
-
+	// PendingBetListPrefix is the prefix to retrieve all pending bets
+	PendingBetListPrefix = []byte{0x03}
 	// SettledBetListPrefix is the prefix to retrieve all settled bets
 	SettledBetListPrefix = []byte{0x04}
 )
@@ -52,15 +48,15 @@ func BetIDKey(creator string, id uint64) []byte {
 	return append(utils.StrBytes(creator), utils.Uint64ToBytes(id)...)
 }
 
-// ActiveBetListOfMarketPrefix returns prefix of
-// the certain market active bet list.
-func ActiveBetListOfMarketPrefix(marketID string) []byte {
-	return append(ActiveBetListPrefix, utils.StrBytes(marketID)...)
+// PendingBetListOfMarketPrefix returns prefix of
+// the certain market pending bet list.
+func PendingBetListOfMarketPrefix(marketID string) []byte {
+	return append(PendingBetListPrefix, utils.StrBytes(marketID)...)
 }
 
-// ActiveBetOfMarketKey return the key of
-// a certain active bet of a market.
-func ActiveBetOfMarketKey(marketID string, id uint64) []byte {
+// PendingBetOfMarketKey return the key of
+// a certain pending bet of a market.
+func PendingBetOfMarketKey(marketID string, id uint64) []byte {
 	return append(utils.StrBytes(marketID), utils.Uint64ToBytes(id)...)
 }
 

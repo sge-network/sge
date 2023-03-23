@@ -12,7 +12,6 @@ import (
 
 const (
 	listSeparator = ","
-	mapSeparator  = ":"
 )
 
 // GetTxCmd returns the transaction commands for this module
