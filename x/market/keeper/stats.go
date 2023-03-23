@@ -27,9 +27,9 @@ func (k Keeper) GetMarketStats(ctx sdk.Context) (val types.MarketStats) {
 }
 
 // appendUnsettledResolvedMarket appends market to the unsettled slice
-func (k Keeper) appendUnsettledResolvedMarket(ctx sdk.Context, storedEventUID string) {
+func (k Keeper) appendUnsettledResolvedMarket(ctx sdk.Context, storedMarketUID string) {
 	stats := k.GetMarketStats(ctx)
-	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, storedEventUID)
+	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, storedMarketUID)
 	k.SetMarketStats(ctx, stats)
 }
 

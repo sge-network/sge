@@ -22,9 +22,9 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		CmdAddEvent(),
-		CmdResolveEvent(),
-		CmdUpdateEvent(),
+		CmdAddMarket(),
+		CmdResolveMarket(),
+		CmdUpdateMarket(),
 	)
 
 	return cmd
