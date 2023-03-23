@@ -21,6 +21,7 @@ func (k msgServer) ResolveMarket(goCtx context.Context, msg *types.MsgResolveMar
 	resolvedMarket, err := k.processMarketResolution(ctx, &resolutionPayload)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process resolution market")
+		// TODO: Should we not register these error messages?
 	}
 
 	response := &types.MsgResolveMarketResponse{
@@ -55,13 +56,14 @@ func (k msgServer) processMarketResolution(ctx sdk.Context, resolutionPayload *t
 func (k msgServer) getMarketToResolve(ctx sdk.Context, resolutionPayload types.MarketResolutionTicketPayload) (types.Market, error) {
 	market, found := k.Keeper.GetMarket(ctx, resolutionPayload.UID)
 	if !found {
-		return types.Market{}, types.ErrEventNotFound
+		return types.Market{}, types.ErrMarketNotFound
 	}
 
 	if market.Status != types.MarketStatus_MARKET_STATUS_ACTIVE &&
 		market.Status != types.MarketStatus_MARKET_STATUS_INACTIVE {
-		return types.Market{}, types.ErrEventIsNotActiveOrInactive
+		return types.Market{}, types.ErrMarketIsNotActiveOrInactive
 	}
+	//TODO: this is repeated check, I found similar in keeper.ResolveMarket
 
 	return market, nil
 }
@@ -69,7 +71,7 @@ func (k msgServer) getMarketToResolve(ctx sdk.Context, resolutionPayload types.M
 func extractWinnerOddsUIDs(market *types.Market, payload *types.MarketResolutionTicketPayload) error {
 	if payload.Status == types.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
 		if payload.ResolutionTS < market.StartTS {
-			return types.ErrResolutionTimeLessTnStart
+			return types.ErrResolutionTimeLessThenStartTime
 		}
 
 		validWinnerOdds := true

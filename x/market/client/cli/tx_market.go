@@ -8,13 +8,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CmdAddEvent CLI registration for add-markets command
+// CmdAddEvent CLI registration for add market command
 func CmdAddEvent() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "add-market [ticket]",
+		Use:   "add [ticket]",
 		Short: "create new market",
 		Long:  "Create a market with ticket.",
 		Args:  cobra.ExactArgs(1),
+		//Example: fmt.Sprintf("%s tx %s postprice bnb:usd 25 9999999999 --from validator",
+		//	version.AppName, types.ModuleName),
+		// TODO: Put example
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -40,10 +43,11 @@ func CmdAddEvent() *cobra.Command {
 // CmdUpdateEvent returns query for updating market transaction
 func CmdUpdateEvent() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-market [ticket]",
+		Use:   "update [ticket]",
 		Short: "update market",
 		Long:  "Update a market with ticket.",
-		Args:  cobra.ExactArgs(1),
+		// TODO: put update example
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

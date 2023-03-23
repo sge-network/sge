@@ -6,7 +6,7 @@ import "sge/market/odds.proto";
 
 option go_package = "github.com/sge-network/sge/x/market/types";
 
-// Market the representation of the market to be stored in
+// Market is the representation of the market to be stored in
 // the market state.
 message Market {
   // uid is the universal unique identifier of the market.

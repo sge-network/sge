@@ -14,6 +14,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TODO: Why is the file name market_server_test.go
+
 func TestMsgServerAddEvent(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
@@ -126,7 +128,7 @@ func TestMsgServerAddEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.AddMarket(wctx, types.NewMsgAddEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventAlreadyExist)
+		assert.ErrorIs(t, err, types.ErrMarketAlreadyExist)
 		assert.Nil(t, response)
 	})
 }
@@ -175,7 +177,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventNotFound)
+		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
 	})
 
@@ -192,7 +194,7 @@ func TestMsgServerResolveEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventIsNotActiveOrInactive)
+		assert.ErrorIs(t, err, types.ErrMarketIsNotActiveOrInactive)
 		assert.Nil(t, response)
 	})
 
@@ -325,7 +327,7 @@ func TestMsgServerUpdateEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.UpdateMarket(wctx, types.NewMsgUpdateEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrEventNotFound)
+		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
 	})
 	t.Run("updating an declared market", func(t *testing.T) {
@@ -340,7 +342,7 @@ func TestMsgServerUpdateEventResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.UpdateMarket(wctx, types.NewMsgUpdateEvent(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrCanNotBeAltered)
+		assert.ErrorIs(t, err, types.ErrMarketCanNotBeAltered)
 		assert.Nil(t, response)
 	})
 }

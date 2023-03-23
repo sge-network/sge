@@ -17,36 +17,37 @@ func (k msgServer) UpdateMarket(goCtx context.Context, msg *types.MsgUpdateMarke
 		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
 	}
 
-	currentData, found := k.Keeper.GetMarket(ctx, updatePayload.GetUID())
+	storedMarket, found := k.Keeper.GetMarket(ctx, updatePayload.GetUID())
 	if !found {
-		return nil, types.ErrEventNotFound
+		return nil, types.ErrMarketNotFound
 	}
 
-	// if current data is not active or inactive it is not updatable
+	// if stored market is inactive it is not updatable
 	// active status can be changed to inactive or vice versa in the updating
-	if currentData.Status != types.MarketStatus_MARKET_STATUS_ACTIVE &&
-		currentData.Status != types.MarketStatus_MARKET_STATUS_INACTIVE {
-		return nil, types.ErrCanNotBeAltered
-	}
+	if storedMarket.Status != types.MarketStatus_MARKET_STATUS_ACTIVE &&
+		storedMarket.Status != types.MarketStatus_MARKET_STATUS_INACTIVE {
+		return nil, types.ErrMarketCanNotBeAltered
+	} //TODO: Something wrong with this check?
 
-	// update market is not valid, return error
 	params := k.GetParams(ctx)
 
+	// update market is not valid, return error
 	if err := updatePayload.Validate(ctx, &params); err != nil {
-		return nil, sdkerrors.Wrap(err, "validate update data")
-	}
+		return nil, sdkerrors.Wrap(err, "update validation failed")
+	} // TODO: Should these errors not be registered?
 
 	// replace current data with payload values
-	currentData.StartTS = updatePayload.StartTS
-	currentData.EndTS = updatePayload.EndTS
-	currentData.BetConstraints = params.NewMarketBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
-	currentData.Status = updatePayload.Status
+	// TODO: If any of these values are null because it is not sent in ticket then it will assign null value
+	storedMarket.StartTS = updatePayload.StartTS
+	storedMarket.EndTS = updatePayload.EndTS
+	storedMarket.BetConstraints = params.NewMarketBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
+	storedMarket.Status = updatePayload.Status
 
 	// update market is successful, update the module state
-	k.Keeper.SetMarket(ctx, currentData)
+	k.Keeper.SetMarket(ctx, storedMarket)
 
 	response := &types.MsgUpdateMarketResponse{
-		Data: &currentData,
+		Data: &storedMarket,
 	}
 	emitTransactionEvent(ctx, types.TypeMsgUpdateMarkets, response.Data.UID, response.Data.BookUID, msg.Creator)
 	return response, nil

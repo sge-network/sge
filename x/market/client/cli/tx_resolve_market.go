@@ -8,13 +8,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CmdResolveEvent registers the resolve-market command
+// CmdResolveEvent registers the resolve market command
 func CmdResolveEvent() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "resolve-market [ticket]",
+		Use:   "resolve [ticket]",
 		Short: "set resolution of an market",
 		Long:  "Resolve a market with ticket.",
-		Args:  cobra.ExactArgs(1),
+		// TODO: Put example
+		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {

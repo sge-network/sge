@@ -25,7 +25,7 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 
 	_, found := k.Keeper.GetMarket(ctx, addPayload.UID)
 	if found {
-		return nil, types.ErrEventAlreadyExist
+		return nil, types.ErrMarketAlreadyExist
 	}
 
 	var oddsUIDs []string

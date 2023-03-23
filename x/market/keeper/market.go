@@ -38,8 +38,10 @@ func (k Keeper) RemoveMarket(ctx sdk.Context, marketUID string) {
 	store.Delete(utils.StrBytes(marketUID))
 }
 
-// GetMarketAll returns all markets
-func (k Keeper) GetMarketAll(ctx sdk.Context) (list []types.Market, err error) {
+// TODO: Where are we using this function? Do we want to remove a market?
+
+// GetMarkets returns all markets
+func (k Keeper) GetMarkets(ctx sdk.Context) (list []types.Market, err error) {
 	store := k.getMarketsStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -65,8 +67,8 @@ func (k Keeper) ResolveMarket(ctx sdk.Context, resolutionEvent *types.MarketReso
 
 	if storedEvent.Status != types.MarketStatus_MARKET_STATUS_ACTIVE &&
 		storedEvent.Status != types.MarketStatus_MARKET_STATUS_INACTIVE {
-		return nil, types.ErrCanNotBeAltered
-	}
+		return nil, types.ErrMarketCanNotBeAltered
+	} // TODO: Should it be or condition with types which we dont allow to be modified?
 
 	storedEvent.ResolutionTS = resolutionEvent.ResolutionTS
 	storedEvent.Status = resolutionEvent.Status

@@ -77,7 +77,7 @@ func TestMarketGetAll(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNMarket(k, ctx, 10)
 
-	markets, err := k.GetMarketAll(ctx)
+	markets, err := k.GetMarkets(ctx)
 	require.NoError(t, err)
 
 	require.ElementsMatch(t,
@@ -110,7 +110,7 @@ func TestResolveMarkets(t *testing.T) {
 		}
 
 		_, err := k.ResolveMarket(ctx, &resEventsIn)
-		require.Equal(t, types.ErrCanNotBeAltered, err)
+		require.Equal(t, types.ErrMarketCanNotBeAltered, err)
 	})
 
 	t.Run("Success", func(t *testing.T) {

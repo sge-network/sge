@@ -21,7 +21,7 @@ service Query {
     option (google.api.http).get = "/sge/market/{uid}";
   }
 
-  // Queries a list of c.
+  // Queries a list of all the markets
   rpc Markets(QueryMarketsRequest) returns (QueryMarketsResponse) {
     option (google.api.http).get = "/sge/market/markets";
   }
