@@ -37,7 +37,7 @@ func TestGenesis(t *testing.T) {
 				ID:  2,
 			},
 		},
-		ActiveBetList: []types.ActiveBet{
+		PendingBetList: []types.PendingBet{
 			{
 				UID:     "1",
 				Creator: simappUtil.TestParamUsers["user1"].Address.String(),

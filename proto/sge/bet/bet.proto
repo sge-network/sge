@@ -37,7 +37,7 @@ message Bet {
 
   // odds_value is the odds on which the bet is placed.
   string odds_value = 5;
-  
+
   // amount is the wager amount.
   string amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -124,8 +124,8 @@ message UID2ID {
   ];
 }
 
-// ActiveBet is the type for an active bet
-message ActiveBet {
+// PendingBet is the type for an unsettled bet
+message PendingBet {
   // uid is the universal unique identifier for the bet.
   string uid = 1 [
     (gogoproto.customname) = "UID",
@@ -148,10 +148,11 @@ message SettledBet {
   string bettor_address = 2;
 }
 
-// BetFulfillment: A bet can be fulfilled by multiple users participating as a house
-// Every participant is exposed to a share of risk or payout associated with the bet
-// For the risk exposure on a bet, an estimated bet amount is also allocated to the participant
-// This bet amount is the amount participant receive if the bettor loose the bet
+// BetFulfillment: A bet can be fulfilled by multiple users participating as a
+// house Every participant is exposed to a share of risk or payout associated
+// with the bet For the risk exposure on a bet, an estimated bet amount is also
+// allocated to the participant This bet amount is the amount participant
+// receive if the bettor loose the bet
 message BetFulfillment {
   // participant_address is the bech32-encoded address of the participant
   // fulfilling bet.

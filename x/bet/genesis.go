@@ -21,10 +21,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		}
 
 		// Set all the active bet
-		for i := range genState.ActiveBetList {
-			active := genState.ActiveBetList[i]
-			if genState.ActiveBetList[i].UID == bet.UID {
-				k.SetActiveBet(ctx, &active, id, bet.MarketUID)
+		for i := range genState.PendingBetList {
+			active := genState.PendingBetList[i]
+			if genState.PendingBetList[i].UID == bet.UID {
+				k.SetPendingBet(ctx, &active, id, bet.MarketUID)
 			}
 		}
 
@@ -53,7 +53,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		panic(err)
 	}
 
-	genesis.ActiveBetList, err = k.GetActiveBets(ctx)
+	genesis.PendingBetList, err = k.GetPendingBets(ctx)
 	if err != nil {
 		panic(err)
 	}

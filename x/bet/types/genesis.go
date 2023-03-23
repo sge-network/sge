@@ -13,7 +13,7 @@ const DefaultUID uint64 = 1
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
 		BetList:        []Bet{},
-		ActiveBetList:  []ActiveBet{},
+		PendingBetList: []PendingBet{},
 		SettledBetList: []SettledBet{},
 		Uid2IdList:     []UID2ID{},
 		Stats:          BetStats{},
@@ -29,7 +29,7 @@ func (gs GenesisState) Validate() error {
 		return fmt.Errorf(ErrTextInitGenesisFailedBecauseOfNotEqualStats, betCount, gs.Stats.Count)
 	}
 
-	activeAndSettledCount := uint64(len(gs.ActiveBetList)) + uint64(len(gs.SettledBetList))
+	activeAndSettledCount := uint64(len(gs.PendingBetList)) + uint64(len(gs.SettledBetList))
 	if activeAndSettledCount != betCount {
 		return fmt.Errorf(ErrTextInitGenesisFailedBetCountNotEqualActiveAndSettled, activeAndSettledCount, betCount)
 	}
@@ -65,7 +65,7 @@ func (gs GenesisState) Validate() error {
 		}
 
 		isActive := false
-		for _, active := range gs.ActiveBetList {
+		for _, active := range gs.PendingBetList {
 			if active.UID == bet.UID {
 				if bet.SettlementHeight != 0 {
 					return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsNotZero, bet.UID)

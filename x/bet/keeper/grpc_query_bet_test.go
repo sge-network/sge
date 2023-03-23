@@ -310,13 +310,13 @@ func TestBetByUIDsQuery(t *testing.T) {
 	}
 }
 
-func TestActiveBetsOfMarketQueryPaginated(t *testing.T) {
+func TestPendingBetsOfMarketQueryPaginated(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNBet(tApp, k, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryActiveBetsRequest {
-		return &types.QueryActiveBetsRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryPendingBetsRequest {
+		return &types.QueryPendingBetsRequest{
 			MarketUid: testMarketUID,
 			Pagination: &query.PageRequest{
 				Key:        next,
@@ -329,7 +329,7 @@ func TestActiveBetsOfMarketQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.ActiveBets(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := k.PendingBets(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
@@ -342,7 +342,7 @@ func TestActiveBetsOfMarketQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.ActiveBets(wctx, request(next, 0, uint64(step), false))
+			resp, err := k.PendingBets(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
 			require.LessOrEqual(t, len(resp.Bet), step)
 			require.Subset(t,
@@ -353,7 +353,7 @@ func TestActiveBetsOfMarketQueryPaginated(t *testing.T) {
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := k.ActiveBets(wctx, request(nil, 0, 0, true))
+		resp, err := k.PendingBets(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,

@@ -24,9 +24,9 @@ func (k Keeper) getBetStatsStore(ctx sdk.Context) prefix.Store {
 	return betStore
 }
 
-// getActiveStore returns active bet store ready for iterating
-func (k Keeper) getActiveStore(ctx sdk.Context) prefix.Store {
-	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.ActiveBetListPrefix)
+// getPendingStore returns pending bet store ready for iterating
+func (k Keeper) getPendingStore(ctx sdk.Context) prefix.Store {
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingBetListPrefix)
 	return betStore
 }
 
