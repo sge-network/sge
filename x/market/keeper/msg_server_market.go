@@ -14,13 +14,13 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 
 	var addPayload types.MarketAddTicketPayload
 	if err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &addPayload); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	params := k.GetParams(ctx)
 
 	if err := addPayload.Validate(ctx, &params); err != nil {
-		return nil, sdkerrors.Wrap(err, "validate add market")
+		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
 	_, found := k.Keeper.GetMarket(ctx, addPayload.UID)
@@ -52,13 +52,12 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 
 	k.Keeper.SetMarket(ctx, market)
 
-	response := &types.MsgAddMarketResponse{
+	emitTransactionEvent(ctx, types.TypeMsgCreateMarkets, market.UID, market.BookUID, msg.Creator)
+
+	return &types.MsgAddMarketResponse{
 		Error: "",
 		Data:  &market,
-	}
-	emitTransactionEvent(ctx, types.TypeMsgCreateMarkets, response.Data.UID, addPayload.UID, msg.Creator)
-
-	return response, nil
+	}, nil
 }
 
 // UpdateMarket accepts ticket containing update market and return response after processing
@@ -67,39 +66,37 @@ func (k msgServer) UpdateMarket(goCtx context.Context, msg *types.MsgUpdateMarke
 
 	var updatePayload types.MarketUpdateTicketPayload
 	if err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &updatePayload); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	storedMarket, found := k.Keeper.GetMarket(ctx, updatePayload.GetUID())
+	market, found := k.Keeper.GetMarket(ctx, updatePayload.GetUID())
 	if !found {
 		return nil, types.ErrMarketNotFound
 	}
 
 	// if stored market is inactive it is not updatable
 	// active status can be changed to inactive or vice versa in the updating
-	if !storedMarket.IsUpdateAllowed() {
-		return nil, types.ErrMarketCanNotBeAltered
+	if !market.IsUpdateAllowed() {
+		return nil, sdkerrors.Wrapf(types.ErrMarketCanNotBeAltered, "%s", market.Status)
 	}
 
 	params := k.GetParams(ctx)
 
 	// update market is not valid, return error
 	if err := updatePayload.Validate(ctx, &params); err != nil {
-		return nil, sdkerrors.Wrap(err, "update validation failed")
-	} // TODO: Should these errors not be registered?
+		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
+	}
 
 	// replace current data with payload values
-	storedMarket.StartTS = updatePayload.StartTS
-	storedMarket.EndTS = updatePayload.EndTS
-	storedMarket.BetConstraints = params.NewMarketBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
-	storedMarket.Status = updatePayload.Status
+	market.StartTS = updatePayload.StartTS
+	market.EndTS = updatePayload.EndTS
+	market.BetConstraints = params.NewMarketBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
+	market.Status = updatePayload.Status
 
 	// update market is successful, update the module state
-	k.Keeper.SetMarket(ctx, storedMarket)
+	k.Keeper.SetMarket(ctx, market)
 
-	response := &types.MsgUpdateMarketResponse{
-		Data: &storedMarket,
-	}
-	emitTransactionEvent(ctx, types.TypeMsgUpdateMarkets, response.Data.UID, response.Data.BookUID, msg.Creator)
-	return response, nil
+	emitTransactionEvent(ctx, types.TypeMsgUpdateMarkets, market.UID, market.BookUID, msg.Creator)
+
+	return &types.MsgUpdateMarketResponse{Data: &market}, nil
 }

@@ -15,30 +15,27 @@ func (k msgServer) ResolveMarket(goCtx context.Context, msg *types.MsgResolveMar
 	var resolutionPayload types.MarketResolutionTicketPayload
 	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolutionPayload)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	if err := resolutionPayload.Validate(); err != nil {
-		return nil, sdkerrors.Wrap(err, "validate resolution data")
+		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
 	market, found := k.Keeper.GetMarket(ctx, resolutionPayload.UID)
 	if !found {
-		return nil, sdkerrors.Wrap(types.ErrMarketNotFound, "getting market")
+		return nil, sdkerrors.Wrapf(types.ErrMarketNotFound, "%s", market.UID)
 	}
 
 	if !market.IsResolveAllowed() {
-		return nil, sdkerrors.Wrap(types.ErrMarketIsNotActiveOrInactive, "getting market")
+		return nil, sdkerrors.Wrapf(types.ErrMarketResolutionNotAllowed, "%s", market.Status)
 	}
 
 	if err := resolutionPayload.ValidateWinnerOdds(&market); err != nil {
-		return nil, sdkerrors.Wrap(err, "extract winner odds id")
+		return nil, sdkerrors.Wrapf(types.ErrInvalidWinnerOdds, "%s", err)
 	}
 
 	resolvedMarket := k.Keeper.ResolveMarket(ctx, market, &resolutionPayload)
-	if err != nil {
-		return nil, sdkerrors.Wrap(err, "resolve market")
-	}
 
 	emitTransactionEvent(ctx, types.TypeMsgResolveMarkets, resolvedMarket.UID, resolvedMarket.BookUID, msg.Creator)
 

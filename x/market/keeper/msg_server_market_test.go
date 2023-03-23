@@ -39,7 +39,7 @@ func TestMsgServerAddMarket(t *testing.T) {
 				msg: types.NewMsgAddMarket(sample.AccAddress(), ""),
 			},
 			want:    nil,
-			wantErr: types.ErrInVerification,
+			wantErr: types.ErrInTicketVerification,
 		},
 	}
 	for _, tt := range tests {
@@ -71,7 +71,7 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.AddMarket(wctx, types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
 
@@ -120,7 +120,7 @@ func TestMsgServerUpdateMarket(t *testing.T) {
 				msg: types.NewMsgUpdateMarket(sample.AccAddress(), ""),
 			},
 			want:    nil,
-			wantErr: types.ErrInVerification,
+			wantErr: types.ErrInTicketVerification,
 		},
 	}
 	for _, tt := range tests {

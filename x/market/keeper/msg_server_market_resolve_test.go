@@ -38,7 +38,7 @@ func TestMsgServerResolveMarket(t *testing.T) {
 				msg: types.NewMsgResolveMarket(sample.AccAddress(), ""),
 			},
 			want:    nil,
-			wantErr: types.ErrInVerification,
+			wantErr: types.ErrInTicketVerification,
 		},
 	}
 	for _, tt := range tests {
@@ -77,7 +77,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
 
@@ -111,7 +111,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, types.ErrMarketIsNotActiveOrInactive)
+		assert.ErrorIs(t, err, types.ErrMarketResolutionNotAllowed)
 		assert.Nil(t, response)
 	})
 
@@ -128,7 +128,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
 
@@ -145,7 +145,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
 
@@ -162,7 +162,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		require.NoError(t, err)
 
 		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
-		assert.ErrorIs(t, err, sdkerrors.ErrInvalidRequest)
+		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
 
