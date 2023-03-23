@@ -80,8 +80,7 @@ func TestNewBet(t *testing.T) {
 			Amount:    inputBet.Amount,
 			OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 		}
-		res, err := types.NewBet(creator, inputBet, types.OddsType_ODDS_TYPE_DECIMAL, inputBetOdds)
+		res := types.NewBet(creator, inputBet, types.OddsType_ODDS_TYPE_DECIMAL, inputBetOdds)
 		require.Equal(t, expectedBet, res)
-		require.Nil(t, err)
 	})
 }

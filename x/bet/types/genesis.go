@@ -26,12 +26,12 @@ func DefaultGenesis() *GenesisState {
 func (gs GenesisState) Validate() error {
 	betCount := uint64(len(gs.BetList))
 	if betCount != gs.Stats.Count {
-		return fmt.Errorf(ErrTextInitGenesisFailedBecauseOfNotEqualStats, betCount, gs.Stats.Count)
+		return fmt.Errorf("%s: %d <> %d", ErrTextInitGenesisFailedBecauseOfNotEqualStats, betCount, gs.Stats.Count)
 	}
 
 	activeAndSettledCount := uint64(len(gs.PendingBetList)) + uint64(len(gs.SettledBetList))
 	if activeAndSettledCount != betCount {
-		return fmt.Errorf(ErrTextInitGenesisFailedBetCountNotEqualActiveAndSettled, activeAndSettledCount, betCount)
+		return fmt.Errorf("%s: %d <> %d", ErrTextInitGenesisFailedBetCountNotEqualActiveAndSettled, activeAndSettledCount, betCount)
 	}
 
 	// Check for duplicated uid in bet
@@ -57,18 +57,18 @@ func (gs GenesisState) Validate() error {
 		if id == 0 {
 			// this means the imported genesis is broken because there is no corresponding
 			// id mapped to the uid
-			return fmt.Errorf(ErrTextInitGenesisFailedBecauseOfMissingBetID, bet.UID)
+			return fmt.Errorf("%s: %s", ErrTextInitGenesisFailedBecauseOfMissingBetID, bet.UID)
 		}
 
 		if bet.SettlementHeight == 0 && bet.Status == Bet_STATUS_SETTLED {
-			return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsZero, bet.UID)
+			return fmt.Errorf("%s: %s", ErrTextInitGenesisFailedSettlementHeightIsZero, bet.UID)
 		}
 
 		isActive := false
 		for _, active := range gs.PendingBetList {
 			if active.UID == bet.UID {
 				if bet.SettlementHeight != 0 {
-					return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsNotZero, bet.UID)
+					return fmt.Errorf("%s: %s", ErrTextInitGenesisFailedSettlementHeightIsNotZero, bet.UID)
 				}
 				isActive = true
 			}
@@ -78,14 +78,14 @@ func (gs GenesisState) Validate() error {
 		for _, settled := range gs.SettledBetList {
 			if settled.UID == bet.UID {
 				if bet.SettlementHeight == 0 {
-					return fmt.Errorf(ErrTextInitGenesisFailedSettlementHeightIsZeroForList, bet.UID)
+					return fmt.Errorf("%s: %s", ErrTextInitGenesisFailedSettlementHeightIsZeroForList, bet.UID)
 				}
 				isSettled = true
 			}
 		}
 
 		if !isActive && !isSettled {
-			return fmt.Errorf(ErrTextInitGenesisFailedNotActiveOrSettled, bet.UID)
+			return fmt.Errorf("%s: %s", ErrTextInitGenesisFailedNotActiveOrSettled, bet.UID)
 		}
 	}
 

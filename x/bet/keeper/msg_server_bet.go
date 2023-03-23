@@ -14,54 +14,28 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	// Check if the value already exists
 	_, isFound := k.GetBetID(ctx, msg.Bet.UID)
 	if isFound {
-		return &types.MsgPlaceBetResponse{
-				Error: types.ErrDuplicateUID.Error(),
-				Bet:   msg.Bet,
-			},
-			types.ErrDuplicateUID
+		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", msg.Bet.UID)
 	}
 
 	ticketData := &types.BetPlacementTicketPayload{}
 	err := k.dvmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
 	if err != nil {
-		return &types.MsgPlaceBetResponse{
-				Error: sdkerrors.Wrapf(types.ErrInVerification, "%s", err).Error(),
-				Bet:   msg.Bet,
-			},
-			sdkerrors.Wrapf(types.ErrInVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	if err = ticketData.Validate(msg.Creator); err != nil {
-		return &types.MsgPlaceBetResponse{
-				Error: err.Error(),
-				Bet:   msg.Bet,
-			},
-			err
+		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
-	bet, err := types.NewBet(msg.Creator, msg.Bet, ticketData.OddsType, ticketData.SelectedOdds)
-	if err != nil {
-		return &types.MsgPlaceBetResponse{
-				Error: err.Error(),
-				Bet:   msg.Bet,
-			},
-			err
-	}
+	bet := types.NewBet(msg.Creator, msg.Bet, ticketData.OddsType, ticketData.SelectedOdds)
 
 	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
-		return &types.MsgPlaceBetResponse{
-				Error: err.Error(),
-				Bet:   msg.Bet,
-			},
-			err
+		return nil, sdkerrors.Wrapf(types.ErrInBetPlacement, "%s", err)
 	}
 
 	emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator)
-	return &types.MsgPlaceBetResponse{
-			Error: "",
-			Bet:   msg.Bet,
-		},
-		nil
+
+	return &types.MsgPlaceBetResponse{Bet: msg.Bet}, nil
 }
 
 func emitBetEvent(ctx sdk.Context, msgType string, betUID string, betCreator string) {

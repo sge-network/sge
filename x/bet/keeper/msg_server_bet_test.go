@@ -43,7 +43,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		_, err = msgk.PlaceBet(wctx, inputBet)
-		require.ErrorIs(t, types.ErrInVerification, err)
+		require.ErrorIs(t, types.ErrInTicketVerification, err)
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
@@ -74,7 +74,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		_, err = msgk.PlaceBet(wctx, inputBet)
-		require.Equal(t, types.ErrInvalidMarketUID, err)
+		require.ErrorIs(t, types.ErrInTicketValidation, err)
 	})
 
 	t.Run("No matching market", func(t *testing.T) {
@@ -103,7 +103,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		_, err = msgk.PlaceBet(wctx, inputBet)
-		require.Equal(t, types.ErrNoMatchingMarket, err)
+		require.ErrorIs(t, types.ErrInBetPlacement, err)
 	})
 
 	t.Run("Success", func(t *testing.T) {

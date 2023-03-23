@@ -30,7 +30,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	if bet.Creator != bettorAddressStr {
@@ -101,7 +101,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidCreator, err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
