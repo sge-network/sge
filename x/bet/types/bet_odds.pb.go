@@ -24,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// BetOdds is the type to store odds of an market.
+// BetOdds is the type to store odds of a market.
 type BetOdds struct {
 	// uid is universal unique identifier of odds.
 	// Required | Unique | uuid-v4 or code

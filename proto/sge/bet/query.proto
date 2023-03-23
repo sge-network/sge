@@ -35,7 +35,7 @@ service Query {
 
   // Queries a list of Bet items filtered by uid list.
   rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
-    option (google.api.http).get = "/sge/bet/bets_by_uids/{uids}";
+    option (google.api.http).get = "/sge/bet/bets_by_uids/{items}";
   }
 
   // Queries list of Active Bet items.
@@ -105,7 +105,7 @@ message QueryBetsByCreatorResponse {
 // QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
 // list input Query/BetsByUIDs RPC method.
 message QueryBetsByUIDsRequest {
-  repeated QueryBetRequest items = 1
+  repeated string items = 1
       [ (gogoproto.jsontag) = "items", json_name = "items" ];
 }
 

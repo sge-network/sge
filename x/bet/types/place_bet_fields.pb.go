@@ -24,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// PlaceBetFields contains necessary fields which come in Place bet tx request.
+// PlaceBetFields contains attributes which come in Place bet tx request.
 type PlaceBetFields struct {
 	// uid is the universal unique identifier assigned to bet.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`

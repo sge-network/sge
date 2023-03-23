@@ -25,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines the parameters for the module.
 type Params struct {
-	// batch_settlement_count is the batch settlement bet counts.
+	// batch_settlement_count is the batch settlement bet count.
 	BatchSettlementCount uint32 `protobuf:"varint,1,opt,name=batch_settlement_count,json=batchSettlementCount,proto3" json:"batch_settlement_count,omitempty"`
 }
 

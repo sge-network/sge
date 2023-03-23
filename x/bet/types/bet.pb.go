@@ -112,24 +112,24 @@ func (Bet_Result) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{0, 1}
 }
 
-// Bet is the main type of bet in the blockchain state.
+// Bet is the transaction order placed by a bettor on a specific event and odd
 type Bet struct {
 	// uid is the universal unique identifier assigned to a bet.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
 	// market_uid is the universal unique identifier of
 	// the market on which the bet is placed.
 	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	// odds_uid is the unique universal unique identifier,
+	// odds_uid is the universal unique identifier,
 	// of the odds on which the bet is placed.
 	OddsUID string `protobuf:"bytes,3,opt,name=odds_uid,proto3" json:"odds_uid"`
 	// odds_type is the type of odds that
-	// user choose such as decimal, fractional.
+	// user choose such as decimal, fractional, etc
 	OddsType OddsType `protobuf:"varint,4,opt,name=odds_type,json=oddsType,proto3,enum=sgenetwork.sge.bet.OddsType" json:"odds_type,omitempty"`
 	// odds_value is the odds on which the bet is placed.
 	OddsValue string `protobuf:"bytes,5,opt,name=odds_value,json=oddsValue,proto3" json:"odds_value,omitempty"`
 	// amount is the wager amount.
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
-	// bet_fee is the betting fee calculated by the bet amount.
+	// bet_fee is the betting fee user needs to pay for placing a bet
 	BetFee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,7,opt,name=bet_fee,json=betFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_fee"`
 	// status is the status of the bet, such as `unspecified` or `settled`.
 	Status Bet_Status `protobuf:"varint,8,opt,name=status,proto3,enum=sgenetwork.sge.bet.Bet_Status" json:"status,omitempty"`
@@ -139,7 +139,7 @@ type Bet struct {
 	Creator string `protobuf:"bytes,10,opt,name=creator,proto3" json:"creator,omitempty"`
 	// created_at is the bet placement timestamp.
 	CreatedAt int64 `protobuf:"varint,11,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	// settlement_height is the block height that the bet is settled.
+	// settlement_height is the block height at which the bet is settled.
 	SettlementHeight int64 `protobuf:"varint,12,opt,name=settlement_height,json=settlementHeight,proto3" json:"settlement_height,omitempty"`
 	// max_loss_multiplier is the multiplier coefficient of max loss.
 	MaxLossMultiplier github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,13,opt,name=max_loss_multiplier,json=maxLossMultiplier,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"max_loss_multiplier"`
@@ -257,7 +257,7 @@ func (m *Bet) GetBetFulfillment() []*BetFulfillment {
 	return nil
 }
 
-// UID2ID is the type for mapping UIDs and Sequencial IDs of bets.
+// UID2ID is the type for mapping UIDs and Sequential IDs of bets.
 type UID2ID struct {
 	// uid is the universal unique identifier assigned to the bet.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
@@ -422,7 +422,10 @@ func (m *SettledBet) GetBettorAddress() string {
 	return ""
 }
 
-// BetFulfillment is the type for bet fulfillment
+// BetFulfillment: A bet can be fulfilled by multiple users participating as a house
+// Every participant is exposed to a share of risk or payout associated with the bet
+// For the risk exposure on a bet, an estimated bet amount is also allocated to the participant
+// This bet amount is the amount participant receive if the bettor loose the bet
 type BetFulfillment struct {
 	// participant_address is the bech32-encoded address of the participant
 	// fulfilling bet.

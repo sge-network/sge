@@ -235,19 +235,26 @@ func local_request_Query_Bets_0(ctx context.Context, marshaler runtime.Marshaler
 
 }
 
-var (
-	filter_Query_BetsByUIDs_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
-)
-
 func request_Query_BetsByUIDs_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq QueryBetsByUIDsRequest
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["items"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "items")
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_BetsByUIDs_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+
+	protoReq.Items, err = runtime.StringSlice(val, ",")
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "items", err)
 	}
 
 	msg, err := client.BetsByUIDs(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -259,11 +266,22 @@ func local_request_Query_BetsByUIDs_0(ctx context.Context, marshaler runtime.Mar
 	var protoReq QueryBetsByUIDsRequest
 	var metadata runtime.ServerMetadata
 
-	if err := req.ParseForm(); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["items"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "items")
 	}
-	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_Query_BetsByUIDs_0); err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+
+	protoReq.Items, err = runtime.StringSlice(val, ",")
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "items", err)
 	}
 
 	msg, err := server.BetsByUIDs(ctx, &protoReq)
@@ -771,15 +789,15 @@ var (
 
 	pattern_Query_Bet_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "bet", "creator", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BetsByCreator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 1, 2, 2}, []string{"sge", "creator", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BetsByCreator_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "bet", "creator", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_Bets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"sge", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Bets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "bet", "bets"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_BetsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"sge", "bets_by_uids"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_BetsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "bet", "bets_by_uids", "items"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_ActiveBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "active_bets", "market_uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ActiveBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "bet", "active-bets", "market_uid"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_SettledBetsOfHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "settled_bets_of_height", "block_height"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_SettledBetsOfHeight_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "bet", "active-bets", "block_height"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

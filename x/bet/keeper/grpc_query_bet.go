@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -10,6 +12,10 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+)
+
+const (
+	mapSeparator = ":"
 )
 
 // Bets returns all bets
@@ -80,11 +86,24 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 
-	req.Items = removeDuplicateUIDs(req.Items)
+	var items []*types.QueryBetRequest
+	for _, val := range req.Items {
+		pair := strings.Split(val, mapSeparator)
+		if len(pair) != 2 {
+			return nil, fmt.Errorf("each pair should be separated by colon ex. creator:uid")
+		}
+
+		items = append(items, &types.QueryBetRequest{
+			Creator: pair[0],
+			Uid:     pair[1],
+		})
+	}
+
+	items = removeDuplicateUIDs(items)
 
 	foundBets := make([]types.Bet, 0, count)
 	notFoundBets := make([]string, 0)
-	for _, item := range req.GetItems() {
+	for _, item := range items {
 		uid2ID, found := k.GetBetID(ctx, item.Uid)
 		if !found {
 			notFoundBets = append(notFoundBets, item.Uid)
@@ -101,8 +120,8 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	}
 
 	return &types.QueryBetsByUIDsResponse{
-		Bets:            foundBets,
-		NotFoundMarkets: notFoundBets,
+		Bets:         foundBets,
+		UidsNotFound: notFoundBets,
 		// TODO: NotFoundBets
 	}, nil
 }

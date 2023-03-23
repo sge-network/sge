@@ -266,32 +266,29 @@ func TestBetByUIDsQuery(t *testing.T) {
 		{
 			desc: "First",
 			request: &types.QueryBetsByUIDsRequest{
-				Items: []*types.QueryBetRequest{{
-					Creator: simappUtil.TestParamUsers["user1"].Address.String(),
-					Uid:     msgs[0].UID,
-				}},
+				Items: []string{
+					simappUtil.TestParamUsers["user1"].Address.String() + ":" + msgs[0].UID,
+				},
 			},
 			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[0]}},
 		},
 		{
 			desc: "Second",
 			request: &types.QueryBetsByUIDsRequest{
-				Items: []*types.QueryBetRequest{{
-					Creator: simappUtil.TestParamUsers["user1"].Address.String(),
-					Uid:     msgs[1].UID,
-				}},
+				Items: []string{
+					simappUtil.TestParamUsers["user1"].Address.String() + ":" + msgs[1].UID,
+				},
 			},
 			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[1]}},
 		},
 		{
 			desc: "NotFound",
 			request: &types.QueryBetsByUIDsRequest{
-				Items: []*types.QueryBetRequest{{
-					Creator: simappUtil.TestParamUsers["user1"].Address.String(),
-					Uid:     "100000",
-				}},
+				Items: []string{
+					simappUtil.TestParamUsers["user1"].Address.String() + ":" + "100000",
+				},
 			},
-			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundMarkets: []string{"100000"}},
+			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, UidsNotFound: []string{"100000"}},
 		},
 		{
 			desc: "InvalidRequest",

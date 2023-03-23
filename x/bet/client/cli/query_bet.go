@@ -2,7 +2,6 @@ package cli
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -135,7 +134,6 @@ func CmdListBetByUIDs() *cobra.Command {
 		Long:  "Get list of bets creator:UID comma separated list ex: \"address1:uid1,address2:uid2\" .",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			reqItems := strings.Split(args[0], listSeparator)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -144,17 +142,10 @@ func CmdListBetByUIDs() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			var items []*types.QueryBetRequest
+			var items []string
+			reqItems := strings.Split(args[0], listSeparator)
 			for _, val := range reqItems {
-				pair := strings.Split(val, mapSeparator)
-				if len(pair) != 2 {
-					return fmt.Errorf("each pair should be separated by colon ex. creator:uid")
-				}
-
-				items = append(items, &types.QueryBetRequest{
-					Creator: pair[0],
-					Uid:     pair[1],
-				})
+				items = append(items, val)
 			}
 
 			params := &types.QueryBetsByUIDsRequest{
