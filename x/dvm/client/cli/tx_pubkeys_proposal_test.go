@@ -29,21 +29,20 @@ func TestCmdChangePubkeysListProposal(t *testing.T) {
 		fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastBlock),
 		fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdk.NewInt(10))).String()),
 	}
-	pub, _, err := ed25519.GenerateKey(rand.Reader)
-	require.NoError(t, err)
-	bs, err := x509.MarshalPKIXPublicKey(pub)
-	require.NoError(t, err)
 
-	t1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
-		PublicKeys  []string
-		LeaderIndex uint32
-		jwt.RegisteredClaims
-	}{
-		PublicKeys:  []string{string(utils.NewPubKeyMemory(bs))},
-		LeaderIndex: 0,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
-		},
+	var pubs []string
+	for i := 0; i < 5; i++ {
+		pub, _, err := ed25519.GenerateKey(rand.Reader)
+		require.NoError(t, err)
+		bs, err := x509.MarshalPKIXPublicKey(pub)
+		require.NoError(t, err)
+		pubs = append(pubs, string(utils.NewPubKeyMemory(bs)))
+	}
+
+	t1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{
+		"public_keys":  pubs,
+		"leader_index": 0,
+		"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 	})
 	singedT1, err := t1.SignedString(simappUtil.TestDVMPrivateKeys[0])
 	require.NoError(t, err)

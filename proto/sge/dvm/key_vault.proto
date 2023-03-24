@@ -9,7 +9,4 @@ option go_package = "github.com/sge-network/sge/x/dvm/types";
 message KeyVault {
   // public_keys contains allowed public keys.
   repeated string public_keys = 1 [ (gogoproto.nullable) = false ];
-
-  // leader_index is the index of the leader public key in the public_keys.
-  uint32 leader_index = 2;
 }

@@ -257,7 +257,7 @@ func (m *QueryPublicKeysChangeProposalRequest) GetStatus() ProposalStatus {
 // QueryPublicKeysChangeProposalResponse is the response type for the
 // Query/PublicKeysChangeProposal RPC method.
 type QueryPublicKeysChangeProposalResponse struct {
-	// proposal holds the active proposal.
+	// proposal holds the proposal.
 	Proposal PublicKeysChangeProposal `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal"`
 }
 
@@ -358,7 +358,7 @@ func (m *QueryPublicKeysChangeProposalsRequest) GetStatus() ProposalStatus {
 // QueryPublicKeysChangeProposalsResponse is the response type for the
 // Query/PublicKeysChangeProposals RPC method.
 type QueryPublicKeysChangeProposalsResponse struct {
-	// proposals hold the active proposals.
+	// proposals hold the proposals.
 	Proposals  []PublicKeysChangeProposal `protobuf:"bytes,1,rep,name=proposals,proto3" json:"proposals"`
 	Pagination *query.PageResponse        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
@@ -484,9 +484,9 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a list of PubKeys items.
 	PubKeys(ctx context.Context, in *QueryPubKeysRequest, opts ...grpc.CallOption) (*QueryPubKeysResponse, error)
-	// Queries an active proposal by id.
+	// Queries an proposal by id and status.
 	PublicKeysChangeProposal(ctx context.Context, in *QueryPublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalResponse, error)
-	// Queries a list of active proposal items.
+	// Queries a list of proposal items by status.
 	PublicKeysChangeProposals(ctx context.Context, in *QueryPublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalsResponse, error)
 }
 
@@ -540,9 +540,9 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a list of PubKeys items.
 	PubKeys(context.Context, *QueryPubKeysRequest) (*QueryPubKeysResponse, error)
-	// Queries an active proposal by id.
+	// Queries an proposal by id and status.
 	PublicKeysChangeProposal(context.Context, *QueryPublicKeysChangeProposalRequest) (*QueryPublicKeysChangeProposalResponse, error)
-	// Queries a list of active proposal items.
+	// Queries a list of proposal items by status.
 	PublicKeysChangeProposals(context.Context, *QueryPublicKeysChangeProposalsRequest) (*QueryPublicKeysChangeProposalsResponse, error)
 }
 
