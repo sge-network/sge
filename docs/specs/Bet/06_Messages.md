@@ -1,6 +1,6 @@
 # **Messages**
 
-In this section, we describe the processing of the Bet messages. the transaction message 
+In this section, we describe the processing of the Bet messages. the transaction message
 handler endpoints is as follows
 
 ```proto
