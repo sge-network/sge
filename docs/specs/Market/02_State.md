@@ -60,7 +60,7 @@ granular control of different categories of market. We can modify here following
 ## **Market**
 
 ```proto
-// Market the representation of the market to be stored in
+// Market is the representation of the market to be stored in
 // the market state.
 message Market {
   // uid is the universal unique identifier of the market.
@@ -103,7 +103,7 @@ message Market {
   MarketBetConstraints bet_constraints = 9;
   // meta contains human-readable metadata of the market.
   string meta = 10;
-  // sr_contribution_for_house is the amount of contibution of house in the sr
+  // sr_contribution_for_house is the amount of contribution by sr for the house
   string sr_contribution_for_house = 11 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
@@ -111,26 +111,11 @@ message Market {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // book_id is the id of book
-  string book_id = 12 [
-    (gogoproto.customname) = "BookID",
-    (gogoproto.jsontag) = "book_id",
-    json_name = "book_id"
-  ];
-}
-
-// MarketBetConstraints is the bet constrains type for the market
-message MarketBetConstraints {
-  // min_amount is the minimum allowed bet amount for a market.
-  string min_amount = 2 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that thebettor needs to pay to bet on the market.
-  string bet_fee = 3 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
+  // book_uid is the unique identifier corresponding to the book
+  string book_uid = 12 [
+    (gogoproto.customname) = "BookUID",
+    (gogoproto.jsontag) = "book_uid",
+    json_name = "book_uid"
   ];
 }
 ```

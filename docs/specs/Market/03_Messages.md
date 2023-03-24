@@ -59,7 +59,7 @@ message MarketAddTicketPayload {
   // status is the current status of the market.
   MarketStatus status = 5;
 
-  // creator is the address of the creator of market.
+  // creator is the address of the creator of the market.
   string creator = 6;
 
   // min_bet_amount is the minimum allowed bet amount for a market.
@@ -68,7 +68,7 @@ message MarketAddTicketPayload {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the market.
+  // bet_fee is the fee that the bettor needs to pay to bet on the market.
   string bet_fee = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -76,8 +76,7 @@ message MarketAddTicketPayload {
 
   // meta contains human-readable metadata of the market.
   string meta = 9;
-  // sr_contribution_for_house is the portion of payout that should be paid by
-  // sr
+  // sr_contribution_for_house is the amount of contribution by sr for the house
   string sr_contribution_for_house = 10 [
     (gogoproto.customname) = "SrContributionForHouse",
     (gogoproto.jsontag) = "sr_contribution_for_house",
@@ -126,8 +125,11 @@ message MarketAddTicketPayload {
 This message is used to resolve already existent markets on the chain
 
 ```proto
+// MsgResolveMarket is the message type for resolving a market.
 message MsgResolveMarket {
+  // creator is the address of the creator account of the market.
   string creator = 1;
+  // ticket is the jwt ticket data.
   string ticket = 2;
 }
 ```
@@ -138,7 +140,7 @@ message MsgResolveMarket {
 // MarketResolutionTicketPayload indicates data of the
 // resolution of the market ticket.
 message MarketResolutionTicketPayload {
-  // uid is the universal unique identifier of market.
+  // uid is the universal unique identifier of the market.
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
@@ -187,8 +189,12 @@ message MarketResolutionTicketPayload {
 This message is used to update already existent markets on the chain
 
 ```proto
+// MsgUpdateMarket is the message type for updating market data.
+// in the state
 message MsgUpdateMarket {
+  // creator is the address of the creator account of the market.
   string creator = 1;
+  // ticket is the jwt ticket data.
   string ticket = 2;
 }
 ```
@@ -196,7 +202,7 @@ message MsgUpdateMarket {
 ### Update Market Ticked Payload
 
 ```proto
-// MarketUpdateTicketPayload indicates data of update market ticket
+// MarketUpdateTicketPayload indicates data of the market update ticket
 message MarketUpdateTicketPayload {
   // uid is the uuid of the market
   string uid = 1 [
@@ -222,7 +228,7 @@ message MarketUpdateTicketPayload {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that thebettor needs to pay to bet on the market.
+  // bet_fee is the fee that the bettor needs to pay to bet on the market.
   string bet_fee = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
