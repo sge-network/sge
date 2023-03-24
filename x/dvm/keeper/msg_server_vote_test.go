@@ -107,5 +107,4 @@ func TestChangePubkeysVote(t *testing.T) {
 		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
 		require.Nil(t, respVote)
 	})
-
 }
