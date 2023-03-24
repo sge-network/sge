@@ -57,8 +57,9 @@ message MsgVotePubkeysChangeRequest {
   string creator = 1;
   // ticket is the jwt ticket data.
   string ticket = 2;
-  // public_key is the public key of the voter.
-  string public_key = 3;
+  // voter_key_index is the public key index of the voter in the current list
+  // of public keys in the vault.
+  uint32 voter_key_index = 3;
 }
 ```
 
