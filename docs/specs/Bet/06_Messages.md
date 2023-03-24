@@ -1,20 +1,19 @@
 # **Messages**
 
-In this section, we describe the processing of the Bet messages.
-
-## **MsgPlaceBet**
-
-Within this message, the user specifies the bet information they wish to place.
+In this section, we describe the processing of the Bet messages. the transaction message 
+handler endpoints is as follows
 
 ```proto
 // Msg defines the Msg service.
 service Msg {
-
   // PlaceBet defines a method to place a bet with the given data
   rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
-
 }
 ```
+
+## **MsgPlaceBet**
+
+Within this message, the user specifies the bet information they wish to place.
 
 ```proto
 // MsgPlaceBet defines a message to place a bet with the given data
@@ -97,9 +96,9 @@ The transaction will fail if:
 - There is an error in AddPayoutProfitToMarket in market module
 - There is an error in ProcessBetPlacement in Strategic Reserve module
 
-### **What Happens if bet fails**
+### **What Happens if bet placement fails**
 
-- A new bet will be created with the given data and will be added to the `bet module's KVStore`.
+- The input data will not be stored in the `bet module's KVStore` and a meaningfull error will be returned to the client.
 
 ---
 
@@ -110,10 +109,8 @@ Within this message, the user provides a bet UID they wish to settle its corresp
 ```proto
 // Msg defines the Msg service.
 service Msg {
-
   // SettleBet defines a method to settle the given bet
   rpc SettleBet(MsgSettleBet) returns (MsgSettleBetResponse);
-
 }
 ```
 
@@ -159,7 +156,7 @@ The transaction will fail if:
 - If corresponding market is aborted or canceled, the bet will be updated in the module state as below:
 
     ```go
-    bet.Result = types.Bet_RESULT_ABORTED
+    bet.Result = types.Bet_RESULT_REFUNDED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 

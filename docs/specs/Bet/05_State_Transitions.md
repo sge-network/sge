@@ -7,13 +7,14 @@ This section defines the state transitions of the bet module's KVStore in all sc
 When this is processed:
 
 - If the ticket is valid a new bet will be created with the given data and will be added to the `bet module's KVStore`.
+- The pending bet, ID map and statistics will update accordingly.
 - Strategic Reserve module bet placement processor will calculate and transfer bet amount to the corresponding module account.
 
 ```go
 newBet := &types.Bet{
     Creator:            msg.Creator,
     UID:                msg.UID,
-    MarketUID:      <msg.Ticket.MarketUID>,
+    MarketUID:          <msg.Ticket.MarketUID>,
     OddsUID:            <msg.Ticket.OddsUID>,
     OddsType:           <msg.OddsType>,
     OddsValue:          <msg.Ticket.OddsValue>,
@@ -38,14 +39,14 @@ When this  is processed:
 - If corresponding market is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
 
     ```go
-    bet.Result = types.Bet_RESULT_ABORTED
+    bet.Result = types.Bet_RESULT_REFUNDED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
 - Resolve the bet result based on the market result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
 
     ```go
-    bet.Result = types.Bet_RESULT_WON
+    bet.Result = types.Bet_RESULT_WON // or types.Bet_RESULT_LOST
     bet.Status = types.Bet_STATUS_RESULT_DECLARED
     ```
 
