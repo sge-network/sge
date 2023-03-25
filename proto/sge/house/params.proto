@@ -9,7 +9,7 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // min_deposit is the minimum amount of acceptable deposit.
+  // min_deposit is the minimum acceptable deposit amount.
   string min_deposit = 1 [
     (gogoproto.moretags) = "yaml:\"min_deposit\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
@@ -17,7 +17,7 @@ message Params {
   ];
 
   // house_participation_fee is the % of the deposit to be paid for a house
-  // participation by the user
+  // participation by the user.
   string house_participation_fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false

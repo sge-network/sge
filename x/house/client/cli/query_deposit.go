@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryDepsoits implements the query all deposits command.
-func GetCmdQueryDepsoits() *cobra.Command {
+// GetCmdQueryDeposits implements the query deposits command.
+func GetCmdQueryDeposits() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposits",
 		Short: "Query for all deposits",
@@ -55,13 +55,13 @@ $ %s query house deposits
 	return cmd
 }
 
-// GetCmdQueryDepositorDepsoits implements the command to query all the deposits made from one depositor.
-func GetCmdQueryDepositorDepsoits() *cobra.Command {
+// GetCmdQueryDepositsByUser implements the command to query all the deposits made from one user.
+func GetCmdQueryDepositsByUser() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "depositor-deposits [depositor-addr]",
-		Short: "Query all deposits made by one depositor",
+		Use:   "deposits-by-user [address]",
+		Short: "Query all deposits made by one user",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query deposits for an individual depositor on all houses.
 
@@ -89,12 +89,12 @@ $ %s query house depositor-deposits %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 				return err
 			}
 
-			params := &types.QueryDepositorDepositsRequest{
-				DepositorAddress: depAddr.String(),
-				Pagination:       pageReq,
+			params := &types.QueryDepositsByUserRequest{
+				Address:    depAddr.String(),
+				Pagination: pageReq,
 			}
 
-			res, err := queryClient.DepositorDeposits(cmd.Context(), params)
+			res, err := queryClient.DepositsByUser(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

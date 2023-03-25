@@ -32,9 +32,13 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // MsgDeposit defines a SDK message for performing a deposit of coins to become
 // part of the house corresponding to a market.
 type MsgDeposit struct {
-	Creator   string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
-	MarketUID string                                 `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	Amount    github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
+	// creator is the user who makes a deposit
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
+	// market_uid is the uid of market/order book against which deposit is being
+	// made.
+	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
+	// amount is the amount being deposited on an order book to be a house
+	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
 }
 
 func (m *MsgDeposit) Reset()         { *m = MsgDeposit{} }
@@ -72,7 +76,10 @@ var xxx_messageInfo_MsgDeposit proto.InternalMessageInfo
 
 // MsgDepositResponse defines the Msg/Deposit response type.
 type MsgDepositResponse struct {
-	MarketUID          string `protobuf:"bytes,1,opt,name=market_uid,proto3" json:"market_uid"`
+	// market_uid is the uid of market/order book against which deposit is being
+	// made.
+	MarketUID string `protobuf:"bytes,1,opt,name=market_uid,proto3" json:"market_uid"`
+	// participation_index is the index corresponding to the order book participation
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
@@ -126,11 +133,14 @@ func (m *MsgDepositResponse) GetParticipationIndex() uint64 {
 // MsgWithdraw defines a SDK message for performing a withdrawal of coins of
 // unused amount corresponding to a deposit.
 type MsgWithdraw struct {
-	Creator            string                                 `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
-	MarketUID          string                                 `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	ParticipationIndex uint64                                 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
-	Mode               WithdrawalMode                         `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
-	Amount             github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
+	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
+	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
+	// participation_index is the index corresponding to the order book participation
+	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
+	// mode is the withdrawal mode. It can be full or partial withdraw
+	Mode WithdrawalMode `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
+	// amount is the requested withdrawal amount
+	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
 }
 
 func (m *MsgWithdraw) Reset()         { *m = MsgWithdraw{} }
@@ -168,8 +178,11 @@ var xxx_messageInfo_MsgWithdraw proto.InternalMessageInfo
 
 // MsgWithdrawResponse defines the Msg/Withdraw response type.
 type MsgWithdrawResponse struct {
-	ID                 uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" yaml:"id"`
-	MarketUID          string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
+	// id is the unique identifier for the withdrawal
+	ID uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" yaml:"id"`
+	// market_uid is the id of market/order book from which withdrawal is made
+	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
+	// participation_index is the index in order book from which withdrawal is made
 	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
@@ -284,10 +297,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// Deposit defines a method for performing a deposit of coins to become part
-	// of the house corresponding to a market.
+	// Deposit defines a method for performing a deposit of tokens to become part
+	// of the order book or be the house for an order book corresponding to a market.
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// Withdraw defines a method for performing a withdrawal of tokens of unused
 	// amount corresponding to a deposit.
 	Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.CallOption) (*MsgWithdrawResponse, error)
 }
@@ -320,10 +333,10 @@ func (c *msgClient) Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// Deposit defines a method for performing a deposit of coins to become part
-	// of the house corresponding to a market.
+	// Deposit defines a method for performing a deposit of tokens to become part
+	// of the order book or be the house for an order book corresponding to a market.
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
-	// Withdraw defines a method for performing a withdrawal of coins of unused
+	// Withdraw defines a method for performing a withdrawal of tokens of unused
 	// amount corresponding to a deposit.
 	Withdraw(context.Context, *MsgWithdraw) (*MsgWithdrawResponse, error)
 }

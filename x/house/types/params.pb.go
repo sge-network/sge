@@ -26,10 +26,10 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params define the parameters for the house module.
 type Params struct {
-	// min_deposit is the minimum amount of acceptable deposit.
+	// min_deposit is the minimum acceptable deposit amount.
 	MinDeposit github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=min_deposit,json=minDeposit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_deposit" yaml:"min_deposit"`
 	// house_participation_fee is the % of the deposit to be paid for a house
-	// participation by the user
+	// participation by the user.
 	HouseParticipationFee github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,2,opt,name=house_participation_fee,json=houseParticipationFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"house_participation_fee"`
 }
 

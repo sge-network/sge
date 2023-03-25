@@ -12,12 +12,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryDepositorWithdrawals implements the command to query all the withdrawals made from one depositor.
-func GetCmdQueryDepositorWithdrawals() *cobra.Command {
+// GetCmdQueryWithdrawalsByUser implements the command to query all the withdrawals made from one depositor.
+func GetCmdQueryWithdrawalsByUser() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "depositor-withdrawals [depositor-addr]",
+		Use:   "depositor-withdrawals [user]",
 		Short: "Query all withdrawals made by one depositor",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query withdrawals for an individual depositor on all houses.
@@ -46,12 +46,12 @@ $ %s query house depositor-withdrawals %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 				return err
 			}
 
-			params := &types.QueryDepositorWithdrawalsRequest{
-				DepositorAddress: depAddr.String(),
-				Pagination:       pageReq,
+			params := &types.QueryWithdrawalsByUserRequest{
+				Address:    depAddr.String(),
+				Pagination: pageReq,
 			}
 
-			res, err := queryClient.DepositorWithdrawals(cmd.Context(), params)
+			res, err := queryClient.WithdrawalsByUser(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

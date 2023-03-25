@@ -25,7 +25,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the house module's genesis state.
 type GenesisState struct {
-	// params defines all the parameters related to deposit.
+	// params defines the parameters of the house module at genesis
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
 	// deposit_list defines the deposits active at genesis.
 	DepositList []Deposit `protobuf:"bytes,2,rep,name=deposit_list,json=depositList,proto3" json:"deposit_list"`

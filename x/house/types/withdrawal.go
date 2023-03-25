@@ -12,7 +12,7 @@ import (
 func NewWithdrawal(id uint64, depositorAddr, marketUID string, participationIndex uint64, amount sdk.Int, mode WithdrawalMode) Withdrawal {
 	return Withdrawal{
 		ID:                 id,
-		DepositorAddress:   depositorAddr,
+		Address:            depositorAddr,
 		MarketUID:          marketUID,
 		ParticipationIndex: participationIndex,
 		Mode:               mode,
@@ -31,7 +31,7 @@ func UnmarshalWithdrawal(cdc codec.BinaryCodec, value []byte) (withdrawal Withdr
 	return withdrawal, err
 }
 
-// String returns a human readable string representation of a Withdrawal.
+// String returns a human-readable string representation of a Withdrawal.
 func (w Withdrawal) String() string {
 	out, err := yaml.Marshal(w)
 	if err != nil {

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"fmt"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
 
@@ -11,7 +12,7 @@ import (
 func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      "Querying commands for the house module",
+		Short:                      fmt.Sprintf("Querying commands for the %s module", types.ModuleName),
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
@@ -19,9 +20,9 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(
 		CmdQueryParams(),
-		GetCmdQueryDepsoits(),
-		GetCmdQueryDepositorDepsoits(),
-		GetCmdQueryDepositorWithdrawals(),
+		GetCmdQueryDeposits(),
+		GetCmdQueryDepositsByUser(),
+		GetCmdQueryWithdrawalsByUser(),
 	)
 
 	return cmd
