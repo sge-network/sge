@@ -68,7 +68,7 @@ func (MarketStatus) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_935a8ad1d6bee065, []int{0}
 }
 
-// Market the representation of the market to be stored in
+// Market is the representation of the market to be stored in
 // the market state.
 type Market struct {
 	// uid is the universal unique identifier of the market.

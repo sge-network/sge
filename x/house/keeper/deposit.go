@@ -8,20 +8,22 @@ import (
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// SetDeposit sets a deposit.
+// SetDeposit sets a deposit in the store
 func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
-	depositKey := types.GetDepositKey(deposit.Creator, deposit.MarketUID, deposit.ParticipationIndex)
+	depositKey := types.GetDepositKey(deposit.Creator, deposit.MarketUID,
+		deposit.ParticipationIndex)
 
-	store := k.getDepositsStore(ctx)
+	store := k.getDepositStore(ctx)
 	b := k.cdc.MustMarshal(&deposit)
 	store.Set(depositKey, b)
 }
 
-// GetDeposit returns a specific deposit.
-func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val types.Deposit, found bool) {
-	MarketsStore := k.getDepositsStore(ctx)
+// GetDeposit returns a specific deposit from the store.
+func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress,
+	marketUID string, participationIndex uint64) (val types.Deposit, found bool) {
+	marketsStore := k.getDepositStore(ctx)
 	depositKey := types.GetDepositKey(depositorAddress, marketUID, participationIndex)
-	b := MarketsStore.Get(depositKey)
+	b := marketsStore.Get(depositKey)
 	if b == nil {
 		return val, false
 	}
@@ -31,9 +33,9 @@ func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, 
 	return val, true
 }
 
-// GetAllDeposits returns all deposits used during genesis dump.
-func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
-	store := k.getDepositsStore(ctx)
+// GetDeposits returns returns list of deposits.
+func (k Keeper) GetDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
+	store := k.getDepositStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -49,8 +51,9 @@ func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error
 	return
 }
 
-// Deposit performs a deposit, set/update everything necessary within the store.
-func (k Keeper) Deposit(ctx sdk.Context, creator string, marketUID string, amount sdk.Int) (participationIndex uint64, err error) {
+// Deposit performs a deposit transaction and stores a new deposit in store.
+func (k Keeper) Deposit(ctx sdk.Context, creator string,
+	marketUID string, amount sdk.Int) (participationIndex uint64, err error) {
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, marketUID, amount, sdk.ZeroInt(), 0)
 

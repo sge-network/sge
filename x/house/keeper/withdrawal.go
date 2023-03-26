@@ -11,14 +11,14 @@ import (
 func (k Keeper) SetWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	withdrawalKey := types.GetWithdrawalKey(withdrawal.Address, withdrawal.MarketUID, withdrawal.ParticipationIndex, withdrawal.ID)
 
-	store := k.getWithdrawalsStore(ctx)
+	store := k.getWithdrawalStore(ctx)
 	b := k.cdc.MustMarshal(&withdrawal)
 	store.Set(withdrawalKey, b)
 }
 
 // GetAllWithdrawals returns all withdrawals used during genesis dump.
 func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err error) {
-	store := k.getWithdrawalsStore(ctx)
+	store := k.getWithdrawalStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {

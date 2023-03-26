@@ -38,7 +38,8 @@ func (gs GenesisState) Validate() error {
 			}
 		}
 		if !found {
-			return fmt.Errorf("the deposit for the depositor address %s, market uid %s and participation index %d not found for the withdrawal",
+			return fmt.Errorf("the deposit for the depositor address %s, "+
+				"market uid %s and participation index %d not found for the withdrawal",
 				w.Address,
 				w.MarketUID,
 				w.ParticipationIndex)

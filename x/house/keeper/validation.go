@@ -9,9 +9,10 @@ import (
 
 // validateDeposit validates deposit acceptability
 func (k msgServer) validateDeposit(ctx sdk.Context, msg *types.MsgDeposit) error {
-	if msg.Amount.LT(k.Keeper.GetMinDepositAllowedAmount(ctx)) {
+	if msg.Amount.LT(k.Keeper.GetMinAllowedDepositAmount(ctx)) {
 		return sdkerrors.Wrapf(
-			types.ErrDepositTooSmall, ": got %s, expected %d", msg.Amount.String(), k.Keeper.GetMinDepositAllowedAmount(ctx),
+			types.ErrDepositTooSmall, ": got %s, expected greater or equal to %d",
+			msg.Amount.String(), k.Keeper.GetMinAllowedDepositAmount(ctx),
 		)
 	}
 

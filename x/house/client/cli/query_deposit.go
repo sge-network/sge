@@ -16,7 +16,7 @@ import (
 func GetCmdQueryDeposits() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposits",
-		Short: "Query for all deposits",
+		Short: "Query for all deposits in the house",
 		Args:  cobra.NoArgs,
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about all deposits on a network.
@@ -63,10 +63,10 @@ func GetCmdQueryDepositsByUser() *cobra.Command {
 		Use:   "deposits-by-user [address]",
 		Short: "Query all deposits made by one user",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query deposits for an individual depositor on all houses.
+			fmt.Sprintf(`Query deposits for an individual user on all houses.
 
 Example:
-$ %s query house depositor-deposits %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
+$ %s query house deposits-by-user %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 `,
 				version.AppName, bech32PrefixAccAddr,
 			),

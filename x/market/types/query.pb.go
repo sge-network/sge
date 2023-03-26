@@ -479,7 +479,7 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a market by uid.
 	Market(ctx context.Context, in *QueryMarketRequest, opts ...grpc.CallOption) (*QueryMarketResponse, error)
-	// Queries a list of c.
+	// Queries a list of all the markets
 	Markets(ctx context.Context, in *QueryMarketsRequest, opts ...grpc.CallOption) (*QueryMarketsResponse, error)
 	// Queries a list of markets by UIDs.
 	MarketsByUIDs(ctx context.Context, in *QueryMarketsByUIDsRequest, opts ...grpc.CallOption) (*QueryMarketsByUIDsResponse, error)
@@ -535,7 +535,7 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a market by uid.
 	Market(context.Context, *QueryMarketRequest) (*QueryMarketResponse, error)
-	// Queries a list of c.
+	// Queries a list of all the markets
 	Markets(context.Context, *QueryMarketsRequest) (*QueryMarketsResponse, error)
 	// Queries a list of markets by UIDs.
 	MarketsByUIDs(context.Context, *QueryMarketsByUIDsRequest) (*QueryMarketsByUIDsResponse, error)

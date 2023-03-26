@@ -6,8 +6,6 @@ import (
 )
 
 // NewDeposit creates a new deposit object
-//
-//nolint:interfacer
 func NewDeposit(creator, marketUID string, amount, totalAmount sdk.Int, withdrawalCount uint64) Deposit {
 	return Deposit{
 		Creator:               creator,
@@ -18,8 +16,8 @@ func NewDeposit(creator, marketUID string, amount, totalAmount sdk.Int, withdraw
 	}
 }
 
-// String returns a human readable string representation of a Deposit.
-func (d Deposit) String() string {
+// String returns a human-readable string representation of a Deposit.
+func (d *Deposit) String() string {
 	out, err := yaml.Marshal(d)
 	if err != nil {
 		panic(err)
@@ -27,6 +25,7 @@ func (d Deposit) String() string {
 	return string(out)
 }
 
+// SetHouseParticipationFee sets participation fee for house
 func (d *Deposit) SetHouseParticipationFee(feePercentage sdk.Dec) {
 	d.Fee = feePercentage.MulInt(d.Amount).RoundInt()
 	d.Liquidity = d.Amount.Sub(d.Fee)

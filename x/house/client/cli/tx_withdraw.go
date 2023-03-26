@@ -10,11 +10,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/sge-network/sge/x/house/types"
+	srtypes "github.com/sge-network/sge/x/strategicreserve/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
-func CmdWithdrawal() *cobra.Command {
+func CmdWithdraw() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw [market_uid] [participation_index] [mode] [amount]",
 		Args:  cobra.RangeArgs(3, 4),
@@ -38,12 +39,13 @@ func CmdWithdrawal() *cobra.Command {
 
 			particiapntIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapntIndex < 1 {
-				return fmt.Errorf("particiapnt number argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf("participant number should be a natural number between 1 and %v: %v",
+					srtypes.KeyMaxBookParticipations, err)
 			}
 
 			mode, err := cast.ToInt64E(args[2])
 			if err != nil {
-				return fmt.Errorf("mode argument provided must be a non-negative-integer: %v", mode)
+				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
 			var argAmountCosmosInt sdk.Int
@@ -61,7 +63,8 @@ func CmdWithdrawal() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgWithdraw(depAddr.String(), MarketUID, argAmountCosmosInt, particiapntIndex, types.WithdrawalMode(mode))
+			msg := types.NewMsgWithdraw(depAddr.String(), MarketUID, argAmountCosmosInt,
+				particiapntIndex, types.WithdrawalMode(mode))
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

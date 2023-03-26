@@ -17,9 +17,9 @@ func CmdDeposit() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposit [market_uid] [amount]",
 		Args:  cobra.ExactArgs(2),
-		Short: "Deposit tokens to be part of a house",
+		Short: "Deposit tokens in a market order book to be the house",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Deposit coins to be part of a house corresponding to a market.
+			fmt.Sprintf(`Deposit tokens in a market order book to be the house.
 
 				Example:
 				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge --from mykey

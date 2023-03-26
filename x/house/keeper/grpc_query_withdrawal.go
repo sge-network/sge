@@ -12,8 +12,9 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// WithdrawalsByUser queries all withdrawals of a give depositor address
-func (k Keeper) WithdrawalsByUser(c context.Context, req *types.QueryWithdrawalsByUserRequest) (*types.QueryWithdrawalsByUserResponse, error) {
+// WithdrawalsByUser returns all withdrawals of a given user address
+func (k Keeper) WithdrawalsByUser(c context.Context,
+	req *types.QueryWithdrawalsByUserRequest) (*types.QueryWithdrawalsByUserResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -21,7 +22,7 @@ func (k Keeper) WithdrawalsByUser(c context.Context, req *types.QueryWithdrawals
 	var withdrawals []types.Withdrawal
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(k.getWithdrawalsStore(ctx), types.GetWithdrawalListPrefix(req.Address))
+	store := prefix.NewStore(k.getWithdrawalStore(ctx), types.GetWithdrawalListPrefix(req.Address))
 	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
 		var withdrawal types.Withdrawal
 		if err := k.cdc.Unmarshal(value, &withdrawal); err != nil {
