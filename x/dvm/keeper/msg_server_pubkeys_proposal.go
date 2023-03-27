@@ -19,12 +19,6 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 		return nil, err
 	}
 
-	var pp interface{}
-	err = k.VerifyTicketUnmarshal(goCtx, msg.Ticket, &pp)
-	if err != nil {
-		return nil, err
-	}
-
 	// remove duplicates in public keys
 	payload.PublicKeys = utils.RemoveDuplicateStrs(payload.PublicKeys)
 
