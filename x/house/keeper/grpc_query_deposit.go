@@ -38,9 +38,10 @@ func (k Keeper) Deposits(c context.Context, req *types.QueryDepositsRequest) (*t
 	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
 }
 
-// DepositsByUser returns all deposits of a given user address
-func (k Keeper) DepositsByUser(c context.Context,
-	req *types.QueryDepositsByUserRequest) (*types.QueryDepositsByUserResponse, error) {
+// DepositsByAcc returns all deposits of a given account address
+func (k Keeper) DepositsByAcc(c context.Context,
+	req *types.QueryDepositsByAccRequest,
+) (*types.QueryDepositsByAccResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -62,5 +63,5 @@ func (k Keeper) DepositsByUser(c context.Context,
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositsByUserResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryDepositsByAccResponse{Deposits: deposits, Pagination: pageRes}, nil
 }

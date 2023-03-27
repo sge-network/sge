@@ -10,7 +10,8 @@ import (
 
 // Withdraw performs withdrawal of unused tokens corresponding to a deposit.
 func (k msgServer) Withdraw(goCtx context.Context,
-	msg *types.MsgWithdraw) (*types.MsgWithdrawResponse, error) {
+	msg *types.MsgWithdraw,
+) (*types.MsgWithdrawResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.MarketUID,

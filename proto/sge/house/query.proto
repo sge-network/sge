@@ -22,15 +22,15 @@ service Query {
     option (google.api.http).get = "/sge/house/deposits";
   }
 
-  // DepositsByUser queries deposits info for given user.
-  rpc DepositsByUser(QueryDepositsByUserRequest)
-      returns (QueryDepositsByUserResponse) {
+  // DepositsByAcc queries deposits info for given account address.
+  rpc DepositsByAcc(QueryDepositsByAccRequest)
+      returns (QueryDepositsByAccResponse) {
     option (google.api.http).get = "/sge/house/deposits/{address}";
   }
 
-  // WithdrawalsByUser queries withdrawals info for given user.
-  rpc WithdrawalsByUser(QueryWithdrawalsByUserRequest)
-      returns (QueryWithdrawalsByUserResponse) {
+  // WithdrawalsByAcc queries withdrawals info for given account address.
+  rpc WithdrawalsByAcc(QueryWithdrawalsByAccRequest)
+      returns (QueryWithdrawalsByAccResponse) {
     option (google.api.http).get = "/sge/house/withdrawals/{address}";
   }
 }
@@ -61,19 +61,19 @@ message QueryDepositsResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// QueryDepositsByUserRequest is request type for Query/DepositsByUser RPC
+// QueryDepositsByAccRequest is request type for Query/DepositsByAcc RPC
 // method.
-message QueryDepositsByUserRequest {
-  // address defines the address of depositor/user for which deposits are queried.
+message QueryDepositsByAccRequest {
+  // address defines the address of depositor/account for which deposits are queried.
   string address = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-// QueryDepositsByUserResponse is response type for the
-// Query/DepositsByUser RPC method
-message QueryDepositsByUserResponse {
+// QueryDepositsByAccResponse is response type for the
+// Query/DepositsByAcc RPC method
+message QueryDepositsByAccResponse {
   // deposits contains all the queried deposits.
   repeated Deposit deposits = 1 [ (gogoproto.nullable) = false ];
 
@@ -82,18 +82,18 @@ message QueryDepositsByUserResponse {
 }
 
 // QueryDepositorWithdrawalsRequest is request type for
-// Query/WithdrawalsByUser RPC method.
-message QueryWithdrawalsByUserRequest {
-  // address defines the address of depositor/user for which withdrawals are queried.
+// Query/WithdrawalsByAcc RPC method.
+message QueryWithdrawalsByAccRequest {
+  // address defines the address of depositor/acc for which withdrawals are queried.
   string address = 1;
 
   // pagination defines an optional pagination for the request.
   cosmos.base.query.v1beta1.PageRequest pagination = 2;
 }
 
-// QueryWithdrawalsByUserResponse is response type for the
-// Query/WithdrawalsByUser RPC method
-message QueryWithdrawalsByUserResponse {
+// QueryWithdrawalsByAccResponse is response type for the
+// Query/WithdrawalsByAcc RPC method
+message QueryWithdrawalsByAccResponse {
   // withdrawals contains all the queried withdrawals.
   repeated Withdrawal withdrawals = 1 [ (gogoproto.nullable) = false ];
 

@@ -17,7 +17,7 @@ message Params {
   ];
 
   // house_participation_fee is the % of the deposit to be paid for a house
-  // participation by the user.
+  // participation by the account address.
   string house_participation_fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false

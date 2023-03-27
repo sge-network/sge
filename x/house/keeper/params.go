@@ -25,7 +25,7 @@ func (k Keeper) GetMinAllowedDepositAmount(ctx sdk.Context) (res sdk.Int) {
 	return
 }
 
-// GetHouseParticipationFee returns % of deposit to be paid for house participation by the user
+// GetHouseParticipationFee returns % of deposit to be paid for house participation by the account.
 func (k Keeper) GetHouseParticipationFee(ctx sdk.Context) (res sdk.Dec) {
 	k.paramstore.Get(ctx, types.KeyHouseParticipationFee, &res)
 	return

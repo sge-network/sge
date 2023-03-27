@@ -23,7 +23,7 @@ message MsgDeposit {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
 
-  // creator is the user who makes a deposit
+  // creator is the account address that makes a deposit
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
   // market_uid is the uid of market/order book against which deposit is being
   // made.
