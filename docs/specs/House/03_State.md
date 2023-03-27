@@ -18,7 +18,7 @@ message Params {
   ];
 
   // house_participation_fee is the % of the deposit to be paid for a house
-  // participation by the user
+  // participation by the account
   string house_participation_fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
@@ -30,7 +30,7 @@ message Params {
 
 ## **Deposit**
 
-The deposit keeps track of the deposits made byt the users.
+The deposit keeps track of the deposits made by the accounts.
 
 ```proto
 // Deposit represents the deposit against a market held by an account.
@@ -91,7 +91,7 @@ message Deposit {
 
 ## **Withdeawal**
 
-The withdrawal keeps track of the withdrawals made byt the users.
+The withdrawal keeps track of the withdrawals made byt the accounts.
 
 ```proto
 // Withdrawal represents the withdrawal against a deposit.
