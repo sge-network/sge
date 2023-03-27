@@ -31,7 +31,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		WithdrawalList: []types.Withdrawal{
 			{
 				ID:                 1,
-				DepositorAddress:   testAddress,
+				Address:            testAddress,
 				MarketUID:          MarketUID,
 				ParticipationIndex: 1,
 				Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
@@ -51,7 +51,7 @@ func TestGenesisState_Validate(t *testing.T) {
 
 	wrongCreator := validState
 	wrongCreator.WithdrawalList = []types.Withdrawal{validState.WithdrawalList[0]}
-	wrongCreator.WithdrawalList[0].DepositorAddress = "new address"
+	wrongCreator.WithdrawalList[0].Address = "new address"
 
 	for _, tc := range []struct {
 		desc     string
