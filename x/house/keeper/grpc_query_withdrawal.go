@@ -12,9 +12,10 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// WithdrawalsByUser returns all withdrawals of a given user address
-func (k Keeper) WithdrawalsByUser(c context.Context,
-	req *types.QueryWithdrawalsByUserRequest) (*types.QueryWithdrawalsByUserResponse, error) {
+// WithdrawalsByAccount returns all withdrawals of a given account address
+func (k Keeper) WithdrawalsByAccount(c context.Context,
+	req *types.QueryWithdrawalsByAccountRequest,
+) (*types.QueryWithdrawalsByAccountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -36,5 +37,5 @@ func (k Keeper) WithdrawalsByUser(c context.Context,
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryWithdrawalsByUserResponse{Withdrawals: withdrawals, Pagination: pageRes}, nil
+	return &types.QueryWithdrawalsByAccountResponse{Withdrawals: withdrawals, Pagination: pageRes}, nil
 }

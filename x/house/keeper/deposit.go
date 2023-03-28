@@ -20,7 +20,8 @@ func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
 
 // GetDeposit returns a specific deposit from the store.
 func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress,
-	marketUID string, participationIndex uint64) (val types.Deposit, found bool) {
+	marketUID string, participationIndex uint64,
+) (val types.Deposit, found bool) {
 	marketsStore := k.getDepositStore(ctx)
 	depositKey := types.GetDepositKey(depositorAddress, marketUID, participationIndex)
 	b := marketsStore.Get(depositKey)
@@ -53,7 +54,8 @@ func (k Keeper) GetDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
 
 // Deposit performs a deposit transaction and stores a new deposit in store.
 func (k Keeper) Deposit(ctx sdk.Context, creator string,
-	marketUID string, amount sdk.Int) (participationIndex uint64, err error) {
+	marketUID string, amount sdk.Int,
+) (participationIndex uint64, err error) {
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, marketUID, amount, sdk.ZeroInt(), 0)
 

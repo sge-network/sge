@@ -10,7 +10,8 @@ import (
 
 // Deposit performs deposit operation to participate as a house in a specific market/order book
 func (k msgServer) Deposit(goCtx context.Context,
-	msg *types.MsgDeposit) (*types.MsgDepositResponse, error) {
+	msg *types.MsgDeposit,
+) (*types.MsgDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := k.validateDeposit(ctx, msg); err != nil {

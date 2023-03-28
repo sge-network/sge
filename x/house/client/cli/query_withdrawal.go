@@ -12,18 +12,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryWithdrawalsByUser implements the command to query all the withdrawals made from one user.
-func GetCmdQueryWithdrawalsByUser() *cobra.Command {
+// GetCmdQueryWithdrawalsByAccount implements the command to query all the withdrawals made from one account.
+func GetCmdQueryWithdrawalsByAccount() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "withdrawals-by-user [user]",
-		Short: "Query all withdrawals made by one user",
+		Use:   "withdrawals-by-account [account]",
+		Short: "Query all withdrawals made by one account",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query withdrawals for an individual user on all houses.
+			fmt.Sprintf(`Query withdrawals for an individual accounts on all houses.
 
 Example:
-$ %s query house withdrawals-by-user %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
+$ %s query house withdrawals-by-account %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 `,
 				version.AppName, bech32PrefixAccAddr,
 			),
@@ -46,12 +46,12 @@ $ %s query house withdrawals-by-user %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 				return err
 			}
 
-			params := &types.QueryWithdrawalsByUserRequest{
+			params := &types.QueryWithdrawalsByAccountRequest{
 				Address:    depAddr.String(),
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.WithdrawalsByUser(cmd.Context(), params)
+			res, err := queryClient.WithdrawalsByAccount(cmd.Context(), params)
 			if err != nil {
 				return err
 			}

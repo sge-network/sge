@@ -32,7 +32,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 // MsgDeposit defines a SDK message for performing a deposit of coins to become
 // part of the house corresponding to a market.
 type MsgDeposit struct {
-	// creator is the user who makes a deposit
+	// creator is the account who makes a deposit
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
 	// market_uid is the uid of market/order book against which deposit is being
 	// made.

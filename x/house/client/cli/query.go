@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/spf13/cobra"
 
@@ -21,8 +22,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 	cmd.AddCommand(
 		CmdQueryParams(),
 		GetCmdQueryDeposits(),
-		GetCmdQueryDepositsByUser(),
-		GetCmdQueryWithdrawalsByUser(),
+		GetCmdQueryDepositsByAccount(),
+		GetCmdQueryWithdrawalsByAccount(),
 	)
 
 	return cmd
