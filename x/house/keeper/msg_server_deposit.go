@@ -8,17 +8,19 @@ import (
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// Deposit defines a method for performing a deposit of coins to become part of the house correspondifg to a market.
-func (k msgServer) Deposit(goCtx context.Context, msg *types.MsgDeposit) (*types.MsgDepositResponse, error) {
+// Deposit performs deposit operation to participate as a house in a specific market/order book
+func (k msgServer) Deposit(goCtx context.Context,
+	msg *types.MsgDeposit,
+) (*types.MsgDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := k.validateDeposit(ctx, msg); err != nil {
-		return nil, sdkerrors.Wrap(err, "validate deposit")
+		return nil, sdkerrors.Wrap(err, "invalid deposit")
 	}
 
 	participationIndex, err := k.Keeper.Deposit(ctx, msg.Creator, msg.MarketUID, msg.Amount)
 	if err != nil {
-		return nil, sdkerrors.Wrap(err, "process deposit")
+		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
 
 	return &types.MsgDepositResponse{

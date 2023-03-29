@@ -10,10 +10,10 @@ import (
 
 // House params default values
 const (
-	// Default minimum deposit acceptable.
+	// DefaultMinDeposit is default minimum deposit acceptable.
 	DefaultMinDeposit int64 = 100
 
-	// Default house participation fee.
+	// DefaultHouseParticipationFee is default house participation fee.
 	DefaultHouseParticipationFee string = "0.1"
 )
 
@@ -22,7 +22,7 @@ var (
 	KeyHouseParticipationFee = []byte("HouseParticipationFee")
 )
 
-// ParamTable for house module
+// ParamKeyTable for house module
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
@@ -35,7 +35,7 @@ func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 	}
 }
 
-// Implements params.ParamSet
+// ParamSetPairs implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinDeposit, validateMinimumDeposit),
@@ -51,7 +51,7 @@ func DefaultParams() Params {
 	)
 }
 
-// String returns a human readable string representation of the parameters.
+// String returns a human-readable string representation of the parameters.
 func (p Params) String() string {
 	out, err := yaml.Marshal(p)
 	if err != nil {
@@ -60,7 +60,7 @@ func (p Params) String() string {
 	return string(out)
 }
 
-// validate a set of params
+// Validate a set of params
 func (p Params) Validate() error {
 	if err := validateMinimumDeposit(p.MinDeposit); err != nil {
 		return err
@@ -73,6 +73,7 @@ func (p Params) Validate() error {
 	return nil
 }
 
+// validateMinimumDeposit performs a minimum acceptable deposit validation
 func validateMinimumDeposit(i interface{}) error {
 	v, ok := i.(sdk.Int)
 	if !ok {
@@ -86,6 +87,7 @@ func validateMinimumDeposit(i interface{}) error {
 	return nil
 }
 
+// validateHouseParticipationFee performs validation of house participation fee
 func validateHouseParticipationFee(i interface{}) error {
 	v, ok := i.(sdk.Dec)
 	if !ok {

@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// keeper of the house store
+// Keeper of the house store
 type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        codec.BinaryCodec
@@ -16,9 +16,9 @@ type Keeper struct {
 	paramstore paramtypes.Subspace
 }
 
-// NewKeeper creates a new house Keeper instance
+// NewKeeper returns an instance of the housekeeper
 func NewKeeper(cdc codec.BinaryCodec, key sdk.StoreKey, srKeeper types.SRKeeper, ps paramtypes.Subspace) *Keeper {
-	// set KeyTable if it has not already been set
+	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}

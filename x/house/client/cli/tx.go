@@ -19,7 +19,7 @@ func NewTxCmd() *cobra.Command {
 
 	houseTxCmd.AddCommand(
 		CmdDeposit(),
-		CmdWithdrawal(),
+		CmdWithdraw(),
 	)
 
 	return houseTxCmd

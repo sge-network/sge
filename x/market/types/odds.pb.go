@@ -23,7 +23,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Odds is a representation ofmarket odds.
+// Odds is a representation of market odds.
 type Odds struct {
 	// uid is the universal unique identifier of the odds.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`

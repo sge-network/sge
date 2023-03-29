@@ -10,7 +10,7 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 
 // GenesisState defines the house module's genesis state.
 message GenesisState {
-  // params defines all the parameters related to deposit.
+  // params defines the parameters of the house module at genesis
   Params params = 1 [ (gogoproto.nullable) = false ];
 
   // deposit_list defines the deposits active at genesis.

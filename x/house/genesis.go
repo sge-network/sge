@@ -27,7 +27,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	var err error
-	genesis.DepositList, err = k.GetAllDeposits(ctx)
+	genesis.DepositList, err = k.GetDeposits(ctx)
 	if err != nil {
 		panic(err)
 	}

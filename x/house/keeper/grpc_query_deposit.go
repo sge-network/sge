@@ -21,7 +21,7 @@ func (k Keeper) Deposits(c context.Context, req *types.QueryDepositsRequest) (*t
 	var deposits []types.Deposit
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := k.getDepositsStore(ctx)
+	store := k.getDepositStore(ctx)
 	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
@@ -38,8 +38,10 @@ func (k Keeper) Deposits(c context.Context, req *types.QueryDepositsRequest) (*t
 	return &types.QueryDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
 }
 
-// DepositorDeposits queries all deposits of a give depositor address
-func (k Keeper) DepositorDeposits(c context.Context, req *types.QueryDepositorDepositsRequest) (*types.QueryDepositorDepositsResponse, error) {
+// DepositsByAccount returns all deposits of a given account address
+func (k Keeper) DepositsByAccount(c context.Context,
+	req *types.QueryDepositsByAccountRequest,
+) (*types.QueryDepositsByAccountResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -47,7 +49,7 @@ func (k Keeper) DepositorDeposits(c context.Context, req *types.QueryDepositorDe
 	var deposits []types.Deposit
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(k.getDepositsStore(ctx), types.GetDepositListPrefix(req.DepositorAddress))
+	store := prefix.NewStore(k.getDepositStore(ctx), types.GetDepositListPrefix(req.Address))
 	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
@@ -61,5 +63,5 @@ func (k Keeper) DepositorDeposits(c context.Context, req *types.QueryDepositorDe
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryDepositorDepositsResponse{Deposits: deposits, Pagination: pageRes}, nil
+	return &types.QueryDepositsByAccountResponse{Deposits: deposits, Pagination: pageRes}, nil
 }

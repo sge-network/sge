@@ -12,11 +12,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryDepsoits implements the query all deposits command.
-func GetCmdQueryDepsoits() *cobra.Command {
+// GetCmdQueryDeposits implements the query deposits command.
+func GetCmdQueryDeposits() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposits",
-		Short: "Query for all deposits",
+		Short: "Query for all deposits in the house",
 		Args:  cobra.NoArgs,
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about all deposits on a network.
@@ -55,18 +55,18 @@ $ %s query house deposits
 	return cmd
 }
 
-// GetCmdQueryDepositorDepsoits implements the command to query all the deposits made from one depositor.
-func GetCmdQueryDepositorDepsoits() *cobra.Command {
+// GetCmdQueryDepositsByAccount implements the command to query all the deposits made from one address.
+func GetCmdQueryDepositsByAccount() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "depositor-deposits [depositor-addr]",
-		Short: "Query all deposits made by one depositor",
+		Use:   "deposits-by-account [account]",
+		Short: "Query all deposits made by one account",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query deposits for an individual depositor on all houses.
+			fmt.Sprintf(`Query deposits for an individual account on all houses.
 
 Example:
-$ %s query house depositor-deposits %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
+$ %s query house deposits-by-account %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 `,
 				version.AppName, bech32PrefixAccAddr,
 			),
@@ -89,12 +89,12 @@ $ %s query house depositor-deposits %s1gghjut3ccd8ay0zduzj64hwre2fxs9ld75ru9p
 				return err
 			}
 
-			params := &types.QueryDepositorDepositsRequest{
-				DepositorAddress: depAddr.String(),
-				Pagination:       pageReq,
+			params := &types.QueryDepositsByAccountRequest{
+				Address:    depAddr.String(),
+				Pagination: pageReq,
 			}
 
-			res, err := queryClient.DepositorDeposits(cmd.Context(), params)
+			res, err := queryClient.DepositsByAccount(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
