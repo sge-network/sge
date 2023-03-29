@@ -60,8 +60,8 @@ func GetCmdQueryDepositsByAccount() *cobra.Command {
 	bech32PrefixAccAddr := sdk.GetConfig().GetBech32AccountAddrPrefix()
 
 	cmd := &cobra.Command{
-		Use:   "deposits-by-address [address]",
-		Short: "Query all deposits made by one address",
+		Use:   "deposits-by-account [account]",
+		Short: "Query all deposits made by one account",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query deposits for an individual account on all houses.
 
