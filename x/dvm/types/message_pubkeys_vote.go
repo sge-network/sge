@@ -1,8 +1,6 @@
 package types
 
 import (
-	"strings"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -13,11 +11,11 @@ const typeMsgVotePubkeysChange = "pubkeys_change_vote"
 var _ sdk.Msg = &MsgVotePubkeysChangeRequest{}
 
 // MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
-func NewMsgVotePubkeysChangeRequest(creator, ticket, pubkey string) *MsgVotePubkeysChangeRequest {
+func NewMsgVotePubkeysChangeRequest(creator, ticket string, voterIndex uint32) *MsgVotePubkeysChangeRequest {
 	return &MsgVotePubkeysChangeRequest{
-		Creator:   creator,
-		Ticket:    ticket,
-		PublicKey: pubkey,
+		Creator:       creator,
+		Ticket:        ticket,
+		VoterKeyIndex: voterIndex,
 	}
 }
 
@@ -51,10 +49,6 @@ func (msg *MsgVotePubkeysChangeRequest) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	if strings.TrimSpace(msg.PublicKey) == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "public key is a mandatory propery")
 	}
 
 	return nil

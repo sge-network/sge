@@ -200,28 +200,25 @@ func (m *QueryPubKeysResponse) GetList() []string {
 	return nil
 }
 
-// QueryActivePublicKeysChangeProposalRequest is the request type for the
-// Query/ActivePublicKeysChangeProposal RPC method.
-type QueryActivePublicKeysChangeProposalRequest struct {
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+// QueryPublicKeysChangeProposalRequest is the request type for the
+// Query/PublicKeysChangeProposal RPC method.
+type QueryPublicKeysChangeProposalRequest struct {
+	Id     uint64         `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status ProposalStatus `protobuf:"varint,2,opt,name=status,proto3,enum=sgenetwork.sge.dvm.ProposalStatus" json:"status,omitempty"`
 }
 
-func (m *QueryActivePublicKeysChangeProposalRequest) Reset() {
-	*m = QueryActivePublicKeysChangeProposalRequest{}
-}
-func (m *QueryActivePublicKeysChangeProposalRequest) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryActivePublicKeysChangeProposalRequest) ProtoMessage() {}
-func (*QueryActivePublicKeysChangeProposalRequest) Descriptor() ([]byte, []int) {
+func (m *QueryPublicKeysChangeProposalRequest) Reset()         { *m = QueryPublicKeysChangeProposalRequest{} }
+func (m *QueryPublicKeysChangeProposalRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPublicKeysChangeProposalRequest) ProtoMessage()    {}
+func (*QueryPublicKeysChangeProposalRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cfb9990f7b27fb76, []int{4}
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryPublicKeysChangeProposalRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPublicKeysChangeProposalRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryActivePublicKeysChangeProposalRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPublicKeysChangeProposalRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -231,48 +228,51 @@ func (m *QueryActivePublicKeysChangeProposalRequest) XXX_Marshal(b []byte, deter
 		return b[:n], nil
 	}
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalRequest.Merge(m, src)
+func (m *QueryPublicKeysChangeProposalRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPublicKeysChangeProposalRequest.Merge(m, src)
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) XXX_Size() int {
+func (m *QueryPublicKeysChangeProposalRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalRequest.DiscardUnknown(m)
+func (m *QueryPublicKeysChangeProposalRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPublicKeysChangeProposalRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryActivePublicKeysChangeProposalRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryPublicKeysChangeProposalRequest proto.InternalMessageInfo
 
-func (m *QueryActivePublicKeysChangeProposalRequest) GetId() uint64 {
+func (m *QueryPublicKeysChangeProposalRequest) GetId() uint64 {
 	if m != nil {
 		return m.Id
 	}
 	return 0
 }
 
-// QueryActivePublicKeysChangeProposalResponse is the response type for the
-// Query/ActivePublicKeysChangeProposal RPC method.
-type QueryActivePublicKeysChangeProposalResponse struct {
-	// proposal holds the active proposal.
+func (m *QueryPublicKeysChangeProposalRequest) GetStatus() ProposalStatus {
+	if m != nil {
+		return m.Status
+	}
+	return ProposalStatus_PROPOSAL_STATUS_UNSPECIFIED
+}
+
+// QueryPublicKeysChangeProposalResponse is the response type for the
+// Query/PublicKeysChangeProposal RPC method.
+type QueryPublicKeysChangeProposalResponse struct {
+	// proposal holds the proposal.
 	Proposal PublicKeysChangeProposal `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal"`
 }
 
-func (m *QueryActivePublicKeysChangeProposalResponse) Reset() {
-	*m = QueryActivePublicKeysChangeProposalResponse{}
-}
-func (m *QueryActivePublicKeysChangeProposalResponse) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryActivePublicKeysChangeProposalResponse) ProtoMessage() {}
-func (*QueryActivePublicKeysChangeProposalResponse) Descriptor() ([]byte, []int) {
+func (m *QueryPublicKeysChangeProposalResponse) Reset()         { *m = QueryPublicKeysChangeProposalResponse{} }
+func (m *QueryPublicKeysChangeProposalResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryPublicKeysChangeProposalResponse) ProtoMessage()    {}
+func (*QueryPublicKeysChangeProposalResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cfb9990f7b27fb76, []int{5}
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryPublicKeysChangeProposalResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPublicKeysChangeProposalResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryActivePublicKeysChangeProposalResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPublicKeysChangeProposalResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -282,47 +282,44 @@ func (m *QueryActivePublicKeysChangeProposalResponse) XXX_Marshal(b []byte, dete
 		return b[:n], nil
 	}
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalResponse.Merge(m, src)
+func (m *QueryPublicKeysChangeProposalResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPublicKeysChangeProposalResponse.Merge(m, src)
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) XXX_Size() int {
+func (m *QueryPublicKeysChangeProposalResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalResponse.DiscardUnknown(m)
+func (m *QueryPublicKeysChangeProposalResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPublicKeysChangeProposalResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryActivePublicKeysChangeProposalResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryPublicKeysChangeProposalResponse proto.InternalMessageInfo
 
-func (m *QueryActivePublicKeysChangeProposalResponse) GetProposal() PublicKeysChangeProposal {
+func (m *QueryPublicKeysChangeProposalResponse) GetProposal() PublicKeysChangeProposal {
 	if m != nil {
 		return m.Proposal
 	}
 	return PublicKeysChangeProposal{}
 }
 
-// QueryActivePublicKeysChangeProposalsRequest is the request type for the
-// Query/ActivePublicKeysChangeProposals RPC method.
-type QueryActivePublicKeysChangeProposalsRequest struct {
+// QueryPublicKeysChangeProposalsRequest is the request type for the
+// Query/PublicKeysChangeProposals RPC method.
+type QueryPublicKeysChangeProposalsRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
+	Status     ProposalStatus     `protobuf:"varint,2,opt,name=status,proto3,enum=sgenetwork.sge.dvm.ProposalStatus" json:"status,omitempty"`
 }
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) Reset() {
-	*m = QueryActivePublicKeysChangeProposalsRequest{}
-}
-func (m *QueryActivePublicKeysChangeProposalsRequest) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryActivePublicKeysChangeProposalsRequest) ProtoMessage() {}
-func (*QueryActivePublicKeysChangeProposalsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryPublicKeysChangeProposalsRequest) Reset()         { *m = QueryPublicKeysChangeProposalsRequest{} }
+func (m *QueryPublicKeysChangeProposalsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryPublicKeysChangeProposalsRequest) ProtoMessage()    {}
+func (*QueryPublicKeysChangeProposalsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cfb9990f7b27fb76, []int{6}
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryPublicKeysChangeProposalsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryActivePublicKeysChangeProposalsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -332,49 +329,54 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, dete
 		return b[:n], nil
 	}
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalsRequest.Merge(m, src)
+func (m *QueryPublicKeysChangeProposalsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.Merge(m, src)
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_Size() int {
+func (m *QueryPublicKeysChangeProposalsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalsRequest.DiscardUnknown(m)
+func (m *QueryPublicKeysChangeProposalsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryActivePublicKeysChangeProposalsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryPublicKeysChangeProposalsRequest proto.InternalMessageInfo
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) GetPagination() *query.PageRequest {
+func (m *QueryPublicKeysChangeProposalsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryActivePublicKeysChangeProposalsResponse is the response type for the
-// Query/ActivePublicKeysChangeProposals RPC method.
-type QueryActivePublicKeysChangeProposalsResponse struct {
-	// proposals hold the active proposals.
+func (m *QueryPublicKeysChangeProposalsRequest) GetStatus() ProposalStatus {
+	if m != nil {
+		return m.Status
+	}
+	return ProposalStatus_PROPOSAL_STATUS_UNSPECIFIED
+}
+
+// QueryPublicKeysChangeProposalsResponse is the response type for the
+// Query/PublicKeysChangeProposals RPC method.
+type QueryPublicKeysChangeProposalsResponse struct {
+	// proposals hold the proposals.
 	Proposals  []PublicKeysChangeProposal `protobuf:"bytes,1,rep,name=proposals,proto3" json:"proposals"`
 	Pagination *query.PageResponse        `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) Reset() {
-	*m = QueryActivePublicKeysChangeProposalsResponse{}
+func (m *QueryPublicKeysChangeProposalsResponse) Reset() {
+	*m = QueryPublicKeysChangeProposalsResponse{}
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryActivePublicKeysChangeProposalsResponse) ProtoMessage() {}
-func (*QueryActivePublicKeysChangeProposalsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryPublicKeysChangeProposalsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryPublicKeysChangeProposalsResponse) ProtoMessage()    {}
+func (*QueryPublicKeysChangeProposalsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_cfb9990f7b27fb76, []int{7}
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryPublicKeysChangeProposalsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryPublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryActivePublicKeysChangeProposalsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -384,236 +386,26 @@ func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, det
 		return b[:n], nil
 	}
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalsResponse.Merge(m, src)
+func (m *QueryPublicKeysChangeProposalsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.Merge(m, src)
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_Size() int {
+func (m *QueryPublicKeysChangeProposalsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryActivePublicKeysChangeProposalsResponse.DiscardUnknown(m)
+func (m *QueryPublicKeysChangeProposalsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryActivePublicKeysChangeProposalsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryPublicKeysChangeProposalsResponse proto.InternalMessageInfo
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) GetProposals() []PublicKeysChangeProposal {
+func (m *QueryPublicKeysChangeProposalsResponse) GetProposals() []PublicKeysChangeProposal {
 	if m != nil {
 		return m.Proposals
 	}
 	return nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-// FinishedPublicKeysChangeProposal is the request type for the
-// Query/FinishedPublicKeysChangeProposal RPC method.
-type QueryFinishedPublicKeysChangeProposalRequest struct {
-	Id uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalRequest) Reset() {
-	*m = QueryFinishedPublicKeysChangeProposalRequest{}
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryFinishedPublicKeysChangeProposalRequest) ProtoMessage() {}
-func (*QueryFinishedPublicKeysChangeProposalRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cfb9990f7b27fb76, []int{8}
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryFinishedPublicKeysChangeProposalRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalRequest.Merge(m, src)
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryFinishedPublicKeysChangeProposalRequest proto.InternalMessageInfo
-
-func (m *QueryFinishedPublicKeysChangeProposalRequest) GetId() uint64 {
-	if m != nil {
-		return m.Id
-	}
-	return 0
-}
-
-// FinishedPublicKeysChangeProposal is the response type for the
-// Query/FinishedPublicKeysChangeProposal RPC method.
-type QueryFinishedPublicKeysChangeProposalResponse struct {
-	// proposal holds the finished proposal.
-	Proposal PublicKeysChangeFinishedProposal `protobuf:"bytes,1,opt,name=proposal,proto3" json:"proposal"`
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) Reset() {
-	*m = QueryFinishedPublicKeysChangeProposalResponse{}
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryFinishedPublicKeysChangeProposalResponse) ProtoMessage() {}
-func (*QueryFinishedPublicKeysChangeProposalResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cfb9990f7b27fb76, []int{9}
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryFinishedPublicKeysChangeProposalResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalResponse.Merge(m, src)
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryFinishedPublicKeysChangeProposalResponse proto.InternalMessageInfo
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) GetProposal() PublicKeysChangeFinishedProposal {
-	if m != nil {
-		return m.Proposal
-	}
-	return PublicKeysChangeFinishedProposal{}
-}
-
-// QueryFinishedPublicKeysChangeProposalsRequest is the request type for the
-// Query/FinishedPublicKeysChangeProposals RPC method.
-type QueryFinishedPublicKeysChangeProposalsRequest struct {
-	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) Reset() {
-	*m = QueryFinishedPublicKeysChangeProposalsRequest{}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryFinishedPublicKeysChangeProposalsRequest) ProtoMessage() {}
-func (*QueryFinishedPublicKeysChangeProposalsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cfb9990f7b27fb76, []int{10}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsRequest.Merge(m, src)
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsRequest proto.InternalMessageInfo
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-// QueryFinishedPublicKeysChangeProposalsResponse is the response type for the
-// Query/FinishedPublicKeysChangeProposals RPC method.
-type QueryFinishedPublicKeysChangeProposalsResponse struct {
-	// proposals hold the finished proposals.
-	Proposals  []PublicKeysChangeFinishedProposal `protobuf:"bytes,1,rep,name=proposals,proto3" json:"proposals"`
-	Pagination *query.PageResponse                `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) Reset() {
-	*m = QueryFinishedPublicKeysChangeProposalsResponse{}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) String() string {
-	return proto.CompactTextString(m)
-}
-func (*QueryFinishedPublicKeysChangeProposalsResponse) ProtoMessage() {}
-func (*QueryFinishedPublicKeysChangeProposalsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_cfb9990f7b27fb76, []int{11}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsResponse.Merge(m, src)
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryFinishedPublicKeysChangeProposalsResponse proto.InternalMessageInfo
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) GetProposals() []PublicKeysChangeFinishedProposal {
-	if m != nil {
-		return m.Proposals
-	}
-	return nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) GetPagination() *query.PageResponse {
+func (m *QueryPublicKeysChangeProposalsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -625,64 +417,55 @@ func init() {
 	proto.RegisterType((*QueryParamsResponse)(nil), "sgenetwork.sge.dvm.QueryParamsResponse")
 	proto.RegisterType((*QueryPubKeysRequest)(nil), "sgenetwork.sge.dvm.QueryPubKeysRequest")
 	proto.RegisterType((*QueryPubKeysResponse)(nil), "sgenetwork.sge.dvm.QueryPubKeysResponse")
-	proto.RegisterType((*QueryActivePublicKeysChangeProposalRequest)(nil), "sgenetwork.sge.dvm.QueryActivePublicKeysChangeProposalRequest")
-	proto.RegisterType((*QueryActivePublicKeysChangeProposalResponse)(nil), "sgenetwork.sge.dvm.QueryActivePublicKeysChangeProposalResponse")
-	proto.RegisterType((*QueryActivePublicKeysChangeProposalsRequest)(nil), "sgenetwork.sge.dvm.QueryActivePublicKeysChangeProposalsRequest")
-	proto.RegisterType((*QueryActivePublicKeysChangeProposalsResponse)(nil), "sgenetwork.sge.dvm.QueryActivePublicKeysChangeProposalsResponse")
-	proto.RegisterType((*QueryFinishedPublicKeysChangeProposalRequest)(nil), "sgenetwork.sge.dvm.QueryFinishedPublicKeysChangeProposalRequest")
-	proto.RegisterType((*QueryFinishedPublicKeysChangeProposalResponse)(nil), "sgenetwork.sge.dvm.QueryFinishedPublicKeysChangeProposalResponse")
-	proto.RegisterType((*QueryFinishedPublicKeysChangeProposalsRequest)(nil), "sgenetwork.sge.dvm.QueryFinishedPublicKeysChangeProposalsRequest")
-	proto.RegisterType((*QueryFinishedPublicKeysChangeProposalsResponse)(nil), "sgenetwork.sge.dvm.QueryFinishedPublicKeysChangeProposalsResponse")
+	proto.RegisterType((*QueryPublicKeysChangeProposalRequest)(nil), "sgenetwork.sge.dvm.QueryPublicKeysChangeProposalRequest")
+	proto.RegisterType((*QueryPublicKeysChangeProposalResponse)(nil), "sgenetwork.sge.dvm.QueryPublicKeysChangeProposalResponse")
+	proto.RegisterType((*QueryPublicKeysChangeProposalsRequest)(nil), "sgenetwork.sge.dvm.QueryPublicKeysChangeProposalsRequest")
+	proto.RegisterType((*QueryPublicKeysChangeProposalsResponse)(nil), "sgenetwork.sge.dvm.QueryPublicKeysChangeProposalsResponse")
 }
 
 func init() { proto.RegisterFile("sge/dvm/query.proto", fileDescriptor_cfb9990f7b27fb76) }
 
 var fileDescriptor_cfb9990f7b27fb76 = []byte{
-	// 700 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x96, 0xcf, 0x4f, 0xd4, 0x40,
-	0x14, 0xc7, 0x77, 0x56, 0x44, 0x18, 0x13, 0x0d, 0x8f, 0x55, 0xb1, 0x31, 0x05, 0x4a, 0x60, 0xf9,
-	0xd9, 0x06, 0xf4, 0xe0, 0xc1, 0x20, 0x60, 0x82, 0x07, 0x13, 0x5d, 0xf7, 0x60, 0x8c, 0x17, 0xd2,
-	0xee, 0x8e, 0xa5, 0x61, 0xb7, 0x53, 0x76, 0xda, 0x45, 0x62, 0xb8, 0x78, 0xf1, 0x6a, 0xe2, 0x3f,
-	0x85, 0x17, 0x25, 0xe1, 0x20, 0x27, 0x63, 0xc0, 0x3f, 0xc4, 0x74, 0xfa, 0x5a, 0x6c, 0x96, 0xa5,
-	0x75, 0x57, 0x6f, 0x9b, 0x99, 0xf7, 0xbe, 0xef, 0xfb, 0x79, 0xf3, 0xfa, 0xb2, 0x74, 0x54, 0xd8,
-	0xcc, 0xa8, 0xb7, 0x9b, 0xc6, 0x6e, 0xc0, 0x5a, 0xfb, 0xba, 0xd7, 0xe2, 0x3e, 0x07, 0x10, 0x36,
-	0x73, 0x99, 0xbf, 0xc7, 0x5b, 0x3b, 0xba, 0xb0, 0x99, 0x5e, 0x6f, 0x37, 0x95, 0x92, 0xcd, 0x6d,
-	0x2e, 0xaf, 0x8d, 0xf0, 0x57, 0x14, 0xa9, 0xcc, 0xd7, 0xb8, 0x68, 0x72, 0x61, 0x58, 0xa6, 0x60,
-	0x91, 0x84, 0xd1, 0x5e, 0xb6, 0x98, 0x6f, 0x2e, 0x1b, 0x9e, 0x69, 0x3b, 0xae, 0xe9, 0x3b, 0xdc,
-	0xc5, 0xd8, 0x7b, 0x36, 0xe7, 0x76, 0x83, 0x19, 0xa6, 0xe7, 0x18, 0xa6, 0xeb, 0x72, 0x5f, 0x5e,
-	0x0a, 0xbc, 0x2d, 0xc5, 0x46, 0x3c, 0xb3, 0x65, 0x36, 0xe3, 0xd3, 0xdb, 0xc9, 0x69, 0x8b, 0x7b,
-	0x5c, 0x98, 0x8d, 0xe8, 0x5c, 0x2b, 0x51, 0x78, 0x19, 0x56, 0xab, 0xc8, 0xe0, 0x2a, 0xdb, 0x0d,
-	0x98, 0xf0, 0xb5, 0x17, 0x74, 0x34, 0x75, 0x2a, 0x3c, 0xee, 0x0a, 0x06, 0x0f, 0xe9, 0x60, 0x24,
-	0x3a, 0x46, 0x26, 0xc8, 0xec, 0xf5, 0x15, 0x45, 0xef, 0xe4, 0xd3, 0xa3, 0x9c, 0x8d, 0x81, 0xc3,
-	0x1f, 0xe3, 0x85, 0x2a, 0xc6, 0x6b, 0xb7, 0x62, 0xc1, 0xc0, 0x7a, 0xc6, 0xf6, 0x93, 0x3a, 0xf3,
-	0xb4, 0x94, 0x3e, 0xc6, 0x42, 0x40, 0x07, 0x1a, 0x8e, 0xf0, 0xc7, 0xc8, 0xc4, 0x95, 0xd9, 0xe1,
-	0xaa, 0xfc, 0xad, 0x3d, 0xa2, 0xf3, 0x32, 0x76, 0xbd, 0xe6, 0x3b, 0x6d, 0x56, 0x09, 0xac, 0x86,
-	0x53, 0x0b, 0x93, 0x9e, 0x6c, 0x9b, 0xae, 0xcd, 0x2a, 0x88, 0x85, 0xca, 0x70, 0x83, 0x16, 0x9d,
-	0xba, 0xb4, 0x39, 0x50, 0x2d, 0x3a, 0x75, 0xed, 0x80, 0x2e, 0xe4, 0xca, 0x46, 0x03, 0xcf, 0xe9,
-	0x50, 0xdc, 0x28, 0x64, 0x5d, 0xbc, 0x90, 0xb5, 0x8b, 0x0e, 0xd2, 0x27, 0x1a, 0x5a, 0x90, 0xab,
-	0x7c, 0xdc, 0x17, 0xd8, 0xa4, 0xf4, 0xfc, 0xd5, 0xd1, 0xc0, 0x8c, 0x1e, 0x8d, 0x88, 0x1e, 0x8e,
-	0x88, 0x1e, 0x4d, 0x19, 0x8e, 0x88, 0x5e, 0x31, 0x6d, 0x86, 0xb9, 0xd5, 0x3f, 0x32, 0xb5, 0x2f,
-	0x84, 0x2e, 0xe6, 0xab, 0x8b, 0xdc, 0x15, 0x3a, 0x1c, 0x7b, 0x16, 0xb2, 0xfb, 0xbd, 0x81, 0x9f,
-	0x8b, 0xc0, 0xd3, 0x14, 0x4a, 0x51, 0xa2, 0x94, 0x33, 0x51, 0x22, 0x3b, 0x29, 0x96, 0x55, 0x44,
-	0xd9, 0x74, 0x5c, 0x47, 0x6c, 0xb3, 0xfa, 0xdf, 0x4e, 0xc0, 0x47, 0x42, 0x97, 0x72, 0x0a, 0x60,
-	0x33, 0x5e, 0x75, 0x0c, 0xc1, 0x83, 0x3c, 0xbd, 0x48, 0xf4, 0xbb, 0x0d, 0xc3, 0x5e, 0x4e, 0x23,
-	0xff, 0x7c, 0x1c, 0x8e, 0x09, 0xd5, 0xf3, 0x56, 0xc6, 0x1e, 0xbc, 0xee, 0x1c, 0x88, 0x7e, 0x9a,
-	0xf0, 0x1f, 0x06, 0x63, 0xe5, 0xeb, 0x10, 0xbd, 0x2a, 0xa9, 0xa0, 0x45, 0x07, 0xa3, 0xed, 0x03,
-	0x33, 0x17, 0x79, 0xec, 0x5c, 0x74, 0x4a, 0x39, 0x33, 0x2e, 0x2a, 0xa8, 0xdd, 0xf9, 0x70, 0xfc,
-	0xeb, 0x73, 0x71, 0x04, 0x6e, 0x1a, 0xe9, 0xf5, 0x0a, 0x7b, 0xf4, 0x1a, 0x6e, 0x2f, 0xb8, 0x44,
-	0x2c, 0xb5, 0xf6, 0x94, 0xd9, 0xec, 0x40, 0x2c, 0x7b, 0x57, 0x96, 0x1d, 0x85, 0x91, 0xf3, 0xb2,
-	0x81, 0xb5, 0xb5, 0x13, 0x56, 0x3b, 0x22, 0x54, 0xbd, 0xfc, 0xb3, 0x86, 0xd5, 0xae, 0x75, 0x72,
-	0x2d, 0x51, 0xe5, 0x71, 0xcf, 0xf9, 0x68, 0x7f, 0x49, 0xda, 0x2f, 0xc3, 0x74, 0x62, 0xdf, 0x94,
-	0x89, 0x5b, 0x5e, 0x60, 0x85, 0x10, 0x5b, 0xf1, 0x38, 0x18, 0xef, 0x9d, 0xfa, 0x01, 0x7c, 0x23,
-	0x74, 0x3c, 0x63, 0x53, 0x41, 0xaf, 0x9e, 0x92, 0xe6, 0xaf, 0xf5, 0x2e, 0x80, 0x54, 0x73, 0x92,
-	0x6a, 0x0a, 0x26, 0xb3, 0xa8, 0x04, 0x9c, 0x10, 0x3a, 0x91, 0xf5, 0xb1, 0x41, 0x77, 0x47, 0x39,
-	0x77, 0x9d, 0xb2, 0xde, 0x87, 0x02, 0x42, 0x19, 0x12, 0x6a, 0x0e, 0xca, 0x09, 0xd4, 0x5b, 0x4c,
-	0xed, 0xf2, 0x58, 0xdf, 0x09, 0x9d, 0xcc, 0xdc, 0x23, 0xd0, 0xbb, 0xb3, 0xe4, 0xc1, 0x36, 0xfa,
-	0x91, 0x40, 0xba, 0x05, 0x49, 0x37, 0x0d, 0x53, 0xd9, 0x74, 0x62, 0x63, 0xed, 0xf0, 0x54, 0x25,
-	0x47, 0xa7, 0x2a, 0xf9, 0x79, 0xaa, 0x92, 0x4f, 0x67, 0x6a, 0xe1, 0xe8, 0x4c, 0x2d, 0x9c, 0x9c,
-	0xa9, 0x85, 0x37, 0x33, 0xb6, 0xe3, 0x6f, 0x07, 0x96, 0x5e, 0xe3, 0xcd, 0x50, 0x68, 0x09, 0x5d,
-	0x49, 0xd1, 0x77, 0x52, 0xd6, 0xdf, 0xf7, 0x98, 0xb0, 0x06, 0xe5, 0x9f, 0xab, 0xfb, 0xbf, 0x03,
-	0x00, 0x00, 0xff, 0xff, 0x0c, 0xa7, 0xc1, 0xfe, 0x15, 0x0a, 0x00, 0x00,
+	// 609 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x54, 0x4d, 0x6f, 0xd3, 0x40,
+	0x10, 0x8d, 0x43, 0x08, 0x74, 0x91, 0x8a, 0xba, 0x0d, 0x90, 0x5a, 0xc8, 0x54, 0x86, 0x26, 0xa1,
+	0x80, 0x57, 0x0d, 0x97, 0xd2, 0x13, 0x2a, 0x12, 0x1c, 0x90, 0x20, 0x98, 0x1b, 0x97, 0x6a, 0x9d,
+	0xac, 0xb6, 0x56, 0x13, 0xaf, 0xeb, 0x5d, 0x27, 0x44, 0x55, 0x2f, 0xfc, 0x02, 0x24, 0x7e, 0x06,
+	0x3f, 0x02, 0x24, 0x2e, 0x3d, 0x56, 0xe2, 0xc2, 0x09, 0xa1, 0x84, 0x3f, 0xc1, 0x0d, 0x79, 0x77,
+	0x9d, 0x0f, 0x35, 0x89, 0x45, 0xb8, 0x45, 0xb3, 0x6f, 0xde, 0x7b, 0xf3, 0x3c, 0x13, 0xb0, 0xce,
+	0x29, 0x41, 0xad, 0x6e, 0x07, 0x1d, 0xc7, 0x24, 0xea, 0x3b, 0x61, 0xc4, 0x04, 0x83, 0x90, 0x53,
+	0x12, 0x10, 0xd1, 0x63, 0xd1, 0x91, 0xc3, 0x29, 0x71, 0x5a, 0xdd, 0x8e, 0x59, 0xa2, 0x8c, 0x32,
+	0xf9, 0x8c, 0x92, 0x5f, 0x0a, 0x69, 0x6e, 0x37, 0x19, 0xef, 0x30, 0x8e, 0x3c, 0xcc, 0x89, 0xa2,
+	0x40, 0xdd, 0x1d, 0x8f, 0x08, 0xbc, 0x83, 0x42, 0x4c, 0xfd, 0x00, 0x0b, 0x9f, 0x05, 0x1a, 0x7b,
+	0x9b, 0x32, 0x46, 0xdb, 0x04, 0xe1, 0xd0, 0x47, 0x38, 0x08, 0x98, 0x90, 0x8f, 0x5c, 0xbf, 0x96,
+	0x52, 0x23, 0x21, 0x8e, 0x70, 0x27, 0xad, 0xde, 0x1c, 0x55, 0x23, 0x16, 0x32, 0x8e, 0xdb, 0xaa,
+	0x6e, 0x97, 0x00, 0x7c, 0x93, 0xa8, 0x35, 0x24, 0xd8, 0x25, 0xc7, 0x31, 0xe1, 0xc2, 0x7e, 0x0d,
+	0xd6, 0xa7, 0xaa, 0x3c, 0x64, 0x01, 0x27, 0x70, 0x17, 0x14, 0x15, 0x69, 0xd9, 0xd8, 0x34, 0x6a,
+	0xd7, 0xea, 0xa6, 0x73, 0x71, 0x3e, 0x47, 0xf5, 0xec, 0x17, 0xce, 0x7e, 0xde, 0xc9, 0xb9, 0x1a,
+	0x6f, 0xdf, 0x48, 0x09, 0x63, 0xef, 0x25, 0xe9, 0x8f, 0x74, 0xb6, 0x41, 0x69, 0xba, 0xac, 0x85,
+	0x20, 0x28, 0xb4, 0x7d, 0x2e, 0xca, 0xc6, 0xe6, 0xa5, 0xda, 0x8a, 0x2b, 0x7f, 0xdb, 0x11, 0xb8,
+	0x97, 0x62, 0xdb, 0x7e, 0x33, 0x81, 0x3f, 0x3b, 0xc4, 0x01, 0x25, 0x0d, 0x3d, 0x90, 0xe6, 0x84,
+	0xab, 0x20, 0xef, 0xb7, 0xa4, 0xc1, 0x82, 0x9b, 0xf7, 0x5b, 0x70, 0x0f, 0x14, 0xb9, 0xc0, 0x22,
+	0xe6, 0xe5, 0xfc, 0xa6, 0x51, 0x5b, 0xad, 0xdb, 0x33, 0x4d, 0x6b, 0x92, 0xb7, 0x12, 0xe9, 0xea,
+	0x0e, 0xbb, 0x07, 0xb6, 0x32, 0x34, 0xb5, 0xe1, 0x57, 0xe0, 0x6a, 0x1a, 0xac, 0xce, 0xe6, 0xe1,
+	0x4c, 0x99, 0x39, 0x3c, 0x3a, 0xad, 0x11, 0x87, 0xfd, 0xd9, 0xc8, 0x50, 0x4e, 0x23, 0x84, 0xcf,
+	0x01, 0x18, 0x2f, 0x88, 0xd6, 0xae, 0x38, 0x6a, 0x9b, 0x9c, 0x64, 0x9b, 0x1c, 0xb5, 0x90, 0x7a,
+	0x9b, 0x9c, 0x06, 0xa6, 0x44, 0xf7, 0xba, 0x13, 0x9d, 0xff, 0x15, 0xd3, 0x37, 0x03, 0x54, 0xb2,
+	0xdc, 0xea, 0xa0, 0x1a, 0x60, 0x25, 0x1d, 0x92, 0xcb, 0xcf, 0xbb, 0x5c, 0x52, 0x63, 0x12, 0xf8,
+	0x62, 0x2a, 0x80, 0xbc, 0x0c, 0xa0, 0x9a, 0x19, 0x80, 0xb2, 0x33, 0x99, 0x40, 0xfd, 0x4f, 0x01,
+	0x5c, 0x96, 0x53, 0xc0, 0x08, 0x14, 0xd5, 0x16, 0xc3, 0xca, 0x2c, 0x6f, 0x17, 0x0f, 0xc6, 0xac,
+	0x66, 0xe2, 0x94, 0xa0, 0x7d, 0xeb, 0xc3, 0xf7, 0xdf, 0x9f, 0xf2, 0x6b, 0xf0, 0x3a, 0x9a, 0x3e,
+	0x53, 0xd8, 0x03, 0x57, 0xf4, 0x15, 0xc0, 0x05, 0x64, 0x53, 0xe7, 0x63, 0xd6, 0xb2, 0x81, 0x5a,
+	0x76, 0x43, 0xca, 0xae, 0xc3, 0xb5, 0xb1, 0x6c, 0xec, 0x1d, 0x1c, 0x25, 0x6a, 0x5f, 0x0d, 0x50,
+	0x9e, 0x97, 0x36, 0xdc, 0x5d, 0xa4, 0xb0, 0xe8, 0x0c, 0xcd, 0x27, 0x4b, 0x74, 0x6a, 0xb3, 0x48,
+	0x9a, 0xbd, 0x0f, 0xab, 0x93, 0x66, 0x13, 0xaf, 0x07, 0xe9, 0x57, 0x47, 0x27, 0x6a, 0xf3, 0x4e,
+	0xd1, 0x89, 0xdf, 0x3a, 0x85, 0x5f, 0x0c, 0xb0, 0x31, 0x77, 0xf5, 0xe0, 0xbf, 0x3b, 0x19, 0x05,
+	0xbc, 0xb7, 0x4c, 0xab, 0x9e, 0xe2, 0x81, 0x9c, 0x62, 0x0b, 0xde, 0x9d, 0x3b, 0x05, 0x1f, 0x8d,
+	0xb1, 0xff, 0xf4, 0x6c, 0x60, 0x19, 0xe7, 0x03, 0xcb, 0xf8, 0x35, 0xb0, 0x8c, 0x8f, 0x43, 0x2b,
+	0x77, 0x3e, 0xb4, 0x72, 0x3f, 0x86, 0x56, 0xee, 0x5d, 0x85, 0xfa, 0xe2, 0x30, 0xf6, 0x9c, 0x26,
+	0xeb, 0x24, 0x44, 0x8f, 0xb4, 0x1b, 0x49, 0xfa, 0x5e, 0xd2, 0x8a, 0x7e, 0x48, 0xb8, 0x57, 0x94,
+	0xff, 0xe7, 0x8f, 0xff, 0x06, 0x00, 0x00, 0xff, 0xff, 0x30, 0x4f, 0x41, 0x29, 0x88, 0x06, 0x00,
+	0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -701,14 +484,10 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// Queries a list of PubKeys items.
 	PubKeys(ctx context.Context, in *QueryPubKeysRequest, opts ...grpc.CallOption) (*QueryPubKeysResponse, error)
-	// Queries an active proposal by id.
-	ActivePublicKeysChangeProposal(ctx context.Context, in *QueryActivePublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryActivePublicKeysChangeProposalResponse, error)
-	// Queries a list of active proposal items.
-	ActivePublicKeysChangeProposals(ctx context.Context, in *QueryActivePublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryActivePublicKeysChangeProposalsResponse, error)
-	// Queries a finished proposal by id.
-	FinishedPublicKeysChangeProposal(ctx context.Context, in *QueryFinishedPublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryFinishedPublicKeysChangeProposalResponse, error)
-	// Queries a list of finished proposal items.
-	FinishedPublicKeysChangeProposals(ctx context.Context, in *QueryFinishedPublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryFinishedPublicKeysChangeProposalsResponse, error)
+	// Queries an proposal by id and status.
+	PublicKeysChangeProposal(ctx context.Context, in *QueryPublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalResponse, error)
+	// Queries a list of proposal items by status.
+	PublicKeysChangeProposals(ctx context.Context, in *QueryPublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalsResponse, error)
 }
 
 type queryClient struct {
@@ -737,36 +516,18 @@ func (c *queryClient) PubKeys(ctx context.Context, in *QueryPubKeysRequest, opts
 	return out, nil
 }
 
-func (c *queryClient) ActivePublicKeysChangeProposal(ctx context.Context, in *QueryActivePublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryActivePublicKeysChangeProposalResponse, error) {
-	out := new(QueryActivePublicKeysChangeProposalResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/ActivePublicKeysChangeProposal", in, out, opts...)
+func (c *queryClient) PublicKeysChangeProposal(ctx context.Context, in *QueryPublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalResponse, error) {
+	out := new(QueryPublicKeysChangeProposalResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/PublicKeysChangeProposal", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) ActivePublicKeysChangeProposals(ctx context.Context, in *QueryActivePublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryActivePublicKeysChangeProposalsResponse, error) {
-	out := new(QueryActivePublicKeysChangeProposalsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/ActivePublicKeysChangeProposals", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) FinishedPublicKeysChangeProposal(ctx context.Context, in *QueryFinishedPublicKeysChangeProposalRequest, opts ...grpc.CallOption) (*QueryFinishedPublicKeysChangeProposalResponse, error) {
-	out := new(QueryFinishedPublicKeysChangeProposalResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/FinishedPublicKeysChangeProposal", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) FinishedPublicKeysChangeProposals(ctx context.Context, in *QueryFinishedPublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryFinishedPublicKeysChangeProposalsResponse, error) {
-	out := new(QueryFinishedPublicKeysChangeProposalsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/FinishedPublicKeysChangeProposals", in, out, opts...)
+func (c *queryClient) PublicKeysChangeProposals(ctx context.Context, in *QueryPublicKeysChangeProposalsRequest, opts ...grpc.CallOption) (*QueryPublicKeysChangeProposalsResponse, error) {
+	out := new(QueryPublicKeysChangeProposalsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.dvm.Query/PublicKeysChangeProposals", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -779,14 +540,10 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// Queries a list of PubKeys items.
 	PubKeys(context.Context, *QueryPubKeysRequest) (*QueryPubKeysResponse, error)
-	// Queries an active proposal by id.
-	ActivePublicKeysChangeProposal(context.Context, *QueryActivePublicKeysChangeProposalRequest) (*QueryActivePublicKeysChangeProposalResponse, error)
-	// Queries a list of active proposal items.
-	ActivePublicKeysChangeProposals(context.Context, *QueryActivePublicKeysChangeProposalsRequest) (*QueryActivePublicKeysChangeProposalsResponse, error)
-	// Queries a finished proposal by id.
-	FinishedPublicKeysChangeProposal(context.Context, *QueryFinishedPublicKeysChangeProposalRequest) (*QueryFinishedPublicKeysChangeProposalResponse, error)
-	// Queries a list of finished proposal items.
-	FinishedPublicKeysChangeProposals(context.Context, *QueryFinishedPublicKeysChangeProposalsRequest) (*QueryFinishedPublicKeysChangeProposalsResponse, error)
+	// Queries an proposal by id and status.
+	PublicKeysChangeProposal(context.Context, *QueryPublicKeysChangeProposalRequest) (*QueryPublicKeysChangeProposalResponse, error)
+	// Queries a list of proposal items by status.
+	PublicKeysChangeProposals(context.Context, *QueryPublicKeysChangeProposalsRequest) (*QueryPublicKeysChangeProposalsResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -799,17 +556,11 @@ func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsReq
 func (*UnimplementedQueryServer) PubKeys(ctx context.Context, req *QueryPubKeysRequest) (*QueryPubKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PubKeys not implemented")
 }
-func (*UnimplementedQueryServer) ActivePublicKeysChangeProposal(ctx context.Context, req *QueryActivePublicKeysChangeProposalRequest) (*QueryActivePublicKeysChangeProposalResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ActivePublicKeysChangeProposal not implemented")
+func (*UnimplementedQueryServer) PublicKeysChangeProposal(ctx context.Context, req *QueryPublicKeysChangeProposalRequest) (*QueryPublicKeysChangeProposalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublicKeysChangeProposal not implemented")
 }
-func (*UnimplementedQueryServer) ActivePublicKeysChangeProposals(ctx context.Context, req *QueryActivePublicKeysChangeProposalsRequest) (*QueryActivePublicKeysChangeProposalsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ActivePublicKeysChangeProposals not implemented")
-}
-func (*UnimplementedQueryServer) FinishedPublicKeysChangeProposal(ctx context.Context, req *QueryFinishedPublicKeysChangeProposalRequest) (*QueryFinishedPublicKeysChangeProposalResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FinishedPublicKeysChangeProposal not implemented")
-}
-func (*UnimplementedQueryServer) FinishedPublicKeysChangeProposals(ctx context.Context, req *QueryFinishedPublicKeysChangeProposalsRequest) (*QueryFinishedPublicKeysChangeProposalsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method FinishedPublicKeysChangeProposals not implemented")
+func (*UnimplementedQueryServer) PublicKeysChangeProposals(ctx context.Context, req *QueryPublicKeysChangeProposalsRequest) (*QueryPublicKeysChangeProposalsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PublicKeysChangeProposals not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -852,74 +603,38 @@ func _Query_PubKeys_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ActivePublicKeysChangeProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryActivePublicKeysChangeProposalRequest)
+func _Query_PublicKeysChangeProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPublicKeysChangeProposalRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ActivePublicKeysChangeProposal(ctx, in)
+		return srv.(QueryServer).PublicKeysChangeProposal(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.dvm.Query/ActivePublicKeysChangeProposal",
+		FullMethod: "/sgenetwork.sge.dvm.Query/PublicKeysChangeProposal",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ActivePublicKeysChangeProposal(ctx, req.(*QueryActivePublicKeysChangeProposalRequest))
+		return srv.(QueryServer).PublicKeysChangeProposal(ctx, req.(*QueryPublicKeysChangeProposalRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_ActivePublicKeysChangeProposals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryActivePublicKeysChangeProposalsRequest)
+func _Query_PublicKeysChangeProposals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryPublicKeysChangeProposalsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).ActivePublicKeysChangeProposals(ctx, in)
+		return srv.(QueryServer).PublicKeysChangeProposals(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.dvm.Query/ActivePublicKeysChangeProposals",
+		FullMethod: "/sgenetwork.sge.dvm.Query/PublicKeysChangeProposals",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ActivePublicKeysChangeProposals(ctx, req.(*QueryActivePublicKeysChangeProposalsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_FinishedPublicKeysChangeProposal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryFinishedPublicKeysChangeProposalRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).FinishedPublicKeysChangeProposal(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/sgenetwork.sge.dvm.Query/FinishedPublicKeysChangeProposal",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).FinishedPublicKeysChangeProposal(ctx, req.(*QueryFinishedPublicKeysChangeProposalRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_FinishedPublicKeysChangeProposals_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryFinishedPublicKeysChangeProposalsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).FinishedPublicKeysChangeProposals(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/sgenetwork.sge.dvm.Query/FinishedPublicKeysChangeProposals",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).FinishedPublicKeysChangeProposals(ctx, req.(*QueryFinishedPublicKeysChangeProposalsRequest))
+		return srv.(QueryServer).PublicKeysChangeProposals(ctx, req.(*QueryPublicKeysChangeProposalsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -937,20 +652,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_PubKeys_Handler,
 		},
 		{
-			MethodName: "ActivePublicKeysChangeProposal",
-			Handler:    _Query_ActivePublicKeysChangeProposal_Handler,
+			MethodName: "PublicKeysChangeProposal",
+			Handler:    _Query_PublicKeysChangeProposal_Handler,
 		},
 		{
-			MethodName: "ActivePublicKeysChangeProposals",
-			Handler:    _Query_ActivePublicKeysChangeProposals_Handler,
-		},
-		{
-			MethodName: "FinishedPublicKeysChangeProposal",
-			Handler:    _Query_FinishedPublicKeysChangeProposal_Handler,
-		},
-		{
-			MethodName: "FinishedPublicKeysChangeProposals",
-			Handler:    _Query_FinishedPublicKeysChangeProposals_Handler,
+			MethodName: "PublicKeysChangeProposals",
+			Handler:    _Query_PublicKeysChangeProposals_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1068,7 +775,7 @@ func (m *QueryPubKeysResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryPublicKeysChangeProposalRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1078,16 +785,21 @@ func (m *QueryActivePublicKeysChangeProposalRequest) Marshal() (dAtA []byte, err
 	return dAtA[:n], nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryActivePublicKeysChangeProposalRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
+	if m.Status != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x10
+	}
 	if m.Id != 0 {
 		i = encodeVarintQuery(dAtA, i, uint64(m.Id))
 		i--
@@ -1096,7 +808,7 @@ func (m *QueryActivePublicKeysChangeProposalRequest) MarshalToSizedBuffer(dAtA [
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryPublicKeysChangeProposalResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1106,12 +818,12 @@ func (m *QueryActivePublicKeysChangeProposalResponse) Marshal() (dAtA []byte, er
 	return dAtA[:n], nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryActivePublicKeysChangeProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1129,7 +841,7 @@ func (m *QueryActivePublicKeysChangeProposalResponse) MarshalToSizedBuffer(dAtA 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryPublicKeysChangeProposalsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1139,16 +851,21 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) Marshal() (dAtA []byte, er
 	return dAtA[:n], nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
+	if m.Status != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x10
+	}
 	if m.Pagination != nil {
 		{
 			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
@@ -1164,7 +881,7 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) MarshalToSizedBuffer(dAtA 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryPublicKeysChangeProposalsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1174,157 +891,12 @@ func (m *QueryActivePublicKeysChangeProposalsResponse) Marshal() (dAtA []byte, e
 	return dAtA[:n], nil
 }
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryActivePublicKeysChangeProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Proposals) > 0 {
-		for iNdEx := len(m.Proposals) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Proposals[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintQuery(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Id != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.Id))
-		i--
-		dAtA[i] = 0x8
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.Proposal.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintQuery(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryPublicKeysChangeProposalsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -1413,7 +985,7 @@ func (m *QueryPubKeysResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryActivePublicKeysChangeProposalRequest) Size() (n int) {
+func (m *QueryPublicKeysChangeProposalRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1422,10 +994,13 @@ func (m *QueryActivePublicKeysChangeProposalRequest) Size() (n int) {
 	if m.Id != 0 {
 		n += 1 + sovQuery(uint64(m.Id))
 	}
+	if m.Status != 0 {
+		n += 1 + sovQuery(uint64(m.Status))
+	}
 	return n
 }
 
-func (m *QueryActivePublicKeysChangeProposalResponse) Size() (n int) {
+func (m *QueryPublicKeysChangeProposalResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1436,7 +1011,7 @@ func (m *QueryActivePublicKeysChangeProposalResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryActivePublicKeysChangeProposalsRequest) Size() (n int) {
+func (m *QueryPublicKeysChangeProposalsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1446,65 +1021,13 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) Size() (n int) {
 		l = m.Pagination.Size()
 		n += 1 + l + sovQuery(uint64(l))
 	}
-	return n
-}
-
-func (m *QueryActivePublicKeysChangeProposalsResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.Proposals) > 0 {
-		for _, e := range m.Proposals {
-			l = e.Size()
-			n += 1 + l + sovQuery(uint64(l))
-		}
-	}
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
+	if m.Status != 0 {
+		n += 1 + sovQuery(uint64(m.Status))
 	}
 	return n
 }
 
-func (m *QueryFinishedPublicKeysChangeProposalRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Id != 0 {
-		n += 1 + sovQuery(uint64(m.Id))
-	}
-	return n
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.Proposal.Size()
-	n += 1 + l + sovQuery(uint64(l))
-	return n
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		l = m.Pagination.Size()
-		n += 1 + l + sovQuery(uint64(l))
-	}
-	return n
-}
-
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) Size() (n int) {
+func (m *QueryPublicKeysChangeProposalsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1794,7 +1317,7 @@ func (m *QueryPubKeysResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryActivePublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryPublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1817,10 +1340,10 @@ func (m *QueryActivePublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) erro
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1838,6 +1361,25 @@ func (m *QueryActivePublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) erro
 				b := dAtA[iNdEx]
 				iNdEx++
 				m.Id |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProposalStatus(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1863,7 +1405,7 @@ func (m *QueryActivePublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) erro
 	}
 	return nil
 }
-func (m *QueryActivePublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryPublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1886,10 +1428,10 @@ func (m *QueryActivePublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) err
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1946,7 +1488,7 @@ func (m *QueryActivePublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) err
 	}
 	return nil
 }
-func (m *QueryActivePublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryPublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1969,10 +1511,10 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) err
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2011,6 +1553,25 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) err
 				return err
 			}
 			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProposalStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])
@@ -2032,7 +1593,7 @@ func (m *QueryActivePublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) err
 	}
 	return nil
 }
-func (m *QueryActivePublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryPublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2055,10 +1616,10 @@ func (m *QueryActivePublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) er
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryActivePublicKeysChangeProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryPublicKeysChangeProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -2091,364 +1652,6 @@ func (m *QueryActivePublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) er
 				return io.ErrUnexpectedEOF
 			}
 			m.Proposals = append(m.Proposals, PublicKeysChangeProposal{})
-			if err := m.Proposals[len(m.Proposals)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageResponse{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryFinishedPublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
-			}
-			m.Id = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.Id |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryFinishedPublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Proposal", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Proposal.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryFinishedPublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalsRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageRequest{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryFinishedPublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalsResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryFinishedPublicKeysChangeProposalsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Proposals", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Proposals = append(m.Proposals, PublicKeysChangeFinishedProposal{})
 			if err := m.Proposals[len(m.Proposals)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

@@ -22,30 +22,23 @@ func TestGenesisState_Validate(t *testing.T) {
 		KeyVault: types.KeyVault{
 			PublicKeys: []string{pubKey1},
 		},
-		ActivePubkeysChangeProposals: []types.PublicKeysChangeProposal{
+		PubkeysChangeProposals: []types.PublicKeysChangeProposal{
 			{
 				Id:      1,
 				Creator: testAddress,
 				StartTS: time.Now().Unix(),
 				Modifications: types.PubkeysChangeProposalPayload{
-					Additions: []string{pubKey1},
-					Deletions: []string{},
+					PublicKeys:  []string{pubKey1},
+					LeaderIndex: 0,
 				},
-				Votes: []*types.Vote{&vote},
+				Votes:  []*types.Vote{&vote},
+				Status: types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			},
 		},
 		ProposalStats: types.ProposalStats{
 			PubkeysChangeCount: 1,
 		},
 		Params: types.DefaultParams(),
-	}
-
-	notEqualCount := validState
-	notEqualCount.ActivePubkeysChangeProposals = []types.PublicKeysChangeProposal{}
-
-	duplicateProposal := validState
-	duplicateProposal.FinishedPubkeysChangeProposals = []types.PublicKeysChangeFinishedProposal{
-		{Proposal: duplicateProposal.ActivePubkeysChangeProposals[0]},
 	}
 
 	for _, tc := range []struct {
@@ -62,16 +55,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc:     "valid genesis state",
 			genState: &validState,
 			valid:    true,
-		},
-		{
-			desc:     "not equal proposal count",
-			genState: &notEqualCount,
-			valid:    false,
-		},
-		{
-			desc:     "duplicate proposal",
-			genState: &duplicateProposal,
-			valid:    false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

@@ -15,14 +15,10 @@ message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   // key_vault trusted keys from genesis file.
   KeyVault key_vault = 2 [ (gogoproto.nullable) = false ];
-  // active_pubkeys_change_proposals is the finished proposal list for the
+  // pubkeys_change_proposals is the finished proposal list for the
   // public keys change.
-  repeated PublicKeysChangeProposal active_pubkeys_change_proposals = 3
+  repeated PublicKeysChangeProposal pubkeys_change_proposals = 3
       [ (gogoproto.nullable) = false ];
-  // finished_pubkeys_change_proposals is the active proposal list for the
-  // public keys change.
-  repeated PublicKeysChangeFinishedProposal finished_pubkeys_change_proposals =
-      4 [ (gogoproto.nullable) = false ];
   // proposal_stats holds the proposal statistics.
-  ProposalStats proposal_stats = 5 [ (gogoproto.nullable) = false ];
+  ProposalStats proposal_stats = 4 [ (gogoproto.nullable) = false ];
 }

@@ -12,11 +12,6 @@ import (
 // SubmitPubkeysChangeProposal is the main transaction of DVM to add or delete the keys to the chain.
 func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types.MsgSubmitPubkeysChangeProposalRequest) (*types.MsgSubmitPubkeysChangeProposalResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	keys, found := k.GetKeyVault(ctx)
-
-	if !found {
-		return nil, types.ErrNoPublicKeysFound
-	}
 
 	payload := types.PubkeysChangeProposalPayload{}
 	err := k.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload)
@@ -24,11 +19,10 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 		return nil, err
 	}
 
-	// remove duplicate additions and deletions
-	payload.Additions = utils.RemoveDuplicateStrs(payload.Additions)
-	payload.Deletions = utils.RemoveDuplicateStrs(payload.Deletions)
+	// remove duplicates in public keys
+	payload.PublicKeys = utils.RemoveDuplicateStrs(payload.PublicKeys)
 
-	err = payload.Validate(keys.PublicKeys)
+	err = payload.Validate(payload.PublicKeys, payload.LeaderIndex)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
@@ -36,8 +30,8 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	stats := k.GetProposalStats(ctx)
 	stats.PubkeysChangeCount++
 
-	// set active proposal
-	k.Keeper.SetActivePubkeysChangeProposal(ctx,
+	// set proposal
+	k.Keeper.SetPubkeysChangeProposal(ctx,
 		types.NewPublicKeysChangeProposal(
 			stats.PubkeysChangeCount,
 			msg.Creator,

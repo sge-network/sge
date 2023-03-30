@@ -11,20 +11,7 @@ func NewPublicKeysChangeProposal(
 		Creator:       creator,
 		Modifications: modifications,
 		StartTS:       startTS,
-	}
-}
-
-func NewFinishedPublicKeysChangeProposal(
-	proposal PublicKeysChangeProposal,
-	result ProposalResult,
-	resultMetadata string,
-	finishTS int64,
-) PublicKeysChangeFinishedProposal {
-	return PublicKeysChangeFinishedProposal{
-		Proposal:   proposal,
-		Result:     result,
-		ResultMeta: resultMetadata,
-		FinishTS:   finishTS,
+		Status:        ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 	}
 }
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
 )
 
 // Ticket is the Interface of ticket.
@@ -19,22 +20,18 @@ type Ticket interface {
 	ValidateExpiry(ctx sdk.Context) error
 }
 
-func (payload *PubkeysChangeProposalPayload) Validate(keys []string) error {
-	finalCount := len(keys) + len(payload.Additions) - len(payload.Deletions)
-	if finalCount < minPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", finalCount, minPubKeysCount)
+func (payload *PubkeysChangeProposalPayload) Validate(keys []string, leaderIndex uint32) error {
+	count := len(keys)
+	if count < minPubKeysCount {
+		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", count, minPubKeysCount)
 	}
 
-	if finalCount > maxPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", finalCount, minPubKeysCount)
+	if count > maxPubKeysCount {
+		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", count, minPubKeysCount)
 	}
 
-	// loop through additions and check if is a valid jwt token
-	for _, v := range payload.Additions {
-		// check if pem content is a valid ED25516 key
-		if err := IsValidJwtToken(v); err != nil {
-			return fmt.Errorf("public key %s is not valid jwt token %s", v, err)
-		}
+	if leaderIndex >= cast.ToUint32(count) {
+		return fmt.Errorf("leader index is out of range %d", leaderIndex)
 	}
 
 	return nil

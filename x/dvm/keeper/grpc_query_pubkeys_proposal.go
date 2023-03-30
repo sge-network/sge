@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/sge-network/sge/consts"
@@ -11,26 +12,27 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ActivePublicKeysChangeProposal returns a specific active proposal by its UID
-func (k Keeper) ActivePublicKeysChangeProposal(c context.Context, req *types.QueryActivePublicKeysChangeProposalRequest) (*types.QueryActivePublicKeysChangeProposalResponse, error) {
+// PublicKeysChangeProposal returns a specific proposal by its id and status
+func (k Keeper) PublicKeysChangeProposal(c context.Context, req *types.QueryPublicKeysChangeProposalRequest) (*types.QueryPublicKeysChangeProposalResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetActivePubkeysChangeProposal(
+	val, found := k.GetPubkeysChangeProposal(
 		ctx,
+		req.Status,
 		req.Id,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryActivePublicKeysChangeProposalResponse{Proposal: val}, nil
+	return &types.QueryPublicKeysChangeProposalResponse{Proposal: val}, nil
 }
 
-// ActivePublicKeysChangeProposal returns list of the active pubkeys change proposal
-func (k Keeper) ActivePublicKeysChangeProposals(goCtx context.Context, req *types.QueryActivePublicKeysChangeProposalsRequest) (*types.QueryActivePublicKeysChangeProposalsResponse, error) {
+// PublicKeysChangeProposals returns list of the pubkeys change proposal
+func (k Keeper) PublicKeysChangeProposals(goCtx context.Context, req *types.QueryPublicKeysChangeProposalsRequest) (*types.QueryPublicKeysChangeProposalsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -38,9 +40,10 @@ func (k Keeper) ActivePublicKeysChangeProposals(goCtx context.Context, req *type
 	var proposals []types.PublicKeysChangeProposal
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	MarketStore := k.getActivePubKeysChangeProposalStore(ctx)
+	marketStore := k.getPubKeysChangeProposalStore(ctx)
+	proposalStore := prefix.NewStore(marketStore, types.PubkeysChangeProposalPrefix(req.Status))
 
-	pageRes, err := query.Paginate(MarketStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(proposalStore, req.Pagination, func(key []byte, value []byte) error {
 		var proposal types.PublicKeysChangeProposal
 		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
 			return err
@@ -53,50 +56,5 @@ func (k Keeper) ActivePublicKeysChangeProposals(goCtx context.Context, req *type
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryActivePublicKeysChangeProposalsResponse{Proposals: proposals, Pagination: pageRes}, nil
-}
-
-// PublicKeysChangeProposal returns a specific finished proposal by its UID
-func (k Keeper) FinishedPublicKeysChangeProposal(c context.Context, req *types.QueryFinishedPublicKeysChangeProposalRequest) (*types.QueryFinishedPublicKeysChangeProposalResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
-	}
-	ctx := sdk.UnwrapSDKContext(c)
-
-	val, found := k.GetFinishedPubkeysChangeProposal(
-		ctx,
-		req.Id,
-	)
-	if !found {
-		return nil, status.Error(codes.NotFound, "not found")
-	}
-
-	return &types.QueryFinishedPublicKeysChangeProposalResponse{Proposal: val}, nil
-}
-
-// FinishedPublicKeysChangeProposal returns list of the finished pubkeys change proposal
-func (k Keeper) FinishedPublicKeysChangeProposals(goCtx context.Context, req *types.QueryFinishedPublicKeysChangeProposalsRequest) (*types.QueryFinishedPublicKeysChangeProposalsResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
-	}
-
-	var proposals []types.PublicKeysChangeFinishedProposal
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	MarketStore := k.getActivePubKeysChangeProposalStore(ctx)
-
-	pageRes, err := query.Paginate(MarketStore, req.Pagination, func(key []byte, value []byte) error {
-		var proposal types.PublicKeysChangeFinishedProposal
-		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
-			return err
-		}
-
-		proposals = append(proposals, proposal)
-		return nil
-	})
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &types.QueryFinishedPublicKeysChangeProposalsResponse{Proposals: proposals, Pagination: pageRes}, nil
+	return &types.QueryPublicKeysChangeProposalsResponse{Proposals: proposals, Pagination: pageRes}, nil
 }

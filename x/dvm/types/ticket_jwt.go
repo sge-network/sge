@@ -57,15 +57,19 @@ func (t *jwtTicket) Unmarshal(v interface{}) error {
 // Verify verifies the ticket signature with the given public keys. If the ticket is verified by any
 // of the keys, then return nil else return invalid signature error
 func (t *jwtTicket) Verify(pubKeys ...string) error {
-	for _, v := range pubKeys {
-		_, err := t.verifyWithKey(v)
-		if err == nil {
-			return nil
-		}
-		if err != ErrInvalidSignature {
-			return err
-		}
+	if len(pubKeys) == 0 {
+		return fmt.Errorf("no pubkeys available")
 	}
+
+	leaderKey := pubKeys[0]
+	_, err := t.verifyWithKey(leaderKey)
+	if err == nil {
+		return nil
+	}
+	if err != ErrInvalidSignature {
+		return err
+	}
+
 	return ErrInvalidSignature
 }
 

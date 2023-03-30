@@ -22,28 +22,39 @@ func TestActivePubkeysChangeProposalQuerySingle(t *testing.T) {
 	msgs := createNActiveProposal(k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryActivePublicKeysChangeProposalRequest
-		response *types.QueryActivePublicKeysChangeProposalResponse
+		request  *types.QueryPublicKeysChangeProposalRequest
+		response *types.QueryPublicKeysChangeProposalResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryActivePublicKeysChangeProposalRequest{
-				Id: msgs[0].Id,
+			request: &types.QueryPublicKeysChangeProposalRequest{
+				Id:     msgs[0].Id,
+				Status: types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			},
-			response: &types.QueryActivePublicKeysChangeProposalResponse{Proposal: msgs[0]},
+			response: &types.QueryPublicKeysChangeProposalResponse{Proposal: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryActivePublicKeysChangeProposalRequest{
-				Id: msgs[1].Id,
+			request: &types.QueryPublicKeysChangeProposalRequest{
+				Id:     msgs[1].Id,
+				Status: types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			},
-			response: &types.QueryActivePublicKeysChangeProposalResponse{Proposal: msgs[1]},
+			response: &types.QueryPublicKeysChangeProposalResponse{Proposal: msgs[1]},
+		},
+		{
+			desc: "ActiveNotFound",
+			request: &types.QueryPublicKeysChangeProposalRequest{
+				Id:     msgs[1].Id,
+				Status: types.ProposalStatus_PROPOSAL_STATUS_FINISHED,
+			},
+			err: status.Error(codes.NotFound, "not found"),
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryActivePublicKeysChangeProposalRequest{
-				Id: 100000,
+			request: &types.QueryPublicKeysChangeProposalRequest{
+				Id:     100000,
+				Status: types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
@@ -53,7 +64,7 @@ func TestActivePubkeysChangeProposalQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := k.ActivePublicKeysChangeProposal(wctx, tc.request)
+			response, err := k.PublicKeysChangeProposal(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
