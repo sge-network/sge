@@ -11,25 +11,25 @@ message OrderBook {
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = false;
 
-  // id corresponding to the book
-  string id = 1 [
-    (gogoproto.customname) = "ID",
-    (gogoproto.jsontag) = "id",
-    json_name = "id"
+  // uid is the universal unique identifier of the order book.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
   ];
 
-  // participation_count is the count of participations in the order book
+  // participation_count is the count of participations in the order book.
   uint64 participation_count = 2
       [ (gogoproto.moretags) = "yaml:\"participation_count\"" ];
 
-  // odds_count is the count of the odds in the order book
+  // odds_count is the count of the odds in the order book.
   uint64 odds_count = 3 [ (gogoproto.moretags) = "yaml:\"odds_count\"" ];
 
-  // order book status
+  // status represents the status of the order book.
   OrderBookStatus status = 4;
 }
 
-// OrderBookStatus is the enum type for the status of the orderbook.
+// OrderBookStatus is the enum type for the status of the order book.
 enum OrderBookStatus {
   // invalid
   ORDER_BOOK_STATUS_UNSPECIFIED = 0;

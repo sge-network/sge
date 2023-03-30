@@ -26,35 +26,36 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // BookParticipation represents the participants of an order book.
 type BookParticipation struct {
-	// index is the id of initial participation queue
+	// index is the index of the participation in the participation queue.
 	Index uint64 `protobuf:"varint,1,opt,name=index,proto3" json:"index,omitempty" yaml:"index"`
-	// book_uid is the unique identifier corresponding to the book
+	// book_uid is the unique identifier corresponding to the book.
 	BookUID string `protobuf:"bytes,2,opt,name=book_uid,proto3" json:"book_uid"`
 	// participant_address is the bech32-encoded address of the participant.
 	ParticipantAddress string `protobuf:"bytes,3,opt,name=participant_address,json=participantAddress,proto3" json:"participant_address,omitempty" yaml:"participant_address"`
-	// if participation is a module account
+	// is_module_account represents if the participant is a module account or not.
 	IsModuleAccount bool `protobuf:"varint,4,opt,name=is_module_account,json=isModuleAccount,proto3" json:"is_module_account,omitempty" yaml:"is_module_account"`
-	// liquidity is the total initial liquidity provided
+	// liquidity is the total initial liquidity provided.
 	Liquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=liquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"liquidity" yaml:"liquidity"`
-	// current round liquidity is the liquidity provided for current round
+	// current_round_liquidity is the liquidity provided for the current round.
 	CurrentRoundLiquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=current_round_liquidity,json=currentRoundLiquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_liquidity" yaml:"current_round_liquidity"`
-	ExposuresNotFilled    uint64                                 `protobuf:"varint,7,opt,name=exposures_not_filled,json=exposuresNotFilled,proto3" json:"exposures_not_filled,omitempty" yaml:"exposures_not_filled"`
-	// total_bet_amount is the total bet amount corresponding to all exposure
+	// exposures_not_filled reresents if all of the exposures of the participation
+	// are filled or not.
+	ExposuresNotFilled uint64 `protobuf:"varint,7,opt,name=exposures_not_filled,json=exposuresNotFilled,proto3" json:"exposures_not_filled,omitempty" yaml:"exposures_not_filled"`
+	// total_bet_amount is the total bet amount corresponding to all exposures.
 	TotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=total_bet_amount,json=totalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"total_bet_amount" yaml:"total_bet_amount"`
 	// current_round_total_bet_amount is the total bet amount corresponding to all
-	// exposure
+	// exposures in the current round.
 	CurrentRoundTotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,9,opt,name=current_round_total_bet_amount,json=currentRoundTotalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_total_bet_amount" yaml:"current_round_total_bet_amount"`
-	// max_loss is the total bet amount corresponding to all exposure
+	// max_loss is the total bet amount corresponding to all exposure.
 	MaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=max_loss,json=maxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_loss" yaml:"max_loss"`
-	// current_round_max_loss is the total bet amount corresponding to all
-	// exposure
+	// current_round_max_loss is the current round max loss.
 	CurrentRoundMaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=current_round_max_loss,json=currentRoundMaxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_max_loss" yaml:"current_round_max_loss"`
-	// current_round_max_loss_odds_uid is the total bet amount corresponding to
-	// all exposure
+	// current_round_max_loss_odds_uid is the total max loss corresponding to
+	// all exposures.
 	CurrentRoundMaxLossOddsUID string `protobuf:"bytes,12,opt,name=current_round_max_loss_odds_uid,proto3" json:"current_round_max_loss_odds_uid" yaml:"current_round_max_loss_odds_uid"`
-	// actual_profit is the actual profit
+	// actual_profit is the actual profit of the participation fulfillment.
 	ActualProfit github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=actual_profit,json=actualProfit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"actual_profit" yaml:"actual_profit"`
-	// if participation is settled
+	// is_settled represents if the participation is settled or not.
 	IsSettled bool `protobuf:"varint,14,opt,name=is_settled,json=isSettled,proto3" json:"is_settled,omitempty" yaml:"is_settled"`
 }
 
@@ -90,13 +91,15 @@ func (m *BookParticipation) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_BookParticipation proto.InternalMessageInfo
 
-// ParticipationBetPair represents the book participation and bet bond
+// ParticipationBetPair represents the book participation and bet bond.
 type ParticipationBetPair struct {
 	// book_uid is the unique identifier corresponding to the book
 	BookUID string `protobuf:"bytes,1,opt,name=book_uid,proto3" json:"book_uid"`
-	// participation_index is the count of initial participation queue
+	// participation_index is the index of participation corresponding to the bet
+	// fulfillment.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
-	// bet_uid is bet's uuid
+	// bet_uid is the bet universal unique identifier of the bet that is
+	// fulfilled.
 	BetUID string `protobuf:"bytes,3,opt,name=bet_uid,proto3" json:"bet_uid"`
 }
 

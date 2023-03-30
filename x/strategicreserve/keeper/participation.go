@@ -104,7 +104,7 @@ func (k Keeper) InitiateBookParticipation(
 	book.ParticipationCount++
 	index = book.ParticipationCount
 
-	_, found = k.GetBookParticipation(ctx, book.ID, index)
+	_, found = k.GetBookParticipation(ctx, book.UID, index)
 	// This should never happen, just a sanity check
 	if found {
 		err = sdkerrors.Wrapf(types.ErrBookParticipationAlreadyExists, "id already exists %d", index)
@@ -112,7 +112,7 @@ func (k Keeper) InitiateBookParticipation(
 	}
 
 	bookParticipation := types.NewBookParticipation(
-		index, book.ID, addr.String(),
+		index, book.UID, addr.String(),
 		book.OddsCount, // all of odds need to be filled in the next steps
 		false,
 		liquidity, liquidity, // int the start, liquidity and current round liquidity are the same
@@ -143,7 +143,7 @@ func (k Keeper) InitiateBookParticipation(
 		boe.FulfillmentQueue = append(boe.FulfillmentQueue, index)
 		k.SetBookOddsExposure(ctx, boe)
 
-		pe := types.NewParticipationExposure(book.ID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
+		pe := types.NewParticipationExposure(book.UID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
 		k.SetParticipationExposure(ctx, pe)
 	}
 

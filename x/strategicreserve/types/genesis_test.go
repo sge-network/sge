@@ -18,7 +18,7 @@ func TestGenesisState_Validate(t *testing.T) {
 	validState := types.GenesisState{
 		BookList: []types.OrderBook{
 			{
-				ID:                 marketUID,
+				UID:                marketUID,
 				ParticipationCount: 1,
 				OddsCount:          1,
 				Status:             types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,

@@ -9,7 +9,7 @@ import (
 
 // SetBook sets a book.
 func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
-	bookKey := types.GetBookKey(book.ID)
+	bookKey := types.GetBookKey(book.UID)
 
 	store := k.getBookStore(ctx)
 	b := k.cdc.MustMarshal(&book)
@@ -56,7 +56,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution s
 	// check for existing book with id
 	book, found := k.GetBook(ctx, bookUID)
 	if found {
-		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
+		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.UID)
 	}
 
 	// create new active book object
@@ -75,11 +75,11 @@ func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution s
 
 	// Add book participation
 	srParticipation := types.NewBookParticipation(
-		types.SrparticipationIndex, book.ID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
+		types.SrparticipationIndex, book.UID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	_, found = k.GetBookParticipation(ctx, book.ID, srParticipation.Index)
+	_, found = k.GetBookParticipation(ctx, book.UID, srParticipation.Index)
 	if found {
 		err = sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", srParticipation.Index)
 		return
@@ -89,7 +89,7 @@ func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution s
 	// Add book exposures
 	fulfillmentQueue := []uint64{srParticipation.Index}
 	for _, oddsUID := range oddsUIDs {
-		boe := types.NewBookOddsExposure(book.ID, oddsUID, fulfillmentQueue)
+		boe := types.NewBookOddsExposure(book.UID, oddsUID, fulfillmentQueue)
 		k.SetBookOddsExposure(ctx, boe)
 
 		pe := types.NewParticipationExposure(srParticipation.BookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)

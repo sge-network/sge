@@ -24,12 +24,14 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// BookOddsExposure represents the exposures taken on odds
+// BookOddsExposure represents the exposures taken on odds.
 type BookOddsExposure struct {
-	// book_uid is the unique identifier corresponding to the book
+	// book_uid is the universally unique identifier corresponding to the book.
 	BookUID string `protobuf:"bytes,1,opt,name=book_uid,proto3" json:"book_uid"`
-	// odds_uid is odds uid
-	OddsUID          string   `protobuf:"bytes,2,opt,name=odds_uid,proto3" json:"odds_uid"`
+	// odds_uid is the universally unique identifier of the odds.
+	OddsUID string `protobuf:"bytes,2,opt,name=odds_uid,proto3" json:"odds_uid"`
+	// fulfillment_queue is the slice of indices of participations to be
+	// fulfilled.
 	FulfillmentQueue []uint64 `protobuf:"varint,3,rep,packed,name=fulfillment_queue,json=fulfillmentQueue,proto3" json:"fulfillment_queue,omitempty" yaml:"fulfillment_queue"`
 }
 
@@ -66,20 +68,23 @@ func (m *BookOddsExposure) XXX_DiscardUnknown() {
 var xxx_messageInfo_BookOddsExposure proto.InternalMessageInfo
 
 // ParticipationExposure represents the exposures taken on odds by
-// participations
+// participations.
 type ParticipationExposure struct {
-	// book_uid is the unique identifier corresponding to the book
+	// book_uid is the universally unique identifier of the order book that the
+	// exposure is being set.
 	BookUID string `protobuf:"bytes,1,opt,name=book_uid,proto3" json:"book_uid"`
-	// odds_uid is odd's uid
+	// odds_uid is the odds universal unique identifier that the exposure is being
+	// set.
 	OddsUID string `protobuf:"bytes,2,opt,name=odds_uid,proto3" json:"odds_uid"`
-	// participation_index is the id of initial participation queue
+	// participation_index is the index of participation in the queue.
 	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
-	// exposure is the total exposure taken on given odd
+	// exposure is the total exposure taken on given odds.
 	Exposure github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=exposure,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"exposure" yaml:"exposure"`
-	// bet_amount is the total bet amount corresponding to the exposure
-	BetAmount   github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=bet_amount,json=betAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_amount" yaml:"bet_amount"`
-	IsFulfilled bool                                   `protobuf:"varint,6,opt,name=is_fulfilled,json=isFulfilled,proto3" json:"is_fulfilled,omitempty" yaml:"is_fulfilled"`
-	// number of current round in queue
+	// bet_amount is the total bet amount corresponding to the exposure.
+	BetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=bet_amount,json=betAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_amount" yaml:"bet_amount"`
+	// is_fulfilled represents if the participation exposure is fulfilled or not.
+	IsFulfilled bool `protobuf:"varint,6,opt,name=is_fulfilled,json=isFulfilled,proto3" json:"is_fulfilled,omitempty" yaml:"is_fulfilled"`
+	// round is the current round number in the queue.
 	Round uint64 `protobuf:"varint,7,opt,name=round,proto3" json:"round,omitempty" yaml:"round"`
 }
 

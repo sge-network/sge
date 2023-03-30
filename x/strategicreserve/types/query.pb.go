@@ -30,7 +30,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is the request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method
 // Query/Params RPC method.
 type QueryParamsRequest struct {
 }
@@ -68,7 +68,7 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
-// QueryParamsResponse is the response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method
 // Query/Params RPC method.
 type QueryParamsResponse struct {
 	// params holds all the parameters of this module.
@@ -115,11 +115,12 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryOrderBooksRequest is request type for Query/OrderBooks RPC method.
+// QueryOrderBooksRequest is the request type for the Query/OrderBooks RPC
+// method.
 type QueryOrderBooksRequest struct {
-	// status enables to query for order bookds matching a given status.
+	// status enables query for order books matching a given status.
 	Status string `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -170,7 +171,8 @@ func (m *QueryOrderBooksRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryOrderBooksResponse is response type for the Query/OrderBooks RPC method
+// QueryOrderBooksResponse is the response type for the Query/OrderBooks RPC
+// method.
 type QueryOrderBooksResponse struct {
 	// orderbooks contains all the queried order books.
 	Orderbooks []OrderBook `protobuf:"bytes,1,rep,name=orderbooks,proto3" json:"orderbooks"`
@@ -225,7 +227,7 @@ func (m *QueryOrderBooksResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryOrderBookRequest is request type for the Query/OrderBook RPC method
+// QueryOrderBookRequest is the request type for the Query/OrderBook RPC method.
 type QueryOrderBookRequest struct {
 	// book_uid defines the book id to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
@@ -271,9 +273,10 @@ func (m *QueryOrderBookRequest) GetBookUid() string {
 	return ""
 }
 
-// QueryOrderBookResponse is response type for the Query/OrderBook RPC method
+// QueryOrderBookResponse is the response type for the Query/OrderBook RPC
+// method.
 type QueryOrderBookResponse struct {
-	// orderBook defines the the order book info.
+	// orderBook defines the order book info.
 	Orderbook OrderBook `protobuf:"bytes,1,opt,name=orderbook,proto3" json:"orderbook"`
 }
 
@@ -317,12 +320,12 @@ func (m *QueryOrderBookResponse) GetOrderbook() OrderBook {
 	return OrderBook{}
 }
 
-// QueryBookParticipationsRequest is request type for the
+// QueryBookParticipationsRequest is the request type for the
 // Query/BookParticipations RPC method
 type QueryBookParticipationsRequest struct {
-	// book_uid defines the book id to query for.
+	// book_uid defines the order book universal unique identifier to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -373,7 +376,7 @@ func (m *QueryBookParticipationsRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryBookParticipationsResponse is response type for the
+// QueryBookParticipationsResponse is the response type for the
 // Query/BookParticipations RPC method
 type QueryBookParticipationsResponse struct {
 	BookParticipations []BookParticipation `protobuf:"bytes,1,rep,name=book_participations,json=bookParticipations,proto3" json:"book_participations"`
@@ -428,12 +431,12 @@ func (m *QueryBookParticipationsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryBookParticipationRequest is request type for the Query/BookParticipation
-// RPC method
+// QueryBookParticipationRequest is the request type for the
+// Query/BookParticipation RPC method.
 type QueryBookParticipationRequest struct {
-	// book_uid defines the book id to query for.
+	// book_uid defines the order book universal unique identifier to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// participation_index defines the participation index to query for
+	// participation_index defines the participation index to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 }
 
@@ -484,10 +487,10 @@ func (m *QueryBookParticipationRequest) GetParticipationIndex() uint64 {
 	return 0
 }
 
-// QueryBookParticipationResponse is response type for the
-// Query/BookParticipation RPC method
+// QueryBookParticipationResponse is the response type for the
+// Query/BookParticipation RPC method.
 type QueryBookParticipationResponse struct {
-	// book_participation defines the the book participation info.
+	// book_participation defines the book participation info.
 	BookParticipation BookParticipation `protobuf:"bytes,1,opt,name=book_participation,json=bookParticipation,proto3" json:"book_participation"`
 }
 
@@ -531,12 +534,12 @@ func (m *QueryBookParticipationResponse) GetBookParticipation() BookParticipatio
 	return BookParticipation{}
 }
 
-// QueryBookExposuresRequest is request type for the Query/BookExposures RPC
+// QueryBookExposuresRequest is the request type for the Query/BookExposures RPC
 // method
 type QueryBookExposuresRequest struct {
 	// book_uid defines the book id to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -587,8 +590,8 @@ func (m *QueryBookExposuresRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryBookExposuresResponse is response type for the Query/BookExposures RPC
-// method
+// QueryBookExposuresResponse is the response type for the Query/BookExposures
+// RPC method.
 type QueryBookExposuresResponse struct {
 	BookExposures []BookOddsExposure `protobuf:"bytes,1,rep,name=book_exposures,json=bookExposures,proto3" json:"book_exposures"`
 	// pagination defines the pagination in the response.
@@ -642,8 +645,8 @@ func (m *QueryBookExposuresResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryBookExposureRequest is request type for the Query/BookExposure RPC
-// method
+// QueryBookExposureRequest is the request type for the Query/BookExposure RPC
+// method.
 type QueryBookExposureRequest struct {
 	// book_uid defines the book id to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
@@ -698,10 +701,10 @@ func (m *QueryBookExposureRequest) GetOddsUid() string {
 	return ""
 }
 
-// QueryBookExposureResponse is response type for the Query/BookExposure RPC
-// method
+// QueryBookExposureResponse is the response type for the Query/BookExposure RPC
+// method.
 type QueryBookExposureResponse struct {
-	// book_exposure defines the the book exposure info.
+	// book_exposure defines the book exposure info.
 	BookExposure BookOddsExposure `protobuf:"bytes,1,opt,name=book_exposure,json=bookExposure,proto3" json:"book_exposure"`
 }
 
@@ -745,12 +748,12 @@ func (m *QueryBookExposureResponse) GetBookExposure() BookOddsExposure {
 	return BookOddsExposure{}
 }
 
-// QueryParticipationExposuresRequest is request type for the
+// QueryParticipationExposuresRequest is the request type for the
 // Query/ParticipationExposures RPC method
 type QueryParticipationExposuresRequest struct {
 	// book_uid defines the book id to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -801,8 +804,8 @@ func (m *QueryParticipationExposuresRequest) GetPagination() *query.PageRequest 
 	return nil
 }
 
-// QueryParticipationExposuresResponse is response type for the
-// Query/ParticipationExposures RPC method
+// QueryParticipationExposuresResponse is the response type for the
+// Query/ParticipationExposures RPC method.
 type QueryParticipationExposuresResponse struct {
 	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
@@ -856,11 +859,12 @@ func (m *QueryParticipationExposuresResponse) GetPagination() *query.PageRespons
 	return nil
 }
 
-// QueryParticipationExposureRequest is request type for the
-// Query/ParticipationExposure RPC method
+// QueryParticipationExposureRequest is the request type for the
+// Query/ParticipationExposure RPC method.
 type QueryParticipationExposureRequest struct {
 	// book_uid defines the book id to query for.
-	BookUid            string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	// participation_index is the index of participation to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -920,10 +924,10 @@ func (m *QueryParticipationExposureRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryParticipationExposureResponse is response type for the
-// Query/ParticipationExposure RPC method
+// QueryParticipationExposureResponse is the response type for the
+// Query/ParticipationExposure RPC method.
 type QueryParticipationExposureResponse struct {
-	// book_exposure defines the the book exposure info.
+	// book_exposure defines the book exposure info.
 	ParticipationExposure []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposure,json=participationExposure,proto3" json:"participation_exposure"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -976,12 +980,12 @@ func (m *QueryParticipationExposureResponse) GetPagination() *query.PageResponse
 	return nil
 }
 
-// QueryHistoricalParticipationExposuresRequest is request type for the
+// QueryHistoricalParticipationExposuresRequest is the request type for the
 // Query/HistoricalParticipationExposures RPC method
 type QueryHistoricalParticipationExposuresRequest struct {
 	// book_uid defines the book id to query for.
 	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -1036,8 +1040,8 @@ func (m *QueryHistoricalParticipationExposuresRequest) GetPagination() *query.Pa
 	return nil
 }
 
-// QueryHistoricalParticipationExposuresResponse is response type for the
-// Query/HistoricalParticipationExposures RPC method
+// QueryHistoricalParticipationExposuresResponse is the response type for the
+// Query/HistoricalParticipationExposures RPC method.
 type QueryHistoricalParticipationExposuresResponse struct {
 	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
@@ -1095,11 +1099,12 @@ func (m *QueryHistoricalParticipationExposuresResponse) GetPagination() *query.P
 	return nil
 }
 
-// QueryParticipationFulfilledBetsRequest is request type for the
-// Query/ParticipationFulfilledBets RPC method
+// QueryParticipationFulfilledBetsRequest is the request type for the
+// Query/ParticipationFulfilledBets RPC method.
 type QueryParticipationFulfilledBetsRequest struct {
 	// book_uid defines the book id to query for.
-	BookUid            string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	// participation_index is the index of participation to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -1161,10 +1166,10 @@ func (m *QueryParticipationFulfilledBetsRequest) GetPagination() *query.PageRequ
 	return nil
 }
 
-// QueryParticipationFulfilledBetsResponse is response type for the
-// Query/ParticipationFulfilledBets RPC method
+// QueryParticipationFulfilledBetsResponse is the response type for the
+// Query/ParticipationFulfilledBets RPC method.
 type QueryParticipationFulfilledBetsResponse struct {
-	// book_exposure defines the the book exposure info.
+	// book_exposure defines the book exposure info.
 	ParticipationBets []ParticipationBetPair `protobuf:"bytes,1,rep,name=participation_bets,json=participationBets,proto3" json:"participation_bets"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -1340,27 +1345,29 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// OrderBooks queries all order books that match the given status.
 	OrderBooks(ctx context.Context, in *QueryOrderBooksRequest, opts ...grpc.CallOption) (*QueryOrderBooksResponse, error)
-	// OrderBook queries orderbook info for given order book id.
+	// OrderBook queries order book info for given order book universal unique
+	// identifier.
 	OrderBook(ctx context.Context, in *QueryOrderBookRequest, opts ...grpc.CallOption) (*QueryOrderBookResponse, error)
-	// BookParticipations queries participation info for given orderbook.
+	// BookParticipations queries participation info for given order book.
 	BookParticipations(ctx context.Context, in *QueryBookParticipationsRequest, opts ...grpc.CallOption) (*QueryBookParticipationsResponse, error)
-	// BookParticipation queries participation info for given orderbook and
+	// BookParticipation queries participation info for given order book and
 	// participation index.
 	BookParticipation(ctx context.Context, in *QueryBookParticipationRequest, opts ...grpc.CallOption) (*QueryBookParticipationResponse, error)
-	// BookExposures queries exposures info for given orderbook.
+	// BookExposures queries exposures info for the given order book.
 	BookExposures(ctx context.Context, in *QueryBookExposuresRequest, opts ...grpc.CallOption) (*QueryBookExposuresResponse, error)
-	// BookExposure queries exposure info for given orderbook and odds id.
+	// BookExposure queries exposure info for the given order book and odds
+	// universal unique identifier.
 	BookExposure(ctx context.Context, in *QueryBookExposureRequest, opts ...grpc.CallOption) (*QueryBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given orderbook
+	// ParticipationExposures queries exposures info for given order book
 	// participations.
 	ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given orderbook
+	// ParticipationExposure queries exposure info for given order book
 	// participation.
 	ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
-	// given orderbook participation.
+	// the given order book participation.
 	HistoricalParticipationExposures(ctx context.Context, in *QueryHistoricalParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipationExposuresResponse, error)
-	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// ParticipationFulfilledBets queries fulfilled bets for given order book
 	// participation.
 	ParticipationFulfilledBets(ctx context.Context, in *QueryParticipationFulfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipationFulfilledBetsResponse, error)
 }
@@ -1478,27 +1485,29 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// OrderBooks queries all order books that match the given status.
 	OrderBooks(context.Context, *QueryOrderBooksRequest) (*QueryOrderBooksResponse, error)
-	// OrderBook queries orderbook info for given order book id.
+	// OrderBook queries order book info for given order book universal unique
+	// identifier.
 	OrderBook(context.Context, *QueryOrderBookRequest) (*QueryOrderBookResponse, error)
-	// BookParticipations queries participation info for given orderbook.
+	// BookParticipations queries participation info for given order book.
 	BookParticipations(context.Context, *QueryBookParticipationsRequest) (*QueryBookParticipationsResponse, error)
-	// BookParticipation queries participation info for given orderbook and
+	// BookParticipation queries participation info for given order book and
 	// participation index.
 	BookParticipation(context.Context, *QueryBookParticipationRequest) (*QueryBookParticipationResponse, error)
-	// BookExposures queries exposures info for given orderbook.
+	// BookExposures queries exposures info for the given order book.
 	BookExposures(context.Context, *QueryBookExposuresRequest) (*QueryBookExposuresResponse, error)
-	// BookExposure queries exposure info for given orderbook and odds id.
+	// BookExposure queries exposure info for the given order book and odds
+	// universal unique identifier.
 	BookExposure(context.Context, *QueryBookExposureRequest) (*QueryBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given orderbook
+	// ParticipationExposures queries exposures info for given order book
 	// participations.
 	ParticipationExposures(context.Context, *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given orderbook
+	// ParticipationExposure queries exposure info for given order book
 	// participation.
 	ParticipationExposure(context.Context, *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
-	// given orderbook participation.
+	// the given order book participation.
 	HistoricalParticipationExposures(context.Context, *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error)
-	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// ParticipationFulfilledBets queries fulfilled bets for given order book
 	// participation.
 	ParticipationFulfilledBets(context.Context, *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error)
 }

@@ -25,30 +25,30 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // GenesisState defines the strategicreserve module's genesis state.
 type GenesisState struct {
-	// params defines all the parameters related to orderbook.
+	// params defines all the parameters related to order book.
 	Params Params `protobuf:"bytes,1,opt,name=params,proto3" json:"params"`
-	// book_list defines the books active at genesis.
+	// book_list defines the order books available at genesis.
 	BookList []OrderBook `protobuf:"bytes,2,rep,name=book_list,json=bookList,proto3" json:"book_list"`
-	// book_participation_list defines the book participations active at genesis.
-	BookParticipationList []BookParticipation `protobuf:"bytes,3,rep,name=book_participation_list,json=bookParticipationList,proto3" json:"book_participation_list"`
-	// book_exposure_list defines the book exposures active at genesis.
-	BookExposureList []BookOddsExposure `protobuf:"bytes,4,rep,name=book_exposure_list,json=bookExposureList,proto3" json:"book_exposure_list"`
-	// participation_exposure_list defines the participation exposures active at
+	// book_participation_list defines the book participations available at
 	// genesis.
+	BookParticipationList []BookParticipation `protobuf:"bytes,3,rep,name=book_participation_list,json=bookParticipationList,proto3" json:"book_participation_list"`
+	// book_exposure_list defines the book exposures available at genesis.
+	BookExposureList []BookOddsExposure `protobuf:"bytes,4,rep,name=book_exposure_list,json=bookExposureList,proto3" json:"book_exposure_list"`
+	// participation_exposure_list defines the participation exposures available
+	// at genesis.
 	ParticipationExposureList []ParticipationExposure `protobuf:"bytes,5,rep,name=participation_exposure_list,json=participationExposureList,proto3" json:"participation_exposure_list"`
 	// participation_exposure_by_index_list defines the participation exposures by
-	// index active at genesis.
+	// the indices available at genesis.
 	ParticipationExposureByIndexList []ParticipationExposure `protobuf:"bytes,6,rep,name=participation_exposure_by_index_list,json=participationExposureByIndexList,proto3" json:"participation_exposure_by_index_list"`
 	// historical_participation_exposure_list defines the historical participation
-	// exposures active at
-	// genesis.
+	// exposures available at genesis.
 	HistoricalParticipationExposureList []ParticipationExposure `protobuf:"bytes,7,rep,name=historical_participation_exposure_list,json=historicalParticipationExposureList,proto3" json:"historical_participation_exposure_list"`
-	// historical_participation_exposure_list defines the historical participation
-	// exposures active at
-	// genesis.
+	// historical_participation_exposure_list defines the participation bet pair
+	// exposures available at genesis.
 	ParticipationBetPairExposureList []ParticipationBetPair `protobuf:"bytes,8,rep,name=participation_bet_pair_exposure_list,json=participationBetPairExposureList,proto3" json:"participation_bet_pair_exposure_list"`
-	PayoutLock                       [][]byte               `protobuf:"bytes,9,rep,name=payout_lock,json=payoutLock,proto3" json:"payout_lock,omitempty"`
-	// stats is the statistics of the order-book
+	// payout_lock defines the current locks for the payouts.
+	PayoutLock [][]byte `protobuf:"bytes,9,rep,name=payout_lock,json=payoutLock,proto3" json:"payout_lock,omitempty"`
+	// stats is the statistics of the order-book.
 	Stats OrderBookStats `protobuf:"bytes,10,opt,name=stats,proto3" json:"stats"`
 }
 

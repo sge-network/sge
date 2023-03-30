@@ -45,7 +45,7 @@ func (k Keeper) ProcessBetPlacement(
 	participationMap := make(map[uint64]types.BookParticipation)
 	participationExposureMap := make(map[uint64]types.ParticipationExposure)
 
-	bps, err := k.GetParticipationsOfBook(ctx, book.ID)
+	bps, err := k.GetParticipationsOfBook(ctx, book.UID)
 	if err != nil {
 		return
 	}
@@ -173,7 +173,7 @@ func (k Keeper) ProcessBetPlacement(
 			for _, pe := range participationExposures {
 				k.MoveToHistoricalParticipationExposure(ctx, pe)
 				if eligibleForNextRound {
-					newPe := types.NewParticipationExposure(book.ID, pe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipationIndex, pe.Round+1, false)
+					newPe := types.NewParticipationExposure(book.UID, pe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), pe.ParticipationIndex, pe.Round+1, false)
 					k.SetParticipationExposure(ctx, newPe)
 					if pe.OddsUID == participationExposure.OddsUID {
 						participationExposure = newPe

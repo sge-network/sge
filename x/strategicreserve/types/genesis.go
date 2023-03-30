@@ -35,7 +35,7 @@ func (gs GenesisState) Validate() error {
 		bookFound := false
 
 		for _, b := range gs.BookList {
-			if b.ID == p.BookUID {
+			if b.UID == p.BookUID {
 				bookFound = true
 			}
 		}
@@ -50,7 +50,7 @@ func (gs GenesisState) Validate() error {
 		for _, be := range gs.BookExposureList {
 			exposureFound := false
 			for _, pe := range gs.ParticipationExposureList {
-				if pe.BookUID == b.ID && pe.OddsUID == be.OddsUID {
+				if pe.BookUID == b.UID && pe.OddsUID == be.OddsUID {
 					exposureFound = true
 				}
 			}
@@ -59,14 +59,14 @@ func (gs GenesisState) Validate() error {
 				return fmt.Errorf("book with id %s not found for odds with uid %s", be.BookUID, be.OddsUID)
 			}
 
-			if be.BookUID == b.ID {
+			if be.BookUID == b.UID {
 				oddsCount++
 			}
 		}
 
 		exposureCount := cast.ToUint64(oddsCount)
 		if exposureCount != b.OddsCount {
-			return fmt.Errorf("book with id %s count does not match the odds exposure count %d", b.ID, exposureCount)
+			return fmt.Errorf("book with id %s count does not match the odds exposure count %d", b.UID, exposureCount)
 		}
 	}
 
@@ -118,7 +118,7 @@ func (gs GenesisState) Validate() error {
 	for _, bp := range gs.ParticipationBetPairExposureList {
 		bookFound := false
 		for _, b := range gs.BookList {
-			if bp.BookUID == b.ID {
+			if bp.BookUID == b.UID {
 				bookFound = true
 			}
 		}
