@@ -36,3 +36,12 @@ func (payload *PubkeysChangeProposalPayload) Validate(keys []string, leaderIndex
 
 	return nil
 }
+
+func (payload *ProposalVotePayload) Validate() error {
+	if !(payload.Vote == ProposalVote_PROPOSAL_VOTE_YES ||
+		payload.Vote == ProposalVote_PROPOSAL_VOTE_NO) {
+		return fmt.Errorf("vote should be no or yes %d", payload.Vote)
+	}
+
+	return nil
+}
