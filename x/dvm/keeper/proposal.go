@@ -113,7 +113,7 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			}
 		}
 
-		if rejectedCount > types.MinVoteCountForDecision {
+		if rejectedCount >= types.MinVoteCountForDecision {
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
@@ -127,12 +127,13 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			continue
 		}
 
-		if approvedCount > types.MinVoteCountForDecision {
+		if approvedCount >= types.MinVoteCountForDecision {
 			keyVault, found := k.GetKeyVault(ctx)
 			if !found {
 				fmt.Printf("there is no publick keys record")
 			}
 
+			keyVault.PublicKeys = proposal.Modifications.PublicKeys
 			keyVault.SetLeader(proposal.Modifications.LeaderIndex)
 
 			if err = k.finishPubkeysChangeProposal(
