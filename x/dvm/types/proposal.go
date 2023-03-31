@@ -34,7 +34,7 @@ func (proposal *PublicKeysChangeProposal) DecideResult() ProposalResult {
 	// check if minimum vote count is met or not
 	if yesCount >= minVoteCountForDecision ||
 		noCount >= minVoteCountForDecision {
-		// minumum vote count is met, so if the yes votes count is more than rejected,
+		// minimum vote count is met, so if the yes votes count is more than rejected,
 		// the proposal is approved,  otherwise is rejected.
 		if yesCount > noCount {
 			return ProposalResult_PROPOSAL_RESULT_APPROVED
