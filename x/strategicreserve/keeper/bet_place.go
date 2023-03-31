@@ -103,13 +103,13 @@ func (k Keeper) ProcessBetPlacement(
 			participation.ExposuresNotFilled--
 		}
 
-		processBetFulfillment := func(payoutToFulfill sdk.Int, isLastFulfillment bool) error {
+		processBetFulfillment := func(payoutProfitToFulfill sdk.Int, isLastFulfillment bool) error {
 			var betAmountToFulfill sdk.Int
 			if isLastFulfillment {
 				// the bet amount
 				betAmountToFulfill = betAmount
 			} else {
-				expectedBetAmountDec, err := bettypes.CalculateBetAmount(oddsType, oddsVal, payoutToFulfill.ToDec())
+				expectedBetAmountDec, err := bettypes.CalculateBetAmount(oddsType, oddsVal, payoutProfitToFulfill.ToDec())
 				if err != nil {
 					return err
 				}
@@ -121,7 +121,7 @@ func (k Keeper) ProcessBetPlacement(
 			if !isLastFulfillment {
 				setFulfilled()
 			}
-			participationExposure.Exposure = participationExposure.Exposure.Add(payoutToFulfill)
+			participationExposure.Exposure = participationExposure.Exposure.Add(payoutProfitToFulfill)
 			participationExposure.BetAmount = participationExposure.BetAmount.Add(betAmountToFulfill)
 			participation.TotalBetAmount = participation.TotalBetAmount.Add(betAmountToFulfill)
 			participation.CurrentRoundTotalBetAmount = participation.CurrentRoundTotalBetAmount.Add(betAmountToFulfill)
@@ -147,12 +147,12 @@ func (k Keeper) ProcessBetPlacement(
 				ParticipantAddress: participation.ParticipantAddress,
 				ParticipationIndex: participation.Index,
 				BetAmount:          betAmountToFulfill,
-				PayoutAmount:       payoutToFulfill,
+				PayoutProfit:       payoutProfitToFulfill,
 			})
 			betAmount = betAmount.Sub(betAmountToFulfill)
 
 			fulfiledBetAmount = fulfiledBetAmount.Add(betAmountToFulfill)
-			remainingPayoutProfit = remainingPayoutProfit.Sub(payoutToFulfill.ToDec())
+			remainingPayoutProfit = remainingPayoutProfit.Sub(payoutProfitToFulfill.ToDec())
 
 			participationBetPair := types.NewParticipationBetPair(participation.BookUID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)

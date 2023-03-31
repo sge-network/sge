@@ -8,25 +8,34 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// RefundBettor process bets in case market gets cancelled or aborted.
-func (k Keeper) RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error {
-	// Idempotency check: If lock does not exist, return error
+// RefundBettor process bets in case market gets cancelled or aborted,
+// this method transfers th bet amount from book liquidity module account balance to the bettor account balance.
+func (k Keeper) RefundBettor(
+	ctx sdk.Context,
+	bettorAddress sdk.AccAddress,
+	betAmount, payout sdk.Int,
+	uniqueLock string,
+) (err error) {
+	// if no lock exist means that there is nothing to be processed.
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
-	// Transfer bet amount from `bet_reserve` to bettor's account
-	err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
+	// transfer bet amount from `bet_reserve` to bettor's account.
+	err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
 	if err != nil {
-		return err
+		return
 	}
 
-	// Delete the lock from the payout store as the bet is settled
+	// delete the lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
-	return nil
+
+	return
 }
 
-// BettorLoses process bets in case bettor looses
+// BettorWins process bets in case bettor is the winner,
+// transfers the bet amount and the payout profit to the bettor's account and,
+// updates actual profit of the participation to the subtracted value from the payout profit.
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
@@ -35,8 +44,8 @@ func (k Keeper) BettorWins(
 	uniqueLock string,
 	betFulfillments []*bettypes.BetFulfillment,
 	bookUID string,
-) error {
-	// Idempotency check: If lock does not exist, return error
+) (err error) {
+	// if no lock exist means that there is nothing to be processed.
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
@@ -47,43 +56,52 @@ func (k Keeper) BettorWins(
 			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, betFulfillment.ParticipationIndex)
 		}
 
-		// Transfer payout from the `book_liquidity_pool` account to bettor
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.PayoutAmount)
+		// transfer payout from the `book_liquidity_pool` account to bettor
+		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.PayoutProfit)
 		if err != nil {
-			return err
+			return
 		}
 
-		// Transfer bet amount from the `book_liquidity_pool` account to bettor
+		// transfer bet amount from the `book_liquidity_pool` account to bettor
 		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.BetAmount)
 		if err != nil {
-			return err
+			return
 		}
 
-		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Sub(betFulfillment.PayoutAmount)
+		// update actual profit of the participation, the bettor is the winner, so we need to
+		// payout from the participant profit.
+		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Sub(betFulfillment.PayoutProfit)
 		k.SetBookParticipation(ctx, bookParticipation)
 	}
 
 	// Delete lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
 
-	return nil
+	return
 }
 
-// BettorLoses process bets in case bettor looses
+// BettorLoses process bets in case bettor loses,
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int, payoutProfit sdk.Int, uniqueLock string, betFulfillments []*bettypes.BetFulfillment, bookUID string,
+	betAmount sdk.Int,
+	payoutProfit sdk.Int,
+	uniqueLock string,
+	betFulfillments []*bettypes.BetFulfillment,
+	bookUID string,
 ) error {
-	// Idempotency check: If lock does not exist, return error
+	// if no lock exist means that there is nothing to be processed.
 	if !k.payoutLockExists(ctx, uniqueLock) {
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
 	for _, betFulfillment := range betFulfillments {
-		// Update amount to be transferred to house
+		// update amount to be transferred to house
 		bookParticipation, found := k.GetBookParticipation(ctx, bookUID, betFulfillment.ParticipationIndex)
 		if !found {
 			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, betFulfillment.ParticipationIndex)
 		}
+
+		// update actual profit of the participation, the bettor is the loser, so we need to
+		// add the lost bet amount to the participant profit.
 		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
 		k.SetBookParticipation(ctx, bookParticipation)
 	}
