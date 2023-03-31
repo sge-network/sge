@@ -219,7 +219,8 @@ func (m *QueryDepositsResponse) GetPagination() *query.PageResponse {
 // QueryDepositsByAccountRequest is request type for Query/DepositsByAccount RPC
 // method.
 type QueryDepositsByAccountRequest struct {
-	// address defines the address of depositor/account for which deposits are queried.
+	// address defines the address of depositor/account for which deposits are
+	// queried.
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	// pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -331,7 +332,8 @@ func (m *QueryDepositsByAccountResponse) GetPagination() *query.PageResponse {
 // QueryDepositorWithdrawalsRequest is request type for
 // Query/WithdrawalsByAccount RPC method.
 type QueryWithdrawalsByAccountRequest struct {
-	// address defines the address of depositor/account for which withdrawals are queried.
+	// address defines the address of depositor/account for which withdrawals are
+	// queried.
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	// pagination defines an optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
