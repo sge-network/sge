@@ -54,15 +54,10 @@ func (t *jwtTicket) Unmarshal(v interface{}) error {
 	return nil
 }
 
-// Verify verifies the ticket signature with the given public keys. If the ticket is verified by any
-// of the keys, then return nil else return invalid signature error
-func (t *jwtTicket) Verify(pubKeys ...string) error {
-	if len(pubKeys) == 0 {
-		return fmt.Errorf("no pubkeys available")
-	}
-
-	leaderKey := pubKeys[0]
-	_, err := t.verifyWithKey(leaderKey)
+// Verify verifies the ticket signature with the given public keys. if the ticket is verified by the
+// the key, then return nil else return invalid signature error
+func (t *jwtTicket) Verify(key string) error {
+	_, err := t.verifyJwtKey(key)
 	if err == nil {
 		return nil
 	}
@@ -109,8 +104,8 @@ func (t *jwtTicket) initFromValue() error {
 	return nil
 }
 
-// verifyWithKey verify a Ticket with the key
-func (t *jwtTicket) verifyWithKey(key string) (bool, error) {
+// verifyJwtKey verify a Ticket with the key
+func (t *jwtTicket) verifyJwtKey(key string) (bool, error) {
 	token := t.header + "." + t.payload + "." + t.signature
 	parser := jwt.NewParser(
 		jwt.WithoutClaimsValidation(),

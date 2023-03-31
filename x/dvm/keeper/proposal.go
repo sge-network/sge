@@ -103,31 +103,21 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			continue
 		}
 
-		var approvedCount, rejectedCount int
-		for _, v := range proposal.Votes {
-			switch v.Vote {
-			case types.ProposalVote_PROPOSAL_VOTE_YES:
-				approvedCount++
-			case types.ProposalVote_PROPOSAL_VOTE_NO:
-				rejectedCount++
-			}
-		}
-
-		if rejectedCount >= types.MinVoteCountForDecision {
+		result := proposal.DecideResult()
+		switch result {
+		case types.ProposalResult_PROPOSAL_RESULT_REJECTED:
 			if err = k.finishPubkeysChangeProposal(
 				ctx,
 				proposal.Id,
 				types.ProposalResult_PROPOSAL_RESULT_REJECTED,
-				fmt.Sprintf("rejected with %d number of 'no' votes.", rejectedCount),
+				"rejected with more 'no' votes than 'yes' votes",
 			); err != nil {
 				return fmt.Errorf("error while setting the proposal as rejected: %s", err)
 			}
 
 			// this proposal is rejected go for next proposal
 			continue
-		}
-
-		if approvedCount >= types.MinVoteCountForDecision {
+		case types.ProposalResult_PROPOSAL_RESULT_APPROVED:
 			keyVault, found := k.GetKeyVault(ctx)
 			if !found {
 				fmt.Printf("there is no publick keys record")

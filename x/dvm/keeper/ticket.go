@@ -32,7 +32,7 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 	}
 
 	// validate the ticket by the keys
-	err = t.Verify(keys.PublicKeys...)
+	err = t.Verify(keys.GetLeader())
 	if err != nil {
 		return err
 	}
@@ -67,12 +67,10 @@ func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr st
 		return types.ErrNoPublicKeysFound
 	}
 
-	pubKeys := keyVault.PublicKeys
-
 	if pubKey != "" {
 		// check if the provided pubkey is registered or not
 		isRegistered := false
-		for _, registereedPubKey := range pubKeys {
+		for _, registereedPubKey := range keyVault.PublicKeys {
 			if registereedPubKey == pubKey {
 				isRegistered = true
 			}
@@ -82,13 +80,12 @@ func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr st
 		if !isRegistered {
 			return fmt.Errorf("the provided public key is not registered in the blockchain store: %s", pubKey)
 		}
-
-		// replace the registered pubkeys with the provided key
-		pubKeys = []string{pubKey}
+	} else {
+		pubKey = keyVault.GetLeader()
 	}
 
 	// validate ticket by the keys with provided pubkey
-	err = ticket.Verify(pubKeys...)
+	err = ticket.Verify(pubKey)
 	if err != nil {
 		return err
 	}

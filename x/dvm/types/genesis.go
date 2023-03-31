@@ -13,5 +13,9 @@ func DefaultGenesis() *GenesisState {
 // Validate performs basic genesis state validation returning an error upon any
 // failure.
 func (gs GenesisState) Validate() error {
+	if err := gs.KeyVault.validatePubKeys(); err != nil {
+		return err
+	}
+
 	return gs.Params.Validate()
 }

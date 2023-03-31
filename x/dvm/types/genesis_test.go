@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
@@ -13,14 +14,16 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	pubKey1 := "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+9wlxVu9a8lzUO2kcFLu\nUBIuV0+DpUdgEmsyQXr4y65sPSx/XjbK3GSZS1fB4irYPPG8EPHa6Z9KwWJLrTBr\nHayQcUBV5GQPf7nDktCkljYEBRmJZ+x3tlTf2kyKf3JMPAYgSFcs792dMpx8EiuE\n683QzUyeCutmiSWj1e7/IR9tjD4X/XFGkLES6wtqpQpOsL10z3hZllQEqZif8pDZ\nZcDvF97dg0l+JIWW3jBINL/UzuBRmdtDMuS1d57bpaMNb7L9HLUDBiwlZTGhs1+v\n9eTMY6IEdIzQ6M1KTFDeLYdnpGWP0ttBpt7SesLNpsKStbZ7QkbNtzlkTN8eJ6qu\nJQIDAQAB\n-----END PUBLIC KEY-----"
-	vote := types.Vote{
-		PublicKey: pubKey1,
-		Vote:      types.ProposalVote_PROPOSAL_VOTE_YES,
+	pubkeys := simappUtil.GenerateDvmPublicKeys(5)
+
+	var votes []*types.Vote
+	for _, v := range pubkeys {
+		votes = append(votes, &types.Vote{PublicKey: v, Vote: types.ProposalVote_PROPOSAL_VOTE_YES})
 	}
+
 	validState := types.GenesisState{
 		KeyVault: types.KeyVault{
-			PublicKeys: []string{pubKey1},
+			PublicKeys: pubkeys,
 		},
 		PubkeysChangeProposals: []types.PublicKeysChangeProposal{
 			{
@@ -28,10 +31,10 @@ func TestGenesisState_Validate(t *testing.T) {
 				Creator: testAddress,
 				StartTS: time.Now().Unix(),
 				Modifications: types.PubkeysChangeProposalPayload{
-					PublicKeys:  []string{pubKey1},
+					PublicKeys:  pubkeys,
 					LeaderIndex: 0,
 				},
-				Votes:  []*types.Vote{&vote},
+				Votes:  votes,
 				Status: types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			},
 		},
@@ -47,9 +50,9 @@ func TestGenesisState_Validate(t *testing.T) {
 		valid    bool
 	}{
 		{
-			desc:     "default is valid",
+			desc:     "default is not valid",
 			genState: types.DefaultGenesis(),
-			valid:    true,
+			valid:    false,
 		},
 		{
 			desc:     "valid genesis state",

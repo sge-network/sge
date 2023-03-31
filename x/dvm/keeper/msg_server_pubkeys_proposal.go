@@ -22,7 +22,7 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	// remove duplicates in public keys
 	payload.PublicKeys = utils.RemoveDuplicateStrs(payload.PublicKeys)
 
-	err = payload.Validate(payload.PublicKeys, payload.LeaderIndex)
+	err = payload.Validate(payload.LeaderIndex)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
