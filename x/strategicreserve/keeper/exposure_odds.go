@@ -29,7 +29,7 @@ func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (v
 	return val, true
 }
 
-// GetOddsExposuresByBook returns all exposures for a book
+// GetOddsExposuresByBook returns all exposures for an order book.
 func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookUID string) (list []types.BookOddsExposure, err error) {
 	store := k.getBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddsExposuresKey(bookUID))
@@ -47,7 +47,7 @@ func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookUID string) (list []
 	return
 }
 
-// GetAllBookExposures returns all book exposures used during genesis dump.
+// GetAllBookExposures returns all order book exposures used during genesis dump.
 func (k Keeper) GetAllBookExposures(ctx sdk.Context) (list []types.BookOddsExposure, err error) {
 	store := k.getBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})

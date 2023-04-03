@@ -7,7 +7,7 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// SetBook sets a book.
+// SetBook sets an order book.
 func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
 	bookKey := types.GetBookKey(book.UID)
 
@@ -16,7 +16,7 @@ func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
 	store.Set(bookKey, b)
 }
 
-// GetBook returns a specific order book.
+// GetBook returns a specific order book by its uid.
 func (k Keeper) GetBook(ctx sdk.Context, bookUID string) (val types.OrderBook, found bool) {
 	marketsStore := k.getBookStore(ctx)
 	bookKey := types.GetBookKey(bookUID)
@@ -48,12 +48,12 @@ func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error)
 	return
 }
 
-// InitiateBook initiates a book for a given market
+// InitiateBook initiates an order book for a given market.
 func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
 	// book and market have one-to-one relationship
 	bookUID := marketUID
 
-	// check for existing book with id
+	// check for existing book with uid
 	book, found := k.GetBook(ctx, bookUID)
 	if found {
 		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.UID)

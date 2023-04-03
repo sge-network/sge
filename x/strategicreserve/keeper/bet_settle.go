@@ -81,6 +81,9 @@ func (k Keeper) BettorWins(
 }
 
 // BettorLoses process bets in case bettor loses,
+// adds the bet amount to the actual profit of the participation
+// for each of the bet fulfillemnt records and,
+// removes the payout lock.
 func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 	betAmount sdk.Int,
 	payoutProfit sdk.Int,

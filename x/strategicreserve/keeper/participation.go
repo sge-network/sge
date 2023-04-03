@@ -18,7 +18,7 @@ func (k Keeper) SetBookParticipation(ctx sdk.Context, participation types.BookPa
 	store.Set(participationKey, b)
 }
 
-// GetBook GetBookParticipation a specific participation.
+// GetBookParticipation returns a specific participation of an order book by index.
 func (k Keeper) GetBookParticipation(ctx sdk.Context, bookUID string, index uint64) (val types.BookParticipation, found bool) {
 	store := k.getParticipationStore(ctx)
 	aprticipationKey := types.GetBookParticipationKey(bookUID, index)
@@ -32,7 +32,7 @@ func (k Keeper) GetBookParticipation(ctx sdk.Context, bookUID string, index uint
 	return val, true
 }
 
-// GetParticipationsOfBook returns all participations for a book
+// GetParticipationsOfBook returns all participations for an order book.
 func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookUID string) (list []types.BookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipationsKey(bookUID))

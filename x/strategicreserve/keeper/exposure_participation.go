@@ -23,7 +23,7 @@ func (k Keeper) removeParticipationExposure(ctx sdk.Context, pe types.Participat
 	store.Delete(types.GetParticipationExposureKey(pe.BookUID, pe.OddsUID, pe.ParticipationIndex))
 }
 
-// GetExposureByBookAndOdds returns all exposures for a book id and odds id
+// GetExposureByBookAndOdds returns all exposures for an order book uid and odds uid.
 func (k Keeper) GetExposureByBookAndOdds(ctx sdk.Context, bookUID, oddsUID string) (list []types.ParticipationExposure, err error) {
 	store := k.getParticipationExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipationExposuresKey(bookUID, oddsUID))
@@ -68,7 +68,7 @@ func (k Keeper) SetParticipationExposureByIndex(ctx sdk.Context, pe types.Partic
 	store.Set(peKey, b)
 }
 
-// GetExposureByBookAndParticipationIndex returns all exposures for a book id and participation index
+// GetExposureByBookAndParticipationIndex returns all exposures for an order book uid and participation index.
 func (k Keeper) GetExposureByBookAndParticipationIndex(ctx sdk.Context, bookUID string, participationIndex uint64) (list []types.ParticipationExposure, err error) {
 	store := k.getParticipationExposureByIndexStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipationByIndexKey(bookUID, participationIndex))
