@@ -14,7 +14,7 @@ message KeyVault {
 
 ## **PublicKeysChangeProposal**
 
-The public keys change proposal is store in the state to be used in order to change compromised public key.
+The public keys change proposal is store in the state to be used to change the compromised public keys.
 
 ```proto
 // PublicKeysChangeProposal is the type for the proposal for additions and
