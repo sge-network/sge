@@ -2,7 +2,7 @@
 
 * [About Sge Network](README.md)
 * [Modules](specs/README.md)
-  * [Bet](specs/bet/01_Overview.md)
+  * [Bet](specs/Bet/01_Overview.md)
   * [DVM](specs/DVM/01_Overview.md)
   * [Mint](specs/Mint/01_Overview.md)
   * [Market](specs/Market/01_Overview.md)
