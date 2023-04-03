@@ -14,7 +14,11 @@ type Ticket interface {
 
 	// Verify verifies the ticket signature with the leader public key. if the ticket is verified,
 	// then return nil else return invalid signature error
-	Verify(pubKeys string) error
+	Verify(pubKey string) error
+
+	// VerifyAny verifies the ticket signature with any of the public keys. if the ticket is verified,
+	// then return nil else return invalid signature error
+	VerifyAny(pubKeys []string) error
 
 	// ValidateExpiry verifies that the ticket is not expired yet.
 	ValidateExpiry(ctx sdk.Context) error
