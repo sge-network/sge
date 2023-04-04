@@ -135,9 +135,9 @@ func TestFinishProposals(t *testing.T) {
 func TestFinishProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	ctx = ctx.WithBlockTime(time.Now())
-	proposal := createNActiveProposal(k, ctx, 1)[0]
+	proposals := createNActiveProposal(k, ctx, 3)
 
-	voteAll := func(vote types.ProposalVote) {
+	voteAll := func(proposal *types.PublicKeysChangeProposal, vote types.ProposalVote) {
 		for _, p := range simappUtil.TestDVMPublicKeys {
 			bs, err := x509.MarshalPKIXPublicKey(p)
 			if err != nil {
@@ -157,35 +157,39 @@ func TestFinishProposal(t *testing.T) {
 		timeDiff time.Duration
 		vote     types.ProposalVote
 		result   types.ProposalResult
+		proposal *types.PublicKeysChangeProposal
 
 		err error
 	}{
 		{
 			timeDiff: types.MaxValidProposalMinutes / 2 * time.Minute,
+			proposal: &proposals[0],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_YES,
 			result:   types.ProposalResult_PROPOSAL_RESULT_APPROVED,
 		},
 		{
 			timeDiff: types.MaxValidProposalMinutes / 2 * time.Minute,
+			proposal: &proposals[1],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_NO,
 			result:   types.ProposalResult_PROPOSAL_RESULT_REJECTED,
 		},
 		{
 			timeDiff: types.MaxValidProposalMinutes * 2 * time.Minute,
+			proposal: &proposals[2],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_YES,
 			result:   types.ProposalResult_PROPOSAL_RESULT_EXPIRED,
 		},
 	} {
 		ctx = ctx.WithBlockTime(ctx.BlockTime().Add(tc.timeDiff))
 
-		voteAll(tc.vote)
+		voteAll(tc.proposal, tc.vote)
 
-		k.SetPubkeysChangeProposal(ctx, proposal)
+		k.SetPubkeysChangeProposal(ctx, *tc.proposal)
 
 		err := k.FinishProposals(ctx)
 		require.NoError(t, err)
 
-		finishedProposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_FINISHED, proposal.Id)
+		finishedProposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_FINISHED, tc.proposal.Id)
 		require.True(t, found)
 		require.Equal(t, tc.result, finishedProposal.Result)
 	}

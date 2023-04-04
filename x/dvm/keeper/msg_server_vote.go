@@ -35,6 +35,11 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket should be signed by the provided pub key: %s", err)
 	}
 
+	err = payload.Validate()
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
+	}
+
 	// get public key change proposal
 	proposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, payload.ProposalId)
 	if !found {

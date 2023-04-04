@@ -32,7 +32,7 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 	}
 
 	// validate the ticket by the keys
-	err = t.Verify(keys.PublicKeys...)
+	err = t.Verify(keys.GetLeader())
 	if err != nil {
 		return err
 	}
@@ -42,11 +42,11 @@ func (k Keeper) VerifyTicket(goCtx context.Context, ticket string) error {
 
 // VerifyTicketUnmarshal verifies the ticket first, then if the token was verified, it unmarshal the data of ticket into clm.
 func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, clm interface{}) error {
-	return k.verifyTicketWithKeyUnmarshal(goCtx, ticketStr, clm, "")
+	return k.verifyTicketWithKeyUnmarshal(goCtx, ticketStr, clm)
 }
 
 // verifyTicketWithKeyUnmarshal verifies the ticket using the provided publiv key first, then if the token was verified, it unmarshal the data of ticket into clm.
-func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr string, clm interface{}, pubKey string) error {
+func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr string, clm interface{}, pubKeys ...string) error {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// construct new ticket object from string ticket
@@ -67,30 +67,34 @@ func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr st
 		return types.ErrNoPublicKeysFound
 	}
 
-	pubKeys := keyVault.PublicKeys
-
-	if pubKey != "" {
+	for _, pk := range pubKeys {
 		// check if the provided pubkey is registered or not
 		isRegistered := false
-		for _, registereedPubKey := range pubKeys {
-			if registereedPubKey == pubKey {
+		for _, registereedPubKey := range keyVault.PublicKeys {
+			if registereedPubKey == pk {
 				isRegistered = true
 			}
 		}
 
 		// pubkey is not registered so it is invalid
 		if !isRegistered {
-			return fmt.Errorf("the provided public key is not registered in the blockchain store: %s", pubKey)
+			return fmt.Errorf("the provided public key is not registered in the blockchain store: %s", pk)
 		}
-
-		// replace the registered pubkeys with the provided key
-		pubKeys = []string{pubKey}
 	}
 
-	// validate ticket by the keys with provided pubkey
-	err = ticket.Verify(pubKeys...)
-	if err != nil {
-		return err
+	if len(pubKeys) == 0 {
+		// validate ticket by the keys with the leader public key
+		leader := keyVault.GetLeader()
+		err = ticket.Verify(leader)
+		if err != nil {
+			return err
+		}
+	} else {
+		// validate ticket by the keys with provided pubkeys
+		err = ticket.VerifyAny(pubKeys)
+		if err != nil {
+			return err
+		}
 	}
 
 	// unmarshal ticket
