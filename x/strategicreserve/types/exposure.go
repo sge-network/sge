@@ -48,3 +48,11 @@ func (pe ParticipationExposure) String() string {
 	}
 	return string(out)
 }
+
+// CalculateMaxLoss calculates the maximum amount of loss for an exposure
+// according to the bet amount.
+func (pe ParticipationExposure) CalculateMaxLoss(totalBetAmount sdk.Int) sdk.Int {
+	return pe.Exposure.
+		Sub(totalBetAmount).
+		Add(pe.BetAmount)
+}

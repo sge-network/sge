@@ -20,82 +20,108 @@ func (k Keeper) ProcessBetPlacement(
 	betFee sdk.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
-) (betFulfillments []*bettypes.BetFulfillment, err error) {
+) ([]*bettypes.BetFulfillment, error) {
 	// If lock exists, return error
 	// Lock already exists means the bet is already placed for the given bet-uid
 	if k.payoutLockExists(ctx, betUID) {
-		err = sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", betUID)
-		return
+		return nil, sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", betUID)
 	}
 
 	// get book data by its id
 	book, found := k.GetBook(ctx, bookUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
-		return
+		return nil, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
 	}
 	// get exposures of the odds user is placing the bet
 	bookExposure, found := k.GetBookOddsExposure(ctx, bookUID, oddsUID)
 	if !found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
-		return
+		return nil, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
 	}
 
-	// make maps for participation and its exposures
-	participationMap := make(map[uint64]types.BookParticipation)
-	participationExposureMap := make(map[uint64]types.ParticipationExposure)
+	betFulfillments, updatedFulfillmentQueue, fulfiledBetAmount, err := k.fulFillQueueBets(ctx,
+		betUID,
+		betID,
+		oddsUID,
+		oddsVal,
+		oddsType,
+		betAmount,
+		payoutProfit,
+		maxLossMultiplier,
+		&book,
+		&bookExposure,
+	)
+	if err != nil {
+		return nil, err
+	}
 
-	bps, err := k.GetParticipationsOfBook(ctx, book.UID)
+	bookExposure.FulfillmentQueue = updatedFulfillmentQueue
+	k.SetBookOddsExposure(ctx, bookExposure)
+
+	// Transfer bet fee from bettor to the `bet` module account
+	if k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
+		return nil, err
+	}
+
+	// Transfer bet amount from bettor to `book_liquidity_pool` Account
+	if err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, fulfiledBetAmount); err != nil {
+		return nil, err
+	}
+
+	// Create a unique lock in the Payout Store for the bet
+	k.SetPayoutLock(ctx, betUID)
+
+	return betFulfillments, nil
+}
+
+func (k Keeper) fulFillQueueBets(
+	ctx sdk.Context,
+	betUID string, betID uint64,
+	oddsUID, oddsVal string, oddsType bettypes.OddsType,
+	betAmount sdk.Int,
+	payoutProfit sdk.Dec,
+	maxLossMultiplier sdk.Dec,
+	book *types.OrderBook,
+	bookExposure *types.BookOddsExposure,
+) (
+	betFulfillments []*bettypes.BetFulfillment,
+	updatedQueue []uint64,
+	fulfiledBetAmount sdk.Int,
+	err error,
+) {
+	participationMap, participationExposureMap, err := k.getExposuresMap(ctx, oddsUID, book)
 	if err != nil {
 		return
 	}
-	if book.ParticipationCount != cast.ToUint64(len(bps)) {
-		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", bookUID)
-		return
-	}
-	for _, bp := range bps {
-		participationMap[bp.Index] = bp
-	}
 
-	pes, err := k.GetExposureByBookAndOdds(ctx, bookUID, oddsUID)
-	if err != nil {
-		return
-	}
-	if book.ParticipationCount != cast.ToUint64(len(pes)) {
-		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", bookUID, oddsUID)
-		return
-	}
-	for _, pe := range pes {
-		participationExposureMap[pe.ParticipationIndex] = pe
-	}
+	updatedQueue = bookExposure.FulfillmentQueue
 
-	remainingPayoutProfit, updatedFulfillmentQueue := payoutProfit, bookExposure.FulfillmentQueue
-	fulfiledBetAmount := sdk.ZeroInt()
+	// the decimal amount that is being lost in the bet amount calculation from payout profit
 	truncatedBetAmount := sdk.NewDec(0)
 
 	// continue until updatedFulfillmentQueue gets empty
-	for len(updatedFulfillmentQueue) > 0 {
+	for len(updatedQueue) > 0 {
 		var participation types.BookParticipation
 		var participationExposure types.ParticipationExposure
-		participationIndex := updatedFulfillmentQueue[0]
+		participationIndex := updatedQueue[0]
 
-		getQueueItemParticipation := func() error {
+		getQueueItemInfo := func() error {
+			var found bool
 			participation, found = participationMap[participationIndex]
 			if !found {
-				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", book.UID, participationIndex)
 			}
 			participationExposure, found = participationExposureMap[participationIndex]
 			if !found {
-				return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookUID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", book.UID, participationIndex)
 			}
 			if participationExposure.IsFulfilled {
-				return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookUID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", book.UID, participationIndex)
 			}
 			return nil
 		}
 
 		removeQueueItem := func() {
-			updatedFulfillmentQueue = updatedFulfillmentQueue[1:]
+			updatedQueue = updatedQueue[1:]
 		}
 
 		setFulfilled := func() {
@@ -103,30 +129,45 @@ func (k Keeper) ProcessBetPlacement(
 			participation.ExposuresNotFilled--
 		}
 
-		processBetFulfillment := func(payoutProfitToFulfill sdk.Int, isLastFulfillment bool) error {
+		fulfill := func(payoutProfitToFulfill sdk.Int, isLastFulfillment bool) error {
 			var betAmountToFulfill sdk.Int
+
+			// if the fulfillment is in the last state,
+			// the bet amount should be fulfilled totally
+			// because there is no decimal truncation.
 			if isLastFulfillment {
 				// the bet amount
 				betAmountToFulfill = betAmount
 			} else {
+				// findout what would be the bet amount according to the pyout profit
 				expectedBetAmountDec, err := bettypes.CalculateBetAmount(oddsType, oddsVal, payoutProfitToFulfill.ToDec())
 				if err != nil {
 					return err
 				}
+				// add previous loop truncated value to the calculated bet amount
 				expectedBetAmountDec = expectedBetAmountDec.Add(truncatedBetAmount)
+
+				// we need for the bet amount to be of type sdk.Int
+				// so the truncation in inevitable
 				betAmountToFulfill = expectedBetAmountDec.TruncateInt()
+
+				// save the truncated amount in the calculations for the next loop
 				truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(betAmountToFulfill.ToDec()))
 			}
 
 			if !isLastFulfillment {
 				setFulfilled()
 			}
+			// add the payout profit to the
 			participationExposure.Exposure = participationExposure.Exposure.Add(payoutProfitToFulfill)
+
+			// add the bet amount that is being fulfilled to the exposure and participation
 			participationExposure.BetAmount = participationExposure.BetAmount.Add(betAmountToFulfill)
 			participation.TotalBetAmount = participation.TotalBetAmount.Add(betAmountToFulfill)
 			participation.CurrentRoundTotalBetAmount = participation.CurrentRoundTotalBetAmount.Add(betAmountToFulfill)
 
-			maxLoss := participationExposure.Exposure.Sub(participation.CurrentRoundTotalBetAmount).Add(participationExposure.BetAmount)
+			// max loss is the maximum amount that an exposure may lose.
+			maxLoss := participationExposure.CalculateMaxLoss(participation.CurrentRoundTotalBetAmount)
 			switch {
 			case participation.CurrentRoundMaxLoss.IsNil():
 				participation.CurrentRoundMaxLoss = maxLoss
@@ -134,7 +175,7 @@ func (k Keeper) ProcessBetPlacement(
 			case participation.CurrentRoundMaxLossOddsUID == oddsUID:
 				participation.CurrentRoundMaxLoss = maxLoss
 			default:
-				originalMaxLoss := participation.CurrentRoundMaxLoss.Sub(betAmountToFulfill)
+				originalMaxLoss := participation.CalculateMaxLoss(betAmountToFulfill)
 				if maxLoss.GT(originalMaxLoss) {
 					participation.CurrentRoundMaxLoss = maxLoss
 					participation.CurrentRoundMaxLossOddsUID = oddsUID
@@ -149,13 +190,21 @@ func (k Keeper) ProcessBetPlacement(
 				BetAmount:          betAmountToFulfill,
 				PayoutProfit:       payoutProfitToFulfill,
 			})
+
+			// the amount has been fulfulled, so it should be subtracted from the bet amount of the
 			betAmount = betAmount.Sub(betAmountToFulfill)
 
+			// add the flfilled bet amount to the fulfillment amount tracker variable
 			fulfiledBetAmount = fulfiledBetAmount.Add(betAmountToFulfill)
-			remainingPayoutProfit = remainingPayoutProfit.Sub(payoutProfitToFulfill.ToDec())
 
+			// subtract the payout profit that is fulfilled from the initial payout profit
+			// to prevent being calculated multiple times
+			payoutProfit = payoutProfit.Sub(payoutProfitToFulfill.ToDec())
+
+			// store the bet pair in the state
 			participationBetPair := types.NewParticipationBetPair(participation.BookUID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)
+
 			return nil
 		}
 
@@ -166,10 +215,12 @@ func (k Keeper) ProcessBetPlacement(
 			// check if there is more liquidity amount
 			eligibleForNextRound := participation.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
-			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, bookUID, participationIndex)
+			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, book.UID, participationIndex)
 			if err != nil {
 				return
 			}
+
+			// prepare the participation exposure map for the next round of calculations.
 			for _, pe := range participationExposures {
 				k.MoveToHistoricalParticipationExposure(ctx, pe)
 				if eligibleForNextRound {
@@ -182,6 +233,7 @@ func (k Keeper) ProcessBetPlacement(
 				}
 			}
 
+			// prepare participation for the next round
 			participation.ExposuresNotFilled = book.OddsCount
 			participation.CurrentRoundTotalBetAmount = sdk.ZeroInt()
 			participation.MaxLoss = participation.MaxLoss.Add(participation.CurrentRoundMaxLoss)
@@ -191,27 +243,27 @@ func (k Keeper) ProcessBetPlacement(
 
 			if eligibleForNextRound {
 				var boes []types.BookOddsExposure
-				boes, err = k.GetOddsExposuresByBook(ctx, bookUID)
+				boes, err = k.GetOddsExposuresByBook(ctx, book.UID)
 				if err != nil {
 					return
 				}
 				for _, boe := range boes {
 					boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
 					if boe.OddsUID == participationExposure.OddsUID {
-						bookExposure = boe
+						bookExposure = &boe
 					}
 
 					k.SetBookOddsExposure(ctx, boe)
 				}
-				updatedFulfillmentQueue = append(updatedFulfillmentQueue, participationIndex)
-				bookExposure.FulfillmentQueue = updatedFulfillmentQueue
+				updatedQueue = append(updatedQueue, participationIndex)
+				bookExposure.FulfillmentQueue = updatedQueue
 			}
 
 			return nil
 		}
 
 		// fill participation and exposure values
-		err = getQueueItemParticipation()
+		err = getQueueItemInfo()
 		if err != nil {
 			return
 		}
@@ -225,21 +277,21 @@ func (k Keeper) ProcessBetPlacement(
 		case availableLiquidty.LTE(sdk.ZeroInt()):
 			setFulfilled()
 			removeQueueItem()
-		case availableLiquidty.ToDec().LTE(remainingPayoutProfit):
+		case availableLiquidty.ToDec().LTE(payoutProfit):
 			// if the available liquidity is less than remaining payout profit that
 			// need to be paid, we should use all of available liquidity pull for the calculations.
-			err := processBetFulfillment(availableLiquidty, false)
+			err = fulfill(availableLiquidty, false)
 			if err != nil {
-				return betFulfillments, err
+				return
 			}
 			removeQueueItem()
 		default:
 			// availableLiquidty is positive and more than remaining payout profit that
 			// need to be paid, so we can cover all of payout profits with available liquidity.
 			// this case appends the last fulfillment
-			err := processBetFulfillment(remainingPayoutProfit.TruncateInt(), true)
+			err = fulfill(payoutProfit.TruncateInt(), true)
 			if err != nil {
-				return betFulfillments, err
+				return
 			}
 		}
 
@@ -255,32 +307,54 @@ func (k Keeper) ProcessBetPlacement(
 		}
 
 		// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-		if remainingPayoutProfit.LT(sdk.OneDec()) || len(updatedFulfillmentQueue) == 0 {
+		if payoutProfit.LT(sdk.OneDec()) || len(updatedQueue) == 0 {
 			break
 		}
 	}
 
-	if remainingPayoutProfit.GTE(sdk.OneDec()) {
-		return betFulfillments, sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+	if payoutProfit.GTE(sdk.OneDec()) {
+		err = sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+		return
 	}
 
-	bookExposure.FulfillmentQueue = updatedFulfillmentQueue
-	k.SetBookOddsExposure(ctx, bookExposure)
+	return betFulfillments, []uint64{}, sdk.Int{}, nil
+}
 
-	// Transfer bet fee from bettor to the `bet` module account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee)
+func (k Keeper) getExposuresMap(
+	ctx sdk.Context,
+	oddsUID string,
+	book *types.OrderBook,
+) (
+	participationMap map[uint64]types.BookParticipation,
+	participationExposureMap map[uint64]types.ParticipationExposure,
+	err error,
+) {
+	participationMap = make(map[uint64]types.BookParticipation)
+	participationExposureMap = make(map[uint64]types.ParticipationExposure)
+
+	bps, err := k.GetParticipationsOfBook(ctx, book.UID)
 	if err != nil {
-		return betFulfillments, err
+		return
+	}
+	if book.ParticipationCount != cast.ToUint64(len(bps)) {
+		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
+		return
+	}
+	for _, bp := range bps {
+		participationMap[bp.Index] = bp
 	}
 
-	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, fulfiledBetAmount)
+	pes, err := k.GetExposureByBookAndOdds(ctx, book.UID, oddsUID)
 	if err != nil {
-		return betFulfillments, err
+		return
+	}
+	if book.ParticipationCount != cast.ToUint64(len(pes)) {
+		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
+		return
+	}
+	for _, pe := range pes {
+		participationExposureMap[pe.ParticipationIndex] = pe
 	}
 
-	// Create a unique lock in the Payout Store for the bet
-	k.SetPayoutLock(ctx, betUID)
-
-	return betFulfillments, nil
+	return participationMap, participationExposureMap, nil
 }

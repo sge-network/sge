@@ -39,3 +39,9 @@ func (bp BookParticipation) String() string {
 	}
 	return string(out)
 }
+
+// CalculateMaxLoss calculates the maxixmum amount of the tokens expected to be the
+// loss of the participation according to the bet amount
+func (bp BookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
+	return bp.CurrentRoundMaxLoss.Sub(betAmount)
+}
