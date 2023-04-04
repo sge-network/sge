@@ -6,19 +6,19 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// SetBookOddsExposure sets a book odds exposure.
-func (k Keeper) SetBookOddsExposure(ctx sdk.Context, boe types.BookOddsExposure) {
-	bookKey := types.GetBookOddsExposureKey(boe.BookUID, boe.OddsUID)
+// SetOrderBookOddsExposure sets a book odds exposure.
+func (k Keeper) SetOrderBookOddsExposure(ctx sdk.Context, boe types.OrderBookOddsExposure) {
+	bookKey := types.GetOrderBookOddsExposureKey(boe.OrderBookUID, boe.OddsUID)
 
-	store := k.getBookOddsExposureStore(ctx)
+	store := k.getOrderBookOddsExposureStore(ctx)
 	b := k.cdc.MustMarshal(&boe)
 	store.Set(bookKey, b)
 }
 
-// GetBookOddsExposure returns a specific book odds exposure.
-func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (val types.BookOddsExposure, found bool) {
-	marketsStore := k.getBookOddsExposureStore(ctx)
-	exposureKey := types.GetBookOddsExposureKey(bookUID, oddsUID)
+// GetOrderBookOddsExposure returns a specific book odds exposure.
+func (k Keeper) GetOrderBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (val types.OrderBookOddsExposure, found bool) {
+	marketsStore := k.getOrderBookOddsExposureStore(ctx)
+	exposureKey := types.GetOrderBookOddsExposureKey(bookUID, oddsUID)
 	b := marketsStore.Get(exposureKey)
 	if b == nil {
 		return val, false
@@ -29,17 +29,17 @@ func (k Keeper) GetBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (v
 	return val, true
 }
 
-// GetOddsExposuresByBook returns all exposures for an order book.
-func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookUID string) (list []types.BookOddsExposure, err error) {
-	store := k.getBookOddsExposureStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookOddsExposuresKey(bookUID))
+// GetOddsExposuresByOrderBook returns all exposures for an order book.
+func (k Keeper) GetOddsExposuresByOrderBook(ctx sdk.Context, bookUID string) (list []types.OrderBookOddsExposure, err error) {
+	store := k.getOrderBookOddsExposureStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookOddsExposuresKey(bookUID))
 
 	defer func() {
 		err = iterator.Close()
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.BookOddsExposure
+		var val types.OrderBookOddsExposure
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -47,9 +47,9 @@ func (k Keeper) GetOddsExposuresByBook(ctx sdk.Context, bookUID string) (list []
 	return
 }
 
-// GetAllBookExposures returns all order book exposures used during genesis dump.
-func (k Keeper) GetAllBookExposures(ctx sdk.Context) (list []types.BookOddsExposure, err error) {
-	store := k.getBookOddsExposureStore(ctx)
+// GetAllOrderBookExposures returns all order book exposures used during genesis dump.
+func (k Keeper) GetAllOrderBookExposures(ctx sdk.Context) (list []types.OrderBookOddsExposure, err error) {
+	store := k.getOrderBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -57,7 +57,7 @@ func (k Keeper) GetAllBookExposures(ctx sdk.Context) (list []types.BookOddsExpos
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.BookOddsExposure
+		var val types.OrderBookOddsExposure
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}

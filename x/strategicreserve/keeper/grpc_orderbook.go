@@ -28,10 +28,10 @@ func (k Keeper) OrderBooks(c context.Context, req *types.QueryOrderBooksRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := ctx.KVStore(k.storeKey)
-	bookStore := prefix.NewStore(store, types.BookKeyPrefix)
+	bookStore := prefix.NewStore(store, types.OrderBookKeyPrefix)
 
 	pageRes, err := query.FilteredPaginate(bookStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		orderBook, err := types.UnmarshalBook(k.cdc, value)
+		orderBook, err := types.UnmarshalOrderBook(k.cdc, value)
 		if err != nil {
 			return false, err
 		}
@@ -59,41 +59,41 @@ func (k Keeper) OrderBook(c context.Context, req *types.QueryOrderBookRequest) (
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookUid == "" {
+	if req.OrderBookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	orderBook, found := k.GetBook(ctx, req.BookUid)
+	orderBook, found := k.GetOrderBook(ctx, req.OrderBookUid)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "order book %s not found", req.BookUid)
+		return nil, status.Errorf(codes.NotFound, "order book %s not found", req.OrderBookUid)
 	}
 
-	return &types.QueryOrderBookResponse{Orderbook: orderBook}, nil
+	return &types.QueryOrderBookResponse{OrderBook: orderBook}, nil
 }
 
-// BookParticipations queries participations info for given strategicreserve
-func (k Keeper) BookParticipations(c context.Context, req *types.QueryBookParticipationsRequest) (*types.QueryBookParticipationsResponse, error) {
+// OrderBookParticipations queries participations info for given strategicreserve
+func (k Keeper) OrderBookParticipations(c context.Context, req *types.QueryOrderBookParticipationsRequest) (*types.QueryOrderBookParticipationsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookUid == "" {
+	if req.OrderBookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
 	}
-	var bookParticipations []types.BookParticipation
+	var orderBookParticipations []types.OrderBookParticipation
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookParticipationKeyPrefix)
-	participationStore := prefix.NewStore(store, types.GetBookParticipationsKey(req.BookUid))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.OrderBookParticipationKeyPrefix)
+	participationStore := prefix.NewStore(store, types.GetOrderBookParticipationsKey(req.OrderBookUid))
 	pageRes, err := query.FilteredPaginate(participationStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var bookParticipation types.BookParticipation
+		var bookParticipation types.OrderBookParticipation
 		if err := k.cdc.Unmarshal(value, &bookParticipation); err != nil {
 			return false, err
 		}
 
 		if accumulate {
-			bookParticipations = append(bookParticipations, bookParticipation)
+			orderBookParticipations = append(orderBookParticipations, bookParticipation)
 		}
 		return true, nil
 	})
@@ -101,19 +101,19 @@ func (k Keeper) BookParticipations(c context.Context, req *types.QueryBookPartic
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryBookParticipationsResponse{
-		BookParticipations: bookParticipations,
-		Pagination:         pageRes,
+	return &types.QueryOrderBookParticipationsResponse{
+		OrderBookParticipations: orderBookParticipations,
+		Pagination:              pageRes,
 	}, nil
 }
 
-// BookParticipation queries book participation info for given order book id and participation index
-func (k Keeper) BookParticipation(c context.Context, req *types.QueryBookParticipationRequest) (*types.QueryBookParticipationResponse, error) {
+// OrderBookParticipation queries book participation info for given order book id and participation index
+func (k Keeper) OrderBookParticipation(c context.Context, req *types.QueryOrderBookParticipationRequest) (*types.QueryOrderBookParticipationResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookUid == "" {
+	if req.OrderBookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
@@ -122,36 +122,36 @@ func (k Keeper) BookParticipation(c context.Context, req *types.QueryBookPartici
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	bookParticipation, found := k.GetBookParticipation(ctx, req.BookUid, req.ParticipationIndex)
+	orderBookParticipation, found := k.GetOrderBookParticipation(ctx, req.OrderBookUid, req.ParticipationIndex)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "book participation %s, %d not found", req.BookUid, req.ParticipationIndex)
+		return nil, status.Errorf(codes.NotFound, "book participation %s, %d not found", req.OrderBookUid, req.ParticipationIndex)
 	}
 
-	return &types.QueryBookParticipationResponse{BookParticipation: bookParticipation}, nil
+	return &types.QueryOrderBookParticipationResponse{OrderBookParticipation: orderBookParticipation}, nil
 }
 
-// BookExposures queries exposures info for given strategicreserve
-func (k Keeper) BookExposures(c context.Context, req *types.QueryBookExposuresRequest) (*types.QueryBookExposuresResponse, error) {
+// OrderBookExposures queries exposures info for given strategicreserve
+func (k Keeper) OrderBookExposures(c context.Context, req *types.QueryOrderBookExposuresRequest) (*types.QueryOrderBookExposuresResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookUid == "" {
+	if req.OrderBookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
 	}
-	var bookExposures []types.BookOddsExposure
+	var orderBookExposures []types.OrderBookOddsExposure
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BookOddsExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetBookOddsExposuresKey(req.BookUid))
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.OrderBookOddsExposureKeyPrefix)
+	exposureStore := prefix.NewStore(store, types.GetOrderBookOddsExposuresKey(req.OrderBookUid))
 	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var bookExposure types.BookOddsExposure
-		if err := k.cdc.Unmarshal(value, &bookExposure); err != nil {
+		var orderBookExposure types.OrderBookOddsExposure
+		if err := k.cdc.Unmarshal(value, &orderBookExposure); err != nil {
 			return false, err
 		}
 
 		if accumulate {
-			bookExposures = append(bookExposures, bookExposure)
+			orderBookExposures = append(orderBookExposures, orderBookExposure)
 		}
 		return true, nil
 	})
@@ -159,19 +159,19 @@ func (k Keeper) BookExposures(c context.Context, req *types.QueryBookExposuresRe
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryBookExposuresResponse{
-		BookExposures: bookExposures,
-		Pagination:    pageRes,
+	return &types.QueryOrderBookExposuresResponse{
+		OrderBookExposures: orderBookExposures,
+		Pagination:         pageRes,
 	}, nil
 }
 
-// BookExposure queries book exposure info for given order book id and odds id
-func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequest) (*types.QueryBookExposureResponse, error) {
+// OrderBookExposure queries book exposure info for given order book id and odds id
+func (k Keeper) OrderBookExposure(c context.Context, req *types.QueryOrderBookExposureRequest) (*types.QueryOrderBookExposureResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
 
-	if req.BookUid == "" {
+	if req.OrderBookUid == "" {
 		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
 	}
 
@@ -180,10 +180,10 @@ func (k Keeper) BookExposure(c context.Context, req *types.QueryBookExposureRequ
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
-	bookExposure, found := k.GetBookOddsExposure(ctx, req.BookUid, req.OddsUid)
+	orderBookExposure, found := k.GetOrderBookOddsExposure(ctx, req.OrderBookUid, req.OddsUid)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.BookUid, req.OddsUid)
+		return nil, status.Errorf(codes.NotFound, "book exposure %s, %s not found", req.OrderBookUid, req.OddsUid)
 	}
 
-	return &types.QueryBookExposureResponse{BookExposure: bookExposure}, nil
+	return &types.QueryOrderBookExposureResponse{OrderBookExposure: orderBookExposure}, nil
 }

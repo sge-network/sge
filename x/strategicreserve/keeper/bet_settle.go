@@ -9,7 +9,7 @@ import (
 )
 
 // RefundBettor process bets in case market gets cancelled or aborted,
-// this method transfers th bet amount from book liquidity module account balance to the bettor account balance.
+// this method transfers th bet amount from order book liquidity module account balance to the bettor account balance.
 func (k Keeper) RefundBettor(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
@@ -22,7 +22,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// transfer bet amount from `bet_reserve` to bettor's account.
-	err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betAmount)
+	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betAmount)
 	if err != nil {
 		return
 	}
@@ -43,7 +43,7 @@ func (k Keeper) BettorWins(
 	payoutProfit sdk.Int,
 	uniqueLock string,
 	betFulfillments []*bettypes.BetFulfillment,
-	bookUID string,
+	orderBookUID string,
 ) (err error) {
 	// if no lock exist means that there is nothing to be processed.
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -51,27 +51,27 @@ func (k Keeper) BettorWins(
 	}
 
 	for _, betFulfillment := range betFulfillments {
-		bookParticipation, found := k.GetBookParticipation(ctx, bookUID, betFulfillment.ParticipationIndex)
+		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, betFulfillment.ParticipationIndex)
+			return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", orderBookUID, betFulfillment.ParticipationIndex)
 		}
 
 		// transfer payout from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.PayoutProfit)
+		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.PayoutProfit)
 		if err != nil {
 			return
 		}
 
 		// transfer bet amount from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, bettorAddress, betFulfillment.BetAmount)
+		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.BetAmount)
 		if err != nil {
 			return
 		}
 
 		// update actual profit of the participation, the bettor is the winner, so we need to
 		// payout from the participant profit.
-		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Sub(betFulfillment.PayoutProfit)
-		k.SetBookParticipation(ctx, bookParticipation)
+		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Sub(betFulfillment.PayoutProfit)
+		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
 	// Delete lock from the payout store as the bet is settled
@@ -89,7 +89,7 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 	payoutProfit sdk.Int,
 	uniqueLock string,
 	betFulfillments []*bettypes.BetFulfillment,
-	bookUID string,
+	orderBookUID string,
 ) error {
 	// if no lock exist means that there is nothing to be processed.
 	if !k.payoutLockExists(ctx, uniqueLock) {
@@ -98,15 +98,15 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 
 	for _, betFulfillment := range betFulfillments {
 		// update amount to be transferred to house
-		bookParticipation, found := k.GetBookParticipation(ctx, bookUID, betFulfillment.ParticipationIndex)
+		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, betFulfillment.ParticipationIndex)
+			return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", orderBookUID, betFulfillment.ParticipationIndex)
 		}
 
 		// update actual profit of the participation, the bettor is the loser, so we need to
 		// add the lost bet amount to the participant profit.
-		bookParticipation.ActualProfit = bookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
-		k.SetBookParticipation(ctx, bookParticipation)
+		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
+		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
 	// Delete lock from the payout store as the bet is settled

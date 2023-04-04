@@ -8,16 +8,16 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// transferFundsFromUserToModule transfers the given amount from
+// transferFundsFromAccountToModule transfers the given amount from
 // the given account address to the module account passed.
 // Returns an error if the account holder has insufficient balance.
-func (k Keeper) transferFundsFromUserToModule(ctx sdk.Context, address sdk.AccAddress, moduleAccName string, amount sdk.Int) error {
+func (k Keeper) transferFundsFromAccountToModule(ctx sdk.Context, address sdk.AccAddress, moduleAccName string, amount sdk.Int) error {
 	// Get the spendable balance of the account holder
 	usgeCoins := k.bankKeeper.SpendableCoins(ctx, address).AmountOf(params.BaseCoinUnit)
 
 	// If account holder has insufficient balance, return error
 	if usgeCoins.LT(amount) {
-		return sdkerrors.Wrapf(types.ErrInsufficientUserBalance, " User Address: %s", address.String())
+		return sdkerrors.Wrapf(types.ErrInsufficientAccountBalance, "account Address: %s", address.String())
 	}
 
 	amt := sdk.NewCoins(sdk.NewCoin(params.BaseCoinUnit, amount))
@@ -63,10 +63,10 @@ func (k Keeper) transferFundsFromModuleToModule(
 	return nil
 }
 
-// transferFundsFromModuleToUser transfers the given amount from a module
+// transferFundsFromModuleToAccount transfers the given amount from a module
 // account to the given account address.
 // Returns an error if the account holder has insufficient balance.
-func (k Keeper) transferFundsFromModuleToUser(ctx sdk.Context,
+func (k Keeper) transferFundsFromModuleToAccount(ctx sdk.Context,
 	moduleAccName string, address sdk.AccAddress, amount sdk.Int,
 ) error {
 	// Get the balance of the sender module account

@@ -5,19 +5,19 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// NewBookOddsExposure creates a new book odds exposure object
+// NewOrderBookOddsExposure creates a new book odds exposure object
 //
 //nolint:interfacer
-func NewBookOddsExposure(bookUID, oddsUID string, fulfillmentQueue []uint64) BookOddsExposure {
-	return BookOddsExposure{
-		BookUID:          bookUID,
+func NewOrderBookOddsExposure(orderBookUID, oddsUID string, fulfillmentQueue []uint64) OrderBookOddsExposure {
+	return OrderBookOddsExposure{
+		OrderBookUID:     orderBookUID,
 		OddsUID:          oddsUID,
 		FulfillmentQueue: fulfillmentQueue,
 	}
 }
 
 // String returns a human readable string representation of a BookOddsExposure.
-func (boe BookOddsExposure) String() string {
+func (boe OrderBookOddsExposure) String() string {
 	out, err := yaml.Marshal(boe)
 	if err != nil {
 		panic(err)
@@ -28,9 +28,9 @@ func (boe BookOddsExposure) String() string {
 // NewParticipationExposure creates a new participation exposure object
 //
 //nolint:interfacer
-func NewParticipationExposure(bookUID, oddsUID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
+func NewParticipationExposure(orderBookUID, oddsUID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
 	return ParticipationExposure{
-		BookUID:            bookUID,
+		OrderBookUID:       orderBookUID,
 		OddsUID:            oddsUID,
 		ParticipationIndex: participationIndex,
 		Exposure:           exposure,

@@ -5,18 +5,18 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-// NewBookParticipation creates a new book participation object
+// NewOrderBookParticipation creates a new book participation object
 //
 //nolint:interfacer
-func NewBookParticipation(
-	index uint64, bookUID string, participantAddress string,
+func NewOrderBookParticipation(
+	index uint64, orderBookUID string, participantAddress string,
 	exposuresNotFilled uint64, isModuleAccount bool,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
 	currentRoundMaxLossOddsUID string, actualProfit sdk.Int,
-) BookParticipation {
-	return BookParticipation{
+) OrderBookParticipation {
+	return OrderBookParticipation{
 		Index:                      index,
-		BookUID:                    bookUID,
+		OrderBookUID:               orderBookUID,
 		ParticipantAddress:         participantAddress,
 		IsModuleAccount:            isModuleAccount,
 		Liquidity:                  liquidity,
@@ -32,7 +32,7 @@ func NewBookParticipation(
 }
 
 // String returns a human readable string representation of a BookParticipation.
-func (bp BookParticipation) String() string {
+func (bp OrderBookParticipation) String() string {
 	out, err := yaml.Marshal(bp)
 	if err != nil {
 		panic(err)
@@ -42,6 +42,6 @@ func (bp BookParticipation) String() string {
 
 // CalculateMaxLoss calculates the maxixmum amount of the tokens expected to be the
 // loss of the participation according to the bet amount
-func (bp BookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
+func (bp OrderBookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
 	return bp.CurrentRoundMaxLoss.Sub(betAmount)
 }

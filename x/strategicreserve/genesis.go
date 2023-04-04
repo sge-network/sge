@@ -9,16 +9,16 @@ import (
 
 // InitGenesis sets the parameters for the provided keeper.
 func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState) {
-	for _, book := range data.BookList {
-		keeper.SetBook(ctx, book)
+	for _, book := range data.OrderBookList {
+		keeper.SetOrderBook(ctx, book)
 	}
 
-	for _, bp := range data.BookParticipationList {
-		keeper.SetBookParticipation(ctx, bp)
+	for _, bp := range data.OrderBookParticipationList {
+		keeper.SetOrderBookParticipation(ctx, bp)
 	}
 
-	for _, be := range data.BookExposureList {
-		keeper.SetBookOddsExposure(ctx, be)
+	for _, be := range data.OrderBookExposureList {
+		keeper.SetOrderBookOddsExposure(ctx, be)
 	}
 
 	for _, pe := range data.ParticipationExposureList {
@@ -57,17 +57,17 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	var err error
-	genesis.BookList, err = k.GetAllBooks(ctx)
+	genesis.OrderBookList, err = k.GetAllOrderBooks(ctx)
 	if err != nil {
 		panic(err)
 	}
 
-	genesis.BookParticipationList, err = k.GetAllBookParticipations(ctx)
+	genesis.OrderBookParticipationList, err = k.GetAllOrderBookParticipations(ctx)
 	if err != nil {
 		panic(err)
 	}
 
-	genesis.BookExposureList, err = k.GetAllBookExposures(ctx)
+	genesis.OrderBookExposureList, err = k.GetAllOrderBookExposures(ctx)
 	if err != nil {
 		panic(err)
 	}

@@ -57,7 +57,7 @@ func (k Keeper) Withdraw(ctx sdk.Context, creator string, marketUID string, part
 	// Create the withdrawal object
 	withdrawal := types.NewWithdrawal(withdrawalID, creator, marketUID, participationIndex, witAmt, mode)
 
-	withdrawalAmt, err := k.srKeeper.WithdrawBookParticipation(ctx, creator, marketUID, participationIndex, mode, witAmt)
+	withdrawalAmt, err := k.srKeeper.WithdrawOrderBookParticipation(ctx, creator, marketUID, participationIndex, mode, witAmt)
 	if err != nil {
 		return participationIndex, sdkerrors.Wrapf(types.ErrSRLiquidateProcessing, "%s", err)
 	}

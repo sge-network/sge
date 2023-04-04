@@ -28,12 +28,12 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// get book data by its id
-	book, found := k.GetBook(ctx, bookUID)
+	book, found := k.GetOrderBook(ctx, bookUID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
 	}
-	// get exposures of the odds user is placing the bet
-	bookExposure, found := k.GetBookOddsExposure(ctx, bookUID, oddsUID)
+	// get exposures of the odds bettor is placing the bet
+	bookExposure, found := k.GetOrderBookOddsExposure(ctx, bookUID, oddsUID)
 	if !found {
 		return nil, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
 	}
@@ -55,15 +55,15 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	bookExposure.FulfillmentQueue = updatedFulfillmentQueue
-	k.SetBookOddsExposure(ctx, bookExposure)
+	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
-	if k.transferFundsFromUserToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
+	if k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
 		return nil, err
 	}
 
 	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	if err = k.transferFundsFromUserToModule(ctx, bettorAddress, types.BookLiquidityName, fulfiledBetAmount); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityName, fulfiledBetAmount); err != nil {
 		return nil, err
 	}
 
@@ -81,7 +81,7 @@ func (k Keeper) fulFillQueueBets(
 	payoutProfit sdk.Dec,
 	maxLossMultiplier sdk.Dec,
 	book *types.OrderBook,
-	bookExposure *types.BookOddsExposure,
+	bookExposure *types.OrderBookOddsExposure,
 ) (
 	betFulfillments []*bettypes.BetFulfillment,
 	updatedQueue []uint64,
@@ -100,7 +100,7 @@ func (k Keeper) fulFillQueueBets(
 
 	// continue until updatedFulfillmentQueue gets empty
 	for len(updatedQueue) > 0 {
-		var participation types.BookParticipation
+		var participation types.OrderBookParticipation
 		var participationExposure types.ParticipationExposure
 		participationIndex := updatedQueue[0]
 
@@ -108,7 +108,7 @@ func (k Keeper) fulFillQueueBets(
 			var found bool
 			participation, found = participationMap[participationIndex]
 			if !found {
-				return sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", book.UID, participationIndex)
+				return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", book.UID, participationIndex)
 			}
 			participationExposure, found = participationExposureMap[participationIndex]
 			if !found {
@@ -202,7 +202,7 @@ func (k Keeper) fulFillQueueBets(
 			payoutProfit = payoutProfit.Sub(payoutProfitToFulfill.ToDec())
 
 			// store the bet pair in the state
-			participationBetPair := types.NewParticipationBetPair(participation.BookUID, betUID, participation.Index)
+			participationBetPair := types.NewParticipationBetPair(participation.OrderBookUID, betUID, participation.Index)
 			k.SetParticipationBetPair(ctx, participationBetPair, betID)
 
 			return nil
@@ -215,7 +215,7 @@ func (k Keeper) fulFillQueueBets(
 			// check if there is more liquidity amount
 			eligibleForNextRound := participation.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 
-			participationExposures, err := k.GetExposureByBookAndParticipationIndex(ctx, book.UID, participationIndex)
+			participationExposures, err := k.GetExposureByOrderBookAndParticipationIndex(ctx, book.UID, participationIndex)
 			if err != nil {
 				return
 			}
@@ -239,11 +239,11 @@ func (k Keeper) fulFillQueueBets(
 			participation.MaxLoss = participation.MaxLoss.Add(participation.CurrentRoundMaxLoss)
 			participation.CurrentRoundMaxLoss = sdk.ZeroInt()
 			participationMap[participation.Index] = participation
-			k.SetBookParticipation(ctx, participation)
+			k.SetOrderBookParticipation(ctx, participation)
 
 			if eligibleForNextRound {
-				var boes []types.BookOddsExposure
-				boes, err = k.GetOddsExposuresByBook(ctx, book.UID)
+				var boes []types.OrderBookOddsExposure
+				boes, err = k.GetOddsExposuresByOrderBook(ctx, book.UID)
 				if err != nil {
 					return
 				}
@@ -253,7 +253,7 @@ func (k Keeper) fulFillQueueBets(
 						bookExposure = &boe
 					}
 
-					k.SetBookOddsExposure(ctx, boe)
+					k.SetOrderBookOddsExposure(ctx, boe)
 				}
 				updatedQueue = append(updatedQueue, participationIndex)
 				bookExposure.FulfillmentQueue = updatedQueue
@@ -296,7 +296,7 @@ func (k Keeper) fulFillQueueBets(
 		}
 
 		k.SetParticipationExposure(ctx, participationExposure)
-		k.SetBookParticipation(ctx, participation)
+		k.SetOrderBookParticipation(ctx, participation)
 
 		// if there are no more exposures to be filled
 		if participation.ExposuresNotFilled == 0 {
@@ -325,14 +325,14 @@ func (k Keeper) getExposuresMap(
 	oddsUID string,
 	book *types.OrderBook,
 ) (
-	participationMap map[uint64]types.BookParticipation,
+	participationMap map[uint64]types.OrderBookParticipation,
 	participationExposureMap map[uint64]types.ParticipationExposure,
 	err error,
 ) {
-	participationMap = make(map[uint64]types.BookParticipation)
+	participationMap = make(map[uint64]types.OrderBookParticipation)
 	participationExposureMap = make(map[uint64]types.ParticipationExposure)
 
-	bps, err := k.GetParticipationsOfBook(ctx, book.UID)
+	bps, err := k.GetParticipationsOfOrderBook(ctx, book.UID)
 	if err != nil {
 		return
 	}
@@ -344,7 +344,7 @@ func (k Keeper) getExposuresMap(
 		participationMap[bp.Index] = bp
 	}
 
-	pes, err := k.GetExposureByBookAndOdds(ctx, book.UID, oddsUID)
+	pes, err := k.GetExposureByOrderBookAndOdds(ctx, book.UID, oddsUID)
 	if err != nil {
 		return
 	}

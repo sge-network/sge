@@ -5,8 +5,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
-// BookParticipation represents the participants of an order book.
-message BookParticipation {
+// OrderBookParticipation represents the participants of an order book.
+message OrderBookParticipation {
   option (gogoproto.equal) = false;
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = false;
@@ -14,11 +14,11 @@ message BookParticipation {
   // index is the index of the participation in the participation queue.
   uint64 index = 1 [ (gogoproto.moretags) = "yaml:\"index\"" ];
 
-  // book_uid is the unique identifier corresponding to the book.
-  string book_uid = 2 [
-    (gogoproto.customname) = "BookUID",
-    (gogoproto.jsontag) = "book_uid",
-    json_name = "book_uid"
+  // order_book_uid is the unique identifier corresponding to the order book.
+  string order_book_uid = 2 [
+    (gogoproto.customname) = "OrderBookUID",
+    (gogoproto.jsontag) = "order_book_uid",
+    json_name = "order_book_uid"
   ];
 
   // participant_address is the bech32-encoded address of the participant.
@@ -99,11 +99,11 @@ message BookParticipation {
 
 // ParticipationBetPair represents the book participation and bet bond.
 message ParticipationBetPair {
-  // book_uid is the unique identifier corresponding to the book
-  string book_uid = 1 [
-    (gogoproto.customname) = "BookUID",
-    (gogoproto.jsontag) = "book_uid",
-    json_name = "book_uid"
+  // order_book_uid is the unique identifier corresponding to the order book
+  string order_book_uid = 1 [
+    (gogoproto.customname) = "OrderBookUID",
+    (gogoproto.jsontag) = "order_book_uid",
+    json_name = "order_book_uid"
   ];
 
   // participation_index is the index of participation corresponding to the bet

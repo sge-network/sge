@@ -9,7 +9,7 @@ import (
 // Get all parameters as types.Params
 func (k Keeper) GetParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
-		k.GetMaxBookParticipationsAllowed(ctx),
+		k.GetMaxOrderBookParticipationsAllowed(ctx),
 		k.GetBatchSettlementCount(ctx),
 	)
 }
@@ -19,9 +19,9 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }
 
-// GetMaxBookParticipationsAllowed - Max number of book participations allowed.
-func (k Keeper) GetMaxBookParticipationsAllowed(ctx sdk.Context) (res uint64) {
-	k.paramstore.Get(ctx, types.KeyMaxBookParticipations, &res)
+// GetMaxOrderBookParticipationsAllowed - Max number of book participations allowed.
+func (k Keeper) GetMaxOrderBookParticipationsAllowed(ctx sdk.Context) (res uint64) {
+	k.paramstore.Get(ctx, types.KeyMaxOrderBookParticipations, &res)
 	return
 }
 

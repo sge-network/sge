@@ -15,16 +15,17 @@ message GenesisState {
   // params defines all the parameters related to order book.
   Params params = 1 [ (gogoproto.nullable) = false ];
 
-  // book_list defines the order books available at genesis.
-  repeated OrderBook book_list = 2 [ (gogoproto.nullable) = false ];
+  // order_book_list defines the order books available at genesis.
+  repeated OrderBook order_book_list = 2 [ (gogoproto.nullable) = false ];
 
-  // book_participation_list defines the book participations available at
+  // order_book_participation_list defines the book participations available at
   // genesis.
-  repeated BookParticipation book_participation_list = 3
+  repeated OrderBookParticipation order_book_participation_list = 3
       [ (gogoproto.nullable) = false ];
 
-  // book_exposure_list defines the book exposures available at genesis.
-  repeated BookOddsExposure book_exposure_list = 4
+  // order_book_exposure_list defines the order book exposures available at
+  // genesis.
+  repeated OrderBookOddsExposure order_book_exposure_list = 4
       [ (gogoproto.nullable) = false ];
 
   // participation_exposure_list defines the participation exposures available
@@ -50,6 +51,6 @@ message GenesisState {
   // payout_lock defines the current locks for the payouts.
   repeated bytes payout_lock = 9 [ (gogoproto.nullable) = false ];
 
-  // stats is the statistics of the order-book.
+  // stats is the statistics of the order book.
   OrderBookStats stats = 10 [ (gogoproto.nullable) = false ];
 }

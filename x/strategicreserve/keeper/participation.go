@@ -9,19 +9,19 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// SetBookParticipation sets a book participation.
-func (k Keeper) SetBookParticipation(ctx sdk.Context, participation types.BookParticipation) {
-	participationKey := types.GetBookParticipationKey(participation.BookUID, participation.Index)
+// SetOrderBookParticipation sets a book participation.
+func (k Keeper) SetOrderBookParticipation(ctx sdk.Context, participation types.OrderBookParticipation) {
+	participationKey := types.GetOrderBookParticipationKey(participation.OrderBookUID, participation.Index)
 
 	store := k.getParticipationStore(ctx)
 	b := k.cdc.MustMarshal(&participation)
 	store.Set(participationKey, b)
 }
 
-// GetBookParticipation returns a specific participation of an order book by index.
-func (k Keeper) GetBookParticipation(ctx sdk.Context, bookUID string, index uint64) (val types.BookParticipation, found bool) {
+// GetOrderBookParticipation returns a specific participation of an order book by index.
+func (k Keeper) GetOrderBookParticipation(ctx sdk.Context, bookUID string, index uint64) (val types.OrderBookParticipation, found bool) {
 	store := k.getParticipationStore(ctx)
-	aprticipationKey := types.GetBookParticipationKey(bookUID, index)
+	aprticipationKey := types.GetOrderBookParticipationKey(bookUID, index)
 	b := store.Get(aprticipationKey)
 	if b == nil {
 		return val, false
@@ -32,17 +32,17 @@ func (k Keeper) GetBookParticipation(ctx sdk.Context, bookUID string, index uint
 	return val, true
 }
 
-// GetParticipationsOfBook returns all participations for an order book.
-func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookUID string) (list []types.BookParticipation, err error) {
+// GetParticipationsOfOrderBook returns all participations for an order book.
+func (k Keeper) GetParticipationsOfOrderBook(ctx sdk.Context, bookUID string) (list []types.OrderBookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetBookParticipationsKey(bookUID))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookParticipationsKey(bookUID))
 
 	defer func() {
 		err = iterator.Close()
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.BookParticipation
+		var val types.OrderBookParticipation
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -50,8 +50,8 @@ func (k Keeper) GetParticipationsOfBook(ctx sdk.Context, bookUID string) (list [
 	return
 }
 
-// GetAllBookParticipations returns all book participations used during genesis dump.
-func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookParticipation, err error) {
+// GetAllOrderBookParticipations returns all book participations used during genesis dump.
+func (k Keeper) GetAllOrderBookParticipations(ctx sdk.Context) (list []types.OrderBookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -60,7 +60,7 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.BookParticipation
+		var val types.OrderBookParticipation
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
@@ -68,8 +68,8 @@ func (k Keeper) GetAllBookParticipations(ctx sdk.Context) (list []types.BookPart
 	return
 }
 
-// InitiateBookParticipation starts a participation on a book for a certain account.
-func (k Keeper) InitiateBookParticipation(
+// InitiateOrderBookParticipation starts a participation on a book for a certain account.
+func (k Keeper) InitiateOrderBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
 ) (index uint64, err error) {
 	market, found := k.marketKeeper.GetMarket(ctx, bookUID)
@@ -83,7 +83,7 @@ func (k Keeper) InitiateBookParticipation(
 		return
 	}
 
-	book, found := k.GetBook(ctx, bookUID)
+	book, found := k.GetOrderBook(ctx, bookUID)
 	if !found {
 		err = sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", bookUID)
 		return
@@ -95,7 +95,7 @@ func (k Keeper) InitiateBookParticipation(
 	}
 
 	// check if the maximum allowed participations is met or not.
-	if k.GetMaxBookParticipationsAllowed(ctx) <= book.ParticipationCount {
+	if k.GetMaxOrderBookParticipationsAllowed(ctx) <= book.ParticipationCount {
 		err = sdkerrors.Wrapf(types.ErrMaxNumberOfParticipationsReached, "%d", book.ParticipationCount)
 		return
 	}
@@ -104,14 +104,14 @@ func (k Keeper) InitiateBookParticipation(
 	book.ParticipationCount++
 	index = book.ParticipationCount
 
-	_, found = k.GetBookParticipation(ctx, book.UID, index)
+	_, found = k.GetOrderBookParticipation(ctx, book.UID, index)
 	// This should never happen, just a sanity check
 	if found {
 		err = sdkerrors.Wrapf(types.ErrBookParticipationAlreadyExists, "id already exists %d", index)
 		return
 	}
 
-	bookParticipation := types.NewBookParticipation(
+	bookParticipation := types.NewOrderBookParticipation(
 		index, book.UID, addr.String(),
 		book.OddsCount, // all of odds need to be filled in the next steps
 		false,
@@ -120,40 +120,41 @@ func (k Keeper) InitiateBookParticipation(
 	)
 
 	// Transfer fee from book participation to the feeAccountName
-	err = k.transferFundsFromUserToModule(ctx, addr, housetypes.HouseParticipationFeeName, fee)
+	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseParticipationFeeName, fee)
 	if err != nil {
 		return
 	}
 
 	// Transfer liquidity amount from book participation  to `book_liquidity_pool` Account
-	err = k.transferFundsFromUserToModule(ctx, addr, types.BookLiquidityName, liquidity)
+	err = k.transferFundsFromAccountToModule(ctx, addr, types.OrderBookLiquidityName, liquidity)
 	if err != nil {
 		return
 	}
 
 	// Make entry for book participation
-	k.SetBookParticipation(ctx, bookParticipation)
+	k.SetOrderBookParticipation(ctx, bookParticipation)
 
 	// Update book odds exposures and add particiapnt exposures
-	boes, err := k.GetOddsExposuresByBook(ctx, bookParticipation.BookUID)
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, bookParticipation.OrderBookUID)
 	if err != nil {
 		return
 	}
 	for _, boe := range boes {
 		boe.FulfillmentQueue = append(boe.FulfillmentQueue, index)
-		k.SetBookOddsExposure(ctx, boe)
+		k.SetOrderBookOddsExposure(ctx, boe)
 
 		pe := types.NewParticipationExposure(book.UID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
 		k.SetParticipationExposure(ctx, pe)
 	}
 
 	// Update strategicreserve
-	k.SetBook(ctx, book)
+	k.SetOrderBook(ctx, book)
 
 	return index, nil
 }
 
-func (k Keeper) WithdrawBookParticipation(
+// WithdrawOrderBookParticipation withdraws the order book participation to the bettor's account
+func (k Keeper) WithdrawOrderBookParticipation(
 	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
 ) (sdk.Int, error) {
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
@@ -161,9 +162,9 @@ func (k Keeper) WithdrawBookParticipation(
 		return sdk.Int{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
-	bp, found := k.GetBookParticipation(ctx, bookUID, participationIndex)
+	bp, found := k.GetOrderBookParticipation(ctx, bookUID, participationIndex)
 	if !found {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
 	}
 
 	if bp.IsSettled {
@@ -187,7 +188,7 @@ func (k Keeper) WithdrawBookParticipation(
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
 			return sdk.Int{}, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity, bp.CurrentRoundMaxLoss)
 		}
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, maxTransferableAmount)
+		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, maxTransferableAmount)
 		if err != nil {
 			return sdk.Int{}, err
 		}
@@ -196,7 +197,7 @@ func (k Keeper) WithdrawBookParticipation(
 		if maxTransferableAmount.LT(amount) {
 			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
 		}
-		err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, amount)
+		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, amount)
 		if err != nil {
 			return sdk.Int{}, err
 		}
@@ -207,10 +208,10 @@ func (k Keeper) WithdrawBookParticipation(
 
 	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)
 	bp.Liquidity = bp.Liquidity.Sub(withdrawalAmt)
-	k.SetBookParticipation(ctx, bp)
+	k.SetOrderBookParticipation(ctx, bp)
 
 	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
-		boes, err := k.GetOddsExposuresByBook(ctx, bookUID)
+		boes, err := k.GetOddsExposuresByOrderBook(ctx, bookUID)
 		if err != nil {
 			return sdk.Int{}, err
 		}
@@ -220,7 +221,7 @@ func (k Keeper) WithdrawBookParticipation(
 					boe.FulfillmentQueue = append(boe.FulfillmentQueue[:i], boe.FulfillmentQueue[i+1:]...)
 				}
 			}
-			k.SetBookOddsExposure(ctx, boe)
+			k.SetOrderBookOddsExposure(ctx, boe)
 		}
 	}
 

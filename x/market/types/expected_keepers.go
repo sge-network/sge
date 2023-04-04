@@ -26,5 +26,5 @@ type DVMKeeper interface {
 
 // SRKeeper defines the expected interface needed to initiate an order book for a market
 type SRKeeper interface {
-	InitiateBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) error
+	InitiateOrderBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) error
 }

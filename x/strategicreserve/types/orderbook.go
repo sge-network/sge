@@ -18,7 +18,7 @@ func NewOrderBook(bookUID string, participationCount, oddsCount uint64, status O
 }
 
 // return the orderbook
-func UnmarshalBook(cdc codec.BinaryCodec, value []byte) (book OrderBook, err error) {
+func UnmarshalOrderBook(cdc codec.BinaryCodec, value []byte) (book OrderBook, err error) {
 	err = cdc.Unmarshal(value, &book)
 	return book, err
 }
