@@ -38,7 +38,7 @@ func (k Keeper) ProcessBetPlacement(
 		return nil, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
 	}
 
-	betFulfillments, updatedFulfillmentQueue, fulfiledBetAmount, err := k.fulFillQueueBets(ctx,
+	betFulfillments, updatedFulfillmentQueue, fulfiledBetAmount, err := k.fulfillQueueBets(ctx,
 		betUID,
 		betID,
 		oddsUID,
@@ -73,7 +73,7 @@ func (k Keeper) ProcessBetPlacement(
 	return betFulfillments, nil
 }
 
-func (k Keeper) fulFillQueueBets(
+func (k Keeper) fulfillQueueBets(
 	ctx sdk.Context,
 	betUID string, betID uint64,
 	oddsUID, oddsVal string, oddsType bettypes.OddsType,
