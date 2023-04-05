@@ -30,7 +30,7 @@ func (k Keeper) RefundBettor(
 	// delete the lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
 
-	return
+	return nil
 }
 
 // BettorWins process bets in case bettor is the winner,
@@ -77,7 +77,7 @@ func (k Keeper) BettorWins(
 	// Delete lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
 
-	return
+	return nil
 }
 
 // BettorLoses process bets in case bettor loses,
@@ -111,5 +111,6 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 
 	// Delete lock from the payout store as the bet is settled
 	k.removePayoutLock(ctx, uniqueLock)
+
 	return nil
 }
