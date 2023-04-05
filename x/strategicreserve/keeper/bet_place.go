@@ -321,7 +321,7 @@ func (k Keeper) fulFillQueueBets(
 		return
 	}
 
-	return betFulfillments, []uint64{}, sdk.Int{}, nil
+	return betFulfillments, updatedQueue, fulfiledBetAmount, nil
 }
 
 func (k Keeper) getExposuresMap(
