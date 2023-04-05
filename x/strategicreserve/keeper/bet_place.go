@@ -58,7 +58,7 @@ func (k Keeper) ProcessBetPlacement(
 	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
-	if k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
 		return nil, err
 	}
 
@@ -247,10 +247,11 @@ func (k Keeper) fulFillQueueBets(
 				if err != nil {
 					return
 				}
-				for _, boe := range boes {
+				for i, boe := range boes {
 					boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
 					if boe.OddsUID == participationExposure.OddsUID {
-						bookExposure = &boe
+						// use the index to prevent implicit memory aliasing.
+						bookExposure = &boes[i]
 					}
 
 					k.SetOrderBookOddsExposure(ctx, boe)
