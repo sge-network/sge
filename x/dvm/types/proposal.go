@@ -11,24 +11,39 @@ func NewPublicKeysChangeProposal(
 		Creator:       creator,
 		Modifications: modifications,
 		StartTS:       startTS,
-	}
-}
-
-func NewFinishedPublicKeysChangeProposal(
-	proposal PublicKeysChangeProposal,
-	result ProposalResult,
-	resultMetadata string,
-	finishTS int64,
-) PublicKeysChangeFinishedProposal {
-	return PublicKeysChangeFinishedProposal{
-		Proposal:   proposal,
-		Result:     result,
-		ResultMeta: resultMetadata,
-		FinishTS:   finishTS,
+		Status:        ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 	}
 }
 
 func (proposal *PublicKeysChangeProposal) IsExpired(blockTime int64) bool {
 	diff := blockTime - proposal.StartTS
 	return diff > MaxValidProposalSeconds
+}
+
+func (proposal *PublicKeysChangeProposal) DecideResult() ProposalResult {
+	var yesCount, noCount int
+	for _, v := range proposal.Votes {
+		switch v.Vote {
+		case ProposalVote_PROPOSAL_VOTE_YES:
+			yesCount++
+		case ProposalVote_PROPOSAL_VOTE_NO:
+			noCount++
+		}
+	}
+
+	// check if minimum vote count is met or not
+	if yesCount >= minVoteCountForDecision ||
+		noCount >= minVoteCountForDecision {
+		// minimum vote count is met, so if the yes votes count is more than rejected,
+		// the proposal is approved,  otherwise is rejected.
+		if yesCount > noCount {
+			return ProposalResult_PROPOSAL_RESULT_APPROVED
+		} else if yesCount < noCount {
+			return ProposalResult_PROPOSAL_RESULT_REJECTED
+		}
+		// else if the yes and no votes counts are equal and we can not make decision for
+		// result of the proposal
+	}
+
+	return ProposalResult_PROPOSAL_RESULT_UNSPECIFIED
 }

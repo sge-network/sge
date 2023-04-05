@@ -25,23 +25,18 @@ message PublicKeysChangeProposal {
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
-}
-
-// PublicKeysChangeFinishedProposal is the type used for the finished proposal
-// for additions and removals of pub keys.
-message PublicKeysChangeFinishedProposal {
-  // proposal is the proposal for additions and removals of pub keys.
-  PublicKeysChangeProposal proposal = 1 [ (gogoproto.nullable) = false ];
   // result is the result of the finished proposal.
-  ProposalResult result = 2;
+  ProposalResult result = 6;
   // result_meta is the metadata related to the result of the finished proposal.
-  string result_meta = 3;
+  string result_meta = 7;
   // finish_ts is the block time that the proposal is set as finished.
-  int64 finish_ts = 4 [
+  int64 finish_ts = 8 [
     (gogoproto.customname) = "FinishTS",
     (gogoproto.jsontag) = "finish_ts",
     json_name = "finish_ts"
   ];
+  // status is the status of a proposal.
+  ProposalStatus status = 9;
 }
 
 // ProposalResult is the enum type for the proposal result.
@@ -54,4 +49,14 @@ enum ProposalResult {
   PROPOSAL_RESULT_REJECTED = 2;
   // expired
   PROPOSAL_RESULT_EXPIRED = 3;
+}
+
+// ProposalStatus is the enum type for the proposal status.
+enum ProposalStatus {
+  // unchosen value
+  PROPOSAL_STATUS_UNSPECIFIED = 0;
+  // active
+  PROPOSAL_STATUS_ACTIVE = 1;
+  // finished
+  PROPOSAL_STATUS_FINISHED = 2;
 }

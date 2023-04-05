@@ -26,10 +26,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdQueryParams(),
 		CmdPubKeysList(),
-		CmdActivePubkeysChangeProposal(),
-		CmdActivePubkeysChangeProposalList(),
-		CmdFinishedPubkeysChangeProposal(),
-		CmdFinishedPubkeysChangeProposalList(),
+		CmdPubkeysChangeProposal(),
+		CmdPubkeysChangeProposalList(),
 	)
 
 	return cmd

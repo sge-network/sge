@@ -15,7 +15,7 @@ func NewTestJwtToken(header, payload string, signature string) *JwtTestToken {
 	}
 }
 
-// VerifyWithKey verifies the test token with key
-func (t *JwtTestToken) VerifyWithKey(key string) (bool, error) {
-	return t.verifyWithKey(key)
+// VerifyJwtKey verifies the test token with key
+func (t *JwtTestToken) VerifyJwtKey(key string) (bool, error) {
+	return t.verifyJwtKey(key)
 }

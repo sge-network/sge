@@ -26,10 +26,11 @@ func createNActiveProposal(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 	for i := range items {
 		items[i].Id = uint64(i)
 		items[i].Creator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
-		items[i].Modifications = types.PubkeysChangeProposalPayload{Additions: pubKeys}
+		items[i].Modifications = types.PubkeysChangeProposalPayload{PublicKeys: pubKeys, LeaderIndex: 0}
 		items[i].StartTS = ctx.BlockTime().Unix()
+		items[i].Status = types.ProposalStatus_PROPOSAL_STATUS_ACTIVE
 
-		keeper.SetActivePubkeysChangeProposal(ctx, items[i])
+		keeper.SetPubkeysChangeProposal(ctx, items[i])
 	}
 	return items
 }
@@ -37,11 +38,11 @@ func createNActiveProposal(keeper *keeper.Keeper, ctx sdk.Context, n int) []type
 func TestGetActivePubkeysChangeProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNActiveProposal(k, ctx, 10)
-	_, found := k.GetActivePubkeysChangeProposal(ctx, 5000000)
+	_, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, 5000000)
 	require.False(t, found)
 
 	for _, item := range items {
-		rst, found := k.GetActivePubkeysChangeProposal(ctx, item.Id)
+		rst, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, item.Id)
 		require.True(t, found)
 		require.EqualValues(t, item, rst)
 	}
@@ -51,10 +52,12 @@ func TestRemoveActivePubkeysChangeProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNActiveProposal(k, ctx, 10)
 	for _, item := range items {
-		k.RemoveActiveProposal(ctx,
+		k.RemoveProposal(ctx,
+			types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			item.Id,
 		)
-		_, found := k.GetActivePubkeysChangeProposal(ctx,
+		_, found := k.GetPubkeysChangeProposal(ctx,
+			types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
 			item.Id,
 		)
 		require.False(t, found)
@@ -65,7 +68,7 @@ func TestGetAllActivePubkeysChangeProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNActiveProposal(k, ctx, 10)
 
-	Markets, err := k.GetAllActivePubkeysChangeProposals(ctx)
+	Markets, err := k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE)
 	require.NoError(t, err)
 
 	require.ElementsMatch(t,
@@ -79,7 +82,7 @@ func TestFinishProposals(t *testing.T) {
 	ctx = ctx.WithBlockTime(time.Now())
 	items := createNActiveProposal(k, ctx, 10)
 
-	proposals, err := k.GetAllActivePubkeysChangeProposals(ctx)
+	proposals, err := k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE)
 	require.NoError(t, err)
 	require.Equal(t, len(items), len(proposals))
 
@@ -101,36 +104,40 @@ func TestFinishProposals(t *testing.T) {
 			)
 		}
 
-		k.SetActivePubkeysChangeProposal(ctx, proposal)
+		k.SetPubkeysChangeProposal(ctx, proposal)
 	}
 
-	proposals, err = k.GetAllActivePubkeysChangeProposals(ctx)
+	proposals, err = k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE)
 	require.NoError(t, err)
 	require.Equal(t, len(items), len(proposals))
 
 	err = k.FinishProposals(ctx)
 	require.NoError(t, err)
 
-	proposals, err = k.GetAllActivePubkeysChangeProposals(ctx)
+	proposals, err = k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE)
 	require.NoError(t, err)
 	require.Equal(t, 0, len(proposals))
 
-	finishedProposals, err := k.GetAllFinishedPubkeysChangeProposals(ctx)
+	finishedProposals, err := k.GetAllPubkeysChangeProposalsByStatus(ctx, types.ProposalStatus_PROPOSAL_STATUS_FINISHED)
 	require.NoError(t, err)
+	require.Equal(t, len(items), len(finishedProposals))
+
+	finishedProposals, err = k.GetAllPubkeysChangeProposals(ctx)
+	require.NoError(t, err)
+
 	require.Equal(t, len(items), len(finishedProposals))
 
 	keyVault, found := k.GetKeyVault(ctx)
 	require.True(t, found)
-	// 55 = 5*10 +  5(existing public keys in the genesis)
-	require.Equal(t, 55, len(keyVault.PublicKeys))
+	require.Equal(t, 5, len(keyVault.PublicKeys))
 }
 
 func TestFinishProposal(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	ctx = ctx.WithBlockTime(time.Now())
-	proposal := createNActiveProposal(k, ctx, 1)[0]
+	proposals := createNActiveProposal(k, ctx, 3)
 
-	voteAll := func(vote types.ProposalVote) {
+	voteAll := func(proposal *types.PublicKeysChangeProposal, vote types.ProposalVote) {
 		for _, p := range simappUtil.TestDVMPublicKeys {
 			bs, err := x509.MarshalPKIXPublicKey(p)
 			if err != nil {
@@ -150,35 +157,39 @@ func TestFinishProposal(t *testing.T) {
 		timeDiff time.Duration
 		vote     types.ProposalVote
 		result   types.ProposalResult
+		proposal *types.PublicKeysChangeProposal
 
 		err error
 	}{
 		{
 			timeDiff: types.MaxValidProposalMinutes / 2 * time.Minute,
+			proposal: &proposals[0],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_YES,
 			result:   types.ProposalResult_PROPOSAL_RESULT_APPROVED,
 		},
 		{
 			timeDiff: types.MaxValidProposalMinutes / 2 * time.Minute,
+			proposal: &proposals[1],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_NO,
 			result:   types.ProposalResult_PROPOSAL_RESULT_REJECTED,
 		},
 		{
 			timeDiff: types.MaxValidProposalMinutes * 2 * time.Minute,
+			proposal: &proposals[2],
 			vote:     types.ProposalVote_PROPOSAL_VOTE_YES,
 			result:   types.ProposalResult_PROPOSAL_RESULT_EXPIRED,
 		},
 	} {
 		ctx = ctx.WithBlockTime(ctx.BlockTime().Add(tc.timeDiff))
 
-		voteAll(tc.vote)
+		voteAll(tc.proposal, tc.vote)
 
-		k.SetActivePubkeysChangeProposal(ctx, proposal)
+		k.SetPubkeysChangeProposal(ctx, *tc.proposal)
 
 		err := k.FinishProposals(ctx)
 		require.NoError(t, err)
 
-		finishedProposal, found := k.GetFinishedPubkeysChangeProposal(ctx, proposal.Id)
+		finishedProposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_FINISHED, tc.proposal.Id)
 		require.True(t, found)
 		require.Equal(t, tc.result, finishedProposal.Result)
 	}

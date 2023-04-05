@@ -22,11 +22,12 @@ func TestVerifyWithKey(t *testing.T) {
 	require.NoError(t, err)
 
 	T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
-		Additions []string
-		Deletions []string
+		PublicKeys  []string
+		LeaderIndex uint32
 		jwt.RegisteredClaims
 	}{
-		Additions: []string{string(utils.NewPubKeyMemory(bs))},
+		PublicKeys:  []string{string(utils.NewPubKeyMemory(bs))},
+		LeaderIndex: 0,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		},
@@ -38,12 +39,12 @@ func TestVerifyWithKey(t *testing.T) {
 	ticket := types.NewTestJwtToken(ss[0], ss[1], ss[2])
 	require.Nil(t, err)
 	t.Run("Success", func(t *testing.T) {
-		_, err = ticket.VerifyWithKey(string(utils.NewPubKeyMemory(bs)))
+		_, err = ticket.VerifyJwtKey(string(utils.NewPubKeyMemory(bs)))
 		require.NoError(t, err)
 	})
 	t.Run("Error", func(t *testing.T) {
 		invalidKey := "MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgGiRKsHZPpIWUVyHVePzoZLHLvFZ+TdnAI2Xg7WJjrJKEX5D3R5KV9uFU5lwmT09fj4BrKjwOf4Yv8+u/BJhfdsiDbkqln3FhNG1ZSxAa+9n6CKBeJku9OLpDt7olBpcydyCf8CYmTNq+YABpJbVX6iYZrbpsWK34C9fppe3rzFDAgMBAAE="
-		_, err := ticket.VerifyWithKey(invalidKey)
+		_, err := ticket.VerifyJwtKey(invalidKey)
 		require.Error(t, err)
 	})
 }
@@ -158,7 +159,7 @@ func TestVerify(t *testing.T) {
 		require.Error(t, err)
 	})
 	t.Run("no key", func(t *testing.T) {
-		err := it.Verify()
+		err := it.Verify("")
 		require.Error(t, err)
 	})
 }

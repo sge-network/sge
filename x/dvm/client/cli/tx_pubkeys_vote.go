@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/sge-network/sge/x/dvm/types"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,7 @@ var _ = strconv.Itoa(0)
 // CmdChangePubkeysListVote is the command object for voting on change of public keys
 func CmdChangePubkeysListVote() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "vote-pubkeys-proposal [ticket] [pubkey]",
+		Use:   "vote-pubkeys-proposal [ticket] [pubkeyIndex]",
 		Short: "creates a vote on the proposal to update list of public keys",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -25,12 +26,15 @@ func CmdChangePubkeysListVote() *cobra.Command {
 			}
 
 			argTicket := args[0]
-			pubkeyTicket := args[1]
+			pubkeyIndex, err := cast.ToUint32E(args[1])
+			if err != nil {
+				return err
+			}
 
 			msg := types.NewMsgVotePubkeysChangeRequest(
 				clientCtx.GetFromAddress().String(),
 				argTicket,
-				pubkeyTicket,
+				pubkeyIndex,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

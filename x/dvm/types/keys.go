@@ -1,5 +1,7 @@
 package types
 
+import "github.com/sge-network/sge/utils"
+
 // module constants
 const (
 	// ModuleName defines the module name
@@ -20,15 +22,22 @@ const (
 
 // store prefixes and keys.
 var (
-	// PubKeysListKey is the key of the list of public keys in KV-Store which points to []string.
-	PubKeysListKey = []byte{0x00}
+	// KeyVaultKey is the key of the list of public keys in KV-Store which points to []string.
+	KeyVaultKey = []byte{0x00}
 
 	// ProposalStatsKey is the key for proposal statistics.
 	ProposalStatsKey = []byte{0x01}
 
-	// PubKeysChangeProposalListActivePrefix is the prefix of active pubkeys change proposal.
-	PubKeysChangeProposalListActivePrefix = []byte{0x02}
-
-	// FinishedPubKeysChangeProposalListPrefix is the prefix of pubkeys change proposal that is finished.
-	FinishedPubKeysChangeProposalListPrefix = []byte{0x03}
+	// PubKeysChangeProposalListPrefix is the prefix of pubkeys change proposal.
+	PubKeysChangeProposalListPrefix = []byte{0x02}
 )
+
+// PubkeysChangeProposalPrefix returns prefix of the proposal list.
+func PubkeysChangeProposalPrefix(status ProposalStatus) []byte {
+	return utils.Int32ToBytes(int32(status))
+}
+
+// PubkeysChangeProposalKey returns key of the proposal list.
+func PubkeysChangeProposalKey(status ProposalStatus, id uint64) []byte {
+	return append(PubkeysChangeProposalPrefix(status), utils.Uint64ToBytes(id)...)
+}
