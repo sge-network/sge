@@ -93,6 +93,9 @@ func (k Keeper) fulFillQueueBets(
 		return
 	}
 
+	// initialize the fulfilled bet amount with 0
+	fulfiledBetAmount = sdk.NewInt(0)
+
 	updatedQueue = bookExposure.FulfillmentQueue
 
 	// the decimal amount that is being lost in the bet amount calculation from payout profit
