@@ -59,13 +59,13 @@ $ %s query strategicreserve orderbooks
 // GetCmdQueryOrderBook implements the strategicreserve query command.
 func GetCmdQueryOrderBook() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "strategicreserve [order-book-id]",
+		Use:   "orderbook [order-book-id]",
 		Short: "Query a strategicreserve",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a order book.
 
 Example:
-$ %s query strategicreserve strategicreserve %s
+$ %s query strategicreserve orderbook %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
