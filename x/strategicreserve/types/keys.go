@@ -17,8 +17,8 @@ const (
 
 // module accounts constants
 const (
-	// BookLiquidityName defines the account name for book liquidity for users
-	BookLiquidityName = "book_liquidity_pool"
+	// OrderBookLiquidityName defines the account name for book liquidity for the bettors
+	OrderBookLiquidityName = "book_liquidity_pool"
 
 	// SRProfitName defines the account name for profit for sr
 	SRProfitName = "sr_profit_pool"
@@ -31,39 +31,39 @@ const (
 )
 
 var (
-	BookKeyPrefix                            = []byte{0x00} // prefix for keys that store books
-	BookParticipationKeyPrefix               = []byte{0x01} // prefix for keys that store book participations
-	BookOddsExposureKeyPrefix                = []byte{0x02} // prefix for keys that store book odds exposures
+	OrderBookKeyPrefix                       = []byte{0x00} // prefix for keys that store books
+	OrderBookParticipationKeyPrefix          = []byte{0x01} // prefix for keys that store book participations
+	OrderBookOddsExposureKeyPrefix           = []byte{0x02} // prefix for keys that store book odds exposures
 	ParticipationExposureKeyPrefix           = []byte{0x03} // prefix for keys that store participation exposures
 	PayoutLockKeyPrefix                      = []byte{0x04} // prefix for keys that store payout locks
 	ParticipationExposureByIndexKeyPrefix    = []byte{0x05} // prefix for keys that store participation exposures
 	HistoricalParticipationExposureKeyPrefix = []byte{0x06} // prefix for keys that store historical participation exposures
-	BookStatsKeyPrefix                       = []byte{0x07} // prefix for keys that store book stats
+	OrderBookStatsKeyPrefix                  = []byte{0x07} // prefix for keys that store book stats
 	ParticipationBetPairKeyPrefix            = []byte{0x08} // prefix for keys that store book participation and bet pairs
 )
 
-// GetBookKey returns the bytes of an book key
-func GetBookKey(bookUID string) []byte {
+// GetOrderBookKey returns the bytes of an book key
+func GetOrderBookKey(bookUID string) []byte {
 	return utils.StrBytes(bookUID)
 }
 
-// GetBookParticipationKey creates the key for book participation bond with book
-func GetBookParticipationKey(bookUID string, participationIndex uint64) []byte {
-	return append(GetBookParticipationsKey(bookUID), utils.Uint64ToBytes(participationIndex)...)
+// GetOrderBookParticipationKey creates the key for book participation bond with book
+func GetOrderBookParticipationKey(bookUID string, participationIndex uint64) []byte {
+	return append(GetOrderBookParticipationsKey(bookUID), utils.Uint64ToBytes(participationIndex)...)
 }
 
-// GetBookParticipationsKey creates the key for book participations for an book
-func GetBookParticipationsKey(bookUID string) []byte {
+// GetOrderBookParticipationsKey creates the key for book participations for an book
+func GetOrderBookParticipationsKey(bookUID string) []byte {
 	return utils.StrBytes(bookUID)
 }
 
-// GetBookOddsExposureKey creates the key for book exposure for an odd
-func GetBookOddsExposureKey(bookUID, oddsUID string) []byte {
-	return append(GetBookOddsExposuresKey(bookUID), utils.StrBytes(oddsUID)...)
+// GetOrderBookOddsExposureKey creates the key for book exposure for an odd
+func GetOrderBookOddsExposureKey(bookUID, oddsUID string) []byte {
+	return append(GetOrderBookOddsExposuresKey(bookUID), utils.StrBytes(oddsUID)...)
 }
 
-// GetBookOddsExposuresKey creates the key for book exposure for an book
-func GetBookOddsExposuresKey(bookUID string) []byte {
+// GetOrderBookOddsExposuresKey creates the key for book exposure for an book
+func GetOrderBookOddsExposuresKey(bookUID string) []byte {
 	return utils.StrBytes(bookUID)
 }
 
@@ -74,11 +74,11 @@ func GetParticipationExposureKey(bookUID, oddsUID string, index uint64) []byte {
 
 // GetParticipationExposuresKey creates the key for exposures for a book id and odds id
 func GetParticipationExposuresKey(bookUID, oddsUID string) []byte {
-	return append(GetParticipationExposuresByBookKey(bookUID), utils.StrBytes(oddsUID)...)
+	return append(GetParticipationExposuresByOrderBookKey(bookUID), utils.StrBytes(oddsUID)...)
 }
 
-// GetParticipationExposuresByBookKey creates the key for exposures for a book id
-func GetParticipationExposuresByBookKey(bookUID string) []byte {
+// GetParticipationExposuresByOrderBookKey creates the key for exposures for a book id
+func GetParticipationExposuresByOrderBookKey(bookUID string) []byte {
 	return utils.StrBytes(bookUID)
 }
 

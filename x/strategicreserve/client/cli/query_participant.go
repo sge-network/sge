@@ -42,8 +42,8 @@ $ %s query strategicreserve participation-exposures %s
 			}
 
 			params := &types.QueryParticipationExposuresRequest{
-				BookUid:    orderBookUID,
-				Pagination: pageReq,
+				OrderBookUid: orderBookUID,
+				Pagination:   pageReq,
 			}
 
 			res, err := queryClient.ParticipationExposures(cmd.Context(), params)
@@ -89,7 +89,7 @@ $ %s query strategicreserve participation-exposure %s %d
 				return fmt.Errorf("participation index argument provided must be a non-negative-integer: %v", err)
 			}
 
-			params := &types.QueryParticipationExposureRequest{BookUid: orderBookUID, ParticipationIndex: particiapationIndex}
+			params := &types.QueryParticipationExposureRequest{OrderBookUid: orderBookUID, ParticipationIndex: particiapationIndex}
 			res, err := queryClient.ParticipationExposure(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -134,8 +134,8 @@ $ %s query strategicreserve historical-participation-exposures %s
 			}
 
 			params := &types.QueryHistoricalParticipationExposuresRequest{
-				BookUid:    orderBookUID,
-				Pagination: pageReq,
+				OrderBookUid: orderBookUID,
+				Pagination:   pageReq,
 			}
 
 			res, err := queryClient.HistoricalParticipationExposures(cmd.Context(), params)
@@ -187,7 +187,7 @@ $ %s query strategicreserve participation-bets %s %d
 			}
 
 			params := &types.QueryParticipationFulfilledBetsRequest{
-				BookUid:            orderBookUID,
+				OrderBookUid:       orderBookUID,
 				ParticipationIndex: particiapationIndex,
 				Pagination:         pageReq,
 			}

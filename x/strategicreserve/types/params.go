@@ -10,14 +10,14 @@ import (
 // SR params default values
 const (
 	// Default maximum book participations.
-	DefaultMaxBookParticipations uint64 = 100
+	DefaultMaxOrderBookParticipations uint64 = 100
 
 	// Default batch settlement count.
 	DefaultBatchSettlementCount uint64 = 100
 )
 
 var (
-	KeyMaxBookParticipations = []byte("MaxBookParticipationss")
+	KeyMaxOrderBookParticipations = []byte("MaxOrderBookParticipationss")
 
 	KeyBatchSettlementCount = []byte("BatchSettlementCount")
 )
@@ -28,17 +28,17 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(maxBookParticipations, batchSettlementCount uint64) Params {
+func NewParams(maxOrderBookParticipations, batchSettlementCount uint64) Params {
 	return Params{
-		MaxBookParticipations: maxBookParticipations,
-		BatchSettlementCount:  batchSettlementCount,
+		MaxOrderBookParticipations: maxOrderBookParticipations,
+		BatchSettlementCount:       batchSettlementCount,
 	}
 }
 
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMaxBookParticipations, &p.MaxBookParticipations, validateMaxBookParticipations),
+		paramtypes.NewParamSetPair(KeyMaxOrderBookParticipations, &p.MaxOrderBookParticipations, validateMaxOrderBookParticipations),
 		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
 	}
 }
@@ -46,7 +46,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultMaxBookParticipations,
+		DefaultMaxOrderBookParticipations,
 		DefaultBatchSettlementCount,
 	)
 }
@@ -62,7 +62,7 @@ func (p Params) String() string {
 
 // validate a set of params
 func (p Params) Validate() error {
-	if err := validateMaxBookParticipations(p.MaxBookParticipations); err != nil {
+	if err := validateMaxOrderBookParticipations(p.MaxOrderBookParticipations); err != nil {
 		return err
 	}
 
@@ -73,7 +73,7 @@ func (p Params) Validate() error {
 	return nil
 }
 
-func validateMaxBookParticipations(i interface{}) error {
+func validateMaxOrderBookParticipations(i interface{}) error {
 	v, ok := i.(uint64)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)

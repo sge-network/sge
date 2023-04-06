@@ -31,17 +31,21 @@ type Deposit struct {
 	// market_uid is the uid of market/order book against which deposit is being
 	// made.
 	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	// participation_index is the index corresponding to the order book participation
+	// participation_index is the index corresponding to the order book
+	// participation
 	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 	// amount is the amount being deposited on an order book to be a house
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount" yaml:"amount"`
-	// fee is deducted from the deposited amount for participation in the order book.
+	// fee is deducted from the deposited amount for participation in the order
+	// book.
 	Fee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=fee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"fee" yaml:"fee"`
-	// liquidity is the liquidity being provided to the order book after fee deduction.
+	// liquidity is the liquidity being provided to the order book after fee
+	// deduction.
 	Liquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=liquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"liquidity" yaml:"liquidity"`
 	// withdrawal_count is the total count of the withdrawals from an order book
 	WithdrawalCount uint64 `protobuf:"varint,7,opt,name=withdrawal_count,json=withdrawalCount,proto3" json:"withdrawal_count,omitempty" yaml:"withdrawals"`
-	// total_withdrawal_amount is the total amount withdrawn from the liquidity provided
+	// total_withdrawal_amount is the total amount withdrawn from the liquidity
+	// provided
 	TotalWithdrawalAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=total_withdrawal_amount,json=totalWithdrawalAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"total_withdrawal_amount" yaml:"total_withdrawal_amount"`
 }
 
