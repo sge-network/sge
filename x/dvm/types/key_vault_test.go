@@ -45,5 +45,4 @@ func TestMajority(t *testing.T) {
 			require.Equal(t, tc.exp, keyVault.MajorityCount())
 		})
 	}
-
 }

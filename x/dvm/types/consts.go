@@ -12,8 +12,6 @@ const (
 	MaxValidProposalSeconds = MaxValidProposalMinutes * 60 // 30 minutes
 )
 
-var (
-	// minVoteMajorityForDecisionPercentage is the minimum majority percentage of votes for
-	// a proposal to be valid for making decision.
-	minVoteMajorityForDecisionPercentage = sdk.NewDecWithPrec(6667, 4) // 66.67%
-)
+// minVoteMajorityForDecisionPercentage is the minimum majority percentage of votes for
+// a proposal to be valid for making decision.
+var minVoteMajorityForDecisionPercentage = sdk.NewDecWithPrec(6667, 4) // 66.67%
