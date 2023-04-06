@@ -87,6 +87,11 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 
 	blockTime := ctx.BlockTime().Unix()
 
+	keyVault, found := k.GetKeyVault(ctx)
+	if !found {
+		fmt.Printf("there is no publick keys record")
+	}
+
 	for _, proposal := range activeProposals {
 		if proposal.IsExpired(blockTime) {
 			// proposal is expired
@@ -103,7 +108,7 @@ func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 			continue
 		}
 
-		result := proposal.DecideResult()
+		result := proposal.DecideResult(&keyVault)
 		switch result {
 		case types.ProposalResult_PROPOSAL_RESULT_REJECTED:
 			if err = k.finishPubkeysChangeProposal(

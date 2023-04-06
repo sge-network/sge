@@ -20,8 +20,8 @@ func (proposal *PublicKeysChangeProposal) IsExpired(blockTime int64) bool {
 	return diff > MaxValidProposalSeconds
 }
 
-func (proposal *PublicKeysChangeProposal) DecideResult() ProposalResult {
-	var yesCount, noCount int
+func (proposal *PublicKeysChangeProposal) DecideResult(keyvault *KeyVault) ProposalResult {
+	var yesCount, noCount int64
 	for _, v := range proposal.Votes {
 		switch v.Vote {
 		case ProposalVote_PROPOSAL_VOTE_YES:
@@ -31,19 +31,17 @@ func (proposal *PublicKeysChangeProposal) DecideResult() ProposalResult {
 		}
 	}
 
-	// check if minimum vote count is met or not
-	if yesCount >= minVoteCountForDecision ||
-		noCount >= minVoteCountForDecision {
-		// minimum vote count is met, so if the yes votes count is more than rejected,
-		// the proposal is approved,  otherwise is rejected.
-		if yesCount > noCount {
-			return ProposalResult_PROPOSAL_RESULT_APPROVED
-		} else if yesCount < noCount {
-			return ProposalResult_PROPOSAL_RESULT_REJECTED
-		}
-		// else if the yes and no votes counts are equal and we can not make decision for
-		// result of the proposal
+	// minimum accepted count of yes votes (note vote) for the decision.
+	majorityCount := keyvault.MajorityCount()
+
+	// check if minimum majority vote count is met or not
+	if noCount >= majorityCount {
+		return ProposalResult_PROPOSAL_RESULT_REJECTED
+	} else if yesCount >= majorityCount {
+		return ProposalResult_PROPOSAL_RESULT_APPROVED
 	}
 
+	// else if the yes and no votes counts are equal and we can not make decision for
+	// result of the proposal
 	return ProposalResult_PROPOSAL_RESULT_UNSPECIFIED
 }

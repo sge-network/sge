@@ -16,5 +16,5 @@ const (
 
 	minPubKeysCount = 5
 
-	maxPubKeysCount = 7
+	maxPubKeysCount = 8
 )

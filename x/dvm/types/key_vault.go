@@ -3,6 +3,7 @@ package types
 import (
 	fmt "fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/utils"
 )
 
@@ -30,10 +31,17 @@ func (k *KeyVault) validatePubKeys() error {
 		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", count, minPubKeysCount)
 	}
 
-	// if there are even number of public keys, there is a chance that proposal votes count get equal
-	if count%2 == 0 {
-		return fmt.Errorf("public keys count should be an odd number, its count is %d", count)
-	}
-
 	return nil
+}
+
+// MajorityCount calculated the minimum count of votes for a proposal to be
+// set in order to a proposal pass.
+func (k *KeyVault) MajorityCount() int64 {
+	count := len(k.PublicKeys)
+
+	majorityVoteCount := sdk.NewDec(int64(count)).
+		Mul(minVoteMajorityForDecisionPercentage).
+		Ceil().TruncateInt64()
+
+	return majorityVoteCount
 }
