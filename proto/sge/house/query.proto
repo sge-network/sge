@@ -64,7 +64,8 @@ message QueryDepositsResponse {
 // QueryDepositsByAccountRequest is request type for Query/DepositsByAccount RPC
 // method.
 message QueryDepositsByAccountRequest {
-  // address defines the address of depositor/account for which deposits are queried.
+  // address defines the address of depositor/account for which deposits are
+  // queried.
   string address = 1;
 
   // pagination defines an optional pagination for the request.
@@ -84,7 +85,8 @@ message QueryDepositsByAccountResponse {
 // QueryDepositorWithdrawalsRequest is request type for
 // Query/WithdrawalsByAccount RPC method.
 message QueryWithdrawalsByAccountRequest {
-  // address defines the address of depositor/account for which withdrawals are queried.
+  // address defines the address of depositor/account for which withdrawals are
+  // queried.
   string address = 1;
 
   // pagination defines an optional pagination for the request.

@@ -7,19 +7,19 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
-// SetBook sets a book.
-func (k Keeper) SetBook(ctx sdk.Context, book types.OrderBook) {
-	bookKey := types.GetBookKey(book.ID)
+// SetOrderBook sets an order book.
+func (k Keeper) SetOrderBook(ctx sdk.Context, book types.OrderBook) {
+	bookKey := types.GetOrderBookKey(book.UID)
 
-	store := k.getBookStore(ctx)
+	store := k.getOrderBookStore(ctx)
 	b := k.cdc.MustMarshal(&book)
 	store.Set(bookKey, b)
 }
 
-// GetBook returns a specific order book.
-func (k Keeper) GetBook(ctx sdk.Context, bookUID string) (val types.OrderBook, found bool) {
-	marketsStore := k.getBookStore(ctx)
-	bookKey := types.GetBookKey(bookUID)
+// GetOrderBook returns a specific order book by its uid.
+func (k Keeper) GetOrderBook(ctx sdk.Context, orderBookUID string) (val types.OrderBook, found bool) {
+	marketsStore := k.getOrderBookStore(ctx)
+	bookKey := types.GetOrderBookKey(orderBookUID)
 	b := marketsStore.Get(bookKey)
 	if b == nil {
 		return val, false
@@ -30,9 +30,9 @@ func (k Keeper) GetBook(ctx sdk.Context, bookUID string) (val types.OrderBook, f
 	return val, true
 }
 
-// GetAllBooks returns all order books used during genesis dump.
-func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error) {
-	store := k.getBookStore(ctx)
+// GetAllOrderBooks returns all order books used during genesis dump.
+func (k Keeper) GetAllOrderBooks(ctx sdk.Context) (list []types.OrderBook, err error) {
+	store := k.getOrderBookStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -48,55 +48,55 @@ func (k Keeper) GetAllBooks(ctx sdk.Context) (list []types.OrderBook, err error)
 	return
 }
 
-// InitiateBook initiates a book for a given market
-func (k Keeper) InitiateBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
+// InitiateOrderBook initiates an order book for a given market.
+func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
 	// book and market have one-to-one relationship
-	bookUID := marketUID
+	orderBookUID := marketUID
 
-	// check for existing book with id
-	book, found := k.GetBook(ctx, bookUID)
+	// check for existing orderBook with uid
+	orderBook, found := k.GetOrderBook(ctx, orderBookUID)
 	if found {
-		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", book.ID)
+		return sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%s", orderBook.UID)
 	}
 
 	// create new active book object
-	book = types.NewOrderBook(
-		bookUID,
+	orderBook = types.NewOrderBook(
+		orderBookUID,
 		1, // sr participation is the only participation of the new book
 		uint64(len(oddsUIDs)),
 		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
 	)
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
-	err = k.transferFundsFromModuleToModule(ctx, types.SRPoolName, types.BookLiquidityName, srContribution)
+	err = k.transferFundsFromModuleToModule(ctx, types.SRPoolName, types.OrderBookLiquidityName, srContribution)
 	if err != nil {
 		return
 	}
 
 	// Add book participation
-	srParticipation := types.NewBookParticipation(
-		types.SrparticipationIndex, book.ID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), book.OddsCount, true, srContribution, srContribution,
+	srParticipation := types.NewOrderBookParticipation(
+		types.SrparticipationIndex, orderBook.UID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), orderBook.OddsCount, true, srContribution, srContribution,
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	_, found = k.GetBookParticipation(ctx, book.ID, srParticipation.Index)
+	_, found = k.GetOrderBookParticipation(ctx, orderBook.UID, srParticipation.Index)
 	if found {
 		err = sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", srParticipation.Index)
 		return
 	}
-	k.SetBookParticipation(ctx, srParticipation)
+	k.SetOrderBookParticipation(ctx, srParticipation)
 
 	// Add book exposures
 	fulfillmentQueue := []uint64{srParticipation.Index}
 	for _, oddsUID := range oddsUIDs {
-		boe := types.NewBookOddsExposure(book.ID, oddsUID, fulfillmentQueue)
-		k.SetBookOddsExposure(ctx, boe)
+		boe := types.NewOrderBookOddsExposure(orderBook.UID, oddsUID, fulfillmentQueue)
+		k.SetOrderBookOddsExposure(ctx, boe)
 
-		pe := types.NewParticipationExposure(srParticipation.BookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
+		pe := types.NewParticipationExposure(srParticipation.OrderBookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
 		k.SetParticipationExposure(ctx, pe)
 	}
 
-	k.SetBook(ctx, book)
+	k.SetOrderBook(ctx, orderBook)
 
 	return nil
 }

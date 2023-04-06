@@ -40,7 +40,7 @@ func CmdWithdraw() *cobra.Command {
 			particiapntIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapntIndex < 1 {
 				return fmt.Errorf("participant number should be a natural number between 1 and %v: %v",
-					srtypes.KeyMaxBookParticipations, err)
+					srtypes.KeyMaxOrderBookParticipations, err)
 			}
 
 			mode, err := cast.ToInt64E(args[2])

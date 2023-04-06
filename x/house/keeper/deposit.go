@@ -67,7 +67,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string,
 		return
 	}
 
-	participationIndex, err = k.srKeeper.InitiateBookParticipation(
+	participationIndex, err = k.srKeeper.InitiateOrderBookParticipation(
 		ctx, creatorAddr, marketUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {

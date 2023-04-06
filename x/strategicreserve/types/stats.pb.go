@@ -22,9 +22,10 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// OrderBookStats holds statistics of the order-book
+// OrderBookStats holds statistics on the order book.
 type OrderBookStats struct {
-	// resolved_unsettled is the list of book ids that needs to be settled.
+	// resolved_unsettled is the list of order book universal unique identifiers
+	// that needs to be settled.
 	ResolvedUnsettled []string `protobuf:"bytes,1,rep,name=resolved_unsettled,json=resolvedUnsettled,proto3" json:"resolved_unsettled,omitempty"`
 }
 

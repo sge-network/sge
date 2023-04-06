@@ -22,7 +22,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 		return nil
 	}
 
-	book, found := k.GetBook(ctx, orderBookUID)
+	book, found := k.GetOrderBook(ctx, orderBookUID)
 	if !found {
 		return fmt.Errorf("strategicreserve not found %s", orderBookUID)
 	}
@@ -50,7 +50,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
-	bookParticipations, err := k.GetParticipationsOfBook(ctx, orderBookUID)
+	bookParticipations, err := k.GetParticipationsOfOrderBook(ctx, orderBookUID)
 	if err != nil {
 		return false, fmt.Errorf("batch settlement of book %s failed: %s", orderBookUID, err)
 	}
@@ -72,28 +72,28 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	return allSettled, nil
 }
 
-func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipation) error {
+func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) error {
 	if bp.IsSettled {
-		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.BookUID, bp.Index)
+		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
 
 	if bp.IsModuleAccount {
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRPoolName, depositPlusProfit)
+			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRPoolName, bp.Liquidity)
+			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to `sr_profit_pool` module account
-			err = k.transferFundsFromModuleToModule(ctx, types.BookLiquidityName, types.SRProfitName, bp.ActualProfit)
+			err = k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRProfitName, bp.ActualProfit)
 			if err != nil {
 				return err
 			}
@@ -106,25 +106,25 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.BookParticipation) error
 		}
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to depositor address
-			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, depositPlusProfit)
+			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to depositor address
-			err := k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, bp.Liquidity)
+			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToUser(ctx, types.BookLiquidityName, depositorAddress, bp.ActualProfit)
+			err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.ActualProfit)
 			if err != nil {
 				return err
 			}
 		}
 	}
 	bp.IsSettled = true
-	k.SetBookParticipation(ctx, bp)
+	k.SetOrderBookParticipation(ctx, bp)
 	return nil
 }

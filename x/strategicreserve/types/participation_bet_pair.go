@@ -4,10 +4,10 @@ package types
 //
 //nolint:interfacer
 func NewParticipationBetPair(
-	bookUID, betUID string, participationIndex uint64,
+	orderBookUID, betUID string, participationIndex uint64,
 ) ParticipationBetPair {
 	return ParticipationBetPair{
-		BookUID:            bookUID,
+		OrderBookUID:       orderBookUID,
 		ParticipationIndex: participationIndex,
 		BetUID:             betUID,
 	}

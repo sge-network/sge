@@ -12,44 +12,45 @@ option go_package = "github.com/sge-network/sge/x/strategicreserve/types";
 
 // GenesisState defines the strategicreserve module's genesis state.
 message GenesisState {
-  // params defines all the parameters related to orderbook.
+  // params defines all the parameters related to order book.
   Params params = 1 [ (gogoproto.nullable) = false ];
 
-  // book_list defines the books active at genesis.
-  repeated OrderBook book_list = 2 [ (gogoproto.nullable) = false ];
+  // order_book_list defines the order books available at genesis.
+  repeated OrderBook order_book_list = 2 [ (gogoproto.nullable) = false ];
 
-  // book_participation_list defines the book participations active at genesis.
-  repeated BookParticipation book_participation_list = 3
-      [ (gogoproto.nullable) = false ];
-
-  // book_exposure_list defines the book exposures active at genesis.
-  repeated BookOddsExposure book_exposure_list = 4
-      [ (gogoproto.nullable) = false ];
-
-  // participation_exposure_list defines the participation exposures active at
+  // order_book_participation_list defines the book participations available at
   // genesis.
+  repeated OrderBookParticipation order_book_participation_list = 3
+      [ (gogoproto.nullable) = false ];
+
+  // order_book_exposure_list defines the order book exposures available at
+  // genesis.
+  repeated OrderBookOddsExposure order_book_exposure_list = 4
+      [ (gogoproto.nullable) = false ];
+
+  // participation_exposure_list defines the participation exposures available
+  // at genesis.
   repeated ParticipationExposure participation_exposure_list = 5
       [ (gogoproto.nullable) = false ];
 
   // participation_exposure_by_index_list defines the participation exposures by
-  // index active at genesis.
+  // the indices available at genesis.
   repeated ParticipationExposure participation_exposure_by_index_list = 6
       [ (gogoproto.nullable) = false ];
 
   // historical_participation_exposure_list defines the historical participation
-  // exposures active at
-  // genesis.
+  // exposures available at genesis.
   repeated ParticipationExposure historical_participation_exposure_list = 7
       [ (gogoproto.nullable) = false ];
 
-  // historical_participation_exposure_list defines the historical participation
-  // exposures active at
-  // genesis.
+  // historical_participation_exposure_list defines the participation bet pair
+  // exposures available at genesis.
   repeated ParticipationBetPair participation_bet_pair_exposure_list = 8
       [ (gogoproto.nullable) = false ];
 
+  // payout_lock defines the current locks for the payouts.
   repeated bytes payout_lock = 9 [ (gogoproto.nullable) = false ];
 
-  // stats is the statistics of the order-book
+  // stats is the statistics of the order book.
   OrderBookStats stats = 10 [ (gogoproto.nullable) = false ];
 }
