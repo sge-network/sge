@@ -124,7 +124,7 @@ or
 - Initialize node
 
 ```shell
-sged init {{NODE_NAME}} --chain-id sge-network-1
+sged init {{NODE_NAME}} --chain-id sge-network-2
 ```
 
 Select network to join
@@ -151,12 +151,12 @@ Coming Soon!!
 
 ### Testnet
 
-- [sge-network-1](https://github.com/sge-network/networks/sge-network-1)
+- [sge-network-2](https://github.com/sge-network/networks/tree/master/sge-network-2)
 
 - Place the genesis file  with the genesis file of the chain.
 
 ```shell
-wget https://github.com/sge-network/networks/blob/master/sge-network-1/genesis.json -O ~/.sged/config/genesis.json
+wget https://github.com/sge-network/networks/blob/master/sge-network-2/genesis.json -O ~/.sged/config/genesis.json
 ```
 
 Verify genesis hash sum
@@ -165,7 +165,7 @@ Verify genesis hash sum
 sha256sum ~/.sged/config/genesis.json
 ```
 
-Correct sha256 sum for sge-network-1 is - 2bea72699f9c1afd6217f7e76f14f07c1fbe849d090fc37cd008a42d14d5d30c
+Correct sha256 sum for sge-network-2 is - 2bea72699f9c1afd6217f7e76f14f07c1fbe849d090fc37cd008a42d14d5d30c
 Genesis file sha sum is published in according repository.
 
 - Add `persistent_peers` or `seeds` in `${HOME}/.sge/config/config.toml`
