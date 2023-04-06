@@ -2,11 +2,11 @@
 
 This section defines the state transitions of the strategic reserve module's KVStore in all scenarios:
 
-## **Book Initialization**
+## **Order Book Initialization**
 
 When this market is being created:
 
-1. Creates a order book corresponding to the market
+1. Creates an order book corresponding to the market
 2. Transfer the sr contribution of market to the liquidity name.
 3. Creates the first participation for the sr module account.
 4. Set the exposures for the bet odds.
@@ -14,7 +14,7 @@ When this market is being created:
 
 ```go
 newOrderBook := &types.Deposit{
-    BookID:                 <marketID>,
+    OrderBookID:            <marketID>,
     ParticipantCount:       1, // this is sr module account
     OddsCount:              <Count of bet odds og market>
     Status:                 Active
@@ -31,8 +31,8 @@ When a user deposits tokens:
 2. Check if maximum allowed participant is reached or not.
 3. Set the participation equal to the liquidity amount of the deposition.
 4. Transfer the deposition fee to the house module account.
-5. Transfer the liquidity amount to the Book liquidity module account.
-6. Update the book odds exposures and add the participation into the fulfillment queue.
+5. Transfer the liquidity amount to the order book liquidity module account.
+6. Update the order book odds exposures and add the participation into the fulfillment queue.
 7. Initialize the participation exposure as zero for round as 1 and set to the state.
 
 ---

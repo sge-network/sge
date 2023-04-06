@@ -2,7 +2,7 @@
 
 * [Home](/)
 * [About SGE Network](../README.md)
-* [Modules](README.md)
+* [Modules](../README.md)
   * [Bet](../Bet/01_Overview.md)
   * [DVM](../DVM/01_Overview.md)
   * [Mint](../Mint/01_Overview.md)
@@ -12,6 +12,6 @@
     * [Overview](../StrategicReserve/01_Overview.md)
     * [Concepts](../StrategicReserve/02_Concepts.md)
     * [State](../StrategicReserve/03_State.md)
-    * [State Transitions](../StrategicReserve/04_State_transitions.md)
-    * [Message](../StrategicReserve/05_Message.md)
+    * [State Transitions](../StrategicReserve/04_State_Transitions.md)
+    * [Message](../StrategicReserve/05_Messages.md)
     * [Events](../StrategicReserve/06_Events.md)
