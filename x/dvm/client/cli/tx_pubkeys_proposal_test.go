@@ -15,6 +15,7 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/dvm/client/cli"
+	"github.com/sge-network/sge/x/dvm/types"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,7 +32,7 @@ func TestCmdChangePubkeysListProposal(t *testing.T) {
 	}
 
 	var pubs []string
-	for i := 0; i < 5; i++ {
+	for i := 0; i < types.MinPubKeysCount; i++ {
 		pub, _, err := ed25519.GenerateKey(rand.Reader)
 		require.NoError(t, err)
 		bs, err := x509.MarshalPKIXPublicKey(pub)
