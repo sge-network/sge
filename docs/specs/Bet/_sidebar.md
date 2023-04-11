@@ -10,7 +10,7 @@
     * [State Transitions](../Bet/05_State_Transitions.md)
     * [Messages](../Bet/06_Messages.md)
     * [Events](../Bet/07_Events.md)
-  * [DVM](../DVM/01_Overview.md)
+  * [OVM](../OVM/01_Overview.md)
   * [Mint](../Mint/01_Overview.md)
   * [Market](../Market/01_Overview.md)
   * [House](../House/01_Overview.md)

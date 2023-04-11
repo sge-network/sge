@@ -5,7 +5,7 @@
 The key vault in the module state that contains a list of strings which are the trusted public keys.
 
 ```proto
-// KeyVault is the information of important keys stored in dvm state.
+// KeyVault is the information of important keys stored in ovm state.
 message KeyVault {
   // public_keys contains allowed public keys.
   repeated string public_keys = 1 [ (gogoproto.nullable) = false ];

@@ -1,6 +1,6 @@
 # **Messages**
 
-In this section, we describe the processing of the DVM messages.
+In this section, we describe the processing of the OVM messages.
 
 ## **SubmitPubkeysChangeProposal**
 
