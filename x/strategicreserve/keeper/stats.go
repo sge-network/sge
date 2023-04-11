@@ -10,14 +10,14 @@ import (
 
 // SetOrderBookStats sets bet statistics in the store
 func (k Keeper) SetOrderBookStats(ctx sdk.Context, stats types.OrderBookStats) {
-	store := k.getBookStatsStore(ctx)
+	store := k.getOrderBookStatsStore(ctx)
 	b := k.cdc.MustMarshal(&stats)
 	store.Set(utils.StrBytes("0"), b)
 }
 
 // GetOrderBookStats returns order-book stats
 func (k Keeper) GetOrderBookStats(ctx sdk.Context) (val types.OrderBookStats) {
-	store := k.getBookStatsStore(ctx)
+	store := k.getOrderBookStatsStore(ctx)
 	b := store.Get(utils.StrBytes("0"))
 	if b == nil {
 		return val
@@ -27,8 +27,9 @@ func (k Keeper) GetOrderBookStats(ctx sdk.Context) (val types.OrderBookStats) {
 	return val
 }
 
-func (k Keeper) AddBookSettlement(ctx sdk.Context, orderBookUID string) error {
-	book, found := k.GetBook(ctx, orderBookUID)
+// SetOrderBookAsSettled sets the orderbook as settled.
+func (k Keeper) SetOrderBookAsSettled(ctx sdk.Context, orderBookUID string) error {
+	book, found := k.GetOrderBook(ctx, orderBookUID)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", orderBookUID)
 	}
@@ -36,7 +37,7 @@ func (k Keeper) AddBookSettlement(ctx sdk.Context, orderBookUID string) error {
 		return sdkerrors.Wrapf(types.ErrOrderBookNotActive, "%s", orderBookUID)
 	}
 	book.Status = types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_RESOLVED
-	k.SetBook(ctx, book)
+	k.SetOrderBook(ctx, book)
 
 	stats := k.GetOrderBookStats(ctx)
 	stats.ResolvedUnsettled = append(stats.ResolvedUnsettled, orderBookUID)

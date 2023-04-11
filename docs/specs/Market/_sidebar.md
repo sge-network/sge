@@ -2,7 +2,7 @@
 
 * [Home](/)
 * [About SGE Network](../README.md)
-* [Modules](README.md)
+* [Modules](../README.md)
   * [Bet](../Bet/01_Overview.md)
   * [OVM](../OVM/01_Overview.md)
   * [Mint](../Mint/01_Overview.md)

@@ -79,7 +79,8 @@ type MsgDepositResponse struct {
 	// market_uid is the uid of market/order book against which deposit is being
 	// made.
 	MarketUID string `protobuf:"bytes,1,opt,name=market_uid,proto3" json:"market_uid"`
-	// participation_index is the index corresponding to the order book participation
+	// participation_index is the index corresponding to the order book
+	// participation
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
@@ -135,7 +136,8 @@ func (m *MsgDepositResponse) GetParticipationIndex() uint64 {
 type MsgWithdraw struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty" yaml:"creator"`
 	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	// participation_index is the index corresponding to the order book participation
+	// participation_index is the index corresponding to the order book
+	// participation
 	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 	// mode is the withdrawal mode. It can be full or partial withdraw
 	Mode WithdrawalMode `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
@@ -182,7 +184,8 @@ type MsgWithdrawResponse struct {
 	ID uint64 `protobuf:"varint,1,opt,name=id,proto3" json:"id" yaml:"id"`
 	// market_uid is the id of market/order book from which withdrawal is made
 	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
-	// participation_index is the index in order book from which withdrawal is made
+	// participation_index is the index in order book from which withdrawal is
+	// made
 	ParticipationIndex uint64 `protobuf:"varint,3,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty" yaml:"participation_index"`
 }
 
@@ -298,7 +301,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
 	// Deposit defines a method for performing a deposit of tokens to become part
-	// of the order book or be the house for an order book corresponding to a market.
+	// of the order book or be the house for an order book corresponding to a
+	// market.
 	Deposit(ctx context.Context, in *MsgDeposit, opts ...grpc.CallOption) (*MsgDepositResponse, error)
 	// Withdraw defines a method for performing a withdrawal of tokens of unused
 	// amount corresponding to a deposit.
@@ -334,7 +338,8 @@ func (c *msgClient) Withdraw(ctx context.Context, in *MsgWithdraw, opts ...grpc.
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// Deposit defines a method for performing a deposit of tokens to become part
-	// of the order book or be the house for an order book corresponding to a market.
+	// of the order book or be the house for an order book corresponding to a
+	// market.
 	Deposit(context.Context, *MsgDeposit) (*MsgDepositResponse, error)
 	// Withdraw defines a method for performing a withdrawal of tokens of unused
 	// amount corresponding to a deposit.

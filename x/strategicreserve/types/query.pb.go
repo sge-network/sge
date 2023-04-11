@@ -30,7 +30,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// QueryParamsRequest is the request type for the Query/Params RPC method.
+// QueryParamsRequest is the request type for the Query/Params RPC method
 // Query/Params RPC method.
 type QueryParamsRequest struct {
 }
@@ -68,7 +68,7 @@ func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParamsRequest proto.InternalMessageInfo
 
-// QueryParamsResponse is the response type for the Query/Params RPC method.
+// QueryParamsResponse is the response type for the Query/Params RPC method
 // Query/Params RPC method.
 type QueryParamsResponse struct {
 	// params holds all the parameters of this module.
@@ -115,11 +115,12 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryOrderBooksRequest is request type for Query/OrderBooks RPC method.
+// QueryOrderBooksRequest is the request type for the Query/OrderBooks RPC
+// method.
 type QueryOrderBooksRequest struct {
-	// status enables to query for order bookds matching a given status.
+	// status enables query for order books matching a given status.
 	Status string `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -170,7 +171,8 @@ func (m *QueryOrderBooksRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryOrderBooksResponse is response type for the Query/OrderBooks RPC method
+// QueryOrderBooksResponse is the response type for the Query/OrderBooks RPC
+// method.
 type QueryOrderBooksResponse struct {
 	// orderbooks contains all the queried order books.
 	Orderbooks []OrderBook `protobuf:"bytes,1,rep,name=orderbooks,proto3" json:"orderbooks"`
@@ -225,10 +227,10 @@ func (m *QueryOrderBooksResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryOrderBookRequest is request type for the Query/OrderBook RPC method
+// QueryOrderBookRequest is the request type for the Query/OrderBook RPC method.
 type QueryOrderBookRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
 }
 
 func (m *QueryOrderBookRequest) Reset()         { *m = QueryOrderBookRequest{} }
@@ -264,17 +266,18 @@ func (m *QueryOrderBookRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryOrderBookRequest proto.InternalMessageInfo
 
-func (m *QueryOrderBookRequest) GetBookUid() string {
+func (m *QueryOrderBookRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
 
-// QueryOrderBookResponse is response type for the Query/OrderBook RPC method
+// QueryOrderBookResponse is the response type for the Query/OrderBook RPC
+// method.
 type QueryOrderBookResponse struct {
-	// orderBook defines the the order book info.
-	Orderbook OrderBook `protobuf:"bytes,1,opt,name=orderbook,proto3" json:"orderbook"`
+	// orderBook defines the order book info.
+	OrderBook OrderBook `protobuf:"bytes,1,opt,name=order_book,json=orderBook,proto3" json:"order_book"`
 }
 
 func (m *QueryOrderBookResponse) Reset()         { *m = QueryOrderBookResponse{} }
@@ -310,34 +313,34 @@ func (m *QueryOrderBookResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryOrderBookResponse proto.InternalMessageInfo
 
-func (m *QueryOrderBookResponse) GetOrderbook() OrderBook {
+func (m *QueryOrderBookResponse) GetOrderBook() OrderBook {
 	if m != nil {
-		return m.Orderbook
+		return m.OrderBook
 	}
 	return OrderBook{}
 }
 
-// QueryBookParticipationsRequest is request type for the
-// Query/BookParticipations RPC method
-type QueryBookParticipationsRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+// QueryOrderBookParticipationsRequest is the request type for the
+// Query/OrderBookParticipations RPC method
+type QueryOrderBookParticipationsRequest struct {
+	// order_book_uid defines the order book universal unique identifier to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookParticipationsRequest) Reset()         { *m = QueryBookParticipationsRequest{} }
-func (m *QueryBookParticipationsRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipationsRequest) ProtoMessage()    {}
-func (*QueryBookParticipationsRequest) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookParticipationsRequest) Reset()         { *m = QueryOrderBookParticipationsRequest{} }
+func (m *QueryOrderBookParticipationsRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookParticipationsRequest) ProtoMessage()    {}
+func (*QueryOrderBookParticipationsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{6}
 }
-func (m *QueryBookParticipationsRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookParticipationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookParticipationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipationsRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookParticipationsRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -347,52 +350,52 @@ func (m *QueryBookParticipationsRequest) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipationsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipationsRequest.Merge(m, src)
+func (m *QueryOrderBookParticipationsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationsRequest.Merge(m, src)
 }
-func (m *QueryBookParticipationsRequest) XXX_Size() int {
+func (m *QueryOrderBookParticipationsRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipationsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipationsRequest.DiscardUnknown(m)
+func (m *QueryOrderBookParticipationsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipationsRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookParticipationsRequest proto.InternalMessageInfo
 
-func (m *QueryBookParticipationsRequest) GetBookUid() string {
+func (m *QueryOrderBookParticipationsRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
 
-func (m *QueryBookParticipationsRequest) GetPagination() *query.PageRequest {
+func (m *QueryOrderBookParticipationsRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookParticipationsResponse is response type for the
-// Query/BookParticipations RPC method
-type QueryBookParticipationsResponse struct {
-	BookParticipations []BookParticipation `protobuf:"bytes,1,rep,name=book_participations,json=bookParticipations,proto3" json:"book_participations"`
+// QueryOrderBookParticipationsResponse is the response type for the
+// Query/OrderBookParticipations RPC method
+type QueryOrderBookParticipationsResponse struct {
+	OrderBookParticipations []OrderBookParticipation `protobuf:"bytes,1,rep,name=order_book_participations,json=orderBookParticipations,proto3" json:"order_book_participations"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookParticipationsResponse) Reset()         { *m = QueryBookParticipationsResponse{} }
-func (m *QueryBookParticipationsResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipationsResponse) ProtoMessage()    {}
-func (*QueryBookParticipationsResponse) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookParticipationsResponse) Reset()         { *m = QueryOrderBookParticipationsResponse{} }
+func (m *QueryOrderBookParticipationsResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookParticipationsResponse) ProtoMessage()    {}
+func (*QueryOrderBookParticipationsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{7}
 }
-func (m *QueryBookParticipationsResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookParticipationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookParticipationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipationsResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookParticipationsResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -402,53 +405,53 @@ func (m *QueryBookParticipationsResponse) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipationsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipationsResponse.Merge(m, src)
+func (m *QueryOrderBookParticipationsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationsResponse.Merge(m, src)
 }
-func (m *QueryBookParticipationsResponse) XXX_Size() int {
+func (m *QueryOrderBookParticipationsResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipationsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipationsResponse.DiscardUnknown(m)
+func (m *QueryOrderBookParticipationsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipationsResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookParticipationsResponse proto.InternalMessageInfo
 
-func (m *QueryBookParticipationsResponse) GetBookParticipations() []BookParticipation {
+func (m *QueryOrderBookParticipationsResponse) GetOrderBookParticipations() []OrderBookParticipation {
 	if m != nil {
-		return m.BookParticipations
+		return m.OrderBookParticipations
 	}
 	return nil
 }
 
-func (m *QueryBookParticipationsResponse) GetPagination() *query.PageResponse {
+func (m *QueryOrderBookParticipationsResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookParticipationRequest is request type for the Query/BookParticipation
-// RPC method
-type QueryBookParticipationRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// participation_index defines the participation index to query for
+// QueryOrderBookParticipationRequest is the request type for the
+// Query/OrderBookParticipation RPC method.
+type QueryOrderBookParticipationRequest struct {
+	// order_book_uid defines the order book universal unique identifier to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// participation_index defines the participation index to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 }
 
-func (m *QueryBookParticipationRequest) Reset()         { *m = QueryBookParticipationRequest{} }
-func (m *QueryBookParticipationRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipationRequest) ProtoMessage()    {}
-func (*QueryBookParticipationRequest) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookParticipationRequest) Reset()         { *m = QueryOrderBookParticipationRequest{} }
+func (m *QueryOrderBookParticipationRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookParticipationRequest) ProtoMessage()    {}
+func (*QueryOrderBookParticipationRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{8}
 }
-func (m *QueryBookParticipationRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookParticipationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookParticipationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipationRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookParticipationRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -458,51 +461,51 @@ func (m *QueryBookParticipationRequest) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipationRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipationRequest.Merge(m, src)
+func (m *QueryOrderBookParticipationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationRequest.Merge(m, src)
 }
-func (m *QueryBookParticipationRequest) XXX_Size() int {
+func (m *QueryOrderBookParticipationRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipationRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipationRequest.DiscardUnknown(m)
+func (m *QueryOrderBookParticipationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipationRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookParticipationRequest proto.InternalMessageInfo
 
-func (m *QueryBookParticipationRequest) GetBookUid() string {
+func (m *QueryOrderBookParticipationRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
 
-func (m *QueryBookParticipationRequest) GetParticipationIndex() uint64 {
+func (m *QueryOrderBookParticipationRequest) GetParticipationIndex() uint64 {
 	if m != nil {
 		return m.ParticipationIndex
 	}
 	return 0
 }
 
-// QueryBookParticipationResponse is response type for the
-// Query/BookParticipation RPC method
-type QueryBookParticipationResponse struct {
-	// book_participation defines the the book participation info.
-	BookParticipation BookParticipation `protobuf:"bytes,1,opt,name=book_participation,json=bookParticipation,proto3" json:"book_participation"`
+// QueryOrderBookParticipationResponse is the response type for the
+// Query/OrderBookParticipation RPC method.
+type QueryOrderBookParticipationResponse struct {
+	// order_book_participation defines the book participation info.
+	OrderBookParticipation OrderBookParticipation `protobuf:"bytes,1,opt,name=order_book_participation,json=orderBookParticipation,proto3" json:"order_book_participation"`
 }
 
-func (m *QueryBookParticipationResponse) Reset()         { *m = QueryBookParticipationResponse{} }
-func (m *QueryBookParticipationResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookParticipationResponse) ProtoMessage()    {}
-func (*QueryBookParticipationResponse) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookParticipationResponse) Reset()         { *m = QueryOrderBookParticipationResponse{} }
+func (m *QueryOrderBookParticipationResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookParticipationResponse) ProtoMessage()    {}
+func (*QueryOrderBookParticipationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{9}
 }
-func (m *QueryBookParticipationResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookParticipationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookParticipationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookParticipationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookParticipationResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookParticipationResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -512,46 +515,46 @@ func (m *QueryBookParticipationResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-func (m *QueryBookParticipationResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookParticipationResponse.Merge(m, src)
+func (m *QueryOrderBookParticipationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationResponse.Merge(m, src)
 }
-func (m *QueryBookParticipationResponse) XXX_Size() int {
+func (m *QueryOrderBookParticipationResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookParticipationResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookParticipationResponse.DiscardUnknown(m)
+func (m *QueryOrderBookParticipationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookParticipationResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookParticipationResponse proto.InternalMessageInfo
 
-func (m *QueryBookParticipationResponse) GetBookParticipation() BookParticipation {
+func (m *QueryOrderBookParticipationResponse) GetOrderBookParticipation() OrderBookParticipation {
 	if m != nil {
-		return m.BookParticipation
+		return m.OrderBookParticipation
 	}
-	return BookParticipation{}
+	return OrderBookParticipation{}
 }
 
-// QueryBookExposuresRequest is request type for the Query/BookExposures RPC
+// QueryOrderBookExposuresRequest is the request type for the Query/OrderBookExposures RPC
 // method
-type QueryBookExposuresRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+type QueryOrderBookExposuresRequest struct {
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookExposuresRequest) Reset()         { *m = QueryBookExposuresRequest{} }
-func (m *QueryBookExposuresRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookExposuresRequest) ProtoMessage()    {}
-func (*QueryBookExposuresRequest) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookExposuresRequest) Reset()         { *m = QueryOrderBookExposuresRequest{} }
+func (m *QueryOrderBookExposuresRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookExposuresRequest) ProtoMessage()    {}
+func (*QueryOrderBookExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{10}
 }
-func (m *QueryBookExposuresRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookExposuresRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookExposuresRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -561,52 +564,52 @@ func (m *QueryBookExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (m *QueryBookExposuresRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookExposuresRequest.Merge(m, src)
+func (m *QueryOrderBookExposuresRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookExposuresRequest.Merge(m, src)
 }
-func (m *QueryBookExposuresRequest) XXX_Size() int {
+func (m *QueryOrderBookExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookExposuresRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookExposuresRequest.DiscardUnknown(m)
+func (m *QueryOrderBookExposuresRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookExposuresRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookExposuresRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookExposuresRequest proto.InternalMessageInfo
 
-func (m *QueryBookExposuresRequest) GetBookUid() string {
+func (m *QueryOrderBookExposuresRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
 
-func (m *QueryBookExposuresRequest) GetPagination() *query.PageRequest {
+func (m *QueryOrderBookExposuresRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookExposuresResponse is response type for the Query/BookExposures RPC
-// method
-type QueryBookExposuresResponse struct {
-	BookExposures []BookOddsExposure `protobuf:"bytes,1,rep,name=book_exposures,json=bookExposures,proto3" json:"book_exposures"`
+// QueryOrderBookExposuresResponse is the response type for the Query/OrderBookExposures
+// RPC method.
+type QueryOrderBookExposuresResponse struct {
+	OrderBookExposures []OrderBookOddsExposure `protobuf:"bytes,1,rep,name=order_book_exposures,json=orderBookExposures,proto3" json:"order_book_exposures"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryBookExposuresResponse) Reset()         { *m = QueryBookExposuresResponse{} }
-func (m *QueryBookExposuresResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookExposuresResponse) ProtoMessage()    {}
-func (*QueryBookExposuresResponse) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookExposuresResponse) Reset()         { *m = QueryOrderBookExposuresResponse{} }
+func (m *QueryOrderBookExposuresResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookExposuresResponse) ProtoMessage()    {}
+func (*QueryOrderBookExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{11}
 }
-func (m *QueryBookExposuresResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookExposuresResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookExposuresResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -616,53 +619,53 @@ func (m *QueryBookExposuresResponse) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-func (m *QueryBookExposuresResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookExposuresResponse.Merge(m, src)
+func (m *QueryOrderBookExposuresResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookExposuresResponse.Merge(m, src)
 }
-func (m *QueryBookExposuresResponse) XXX_Size() int {
+func (m *QueryOrderBookExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookExposuresResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookExposuresResponse.DiscardUnknown(m)
+func (m *QueryOrderBookExposuresResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookExposuresResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookExposuresResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookExposuresResponse proto.InternalMessageInfo
 
-func (m *QueryBookExposuresResponse) GetBookExposures() []BookOddsExposure {
+func (m *QueryOrderBookExposuresResponse) GetOrderBookExposures() []OrderBookOddsExposure {
 	if m != nil {
-		return m.BookExposures
+		return m.OrderBookExposures
 	}
 	return nil
 }
 
-func (m *QueryBookExposuresResponse) GetPagination() *query.PageResponse {
+func (m *QueryOrderBookExposuresResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-// QueryBookExposureRequest is request type for the Query/BookExposure RPC
-// method
-type QueryBookExposureRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+// QueryOrderBookExposureRequest is the request type for the Query/OrderBookExposure RPC
+// method.
+type QueryOrderBookExposureRequest struct {
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
 	// odds_uid defines the odds id to query for.
 	OddsUid string `protobuf:"bytes,2,opt,name=odds_uid,json=oddsUid,proto3" json:"odds_uid,omitempty"`
 }
 
-func (m *QueryBookExposureRequest) Reset()         { *m = QueryBookExposureRequest{} }
-func (m *QueryBookExposureRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBookExposureRequest) ProtoMessage()    {}
-func (*QueryBookExposureRequest) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookExposureRequest) Reset()         { *m = QueryOrderBookExposureRequest{} }
+func (m *QueryOrderBookExposureRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookExposureRequest) ProtoMessage()    {}
+func (*QueryOrderBookExposureRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{12}
 }
-func (m *QueryBookExposureRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookExposureRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookExposureRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookExposureRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -672,51 +675,51 @@ func (m *QueryBookExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryBookExposureRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookExposureRequest.Merge(m, src)
+func (m *QueryOrderBookExposureRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookExposureRequest.Merge(m, src)
 }
-func (m *QueryBookExposureRequest) XXX_Size() int {
+func (m *QueryOrderBookExposureRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookExposureRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookExposureRequest.DiscardUnknown(m)
+func (m *QueryOrderBookExposureRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookExposureRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookExposureRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookExposureRequest proto.InternalMessageInfo
 
-func (m *QueryBookExposureRequest) GetBookUid() string {
+func (m *QueryOrderBookExposureRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
 
-func (m *QueryBookExposureRequest) GetOddsUid() string {
+func (m *QueryOrderBookExposureRequest) GetOddsUid() string {
 	if m != nil {
 		return m.OddsUid
 	}
 	return ""
 }
 
-// QueryBookExposureResponse is response type for the Query/BookExposure RPC
-// method
-type QueryBookExposureResponse struct {
-	// book_exposure defines the the book exposure info.
-	BookExposure BookOddsExposure `protobuf:"bytes,1,opt,name=book_exposure,json=bookExposure,proto3" json:"book_exposure"`
+// QueryOrderBookExposureResponse is the response type for the Query/OrderBookExposure RPC
+// method.
+type QueryOrderBookExposureResponse struct {
+	// order_book_exposure defines the order book exposure info.
+	OrderBookExposure OrderBookOddsExposure `protobuf:"bytes,1,opt,name=order_book_exposure,json=orderBookExposure,proto3" json:"order_book_exposure"`
 }
 
-func (m *QueryBookExposureResponse) Reset()         { *m = QueryBookExposureResponse{} }
-func (m *QueryBookExposureResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryBookExposureResponse) ProtoMessage()    {}
-func (*QueryBookExposureResponse) Descriptor() ([]byte, []int) {
+func (m *QueryOrderBookExposureResponse) Reset()         { *m = QueryOrderBookExposureResponse{} }
+func (m *QueryOrderBookExposureResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryOrderBookExposureResponse) ProtoMessage()    {}
+func (*QueryOrderBookExposureResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_6b5d7d659eddd962, []int{13}
 }
-func (m *QueryBookExposureResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryOrderBookExposureResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBookExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryOrderBookExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBookExposureResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryOrderBookExposureResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -726,31 +729,31 @@ func (m *QueryBookExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([
 		return b[:n], nil
 	}
 }
-func (m *QueryBookExposureResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBookExposureResponse.Merge(m, src)
+func (m *QueryOrderBookExposureResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookExposureResponse.Merge(m, src)
 }
-func (m *QueryBookExposureResponse) XXX_Size() int {
+func (m *QueryOrderBookExposureResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBookExposureResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBookExposureResponse.DiscardUnknown(m)
+func (m *QueryOrderBookExposureResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookExposureResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBookExposureResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryOrderBookExposureResponse proto.InternalMessageInfo
 
-func (m *QueryBookExposureResponse) GetBookExposure() BookOddsExposure {
+func (m *QueryOrderBookExposureResponse) GetOrderBookExposure() OrderBookOddsExposure {
 	if m != nil {
-		return m.BookExposure
+		return m.OrderBookExposure
 	}
-	return BookOddsExposure{}
+	return OrderBookOddsExposure{}
 }
 
-// QueryParticipationExposuresRequest is request type for the
+// QueryParticipationExposuresRequest is the request type for the
 // Query/ParticipationExposures RPC method
 type QueryParticipationExposuresRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -787,9 +790,9 @@ func (m *QueryParticipationExposuresRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParticipationExposuresRequest proto.InternalMessageInfo
 
-func (m *QueryParticipationExposuresRequest) GetBookUid() string {
+func (m *QueryParticipationExposuresRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
@@ -801,8 +804,8 @@ func (m *QueryParticipationExposuresRequest) GetPagination() *query.PageRequest 
 	return nil
 }
 
-// QueryParticipationExposuresResponse is response type for the
-// Query/ParticipationExposures RPC method
+// QueryParticipationExposuresResponse is the response type for the
+// Query/ParticipationExposures RPC method.
 type QueryParticipationExposuresResponse struct {
 	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
@@ -856,11 +859,12 @@ func (m *QueryParticipationExposuresResponse) GetPagination() *query.PageRespons
 	return nil
 }
 
-// QueryParticipationExposureRequest is request type for the
-// Query/ParticipationExposure RPC method
+// QueryParticipationExposureRequest is the request type for the
+// Query/ParticipationExposure RPC method.
 type QueryParticipationExposureRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid            string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	// order_book_uid defines the order book id to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// participation_index is the index of participation to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -899,9 +903,9 @@ func (m *QueryParticipationExposureRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParticipationExposureRequest proto.InternalMessageInfo
 
-func (m *QueryParticipationExposureRequest) GetBookUid() string {
+func (m *QueryParticipationExposureRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
@@ -920,10 +924,10 @@ func (m *QueryParticipationExposureRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryParticipationExposureResponse is response type for the
-// Query/ParticipationExposure RPC method
+// QueryParticipationExposureResponse is the response type for the
+// Query/ParticipationExposure RPC method.
 type QueryParticipationExposureResponse struct {
-	// book_exposure defines the the book exposure info.
+	// participation_exposure defines the participation exposure info.
 	ParticipationExposure []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposure,json=participationExposure,proto3" json:"participation_exposure"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -976,12 +980,12 @@ func (m *QueryParticipationExposureResponse) GetPagination() *query.PageResponse
 	return nil
 }
 
-// QueryHistoricalParticipationExposuresRequest is request type for the
+// QueryHistoricalParticipationExposuresRequest is the request type for the
 // Query/HistoricalParticipationExposures RPC method
 type QueryHistoricalParticipationExposuresRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
-	// pagination defines an optional pagination for the request.
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
@@ -1022,9 +1026,9 @@ func (m *QueryHistoricalParticipationExposuresRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryHistoricalParticipationExposuresRequest proto.InternalMessageInfo
 
-func (m *QueryHistoricalParticipationExposuresRequest) GetBookUid() string {
+func (m *QueryHistoricalParticipationExposuresRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
@@ -1036,8 +1040,8 @@ func (m *QueryHistoricalParticipationExposuresRequest) GetPagination() *query.Pa
 	return nil
 }
 
-// QueryHistoricalParticipationExposuresResponse is response type for the
-// Query/HistoricalParticipationExposures RPC method
+// QueryHistoricalParticipationExposuresResponse is the response type for the
+// Query/HistoricalParticipationExposures RPC method.
 type QueryHistoricalParticipationExposuresResponse struct {
 	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
@@ -1095,11 +1099,12 @@ func (m *QueryHistoricalParticipationExposuresResponse) GetPagination() *query.P
 	return nil
 }
 
-// QueryParticipationFulfilledBetsRequest is request type for the
-// Query/ParticipationFulfilledBets RPC method
+// QueryParticipationFulfilledBetsRequest is the request type for the
+// Query/ParticipationFulfilledBets RPC method.
 type QueryParticipationFulfilledBetsRequest struct {
-	// book_uid defines the book id to query for.
-	BookUid            string `protobuf:"bytes,1,opt,name=book_uid,json=bookUid,proto3" json:"book_uid,omitempty"`
+	// order_book_uid defines the order book uid to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// participation_index is the index of participation to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -1140,9 +1145,9 @@ func (m *QueryParticipationFulfilledBetsRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_QueryParticipationFulfilledBetsRequest proto.InternalMessageInfo
 
-func (m *QueryParticipationFulfilledBetsRequest) GetBookUid() string {
+func (m *QueryParticipationFulfilledBetsRequest) GetOrderBookUid() string {
 	if m != nil {
-		return m.BookUid
+		return m.OrderBookUid
 	}
 	return ""
 }
@@ -1161,10 +1166,10 @@ func (m *QueryParticipationFulfilledBetsRequest) GetPagination() *query.PageRequ
 	return nil
 }
 
-// QueryParticipationFulfilledBetsResponse is response type for the
-// Query/ParticipationFulfilledBets RPC method
+// QueryParticipationFulfilledBetsResponse is the response type for the
+// Query/ParticipationFulfilledBets RPC method.
 type QueryParticipationFulfilledBetsResponse struct {
-	// book_exposure defines the the book exposure info.
+	// participation_bets is the bets of the participation.
 	ParticipationBets []ParticipationBetPair `protobuf:"bytes,1,rep,name=participation_bets,json=participationBets,proto3" json:"participation_bets"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -1226,14 +1231,14 @@ func init() {
 	proto.RegisterType((*QueryOrderBooksResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBooksResponse")
 	proto.RegisterType((*QueryOrderBookRequest)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookRequest")
 	proto.RegisterType((*QueryOrderBookResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookResponse")
-	proto.RegisterType((*QueryBookParticipationsRequest)(nil), "sgenetwork.sge.strategicreserve.QueryBookParticipationsRequest")
-	proto.RegisterType((*QueryBookParticipationsResponse)(nil), "sgenetwork.sge.strategicreserve.QueryBookParticipationsResponse")
-	proto.RegisterType((*QueryBookParticipationRequest)(nil), "sgenetwork.sge.strategicreserve.QueryBookParticipationRequest")
-	proto.RegisterType((*QueryBookParticipationResponse)(nil), "sgenetwork.sge.strategicreserve.QueryBookParticipationResponse")
-	proto.RegisterType((*QueryBookExposuresRequest)(nil), "sgenetwork.sge.strategicreserve.QueryBookExposuresRequest")
-	proto.RegisterType((*QueryBookExposuresResponse)(nil), "sgenetwork.sge.strategicreserve.QueryBookExposuresResponse")
-	proto.RegisterType((*QueryBookExposureRequest)(nil), "sgenetwork.sge.strategicreserve.QueryBookExposureRequest")
-	proto.RegisterType((*QueryBookExposureResponse)(nil), "sgenetwork.sge.strategicreserve.QueryBookExposureResponse")
+	proto.RegisterType((*QueryOrderBookParticipationsRequest)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookParticipationsRequest")
+	proto.RegisterType((*QueryOrderBookParticipationsResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookParticipationsResponse")
+	proto.RegisterType((*QueryOrderBookParticipationRequest)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookParticipationRequest")
+	proto.RegisterType((*QueryOrderBookParticipationResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookParticipationResponse")
+	proto.RegisterType((*QueryOrderBookExposuresRequest)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookExposuresRequest")
+	proto.RegisterType((*QueryOrderBookExposuresResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookExposuresResponse")
+	proto.RegisterType((*QueryOrderBookExposureRequest)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookExposureRequest")
+	proto.RegisterType((*QueryOrderBookExposureResponse)(nil), "sgenetwork.sge.strategicreserve.QueryOrderBookExposureResponse")
 	proto.RegisterType((*QueryParticipationExposuresRequest)(nil), "sgenetwork.sge.strategicreserve.QueryParticipationExposuresRequest")
 	proto.RegisterType((*QueryParticipationExposuresResponse)(nil), "sgenetwork.sge.strategicreserve.QueryParticipationExposuresResponse")
 	proto.RegisterType((*QueryParticipationExposureRequest)(nil), "sgenetwork.sge.strategicreserve.QueryParticipationExposureRequest")
@@ -1247,81 +1252,81 @@ func init() {
 func init() { proto.RegisterFile("sge/strategicreserve/query.proto", fileDescriptor_6b5d7d659eddd962) }
 
 var fileDescriptor_6b5d7d659eddd962 = []byte{
-	// 1173 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x58, 0xdd, 0x4f, 0x1c, 0x55,
-	0x14, 0xe7, 0xd2, 0x8a, 0xed, 0x69, 0x31, 0xe1, 0x50, 0x28, 0x4c, 0x70, 0xa1, 0x53, 0x02, 0x58,
-	0xcb, 0x4c, 0x58, 0x6a, 0x51, 0x8c, 0xa2, 0x5b, 0x29, 0x68, 0x52, 0xba, 0x92, 0xe8, 0x83, 0x69,
-	0x24, 0xb3, 0xec, 0xed, 0x30, 0x02, 0x7b, 0xa7, 0x73, 0x67, 0x2b, 0x84, 0xe0, 0x83, 0x3e, 0x54,
-	0xdf, 0x34, 0x3e, 0xf9, 0xa6, 0xff, 0x83, 0xd1, 0x17, 0xe3, 0x9b, 0x49, 0xe3, 0x53, 0x13, 0x63,
-	0xe2, 0x8b, 0xd5, 0x80, 0x3e, 0x9b, 0xf8, 0x6e, 0x62, 0xe6, 0xce, 0x9d, 0xd9, 0x9d, 0x9d, 0x19,
-	0x76, 0x76, 0x59, 0xad, 0xf1, 0x8d, 0xd9, 0x7b, 0xcf, 0x39, 0xbf, 0x8f, 0x73, 0xbf, 0x80, 0x31,
-	0x6e, 0x52, 0x9d, 0xbb, 0x8e, 0xe1, 0x52, 0xd3, 0x5a, 0x77, 0x28, 0xa7, 0xce, 0x5d, 0xaa, 0xdf,
-	0xa9, 0x52, 0x67, 0x57, 0xb3, 0x1d, 0xe6, 0x32, 0x1c, 0xe5, 0x26, 0xad, 0x50, 0xf7, 0x5d, 0xe6,
-	0x6c, 0x6a, 0xdc, 0xa4, 0x5a, 0xe3, 0x64, 0xe5, 0xd2, 0x3a, 0xe3, 0xdb, 0x8c, 0xeb, 0x25, 0x83,
-	0xcb, 0x48, 0xfd, 0xee, 0x4c, 0x89, 0xba, 0xc6, 0x8c, 0x6e, 0x1b, 0xa6, 0x55, 0x31, 0x5c, 0x8b,
-	0x55, 0xfc, 0x64, 0xca, 0x39, 0x93, 0x99, 0x4c, 0xfc, 0xa9, 0x7b, 0x7f, 0xc9, 0x5f, 0x47, 0x4c,
-	0xc6, 0xcc, 0x2d, 0xaa, 0x1b, 0xb6, 0xa5, 0x1b, 0x95, 0x0a, 0x73, 0x45, 0x08, 0x97, 0xa3, 0x17,
-	0x12, 0x21, 0xda, 0x86, 0x63, 0x6c, 0x07, 0x53, 0xc6, 0x13, 0xa7, 0x30, 0xa7, 0x4c, 0x9d, 0x12,
-	0x63, 0x9b, 0x72, 0xd6, 0x54, 0x5a, 0x22, 0xd7, 0x5a, 0xb7, 0xec, 0x7a, 0x98, 0x17, 0x13, 0x67,
-	0xd2, 0x1d, 0x9b, 0xf1, 0xaa, 0x43, 0xfd, 0x49, 0xea, 0x39, 0xc0, 0xd7, 0x3d, 0xb6, 0x45, 0x81,
-	0x64, 0x95, 0xde, 0xa9, 0x52, 0xee, 0xaa, 0xb7, 0xa0, 0x3f, 0xf2, 0x2b, 0xb7, 0x59, 0x85, 0x53,
-	0x5c, 0x84, 0x1e, 0x1f, 0xf1, 0x10, 0x19, 0x23, 0x53, 0x67, 0xf2, 0x93, 0x5a, 0x13, 0x59, 0x35,
-	0x3f, 0x41, 0xe1, 0xe4, 0xfd, 0x87, 0xa3, 0x5d, 0xab, 0x32, 0x58, 0xdd, 0x81, 0x41, 0x91, 0xfd,
-	0xa6, 0x47, 0xad, 0xc0, 0xd8, 0x66, 0x50, 0x17, 0x07, 0xa1, 0x87, 0xbb, 0x86, 0x5b, 0xf5, 0x0b,
-	0x9c, 0x5e, 0x95, 0x5f, 0x78, 0x1d, 0xa0, 0xe6, 0xc2, 0x50, 0xb7, 0x28, 0x3e, 0xa1, 0xf9, 0x96,
-	0x69, 0x9e, 0x65, 0x9a, 0x6f, 0xb6, 0xb4, 0x4c, 0x2b, 0x1a, 0x26, 0x95, 0x39, 0x57, 0xeb, 0x22,
-	0xd5, 0x2f, 0x09, 0x9c, 0x8f, 0x95, 0x96, 0xe4, 0x8a, 0x00, 0xa1, 0xd6, 0x5e, 0xfd, 0x13, 0x53,
-	0x67, 0xf2, 0x97, 0x9a, 0x12, 0x0c, 0x13, 0x49, 0x8e, 0x75, 0x39, 0x70, 0x29, 0x01, 0xf5, 0x64,
-	0x53, 0xd4, 0x3e, 0x9c, 0x08, 0xec, 0x3c, 0x0c, 0x44, 0x51, 0x07, 0x7a, 0x0d, 0xc3, 0x29, 0xaf,
-	0xd4, 0x5a, 0xd5, 0x2a, 0x4b, 0xc5, 0x1e, 0xf7, 0xbe, 0xdf, 0xb0, 0xca, 0xea, 0x46, 0xa3, 0xc8,
-	0x21, 0xd1, 0x15, 0x38, 0x1d, 0x82, 0x94, 0x46, 0xb6, 0xce, 0xb3, 0x96, 0x42, 0xfd, 0x80, 0x40,
-	0x4e, 0x94, 0xf2, 0x86, 0x8b, 0xf5, 0x8d, 0xc8, 0x9b, 0xe3, 0xec, 0x98, 0xb5, 0x3f, 0x12, 0x18,
-	0x4d, 0x45, 0x21, 0x99, 0x5b, 0xd0, 0x2f, 0x60, 0x44, 0x56, 0x4b, 0xe0, 0x75, 0xbe, 0xa9, 0x06,
-	0xb1, 0xcc, 0x52, 0x0b, 0x2c, 0xc5, 0x4a, 0x76, 0xce, 0xfb, 0x4d, 0x78, 0x32, 0x99, 0x56, 0x06,
-	0x6d, 0x75, 0xe8, 0x8f, 0x50, 0x5d, 0xb3, 0x2a, 0x65, 0xba, 0x23, 0xd0, 0x9c, 0x5c, 0xc5, 0xc8,
-	0xd0, 0xab, 0xde, 0x88, 0xfa, 0x51, 0xaa, 0x95, 0xa1, 0x86, 0x26, 0x60, 0x5c, 0x43, 0xd9, 0x46,
-	0xed, 0x4b, 0xd8, 0x17, 0x93, 0x50, 0x7d, 0x0f, 0x86, 0x43, 0x28, 0x8b, 0x72, 0xd3, 0xfa, 0x37,
-	0x1b, 0xea, 0x3b, 0x02, 0x4a, 0x12, 0x00, 0xa9, 0xc3, 0xdb, 0xf0, 0x84, 0x40, 0x10, 0xec, 0xa7,
-	0x41, 0x1b, 0xcd, 0x64, 0xd2, 0xe0, 0x66, 0xb9, 0xcc, 0x83, 0x9c, 0x52, 0x82, 0xde, 0x52, 0x7d,
-	0x9d, 0xce, 0x35, 0x50, 0x11, 0x86, 0x62, 0x34, 0x32, 0xc8, 0x38, 0x0c, 0xa7, 0x58, 0xb9, 0xcc,
-	0xc5, 0x50, 0xb7, 0x3f, 0xe4, 0x7d, 0x7b, 0x5b, 0xcb, 0x6e, 0x82, 0x33, 0xa1, 0x2e, 0xb7, 0xa0,
-	0x37, 0xa2, 0x8b, 0x6c, 0x8d, 0xb6, 0x65, 0x39, 0x5b, 0x2f, 0x8b, 0x7a, 0x8f, 0x80, 0x1a, 0x9c,
-	0x4c, 0xb5, 0x5e, 0x79, 0x14, 0xed, 0xf1, 0x3b, 0x81, 0x8b, 0x47, 0x22, 0x91, 0x7a, 0x54, 0xe1,
-	0x7c, 0x74, 0x0d, 0x36, 0x36, 0xcc, 0xd5, 0x2c, 0x87, 0x68, 0xbc, 0x82, 0x94, 0x67, 0xd0, 0x4e,
-	0x2c, 0xdf, 0xb9, 0xf6, 0xf9, 0x9a, 0xc0, 0x85, 0x74, 0x9e, 0xff, 0xc0, 0x26, 0xd4, 0xe0, 0xd0,
-	0x89, 0xb6, 0x1d, 0x3a, 0x38, 0xb2, 0x57, 0x42, 0x83, 0x38, 0x0c, 0x26, 0x1b, 0xd4, 0x11, 0x7f,
-	0x06, 0x12, 0xfd, 0xe9, 0x9c, 0x3d, 0x9f, 0x10, 0xb8, 0x2c, 0x48, 0x2e, 0x5b, 0xdc, 0x65, 0x8e,
-	0xb5, 0x6e, 0x6c, 0x3d, 0xf2, 0xa5, 0xf1, 0x07, 0x81, 0xe9, 0x8c, 0x98, 0xfe, 0x27, 0x8b, 0xe4,
-	0x1b, 0x02, 0x13, 0xf1, 0x56, 0xbb, 0x5e, 0xdd, 0xba, 0x6d, 0x6d, 0x6d, 0xd1, 0x72, 0x81, 0xba,
-	0xfc, 0xbf, 0xbc, 0x52, 0x1e, 0x12, 0x98, 0x6c, 0x0a, 0x5f, 0x5a, 0xf5, 0x0e, 0x44, 0x91, 0xac,
-	0x95, 0xa8, 0x1b, 0xb8, 0xf4, 0x4c, 0x6b, 0x2e, 0x15, 0xa8, 0x5b, 0x34, 0x2c, 0x27, 0xb8, 0x02,
-	0xd8, 0x0d, 0x63, 0x9d, 0xf3, 0x27, 0xff, 0x57, 0x1f, 0x3c, 0x26, 0x08, 0xe2, 0x67, 0x04, 0x7a,
-	0xfc, 0x47, 0x09, 0xce, 0x36, 0x45, 0x1b, 0x7f, 0x19, 0x29, 0x57, 0x5a, 0x0b, 0xf2, 0xb1, 0xa8,
-	0xe3, 0xef, 0xff, 0xf0, 0xdb, 0xa7, 0xdd, 0x39, 0x1c, 0xd1, 0x8f, 0x78, 0x06, 0xe2, 0x17, 0x04,
-	0xa0, 0xf6, 0x30, 0xc1, 0xb9, 0x6c, 0xa5, 0x62, 0xaf, 0x28, 0xe5, 0xd9, 0xd6, 0x03, 0x25, 0xce,
-	0x31, 0x81, 0x53, 0xc1, 0x21, 0x81, 0xb3, 0xf6, 0x94, 0xd1, 0xf7, 0xfc, 0x87, 0xd8, 0x3e, 0x7e,
-	0x4e, 0xe0, 0x74, 0x18, 0x88, 0x57, 0x5b, 0xac, 0x14, 0x20, 0x9c, 0x6b, 0x39, 0x4e, 0x02, 0x54,
-	0x05, 0xc0, 0x11, 0x54, 0x62, 0x00, 0x83, 0x45, 0xb5, 0x8f, 0xdf, 0x13, 0xc0, 0xf8, 0x23, 0x00,
-	0x17, 0xb2, 0xd5, 0x4c, 0x7d, 0xc4, 0x28, 0x2f, 0xb5, 0x9f, 0x40, 0xa2, 0x9f, 0x11, 0xe8, 0x9f,
-	0xc6, 0xa7, 0xd2, 0xd1, 0x47, 0x5f, 0xf2, 0x1c, 0x7f, 0x26, 0xd0, 0x17, 0xcb, 0x88, 0x2f, 0xb6,
-	0x09, 0x25, 0xa0, 0xb2, 0xd0, 0x76, 0xbc, 0x64, 0xb2, 0x24, 0x98, 0xbc, 0x8c, 0x0b, 0x99, 0x99,
-	0xe8, 0x7b, 0x09, 0x7b, 0xdb, 0x3e, 0x7e, 0x45, 0xa0, 0x37, 0x72, 0xc1, 0xc6, 0xf9, 0xec, 0xd8,
-	0x1a, 0x0f, 0x37, 0xe5, 0xf9, 0xb6, 0x62, 0x25, 0xa7, 0xcb, 0x82, 0xd3, 0x04, 0x8e, 0x1f, 0xc1,
-	0x29, 0x3c, 0x97, 0xf0, 0x5b, 0x02, 0x67, 0xeb, 0xf3, 0xe0, 0x73, 0xad, 0xd7, 0x0e, 0x60, 0xcf,
-	0xb7, 0x13, 0x2a, 0x51, 0xcf, 0x09, 0xd4, 0x33, 0xa8, 0x67, 0x41, 0xad, 0xef, 0x05, 0x77, 0xfa,
-	0x7d, 0xfc, 0x85, 0xc0, 0x60, 0xf2, 0xb1, 0x8c, 0xd7, 0x32, 0x6f, 0x72, 0xe9, 0x17, 0x0d, 0xe5,
-	0x95, 0xe3, 0x25, 0x91, 0xf4, 0xe6, 0x05, 0xbd, 0x2b, 0x98, 0xcf, 0xda, 0x68, 0xd3, 0x35, 0x8b,
-	0xfe, 0x24, 0x30, 0x90, 0x98, 0x1e, 0x0b, 0xc7, 0xc0, 0x16, 0xf0, 0xbb, 0x76, 0xac, 0x1c, 0x92,
-	0x5e, 0x51, 0xd0, 0x7b, 0x0d, 0x97, 0x5b, 0xa7, 0x97, 0xb2, 0xa0, 0x3e, 0xec, 0x86, 0xb1, 0x66,
-	0xf7, 0x2e, 0xbc, 0x91, 0x0d, 0x7b, 0xc6, 0x3b, 0xa5, 0xb2, 0xd2, 0xa9, 0x74, 0x52, 0x95, 0x45,
-	0xa1, 0xca, 0x02, 0xbe, 0x70, 0x84, 0x2a, 0x1b, 0x61, 0xb2, 0xe9, 0x34, 0xff, 0xef, 0x75, 0x83,
-	0x92, 0x7e, 0xa3, 0xc1, 0xa5, 0x36, 0x0c, 0x4c, 0xba, 0xd2, 0x29, 0xcb, 0xc7, 0x4f, 0x24, 0x89,
-	0xbf, 0x29, 0x88, 0x17, 0x71, 0xe5, 0x98, 0xdb, 0xaa, 0x7e, 0x3b, 0x48, 0x2f, 0xae, 0x67, 0x85,
-	0x1b, 0xf7, 0x0f, 0x72, 0xe4, 0xc1, 0x41, 0x8e, 0xfc, 0x7a, 0x90, 0x23, 0x1f, 0x1f, 0xe6, 0xba,
-	0x1e, 0x1c, 0xe6, 0xba, 0x7e, 0x3a, 0xcc, 0x75, 0xbd, 0x35, 0x6b, 0x5a, 0xee, 0x46, 0xb5, 0xa4,
-	0xad, 0xb3, 0x6d, 0xaf, 0xe6, 0xb4, 0xa4, 0x21, 0xea, 0xef, 0xc4, 0x6f, 0x2a, 0xee, 0xae, 0x4d,
-	0x79, 0xa9, 0x47, 0xfc, 0xef, 0x78, 0xf6, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0xd3, 0x0f, 0xe6,
-	0xe5, 0x78, 0x17, 0x00, 0x00,
+	// 1175 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x58, 0x4f, 0x6f, 0x1b, 0x45,
+	0x14, 0xcf, 0xa4, 0x25, 0x90, 0x57, 0x84, 0xd4, 0x97, 0xc4, 0x49, 0x57, 0xc5, 0x49, 0xb7, 0x51,
+	0x13, 0x45, 0xcd, 0xae, 0x92, 0xd0, 0xa6, 0x42, 0x2a, 0xad, 0x9c, 0xa6, 0x29, 0x42, 0x69, 0x4c,
+	0x04, 0x3d, 0xa0, 0x4a, 0x61, 0x1d, 0x4f, 0xb7, 0x4b, 0x1c, 0xcf, 0x76, 0x67, 0xdd, 0x26, 0x8a,
+	0x72, 0xe1, 0x4e, 0x85, 0xe8, 0x09, 0x09, 0x21, 0x71, 0xe1, 0x13, 0xf0, 0x09, 0xb8, 0x50, 0x89,
+	0x4b, 0xa5, 0x5e, 0x10, 0x87, 0x82, 0x12, 0x7a, 0xe1, 0x52, 0x89, 0x13, 0x47, 0xb4, 0xb3, 0xb3,
+	0x1b, 0xaf, 0x77, 0xd7, 0xf6, 0xda, 0x46, 0x85, 0xde, 0x6c, 0xef, 0xcc, 0x7b, 0xbf, 0x3f, 0xef,
+	0xcd, 0xce, 0x33, 0x4c, 0x70, 0x93, 0xea, 0xdc, 0x75, 0x0c, 0x97, 0x9a, 0xd6, 0xa6, 0x43, 0x39,
+	0x75, 0xee, 0x53, 0xfd, 0x5e, 0x8d, 0x3a, 0xbb, 0x9a, 0xed, 0x30, 0x97, 0xe1, 0x38, 0x37, 0x69,
+	0x95, 0xba, 0x0f, 0x98, 0xb3, 0xa5, 0x71, 0x93, 0x6a, 0x8d, 0x8b, 0x95, 0x99, 0x4d, 0xc6, 0xb7,
+	0x19, 0xd7, 0x4b, 0x06, 0x97, 0x3b, 0xf5, 0xfb, 0x73, 0x25, 0xea, 0x1a, 0x73, 0xba, 0x6d, 0x98,
+	0x56, 0xd5, 0x70, 0x2d, 0x56, 0xf5, 0x83, 0x29, 0xc3, 0x26, 0x33, 0x99, 0xf8, 0xa8, 0x7b, 0x9f,
+	0xe4, 0xaf, 0xa7, 0x4d, 0xc6, 0xcc, 0x0a, 0xd5, 0x0d, 0xdb, 0xd2, 0x8d, 0x6a, 0x95, 0xb9, 0x62,
+	0x0b, 0x97, 0x4f, 0xcf, 0x24, 0x42, 0xb4, 0x0d, 0xc7, 0xd8, 0x0e, 0x96, 0x4c, 0x26, 0x2e, 0x61,
+	0x4e, 0x99, 0x3a, 0x25, 0xc6, 0xb6, 0xe4, 0xaa, 0xe9, 0xb4, 0x40, 0xae, 0xb5, 0x69, 0xd9, 0xf5,
+	0x30, 0xcf, 0x26, 0xae, 0xa4, 0x3b, 0x36, 0xe3, 0x35, 0x87, 0xfa, 0x8b, 0xd4, 0x61, 0xc0, 0x0f,
+	0x3d, 0xb6, 0x45, 0x81, 0x64, 0x9d, 0xde, 0xab, 0x51, 0xee, 0xaa, 0xb7, 0x61, 0x28, 0xf2, 0x2b,
+	0xb7, 0x59, 0x95, 0x53, 0x5c, 0x86, 0x01, 0x1f, 0xf1, 0x18, 0x99, 0x20, 0xd3, 0x27, 0xe6, 0xa7,
+	0xb4, 0x16, 0xb2, 0x6a, 0x7e, 0x80, 0xc2, 0xf1, 0xc7, 0xcf, 0xc6, 0xfb, 0xd6, 0xe5, 0x66, 0x75,
+	0x07, 0x72, 0x22, 0xfa, 0x9a, 0x47, 0xad, 0xc0, 0xd8, 0x56, 0x90, 0x17, 0x73, 0x30, 0xc0, 0x5d,
+	0xc3, 0xad, 0xf9, 0x09, 0x06, 0xd7, 0xe5, 0x37, 0xbc, 0x0e, 0x70, 0xe4, 0xc2, 0x58, 0xbf, 0x48,
+	0x7e, 0x4e, 0xf3, 0x2d, 0xd3, 0x3c, 0xcb, 0x34, 0xdf, 0x6c, 0x69, 0x99, 0x56, 0x34, 0x4c, 0x2a,
+	0x63, 0xae, 0xd7, 0xed, 0x54, 0x7f, 0x20, 0x30, 0x1a, 0x4b, 0x2d, 0xc9, 0x15, 0x01, 0x42, 0xad,
+	0xbd, 0xfc, 0xc7, 0xa6, 0x4f, 0xcc, 0xcf, 0xb4, 0x24, 0x18, 0x06, 0x92, 0x1c, 0xeb, 0x62, 0xe0,
+	0x4a, 0x02, 0xea, 0xa9, 0x96, 0xa8, 0x7d, 0x38, 0x11, 0xd8, 0x97, 0x61, 0x24, 0x8a, 0x3a, 0xd0,
+	0x6b, 0x12, 0xde, 0x12, 0xf9, 0x36, 0xbc, 0x84, 0x1b, 0x35, 0xab, 0x2c, 0x75, 0x7b, 0x93, 0x05,
+	0x2b, 0x3f, 0xb6, 0xca, 0xaa, 0xd5, 0xa8, 0x77, 0xc8, 0x79, 0x4d, 0x72, 0x16, 0xfb, 0xa5, 0xa9,
+	0xd9, 0x39, 0x0f, 0x86, 0xd9, 0xd4, 0x47, 0x04, 0xce, 0x46, 0x73, 0x15, 0xeb, 0x2b, 0x93, 0x67,
+	0x02, 0xde, 0x33, 0xdb, 0xff, 0x24, 0x30, 0xd9, 0x1c, 0x95, 0xd4, 0x63, 0x17, 0x4e, 0xd5, 0xc1,
+	0x8a, 0x34, 0x55, 0x50, 0x12, 0x8b, 0xed, 0xcb, 0x13, 0x49, 0x22, 0xb5, 0x1a, 0x65, 0xc9, 0x10,
+	0x7a, 0x57, 0x2c, 0x7b, 0xa0, 0x36, 0xe1, 0x9a, 0xcd, 0x00, 0x1d, 0x86, 0x22, 0x22, 0x6c, 0x58,
+	0xd5, 0x32, 0xdd, 0x11, 0xe8, 0x8e, 0xaf, 0x63, 0xe4, 0xd1, 0xfb, 0xde, 0x13, 0xf5, 0xdb, 0xe6,
+	0xfe, 0x87, 0x42, 0x3f, 0x80, 0xb1, 0x34, 0xa1, 0x65, 0x19, 0x76, 0xa9, 0x73, 0x2e, 0x59, 0x67,
+	0xf5, 0x21, 0x81, 0x7c, 0x14, 0xe0, 0xb2, 0x3c, 0x10, 0x5f, 0x52, 0x6d, 0xfe, 0x4a, 0x60, 0x3c,
+	0x15, 0x90, 0x54, 0xab, 0x0a, 0xc3, 0x75, 0x88, 0x82, 0x13, 0x3c, 0xa8, 0xc8, 0x8b, 0xed, 0x2b,
+	0xb5, 0x56, 0x2e, 0xf3, 0x20, 0xbc, 0x14, 0x0a, 0x59, 0x2c, 0x6f, 0xef, 0x6a, 0xf1, 0x53, 0x78,
+	0x3b, 0x99, 0x5b, 0x36, 0xad, 0x4f, 0xc1, 0x1b, 0xac, 0x5c, 0xe6, 0xe2, 0x79, 0xbf, 0x78, 0xfe,
+	0xba, 0xf7, 0xdd, 0x3b, 0xdb, 0xd2, 0xfd, 0x0c, 0xd5, 0xab, 0xc0, 0x50, 0x82, 0x7a, 0xb2, 0xcc,
+	0xba, 0x13, 0xef, 0x64, 0x4c, 0x3c, 0xf5, 0x2b, 0x22, 0xfb, 0x2f, 0x52, 0x77, 0x2f, 0xb9, 0xc8,
+	0x9e, 0x07, 0x6d, 0x99, 0x06, 0x4a, 0x4a, 0x55, 0x83, 0xd1, 0x68, 0xbf, 0x67, 0xaf, 0xb5, 0xc4,
+	0x0c, 0x41, 0x53, 0xda, 0x89, 0xe9, 0x7b, 0x57, 0x6f, 0x3f, 0x12, 0x38, 0x93, 0xce, 0xf3, 0xdf,
+	0x3d, 0xfb, 0x1a, 0xcc, 0x3a, 0xd6, 0xb1, 0x59, 0x07, 0x4d, 0x2b, 0x28, 0xf4, 0x8a, 0x43, 0x2e,
+	0xd9, 0xab, 0x9e, 0x58, 0x35, 0x92, 0x68, 0x55, 0xef, 0x9c, 0xfa, 0x86, 0xc0, 0x79, 0x41, 0xf2,
+	0x86, 0xc5, 0x5d, 0xe6, 0x58, 0x9b, 0x46, 0xe5, 0xbf, 0xd4, 0x30, 0x2f, 0x08, 0xcc, 0xb6, 0x09,
+	0xef, 0x15, 0x69, 0x9d, 0x9f, 0x08, 0x9c, 0x8b, 0x57, 0xdd, 0xf5, 0x5a, 0xe5, 0x8e, 0x55, 0xa9,
+	0xd0, 0x72, 0x81, 0xba, 0xfc, 0x7f, 0xd2, 0x3f, 0xcf, 0x08, 0x4c, 0xb5, 0x64, 0x22, 0x5d, 0xfb,
+	0x0c, 0xa2, 0x48, 0x36, 0x4a, 0xd4, 0x0d, 0x0c, 0xbb, 0x90, 0xcd, 0xb0, 0x02, 0x75, 0x8b, 0x86,
+	0xe5, 0x04, 0x6f, 0x06, 0xbb, 0xe1, 0x59, 0xef, 0xac, 0x9a, 0x7f, 0x81, 0xf0, 0x9a, 0x20, 0x88,
+	0x5f, 0x13, 0x18, 0xf0, 0x47, 0x2c, 0x5c, 0x68, 0x89, 0x36, 0x3e, 0xe7, 0x29, 0xef, 0x64, 0xdb,
+	0xe4, 0x63, 0x51, 0x27, 0x3f, 0x7f, 0xfa, 0xc7, 0xa3, 0xfe, 0x3c, 0x9e, 0xd6, 0x9b, 0x0c, 0xb5,
+	0xf8, 0x1d, 0x01, 0x38, 0x1a, 0xb3, 0x70, 0xb1, 0xbd, 0x54, 0xb1, 0x99, 0x50, 0xb9, 0x94, 0x7d,
+	0xa3, 0xc4, 0x39, 0x21, 0x70, 0x2a, 0x38, 0x26, 0x70, 0x1e, 0x0d, 0x66, 0xfa, 0x9e, 0x3f, 0x56,
+	0xee, 0xe3, 0xf7, 0x04, 0x06, 0xc3, 0x8d, 0x78, 0x31, 0x63, 0xa6, 0x00, 0xe1, 0x62, 0xe6, 0x7d,
+	0x12, 0xe0, 0xb4, 0x00, 0xa8, 0xe2, 0x44, 0x0c, 0x60, 0xb4, 0xbf, 0xf6, 0xf1, 0x37, 0x02, 0xa3,
+	0x29, 0xc3, 0x0b, 0x5e, 0xcb, 0x98, 0x3e, 0x71, 0x22, 0x53, 0x96, 0xbb, 0x8c, 0x22, 0x29, 0x2d,
+	0x0a, 0x4a, 0x73, 0xa8, 0xb7, 0xa2, 0x14, 0xfd, 0xcb, 0x82, 0xe3, 0x5f, 0x04, 0x72, 0xc9, 0xc1,
+	0x71, 0xa9, 0x1b, 0x68, 0x01, 0xbf, 0x6b, 0xdd, 0x05, 0x91, 0xf4, 0x56, 0x05, 0xbd, 0x15, 0x5c,
+	0xce, 0x48, 0x4f, 0xdf, 0x4b, 0x38, 0x0b, 0xf7, 0xf1, 0x67, 0x02, 0x18, 0xbf, 0xf7, 0xe3, 0x95,
+	0x8c, 0x58, 0x1b, 0x5f, 0x96, 0xca, 0xd5, 0xce, 0x03, 0x48, 0xa2, 0xf3, 0x82, 0xe8, 0x79, 0x9c,
+	0x69, 0x49, 0x34, 0x7c, 0xcf, 0xe1, 0x53, 0x02, 0x27, 0x63, 0x21, 0xf1, 0xbd, 0x0e, 0xb1, 0x04,
+	0x5c, 0xae, 0x74, 0xbc, 0x5f, 0x52, 0xb9, 0x2c, 0xa8, 0x2c, 0xe2, 0x85, 0xf6, 0xa9, 0xe8, 0x7b,
+	0xc1, 0xbc, 0xb1, 0x8f, 0xcf, 0x09, 0xe4, 0x92, 0xdf, 0xfd, 0xed, 0x16, 0x66, 0xd3, 0x8b, 0x4d,
+	0xbb, 0x85, 0xd9, 0xfc, 0xfa, 0xa1, 0x5e, 0x15, 0x24, 0xdf, 0xc5, 0x4b, 0xd9, 0x0a, 0x73, 0xf6,
+	0xc8, 0xbd, 0xbf, 0x09, 0x8c, 0x24, 0x26, 0xc1, 0x42, 0x17, 0x08, 0x03, 0x96, 0x4b, 0x5d, 0xc5,
+	0x90, 0x24, 0x6f, 0x09, 0x92, 0x45, 0xbc, 0xd9, 0x29, 0xc9, 0x94, 0x36, 0x7c, 0xd8, 0x0f, 0x13,
+	0xad, 0x2e, 0x7a, 0xb8, 0xda, 0x1e, 0x83, 0x36, 0xef, 0xb3, 0xca, 0xcd, 0x5e, 0x85, 0x93, 0xda,
+	0x7c, 0x20, 0xb4, 0x59, 0xc6, 0xa5, 0x96, 0xda, 0xdc, 0x0d, 0x43, 0xce, 0xa6, 0xd5, 0xc2, 0x17,
+	0xfd, 0xa0, 0xa4, 0xdf, 0x9e, 0x70, 0xa5, 0x03, 0x33, 0x93, 0x6e, 0x92, 0xca, 0x8d, 0xee, 0x03,
+	0x49, 0xfa, 0xb7, 0x05, 0xfd, 0x5b, 0xf8, 0x51, 0x4f, 0x0e, 0x66, 0xfd, 0x4e, 0x90, 0x44, 0x5c,
+	0x08, 0x0b, 0xab, 0x8f, 0x0f, 0xf2, 0xe4, 0xc9, 0x41, 0x9e, 0xfc, 0x7e, 0x90, 0x27, 0x5f, 0x1e,
+	0xe6, 0xfb, 0x9e, 0x1c, 0xe6, 0xfb, 0x7e, 0x39, 0xcc, 0xf7, 0x7d, 0xb2, 0x60, 0x5a, 0xee, 0xdd,
+	0x5a, 0x49, 0xdb, 0x64, 0xdb, 0x5e, 0xe6, 0x59, 0x49, 0x46, 0xa0, 0xd8, 0x89, 0xdf, 0x8d, 0xdc,
+	0x5d, 0x9b, 0xf2, 0xd2, 0x80, 0xf8, 0xef, 0x7d, 0xe1, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x17,
+	0xc9, 0x2b, 0xe7, 0xb8, 0x18, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1340,27 +1345,29 @@ type QueryClient interface {
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
 	// OrderBooks queries all order books that match the given status.
 	OrderBooks(ctx context.Context, in *QueryOrderBooksRequest, opts ...grpc.CallOption) (*QueryOrderBooksResponse, error)
-	// OrderBook queries orderbook info for given order book id.
+	// OrderBook queries order book info for given order book universal unique
+	// identifier.
 	OrderBook(ctx context.Context, in *QueryOrderBookRequest, opts ...grpc.CallOption) (*QueryOrderBookResponse, error)
-	// BookParticipations queries participation info for given orderbook.
-	BookParticipations(ctx context.Context, in *QueryBookParticipationsRequest, opts ...grpc.CallOption) (*QueryBookParticipationsResponse, error)
-	// BookParticipation queries participation info for given orderbook and
+	// OrderBookParticipations queries participation info for given order book.
+	OrderBookParticipations(ctx context.Context, in *QueryOrderBookParticipationsRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationsResponse, error)
+	// OrderBookParticipation queries participation info for given order book and
 	// participation index.
-	BookParticipation(ctx context.Context, in *QueryBookParticipationRequest, opts ...grpc.CallOption) (*QueryBookParticipationResponse, error)
-	// BookExposures queries exposures info for given orderbook.
-	BookExposures(ctx context.Context, in *QueryBookExposuresRequest, opts ...grpc.CallOption) (*QueryBookExposuresResponse, error)
-	// BookExposure queries exposure info for given orderbook and odds id.
-	BookExposure(ctx context.Context, in *QueryBookExposureRequest, opts ...grpc.CallOption) (*QueryBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given orderbook
+	OrderBookParticipation(ctx context.Context, in *QueryOrderBookParticipationRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationResponse, error)
+	// OrderBookExposures queries exposures info for the given order book.
+	OrderBookExposures(ctx context.Context, in *QueryOrderBookExposuresRequest, opts ...grpc.CallOption) (*QueryOrderBookExposuresResponse, error)
+	// OrderBookExposure queries exposure info for the given order book and odds
+	// universal unique identifier.
+	OrderBookExposure(ctx context.Context, in *QueryOrderBookExposureRequest, opts ...grpc.CallOption) (*QueryOrderBookExposureResponse, error)
+	// ParticipationExposures queries exposures info for given order book
 	// participations.
 	ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given orderbook
+	// ParticipationExposure queries exposure info for given order book
 	// participation.
 	ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
-	// given orderbook participation.
+	// the given order book participation.
 	HistoricalParticipationExposures(ctx context.Context, in *QueryHistoricalParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipationExposuresResponse, error)
-	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// ParticipationFulfilledBets queries fulfilled bets for given order book
 	// participation.
 	ParticipationFulfilledBets(ctx context.Context, in *QueryParticipationFulfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipationFulfilledBetsResponse, error)
 }
@@ -1400,36 +1407,36 @@ func (c *queryClient) OrderBook(ctx context.Context, in *QueryOrderBookRequest, 
 	return out, nil
 }
 
-func (c *queryClient) BookParticipations(ctx context.Context, in *QueryBookParticipationsRequest, opts ...grpc.CallOption) (*QueryBookParticipationsResponse, error) {
-	out := new(QueryBookParticipationsResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/BookParticipations", in, out, opts...)
+func (c *queryClient) OrderBookParticipations(ctx context.Context, in *QueryOrderBookParticipationsRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationsResponse, error) {
+	out := new(QueryOrderBookParticipationsResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/OrderBookParticipations", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) BookParticipation(ctx context.Context, in *QueryBookParticipationRequest, opts ...grpc.CallOption) (*QueryBookParticipationResponse, error) {
-	out := new(QueryBookParticipationResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/BookParticipation", in, out, opts...)
+func (c *queryClient) OrderBookParticipation(ctx context.Context, in *QueryOrderBookParticipationRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationResponse, error) {
+	out := new(QueryOrderBookParticipationResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/OrderBookParticipation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) BookExposures(ctx context.Context, in *QueryBookExposuresRequest, opts ...grpc.CallOption) (*QueryBookExposuresResponse, error) {
-	out := new(QueryBookExposuresResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/BookExposures", in, out, opts...)
+func (c *queryClient) OrderBookExposures(ctx context.Context, in *QueryOrderBookExposuresRequest, opts ...grpc.CallOption) (*QueryOrderBookExposuresResponse, error) {
+	out := new(QueryOrderBookExposuresResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/OrderBookExposures", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) BookExposure(ctx context.Context, in *QueryBookExposureRequest, opts ...grpc.CallOption) (*QueryBookExposureResponse, error) {
-	out := new(QueryBookExposureResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/BookExposure", in, out, opts...)
+func (c *queryClient) OrderBookExposure(ctx context.Context, in *QueryOrderBookExposureRequest, opts ...grpc.CallOption) (*QueryOrderBookExposureResponse, error) {
+	out := new(QueryOrderBookExposureResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.strategicreserve.Query/OrderBookExposure", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1478,27 +1485,29 @@ type QueryServer interface {
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
 	// OrderBooks queries all order books that match the given status.
 	OrderBooks(context.Context, *QueryOrderBooksRequest) (*QueryOrderBooksResponse, error)
-	// OrderBook queries orderbook info for given order book id.
+	// OrderBook queries order book info for given order book universal unique
+	// identifier.
 	OrderBook(context.Context, *QueryOrderBookRequest) (*QueryOrderBookResponse, error)
-	// BookParticipations queries participation info for given orderbook.
-	BookParticipations(context.Context, *QueryBookParticipationsRequest) (*QueryBookParticipationsResponse, error)
-	// BookParticipation queries participation info for given orderbook and
+	// OrderBookParticipations queries participation info for given order book.
+	OrderBookParticipations(context.Context, *QueryOrderBookParticipationsRequest) (*QueryOrderBookParticipationsResponse, error)
+	// OrderBookParticipation queries participation info for given order book and
 	// participation index.
-	BookParticipation(context.Context, *QueryBookParticipationRequest) (*QueryBookParticipationResponse, error)
-	// BookExposures queries exposures info for given orderbook.
-	BookExposures(context.Context, *QueryBookExposuresRequest) (*QueryBookExposuresResponse, error)
-	// BookExposure queries exposure info for given orderbook and odds id.
-	BookExposure(context.Context, *QueryBookExposureRequest) (*QueryBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given orderbook
+	OrderBookParticipation(context.Context, *QueryOrderBookParticipationRequest) (*QueryOrderBookParticipationResponse, error)
+	// OrderBookExposures queries exposures info for the given order book.
+	OrderBookExposures(context.Context, *QueryOrderBookExposuresRequest) (*QueryOrderBookExposuresResponse, error)
+	// OrderBookExposure queries exposure info for the given order book and odds
+	// universal unique identifier.
+	OrderBookExposure(context.Context, *QueryOrderBookExposureRequest) (*QueryOrderBookExposureResponse, error)
+	// ParticipationExposures queries exposures info for given order book
 	// participations.
 	ParticipationExposures(context.Context, *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given orderbook
+	// ParticipationExposure queries exposure info for given order book
 	// participation.
 	ParticipationExposure(context.Context, *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
-	// given orderbook participation.
+	// the given order book participation.
 	HistoricalParticipationExposures(context.Context, *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error)
-	// ParticipationFulfilledBets queries fulfilled bets for given orderbook
+	// ParticipationFulfilledBets queries fulfilled bets for given order book
 	// participation.
 	ParticipationFulfilledBets(context.Context, *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error)
 }
@@ -1516,17 +1525,17 @@ func (*UnimplementedQueryServer) OrderBooks(ctx context.Context, req *QueryOrder
 func (*UnimplementedQueryServer) OrderBook(ctx context.Context, req *QueryOrderBookRequest) (*QueryOrderBookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBook not implemented")
 }
-func (*UnimplementedQueryServer) BookParticipations(ctx context.Context, req *QueryBookParticipationsRequest) (*QueryBookParticipationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookParticipations not implemented")
+func (*UnimplementedQueryServer) OrderBookParticipations(ctx context.Context, req *QueryOrderBookParticipationsRequest) (*QueryOrderBookParticipationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipations not implemented")
 }
-func (*UnimplementedQueryServer) BookParticipation(ctx context.Context, req *QueryBookParticipationRequest) (*QueryBookParticipationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookParticipation not implemented")
+func (*UnimplementedQueryServer) OrderBookParticipation(ctx context.Context, req *QueryOrderBookParticipationRequest) (*QueryOrderBookParticipationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipation not implemented")
 }
-func (*UnimplementedQueryServer) BookExposures(ctx context.Context, req *QueryBookExposuresRequest) (*QueryBookExposuresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookExposures not implemented")
+func (*UnimplementedQueryServer) OrderBookExposures(ctx context.Context, req *QueryOrderBookExposuresRequest) (*QueryOrderBookExposuresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderBookExposures not implemented")
 }
-func (*UnimplementedQueryServer) BookExposure(ctx context.Context, req *QueryBookExposureRequest) (*QueryBookExposureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BookExposure not implemented")
+func (*UnimplementedQueryServer) OrderBookExposure(ctx context.Context, req *QueryOrderBookExposureRequest) (*QueryOrderBookExposureResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderBookExposure not implemented")
 }
 func (*UnimplementedQueryServer) ParticipationExposures(ctx context.Context, req *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposures not implemented")
@@ -1599,74 +1608,74 @@ func _Query_OrderBook_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookParticipations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookParticipationsRequest)
+func _Query_OrderBookParticipations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOrderBookParticipationsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookParticipations(ctx, in)
+		return srv.(QueryServer).OrderBookParticipations(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.strategicreserve.Query/BookParticipations",
+		FullMethod: "/sgenetwork.sge.strategicreserve.Query/OrderBookParticipations",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookParticipations(ctx, req.(*QueryBookParticipationsRequest))
+		return srv.(QueryServer).OrderBookParticipations(ctx, req.(*QueryOrderBookParticipationsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookParticipation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookParticipationRequest)
+func _Query_OrderBookParticipation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOrderBookParticipationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookParticipation(ctx, in)
+		return srv.(QueryServer).OrderBookParticipation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.strategicreserve.Query/BookParticipation",
+		FullMethod: "/sgenetwork.sge.strategicreserve.Query/OrderBookParticipation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookParticipation(ctx, req.(*QueryBookParticipationRequest))
+		return srv.(QueryServer).OrderBookParticipation(ctx, req.(*QueryOrderBookParticipationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookExposuresRequest)
+func _Query_OrderBookExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOrderBookExposuresRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookExposures(ctx, in)
+		return srv.(QueryServer).OrderBookExposures(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.strategicreserve.Query/BookExposures",
+		FullMethod: "/sgenetwork.sge.strategicreserve.Query/OrderBookExposures",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookExposures(ctx, req.(*QueryBookExposuresRequest))
+		return srv.(QueryServer).OrderBookExposures(ctx, req.(*QueryOrderBookExposuresRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_BookExposure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryBookExposureRequest)
+func _Query_OrderBookExposure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOrderBookExposureRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).BookExposure(ctx, in)
+		return srv.(QueryServer).OrderBookExposure(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.strategicreserve.Query/BookExposure",
+		FullMethod: "/sgenetwork.sge.strategicreserve.Query/OrderBookExposure",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).BookExposure(ctx, req.(*QueryBookExposureRequest))
+		return srv.(QueryServer).OrderBookExposure(ctx, req.(*QueryOrderBookExposureRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1760,20 +1769,20 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_OrderBook_Handler,
 		},
 		{
-			MethodName: "BookParticipations",
-			Handler:    _Query_BookParticipations_Handler,
+			MethodName: "OrderBookParticipations",
+			Handler:    _Query_OrderBookParticipations_Handler,
 		},
 		{
-			MethodName: "BookParticipation",
-			Handler:    _Query_BookParticipation_Handler,
+			MethodName: "OrderBookParticipation",
+			Handler:    _Query_OrderBookParticipation_Handler,
 		},
 		{
-			MethodName: "BookExposures",
-			Handler:    _Query_BookExposures_Handler,
+			MethodName: "OrderBookExposures",
+			Handler:    _Query_OrderBookExposures_Handler,
 		},
 		{
-			MethodName: "BookExposure",
-			Handler:    _Query_BookExposure_Handler,
+			MethodName: "OrderBookExposure",
+			Handler:    _Query_OrderBookExposure_Handler,
 		},
 		{
 			MethodName: "ParticipationExposures",
@@ -1963,10 +1972,10 @@ func (m *QueryOrderBookRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -1994,7 +2003,7 @@ func (m *QueryOrderBookResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	var l int
 	_ = l
 	{
-		size, err := m.Orderbook.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.OrderBook.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2006,7 +2015,7 @@ func (m *QueryOrderBookResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipationsRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookParticipationsRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2016,12 +2025,12 @@ func (m *QueryBookParticipationsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipationsRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationsRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationsRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2038,17 +2047,17 @@ func (m *QueryBookParticipationsRequest) MarshalToSizedBuffer(dAtA []byte) (int,
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipationsResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookParticipationsResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2058,12 +2067,12 @@ func (m *QueryBookParticipationsResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipationsResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationsResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2080,10 +2089,10 @@ func (m *QueryBookParticipationsResponse) MarshalToSizedBuffer(dAtA []byte) (int
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookParticipations) > 0 {
-		for iNdEx := len(m.BookParticipations) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.OrderBookParticipations) > 0 {
+		for iNdEx := len(m.OrderBookParticipations) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.BookParticipations[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.OrderBookParticipations[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2097,7 +2106,7 @@ func (m *QueryBookParticipationsResponse) MarshalToSizedBuffer(dAtA []byte) (int
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipationRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookParticipationRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2107,12 +2116,12 @@ func (m *QueryBookParticipationRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipationRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2122,17 +2131,17 @@ func (m *QueryBookParticipationRequest) MarshalToSizedBuffer(dAtA []byte) (int, 
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookParticipationResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookParticipationResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2142,18 +2151,18 @@ func (m *QueryBookParticipationResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookParticipationResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookParticipationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookParticipationResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.BookParticipation.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.OrderBookParticipation.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2165,7 +2174,7 @@ func (m *QueryBookParticipationResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookExposuresRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookExposuresRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2175,12 +2184,12 @@ func (m *QueryBookExposuresRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2197,17 +2206,17 @@ func (m *QueryBookExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, erro
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookExposuresResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookExposuresResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2217,12 +2226,12 @@ func (m *QueryBookExposuresResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2239,10 +2248,10 @@ func (m *QueryBookExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookExposures) > 0 {
-		for iNdEx := len(m.BookExposures) - 1; iNdEx >= 0; iNdEx-- {
+	if len(m.OrderBookExposures) > 0 {
+		for iNdEx := len(m.OrderBookExposures) - 1; iNdEx >= 0; iNdEx-- {
 			{
-				size, err := m.BookExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				size, err := m.OrderBookExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2256,7 +2265,7 @@ func (m *QueryBookExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, err
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookExposureRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookExposureRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2266,12 +2275,12 @@ func (m *QueryBookExposureRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookExposureRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposureRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -2283,17 +2292,17 @@ func (m *QueryBookExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBookExposureResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryOrderBookExposureResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -2303,18 +2312,18 @@ func (m *QueryBookExposureResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBookExposureResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposureResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBookExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryOrderBookExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
 	{
-		size, err := m.BookExposure.MarshalToSizedBuffer(dAtA[:i])
+		size, err := m.OrderBookExposure.MarshalToSizedBuffer(dAtA[:i])
 		if err != nil {
 			return 0, err
 		}
@@ -2358,10 +2367,10 @@ func (m *QueryParticipationExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2454,10 +2463,10 @@ func (m *QueryParticipationExposureRequest) MarshalToSizedBuffer(dAtA []byte) (i
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2545,10 +2554,10 @@ func (m *QueryHistoricalParticipationExposuresRequest) MarshalToSizedBuffer(dAtA
 		i--
 		dAtA[i] = 0x12
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2641,10 +2650,10 @@ func (m *QueryParticipationFulfilledBetsRequest) MarshalToSizedBuffer(dAtA []byt
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.BookUid) > 0 {
-		i -= len(m.BookUid)
-		copy(dAtA[i:], m.BookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.BookUid)))
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -2773,7 +2782,7 @@ func (m *QueryOrderBookRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2786,18 +2795,18 @@ func (m *QueryOrderBookResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = m.Orderbook.Size()
+	l = m.OrderBook.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryBookParticipationsRequest) Size() (n int) {
+func (m *QueryOrderBookParticipationsRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2808,14 +2817,14 @@ func (m *QueryBookParticipationsRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipationsResponse) Size() (n int) {
+func (m *QueryOrderBookParticipationsResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.BookParticipations) > 0 {
-		for _, e := range m.BookParticipations {
+	if len(m.OrderBookParticipations) > 0 {
+		for _, e := range m.OrderBookParticipations {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2827,13 +2836,13 @@ func (m *QueryBookParticipationsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipationRequest) Size() (n int) {
+func (m *QueryOrderBookParticipationRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2843,24 +2852,24 @@ func (m *QueryBookParticipationRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookParticipationResponse) Size() (n int) {
+func (m *QueryOrderBookParticipationResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.BookParticipation.Size()
+	l = m.OrderBookParticipation.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
 
-func (m *QueryBookExposuresRequest) Size() (n int) {
+func (m *QueryOrderBookExposuresRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2871,14 +2880,14 @@ func (m *QueryBookExposuresRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookExposuresResponse) Size() (n int) {
+func (m *QueryOrderBookExposuresResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.BookExposures) > 0 {
-		for _, e := range m.BookExposures {
+	if len(m.OrderBookExposures) > 0 {
+		for _, e := range m.OrderBookExposures {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -2890,13 +2899,13 @@ func (m *QueryBookExposuresResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookExposureRequest) Size() (n int) {
+func (m *QueryOrderBookExposureRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2907,13 +2916,13 @@ func (m *QueryBookExposureRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryBookExposureResponse) Size() (n int) {
+func (m *QueryOrderBookExposureResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = m.BookExposure.Size()
+	l = m.OrderBookExposure.Size()
 	n += 1 + l + sovQuery(uint64(l))
 	return n
 }
@@ -2924,7 +2933,7 @@ func (m *QueryParticipationExposuresRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2960,7 +2969,7 @@ func (m *QueryParticipationExposureRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -2999,7 +3008,7 @@ func (m *QueryHistoricalParticipationExposuresRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -3035,7 +3044,7 @@ func (m *QueryParticipationFulfilledBetsRequest) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.BookUid)
+	l = len(m.OrderBookUid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
@@ -3476,7 +3485,7 @@ func (m *QueryOrderBookRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3504,7 +3513,7 @@ func (m *QueryOrderBookRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -3558,7 +3567,7 @@ func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Orderbook", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBook", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3585,7 +3594,7 @@ func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.Orderbook.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.OrderBook.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3610,7 +3619,7 @@ func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipationsRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3633,15 +3642,15 @@ func (m *QueryBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipationsRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookParticipationsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookParticipationsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3669,7 +3678,7 @@ func (m *QueryBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -3728,7 +3737,7 @@ func (m *QueryBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipationsResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3751,15 +3760,15 @@ func (m *QueryBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipationsResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookParticipationsResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookParticipationsResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipations", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookParticipations", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -3786,8 +3795,8 @@ func (m *QueryBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookParticipations = append(m.BookParticipations, BookParticipation{})
-			if err := m.BookParticipations[len(m.BookParticipations)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.OrderBookParticipations = append(m.OrderBookParticipations, OrderBookParticipation{})
+			if err := m.OrderBookParticipations[len(m.OrderBookParticipations)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -3848,7 +3857,7 @@ func (m *QueryBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipationRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookParticipationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3871,15 +3880,15 @@ func (m *QueryBookParticipationRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipationRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookParticipationRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookParticipationRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -3907,7 +3916,7 @@ func (m *QueryBookParticipationRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -3949,7 +3958,7 @@ func (m *QueryBookParticipationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookParticipationResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookParticipationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3972,15 +3981,15 @@ func (m *QueryBookParticipationResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookParticipationResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookParticipationResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookParticipationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookParticipationResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookParticipation", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookParticipation", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4007,7 +4016,7 @@ func (m *QueryBookParticipationResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.BookParticipation.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.OrderBookParticipation.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4032,7 +4041,7 @@ func (m *QueryBookParticipationResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookExposuresRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4055,15 +4064,15 @@ func (m *QueryBookExposuresRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookExposuresRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookExposuresRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4091,7 +4100,7 @@ func (m *QueryBookExposuresRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -4150,7 +4159,7 @@ func (m *QueryBookExposuresRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookExposuresResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4173,15 +4182,15 @@ func (m *QueryBookExposuresResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookExposuresResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookExposuresResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookExposures", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookExposures", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4208,8 +4217,8 @@ func (m *QueryBookExposuresResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookExposures = append(m.BookExposures, BookOddsExposure{})
-			if err := m.BookExposures[len(m.BookExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			m.OrderBookExposures = append(m.OrderBookExposures, OrderBookOddsExposure{})
+			if err := m.OrderBookExposures[len(m.OrderBookExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4270,7 +4279,7 @@ func (m *QueryBookExposuresResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookExposureRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4293,15 +4302,15 @@ func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookExposureRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookExposureRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookExposureRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookExposureRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4329,7 +4338,7 @@ func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -4384,7 +4393,7 @@ func (m *QueryBookExposureRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBookExposureResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryOrderBookExposureResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -4407,15 +4416,15 @@ func (m *QueryBookExposureResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBookExposureResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryOrderBookExposureResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBookExposureResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryOrderBookExposureResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookExposure", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookExposure", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -4442,7 +4451,7 @@ func (m *QueryBookExposureResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.BookExposure.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.OrderBookExposure.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -4498,7 +4507,7 @@ func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4526,7 +4535,7 @@ func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -4736,7 +4745,7 @@ func (m *QueryParticipationExposureRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -4764,7 +4773,7 @@ func (m *QueryParticipationExposureRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -4993,7 +5002,7 @@ func (m *QueryHistoricalParticipationExposuresRequest) Unmarshal(dAtA []byte) er
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5021,7 +5030,7 @@ func (m *QueryHistoricalParticipationExposuresRequest) Unmarshal(dAtA []byte) er
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
@@ -5231,7 +5240,7 @@ func (m *QueryParticipationFulfilledBetsRequest) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BookUid", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -5259,7 +5268,7 @@ func (m *QueryParticipationFulfilledBetsRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BookUid = string(dAtA[iNdEx:postIndex])
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {

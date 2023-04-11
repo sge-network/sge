@@ -16,24 +16,24 @@ func TestGenesisState_Validate(t *testing.T) {
 	marketUID := uuid.NewString()
 	oddsUID := uuid.NewString()
 	validState := types.GenesisState{
-		BookList: []types.OrderBook{
+		OrderBookList: []types.OrderBook{
 			{
-				ID:                 marketUID,
+				UID:                marketUID,
 				ParticipationCount: 1,
 				OddsCount:          1,
 				Status:             types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
 			},
 		},
-		BookExposureList: []types.BookOddsExposure{
+		OrderBookExposureList: []types.OrderBookOddsExposure{
 			{
-				BookUID:          marketUID,
+				OrderBookUID:     marketUID,
 				OddsUID:          oddsUID,
 				FulfillmentQueue: []uint64{},
 			},
 		},
-		BookParticipationList: []types.BookParticipation{
+		OrderBookParticipationList: []types.OrderBookParticipation{
 			{
-				BookUID:            marketUID,
+				OrderBookUID:       marketUID,
 				Index:              1,
 				ParticipantAddress: testAddress,
 				IsModuleAccount:    true,
@@ -41,28 +41,28 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		ParticipationExposureList: []types.ParticipationExposure{
 			{
-				BookUID:            marketUID,
+				OrderBookUID:       marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		ParticipationExposureByIndexList: []types.ParticipationExposure{
 			{
-				BookUID:            marketUID,
+				OrderBookUID:       marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		HistoricalParticipationExposureList: []types.ParticipationExposure{
 			{
-				BookUID:            marketUID,
+				OrderBookUID:       marketUID,
 				OddsUID:            oddsUID,
 				ParticipationIndex: 1,
 			},
 		},
 		ParticipationBetPairExposureList: []types.ParticipationBetPair{
 			{
-				BookUID:            marketUID,
+				OrderBookUID:       marketUID,
 				ParticipationIndex: 1,
 			},
 		},
@@ -74,14 +74,14 @@ func TestGenesisState_Validate(t *testing.T) {
 	}
 
 	invalidParticipantAddress := validState
-	invalidParticipantAddress.BookParticipationList = []types.BookParticipation{validState.BookParticipationList[0]}
-	invalidParticipantAddress.BookParticipationList[0].ParticipantAddress = "wrong"
+	invalidParticipantAddress.OrderBookParticipationList = []types.OrderBookParticipation{validState.OrderBookParticipationList[0]}
+	invalidParticipantAddress.OrderBookParticipationList[0].ParticipantAddress = "wrong"
 
-	notEqualBookCount := validState
-	notEqualBookCount.BookList = []types.OrderBook{}
+	notEqualOrderBookCount := validState
+	notEqualOrderBookCount.OrderBookList = []types.OrderBook{}
 
-	notEqualBookExposureCount := validState
-	notEqualBookExposureCount.BookExposureList = []types.BookOddsExposure{}
+	notEqualOrderBookExposureCount := validState
+	notEqualOrderBookExposureCount.OrderBookExposureList = []types.OrderBookOddsExposure{}
 
 	notEqualParticipationExposureCount := validState
 	notEqualParticipationExposureCount.ParticipationExposureList = []types.ParticipationExposure{}
@@ -111,12 +111,12 @@ func TestGenesisState_Validate(t *testing.T) {
 		},
 		{
 			desc:     "not equal book",
-			genState: &notEqualBookCount,
+			genState: &notEqualOrderBookCount,
 			valid:    false,
 		},
 		{
 			desc:     "not equal book exposure",
-			genState: &notEqualBookExposureCount,
+			genState: &notEqualOrderBookExposureCount,
 			valid:    false,
 		},
 		{

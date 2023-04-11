@@ -22,6 +22,4 @@ message MsgPlaceBet {
 
 // MsgPlaceBetResponse is the returning value in the response
 // of MsgPlaceBet request.
-message MsgPlaceBetResponse {
-  PlaceBetFields bet = 1;
-}
+message MsgPlaceBetResponse { PlaceBetFields bet = 1; }

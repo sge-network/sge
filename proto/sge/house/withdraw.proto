@@ -20,8 +20,7 @@ message Withdrawal {
   ];
 
   // address is the bech32-encoded address of the depositor.
-  string address = 2
-      [ (gogoproto.moretags) = "yaml:\"address\"" ];
+  string address = 2 [ (gogoproto.moretags) = "yaml:\"address\"" ];
 
   // market_uid is the uid of market against which the deposit is
   // being made.

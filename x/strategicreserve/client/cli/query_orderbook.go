@@ -59,13 +59,13 @@ $ %s query strategicreserve orderbooks
 // GetCmdQueryOrderBook implements the strategicreserve query command.
 func GetCmdQueryOrderBook() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "strategicreserve [order-book-id]",
+		Use:   "orderbook [order-book-id]",
 		Short: "Query a strategicreserve",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a order book.
 
 Example:
-$ %s query strategicreserve strategicreserve %s
+$ %s query strategicreserve orderbook %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -80,13 +80,13 @@ $ %s query strategicreserve strategicreserve %s
 
 			orderBookUID := args[0]
 
-			params := &types.QueryOrderBookRequest{BookUid: orderBookUID}
+			params := &types.QueryOrderBookRequest{OrderBookUid: orderBookUID}
 			res, err := queryClient.OrderBook(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
 
-			return clientCtx.PrintProto(&res.Orderbook)
+			return clientCtx.PrintProto(&res.OrderBook)
 		},
 	}
 
@@ -95,8 +95,8 @@ $ %s query strategicreserve strategicreserve %s
 	return cmd
 }
 
-// GetCmdQueryBookParticipations implements the command to query all the participations to a specific strategicreserve.
-func GetCmdQueryBookParticipations() *cobra.Command {
+// GetCmdQueryOrderBookParticipations implements the command to query all the participations to a specific strategicreserve.
+func GetCmdQueryOrderBookParticipations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-participations [order-book-id]",
 		Short: "Query all book participations for a specific order book",
@@ -124,12 +124,12 @@ $ %s query strategicreserve book-participations %s
 				return err
 			}
 
-			params := &types.QueryBookParticipationsRequest{
-				BookUid:    orderBookUID,
-				Pagination: pageReq,
+			params := &types.QueryOrderBookParticipationsRequest{
+				OrderBookUid: orderBookUID,
+				Pagination:   pageReq,
 			}
 
-			res, err := queryClient.BookParticipations(cmd.Context(), params)
+			res, err := queryClient.OrderBookParticipations(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -144,8 +144,8 @@ $ %s query strategicreserve book-participations %s
 	return cmd
 }
 
-// GetCmdQueryBookParticipation implements the bookparticipation query command.
-func GetCmdQueryBookParticipation() *cobra.Command {
+// GetCmdQueryOrderBookParticipation implements the bookparticipation query command.
+func GetCmdQueryOrderBookParticipation() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-participation [order-book-id] [participation-index]",
 		Short: "Query a book participation",
@@ -173,13 +173,13 @@ $ %s query strategicreserve book-participation %s %d
 				return fmt.Errorf("particiapnt index argument provided must be a non-negative-integer: %v", err)
 			}
 
-			params := &types.QueryBookParticipationRequest{BookUid: orderBookUID, ParticipationIndex: particiapationIndex}
-			res, err := queryClient.BookParticipation(cmd.Context(), params)
+			params := &types.QueryOrderBookParticipationRequest{OrderBookUid: orderBookUID, ParticipationIndex: particiapationIndex}
+			res, err := queryClient.OrderBookParticipation(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
 
-			return clientCtx.PrintProto(&res.BookParticipation)
+			return clientCtx.PrintProto(&res.OrderBookParticipation)
 		},
 	}
 
@@ -188,8 +188,8 @@ $ %s query strategicreserve book-participation %s %d
 	return cmd
 }
 
-// GetCmdQueryBookExposures implements the command to query all the exposures to a specific strategicreserve.
-func GetCmdQueryBookExposures() *cobra.Command {
+// GetCmdQueryOrderBookExposures implements the command to query all the exposures to a specific strategicreserve.
+func GetCmdQueryOrderBookExposures() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-exposures [order-book-id]",
 		Short: "Query all book exposures for a specific order book",
@@ -217,12 +217,12 @@ $ %s query strategicreserve book-exposures %s
 				return err
 			}
 
-			params := &types.QueryBookExposuresRequest{
-				BookUid:    orderBookUID,
-				Pagination: pageReq,
+			params := &types.QueryOrderBookExposuresRequest{
+				OrderBookUid: orderBookUID,
+				Pagination:   pageReq,
 			}
 
-			res, err := queryClient.BookExposures(cmd.Context(), params)
+			res, err := queryClient.OrderBookExposures(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -237,8 +237,8 @@ $ %s query strategicreserve book-exposures %s
 	return cmd
 }
 
-// GetCmdQueryBookExposure implements the bookexposure query command.
-func GetCmdQueryBookExposure() *cobra.Command {
+// GetCmdQueryOrderBookExposure implements the bookexposure query command.
+func GetCmdQueryOrderBookExposure() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-exposure [order-book-id] [odd-uid]",
 		Short: "Query a book exposure",
@@ -262,13 +262,13 @@ $ %s query strategicreserve book-exposure %s %s
 			orderBookUID := args[0]
 			oddsUID := args[1]
 
-			params := &types.QueryBookExposureRequest{BookUid: orderBookUID, OddsUid: oddsUID}
-			res, err := queryClient.BookExposure(cmd.Context(), params)
+			params := &types.QueryOrderBookExposureRequest{OrderBookUid: orderBookUID, OddsUid: oddsUID}
+			res, err := queryClient.OrderBookExposure(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
 
-			return clientCtx.PrintProto(&res.BookExposure)
+			return clientCtx.PrintProto(&res.OrderBookExposure)
 		},
 	}
 
