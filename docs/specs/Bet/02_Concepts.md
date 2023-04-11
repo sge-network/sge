@@ -17,7 +17,7 @@ Before accepting bet some validation should take place:
     - Bet amount (deducted by betting fee) is not less than the minimum allowed bet amount.
 - Bet level validation:
   - Odds Value and the validations according to the American, British and decimal odds.
-- DVM level validation:
+- OVM level validation:
   - All data provided in placement request is valid e.g. odds value.
 - KYC Validation:
   - If Required is true in bet ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a bet to be placed.

@@ -21,7 +21,7 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
-	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
 
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
@@ -45,7 +45,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		strategicreservemoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
 		marketmoduletypes.StoreKey,
-		dvmmoduletypes.StoreKey,
+		ovmmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
 	)
 

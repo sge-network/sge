@@ -1,0 +1,45 @@
+syntax = "proto3";
+package sgenetwork.sge.ovm;
+
+option go_package = "github.com/sge-network/sge/x/ovm/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // PubkeysChangeProposal defines a method to submit a proposal for changing
+  // the allowed public keys.
+  rpc SubmitPubkeysChangeProposal(MsgSubmitPubkeysChangeProposalRequest)
+      returns (MsgSubmitPubkeysChangeProposalResponse);
+  // VotePubkeysChange defines a method to vote for a proposal for changing the
+  // allowed public keys.
+  rpc VotePubkeysChange(MsgVotePubkeysChangeRequest)
+      returns (MsgVotePubkeysChangeResponse);
+}
+
+// MsgPubkeysChangeProposalRequest is the type of request for modification of
+// public keys.
+message MsgSubmitPubkeysChangeProposalRequest {
+  // creator is the account address of the creator.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+}
+
+// MsgPubkeysChangeProposalResponse is the type of response for modification of
+// public keys.
+message MsgSubmitPubkeysChangeProposalResponse { bool success = 1; }
+
+// MsgVotePubkeysChangeRequest is the type of request to vote on the
+// modification of public keys proposal.
+message MsgVotePubkeysChangeRequest {
+  // creator is the account address of the creator.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+  // voter_key_index is the public key index of the voter in the current list
+  // of public keys in the vault.
+  uint32 voter_key_index = 3;
+}
+
+// MsgVotePubkeysChangeResponse is the type of response vote for public keys
+// modification.
+message MsgVotePubkeysChangeResponse { bool success = 1; }

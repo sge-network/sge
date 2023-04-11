@@ -19,7 +19,7 @@ type Keeper struct {
 	paramstore   paramtypes.Subspace
 	marketKeeper types.MarketKeeper
 	srKeeper     types.SRKeeper
-	dvmKeeper    types.DVMKeeper
+	ovmKeeper    types.OVMKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -52,9 +52,9 @@ func (k *Keeper) SetSRKeeper(srKeeper types.SRKeeper) {
 	k.srKeeper = srKeeper
 }
 
-// SetDVMKeeper sets dvm keeper to the bet keeper.
-func (k *Keeper) SetDVMKeeper(dvmKeeper types.DVMKeeper) {
-	k.dvmKeeper = dvmKeeper
+// SetOVMKeeper sets ovm keeper to the bet keeper.
+func (k *Keeper) SetOVMKeeper(ovmKeeper types.OVMKeeper) {
+	k.ovmKeeper = ovmKeeper
 }
 
 // Logger returns the logger of the keeper

@@ -13,7 +13,7 @@ func (k msgServer) ResolveMarket(goCtx context.Context, msg *types.MsgResolveMar
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolutionPayload types.MarketResolutionTicketPayload
-	err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolutionPayload)
+	err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &resolutionPayload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}

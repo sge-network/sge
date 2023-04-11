@@ -52,8 +52,8 @@ import (
 	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
-	dvmmodule "github.com/sge-network/sge/x/dvm"
-	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
+	ovmmodule "github.com/sge-network/sge/x/ovm"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
 
 	housemodule "github.com/sge-network/sge/x/house"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
@@ -106,7 +106,7 @@ var ModuleBasics = module.NewBasicManager(
 	betmodule.AppModuleBasic{},
 	marketmodule.AppModuleBasic{},
 	strategicreservemodule.AppModuleBasic{},
-	dvmmodule.AppModuleBasic{},
+	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
 )
 
@@ -146,7 +146,7 @@ func appModules(
 		app.BetModule,
 		app.MarketModule,
 		app.StrategicReserveModule,
-		app.DVMModule,
+		app.OVMModule,
 		app.HouseModule,
 		// this line is u
 	}
@@ -179,7 +179,7 @@ func simulationModules(
 
 		app.BetModule,
 		app.MarketModule,
-		app.DVMModule,
+		app.OVMModule,
 	}
 }
 
@@ -210,7 +210,7 @@ func orderBeginBlockers() []string {
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
-		dvmmoduletypes.ModuleName,
+		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}
 }
@@ -239,7 +239,7 @@ func orderEndBlockers() []string {
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
-		dvmmoduletypes.ModuleName,
+		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}
 }
@@ -268,7 +268,7 @@ func orderInitBlockers() []string {
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		strategicreservemoduletypes.ModuleName,
-		dvmmoduletypes.ModuleName,
+		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}
 }

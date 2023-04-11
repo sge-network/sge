@@ -28,8 +28,8 @@ type MarketKeeper interface {
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 }
 
-// DVMKeeper defines the expected interface needed to verify ticket and unmarshal it
-type DVMKeeper interface {
+// OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
+type OVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
 }
 

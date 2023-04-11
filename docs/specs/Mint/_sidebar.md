@@ -3,7 +3,7 @@
 * [About SGE Network](../../README.md)
 * [Modules](../README.md)
   * [Bet](../Bet/01_Overview.md)
-  * [DVM](../DVM/01_Overview.md)
+  * [OVM](../OVM/01_Overview.md)
   * [Mint](../Mint/01_Overview.md)
     * [Overview](../Mint/01_Overview.md)
     * [Concepts](../Mint/02_Concepts.md)

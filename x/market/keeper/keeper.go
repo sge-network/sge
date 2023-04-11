@@ -17,7 +17,7 @@ type Keeper struct {
 	storeKey   sdk.StoreKey
 	memKey     sdk.StoreKey
 	paramStore paramtypes.Subspace
-	dvmKeeper  types.DVMKeeper
+	ovmKeeper  types.OVMKeeper
 	srKeeper   types.SRKeeper
 }
 
@@ -46,9 +46,9 @@ func (k *Keeper) SetSRKeeper(srKeeper types.SRKeeper) {
 	k.srKeeper = srKeeper
 }
 
-// SetDVMKeeper sets the dvm module keeper to the market keeper.
-func (k *Keeper) SetDVMKeeper(dvmKeeper types.DVMKeeper) {
-	k.dvmKeeper = dvmKeeper
+// SetOVMKeeper sets the ovm module keeper to the market keeper.
+func (k *Keeper) SetOVMKeeper(ovmKeeper types.OVMKeeper) {
+	k.ovmKeeper = ovmKeeper
 }
 
 // Logger returns the logger of the keeper

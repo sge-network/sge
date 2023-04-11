@@ -10,8 +10,8 @@
   - x/**/module.go
 "C:x/bet":
   - x/bet/**/*
-"C:x/dvm":
-  - x/dvm/**/*
+"C:x/ovm":
+  - x/ovm/**/*
 "C:x/mint":
   - x/mint/**/*
 "C:x/market":

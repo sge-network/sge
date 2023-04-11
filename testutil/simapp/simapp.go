@@ -20,8 +20,8 @@ import (
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/utils"
-	dvmtypes "github.com/sge-network/sge/x/dvm/types"
 	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
+	ovmtypes "github.com/sge-network/sge/x/ovm/types"
 	strategicreservetypes "github.com/sge-network/sge/x/strategicreserve/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
@@ -104,14 +104,14 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
 	{
-		publicKeys := GenerateDvmPublicKeys(5)
+		publicKeys := GenerateOvmPublicKeys(ovmtypes.MinPubKeysCount)
 
-		dvmGenesisState := &dvmtypes.GenesisState{
-			KeyVault: dvmtypes.KeyVault{
+		ovmGenesisState := &ovmtypes.GenesisState{
+			KeyVault: ovmtypes.KeyVault{
 				PublicKeys: publicKeys,
 			},
 		}
-		genesisState[dvmtypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(dvmGenesisState)
+		genesisState[ovmtypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(ovmGenesisState)
 	}
 
 	stateBytes, err := json.MarshalIndent(genesisState, "", " ")
@@ -369,12 +369,12 @@ func validatorDefaultCommission() stakingtypes.CommissionRates {
 	return stakingtypes.NewCommissionRates(sdk.MustNewDecFromStr("0.1"), sdk.MustNewDecFromStr("0.2"), sdk.MustNewDecFromStr("0.01"))
 }
 
-func GenerateDvmPublicKeys(n int) (pubKeys []string) {
-	TestDVMPublicKeys = make([]ed25519.PublicKey, n)
-	TestDVMPrivateKeys = make([]ed25519.PrivateKey, n)
+func GenerateOvmPublicKeys(n int) (pubKeys []string) {
+	TestOVMPublicKeys = make([]ed25519.PublicKey, n)
+	TestOVMPrivateKeys = make([]ed25519.PrivateKey, n)
 	for i := 0; i < n; i++ {
-		TestDVMPublicKeys[i], TestDVMPrivateKeys[i], _ = ed25519.GenerateKey(rand.Reader)
-		bs, err := x509.MarshalPKIXPublicKey(TestDVMPublicKeys[i])
+		TestOVMPublicKeys[i], TestOVMPrivateKeys[i], _ = ed25519.GenerateKey(rand.Reader)
+		bs, err := x509.MarshalPKIXPublicKey(TestOVMPublicKeys[i])
 		if err != nil {
 			panic(err)
 		}

@@ -7,7 +7,7 @@ This section defines the state transitions of the sport module's KVStore in all 
 When this is processed:
 
 - Validate the creator address and validate the ticket format.
-- Call the DVM module to validate the ticket internals and to retrieve the
+- Call the OVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
 - If the ticket is valid, check if the market already exists.
 - Use default bet constraints if the `bet_fee` and `min_bet_amount` are not available in the ticket.
@@ -41,7 +41,7 @@ When this is processed:
 For each market:
 
 - Validate the creator address and validate the ticket format.
-- Call the DVM module to validate the ticket internals and to retrieve the
+- Call the OVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
 - If the ticket is valid, check that the market already exists or not.
 - The market status should be active or inactive to be updatable, if not
@@ -57,7 +57,7 @@ When this is processed:
 For each market:
 
 - Validate the creator address and validate the ticket format.
-- Call the DVM module to validate the ticket internals and to retrieve the
+- Call the OVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
 - If the ticket is valid, check that the market already exist or not.
 - The market should exist and the status should be active otherwise proper error returned.

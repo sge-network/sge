@@ -27,5 +27,5 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestDVMPrivateKeys[0])
+	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
 }

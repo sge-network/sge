@@ -18,7 +18,7 @@ func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	}
 
 	ticketData := &types.BetPlacementTicketPayload{}
-	err := k.dvmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
+	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
