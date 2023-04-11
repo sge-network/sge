@@ -104,7 +104,7 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
 	{
-		publicKeys := GenerateDvmPublicKeys(5)
+		publicKeys := GenerateDvmPublicKeys(dvmtypes.MinPubKeysCount)
 
 		dvmGenesisState := &dvmtypes.GenesisState{
 			KeyVault: dvmtypes.KeyVault{

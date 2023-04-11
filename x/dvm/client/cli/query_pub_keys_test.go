@@ -20,7 +20,7 @@ func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault) {
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	pubkeys := simappUtil.GenerateDvmPublicKeys(5)
+	pubkeys := simappUtil.GenerateDvmPublicKeys(types.MinPubKeysCount)
 
 	state.KeyVault = types.KeyVault{
 		PublicKeys: pubkeys,

@@ -4,6 +4,7 @@ import (
 	fmt "fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/sge-network/sge/utils"
 )
 
@@ -23,12 +24,19 @@ func (k *KeyVault) GetLeader() string {
 // validatePubKeys validates the public keys stored in the key vault.
 func (k *KeyVault) validatePubKeys() error {
 	count := len(k.PublicKeys)
-	if count < minPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", count, minPubKeysCount)
+	if count < MinPubKeysCount {
+		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", count, MinPubKeysCount)
 	}
 
-	if count > maxPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", count, minPubKeysCount)
+	if count > MaxPubKeysCount {
+		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", count, MinPubKeysCount)
+	}
+
+	for _, pubKey := range k.PublicKeys {
+		ed25519Key, err := jwt.ParseEdPublicKeyFromPEM([]byte(pubKey))
+		if err != nil {
+			return fmt.Errorf("unable to parse public key %s: %v", ed25519Key, err)
+		}
 	}
 
 	return nil

@@ -17,7 +17,7 @@ func TestChangePubkeysVote(t *testing.T) {
 
 		createNActiveProposal(k, ctx, 1)
 		creator := simappUtil.TestParamUsers["user1"]
-		pubs, err := createNTestPubKeys(5)
+		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
 		proposalTicket := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{
@@ -57,7 +57,7 @@ func TestChangePubkeysVote(t *testing.T) {
 
 		createNActiveProposal(k, ctx, 1)
 		creator := simappUtil.TestParamUsers["user1"]
-		pubs, err := createNTestPubKeys(5)
+		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
 		proposalTicket := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{

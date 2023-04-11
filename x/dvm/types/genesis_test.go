@@ -14,7 +14,7 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	pubkeys := simappUtil.GenerateDvmPublicKeys(5)
+	pubkeys := simappUtil.GenerateDvmPublicKeys(7)
 
 	var votes []*types.Vote
 	for _, v := range pubkeys {
@@ -44,6 +44,18 @@ func TestGenesisState_Validate(t *testing.T) {
 		Params: types.DefaultParams(),
 	}
 
+	corruptPublicKeys := make([]string, len(pubkeys))
+	copy(corruptPublicKeys, pubkeys)
+	corruptPublicKeys[0] = "-----BEGIN PUBLIC KEY-----\n \n-----END PUBLIC KEY-----"
+	invalidPublicKeysState := types.GenesisState{
+		KeyVault: types.KeyVault{
+			PublicKeys: corruptPublicKeys,
+		},
+		PubkeysChangeProposals: validState.PubkeysChangeProposals,
+		ProposalStats:          validState.ProposalStats,
+		Params:                 types.DefaultParams(),
+	}
+
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -58,6 +70,11 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc:     "valid genesis state",
 			genState: &validState,
 			valid:    true,
+		},
+		{
+			desc:     "invalid genesis state",
+			genState: &invalidPublicKeysState,
+			valid:    false,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

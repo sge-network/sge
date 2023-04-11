@@ -40,7 +40,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		msgk, _, wctx := setupMsgServer(t)
 		creator := simappUtil.TestParamUsers["user1"]
-		pubs, err := createNTestPubKeys(5)
+		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
 		T1 := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{
@@ -83,17 +83,17 @@ func TestChangePubkeysListProposal(t *testing.T) {
 		require.Nil(t, resp)
 	})
 
-	t.Run("few pubkeys", func(t *testing.T) {
+	t.Run("wrong index", func(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
 		creator := simappUtil.TestParamUsers["user1"]
-		pubs, err := createNTestPubKeys(5)
+		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
 		proposalTicket := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{
 			"public_keys":  pubs,
-			"leader_index": 5,
+			"leader_index": types.MaxPubKeysCount,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
 		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestDVMPrivateKeys[0])

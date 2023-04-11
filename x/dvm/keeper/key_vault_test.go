@@ -19,7 +19,7 @@ func TestQueryPublicKeys(t *testing.T) {
 
 	creator := simappUtil.TestParamUsers["user1"]
 	var pubs []string
-	for i := 0; i < 5; i++ {
+	for i := 0; i < types.MaxPubKeysCount; i++ {
 		pub, _, err := ed25519.GenerateKey(rand.Reader)
 		require.NoError(t, err)
 		bs, err := x509.MarshalPKIXPublicKey(pub)

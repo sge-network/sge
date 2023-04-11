@@ -14,7 +14,9 @@ const (
 	// DefaultTimeWeight is the default weight of the time for JWT ticket expiration
 	DefaultTimeWeight = 1
 
-	minPubKeysCount = 5
+	// MinPubKeysCount is the minimum allowed public keys in the key vault
+	MinPubKeysCount = 7
 
-	maxPubKeysCount = 8
+	// MaxPubKeysCount is the maximum allowed public keys in the key vault
+	MaxPubKeysCount = 10
 )

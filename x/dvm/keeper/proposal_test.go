@@ -18,7 +18,7 @@ import (
 func createNActiveProposal(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.PublicKeysChangeProposal {
 	items := make([]types.PublicKeysChangeProposal, n)
 
-	pubKeys, err := createNTestPubKeys(5)
+	pubKeys, err := createNTestPubKeys(types.MinPubKeysCount)
 	if err != nil {
 		panic(err)
 	}
@@ -129,7 +129,7 @@ func TestFinishProposals(t *testing.T) {
 
 	keyVault, found := k.GetKeyVault(ctx)
 	require.True(t, found)
-	require.Equal(t, 5, len(keyVault.PublicKeys))
+	require.Equal(t, 7, len(keyVault.PublicKeys))
 }
 
 func TestFinishProposal(t *testing.T) {
