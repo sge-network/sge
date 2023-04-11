@@ -13,7 +13,7 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.MarketAddTicketPayload
-	if err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &addPayload); err != nil {
+	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &addPayload); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
@@ -65,7 +65,7 @@ func (k msgServer) UpdateMarket(goCtx context.Context, msg *types.MsgUpdateMarke
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updatePayload types.MarketUpdateTicketPayload
-	if err := k.dvmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &updatePayload); err != nil {
+	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &updatePayload); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 

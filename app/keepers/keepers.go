@@ -59,9 +59,9 @@ import (
 	marketmodulekeeper "github.com/sge-network/sge/x/market/keeper"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 
-	dvmmodule "github.com/sge-network/sge/x/dvm"
-	dvmmodulekeeper "github.com/sge-network/sge/x/dvm/keeper"
-	dvmmoduletypes "github.com/sge-network/sge/x/dvm/types"
+	ovmmodule "github.com/sge-network/sge/x/ovm"
+	ovmmodulekeeper "github.com/sge-network/sge/x/ovm/keeper"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
 
 	housemodule "github.com/sge-network/sge/x/house"
 	housemodulekeeper "github.com/sge-network/sge/x/house/keeper"
@@ -103,7 +103,7 @@ type AppKeepers struct {
 
 	MarketKeeper           marketmodulekeeper.Keeper
 	BetKeeper              betmodulekeeper.Keeper
-	DVMKeeper              dvmmodulekeeper.Keeper
+	OVMKeeper              ovmmodulekeeper.Keeper
 	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
 	MarketModule           marketmodule.AppModule
@@ -114,7 +114,7 @@ type AppKeepers struct {
 	// modules
 	ICAModule      ica.AppModule
 	TransferModule transfer.AppModule
-	DVMModule      dvmmodule.AppModule
+	OVMModule      ovmmodule.AppModule
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -332,13 +332,13 @@ func NewAppKeeper(
 		appKeepers.SlashingKeeper,
 	)
 
-	appKeepers.DVMKeeper = *dvmmodulekeeper.NewKeeper(
+	appKeepers.OVMKeeper = *ovmmodulekeeper.NewKeeper(
 		appCodec,
-		appKeepers.keys[dvmmoduletypes.StoreKey],
-		appKeepers.keys[dvmmoduletypes.MemStoreKey],
-		appKeepers.GetSubspace(dvmmoduletypes.ModuleName),
+		appKeepers.keys[ovmmoduletypes.StoreKey],
+		appKeepers.keys[ovmmoduletypes.MemStoreKey],
+		appKeepers.GetSubspace(ovmmoduletypes.ModuleName),
 	)
-	appKeepers.DVMModule = dvmmodule.NewAppModule(appCodec, appKeepers.DVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
+	appKeepers.OVMModule = ovmmodule.NewAppModule(appCodec, appKeepers.OVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
 	appKeepers.MarketKeeper = *marketmodulekeeper.NewKeeper(
 		appCodec,
@@ -346,9 +346,9 @@ func NewAppKeeper(
 		appKeepers.keys[marketmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
 	)
-	appKeepers.MarketKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
+	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
-	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.DVMKeeper)
+	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.OVMKeeper)
 
 	appKeepers.BetKeeper = *betmodulekeeper.NewKeeper(
 		appCodec,
@@ -358,8 +358,8 @@ func NewAppKeeper(
 	)
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.BetKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
-	appKeepers.BetKeeper.SetDVMKeeper(appKeepers.DVMKeeper)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.DVMKeeper)
+	appKeepers.BetKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.OVMKeeper)
 
 	appKeepers.StrategicReserveKeeper.SetBetKeeper(appKeepers.BetKeeper)
 	appKeepers.StrategicReserveKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
@@ -411,7 +411,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(betmoduletypes.ModuleName)
 	paramsKeeper.Subspace(marketmoduletypes.ModuleName)
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
-	paramsKeeper.Subspace(dvmmoduletypes.ModuleName)
+	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
 
 	return paramsKeeper

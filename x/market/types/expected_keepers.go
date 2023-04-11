@@ -19,8 +19,8 @@ type BankKeeper interface {
 	// Methods imported from bank should be defined here
 }
 
-// DVMKeeper defines the expected interface needed to verify ticket and unmarshal it
-type DVMKeeper interface {
+// OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
+type OVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
 }
 

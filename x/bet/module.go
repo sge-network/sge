@@ -95,7 +95,7 @@ type AppModule struct {
 	bankKeeper    types.BankKeeper
 	marketKeeper  types.MarketKeeper
 	srKeeper      types.SRKeeper
-	dvmKeeper     types.DVMKeeper
+	ovmKeeper     types.OVMKeeper
 }
 
 // NewAppModule creates new app module object
@@ -106,7 +106,7 @@ func NewAppModule(
 	bankKeeper types.BankKeeper,
 	marketKeeper types.MarketKeeper,
 	srKeeper types.SRKeeper,
-	dvmKeeper types.DVMKeeper,
+	ovmKeeper types.OVMKeeper,
 ) AppModule {
 	return AppModule{
 		AppModuleBasic: NewAppModuleBasic(cdc),
@@ -115,7 +115,7 @@ func NewAppModule(
 		bankKeeper:     bankKeeper,
 		marketKeeper:   marketKeeper,
 		srKeeper:       srKeeper,
-		dvmKeeper:      dvmKeeper,
+		ovmKeeper:      ovmKeeper,
 	}
 }
 
