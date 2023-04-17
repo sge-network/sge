@@ -12,7 +12,7 @@ var _ sdk.Msg = &MsgWithdraw{}
 
 // NewMsgWithdraw creates the new input for withdrawal of a deposit
 func NewMsgWithdraw(creator string, marketUID string, amount sdk.Int,
-	participationIndex uint64, mode WithdrawalMode,
+	participationIndex uint64, mode WithdrawalMode, ticket string,
 ) *MsgWithdraw {
 	return &MsgWithdraw{
 		Creator:            creator,
@@ -20,6 +20,7 @@ func NewMsgWithdraw(creator string, marketUID string, amount sdk.Int,
 		ParticipationIndex: participationIndex,
 		Mode:               mode,
 		Amount:             amount,
+		Ticket:             ticket,
 	}
 }
 

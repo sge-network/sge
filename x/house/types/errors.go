@@ -22,6 +22,9 @@ var (
 	ErrWithdrawalTooLarge        = sdkerrors.Register(ModuleName, 5012, "withdrawal is more than unused amount")
 	ErrSRLiquidateProcessing     = sdkerrors.Register(ModuleName, 5013, "internal error in processing liquidation in SR")
 	ErrWrongWithdrawCreator      = sdkerrors.Register(ModuleName, 5014, "withdrawal is only allowed from the depositor account")
+	ErrInTicketVerification      = sdkerrors.Register(ModuleName, 5015, "error in ticket verification process")
+	ErrInTicketPayloadValidation = sdkerrors.Register(ModuleName, 5016, "error in ticket payload validation")
+	ErrUserKycFailed             = sdkerrors.Register(ModuleName, 5017, "the bettor failed the KYC Validation")
 )
 
 const (

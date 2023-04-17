@@ -11,11 +11,12 @@ const typeMsgDeposit = "deposit"
 var _ sdk.Msg = &MsgDeposit{}
 
 // NewMsgDeposit creates the new input for adding deposit to blockchain
-func NewMsgDeposit(creator, marketUID string, amount sdk.Int) *MsgDeposit {
+func NewMsgDeposit(creator, marketUID string, amount sdk.Int, ticket string) *MsgDeposit {
 	return &MsgDeposit{
 		Creator:   creator,
 		MarketUID: marketUID,
 		Amount:    amount,
+		Ticket:    ticket,
 	}
 }
 
@@ -59,6 +60,18 @@ func (msg *MsgDeposit) ValidateBasic() error {
 		return sdkerrors.Wrap(
 			sdkerrors.ErrInvalidRequest,
 			"invalid deposit amount",
+		)
+	}
+
+	return nil
+}
+
+// ValidateSanity validates deposit acceptability
+func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
+	if msg.Amount.LT(p.MinDeposit) {
+		return sdkerrors.Wrapf(
+			ErrDepositTooSmall, ": got %s, expected greater or equal to %d",
+			msg.Amount.String(), p.MinDeposit,
 		)
 	}
 

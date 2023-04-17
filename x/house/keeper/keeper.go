@@ -12,8 +12,9 @@ import (
 type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        codec.BinaryCodec
-	srKeeper   types.SRKeeper
 	paramstore paramtypes.Subspace
+	srKeeper   types.SRKeeper
+	ovmKeeper  types.OVMKeeper
 }
 
 // NewKeeper returns an instance of the housekeeper
