@@ -32,6 +32,7 @@ jobs:
 
     - name: Copy Proto Files
       run: |
+        git rm -r sgejs/proto/sge
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add .
         git -C sgejs status
