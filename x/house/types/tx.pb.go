@@ -39,7 +39,8 @@ type MsgDeposit struct {
 	MarketUID string `protobuf:"bytes,2,opt,name=market_uid,proto3" json:"market_uid"`
 	// amount is the amount being deposited on an order book to be a house
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
-	Ticket string                                 `protobuf:"bytes,4,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// ticket is the jwt ticket data.
+	Ticket string `protobuf:"bytes,4,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
 func (m *MsgDeposit) Reset()         { *m = MsgDeposit{} }
@@ -144,7 +145,8 @@ type MsgWithdraw struct {
 	Mode WithdrawalMode `protobuf:"varint,4,opt,name=mode,proto3,enum=sgenetwork.sge.house.WithdrawalMode" json:"mode,omitempty" yaml:"mode"`
 	// amount is the requested withdrawal amount
 	Amount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=amount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"amount"`
-	Ticket string                                 `protobuf:"bytes,6,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// ticket is the jwt ticket data.
+	Ticket string `protobuf:"bytes,6,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
 func (m *MsgWithdraw) Reset()         { *m = MsgWithdraw{} }

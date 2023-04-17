@@ -4,7 +4,6 @@ package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
 import "sge/house/kyc.proto";
-import "sge/house/withdraw.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
