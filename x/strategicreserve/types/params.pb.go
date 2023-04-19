@@ -25,7 +25,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Params defines the parameters for the strategic reserve module.
 type Params struct {
-	// max_order_book_participations is the maximum number of participations per book.
+	// max_order_book_participations is the maximum number of participations per
+	// book.
 	MaxOrderBookParticipations uint64 `protobuf:"varint,1,opt,name=max_order_book_participations,json=maxOrderBookParticipations,proto3" json:"max_order_book_participations,omitempty" yaml:"max_order_book_participations"`
 	// batch_settlement_count is the batch settlement deposit count.
 	BatchSettlementCount uint64 `protobuf:"varint,2,opt,name=batch_settlement_count,json=batchSettlementCount,proto3" json:"batch_settlement_count,omitempty" yaml:"batch_settlement_count"`
