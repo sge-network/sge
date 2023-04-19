@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cast"
 )
 
-var guageKeys = []string{"minted_tokens"}
+var gaugeKeys = []string{"minted_tokens"}
 
 // BeginBlocker mints new tokens for the previous block.
 func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
@@ -69,7 +69,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	if mintedCoin.Amount.IsInt64() {
-		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), guageKeys...)
+		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), gaugeKeys...)
 	}
 
 	ctx.EventManager().EmitEvent(
