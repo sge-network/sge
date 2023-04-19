@@ -7,6 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
+	"github.com/spf13/cast"
 )
 
 // SubmitPubkeysChangeProposal is the main transaction of OVM to add or delete the keys to the chain.
@@ -36,17 +37,35 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	stats.PubkeysChangeCount++
 
 	// set proposal
-	k.Keeper.SetPubkeysChangeProposal(ctx,
-		types.NewPublicKeysChangeProposal(
-			stats.PubkeysChangeCount,
-			msg.Creator,
-			payload,
-			ctx.BlockTime().Unix(),
-		),
+	proposal := types.NewPublicKeysChangeProposal(
+		stats.PubkeysChangeCount,
+		msg.Creator,
+		payload,
+		ctx.BlockTime().Unix(),
 	)
+	k.Keeper.SetPubkeysChangeProposal(ctx, proposal)
 
 	// set proposal statistics
 	k.Keeper.SetProposalStats(ctx, stats)
 
+	emitSumitProposalEvent(ctx, types.TypeMsgCreatePubKeyChaneProposal, proposal.Id, proposal.Creator, proposal.Modifications.String())
+
 	return &types.MsgSubmitPubkeysChangeProposalResponse{Success: true}, nil
+}
+
+func emitSumitProposalEvent(ctx sdk.Context, emitType string, id uint64, creator string, content string) {
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			emitType,
+			sdk.NewAttribute(types.AttributeKeyPubkeysChangeProposalID, cast.ToString(id)),
+			sdk.NewAttribute(types.AttributeKeyCreator, creator),
+			sdk.NewAttribute(types.AttributeKeyContent, content),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+			sdk.NewAttribute(sdk.AttributeKeyAction, emitType),
+			sdk.NewAttribute(sdk.AttributeKeySender, creator),
+		),
+	})
 }
