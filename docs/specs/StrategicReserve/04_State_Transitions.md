@@ -8,14 +8,14 @@ When this market is being created:
 
 1. Creates an order book corresponding to the market
 2. Transfer the sr contribution of market to the liquidity name.
-3. Creates the first participation for the sr module account.
+3. Creates the first and second participation for the sr module account.
 4. Set the exposures for the bet odds.
 5. Set the exposures for the participations.
 
 ```go
 newOrderBook := &types.Deposit{
     OrderBookID:            <marketID>,
-    ParticipantCount:       1, // this is sr module account
+    ParticipantCount:       2, // this is sr module account
     OddsCount:              <Count of bet odds og market>
     Status:                 Active
 }
