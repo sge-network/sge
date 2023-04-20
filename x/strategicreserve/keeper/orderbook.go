@@ -77,7 +77,8 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribut
 	tranch1SRContribution := srContribution.Quo(sdk.NewInt(2))
 	tranch2SRContribution := srContribution.Sub(tranch1SRContribution)
 	fulfillmentQueue := []uint64{}
-	for i := 0; i <= 1; i++ {
+	var i uint
+	for i = 0; i <= 1; i++ {
 		var tranchSRContribution sdk.Int
 		if i == 0 {
 			tranchSRContribution = tranch1SRContribution
