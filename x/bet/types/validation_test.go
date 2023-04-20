@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
 )
@@ -83,7 +84,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc     string
 		betOdds  *types.BetOdds
-		kyc      types.KycDataPayload
+		kyc      sgetypes.KycDataPayload
 		oddsType types.OddsType
 		err      error
 	}{
@@ -95,7 +96,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: types.KycDataPayload{
+			kyc: sgetypes.KycDataPayload{
 				Ignore:   true,
 				Approved: true,
 				ID:       testAddress,
@@ -111,7 +112,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: types.KycDataPayload{
+			kyc: sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       testAddress,
 			},
@@ -126,7 +127,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: types.KycDataPayload{
+			kyc: sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       testAddress,
 			},
@@ -152,7 +153,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: types.KycDataPayload{
+			kyc: sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       "",
 			},
@@ -167,7 +168,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			kyc: types.KycDataPayload{
+			kyc: sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       testAddress,
 			},

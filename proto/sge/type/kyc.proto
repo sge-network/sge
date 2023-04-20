@@ -1,17 +1,17 @@
 syntax = "proto3";
-package sgenetwork.sge.bet;
+package sgenetwork.sge.type;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/bet/types";
+option go_package = "github.com/sge-network/sge/types";
 
 // KycDataPayload is the KYC info.
 message KycDataPayload {
-  // ignore is true if kyc validation is not required.
+  // ignore is true if KYC validation is not required.
   bool ignore = 1;
-  // approved represent if kyc validation is approved or not.
+  // approved represent if KYC validation is approved or not.
   bool approved = 2;
-  // id is the id of the kyc user.
+  // id is the id of the KYC user.
   string id = 3 [
     (gogoproto.customname) = "ID",
     (gogoproto.jsontag) = "id",

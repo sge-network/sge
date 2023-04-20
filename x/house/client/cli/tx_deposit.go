@@ -15,14 +15,14 @@ import (
 
 func CmdDeposit() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit [market_uid] [amount]",
-		Args:  cobra.ExactArgs(2),
+		Use:   "deposit [market_uid] [amount] [ticket]",
+		Args:  cobra.ExactArgs(3),
 		Short: "Deposit tokens in a market order book to be the house",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Deposit tokens in a market order book to be the house.
 
 				Example:
-				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge --from mykey
+				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge {ticket string} --from mykey
 				`,
 				version.AppName,
 			),
@@ -33,16 +33,18 @@ func CmdDeposit() *cobra.Command {
 				return err
 			}
 
-			MarketUID := args[0]
+			argMarketUID := args[0]
 
 			argAmountCosmosInt, ok := sdk.NewIntFromString(args[1])
 			if !ok {
 				return types.ErrInvalidAmount
 			}
 
+			argTicket := args[2]
+
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := types.NewMsgDeposit(depAddr.String(), MarketUID, argAmountCosmosInt)
+			msg := types.NewMsgDeposit(depAddr.String(), argMarketUID, argAmountCosmosInt, argTicket)
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},

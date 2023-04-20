@@ -12,12 +12,13 @@ import (
 type Keeper struct {
 	storeKey   sdk.StoreKey
 	cdc        codec.BinaryCodec
-	srKeeper   types.SRKeeper
 	paramstore paramtypes.Subspace
+	srKeeper   types.SRKeeper
+	ovmKeeper  types.OVMKeeper
 }
 
 // NewKeeper returns an instance of the housekeeper
-func NewKeeper(cdc codec.BinaryCodec, key sdk.StoreKey, srKeeper types.SRKeeper, ps paramtypes.Subspace) *Keeper {
+func NewKeeper(cdc codec.BinaryCodec, key sdk.StoreKey, srKeeper types.SRKeeper, ovmKeeper types.OVMKeeper, ps paramtypes.Subspace) *Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
@@ -27,6 +28,7 @@ func NewKeeper(cdc codec.BinaryCodec, key sdk.StoreKey, srKeeper types.SRKeeper,
 		storeKey:   key,
 		cdc:        cdc,
 		srKeeper:   srKeeper,
+		ovmKeeper:  ovmKeeper,
 		paramstore: ps,
 	}
 }

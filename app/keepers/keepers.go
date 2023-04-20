@@ -368,6 +368,7 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.keys[housemoduletypes.StoreKey],
 		appKeepers.StrategicReserveKeeper,
+		appKeepers.OVMKeeper,
 		appKeepers.GetSubspace(housemoduletypes.ModuleName),
 	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)

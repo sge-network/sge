@@ -38,6 +38,8 @@ message MsgDeposit {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // ticket is the jwt ticket data.
+  string ticket = 4;
 }
 
 // MsgDepositResponse defines the Msg/Deposit response type.
@@ -78,6 +80,8 @@ message MsgWithdraw {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
+  // ticket is the jwt ticket data.
+  string ticket = 6;
 }
 
 // MsgWithdrawResponse defines the Msg/Withdraw response type.
