@@ -68,7 +68,6 @@ message DepositTicketPayload {
 }
 ```
 
-
 ### **Deposit Failure cases**
 
 The transaction will fail if:
