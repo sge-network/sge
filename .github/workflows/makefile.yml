@@ -32,9 +32,9 @@ jobs:
 
     - name: Copy Proto Files
       run: |
-        git rm -r sgejs/proto/sge
+        rm -rf sgejs/proto/sge
         cp -r sge/proto/sge sgejs/proto
-        git -C sgejs add .
+        git -C sgejs add -u .
         git -C sgejs status
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
