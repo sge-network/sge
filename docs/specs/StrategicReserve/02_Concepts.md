@@ -5,10 +5,7 @@ each order book will be created as a one-to-one dependency of market. in action,
 book initiation method of the strategic reserve module to create the corresponding order book, participation and exposures.
 The created order book for the market initiated will be maintained until the market marked as settled.
 
-The order book for a given market, is made up of order Book Participants. The first order book participant for any order book of
-a market will be Strategic Reserve. At the creation of a market, in order to facilitate betting on
-the created market. Strategic reserve initiates an order book for the market and becomes the first participation for the
-initiated order book.
+The order book for a given market, is made up of order Book Participants. The first and second order book participant for any order book of a market will be Strategic Reserve, as the SR contribution to order book is made in two tranches. At the creation of a market, in order to facilitate betting on the created market. Strategic reserve initiates an order book for the market and becomes the first and second participation for the initiated order book.
 
 Once the strategic reserve has initiated an order book for a market, users can either bet against the house or
 become a part of the house by deposition of chosen amount through the House module. When a user deposits chosen

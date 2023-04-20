@@ -19,6 +19,10 @@ message Params {
   // batch_settlement_count is the batch settlement deposit count.
   uint64 batch_settlement_count = 2
       [ (gogoproto.moretags) = "yaml:\"batch_settlement_count\"" ];
+
+  // requeue_threshold is the threshold at which a participation is requeued in orderbook.
+  uint64 requeue_threshold = 3
+  [ (gogoproto.moretags) = "yaml:\"requeue_threshold\"" ];
 }
 ```
 

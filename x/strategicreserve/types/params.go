@@ -14,12 +14,17 @@ const (
 
 	// Default batch settlement count.
 	DefaultBatchSettlementCount uint64 = 100
+
+	// Default requeue threshold.
+	DefaultRequeueThreshold uint64 = 1000
 )
 
 var (
 	KeyMaxOrderBookParticipations = []byte("MaxOrderBookParticipationss")
 
 	KeyBatchSettlementCount = []byte("BatchSettlementCount")
+
+	KeyRequeueThreshold = []byte("RequeueThreshold")
 )
 
 // ParamTable for strategicreserve module
@@ -28,10 +33,11 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(maxOrderBookParticipations, batchSettlementCount uint64) Params {
+func NewParams(maxOrderBookParticipations, batchSettlementCount, requeueThreshold uint64) Params {
 	return Params{
 		MaxOrderBookParticipations: maxOrderBookParticipations,
 		BatchSettlementCount:       batchSettlementCount,
+		RequeueThreshold:           requeueThreshold,
 	}
 }
 
@@ -40,6 +46,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMaxOrderBookParticipations, &p.MaxOrderBookParticipations, validateMaxOrderBookParticipations),
 		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
+		paramtypes.NewParamSetPair(KeyRequeueThreshold, &p.RequeueThreshold, validateRequeueThreshold),
 	}
 }
 
@@ -48,6 +55,7 @@ func DefaultParams() Params {
 	return NewParams(
 		DefaultMaxOrderBookParticipations,
 		DefaultBatchSettlementCount,
+		DefaultRequeueThreshold,
 	)
 }
 
@@ -94,6 +102,15 @@ func validateBatchSettlementCount(i interface{}) error {
 
 	if v == 0 {
 		return fmt.Errorf("batch settlement count must be positive: %d", v)
+	}
+
+	return nil
+}
+
+func validateRequeueThreshold(i interface{}) error {
+	_, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
 	return nil
