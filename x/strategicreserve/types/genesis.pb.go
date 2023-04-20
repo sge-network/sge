@@ -32,7 +32,8 @@ type GenesisState struct {
 	// order_book_participation_list defines the book participations available at
 	// genesis.
 	OrderBookParticipationList []OrderBookParticipation `protobuf:"bytes,3,rep,name=order_book_participation_list,json=orderBookParticipationList,proto3" json:"order_book_participation_list"`
-	// order_book_exposure_list defines the order book exposures available at genesis.
+	// order_book_exposure_list defines the order book exposures available at
+	// genesis.
 	OrderBookExposureList []OrderBookOddsExposure `protobuf:"bytes,4,rep,name=order_book_exposure_list,json=orderBookExposureList,proto3" json:"order_book_exposure_list"`
 	// participation_exposure_list defines the participation exposures available
 	// at genesis.

@@ -323,7 +323,8 @@ func (m *QueryOrderBookResponse) GetOrderBook() OrderBook {
 // QueryOrderBookParticipationsRequest is the request type for the
 // Query/OrderBookParticipations RPC method
 type QueryOrderBookParticipationsRequest struct {
-	// order_book_uid defines the order book universal unique identifier to query for.
+	// order_book_uid defines the order book universal unique identifier to query
+	// for.
 	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
 	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -434,7 +435,8 @@ func (m *QueryOrderBookParticipationsResponse) GetPagination() *query.PageRespon
 // QueryOrderBookParticipationRequest is the request type for the
 // Query/OrderBookParticipation RPC method.
 type QueryOrderBookParticipationRequest struct {
-	// order_book_uid defines the order book universal unique identifier to query for.
+	// order_book_uid defines the order book universal unique identifier to query
+	// for.
 	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
 	// participation_index defines the participation index to query for.
 	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
@@ -534,8 +536,8 @@ func (m *QueryOrderBookParticipationResponse) GetOrderBookParticipation() OrderB
 	return OrderBookParticipation{}
 }
 
-// QueryOrderBookExposuresRequest is the request type for the Query/OrderBookExposures RPC
-// method
+// QueryOrderBookExposuresRequest is the request type for the
+// Query/OrderBookExposures RPC method
 type QueryOrderBookExposuresRequest struct {
 	// order_book_uid defines the order book uid to query for.
 	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
@@ -590,8 +592,8 @@ func (m *QueryOrderBookExposuresRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryOrderBookExposuresResponse is the response type for the Query/OrderBookExposures
-// RPC method.
+// QueryOrderBookExposuresResponse is the response type for the
+// Query/OrderBookExposures RPC method.
 type QueryOrderBookExposuresResponse struct {
 	OrderBookExposures []OrderBookOddsExposure `protobuf:"bytes,1,rep,name=order_book_exposures,json=orderBookExposures,proto3" json:"order_book_exposures"`
 	// pagination defines the pagination in the response.
@@ -645,8 +647,8 @@ func (m *QueryOrderBookExposuresResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryOrderBookExposureRequest is the request type for the Query/OrderBookExposure RPC
-// method.
+// QueryOrderBookExposureRequest is the request type for the
+// Query/OrderBookExposure RPC method.
 type QueryOrderBookExposureRequest struct {
 	// order_book_uid defines the order book uid to query for.
 	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
@@ -701,8 +703,8 @@ func (m *QueryOrderBookExposureRequest) GetOddsUid() string {
 	return ""
 }
 
-// QueryOrderBookExposureResponse is the response type for the Query/OrderBookExposure RPC
-// method.
+// QueryOrderBookExposureResponse is the response type for the
+// Query/OrderBookExposure RPC method.
 type QueryOrderBookExposureResponse struct {
 	// order_book_exposure defines the order book exposure info.
 	OrderBookExposure OrderBookOddsExposure `protobuf:"bytes,1,opt,name=order_book_exposure,json=orderBookExposure,proto3" json:"order_book_exposure"`

@@ -62,7 +62,7 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribut
 	// create new active book object
 	orderBook = types.NewOrderBook(
 		orderBookUID,
-		1, // sr participation is the only participation of the new book
+		2, // sr participation is made in two tranches to solve the reordering issue
 		uint64(len(oddsUIDs)),
 		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
 	)
@@ -73,27 +73,40 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribut
 		return
 	}
 
-	// Add book participation
-	srParticipation := types.NewOrderBookParticipation(
-		types.SrparticipationIndex, orderBook.UID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), orderBook.OddsCount, true, srContribution, srContribution,
-		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
-	)
+	// Add book participations
+	tranch1SRContribution := srContribution.Quo(sdk.NewInt(2))
+	tranch2SRContribution := srContribution.Sub(tranch1SRContribution)
+	fulfillmentQueue := []uint64{}
+	for i := 0; i <= 1; i++ {
+		var tranchSRContribution sdk.Int
+		if i == 0 {
+			tranchSRContribution = tranch1SRContribution
+		} else {
+			tranchSRContribution = tranch2SRContribution
+		}
+		srParticipation := types.NewOrderBookParticipation(
+			types.SrparticipationIndex+uint64(i), orderBook.UID, k.accountKeeper.GetModuleAddress(types.SRPoolName).String(), orderBook.OddsCount, true, tranchSRContribution, tranchSRContribution,
+			sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
+		)
+		_, found = k.GetOrderBookParticipation(ctx, orderBook.UID, srParticipation.Index)
+		if found {
+			err = sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", srParticipation.Index)
+			return
+		}
+		k.SetOrderBookParticipation(ctx, srParticipation)
+		fulfillmentQueue = append(fulfillmentQueue, srParticipation.Index)
 
-	_, found = k.GetOrderBookParticipation(ctx, orderBook.UID, srParticipation.Index)
-	if found {
-		err = sdkerrors.Wrapf(types.ErrOrderBookAlreadyPresent, "%d", srParticipation.Index)
-		return
+		// Add participation exposures
+		for _, oddsUID := range oddsUIDs {
+			pe := types.NewParticipationExposure(srParticipation.OrderBookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
+			k.SetParticipationExposure(ctx, pe)
+		}
 	}
-	k.SetOrderBookParticipation(ctx, srParticipation)
 
 	// Add book exposures
-	fulfillmentQueue := []uint64{srParticipation.Index}
 	for _, oddsUID := range oddsUIDs {
 		boe := types.NewOrderBookOddsExposure(orderBook.UID, oddsUID, fulfillmentQueue)
 		k.SetOrderBookOddsExposure(ctx, boe)
-
-		pe := types.NewParticipationExposure(srParticipation.OrderBookUID, oddsUID, sdk.ZeroInt(), sdk.ZeroInt(), srParticipation.Index, types.RoundStart, false)
-		k.SetParticipationExposure(ctx, pe)
 	}
 
 	k.SetOrderBook(ctx, orderBook)

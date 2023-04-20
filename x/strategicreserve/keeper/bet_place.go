@@ -293,9 +293,17 @@ func (k Keeper) fulfillQueueBets(
 			// availableLiquidty is positive and more than remaining payout profit that
 			// need to be paid, so we can cover all of payout profits with available liquidity.
 			// this case appends the last fulfillment
+			requeue := false
+			if (availableLiquidty.Sub(payoutProfit.TruncateInt())).LTE(sdk.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
+				requeue = true
+			}
 			err = fulfill(payoutProfit.TruncateInt(), true)
 			if err != nil {
 				return
+			}
+			if requeue {
+				setFulfilled()
+				removeQueueItem()
 			}
 		}
 

@@ -59,3 +59,6 @@ genesis:
         min_bet_amount: "1000000"
         min_bet_fee: "0"
         max_sr_contribution: "100000000"
+    strategicreserve:
+      params:
+        requeue_threshold: "1000"

@@ -26,7 +26,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // OrderBookOddsExposure represents the exposures taken on odds.
 type OrderBookOddsExposure struct {
-	// order_book_uid is the universally unique identifier corresponding to the order book.
+	// order_book_uid is the universally unique identifier corresponding to the
+	// order book.
 	OrderBookUID string `protobuf:"bytes,1,opt,name=order_book_uid,proto3" json:"order_book_uid"`
 	// odds_uid is the universally unique identifier of the odds.
 	OddsUID string `protobuf:"bytes,2,opt,name=odds_uid,proto3" json:"odds_uid"`
@@ -70,8 +71,8 @@ var xxx_messageInfo_OrderBookOddsExposure proto.InternalMessageInfo
 // ParticipationExposure represents the exposures taken on odds by
 // participations.
 type ParticipationExposure struct {
-	// order_book_uid is the universally unique identifier of the order book that the
-	// exposure is being set.
+	// order_book_uid is the universally unique identifier of the order book that
+	// the exposure is being set.
 	OrderBookUID string `protobuf:"bytes,1,opt,name=order_book_uid,proto3" json:"order_book_uid"`
 	// odds_uid is the odds universal unique identifier that the exposure is being
 	// set.
