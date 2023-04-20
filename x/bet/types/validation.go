@@ -30,7 +30,7 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 		return ErrOddsDataNotFound
 	}
 
-	if !ticketData.KycData.validate(creator) {
+	if !ticketData.KycData.Validate(creator) {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
@@ -60,19 +60,4 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 	}
 
 	return nil
-}
-
-// validate checks whether the kyc data is valid for a particular bettor
-// if the kyc is required
-func (payload KycDataPayload) validate(address string) bool {
-	// ignore is true means that kyc check should be ignored
-	if payload.Ignore {
-		return true
-	}
-
-	if payload.Approved && payload.ID == address {
-		return true
-	}
-
-	return false
 }

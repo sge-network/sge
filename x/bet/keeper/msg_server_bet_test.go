@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/types"
 
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -50,7 +51,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		selectedBetOdds := *testSelectedBetOdds
 
 		selectedBetOdds.MarketUID = ""
-		testKyc := &types.KycDataPayload{
+		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
 			ID:       creator.Address.String(),
 		}
@@ -78,7 +79,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("No matching market", func(t *testing.T) {
-		testKyc := &types.KycDataPayload{
+		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
 			ID:       creator.Address.String(),
 		}
@@ -107,7 +108,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		testKyc := &types.KycDataPayload{
+		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
 			ID:       creator.Address.String(),
 		}

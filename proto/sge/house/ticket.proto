@@ -3,18 +3,20 @@ syntax = "proto3";
 package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
-import "sge/house/kyc.proto";
+import "sge/type/kyc.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
-// DepositTicketPayload indicates data of bet deposit ticket.
+// DepositTicketPayload indicates data of the deposit ticket.
 message DepositTicketPayload {
   // kyc_data contains the details of user kyc.
-  KycDataPayload kyc_data = 1 [ (gogoproto.nullable) = false ];
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
 }
 
-// WithdrawTicketPayload indicates data of bet withdrawal ticket.
+// WithdrawTicketPayload indicates data of the withdrawal ticket.
 message WithdrawTicketPayload {
   // kyc_data contains the details of user kyc.
-  KycDataPayload kyc_data = 1 [ (gogoproto.nullable) = false ];
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
 }

@@ -22,7 +22,7 @@ func CmdDeposit() *cobra.Command {
 			fmt.Sprintf(`Deposit tokens in a market order book to be the house.
 
 				Example:
-				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge --from mykey
+				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge {ticket string} --from mykey
 				`,
 				version.AppName,
 			),

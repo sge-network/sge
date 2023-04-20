@@ -10,6 +10,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
@@ -125,7 +126,7 @@ func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUI
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
-	testKyc := &types.KycDataPayload{
+	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       testCreator,
 	}

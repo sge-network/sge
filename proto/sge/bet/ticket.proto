@@ -3,8 +3,8 @@ syntax = "proto3";
 package sgenetwork.sge.bet;
 
 import "gogoproto/gogo.proto";
+import "sge/type/kyc.proto";
 import "sge/bet/bet_odds.proto";
-import "sge/bet/kyc.proto";
 import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
@@ -14,7 +14,8 @@ message BetPlacementTicketPayload {
   // selected_odds is the user-selected odds to place bet.
   BetOdds selected_odds = 1;
   // kyc_data contains the details of user kyc.
-  KycDataPayload kyc_data = 2 [ (gogoproto.nullable) = false ];
+  sgenetwork.sge.type.KycDataPayload kyc_data = 2
+      [ (gogoproto.nullable) = false ];
   // odds_type is the type of odds that are going to be placed
   // such as decimal, fraction, moneyline.
   sgenetwork.sge.bet.OddsType odds_type = 3;

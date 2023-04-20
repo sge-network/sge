@@ -24,7 +24,7 @@ func CmdWithdraw() *cobra.Command {
 			fmt.Sprintf(`Withdraw coins of unused amount corresponding to a deposit.
 
 				Example:
-				$ %s tx house withdraw bc79a72c-ad7e-4cf5-91a2-98af2751e812 1 1 1000 --from mykey
+				$ %s tx house withdraw bc79a72c-ad7e-4cf5-91a2-98af2751e812 1 {ticket string} 1 1000 --from mykey
 				`,
 				version.AppName,
 			),
