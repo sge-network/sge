@@ -11,4 +11,7 @@ message Params {
 
   // batch_settlement_count is the batch settlement bet count.
   uint32 batch_settlement_count = 1;
+
+  // max_bet_by_uid_query_count is the maximum bet by uid query items count.
+  uint32 max_bet_by_uid_query_count = 2;
 }

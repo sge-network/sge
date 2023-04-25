@@ -10,6 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/bet/types"
+	"github.com/spf13/cast"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -81,7 +82,7 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 	ctx := sdk.UnwrapSDKContext(c)
 
 	count := len(req.GetItems())
-	if count > types.MaxAllowedQueryBetsCount {
+	if count > cast.ToInt(k.GetParams(ctx).MaxBetByUidQueryCount) {
 		return nil, types.ErrCanNotQueryLargeNumberOfBets
 	}
 
