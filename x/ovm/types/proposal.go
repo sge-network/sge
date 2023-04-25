@@ -37,7 +37,7 @@ func (proposal *PublicKeysChangeProposal) DecideResult(keyvault *KeyVault) Propo
 	// check if minimum majority vote count is met or not
 	if noCount >= majorityCount {
 		return ProposalResult_PROPOSAL_RESULT_REJECTED
-	} else if yesCount >= majorityCount {
+	} else if yesCount > majorityCount {
 		return ProposalResult_PROPOSAL_RESULT_APPROVED
 	}
 
