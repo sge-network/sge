@@ -37,9 +37,6 @@ genesis:
     gov:
       deposit_params:
         min_deposit: [{ amount: "1", denom: "usge" }]
-
-      voting_params:
-        voting_period: "30s"
     mint:
       minter:
         phase_provisions: "100000000000000.000000000000000000"
