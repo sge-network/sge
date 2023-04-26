@@ -18,6 +18,9 @@ var (
 	// KeyMinBetFee is the minimum bet fee param key
 	KeyMinBetFee = []byte("MinBetFee")
 
+	// KeyMaxBetFee is the maximum bet fee param key
+	KeyMaxBetFee = []byte("MaxBetFee")
+
 	// KeyMaxSRContribution is the min bet amount param key
 	KeyMaxSRContribution = []byte("MaxSRContribution")
 )
@@ -32,6 +35,9 @@ var (
 
 	// DefaultMinBetFee is the default minimum bet fee amount allowed
 	DefaultMinBetFee = sdk.NewInt(0)
+
+	// DefaultMaxBetFee is the default maximum bet fee amount allowed
+	DefaultMaxBetFee = sdk.NewInt(100)
 )
 
 // ParamKeyTable the param key table for launch module
@@ -44,6 +50,7 @@ func NewParams() Params {
 	return Params{
 		MinBetAmount:      DefaultMinBetAmount,
 		MinBetFee:         DefaultMinBetFee,
+		MaxBetFee:         DefaultMaxBetFee,
 		MaxSrContribution: DefaultMaxSRContribution,
 	}
 }
@@ -58,6 +65,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMinBetAmount, &p.MinBetAmount, validateMinBetAmount),
 		paramtypes.NewParamSetPair(KeyMinBetFee, &p.MinBetFee, validateMinBetFeePercentage),
+		paramtypes.NewParamSetPair(KeyMaxBetFee, &p.MaxBetFee, validateMaxBetFeePercentage),
 		paramtypes.NewParamSetPair(KeyMaxSRContribution, &p.MaxSrContribution, validateMaxSRContribution),
 	}
 }
@@ -77,10 +85,41 @@ func (p Params) String() string {
 }
 
 func validateMinBetAmount(i interface{}) error {
+	v, ok := i.(sdk.Int)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.LTE(sdk.OneInt()) {
+		return fmt.Errorf("minimum bet amount must be positive: %d", v.Int64())
+	}
+
 	return nil
 }
 
 func validateMinBetFeePercentage(i interface{}) error {
+	v, ok := i.(sdk.Int)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.LT(sdk.ZeroInt()) {
+		return fmt.Errorf("minimum bet fee must be positive: %d", v.Int64())
+	}
+
+	return nil
+}
+
+func validateMaxBetFeePercentage(i interface{}) error {
+	v, ok := i.(sdk.Int)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.LT(sdk.ZeroInt()) {
+		return fmt.Errorf("maximum bet fee must be positive: %d", v.Int64())
+	}
+
 	return nil
 }
 

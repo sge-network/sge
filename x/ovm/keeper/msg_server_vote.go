@@ -55,15 +55,34 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 	}
 
 	// append new vote to the votes of the proposal
-	proposal.Votes = append(proposal.Votes,
-		types.NewVote(
-			voterPubKey,
-			payload.Vote,
-		),
+	vote := types.NewVote(
+		voterPubKey,
+		payload.Vote,
 	)
+	proposal.Votes = append(proposal.Votes, vote)
 
 	// set proposal with updated votes in the module state
 	k.SetPubkeysChangeProposal(ctx, proposal)
 
+	emitVoteEvent(ctx, types.TypeMsgCreatePubKeyChaneProposalVote, msg.Creator, payload.ProposalId, vote.PublicKey, vote.Vote)
+
 	return &types.MsgVotePubkeysChangeResponse{Success: true}, nil
+}
+
+func emitVoteEvent(ctx sdk.Context, emitType string, creator string, proposalID uint64, publicKey string, vote types.ProposalVote) {
+	ctx.EventManager().EmitEvents(sdk.Events{
+		sdk.NewEvent(
+			emitType,
+			sdk.NewAttribute(types.AttributeKeyCreator, creator),
+			sdk.NewAttribute(types.AttributeKeyPubkeysChangeProposalID, cast.ToString(proposalID)),
+			sdk.NewAttribute(types.AttributeKeyVoterPubKey, publicKey),
+			sdk.NewAttribute(types.AttributeKeyVote, vote.String()),
+		),
+		sdk.NewEvent(
+			sdk.EventTypeMessage,
+			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
+			sdk.NewAttribute(sdk.AttributeKeyAction, emitType),
+			sdk.NewAttribute(sdk.AttributeKeySender, creator),
+		),
+	})
 }

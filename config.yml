@@ -37,9 +37,6 @@ genesis:
     gov:
       deposit_params:
         min_deposit: [{ amount: "1", denom: "usge" }]
-
-      voting_params:
-        voting_period: "30s"
     mint:
       minter:
         phase_provisions: "100000000000000.000000000000000000"
@@ -58,6 +55,7 @@ genesis:
       params:
         min_bet_amount: "1000000"
         min_bet_fee: "0"
+        max_bet_fee: "100"
         max_sr_contribution: "100000000"
     strategicreserve:
       params:

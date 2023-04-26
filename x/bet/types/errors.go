@@ -4,7 +4,6 @@ package types
 
 import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/spf13/cast"
 )
 
 // x/bet module sentinel errors
@@ -37,7 +36,7 @@ var (
 	ErrOddsDataNotFound                     = sdkerrors.Register(ModuleName, 2026, "odds does not exist in ticket payload")
 	ErrInvalidOddsType                      = sdkerrors.Register(ModuleName, 2027, "valid odds type should be provided, 1: decimal, 2: fractional, 3: moneyline")
 	ErrUserKycFailed                        = sdkerrors.Register(ModuleName, 2028, "the bettor failed the KYC Validation")
-	ErrCanNotQueryLargeNumberOfBets         = sdkerrors.Register(ModuleName, 2029, "can not query more than "+cast.ToString(MaxAllowedQueryBetsCount))
+	ErrCanNotQueryLargeNumberOfBets         = sdkerrors.Register(ModuleName, 2029, "large amount of bets requested")
 	ErrDecimalOddsShouldBePositive          = sdkerrors.Register(ModuleName, 2030, "decimal odds value should be positive")
 	ErrDecimalOddsCanNotBeLessThanOne       = sdkerrors.Register(ModuleName, 2031, "decimal odds value can not less than or equal to 1")
 	ErrFractionalOddsCanNotBeNegativeOrZero = sdkerrors.Register(ModuleName, 2032, "fractional odds numbers can not be negative")
@@ -52,6 +51,7 @@ var (
 const (
 	ErrTextInvalidParamType                                  = "invalid parameter type"
 	ErrTextBatchSettlementCountMustBePositive                = "batch settlement count should be a positive number"
+	ErrTextMaxBetUIDQueryCountMustBePositive                 = "max bet by uid query count should be a positive number"
 	ErrTextInitGenesisFailedBecauseOfMissingBetID            = "no bet id found for the bet with uuid"
 	ErrTextInitGenesisFailedBecauseOfNotEqualStats           = "bet list items count is not equal to stats count"
 	ErrTextInitGenesisFailedBetCountNotEqualActiveAndSettled = "sum of active and settled list items count is not equal to bet list items count"

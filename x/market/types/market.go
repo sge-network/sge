@@ -2,6 +2,7 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/mrz1836/go-sanitize"
 )
 
 func NewMarket(
@@ -21,7 +22,7 @@ func NewMarket(
 		EndTS:                  endTS,
 		Odds:                   odds,
 		BetConstraints:         betConstraints,
-		Meta:                   meta,
+		Meta:                   sanitize.XSS(meta),
 		BookUID:                bookUID,
 		SrContributionForHouse: srContributionForHouse,
 		Status:                 status,

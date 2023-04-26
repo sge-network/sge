@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	batchSettlementCount = 1000
+	batchSettlementCount  = 1000
+	maxBetByUIDQueryCount = 10
 )
 
 // parameter store keys
@@ -16,6 +17,10 @@ var (
 	// KeyBatchSettlementCount is the batch settlement
 	// count of bets
 	KeyBatchSettlementCount = []byte("BatchSettlementCount")
+
+	// KeyMaxBetByUIDQueryCount is the max count of
+	// the queryable bets by UID list.
+	KeyMaxBetByUIDQueryCount = []byte("MaxBetByUidQueryCount")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -28,7 +33,8 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		BatchSettlementCount: batchSettlementCount,
+		BatchSettlementCount:  batchSettlementCount,
+		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
 	}
 }
 
@@ -41,6 +47,7 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
+		paramtypes.NewParamSetPair(KeyMaxBetByUIDQueryCount, &p.MaxBetByUidQueryCount, validateMaxBetByUIDQueryCount),
 	}
 }
 
@@ -49,6 +56,11 @@ func (p Params) Validate() error {
 	if err := validateBatchSettlementCount(p.BatchSettlementCount); err != nil {
 		return err
 	}
+
+	if err := validateMaxBetByUIDQueryCount(p.MaxBetByUidQueryCount); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -69,6 +81,19 @@ func validateBatchSettlementCount(i interface{}) error {
 
 	if v <= 0 {
 		return fmt.Errorf("%s: %d", ErrTextBatchSettlementCountMustBePositive, v)
+	}
+
+	return nil
+}
+
+func validateMaxBetByUIDQueryCount(i interface{}) error {
+	v, ok := i.(uint32)
+	if !ok {
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
+	}
+
+	if v <= 0 {
+		return fmt.Errorf("%s: %d", ErrTextMaxBetUIDQueryCountMustBePositive, v)
 	}
 
 	return nil

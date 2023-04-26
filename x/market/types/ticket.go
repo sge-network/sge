@@ -5,12 +5,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/mrz1836/go-sanitize"
 	"github.com/sge-network/sge/utils"
 	"github.com/spf13/cast"
 )
 
 // Validate validates market add ticket payload.
 func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) error {
+	// remove xss attach prone characters
+	payload.Meta = sanitize.XSS(payload.Meta)
 	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
 	}
@@ -48,6 +51,7 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 		if len(o.Meta) > MaxAllowedCharactersForMeta {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", MaxAllowedCharactersForMeta)
 		}
+		o.Meta = sanitize.XSS(o.Meta)
 		if !utils.IsValidUID(o.UID) {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "odds-uid passed is invalid")
 		}
