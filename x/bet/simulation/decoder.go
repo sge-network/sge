@@ -11,7 +11,7 @@ import (
 
 // NewDecodeStore returns a decoder function closure that unmarshals the KVPair's
 // Value to the corresponding bet type.
-func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
+func NewDecodeStore(cdc codec.BinaryCodec) func(kvA, kvB kv.Pair) string {
 	return func(kvA, kvB kv.Pair) string {
 		switch {
 		case bytes.Equal(kvA.Key, types.BetListPrefix):
@@ -40,7 +40,7 @@ func NewDecodeStore(cdc codec.Codec) func(kvA, kvB kv.Pair) string {
 			cdc.MustUnmarshal(kvB.Value, &settleBetB)
 			return fmt.Sprintf("%v\n%v", settledBetA, settleBetB)
 		default:
-			panic(fmt.Sprintf("invlid key %v", kvA.Key))
+			panic(fmt.Sprintf(errTextInvalidBetKey, kvA.Key))
 		}
 	}
 }
