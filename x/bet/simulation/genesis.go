@@ -15,7 +15,7 @@ import (
 // Simulation parameter constants
 const (
 	BatchSettlementCount  = "BatchSettlementCount"
-	MaxBetByUidQueryCount = "MaxBetByUidQueryCount"
+	MaxBetByUIDQueryCount = "MaxBetByUidQueryCount"
 )
 
 // GenBatchSettlementCount randomized bathc settlement count
@@ -23,8 +23,8 @@ func GenBatchSettlementCount(r *rand.Rand) uint32 {
 	return cast.ToUint32(r.Intn(99))
 }
 
-// GenMaxBetByUidQueryCount randomized bet by uid query count
-func GenMaxBetByUidQueryCount(r *rand.Rand) uint32 {
+// GenMaxBetByUIDQueryCount randomized bet by uid query count
+func GenMaxBetByUIDQueryCount(r *rand.Rand) uint32 {
 	return cast.ToUint32(r.Intn(99))
 }
 
@@ -36,10 +36,10 @@ func RandomizedGenState(simState *module.SimulationState) {
 		func(r *rand.Rand) { batchSettlementCount = GenBatchSettlementCount(r) },
 	)
 
-	var maxBetByUidQueryCount uint32
+	var maxBetByUIDQueryCount uint32
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, MaxBetByUidQueryCount, &maxBetByUidQueryCount, simState.Rand,
-		func(r *rand.Rand) { maxBetByUidQueryCount = GenMaxBetByUidQueryCount(r) },
+		simState.Cdc, MaxBetByUIDQueryCount, &maxBetByUIDQueryCount, simState.Rand,
+		func(r *rand.Rand) { maxBetByUIDQueryCount = GenMaxBetByUIDQueryCount(r) },
 	)
 
 	defaultGenesis := types.DefaultGenesis()

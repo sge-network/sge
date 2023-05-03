@@ -20,10 +20,10 @@ func NewDecodeStore(cdc codec.BinaryCodec) func(kvA, kvB kv.Pair) string {
 			cdc.MustUnmarshal(kvB.Value, &betB)
 			return fmt.Sprintf("%v\n%v", betA, betB)
 		case bytes.Equal(kvA.Key, types.BetIDListPrefix):
-			var betIdA, betIdB types.UID2ID
-			cdc.MustUnmarshal(kvA.Value, &betIdA)
-			cdc.MustUnmarshal(kvB.Value, &betIdB)
-			return fmt.Sprintf("%v\n%v", betIdA, betIdB)
+			var betIDA, betIDB types.UID2ID
+			cdc.MustUnmarshal(kvA.Value, &betIDA)
+			cdc.MustUnmarshal(kvB.Value, &betIDB)
+			return fmt.Sprintf("%v\n%v", betIDA, betIDB)
 		case bytes.Equal(kvA.Key, types.BetStatsKey):
 			var betStatsA, betStatsB types.BetStats
 			cdc.MustUnmarshal(kvA.Value, &betStatsA)
