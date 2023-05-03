@@ -58,8 +58,8 @@ func TestDecodeStore(t *testing.T) {
 		name        string
 		expectedLog string
 	}{
-		{"bet", fmt.Sprintf("%v\n%v", market, market)},
-		{"bet_uid", fmt.Sprintf("%v\n%v", stats, stats)},
+		{"market", fmt.Sprintf("%v\n%v", market, market)},
+		{"market_stats", fmt.Sprintf("%v\n%v", stats, stats)},
 		{"other", ""},
 	}
 
