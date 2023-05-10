@@ -14,3 +14,13 @@ message DepositAuthorization {
     (gogoproto.nullable) = false
   ];
 }
+
+// WithdrawAuthorization allows the grantee to withdraw up to withdraw_limit from
+// the granter's account for deposit.
+message WithdrawAuthorization {
+
+  string withdraw_limit = 1[
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
