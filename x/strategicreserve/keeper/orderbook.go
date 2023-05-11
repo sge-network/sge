@@ -68,7 +68,7 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribut
 	)
 
 	// Transfer sr contribution from sr to `sr_book_liquidity_pool` Account
-	err = k.transferFundsFromModuleToModule(ctx, types.SRPoolName, types.OrderBookLiquidityName, srContribution)
+	err = k.transferFundsFromModuleToModule(ctx, types.SRPoolName, types.HouseDepositCollector, srContribution)
 	if err != nil {
 		return
 	}

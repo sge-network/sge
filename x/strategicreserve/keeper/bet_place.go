@@ -63,7 +63,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityName, fulfiledBetAmount); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.HouseDepositCollector, fulfiledBetAmount); err != nil {
 		return nil, err
 	}
 

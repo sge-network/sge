@@ -17,8 +17,8 @@ const (
 
 // module accounts constants
 const (
-	// OrderBookLiquidityName defines the account name for book liquidity for the bettors
-	OrderBookLiquidityName = "book_liquidity_pool"
+	// HouseDepositCollector defines the account name for book liquidity for the bettors
+	HouseDepositCollector = "house_deposit_collector"
 
 	// SRProfitName defines the account name for profit for sr
 	SRProfitName = "sr_profit_pool"

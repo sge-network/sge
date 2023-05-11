@@ -81,19 +81,19 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) 
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, depositPlusProfit)
+			err := k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRPoolName, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, bp.Liquidity)
+			err := k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRPoolName, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to `sr_profit_pool` module account
-			err = k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRProfitName, bp.ActualProfit)
+			err = k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRProfitName, bp.ActualProfit)
 			if err != nil {
 				return err
 			}
@@ -106,19 +106,19 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) 
 		}
 		if depositPlusProfit.LTE(bp.Liquidity) {
 			// transfer amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, depositPlusProfit)
+			err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
 			if err != nil {
 				return err
 			}
 		} else {
 			// transfer initial amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.Liquidity)
+			err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.Liquidity)
 			if err != nil {
 				return err
 			}
 
 			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.ActualProfit)
+			err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.ActualProfit)
 			if err != nil {
 				return err
 			}

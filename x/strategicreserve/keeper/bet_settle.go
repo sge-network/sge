@@ -22,7 +22,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// transfer bet amount from `bet_reserve` to bettor's account.
-	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betAmount)
+	err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, bettorAddress, betAmount)
 	if err != nil {
 		return
 	}
@@ -57,13 +57,13 @@ func (k Keeper) BettorWins(
 		}
 
 		// transfer payout from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.PayoutProfit)
+		err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, bettorAddress, betFulfillment.PayoutProfit)
 		if err != nil {
 			return
 		}
 
 		// transfer bet amount from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.BetAmount)
+		err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, bettorAddress, betFulfillment.BetAmount)
 		if err != nil {
 			return
 		}
