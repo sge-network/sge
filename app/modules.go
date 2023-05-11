@@ -77,7 +77,7 @@ var mAccPerms = map[string][]string{
 	strategicreservemoduletypes.SRProfitName:          nil,
 	strategicreservemoduletypes.HouseDepositCollector: nil,
 	betmoduletypes.ModuleName:                         nil,
-	housemoduletypes.HouseParticipationFeeName:        nil,
+	housemoduletypes.HouseFeeCollector:                nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,

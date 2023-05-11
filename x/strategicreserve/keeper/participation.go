@@ -120,7 +120,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 	)
 
 	// Transfer fee from book participation to the feeAccountName
-	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseParticipationFeeName, fee)
+	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseFeeCollector, fee)
 	if err != nil {
 		return
 	}
