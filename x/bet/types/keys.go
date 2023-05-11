@@ -25,6 +25,11 @@ const (
 	MemStoreKey = "mem_bet"
 )
 
+const (
+	// BetFeeCollector is the module account name for the bet fee collection.
+	BetFeeCollector = "bet_fee_collector"
+)
+
 var (
 	// BetListPrefix is the prefix to retrieve all Bet
 	BetListPrefix = []byte{0x00}

@@ -58,7 +58,7 @@ func (k Keeper) ProcessBetPlacement(
 	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.BetFeeCollector, betFee); err != nil {
 		return nil, err
 	}
 
