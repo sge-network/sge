@@ -9,17 +9,17 @@ option go_package = "github.com/sge-network/sge/x/house/types";
 // the granter's account for deposit.
 message DepositAuthorization {
 
-  string spend_limit = 1[
+  string spend_limit = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 }
 
-// WithdrawAuthorization allows the grantee to withdraw up to withdraw_limit from
-// the granter's account for deposit.
+// WithdrawAuthorization allows the grantee to withdraw up to withdraw_limit
+// from the granter's account for deposit.
 message WithdrawAuthorization {
 
-  string withdraw_limit = 1[
+  string withdraw_limit = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

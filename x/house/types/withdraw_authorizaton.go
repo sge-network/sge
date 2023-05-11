@@ -42,6 +42,9 @@ func (a WithdrawAuthorization) ValidateBasic() error {
 	if a.WithdrawLimit.LTE(sdk.ZeroInt()) {
 		return sdkerrors.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
 	}
+	if a.WithdrawLimit.GT(maxWithdrawGrant) {
+		return sdkerrors.ErrInvalidCoins.Wrapf("withdraw limit cannot be grated than %s", maxWithdrawGrant)
+	}
 
 	return nil
 }
