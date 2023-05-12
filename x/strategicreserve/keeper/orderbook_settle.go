@@ -77,53 +77,31 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) 
 		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
 
-	if bp.IsModuleAccount {
-		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		if depositPlusProfit.LTE(bp.Liquidity) {
-			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRPoolName, depositPlusProfit)
-			if err != nil {
-				return err
-			}
-		} else {
-			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRPoolName, bp.Liquidity)
-			if err != nil {
-				return err
-			}
-
-			// transfer profit to `sr_profit_pool` module account
-			err = k.transferFundsFromModuleToModule(ctx, types.HouseDepositCollector, types.SRProfitName, bp.ActualProfit)
-			if err != nil {
-				return err
-			}
+	depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+	}
+	if depositPlusProfit.LTE(bp.Liquidity) {
+		// transfer amount to depositor address
+		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
+		if err != nil {
+			return err
 		}
 	} else {
-		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
+		// transfer initial amount to depositor address
+		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.Liquidity)
 		if err != nil {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+			return err
 		}
-		if depositPlusProfit.LTE(bp.Liquidity) {
-			// transfer amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
-			if err != nil {
-				return err
-			}
-		} else {
-			// transfer initial amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.Liquidity)
-			if err != nil {
-				return err
-			}
 
-			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.ActualProfit)
-			if err != nil {
-				return err
-			}
+		// transfer profit to depositor address
+		err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.ActualProfit)
+		if err != nil {
+			return err
 		}
 	}
+
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 	return nil

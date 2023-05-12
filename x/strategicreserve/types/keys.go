@@ -23,9 +23,6 @@ const (
 	// SRProfitName defines the account name for profit for sr
 	SRProfitName = "sr_profit_pool"
 
-	// SRPoolName defines the account name for SR Pool
-	SRPoolName = "sr_pool"
-
 	// BetReserveName defines the account name for storing bet amount
 	BetReserveName = "bet_reserve"
 )
