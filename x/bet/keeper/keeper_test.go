@@ -39,13 +39,12 @@ var (
 	testAddMarket *markettypes.MsgAddMarket
 
 	testMarket = markettypes.Market{
-		UID:                    testMarketUID,
-		Creator:                simappUtil.TestParamUsers["user1"].Address.String(),
-		StartTS:                1111111111,
-		EndTS:                  uint64(time.Now().Unix()) + 5000,
-		Odds:                   testMarketOdds,
-		Status:                 markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-		SrContributionForHouse: sdk.NewInt(5),
+		UID:     testMarketUID,
+		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		StartTS: 1111111111,
+		EndTS:   uint64(time.Now().Unix()) + 5000,
+		Odds:    testMarketOdds,
+		Status:  markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 	}
 )
 
@@ -65,15 +64,14 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
-		"uid":                       testMarketUID,
-		"start_ts":                  1111111111,
-		"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
-		"odds":                      testMarketOdds,
-		"exp":                       9999999999,
-		"iat":                       7777777777,
-		"meta":                      "Winner of x:y",
-		"sr_contribution_for_house": sdk.NewInt(500000),
-		"status":                    markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
+		"uid":      testMarketUID,
+		"start_ts": 1111111111,
+		"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
+		"odds":     testMarketOdds,
+		"exp":      9999999999,
+		"iat":      7777777777,
+		"meta":     "Winner of x:y",
+		"status":   markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 	}
 	testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 	require.Nil(t, err)
@@ -95,15 +93,14 @@ func addTestMarketBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context,
 		uid := uuid.NewString()
 		uids = append(uids, uid)
 		testAddMarketClaim := jwt.MapClaims{
-			"uid":                       uid,
-			"start_ts":                  1111111111,
-			"end_ts":                    uint64(ctx.BlockTime().Unix()) + 1000,
-			"odds":                      testMarketOdds,
-			"exp":                       9999999999,
-			"iat":                       7777777777,
-			"meta":                      "Winner of x:y",
-			"sr_contribution_for_house": sdk.NewInt(500000),
-			"status":                    markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
+			"uid":      uid,
+			"start_ts": 1111111111,
+			"end_ts":   uint64(ctx.BlockTime().Unix()) + 1000,
+			"odds":     testMarketOdds,
+			"exp":      9999999999,
+			"iat":      7777777777,
+			"meta":     "Winner of x:y",
+			"status":   markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 		}
 		testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 		require.Nil(t, err)

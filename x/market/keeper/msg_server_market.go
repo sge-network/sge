@@ -32,7 +32,7 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 	for _, odds := range addPayload.Odds {
 		oddsUIDs = append(oddsUIDs, odds.UID)
 	}
-	err := k.srKeeper.InitiateOrderBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
+	err := k.srKeeper.InitiateOrderBook(ctx, addPayload.UID, oddsUIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}
@@ -46,7 +46,6 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 		params.NewMarketBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Meta,
 		addPayload.UID,
-		addPayload.SrContributionForHouse,
 		addPayload.Status,
 	)
 

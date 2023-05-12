@@ -39,10 +39,6 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", MaxAllowedCharactersForMeta)
 	}
 
-	if payload.SrContributionForHouse.IsNil() || payload.SrContributionForHouse.LT(sdk.OneInt()) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be nil or less than 1")
-	}
-
 	oddsSet := make(map[string]Odds, len(payload.Odds))
 	for _, o := range payload.Odds {
 		if o.Meta == "" {
@@ -66,10 +62,6 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 		if err := betConstraints.validate(p); err != nil {
 			return err
 		}
-	}
-
-	if payload.SrContributionForHouse.GT(p.MaxSrContribution) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "sr contribution cannot be more than %d", p.MaxSrContribution.Int64())
 	}
 
 	return nil

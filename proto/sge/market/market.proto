@@ -49,16 +49,8 @@ message Market {
   MarketBetConstraints bet_constraints = 9;
   // meta contains human-readable metadata of the market.
   string meta = 10;
-  // sr_contribution_for_house is the amount of contribution by sr for the house
-  string sr_contribution_for_house = 11 [
-    (gogoproto.customname) = "SrContributionForHouse",
-    (gogoproto.jsontag) = "sr_contribution_for_house",
-    json_name = "sr_contribution_for_house",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
   // book_uid is the unique identifier corresponding to the book
-  string book_uid = 12 [
+  string book_uid = 11 [
     (gogoproto.customname) = "BookUID",
     (gogoproto.jsontag) = "book_uid",
     json_name = "book_uid"

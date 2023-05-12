@@ -39,7 +39,6 @@ func TestDecodeStore(t *testing.T) {
 		},
 		"custom metadata",
 		uID,
-		sdk.NewInt(10),
 		types.MarketStatus_MARKET_STATUS_ACTIVE,
 	)
 

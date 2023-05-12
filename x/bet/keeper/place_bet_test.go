@@ -48,7 +48,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -66,7 +65,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -85,7 +83,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -108,7 +105,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
 				{UID: "odds1", MarketUID: "uid_oddsNotexist", Value: "2.52"},
@@ -139,7 +135,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1000),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
 				{UID: "odds1", MarketUID: "uid_lowBetAmount", Value: "2.52"},
@@ -170,7 +165,6 @@ func TestPlaceBet(t *testing.T) {
 					MinAmount: sdk.NewInt(1),
 					BetFee:    sdk.NewInt(1),
 				},
-				SrContributionForHouse: sdk.NewInt(500000),
 			},
 			activeBetOdds: []*types.BetOdds{
 				{UID: "odds1", MarketUID: "uid_success", Value: "2.52", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -198,7 +192,7 @@ func TestPlaceBet(t *testing.T) {
 				for _, v := range tc.market.Odds {
 					oddsUIDs = append(oddsUIDs, v.UID)
 				}
-				err := tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, tc.market.UID, tc.market.SrContributionForHouse, oddsUIDs)
+				err := tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, tc.market.UID, oddsUIDs)
 				require.NoError(t, err)
 			}
 

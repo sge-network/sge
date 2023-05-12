@@ -49,7 +49,7 @@ func (k Keeper) GetAllOrderBooks(ctx sdk.Context) (list []types.OrderBook, err e
 }
 
 // InitiateOrderBook initiates an order book for a given market.
-func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, srContribution sdk.Int, oddsUIDs []string) (err error) {
+func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, oddsUIDs []string) (err error) {
 	// book and market have one-to-one relationship
 	orderBookUID := marketUID
 

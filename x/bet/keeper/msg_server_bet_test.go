@@ -142,7 +142,6 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 				MinAmount: sdk.NewInt(1),
 				BetFee:    sdk.NewInt(1),
 			},
-			SrContributionForHouse: sdk.NewInt(50000),
 		}
 
 		tApp.MarketKeeper.SetMarket(ctx, marketItem)
@@ -151,7 +150,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		for _, v := range marketItem.Odds {
 			oddsUIDs = append(oddsUIDs, v.UID)
 		}
-		err = tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, marketItem.UID, marketItem.SrContributionForHouse, oddsUIDs)
+		err = tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, marketItem.UID, oddsUIDs)
 		require.NoError(t, err)
 
 		_, err = msgk.PlaceBet(wctx, inputBet)

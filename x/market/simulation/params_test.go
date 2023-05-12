@@ -23,7 +23,6 @@ func TestParamChangest(t *testing.T) {
 		{"market/MinBetAmount", "MinBetAmount", "market"},
 		{"market/MinBetFee", "MinBetFee", "market"},
 		{"market/MaxBetFee", "MaxBetFee", "market"},
-		{"market/MaxSrContribution", "MaxSrContribution", "market"},
 	}
 
 	paramChanges := simulation.ParamChanges(r)

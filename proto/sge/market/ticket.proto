@@ -51,14 +51,6 @@ message MarketAddTicketPayload {
 
   // meta contains human-readable metadata of the market.
   string meta = 9;
-  // sr_contribution_for_house is the amount of contribution by sr for the house
-  string sr_contribution_for_house = 10 [
-    (gogoproto.customname) = "SrContributionForHouse",
-    (gogoproto.jsontag) = "sr_contribution_for_house",
-    json_name = "sr_contribution_for_house",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
 }
 
 // MarketUpdateTicketPayload indicates data of the market update ticket
