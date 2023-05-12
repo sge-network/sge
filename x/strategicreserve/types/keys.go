@@ -19,9 +19,6 @@ const (
 const (
 	// HouseDepositCollector defines the account name for book liquidity for the bettors
 	HouseDepositCollector = "house_deposit_collector"
-
-	// BetReserveName defines the account name for storing bet amount
-	BetReserveName = "bet_reserve"
 )
 
 var (
