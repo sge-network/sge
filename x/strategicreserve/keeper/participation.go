@@ -125,7 +125,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 		return
 	}
 
-	// Transfer liquidity amount from book participation  to `book_liquidity_pool` Account
+	// Transfer liquidity amount from book participation  to `house_deposit_collector` Account
 	err = k.transferFundsFromAccountToModule(ctx, addr, types.HouseDepositCollector, liquidity)
 	if err != nil {
 		return

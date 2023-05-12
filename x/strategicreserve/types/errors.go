@@ -35,6 +35,7 @@ var (
 	ErrMaxWithdrawableAmountIsZero          = sdkerrors.Register(ModuleName, 6025, "maximum withdrawable amount is zero")
 	ErrParticipationOnInactiveMarket        = sdkerrors.Register(ModuleName, 6026, "participation is allowed on an active market only")
 	ErrMarketNotFound                       = sdkerrors.Register(ModuleName, 6027, "market not found to initialize participation")
+	ErrTranferringDepositorProfit           = sdkerrors.Register(ModuleName, 6028, "error while transfering the loser bat amount and profit to depositor")
 )
 
 // x/strategicreserve module sentinel error text

@@ -72,6 +72,8 @@ var mAccPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName:                    {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:                               {authtypes.Burner},
 	ibctransfertypes.ModuleName:                       {authtypes.Minter, authtypes.Burner},
+	betmoduletypes.BetCollector:                       nil,
+	betmoduletypes.BetFeeCollector:                    nil,
 	strategicreservemoduletypes.SRPoolName:            nil,
 	strategicreservemoduletypes.BetReserveName:        nil,
 	strategicreservemoduletypes.SRProfitName:          nil,
