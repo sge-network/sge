@@ -20,9 +20,6 @@ const (
 	// HouseDepositCollector defines the account name for book liquidity for the bettors
 	HouseDepositCollector = "house_deposit_collector"
 
-	// SRProfitName defines the account name for profit for sr
-	SRProfitName = "sr_profit_pool"
-
 	// BetReserveName defines the account name for storing bet amount
 	BetReserveName = "bet_reserve"
 )

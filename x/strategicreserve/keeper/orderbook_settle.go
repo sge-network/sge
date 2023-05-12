@@ -31,7 +31,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	}
 
 	// settle order book active deposits.
-	allSettled, err := k.batchSettlementOfDeposit(ctx, orderBookUID, toFetch)
+	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, toFetch)
 	if err != nil {
 		return fmt.Errorf("could not settle strategicreserve %s %s", orderBookUID, err)
 	}
@@ -45,8 +45,8 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfDeposit settles active deposits of a strategicreserve
-func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
+// batchSettlementOfParticipation settles active deposits of a strategicreserve
+func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
@@ -56,7 +56,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	}
 	for _, bookParticipation := range bookParticipations {
 		if !bookParticipation.IsSettled {
-			err = k.settleDeposit(ctx, bookParticipation)
+			err = k.settleParticipation(ctx, bookParticipation)
 			if err != nil {
 				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
 					bookParticipation, err)
@@ -72,7 +72,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	return allSettled, nil
 }
 
-func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) error {
+func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation) error {
 	if bp.IsSettled {
 		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
@@ -82,24 +82,11 @@ func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) 
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
-	if depositPlusProfit.LTE(bp.Liquidity) {
-		// transfer amount to depositor address
-		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
-		if err != nil {
-			return err
-		}
-	} else {
-		// transfer initial amount to depositor address
-		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.Liquidity)
-		if err != nil {
-			return err
-		}
 
-		// transfer profit to depositor address
-		err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, bp.ActualProfit)
-		if err != nil {
-			return err
-		}
+	// transfer amount to depositor address
+	err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
+	if err != nil {
+		return err
 	}
 
 	bp.IsSettled = true
