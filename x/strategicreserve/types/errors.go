@@ -35,6 +35,7 @@ var (
 	ErrParticipationOnInactiveMarket        = sdkerrors.Register(ModuleName, 6025, "participation is allowed on an active market only")
 	ErrMarketNotFound                       = sdkerrors.Register(ModuleName, 6026, "market not found to initialize participation")
 	ErrTranferringDepositorProfit           = sdkerrors.Register(ModuleName, 6027, "error while transfering the loser bat amount and profit to depositor")
+	ErrDepositNotFoundForParticipation      = sdkerrors.Register(ModuleName, 6028, "corresponding deposit not found for the participation")
 )
 
 // x/strategicreserve module sentinel error text

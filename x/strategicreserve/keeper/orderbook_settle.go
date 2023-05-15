@@ -7,6 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
+	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
@@ -87,6 +88,26 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 	err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
 	if err != nil {
 		return err
+	}
+
+	if !bp.Liquidity.Equal(bp.CurrentRoundLiquidity) {
+		// get corresponding deposit to extract house fee
+		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
+		if !found {
+			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s %s", err)
+		}
+
+		// this means that this participation is not participated in the bet fulfillment so,
+		// transfer fee from book participation to the feeAccountName
+		err = k.transferFundsFromAccountToModule(
+			ctx,
+			sdk.MustAccAddressFromBech32(bp.ParticipantAddress),
+			housetypes.HouseFeeCollector,
+			deposit.Fee,
+		)
+		if err != nil {
+			return err
+		}
 	}
 
 	bp.IsSettled = true

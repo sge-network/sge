@@ -373,6 +373,8 @@ func NewAppKeeper(
 	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
 
+	appKeepers.StrategicReserveKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
+
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).

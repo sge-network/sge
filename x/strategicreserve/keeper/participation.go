@@ -118,12 +118,6 @@ func (k Keeper) InitiateOrderBookParticipation(
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	// Transfer fee from book participation to the feeAccountName
-	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseFeeCollector, fee)
-	if err != nil {
-		return
-	}
-
 	// Transfer liquidity amount from book participation  to `house_deposit_collector` Account
 	err = k.transferFundsFromAccountToModule(ctx, addr, types.HouseDepositCollector, liquidity)
 	if err != nil {
