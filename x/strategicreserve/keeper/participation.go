@@ -113,8 +113,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 
 	bookParticipation := types.NewOrderBookParticipation(
 		index, book.UID, addr.String(),
-		book.OddsCount, // all of odds need to be filled in the next steps
-		false,
+		book.OddsCount,       // all of odds need to be filled in the next steps
 		liquidity, liquidity, // int the start, liquidity and current round liquidity are the same
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
@@ -173,10 +172,6 @@ func (k Keeper) WithdrawOrderBookParticipation(
 
 	if bp.ParticipantAddress != depositorAddr {
 		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
-	}
-
-	if bp.IsModuleAccount {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
 	}
 
 	// Calculate max amount that can be transferred

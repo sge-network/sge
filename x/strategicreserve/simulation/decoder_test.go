@@ -31,7 +31,6 @@ func TestDecodeStore(t *testing.T) {
 		Index:                      1,
 		OrderBookUID:               orderBookUID,
 		ParticipantAddress:         sample.AccAddress(),
-		IsModuleAccount:            false,
 		Liquidity:                  sdk.NewInt(100),
 		CurrentRoundLiquidity:      sdk.NewInt(50),
 		ExposuresNotFilled:         1,

@@ -30,12 +30,11 @@ var (
 	ErrPayoutLockDoesnotExist               = sdkerrors.Register(ModuleName, 6020, "Payout lock for bet uid %s does not exist")
 	ErrBookParticipationAlreadySettled      = sdkerrors.Register(ModuleName, 6021, "book participation already settled")
 	ErrMismatchInDepositorAddress           = sdkerrors.Register(ModuleName, 6022, "mismatch in depositor address")
-	ErrDepositorIsModuleAccount             = sdkerrors.Register(ModuleName, 6023, "depositor is module account")
-	ErrWithdrawalAmountIsTooLarge           = sdkerrors.Register(ModuleName, 6024, "withdrawal amount more than available amount for withdrawal")
-	ErrMaxWithdrawableAmountIsZero          = sdkerrors.Register(ModuleName, 6025, "maximum withdrawable amount is zero")
-	ErrParticipationOnInactiveMarket        = sdkerrors.Register(ModuleName, 6026, "participation is allowed on an active market only")
-	ErrMarketNotFound                       = sdkerrors.Register(ModuleName, 6027, "market not found to initialize participation")
-	ErrTranferringDepositorProfit           = sdkerrors.Register(ModuleName, 6028, "error while transfering the loser bat amount and profit to depositor")
+	ErrWithdrawalAmountIsTooLarge           = sdkerrors.Register(ModuleName, 6023, "withdrawal amount more than available amount for withdrawal")
+	ErrMaxWithdrawableAmountIsZero          = sdkerrors.Register(ModuleName, 6024, "maximum withdrawable amount is zero")
+	ErrParticipationOnInactiveMarket        = sdkerrors.Register(ModuleName, 6025, "participation is allowed on an active market only")
+	ErrMarketNotFound                       = sdkerrors.Register(ModuleName, 6026, "market not found to initialize participation")
+	ErrTranferringDepositorProfit           = sdkerrors.Register(ModuleName, 6027, "error while transfering the loser bat amount and profit to depositor")
 )
 
 // x/strategicreserve module sentinel error text
