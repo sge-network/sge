@@ -94,7 +94,7 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		// get corresponding deposit to extract house fee
 		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s %s", err)
+			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
 		}
 
 		// this means that this participation is not participated in the bet fulfillment so,

@@ -72,11 +72,11 @@ var mAccPerms = map[string][]string{
 	stakingtypes.NotBondedPoolName:                    {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:                               {authtypes.Burner},
 	ibctransfertypes.ModuleName:                       {authtypes.Minter, authtypes.Burner},
-	betmoduletypes.ModuleName:                         nil,
 	betmoduletypes.BetCollector:                       nil,
 	betmoduletypes.BetFeeCollector:                    nil,
-	strategicreservemoduletypes.HouseDepositCollector: nil,
 	housemoduletypes.HouseFeeCollector:                nil,
+	strategicreservemoduletypes.DataFeeCollector:      nil,
+	strategicreservemoduletypes.HouseDepositCollector: nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,

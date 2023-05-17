@@ -11,12 +11,17 @@ const (
 	// StoreKey is the string store representation
 	StoreKey = ModuleName
 
+	// RouterKey is the message route for strategicreserve
+	RouterKey = ModuleName
+
 	// QuerierRoute defines the module's query routing key
 	QuerierRoute = ModuleName
 )
 
 // module accounts constants
 const (
+	// DataFeeCollector is the module account responsible for the payment of the market manipulation
+	DataFeeCollector = "data_fee_collector"
 	// HouseDepositCollector defines the account name for book liquidity for the bettors
 	HouseDepositCollector = "house_deposit_collector"
 )
