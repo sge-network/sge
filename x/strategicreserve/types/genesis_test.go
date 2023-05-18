@@ -36,7 +36,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				OrderBookUID:       marketUID,
 				Index:              1,
 				ParticipantAddress: testAddress,
-				IsModuleAccount:    true,
 			},
 		},
 		ParticipationExposureList: []types.ParticipationExposure{

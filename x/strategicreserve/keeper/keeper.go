@@ -20,6 +20,7 @@ type Keeper struct {
 	accountKeeper types.AccountKeeper
 	BetKeeper     types.BetKeeper
 	marketKeeper  types.MarketKeeper
+	houseKeeper   types.HouseKeeper
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -57,6 +58,11 @@ func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
 // SetMarketKeeper sets the market module keeper to the order book keeper.
 func (k *Keeper) SetMarketKeeper(marketKeeper types.MarketKeeper) {
 	k.marketKeeper = marketKeeper
+}
+
+// SetMarketKeeper sets the market module keeper to the order book keeper.
+func (k *Keeper) SetHouseKeeper(houseKeeper types.HouseKeeper) {
+	k.houseKeeper = houseKeeper
 }
 
 // Logger returns the logger of the keeper

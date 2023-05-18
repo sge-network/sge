@@ -58,12 +58,18 @@ func (k Keeper) ProcessBetPlacement(
 	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
 	// Transfer bet fee from bettor to the `bet` module account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.ModuleName, betFee); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.BetFeeCollector, betFee); err != nil {
 		return nil, err
 	}
 
-	// Transfer bet amount from bettor to `book_liquidity_pool` Account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityName, fulfiledBetAmount); err != nil {
+	// Transfer bet amount from bettor to `bet_collector` Account
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.BetCollector, fulfiledBetAmount); err != nil {
+		return nil, err
+	}
+
+	payoutPlusBetAmount := betAmount.Add(payoutProfit.TruncateInt())
+	// Transfer bet amount from `house_deposit_collector` to `bet_collector` Account
+	if err = k.transferFundsFromAccountToModule(ctx, k.accountKeeper.GetModuleAddress(types.HouseDepositCollector), bettypes.BetCollector, payoutPlusBetAmount); err != nil {
 		return nil, err
 	}
 

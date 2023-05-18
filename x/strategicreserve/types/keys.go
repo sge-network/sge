@@ -11,23 +11,19 @@ const (
 	// StoreKey is the string store representation
 	StoreKey = ModuleName
 
+	// RouterKey is the message route for strategicreserve
+	RouterKey = ModuleName
+
 	// QuerierRoute defines the module's query routing key
 	QuerierRoute = ModuleName
 )
 
 // module accounts constants
 const (
-	// OrderBookLiquidityName defines the account name for book liquidity for the bettors
-	OrderBookLiquidityName = "book_liquidity_pool"
-
-	// SRProfitName defines the account name for profit for sr
-	SRProfitName = "sr_profit_pool"
-
-	// SRPoolName defines the account name for SR Pool
-	SRPoolName = "sr_pool"
-
-	// BetReserveName defines the account name for storing bet amount
-	BetReserveName = "bet_reserve"
+	// DataFeeCollector is the module account responsible for the payment of the market manipulation
+	DataFeeCollector = "data_fee_collector"
+	// HouseDepositCollector defines the account name for book liquidity for the bettors
+	HouseDepositCollector = "house_deposit_collector"
 )
 
 var (

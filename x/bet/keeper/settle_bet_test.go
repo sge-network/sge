@@ -76,12 +76,11 @@ func TestSettleBet(t *testing.T) {
 				OddsUID:   testOddsUID1,
 			},
 			updateMarket: &markettypes.Market{
-				UID:                    testMarketUID,
-				Creator:                testCreator,
-				StartTS:                1111111111,
-				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testMarketOdds,
-				SrContributionForHouse: sdk.NewInt(500000),
+				UID:     testMarketUID,
+				Creator: testCreator,
+				StartTS: 1111111111,
+				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:    testMarketOdds,
 
 				Status: markettypes.MarketStatus_MARKET_STATUS_ABORTED,
 			},
@@ -97,12 +96,11 @@ func TestSettleBet(t *testing.T) {
 				OddsUID:   testOddsUID1,
 			},
 			updateMarket: &markettypes.Market{
-				UID:                    testMarketUID,
-				Creator:                testCreator,
-				StartTS:                1111111111,
-				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testMarketOdds,
-				SrContributionForHouse: sdk.NewInt(500000),
+				UID:     testMarketUID,
+				Creator: testCreator,
+				StartTS: 1111111111,
+				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:    testMarketOdds,
 
 				Status: markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 			},
@@ -118,12 +116,11 @@ func TestSettleBet(t *testing.T) {
 				OddsUID:   testOddsUID1,
 			},
 			updateMarket: &markettypes.Market{
-				UID:                    testMarketUID,
-				Creator:                testCreator,
-				StartTS:                1111111111,
-				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testMarketOdds,
-				SrContributionForHouse: sdk.NewInt(500000),
+				UID:     testMarketUID,
+				Creator: testCreator,
+				StartTS: 1111111111,
+				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:    testMarketOdds,
 
 				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
@@ -142,12 +139,11 @@ func TestSettleBet(t *testing.T) {
 				Result: types.Bet_RESULT_WON,
 			},
 			updateMarket: &markettypes.Market{
-				UID:                    testMarketUID,
-				Creator:                testCreator,
-				StartTS:                1111111111,
-				EndTS:                  uint64(ctx.BlockTime().Unix()) + 1000,
-				Odds:                   testMarketOdds,
-				SrContributionForHouse: sdk.NewInt(500000),
+				UID:     testMarketUID,
+				Creator: testCreator,
+				StartTS: 1111111111,
+				EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
+				Odds:    testMarketOdds,
 
 				Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
@@ -170,9 +166,20 @@ func TestSettleBet(t *testing.T) {
 						MinAmount: sdk.NewInt(1),
 						BetFee:    sdk.NewInt(1),
 					},
-					SrContributionForHouse: sdk.NewInt(500000),
 				}
 				tApp.MarketKeeper.SetMarket(ctx, resetMarket)
+
+				if resetMarket.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
+					_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+						ctx,
+						simappUtil.TestParamUsers["user1"].Address,
+						resetMarket.UID,
+						sdk.NewInt(10000000),
+						sdk.NewInt(1),
+					)
+					require.NoError(t, err)
+				}
+
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
@@ -226,6 +233,15 @@ func TestBatchSettleBet(t *testing.T) {
 			BetFee:    sdk.NewInt(1),
 		}
 		tApp.MarketKeeper.SetMarket(ctx, market)
+
+		_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+			ctx,
+			simappUtil.TestParamUsers["user1"].Address,
+			market.UID,
+			sdk.NewInt(10000000),
+			sdk.NewInt(1),
+		)
+		require.NoError(t, err)
 
 		for i := 0; i < marketBetCount; i++ {
 			placeTestBet(ctx, t, tApp,

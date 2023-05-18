@@ -7,6 +7,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
+	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
@@ -31,7 +32,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	}
 
 	// settle order book active deposits.
-	allSettled, err := k.batchSettlementOfDeposit(ctx, orderBookUID, toFetch)
+	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, toFetch)
 	if err != nil {
 		return fmt.Errorf("could not settle strategicreserve %s %s", orderBookUID, err)
 	}
@@ -45,8 +46,8 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfDeposit settles active deposits of a strategicreserve
-func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
+// batchSettlementOfParticipation settles active deposits of a strategicreserve
+func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
@@ -56,7 +57,7 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	}
 	for _, bookParticipation := range bookParticipations {
 		if !bookParticipation.IsSettled {
-			err = k.settleDeposit(ctx, bookParticipation)
+			err = k.settleParticipation(ctx, bookParticipation)
 			if err != nil {
 				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
 					bookParticipation, err)
@@ -72,58 +73,43 @@ func (k Keeper) batchSettlementOfDeposit(ctx sdk.Context, orderBookUID string, c
 	return allSettled, nil
 }
 
-func (k Keeper) settleDeposit(ctx sdk.Context, bp types.OrderBookParticipation) error {
+func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation) error {
 	if bp.IsSettled {
 		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
 
-	if bp.IsModuleAccount {
-		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		if depositPlusProfit.LTE(bp.Liquidity) {
-			// transfer amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, depositPlusProfit)
-			if err != nil {
-				return err
-			}
-		} else {
-			// transfer initial amount to `sr_pool` module account
-			err := k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRPoolName, bp.Liquidity)
-			if err != nil {
-				return err
-			}
+	depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+	}
 
-			// transfer profit to `sr_profit_pool` module account
-			err = k.transferFundsFromModuleToModule(ctx, types.OrderBookLiquidityName, types.SRProfitName, bp.ActualProfit)
-			if err != nil {
-				return err
-			}
+	// transfer amount to depositor address
+	err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
+	if err != nil {
+		return err
+	}
+
+	if !bp.Liquidity.Equal(bp.CurrentRoundLiquidity) {
+		// get corresponding deposit to extract house fee
+		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
+		if !found {
+			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
 		}
-	} else {
-		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
+
+		// this means that this participation is not participated in the bet fulfillment so,
+		// transfer fee from book participation to the feeAccountName
+		err = k.transferFundsFromAccountToModule(
+			ctx,
+			sdk.MustAccAddressFromBech32(bp.ParticipantAddress),
+			housetypes.HouseFeeCollector,
+			deposit.Fee,
+		)
 		if err != nil {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
-		}
-		if depositPlusProfit.LTE(bp.Liquidity) {
-			// transfer amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, depositPlusProfit)
-			if err != nil {
-				return err
-			}
-		} else {
-			// transfer initial amount to depositor address
-			err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.Liquidity)
-			if err != nil {
-				return err
-			}
-
-			// transfer profit to depositor address
-			err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, bp.ActualProfit)
-			if err != nil {
-				return err
-			}
+			return err
 		}
 	}
+
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 	return nil

@@ -22,7 +22,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// transfer bet amount from `bet_reserve` to bettor's account.
-	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betAmount)
+	err = k.transferFundsFromModuleToAccount(ctx, bettypes.BetCollector, bettorAddress, betAmount)
 	if err != nil {
 		return
 	}
@@ -56,14 +56,9 @@ func (k Keeper) BettorWins(
 			return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", orderBookUID, betFulfillment.ParticipationIndex)
 		}
 
-		// transfer payout from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.PayoutProfit)
-		if err != nil {
-			return
-		}
-
-		// transfer bet amount from the `book_liquidity_pool` account to bettor
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, bettorAddress, betFulfillment.BetAmount)
+		total := betFulfillment.PayoutProfit.Add(betFulfillment.BetAmount)
+		// transfer bet amount and expected payout from the `bet_collector` account to bettor
+		err = k.transferFundsFromModuleToAccount(ctx, bettypes.BetCollector, bettorAddress, total)
 		if err != nil {
 			return
 		}

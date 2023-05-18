@@ -45,7 +45,6 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, sdk.NewInt(1000000), marketGenesis.Params.MinBetAmount)
 	require.Equal(t, sdk.NewInt(0), marketGenesis.Params.MinBetFee)
 	require.Equal(t, sdk.NewInt(100), marketGenesis.Params.MaxBetFee)
-	require.Equal(t, sdk.NewInt(10000000), marketGenesis.Params.MaxSrContribution)
 }
 
 // TestRandomizedGenState tests abnormal scenarios of applying RandomizedGenState.

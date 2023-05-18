@@ -37,6 +37,7 @@ import (
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
+	strategicreserveclient "github.com/sge-network/sge/x/strategicreserve/client"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -58,6 +59,7 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 		upgradeclient.CancelProposalHandler,
 		ibcclientHandlers.UpdateClientProposalHandler,
 		ibcclientHandlers.UpgradeProposalHandler,
+		strategicreserveclient.DataFeeCollectorFeedProposalHandler,
 	)
 
 	return govProposalHandlers

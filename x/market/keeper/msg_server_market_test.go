@@ -77,15 +77,14 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 
 	t.Run("pre existing uid", func(t *testing.T) {
 		validEmptyTicketClaims := jwt.MapClaims{
-			"uid":                       u1,
-			"start_ts":                  uint64(time.Now().Add(time.Minute).Unix()),
-			"end_ts":                    uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds":                      []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
-			"exp":                       9999999999,
-			"iat":                       1111111111,
-			"meta":                      "Winner of x:y",
-			"sr_contribution_for_house": "2",
-			"status":                    types.MarketStatus_MARKET_STATUS_ACTIVE,
+			"uid":      u1,
+			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
+			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
+			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
+			"exp":      9999999999,
+			"iat":      1111111111,
+			"meta":     "Winner of x:y",
+			"status":   types.MarketStatus_MARKET_STATUS_ACTIVE,
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
@@ -200,9 +199,8 @@ func TestValidateCreationMarket(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Meta:                   "Winner of x:y",
-				SrContributionForHouse: sdk.NewInt(2),
-				Status:                 types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "Winner of x:y",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 		},
 		{
@@ -318,11 +316,10 @@ func TestValidateCreationMarket(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				MinBetAmount:           params.MinBetAmount,
-				BetFee:                 params.MinBetFee,
-				Meta:                   "Winner of x:y",
-				SrContributionForHouse: sdk.NewInt(2),
-				Status:                 types.MarketStatus_MARKET_STATUS_ACTIVE,
+				MinBetAmount: params.MinBetAmount,
+				BetFee:       params.MinBetFee,
+				Meta:         "Winner of x:y",
+				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 		},
 		{

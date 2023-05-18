@@ -278,7 +278,8 @@ func NewAppKeeper(
 		AddRoute(paramproposal.RouterKey, params.NewParamChangeProposalHandler(appKeepers.ParamsKeeper)).
 		AddRoute(distrtypes.RouterKey, distr.NewCommunityPoolSpendProposalHandler(appKeepers.DistrKeeper)).
 		AddRoute(upgradetypes.RouterKey, upgrade.NewSoftwareUpgradeProposalHandler(appKeepers.UpgradeKeeper)).
-		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper))
+		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(appKeepers.IBCKeeper.ClientKeeper)).
+		AddRoute(strategicreservemoduletypes.RouterKey, strategicreservemodule.NewDataFeeCollectorFeedProposalHandler(appKeepers.StrategicReserveKeeper))
 
 	appKeepers.GovKeeper = govkeeper.NewKeeper(
 		appCodec,
@@ -372,6 +373,8 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(housemoduletypes.ModuleName),
 	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
+
+	appKeepers.StrategicReserveKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()

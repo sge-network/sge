@@ -10,7 +10,7 @@ import (
 //nolint:interfacer
 func NewOrderBookParticipation(
 	index uint64, orderBookUID string, participantAddress string,
-	exposuresNotFilled uint64, isModuleAccount bool,
+	exposuresNotFilled uint64,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
 	currentRoundMaxLossOddsUID string, actualProfit sdk.Int,
 ) OrderBookParticipation {
@@ -18,7 +18,6 @@ func NewOrderBookParticipation(
 		Index:                      index,
 		OrderBookUID:               orderBookUID,
 		ParticipantAddress:         participantAddress,
-		IsModuleAccount:            isModuleAccount,
 		Liquidity:                  liquidity,
 		CurrentRoundLiquidity:      currentRoundLiquidity,
 		ExposuresNotFilled:         exposuresNotFilled,

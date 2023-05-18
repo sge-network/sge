@@ -113,20 +113,13 @@ func (k Keeper) InitiateOrderBookParticipation(
 
 	bookParticipation := types.NewOrderBookParticipation(
 		index, book.UID, addr.String(),
-		book.OddsCount, // all of odds need to be filled in the next steps
-		false,
+		book.OddsCount,       // all of odds need to be filled in the next steps
 		liquidity, liquidity, // int the start, liquidity and current round liquidity are the same
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	// Transfer fee from book participation to the feeAccountName
-	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseParticipationFeeName, fee)
-	if err != nil {
-		return
-	}
-
-	// Transfer liquidity amount from book participation  to `book_liquidity_pool` Account
-	err = k.transferFundsFromAccountToModule(ctx, addr, types.OrderBookLiquidityName, liquidity)
+	// Transfer liquidity amount from book participation  to `house_deposit_collector` Account
+	err = k.transferFundsFromAccountToModule(ctx, addr, types.HouseDepositCollector, liquidity)
 	if err != nil {
 		return
 	}
@@ -175,10 +168,6 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
 	}
 
-	if bp.IsModuleAccount {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
-	}
-
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
 
@@ -188,7 +177,7 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
 			return sdk.Int{}, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity, bp.CurrentRoundMaxLoss)
 		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, maxTransferableAmount)
+		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, maxTransferableAmount)
 		if err != nil {
 			return sdk.Int{}, err
 		}
@@ -197,7 +186,7 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		if maxTransferableAmount.LT(amount) {
 			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
 		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, amount)
+		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, amount)
 		if err != nil {
 			return sdk.Int{}, err
 		}

@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -28,4 +29,9 @@ type BetKeeper interface {
 // MarketKeeper defines the expected market keeper methods.
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (val markettypes.Market, found bool)
+}
+
+// MarketKeeper defines the expected market keeper methods.
+type HouseKeeper interface {
+	GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val housetypes.Deposit, found bool)
 }
