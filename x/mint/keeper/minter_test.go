@@ -11,19 +11,19 @@ import (
 func TestTokenSupply(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	tokenSupply := k.TokenSupply(ctx, params.DefaultBondDenom)
-	require.Equal(t, int64(150010020200000), tokenSupply.Int64())
+	require.Equal(t, int64(20020000000), tokenSupply.Int64())
 }
 
 func TestStakingTokenSupply(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	tokenSupply := k.StakingTokenSupply(ctx)
-	require.Equal(t, int64(150010020200000), tokenSupply.Int64())
+	require.Equal(t, int64(20020000000), tokenSupply.Int64())
 }
 
 func TestBondedRatio(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	bondedRatio := k.BondedRatio(ctx)
-	expectedBondedRatio, _ := sdk.NewDecFromStr("0.000000066662213541")
+	expectedBondedRatio, _ := sdk.NewDecFromStr("0.000499500499500499")
 	require.Equal(t, expectedBondedRatio, bondedRatio)
 }
 
@@ -35,5 +35,5 @@ func TestMintCoins(t *testing.T) {
 
 	totalSupply := k.TokenSupply(ctx, params.DefaultBondDenom)
 	totalSupply = totalSupply.Add(sdk.NewInt(mintAmount))
-	require.Equal(t, int64(150010020200200), totalSupply.Int64())
+	require.Equal(t, int64(20020000200), totalSupply.Int64())
 }

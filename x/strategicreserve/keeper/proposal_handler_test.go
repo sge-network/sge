@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
-	"github.com/sge-network/sge/testutil/simapp"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/strategicreserve"
@@ -32,15 +32,16 @@ func TestProposalHandlerPassed(t *testing.T) {
 
 	// add coins to the module account
 	houseFeeMacc := tApp.AccountKeeper.GetModuleAccount(ctx, housetypes.HouseFeeCollector)
-	require.NoError(t, simapp.FundModuleAccount(tApp, ctx, houseFeeMacc.GetName(), houseFeeSpend))
+	require.NoError(t, simappUtil.FundModuleAccount(tApp, ctx, houseFeeMacc.GetName(), houseFeeSpend))
 	tApp.AccountKeeper.SetModuleAccount(ctx, houseFeeMacc)
 
 	betFeeMacc := tApp.AccountKeeper.GetModuleAccount(ctx, bettypes.BetFeeCollector)
-	require.NoError(t, simapp.FundModuleAccount(tApp, ctx, betFeeMacc.GetName(), betFeeSpend))
+	require.NoError(t, simappUtil.FundModuleAccount(tApp, ctx, betFeeMacc.GetName(), betFeeSpend))
 	tApp.AccountKeeper.SetModuleAccount(ctx, betFeeMacc)
 
 	dataFeeMacc := tApp.AccountKeeper.GetModuleAccount(ctx, types.DataFeeCollector)
-	require.True(t, tApp.BankKeeper.GetBalance(ctx, dataFeeMacc.GetAddress(), params.BaseCoinUnit).IsZero())
+	dataFeeMaccInitBalance := tApp.BankKeeper.GetBalance(ctx, dataFeeMacc.GetAddress(), params.BaseCoinUnit).Amount
+	require.Equal(t, dataFeeMaccInitBalance.Int64(), simappUtil.GenesisModuleAccountsBalances[types.DataFeeCollector])
 
 	tp := testProposal()
 	hdlr := strategicreserve.NewDataFeeCollectorFeedProposalHandler(tApp.StrategicReserveKeeper)
@@ -49,7 +50,7 @@ func TestProposalHandlerPassed(t *testing.T) {
 	balance := tApp.BankKeeper.GetBalance(ctx, dataFeeMacc.GetAddress(), params.BaseCoinUnit)
 	require.Equal(t,
 		balance.Amount,
-		houseFeeSpend.AmountOf(params.BaseCoinUnit).Add(betFeeSpend.AmountOf(params.BaseCoinUnit)),
+		dataFeeMaccInitBalance.Add(houseFeeSpend.AmountOf(params.BaseCoinUnit).Add(betFeeSpend.AmountOf(params.BaseCoinUnit))),
 	)
 }
 
@@ -58,11 +59,12 @@ func TestProposalHandlerFailed(t *testing.T) {
 
 	// add coins to the module account
 	houseFeeMacc := tApp.AccountKeeper.GetModuleAccount(ctx, housetypes.HouseFeeCollector)
-	require.NoError(t, simapp.FundModuleAccount(tApp, ctx, houseFeeMacc.GetName(), houseFeeSpend))
+	require.NoError(t, simappUtil.FundModuleAccount(tApp, ctx, houseFeeMacc.GetName(), houseFeeSpend))
 	tApp.AccountKeeper.SetModuleAccount(ctx, houseFeeMacc)
 
 	dataFeeMacc := tApp.AccountKeeper.GetModuleAccount(ctx, types.DataFeeCollector)
-	require.True(t, tApp.BankKeeper.GetBalance(ctx, dataFeeMacc.GetAddress(), params.BaseCoinUnit).IsZero())
+	dataFeeMaccInitBalance := tApp.BankKeeper.GetBalance(ctx, dataFeeMacc.GetAddress(), params.BaseCoinUnit).Amount
+	require.Equal(t, dataFeeMaccInitBalance.Int64(), simappUtil.GenesisModuleAccountsBalances[types.DataFeeCollector])
 
 	tp := testProposal()
 	hdlr := strategicreserve.NewDataFeeCollectorFeedProposalHandler(tApp.StrategicReserveKeeper)

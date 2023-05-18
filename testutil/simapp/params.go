@@ -5,6 +5,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	strategicreservetypes "github.com/sge-network/sge/x/strategicreserve/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 )
 
@@ -40,3 +41,8 @@ var (
 	// TestOVMPrivateKeys represents test private keys needed for ovm
 	TestOVMPrivateKeys []ed25519.PrivateKey
 )
+
+// GenesisModuleAccountsBalances holds the test genesis module accounts balance map.
+var GenesisModuleAccountsBalances = map[string]int64{
+	strategicreservetypes.DataFeeCollector: 10000000000,
+}
