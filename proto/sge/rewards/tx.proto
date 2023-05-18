@@ -1,7 +1,40 @@
 syntax = "proto3";
+
 package sgenetwork.sge.rewards;
 
 option go_package = "github.com/sge-network/sge/x/rewards/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc RewardUser (MsgRewardUser) returns (MsgRewardUserResponse);
+}
+
+
+message MsgRewardUser {
+  Reward reward = 1;
+  string ticket = 2;
+  string creator = 5;
+}
+
+message MsgRewardUserResponse {
+  Reward reward = 1;
+}
+
+message Awardee {
+  string address = 1;
+  uint64 amount = 2;
+}
+
+
+enum RewardType {
+  REFERRAL = 0;
+  MARKETING = 1;
+}
+
+message Reward {
+  repeated Awardee awardees = 1;
+  RewardType rewardType = 2;
+  string incentiveId = 3;
+  map<string, string> meta = 4;
+}
+
