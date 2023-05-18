@@ -1,0 +1,12 @@
+syntax = "proto3";
+package sgenetwork.sge.rewards;
+
+import "gogoproto/gogo.proto";
+import "sge/rewards/params.proto";
+
+option go_package = "github.com/sge-network/sge/x/rewards/types";
+
+// GenesisState defines the rewards module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+}
