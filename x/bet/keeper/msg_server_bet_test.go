@@ -153,6 +153,15 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		err = tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, marketItem.UID, oddsUIDs)
 		require.NoError(t, err)
 
+		_, err = tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+			ctx,
+			simappUtil.TestParamUsers["user1"].Address,
+			marketItem.UID,
+			sdk.NewInt(10000000),
+			sdk.NewInt(1),
+		)
+		require.NoError(t, err)
+
 		_, err = msgk.PlaceBet(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found := k.GetBet(ctx,

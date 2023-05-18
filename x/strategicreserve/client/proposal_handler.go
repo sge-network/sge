@@ -9,17 +9,15 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/client/cli"
 )
 
-var (
-	// DataFeeCollectorFeedProposalHandler is the data fee collecttor feed handler.
-	DataFeeCollectorFeedProposalHandler = govclient.NewProposalHandler(
-		cli.CmdSubmitProposal,
-		func(ctx client.Context) govrest.ProposalRESTHandler {
-			return govrest.ProposalRESTHandler{
-				SubRoute: "data-fee-collector-fund",
-				Handler:  emptyHandler(ctx),
-			}
-		},
-	)
+// DataFeeCollectorFeedProposalHandler is the data fee collecttor feed handler.
+var DataFeeCollectorFeedProposalHandler = govclient.NewProposalHandler(
+	cli.CmdSubmitProposal,
+	func(ctx client.Context) govrest.ProposalRESTHandler {
+		return govrest.ProposalRESTHandler{
+			SubRoute: "data-fee-collector-fund",
+			Handler:  emptyHandler(ctx),
+		}
+	},
 )
 
 func emptyHandler(clientCtx client.Context) http.HandlerFunc {

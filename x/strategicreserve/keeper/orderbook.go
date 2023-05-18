@@ -62,10 +62,16 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, oddsUIDs []
 	// create new active book object
 	orderBook = types.NewOrderBook(
 		orderBookUID,
-		2, // sr participation is made in two tranches to solve the reordering issue
+		0,
 		uint64(len(oddsUIDs)),
 		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
 	)
+
+	// Add book exposures
+	for _, oddsUID := range oddsUIDs {
+		boe := types.NewOrderBookOddsExposure(orderBook.UID, oddsUID, []uint64{})
+		k.SetOrderBookOddsExposure(ctx, boe)
+	}
 
 	k.SetOrderBook(ctx, orderBook)
 

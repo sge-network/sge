@@ -168,6 +168,18 @@ func TestSettleBet(t *testing.T) {
 					},
 				}
 				tApp.MarketKeeper.SetMarket(ctx, resetMarket)
+
+				if resetMarket.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
+					_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+						ctx,
+						simappUtil.TestParamUsers["user1"].Address,
+						resetMarket.UID,
+						sdk.NewInt(10000000),
+						sdk.NewInt(1),
+					)
+					require.NoError(t, err)
+				}
+
 				tc.bet.UID = betUID
 				placeTestBet(ctx, t, tApp, betUID, nil)
 				k.SetBet(ctx, *tc.bet, 1)
@@ -221,6 +233,15 @@ func TestBatchSettleBet(t *testing.T) {
 			BetFee:    sdk.NewInt(1),
 		}
 		tApp.MarketKeeper.SetMarket(ctx, market)
+
+		_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+			ctx,
+			simappUtil.TestParamUsers["user1"].Address,
+			market.UID,
+			sdk.NewInt(10000000),
+			sdk.NewInt(1),
+		)
+		require.NoError(t, err)
 
 		for i := 0; i < marketBetCount; i++ {
 			placeTestBet(ctx, t, tApp,

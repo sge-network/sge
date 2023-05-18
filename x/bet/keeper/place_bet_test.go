@@ -194,6 +194,17 @@ func TestPlaceBet(t *testing.T) {
 				}
 				err := tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, tc.market.UID, oddsUIDs)
 				require.NoError(t, err)
+
+				if tc.market.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
+					_, err = tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+						ctx,
+						simappUtil.TestParamUsers["user1"].Address,
+						tc.market.UID,
+						sdk.NewInt(10000000),
+						sdk.NewInt(1),
+					)
+					require.NoError(t, err)
+				}
 			}
 
 			err := k.PlaceBet(ctx, tc.bet)
