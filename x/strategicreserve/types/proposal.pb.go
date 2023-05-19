@@ -65,8 +65,8 @@ func (m *DataFeeCollectorFeedProposal) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DataFeeCollectorFeedProposal proto.InternalMessageInfo
 
-// DataFeeCollectorFeedProposalWithDeposit defines a DataFeeCollectorFeedProposal
-// with a deposit
+// DataFeeCollectorFeedProposalWithDeposit defines a
+// DataFeeCollectorFeedProposal with a deposit
 type DataFeeCollectorFeedProposalWithDeposit struct {
 	Title         string                                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
