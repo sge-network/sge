@@ -50,6 +50,7 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	rewardsmodule "github.com/sge-network/sge/x/rewards"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -110,6 +111,7 @@ type AppKeepers struct {
 	BetModule              betmodule.AppModule
 	StrategicReserveModule strategicreservemodule.AppModule
 	HouseModule            housemodule.AppModule
+	RewardModule           rewardsmodule.AppModule
 
 	// modules
 	ICAModule      ica.AppModule

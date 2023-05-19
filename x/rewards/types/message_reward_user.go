@@ -43,3 +43,13 @@ func (msg *MsgRewardUser) ValidateBasic() error {
 	}
 	return nil
 }
+
+func (msg *MsgRewardUser) ValidateSanity(ctx sdk.Context, p *Params) error {
+	err := msg.ValidateBasic()
+	if err != nil {
+		return err
+	}
+
+	// TODO Check for total awardees, their sum limit
+	return nil
+}

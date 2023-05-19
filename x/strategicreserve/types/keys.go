@@ -28,6 +28,8 @@ const (
 
 	// BetReserveName defines the account name for storing bet amount
 	BetReserveName = "bet_reserve"
+
+	IncentiveReservePool = "incentive_reserve"
 )
 
 var (

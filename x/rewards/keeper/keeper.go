@@ -18,6 +18,8 @@ type (
 		storeKey   storetypes.StoreKey
 		memKey     storetypes.StoreKey
 		paramstore paramtypes.Subspace
+		srKeeper   types.SRKeeper
+		ovmKeeper  types.OVMKeeper
 	}
 )
 
@@ -26,7 +28,8 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
-
+	srKeeper types.SRKeeper,
+	ovmKeeper types.OVMKeeper,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -38,6 +41,8 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramstore: ps,
+		srKeeper:   srKeeper,
+		ovmKeeper:  ovmKeeper,
 	}
 }
 

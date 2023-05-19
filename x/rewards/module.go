@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+
 	// this line is used by starport scaffolding # 1
 
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
@@ -33,6 +35,11 @@ var (
 // AppModuleBasic implements the AppModuleBasic interface that defines the independent methods a Cosmos SDK module needs to implement.
 type AppModuleBasic struct {
 	cdc codec.BinaryCodec
+}
+
+func (a AppModuleBasic) RegisterRESTRoutes(c client.Context, router *mux.Router) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic {
@@ -94,6 +101,11 @@ type AppModule struct {
 	keeper        keeper.Keeper
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
+}
+
+func (am AppModule) RegisterRESTRoutes(c client.Context, router *mux.Router) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewAppModule(
