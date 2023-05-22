@@ -25,3 +25,5 @@
 
 # ignore visual studio code dev container config
 .devcontainer
+
+public-keys.json

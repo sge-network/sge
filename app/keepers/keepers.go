@@ -50,7 +50,6 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
-	rewardsmodule "github.com/sge-network/sge/x/rewards"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -67,6 +66,10 @@ import (
 	housemodule "github.com/sge-network/sge/x/house"
 	housemodulekeeper "github.com/sge-network/sge/x/house/keeper"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
+
+	rewardsmodule "github.com/sge-network/sge/x/rewards"
+	rewardsmodulekeeper "github.com/sge-network/sge/x/rewards/keeper"
+	rewardsmoduletypes "github.com/sge-network/sge/x/rewards/types"
 
 	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
 	strategicreservemodulekeeper "github.com/sge-network/sge/x/strategicreserve/keeper"
@@ -107,11 +110,12 @@ type AppKeepers struct {
 	OVMKeeper              ovmmodulekeeper.Keeper
 	StrategicReserveKeeper strategicreservemodulekeeper.Keeper
 	HouseKeeper            housemodulekeeper.Keeper
+	RewardsKeeper          rewardsmodulekeeper.Keeper
 	MarketModule           marketmodule.AppModule
 	BetModule              betmodule.AppModule
 	StrategicReserveModule strategicreservemodule.AppModule
 	HouseModule            housemodule.AppModule
-	RewardModule           rewardsmodule.AppModule
+	RewardsModule          rewardsmodule.AppModule
 
 	// modules
 	ICAModule      ica.AppModule
@@ -375,6 +379,15 @@ func NewAppKeeper(
 	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
 
+	appKeepers.RewardsKeeper = *rewardsmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[rewardsmoduletypes.StoreKey],
+		appKeepers.GetSubspace(rewardsmoduletypes.ModuleName),
+		appKeepers.StrategicReserveKeeper,
+		appKeepers.OVMKeeper)
+
+	appKeepers.RewardsModule = rewardsmodule.NewAppModule(appCodec, appKeepers.RewardsKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
+
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
@@ -416,6 +429,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(strategicreservemoduletypes.ModuleName)
 	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
+	paramsKeeper.Subspace(rewardsmoduletypes.ModuleName)
 
 	return paramsKeeper
 }
