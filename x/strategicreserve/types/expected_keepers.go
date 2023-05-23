@@ -1,7 +1,10 @@
 package types
 
 import (
+	context "context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkfeegrant "github.com/cosmos/cosmos-sdk/x/feegrant"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -34,4 +37,15 @@ type MarketKeeper interface {
 // MarketKeeper defines the expected market keeper methods.
 type HouseKeeper interface {
 	GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val housetypes.Deposit, found bool)
+}
+
+// OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
+type OVMKeeper interface {
+	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
+}
+
+// FeeGrantKeeper defines the expected interface needed for the fee grant.
+type FeeGrantKeeper interface {
+	GrantAllowance(ctx sdk.Context, granter, grantee sdk.AccAddress, feeAllowance sdkfeegrant.FeeAllowanceI) error
+	GetAllowance(ctx sdk.Context, granter, grantee sdk.AccAddress) (sdkfeegrant.FeeAllowanceI, error)
 }

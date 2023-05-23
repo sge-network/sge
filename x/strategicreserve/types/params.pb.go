@@ -30,7 +30,8 @@ type Params struct {
 	MaxOrderBookParticipations uint64 `protobuf:"varint,1,opt,name=max_order_book_participations,json=maxOrderBookParticipations,proto3" json:"max_order_book_participations,omitempty" yaml:"max_order_book_participations"`
 	// batch_settlement_count is the batch settlement deposit count.
 	BatchSettlementCount uint64 `protobuf:"varint,2,opt,name=batch_settlement_count,json=batchSettlementCount,proto3" json:"batch_settlement_count,omitempty" yaml:"batch_settlement_count"`
-	// requeue_threshold is the threshold at which a participation is requeued in orderbook.
+	// requeue_threshold is the threshold at which a participation is requeued in
+	// orderbook.
 	RequeueThreshold uint64 `protobuf:"varint,3,opt,name=requeue_threshold,json=requeueThreshold,proto3" json:"requeue_threshold,omitempty" yaml:"requeue_threshold"`
 }
 
