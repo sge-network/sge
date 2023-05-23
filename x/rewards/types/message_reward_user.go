@@ -1,18 +1,65 @@
 package types
 
 import (
+	"encoding/json"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"strconv"
+	"strings"
 )
 
 const TypeMsgRewardUser = "reward_user"
 
 var _ sdk.Msg = &MsgRewardUser{}
 
-func NewMsgRewardUser(creator string) *MsgRewardUser {
+func NewMsgRewardUser(creator string, addresses string, amounts string, rType string, meta string, incentiveId string) (
+	*MsgRewardUser, error) {
+	addressList := strings.Split(addresses, ",")
+	amountList, err := mapStringsToInts(strings.Split(amounts, ","))
+	if err != nil {
+		return nil, err
+	}
+	if len(addressList) != len(amountList) {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "unequal amounts and addresses (%s) (%s)", addressList, amountList)
+	}
+	var metaData map[string]string
+	err = json.Unmarshal([]byte(meta), &metaData)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "Invalid Meta (%s)", meta)
+	}
+	rewards := Reward{
+		Awardees:    getAwardeesList(addressList, amountList),
+		RewardType:  RewardType(RewardType_value[rType]),
+		Meta:        metaData,
+		IncentiveId: incentiveId,
+	}
 	return &MsgRewardUser{
 		Creator: creator,
+		Reward:  &rewards,
+	}, nil
+}
+
+func getAwardeesList(addressList []string, amountList []int) []*Awardee {
+	var awardees []*Awardee
+	for i := 0; i < len(addressList); i++ {
+		awardees = append(awardees, &Awardee{
+			Address: addressList[i],
+			Amount:  uint64(amountList[i]),
+		})
 	}
+	return awardees
+}
+
+func mapStringsToInts(strList []string) ([]int, error) {
+	var err error
+	intList := make([]int, len(strList))
+	for i, str := range strList {
+		intList[i], err = strconv.Atoi(str)
+		if err != nil {
+			return intList, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "invalid integer string (%s)", err)
+		}
+	}
+	return intList, nil
 }
 
 func (msg *MsgRewardUser) Route() string {
