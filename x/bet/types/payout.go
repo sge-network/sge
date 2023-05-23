@@ -53,6 +53,26 @@ func CalculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec)
 	return betAmount, nil
 }
 
+// CalculateBetAmountInt calculates the amount of bet according to bet odds value and payout profit
+// and returns the int and the truncated decimal part.
+func CalculateBetAmountInt(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec, truncatedBetAmount sdk.Dec) (sdk.Int, sdk.Dec, error) {
+	expectedBetAmountDec, err := CalculateBetAmount(oddsType, oddsVal, payoutProfit)
+	if err != nil {
+		return sdk.Int{}, sdk.Dec{}, err
+	}
+	// add previous loop truncated value to the calculated bet amount
+	expectedBetAmountDec = expectedBetAmountDec.Add(truncatedBetAmount)
+
+	// we need for the bet amount to be of type sdk.Int
+	// so the truncation in inevitable
+	betAmount := expectedBetAmountDec.TruncateInt()
+
+	// save the truncated amount in the calculations for the next loop
+	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(betAmount.ToDec()))
+
+	return betAmount, truncatedBetAmount, nil
+}
+
 // calculateBetAmount calculates the amount of bet according to bet odds value and payoutProfit
 func calculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	var oType OddsTypeI

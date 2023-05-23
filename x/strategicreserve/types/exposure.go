@@ -40,6 +40,19 @@ func NewParticipationExposure(orderBookUID, oddsUID string, exposure, betAmount 
 	}
 }
 
+// NextRound returns the next round participation object extracted from the current round properties.
+func (pe ParticipationExposure) NextRound() ParticipationExposure {
+	return NewParticipationExposure(
+		pe.OrderBookUID,
+		pe.OddsUID,
+		sdk.ZeroInt(),
+		sdk.ZeroInt(),
+		pe.ParticipationIndex,
+		pe.Round+1,
+		false,
+	)
+}
+
 // String returns a human readable string representation of a participationExposure.
 func (pe ParticipationExposure) String() string {
 	out, err := yaml.Marshal(pe)
@@ -49,10 +62,17 @@ func (pe ParticipationExposure) String() string {
 	return string(out)
 }
 
-// CalculateMaxLoss calculates the maximum amount of loss for an exposure
+// calculateMaxLoss calculates the maximum amount of loss for an exposure
 // according to the bet amount.
-func (pe ParticipationExposure) CalculateMaxLoss(totalBetAmount sdk.Int) sdk.Int {
-	return pe.Exposure.
-		Sub(totalBetAmount).
-		Add(pe.BetAmount)
+func (pe ParticipationExposure) calculateMaxLoss(totalBetAmount sdk.Int) sdk.Int {
+	return pe.Exposure.Add(pe.BetAmount).Sub(totalBetAmount)
+}
+
+// SetCurrentRound sets the current round bet amount and payout profit.
+func (pe *ParticipationExposure) SetCurrentRound(betAmount, payoutProfit sdk.Int) {
+	// add the payout profit to the
+	pe.Exposure = pe.Exposure.Add(payoutProfit)
+
+	// add the bet amount that is being fulfilled to the exposure and participation
+	pe.BetAmount = pe.BetAmount.Add(betAmount)
 }
