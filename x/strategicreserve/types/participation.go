@@ -2,6 +2,8 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	housetypes "github.com/sge-network/sge/x/house/types"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -43,6 +45,61 @@ func (p OrderBookParticipation) String() string {
 // loss of the participation according to the bet amount
 func (p OrderBookParticipation) calculateMaxLoss(betAmount sdk.Int) sdk.Int {
 	return p.CurrentRoundMaxLoss.Sub(betAmount)
+}
+
+// ValidateWithdraw determines if the participation is allowed
+// to be withdrawn or not.
+func (p *OrderBookParticipation) ValidateWithdraw(depositorAddress string, participationIndex uint64) error {
+	if p.IsSettled {
+		return sdkerrors.Wrapf(ErrBookParticipationAlreadySettled, "%s, %d", p.OrderBookUID, participationIndex)
+	}
+
+	if p.ParticipantAddress != depositorAddress {
+		return sdkerrors.Wrapf(ErrMismatchInDepositorAddress, "%s", p.ParticipantAddress)
+	}
+
+	return nil
+}
+
+// maxWithdrawableAmount returns the max withdrawable amount of a participation.
+func (p *OrderBookParticipation) maxWithdrawableAmount() sdk.Int {
+	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
+}
+
+// maxWithdrawableAmount determines if the participation has enough funds in
+// current round to be able to withdrawn.
+func (p *OrderBookParticipation) IsWithdrawable() bool {
+	return p.maxWithdrawableAmount().GT(sdk.ZeroInt())
+}
+
+// WithdrawableAmount returns the withdrawable amount according to the withdrawal mode and max withdrawable amount.
+func (p *OrderBookParticipation) WithdrawableAmount(depositorAddress string, mode housetypes.WithdrawalMode, amount sdk.Int) (sdk.Int, error) {
+	// Calculate max amount that can be transferred
+	maxTransferableAmount := p.maxWithdrawableAmount()
+
+	var withdrawalAmt sdk.Int
+	switch mode {
+	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
+		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
+			return sdk.Int{}, sdkerrors.Wrapf(ErrMaxWithdrawableAmountIsZero, "%d, %d", p.CurrentRoundLiquidity, p.CurrentRoundMaxLoss)
+		}
+		withdrawalAmt = maxTransferableAmount
+	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
+		if maxTransferableAmount.LT(amount) {
+			return sdk.Int{}, sdkerrors.Wrapf(ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
+		}
+		withdrawalAmt = amount
+	default:
+		return sdk.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
+	}
+
+	return withdrawalAmt, nil
+}
+
+// SetLiquidityAfterWithdrawal sets the liquidity props after withdrawal.
+func (p *OrderBookParticipation) SetLiquidityAfterWithdrawal(withdrawalAmt sdk.Int) {
+	p.CurrentRoundLiquidity = p.CurrentRoundLiquidity.Sub(withdrawalAmt)
+	p.Liquidity = p.Liquidity.Sub(withdrawalAmt)
 }
 
 // IsEligibleForNextRound determines if the participation has enough

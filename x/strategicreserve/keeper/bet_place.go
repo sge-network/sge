@@ -35,7 +35,7 @@ func (info *fulfillmentInfo) removeQueueItem() {
 	info.fulfillmentQueue = info.fulfillmentQueue[1:]
 }
 
-func (info *fulfillmentInfo) availableLiquidity() {
+func (info *fulfillmentInfo) setAvailableLiquidity() {
 	info.inProcessItem.availableLiquidity = info.maxLossMultiplier.
 		MulInt(info.inProcessItem.participation.CurrentRoundLiquidity).
 		Sub(sdk.NewDecFromInt(info.inProcessItem.participationExposure.Exposure)).TruncateInt()
@@ -137,7 +137,7 @@ func (k Keeper) ProcessBetPlacement(
 		return nil, err
 	}
 
-	err = k.fulfillQueueBets(ctx, &fInfo, &book, &bookExposure)
+	err = k.fulfillBetByParticipationQueue(ctx, &fInfo, &book, &bookExposure)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,9 @@ func (k Keeper) ProcessBetPlacement(
 	return fInfo.fulfillments, nil
 }
 
-func (k Keeper) fulfillQueueBets(
+// fulfillBetByParticipationQueue fulfills the bet placement payout using the participations
+// that is stored in the state.
+func (k Keeper) fulfillBetByParticipationQueue(
 	ctx sdk.Context,
 	fInfo *fulfillmentInfo,
 	book *types.OrderBook,
@@ -188,7 +190,7 @@ func (k Keeper) fulfillQueueBets(
 		}
 
 		// availableLiquidty is the available amount of tokens to be used from the participation exposure
-		fInfo.availableLiquidity()
+		fInfo.setAvailableLiquidity()
 
 		setFulfilled := false
 		switch {

@@ -128,22 +128,31 @@ func (k Keeper) InitiateOrderBookParticipation(
 	k.SetOrderBookParticipation(ctx, bookParticipation)
 
 	// Update book odds exposures and add particiapnt exposures
-	boes, err := k.GetOddsExposuresByOrderBook(ctx, bookParticipation.OrderBookUID)
-	if err != nil {
-		return
-	}
-	for _, boe := range boes {
-		boe.FulfillmentQueue = append(boe.FulfillmentQueue, index)
-		k.SetOrderBookOddsExposure(ctx, boe)
-
-		pe := types.NewParticipationExposure(book.UID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
-		k.SetParticipationExposure(ctx, pe)
-	}
+	k.initParticipationExposures(ctx, book.UID, index)
 
 	// Update strategicreserve
 	k.SetOrderBook(ctx, book)
 
 	return index, nil
+}
+
+// initParticipationExposures initialize the odds and participation exposures for the
+// participation at index.
+func (k Keeper) initParticipationExposures(ctx sdk.Context, orderBookUID string, participationIndex uint64) error {
+	// Update book odds exposures and add particiapnt exposures
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
+	if err != nil {
+		return err
+	}
+	for _, boe := range boes {
+		boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
+		k.SetOrderBookOddsExposure(ctx, boe)
+
+		pe := types.NewParticipationExposure(orderBookUID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), participationIndex, 1, false)
+		k.SetParticipationExposure(ctx, pe)
+	}
+
+	return nil
 }
 
 // WithdrawOrderBookParticipation withdraws the order book participation to the bettor's account
@@ -160,49 +169,34 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		return sdk.Int{}, sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
 	}
 
-	if bp.IsSettled {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookUID, participationIndex)
+	if err = bp.ValidateWithdraw(depositorAddr, participationIndex); err != nil {
+		return sdk.Int{}, err
 	}
 
-	if bp.ParticipantAddress != depositorAddr {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+	withdrawalAmt, err := bp.WithdrawableAmount(depositorAddr, mode, amount)
+	if err != nil {
+		return sdk.Int{}, err
 	}
 
-	// Calculate max amount that can be transferred
-	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
-
-	var withdrawalAmt sdk.Int
-	switch mode {
-	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
-		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
-			return sdk.Int{}, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity, bp.CurrentRoundMaxLoss)
-		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, maxTransferableAmount)
-		if err != nil {
-			return sdk.Int{}, err
-		}
-		withdrawalAmt = maxTransferableAmount
-	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
-		if maxTransferableAmount.LT(amount) {
-			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
-		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, amount)
-		if err != nil {
-			return sdk.Int{}, err
-		}
-		withdrawalAmt = amount
-	default:
-		return sdk.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
+	if err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, withdrawalAmt); err != nil {
+		return sdk.Int{}, err
 	}
 
-	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)
-	bp.Liquidity = bp.Liquidity.Sub(withdrawalAmt)
+	bp.SetLiquidityAfterWithdrawal(withdrawalAmt)
 	k.SetOrderBookParticipation(ctx, bp)
 
-	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
-		boes, err := k.GetOddsExposuresByOrderBook(ctx, bookUID)
+	if err = k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp); err != nil {
+		return sdk.Int{}, err
+	}
+
+	return withdrawalAmt, nil
+}
+
+func (k Keeper) removeNotWithdrawableFromFulfillmentQueue(ctx sdk.Context, bp types.OrderBookParticipation) error {
+	if !bp.IsWithdrawable() {
+		boes, err := k.GetOddsExposuresByOrderBook(ctx, bp.OrderBookUID)
 		if err != nil {
-			return sdk.Int{}, err
+			return err
 		}
 		for _, boe := range boes {
 			for i, pn := range boe.FulfillmentQueue {
@@ -214,5 +208,5 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		}
 	}
 
-	return withdrawalAmt, nil
+	return nil
 }
