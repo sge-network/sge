@@ -15,11 +15,11 @@ genesis:
   app_state:
     bank:
       balances:
-        - address: "sge1kypq29kggkextekt869pwpfukj6lsw38c8a43w"
-          coins: [{"denom": "usge", "amount": "500000000000"}]
+        - address: "sge12m8k4n37tcqt5fk0s90jk3t8gz8rkgl33cu407"
+          coins: [{"denom": "usge", "amount": "10000000000"}]
       supply:
         - denom: "usge"
-          amount: "500000000000"
+          amount: "10000000000"
     staking:
       params:
         bond_denom: "usge"
