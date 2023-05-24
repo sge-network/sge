@@ -63,8 +63,8 @@ func (m *DepositAuthorization) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DepositAuthorization proto.InternalMessageInfo
 
-// WithdrawAuthorization allows the grantee to withdraw up to withdraw_limit from
-// the granter's account for deposit.
+// WithdrawAuthorization allows the grantee to withdraw up to withdraw_limit
+// from the granter's account for deposit.
 type WithdrawAuthorization struct {
 	WithdrawLimit github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=withdraw_limit,json=withdrawLimit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"withdraw_limit"`
 }
