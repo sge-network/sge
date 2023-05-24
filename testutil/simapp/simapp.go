@@ -172,6 +172,11 @@ func GetTestObjectsWithOptions(options Options) (*TestApp, sdk.Context, error) {
 		return &TestApp{}, sdk.Context{}, err
 	}
 
+	err = SetModuleAccountCoins(&ctx, tApp.BankKeeper, strategicreservetypes.IncentiveReservePool, 200000)
+	if err != nil {
+		return &TestApp{}, sdk.Context{}, err
+	}
+
 	return tApp, ctx, nil
 }
 

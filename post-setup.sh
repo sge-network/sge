@@ -3,4 +3,4 @@ sged gentx valnode1 900000000000usge --chain-id saage --commission-max-change-ra
 
 sged collect-gentxs
 
-sged start
+sged start --log_level debug --trace

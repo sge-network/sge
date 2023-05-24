@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -73,6 +74,9 @@ func (k Keeper) transferFundsFromModuleToAccount(ctx sdk.Context,
 	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(
 		moduleAccName), params.DefaultBondDenom)
 
+	fmt.Println("module account balance", balance, k.accountKeeper.GetModuleAddress(
+		moduleAccName))
+
 	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
 
 	// If module account has insufficient balance, return error
@@ -81,6 +85,7 @@ func (k Keeper) transferFundsFromModuleToAccount(ctx sdk.Context,
 			moduleAccName)
 	}
 
+	fmt.Println("Calling SendCoinsFromModuleToAccount")
 	// Transfer funds
 	err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, moduleAccName,
 		address, amt)

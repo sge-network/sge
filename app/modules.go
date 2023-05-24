@@ -79,6 +79,7 @@ var mAccPerms = map[string][]string{
 	strategicreservemoduletypes.BetReserveName:         nil,
 	strategicreservemoduletypes.SRProfitName:           nil,
 	strategicreservemoduletypes.OrderBookLiquidityName: nil,
+	strategicreservemoduletypes.IncentiveReservePool:   nil,
 	betmoduletypes.ModuleName:                          nil,
 	housemoduletypes.HouseParticipationFeeName:         nil,
 }
@@ -111,7 +112,7 @@ var ModuleBasics = module.NewBasicManager(
 	strategicreservemodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
-	rewardsmodule.AppModule{},
+	rewardsmodule.AppModuleBasic{},
 )
 
 func appModules(
