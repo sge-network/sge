@@ -10,6 +10,7 @@ import (
 // RegisterCodec registers module codec to the app codec
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgInvokeFeeGrant{}, "strategicreserve/InvokeFeeGrant", nil)
+	cdc.RegisterConcrete(&MsgRevokeFeeGrant{}, "strategicreserve/RevokeFeeGrant", nil)
 	cdc.RegisterConcrete(&DataFeeCollectorFeedProposal{}, "strategicreserve/DataFeeCollectorFeedProposal", nil)
 }
 
@@ -18,6 +19,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil))
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgInvokeFeeGrant{},
+		&MsgRevokeFeeGrant{},
 	)
 
 	registry.RegisterImplementations(

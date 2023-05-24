@@ -208,11 +208,11 @@ func NewAppKeeper(
 		appKeepers.keys[strategicreservemoduletypes.StoreKey],
 		appKeepers.GetSubspace(strategicreservemoduletypes.ModuleName),
 		strategicreservemodulekeeper.SdkExpectedKeepers{
-			BankKeeper:    appKeepers.BankKeeper,
-			AccountKeeper: appKeepers.AccountKeeper,
+			BankKeeper:     appKeepers.BankKeeper,
+			AccountKeeper:  appKeepers.AccountKeeper,
+			FeeGrantKeeper: appKeepers.FeeGrantKeeper,
 		},
 	)
-	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper)
 
 	appKeepers.MintKeeper = *mintkeeper.NewKeeper(
 		appCodec,
@@ -339,7 +339,6 @@ func NewAppKeeper(
 		appKeepers.keys[ovmmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(ovmmoduletypes.ModuleName),
 	)
-	appKeepers.OVMModule = ovmmodule.NewAppModule(appCodec, appKeepers.OVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
 
 	appKeepers.MarketKeeper = *marketmodulekeeper.NewKeeper(
 		appCodec,
@@ -349,7 +348,6 @@ func NewAppKeeper(
 	)
 	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
-	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.OVMKeeper)
 
 	appKeepers.BetKeeper = *betmodulekeeper.NewKeeper(
 		appCodec,
@@ -360,10 +358,10 @@ func NewAppKeeper(
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.BetKeeper.SetSRKeeper(appKeepers.StrategicReserveKeeper)
 	appKeepers.BetKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.OVMKeeper)
 
 	appKeepers.StrategicReserveKeeper.SetBetKeeper(appKeepers.BetKeeper)
 	appKeepers.StrategicReserveKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
+	appKeepers.StrategicReserveKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 
 	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
 		appCodec,
@@ -372,9 +370,13 @@ func NewAppKeeper(
 		appKeepers.OVMKeeper,
 		appKeepers.GetSubspace(housemoduletypes.ModuleName),
 	)
-	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
-
 	appKeepers.StrategicReserveKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
+
+	appKeepers.OVMModule = ovmmodule.NewAppModule(appCodec, appKeepers.OVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
+	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.OVMKeeper)
+	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.OVMKeeper)
+	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
+	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
