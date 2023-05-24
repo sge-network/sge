@@ -54,3 +54,53 @@ func (msg *MsgInvokeFeeGrant) ValidateBasic() error {
 	}
 	return nil
 }
+
+const typeMsgRevokeFeeGrant = "revoke_feegrant"
+
+var _ sdk.Msg = &MsgRevokeFeeGrant{}
+
+// NewMsgRevokeFeeGrant creates the new input for revoking a feegrant to blockchain.
+func NewMsgRevokeFeeGrant(creator string, ticket string) *MsgRevokeFeeGrant {
+	return &MsgRevokeFeeGrant{
+		Creator: creator,
+		Ticket:  ticket,
+	}
+}
+
+// Route return the message route for slashing
+func (msg *MsgRevokeFeeGrant) Route() string {
+	return RouterKey
+}
+
+// Type returns the msg add market type
+func (msg *MsgRevokeFeeGrant) Type() string {
+	return typeMsgRevokeFeeGrant
+}
+
+// GetSigners return the creators address
+func (msg *MsgRevokeFeeGrant) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+// GetSignBytes return the marshalled bytes of the msg
+func (msg *MsgRevokeFeeGrant) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+// ValidateBasic validates the input creation market
+func (msg *MsgRevokeFeeGrant) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ticket param")
+	}
+	return nil
+}

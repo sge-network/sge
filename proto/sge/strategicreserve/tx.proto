@@ -10,7 +10,7 @@ service Msg {
   // InvokeFeeGrant defines a method to add a feegrant with the given data.
   rpc InvokeFeeGrant(MsgInvokeFeeGrant) returns (MsgInvokeFeeGrantResponse);
   // RevokeFeeGrant defines a method to add a feegrant with the given data.
-  // rpc RevokeFeeGrant(MsgRevokeFeeGrant) returns (MsgRevokeFeeGrantResponse);
+  rpc RevokeFeeGrant(MsgRevokeFeeGrant) returns (MsgRevokeFeeGrantResponse);
 }
 
 // MsgInvokeFeeGrant is the message type for granting a feegrant from strategic

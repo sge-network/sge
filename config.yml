@@ -1,11 +1,15 @@
 version: 1
 accounts:
-  - name: treasury
+  - name: cold
     coins: ["9000000000000usge"]
-  - name: seed
+  - name: hot
+    coins: ["1000000000000usge"]
+  - name: admin
+    coins: ["1000000000000usge"]
+  - name: oracle
     coins: ["1000000000000usge"]
 validators:
-  - name: treasury
+  - name: cold
     bonded: "1000000000000usge"
 genesis:
   app_state:

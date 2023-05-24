@@ -22,6 +22,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgInvokeFeeGrant:
 			res, err := msgServer.InvokeFeeGrant(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgRevokeFeeGrant:
+			res, err := msgServer.RevokeFeeGrant(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)

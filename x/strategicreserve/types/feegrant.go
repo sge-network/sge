@@ -17,7 +17,7 @@ func NewFeeGrant(creator, grantee string, blocktime int64) FeeGrant {
 
 // DefaultFeeGrantAllowance is the default allowance of the sr pool
 func DefaultFeeGrantAllowance(ctx sdk.Context) sdkfeegrant.FeeAllowanceI {
-	expireTime := ctx.BlockTime().Add(defaultAllowanceExpiration * time.Minute)
+	expireTime := ctx.BlockTime().Add(DefaultAllowanceExpiration * time.Minute)
 	return &sdkfeegrant.BasicAllowance{
 		Expiration: &expireTime,
 	}
