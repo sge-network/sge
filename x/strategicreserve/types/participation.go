@@ -43,7 +43,7 @@ func (p OrderBookParticipation) String() string {
 
 // CalculateMaxLoss calculates the maxixmum amount of the tokens expected to be the
 // loss of the participation according to the bet amount
-func (p OrderBookParticipation) calculateMaxLoss(betAmount sdk.Int) sdk.Int {
+func (p OrderBookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
 	return p.CurrentRoundMaxLoss.Sub(betAmount)
 }
 
@@ -140,7 +140,7 @@ func (p *OrderBookParticipation) SetCurrentRound(pe *ParticipationExposure, odds
 // setMaxLoss sets the max loss of the the cirrent round.
 func (p *OrderBookParticipation) setMaxLoss(pe *ParticipationExposure, oddsUID string, betAmount sdk.Int) {
 	// max loss is the maximum amount that an exposure may lose.
-	maxLoss := pe.calculateMaxLoss(p.CurrentRoundTotalBetAmount)
+	maxLoss := pe.CalculateMaxLoss(p.CurrentRoundTotalBetAmount)
 	switch {
 	case p.CurrentRoundMaxLoss.IsNil():
 		p.CurrentRoundMaxLoss = maxLoss
@@ -148,7 +148,7 @@ func (p *OrderBookParticipation) setMaxLoss(pe *ParticipationExposure, oddsUID s
 	case p.CurrentRoundMaxLossOddsUID == oddsUID:
 		p.CurrentRoundMaxLoss = maxLoss
 	default:
-		originalMaxLoss := p.calculateMaxLoss(betAmount)
+		originalMaxLoss := p.CalculateMaxLoss(betAmount)
 		if maxLoss.GT(originalMaxLoss) {
 			p.CurrentRoundMaxLoss = maxLoss
 			p.CurrentRoundMaxLossOddsUID = oddsUID
