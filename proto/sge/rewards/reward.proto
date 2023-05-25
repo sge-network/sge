@@ -1,0 +1,46 @@
+syntax = "proto3";
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/rewards/types";
+
+// RewardK represents the awardees, types and amount
+message RewardK {
+  option (gogoproto.equal) = false;
+  option (gogoproto.goproto_getters) = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // creator is the bech32-encoded address.
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+
+  // incentive_uid is the external UID to identify the payout
+  string incentive_uid = 2 [
+    (gogoproto.customname) = "IncentiveUID",
+    (gogoproto.jsontag) = "incentive_uid",
+    json_name = "incentive_uid"
+  ];
+
+  repeated AwardeeK awardees = 3;
+
+  map<string, string> meta = 4;
+
+  RewardTypeK reward_type = 5;
+
+  enum RewardTypeK {
+    REFERRAL = 0;
+    MARKETING = 1;
+  }
+}
+
+message AwardeeK {
+  // creator is the bech32-encoded address of the awardee
+  string address = 1 [ (gogoproto.moretags) = "yaml:\"address\"" ];
+
+  // amount is the amount being deposited to the awardee
+  string amount = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\""
+  ];
+}

@@ -16,17 +16,17 @@ func (k msgServer) RewardUser(goCtx context.Context, msg *types.MsgRewardUser) (
 		return nil, sdkerrors.Wrap(err, "Invalid Reward Requests")
 	}
 
-	// TODO: See if want to use OVM
+	// TODO: See during integration if incentive id can be moved to ticket
 	//if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
 	//	return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	//}
 	emitTransactionEvent(ctx, "Reward User Initiate", len(msg.Reward.Awardees), msg.Creator)
-	for _, awardee := range msg.Reward.Awardees {
-		err := k.Keeper.RewardUser(ctx, msg.Creator, msg.Reward.RewardType.String(), awardee.Amount, awardee.Address)
-		if err != nil {
-			return nil, sdkerrors.Wrap(err, "Something failed")
-		}
+
+	err := k.Keeper.RewardUsers(ctx, msg)
+	if err != nil {
+		return nil, sdkerrors.Wrap(err, "Something failed")
 	}
+
 	emitTransactionEvent(ctx, "Reward User Done", len(msg.Reward.Awardees), msg.Creator)
 	return &types.MsgRewardUserResponse{}, nil
 }
