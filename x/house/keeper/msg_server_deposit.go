@@ -29,7 +29,6 @@ func (k msgServer) Deposit(goCtx context.Context,
 		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
 			return nil, err
 		}
-
 		depositorAddr = payload.DepositorAddress
 	}
 
