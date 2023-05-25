@@ -10,7 +10,7 @@ import (
 
 // SetDeposit sets a deposit in the store
 func (k Keeper) SetDeposit(ctx sdk.Context, deposit types.Deposit) {
-	depositKey := types.GetDepositKey(deposit.Creator, deposit.MarketUID,
+	depositKey := types.GetDepositKey(deposit.DepositorAddress, deposit.MarketUID,
 		deposit.ParticipationIndex)
 
 	store := k.getDepositStore(ctx)
@@ -53,22 +53,22 @@ func (k Keeper) GetDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
 }
 
 // Deposit performs a deposit transaction and stores a new deposit in store.
-func (k Keeper) Deposit(ctx sdk.Context, creator string,
+func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	marketUID string, amount sdk.Int,
 ) (participationIndex uint64, err error) {
 	// Create the deposit object
-	deposit := types.NewDeposit(creator, marketUID, amount, sdk.ZeroInt(), 0)
+	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdk.ZeroInt(), 0)
 
 	deposit.SetHouseParticipationFee(k.GetHouseParticipationFee(ctx))
 
-	creatorAddr, err := sdk.AccAddressFromBech32(creator)
+	depositorAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
 		err = sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 		return
 	}
 
 	participationIndex, err = k.srKeeper.InitiateOrderBookParticipation(
-		ctx, creatorAddr, marketUID, deposit.Liquidity, deposit.Fee,
+		ctx, depositorAddr, marketUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
 		err = sdkerrors.Wrapf(types.ErrSRDepositProcessing, "%s", err)
@@ -78,16 +78,17 @@ func (k Keeper) Deposit(ctx sdk.Context, creator string,
 	deposit.ParticipationIndex = participationIndex
 
 	k.SetDeposit(ctx, deposit)
-	emitTransactionEvent(ctx, types.TypeMsgDeposit, cast.ToString(participationIndex), creator)
+	emitTransactionEvent(ctx, types.TypeMsgDeposit, cast.ToString(participationIndex), creator, depositor)
 
 	return participationIndex, err
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, participationIndex, creator string) {
+func emitTransactionEvent(ctx sdk.Context, emitType string, participationIndex, creator, depositor string) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,
 			sdk.NewAttribute(types.AttributeKeyParticipationIndex, participationIndex),
+			sdk.NewAttribute(types.AttributeKeyParticipationIndex, depositor),
 		),
 		sdk.NewEvent(
 			sdk.EventTypeMessage,

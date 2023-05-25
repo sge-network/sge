@@ -174,7 +174,7 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		return sdk.Int{}, err
 	}
 
-	withdrawalAmt, err := bp.WithdrawableAmount(depositorAddr, mode, amount)
+	withdrawalAmt, err := bp.WithdrawableAmount(mode, amount)
 	if err != nil {
 		return sdk.Int{}, err
 	}

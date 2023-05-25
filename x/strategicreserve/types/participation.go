@@ -73,7 +73,7 @@ func (p *OrderBookParticipation) IsWithdrawable() bool {
 }
 
 // WithdrawableAmount returns the withdrawable amount according to the withdrawal mode and max withdrawable amount.
-func (p *OrderBookParticipation) WithdrawableAmount(depositorAddress string, mode housetypes.WithdrawalMode, amount sdk.Int) (sdk.Int, error) {
+func (p *OrderBookParticipation) WithdrawableAmount(mode housetypes.WithdrawalMode, amount sdk.Int) (sdk.Int, error) {
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := p.maxWithdrawableAmount()
 

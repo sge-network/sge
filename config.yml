@@ -12,6 +12,8 @@ accounts:
 validators:
   - name: cold
     bonded: "1000000000000usge"
+    app:
+      minimum-gas-prices: "10usge"
 genesis:
   app_state:
     bank:

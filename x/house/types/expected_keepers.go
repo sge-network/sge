@@ -2,8 +2,10 @@ package types
 
 import (
 	context "context"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
 // SRKeeper defines the expected strategicreserve keeper.
@@ -17,4 +19,9 @@ type SRKeeper interface {
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
 type OVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
+}
+
+// AuthzKeeper defines the expected authz keeper.
+type AuthzKeeper interface {
+	GetCleanAuthorization(ctx sdk.Context, grantee sdk.AccAddress, granter sdk.AccAddress, msgType string) (cap authz.Authorization, expiration time.Time)
 }

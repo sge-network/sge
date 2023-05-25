@@ -21,6 +21,7 @@ func TestDecodeStore(t *testing.T) {
 
 	deposit := types.NewDeposit(
 		sample.AccAddress(),
+		sample.AccAddress(),
 		uuid.NewString(),
 		sdk.NewInt(100),
 		sdk.NewInt(1000),

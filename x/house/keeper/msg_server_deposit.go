@@ -24,11 +24,20 @@ func (k msgServer) Deposit(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	if err := payload.Validate(msg.Creator); err != nil {
+	depositorAddr := msg.Creator
+	if payload.DepositorAddress != "" {
+		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
+			return nil, err
+		}
+
+		depositorAddr = payload.DepositorAddress
+	}
+
+	if err := payload.Validate(depositorAddr); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
-	participationIndex, err := k.Keeper.Deposit(ctx, msg.Creator, msg.MarketUID, msg.Amount)
+	participationIndex, err := k.Keeper.Deposit(ctx, msg.Creator, depositorAddr, msg.MarketUID, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}

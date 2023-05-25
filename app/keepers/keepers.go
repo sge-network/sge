@@ -369,6 +369,9 @@ func NewAppKeeper(
 		appKeepers.StrategicReserveKeeper,
 		appKeepers.OVMKeeper,
 		appKeepers.GetSubspace(housemoduletypes.ModuleName),
+		housemodulekeeper.SdkExpectedKeepers{
+			AuthzKeeper: appKeepers.AuthzKeeper,
+		},
 	)
 	appKeepers.StrategicReserveKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 

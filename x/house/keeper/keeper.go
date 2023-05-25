@@ -10,25 +10,39 @@ import (
 
 // Keeper of the house store
 type Keeper struct {
-	storeKey   sdk.StoreKey
-	cdc        codec.BinaryCodec
-	paramstore paramtypes.Subspace
-	srKeeper   types.SRKeeper
-	ovmKeeper  types.OVMKeeper
+	storeKey    sdk.StoreKey
+	cdc         codec.BinaryCodec
+	paramstore  paramtypes.Subspace
+	authzKeeper types.AuthzKeeper
+	srKeeper    types.SRKeeper
+	ovmKeeper   types.OVMKeeper
+}
+
+// SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
+type SdkExpectedKeepers struct {
+	AuthzKeeper types.AuthzKeeper
 }
 
 // NewKeeper returns an instance of the housekeeper
-func NewKeeper(cdc codec.BinaryCodec, key sdk.StoreKey, srKeeper types.SRKeeper, ovmKeeper types.OVMKeeper, ps paramtypes.Subspace) *Keeper {
+func NewKeeper(
+	cdc codec.BinaryCodec,
+	key sdk.StoreKey,
+	srKeeper types.SRKeeper,
+	ovmKeeper types.OVMKeeper,
+	ps paramtypes.Subspace,
+	expectedKeepers SdkExpectedKeepers,
+) *Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
 	return &Keeper{
-		storeKey:   key,
-		cdc:        cdc,
-		srKeeper:   srKeeper,
-		ovmKeeper:  ovmKeeper,
-		paramstore: ps,
+		storeKey:    key,
+		cdc:         cdc,
+		srKeeper:    srKeeper,
+		ovmKeeper:   ovmKeeper,
+		paramstore:  ps,
+		authzKeeper: expectedKeepers.AuthzKeeper,
 	}
 }
