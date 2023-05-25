@@ -64,19 +64,18 @@ import (
 
 // module account permissions
 var mAccPerms = map[string][]string{
-	authtypes.FeeCollectorName:                        nil,
-	distrtypes.ModuleName:                             nil,
-	icatypes.ModuleName:                               nil,
-	minttypes.ModuleName:                              {authtypes.Minter},
-	stakingtypes.BondedPoolName:                       {authtypes.Burner, authtypes.Staking},
-	stakingtypes.NotBondedPoolName:                    {authtypes.Burner, authtypes.Staking},
-	govtypes.ModuleName:                               {authtypes.Burner},
-	ibctransfertypes.ModuleName:                       {authtypes.Minter, authtypes.Burner},
-	betmoduletypes.BetCollector:                       nil,
-	betmoduletypes.BetFeeCollector:                    nil,
-	housemoduletypes.HouseFeeCollector:                nil,
-	strategicreservemoduletypes.DataFeeCollector:      nil,
-	strategicreservemoduletypes.HouseDepositCollector: nil,
+	authtypes.FeeCollectorName:                         nil,
+	distrtypes.ModuleName:                              nil,
+	icatypes.ModuleName:                                nil,
+	minttypes.ModuleName:                               {authtypes.Minter},
+	stakingtypes.BondedPoolName:                        {authtypes.Burner, authtypes.Staking},
+	stakingtypes.NotBondedPoolName:                     {authtypes.Burner, authtypes.Staking},
+	govtypes.ModuleName:                                {authtypes.Burner},
+	ibctransfertypes.ModuleName:                        {authtypes.Minter, authtypes.Burner},
+	betmoduletypes.BetFeeCollector:                     nil,
+	housemoduletypes.HouseFeeCollector:                 nil,
+	strategicreservemoduletypes.DataFeeCollector:       nil,
+	strategicreservemoduletypes.OrderBookLiquidityPool: nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,

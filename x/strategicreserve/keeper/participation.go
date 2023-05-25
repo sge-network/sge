@@ -119,7 +119,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 	)
 
 	// Transfer liquidity amount from book participation  to `house_deposit_collector` Account
-	err = k.transferFundsFromAccountToModule(ctx, addr, types.HouseDepositCollector, liquidity)
+	err = k.transferFundsFromAccountToModule(ctx, addr, types.OrderBookLiquidityPool, liquidity)
 	if err != nil {
 		return
 	}
@@ -178,7 +178,7 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		return sdk.Int{}, err
 	}
 
-	if err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, withdrawalAmt); err != nil {
+	if err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, withdrawalAmt); err != nil {
 		return sdk.Int{}, err
 	}
 

@@ -151,13 +151,7 @@ func (k Keeper) ProcessBetPlacement(
 	}
 
 	// Transfer bet amount from bettor to `bet_collector` Account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.BetCollector, fInfo.fulfiledBetAmount); err != nil {
-		return nil, err
-	}
-
-	payoutPlusBetAmount := betAmount.Add(payoutProfit.TruncateInt())
-	// Transfer bet amount from `house_deposit_collector` to `bet_collector` Account
-	if err = k.transferFundsFromAccountToModule(ctx, k.accountKeeper.GetModuleAddress(types.HouseDepositCollector), bettypes.BetCollector, payoutPlusBetAmount); err != nil {
+	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityPool, fInfo.fulfiledBetAmount); err != nil {
 		return nil, err
 	}
 

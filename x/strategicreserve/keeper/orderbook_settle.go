@@ -85,7 +85,7 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 	}
 
 	// transfer amount to depositor address
-	err = k.transferFundsFromModuleToAccount(ctx, types.HouseDepositCollector, depositorAddress, depositPlusProfit)
+	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, depositPlusProfit)
 	if err != nil {
 		return err
 	}
