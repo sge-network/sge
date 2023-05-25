@@ -64,6 +64,26 @@ func (info *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) boo
 	return diff.LTE(threshold)
 }
 
+func (info *fulfillmentInfo) getFulfillmentItem(bookUID string, participationIndex uint64) (fulfillmentItem, error) {
+	participation, found := info.pMap[participationIndex]
+	if !found {
+		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
+	}
+
+	participationExposure, found := info.peMap[participationIndex]
+	if !found {
+		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookUID, participationIndex)
+	}
+	if participationExposure.IsFulfilled {
+		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookUID, participationIndex)
+	}
+
+	return fulfillmentItem{
+		participation:         participation,
+		participationExposure: participationExposure,
+	}, nil
+}
+
 type fulfillmentItem struct {
 	availableLiquidity    sdk.Int
 	participation         types.OrderBookParticipation
@@ -81,26 +101,6 @@ func (item *fulfillmentItem) setFulfilled() {
 
 func (item *fulfillmentItem) allExposureFulfilled() bool {
 	return item.participation.ExposuresNotFilled > 0
-}
-
-func (p *fulfillmentInfo) getFulfillmentItem(bookUID string, participationIndex uint64) (fulfillmentItem, error) {
-	participation, found := p.pMap[participationIndex]
-	if !found {
-		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
-	}
-
-	participationExposure, found := p.peMap[participationIndex]
-	if !found {
-		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%s, %d", bookUID, participationIndex)
-	}
-	if participationExposure.IsFulfilled {
-		return fulfillmentItem{}, sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%s, %d", bookUID, participationIndex)
-	}
-
-	return fulfillmentItem{
-		participation:         participation,
-		participationExposure: participationExposure,
-	}, nil
 }
 
 // ProcessBetPlacement processes bet placement
