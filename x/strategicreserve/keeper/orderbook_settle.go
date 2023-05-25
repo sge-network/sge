@@ -90,19 +90,18 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		return err
 	}
 
-	if !bp.Liquidity.Equal(bp.CurrentRoundLiquidity) {
+	if bp.NotParticipatedInBetFulfillment() {
 		// get corresponding deposit to extract house fee
 		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
 		if !found {
 			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
 		}
 
-		// this means that this participation is not participated in the bet fulfillment so,
-		// transfer fee from book participation to the feeAccountName
-		err = k.transferFundsFromAccountToModule(
+		// give back the participation fee to the depositor account
+		err = k.transferFundsFromModuleToAccount(
 			ctx,
-			sdk.MustAccAddressFromBech32(bp.ParticipantAddress),
 			housetypes.HouseFeeCollector,
+			sdk.MustAccAddressFromBech32(bp.ParticipantAddress),
 			deposit.Fee,
 		)
 		if err != nil {

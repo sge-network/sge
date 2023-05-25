@@ -102,6 +102,12 @@ func (p *OrderBookParticipation) SetLiquidityAfterWithdrawal(withdrawalAmt sdk.I
 	p.Liquidity = p.Liquidity.Sub(withdrawalAmt)
 }
 
+// NotParticipatedInBetFulfillment determines if the participation has
+// participated in the bet fulfillment.
+func (p *OrderBookParticipation) NotParticipatedInBetFulfillment() bool {
+	return p.TotalBetAmount.Equal(sdk.ZeroInt())
+}
+
 // IsEligibleForNextRound determines if the participation has enough
 // liquidity to be used in the next round or not
 func (p *OrderBookParticipation) IsEligibleForNextRound() bool {
