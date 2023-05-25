@@ -18,7 +18,7 @@ func (k Keeper) ValidateMsgAuthorization(ctx sdk.Context, creator, depositor str
 	}
 	_, err = authorization.Accept(ctx, msg)
 	if err != nil {
-		sdkerrors.Wrapf(types.ErrAuthorizationNotAccepted, "%s", err)
+		return sdkerrors.Wrapf(types.ErrAuthorizationNotAccepted, "%s", err)
 	}
 	return nil
 }
