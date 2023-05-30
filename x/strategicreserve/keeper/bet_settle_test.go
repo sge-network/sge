@@ -5,15 +5,18 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestBetSettlement(t *testing.T) {
-	ts := NewTestSuite(t)
-
+	ts := NewTestBetSuite(t)
 	bets, winner1PayoutProfit, winner2PayoutProfit := ts.placeBetsAndTest()
+	ts.settleBetsAndTest(bets, winner1PayoutProfit, winner2PayoutProfit)
+}
 
+func (ts *TestBetSuite) settleBetsAndTest(bets []bettypes.Bet, winner1PayoutProfit, winner2PayoutProfit sdk.Dec) {
 	winner1BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[0].Creator), params.DefaultBondDenom).Amount
 	winner2BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[1].Creator), params.DefaultBondDenom).Amount
 	loserBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[2].Creator), params.DefaultBondDenom).Amount
@@ -29,16 +32,16 @@ func TestBetSettlement(t *testing.T) {
 
 	// settle all of the resolved market
 	err := ts.tApp.BetKeeper.BatchMarketSettlements(ts.ctx)
-	require.NoError(t, err)
+	require.NoError(ts.t, err)
 
 	winner1BettorBalAfterSettlement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[0].Creator), params.DefaultBondDenom)
 	expWinner1BalanceAfterSettlement := winner1BalAfterPlacement.Add(bets[0].Amount).Add(winner1PayoutProfit.TruncateInt())
-	require.Equal(t, expWinner1BalanceAfterSettlement.Int64(), winner1BettorBalAfterSettlement.Amount.Int64())
+	require.Equal(ts.t, expWinner1BalanceAfterSettlement.Int64(), winner1BettorBalAfterSettlement.Amount.Int64())
 
 	winner2BettorBalAfterSettlement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[1].Creator), params.DefaultBondDenom)
 	expWinner2BalanceAfterSettlement := winner2BalAfterPlacement.Add(bets[1].Amount).Add(winner2PayoutProfit.TruncateInt())
-	require.Equal(t, expWinner2BalanceAfterSettlement.Int64(), winner2BettorBalAfterSettlement.Amount.Int64())
+	require.Equal(ts.t, expWinner2BalanceAfterSettlement.Int64(), winner2BettorBalAfterSettlement.Amount.Int64())
 
 	loserBettorBalAfterSettlement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[2].Creator), params.DefaultBondDenom)
-	require.Equal(t, loserBalanceAfterPlacement.Int64(), loserBettorBalAfterSettlement.Amount.Int64())
+	require.Equal(ts.t, loserBalanceAfterPlacement.Int64(), loserBettorBalAfterSettlement.Amount.Int64())
 }

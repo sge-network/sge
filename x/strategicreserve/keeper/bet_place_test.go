@@ -17,11 +17,11 @@ import (
 )
 
 func TestBetPlacement(t *testing.T) {
-	ts := NewTestSuite(t)
+	ts := NewTestBetSuite(t)
 	ts.placeBetsAndTest()
 }
 
-type TestSuite struct {
+type TestBetSuite struct {
 	t                *testing.T
 	k                *keeper.KeeperTest
 	ctx              sdk.Context
@@ -29,9 +29,10 @@ type TestSuite struct {
 	betFee           sdk.Int
 	participationFee sdk.Int
 	market           markettypes.Market
+	participations   []types.OrderBookParticipation
 }
 
-func NewTestSuite(t *testing.T) TestSuite {
+func NewTestBetSuite(t *testing.T) TestBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	betFee := sdk.NewInt(10)
@@ -53,10 +54,16 @@ func NewTestSuite(t *testing.T) TestSuite {
 		BookUID: marketUID,
 	}
 
-	return TestSuite{t, k, ctx, *tApp, betFee, participationFee, market}
+	participations := []types.OrderBookParticipation{
+		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), Liquidity: sdk.NewInt(8000)},
+		{ParticipantAddress: simappUtil.TestParamUsers["user3"].Address.String(), Liquidity: sdk.NewInt(10000)},
+		{ParticipantAddress: simappUtil.TestParamUsers["user4"].Address.String(), Liquidity: sdk.NewInt(10000)},
+	}
+
+	return TestBetSuite{t, k, ctx, *tApp, betFee, participationFee, market, participations}
 }
 
-func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
+func (ts *TestBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 
 	ts.tApp.MarketKeeper.SetMarket(ts.ctx, ts.market)
 
@@ -67,23 +74,28 @@ func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	})
 	require.NoError(ts.t, err)
 
-	_, err = ts.k.InitiateOrderBookParticipation(ts.ctx, simappUtil.TestParamUsers["user2"].Address, ts.market.BookUID, sdk.NewInt(8000), ts.participationFee)
+	ts.participations[0].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[0].ParticipantAddress), ts.market.BookUID, ts.participations[0].Liquidity, ts.participationFee)
 	require.NoError(ts.t, err)
 
-	_, err = ts.k.InitiateOrderBookParticipation(ts.ctx, simappUtil.TestParamUsers["user3"].Address, ts.market.BookUID, sdk.NewInt(10000), ts.participationFee)
+	ts.participations[1].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[1].ParticipantAddress), ts.market.BookUID, ts.participations[1].Liquidity, ts.participationFee)
+	require.NoError(ts.t, err)
+
+	ts.participations[2].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[2].ParticipantAddress), ts.market.BookUID, ts.participations[2].Liquidity, ts.participationFee)
 	require.NoError(ts.t, err)
 
 	oddsExposures, found := ts.k.GetOrderBookOddsExposure(ts.ctx, ts.market.BookUID, ts.market.Odds[0].UID)
 	require.True(ts.t, found)
-	require.Equal(ts.t, []uint64{1, 2}, oddsExposures.FulfillmentQueue)
+	require.Equal(ts.t, []uint64{1, 2, 3}, oddsExposures.FulfillmentQueue)
+
+	defaultBetAmount := sdk.NewInt(100)
 
 	///// winner1 bet placement
 	//
 	//
-	winner1BettorAddr := simappUtil.TestParamUsers["user4"].Address
+	winner1BettorAddr := simappUtil.TestParamUsers["user5"].Address
 	winner1Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner1BettorAddr, params.DefaultBondDenom)
 	winner1BetID := uint64(1)
-	winner1Bet, winner1PayoutProfit, winner1BetFulfillment := ts.placeTestBet(winner1BettorAddr, ts.market.UID, ts.market.Odds[0].UID, winner1BetID, ts.betFee, nil)
+	winner1Bet, winner1PayoutProfit, winner1BetFulfillment := ts.placeTestBet(winner1BettorAddr, ts.market.UID, ts.market.Odds[0].UID, winner1BetID, defaultBetAmount, ts.betFee, nil)
 	winner1Bet.BetFulfillment = winner1BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner1Bet, winner1BetID)
 	winner1BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner1BettorAddr, params.DefaultBondDenom)
@@ -92,20 +104,15 @@ func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 
 	oddsExposures, found = ts.k.GetOrderBookOddsExposure(ts.ctx, ts.market.BookUID, ts.market.Odds[0].UID)
 	require.True(ts.t, found)
-	require.Equal(ts.t, []uint64{2}, oddsExposures.FulfillmentQueue)
+	require.Equal(ts.t, []uint64{2, 3}, oddsExposures.FulfillmentQueue)
 
 	///// winner2 bet placement
 	//
 	//
-	winner2BettorAddr := simappUtil.TestParamUsers["user5"].Address
+	winner2BettorAddr := simappUtil.TestParamUsers["user6"].Address
 	winner2Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner2BettorAddr, params.DefaultBondDenom)
 	winner2BetID := uint64(2)
-	winner2Bet, winner2PayoutProfit, winner2BetFulfillment := ts.placeTestBet(winner2BettorAddr, ts.market.UID, ts.market.Odds[0].UID, winner2BetID, ts.betFee, nil)
-
-	// oddsExposures, found := k.GetOrderBookOddsExposure(ctx, market.BookUID, oddsUID1)
-	// require.True(t, found)
-
-	// require.Equal(t, 1, len(oddsExposures.FulfillmentQueue))
+	winner2Bet, winner2PayoutProfit, winner2BetFulfillment := ts.placeTestBet(winner2BettorAddr, ts.market.UID, ts.market.Odds[0].UID, winner2BetID, defaultBetAmount, ts.betFee, nil)
 
 	winner2Bet.BetFulfillment = winner2BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner2Bet, winner2BetID)
@@ -114,14 +121,14 @@ func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	require.Equal(ts.t, expWinner2BalanceAfterPlacement.Int64(), winner2BalAfterPlacement.Amount.Int64())
 	oddsExposures, found = ts.k.GetOrderBookOddsExposure(ts.ctx, ts.market.BookUID, ts.market.Odds[0].UID)
 	require.True(ts.t, found)
-	require.Equal(ts.t, 0, len(oddsExposures.FulfillmentQueue))
+	require.Equal(ts.t, []uint64{3}, oddsExposures.FulfillmentQueue)
 
 	///// failed winner bet placement
 	// should fail because there is not participation to fulfill this bet.
 	//
-	failedWinnerBettorAddr := simappUtil.TestParamUsers["user6"].Address
+	failedWinnerBettorAddr := simappUtil.TestParamUsers["user7"].Address
 	failedWinnerBetID := uint64(3)
-	ts.placeTestBet(failedWinnerBettorAddr, ts.market.UID, ts.market.Odds[0].UID, failedWinnerBetID, ts.betFee, types.ErrInternalProcessingBet)
+	ts.placeTestBet(failedWinnerBettorAddr, ts.market.UID, ts.market.Odds[0].UID, failedWinnerBetID, sdk.NewInt(100000000000), ts.betFee, types.ErrInternalProcessingBet)
 
 	///// loser bet placement
 	//
@@ -129,7 +136,7 @@ func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	loserBettorAddr := simappUtil.TestParamUsers["user7"].Address
 	loserBal := ts.tApp.BankKeeper.GetBalance(ts.ctx, loserBettorAddr, params.DefaultBondDenom)
 	loserBetID := uint64(3)
-	loserBet, _, loserBetFulfillment := ts.placeTestBet(loserBettorAddr, ts.market.UID, ts.market.Odds[2].UID, loserBetID, ts.betFee, nil)
+	loserBet, _, loserBetFulfillment := ts.placeTestBet(loserBettorAddr, ts.market.UID, ts.market.Odds[2].UID, loserBetID, defaultBetAmount, ts.betFee, nil)
 	loserBet.BetFulfillment = loserBetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, loserBet, loserBetID)
 	loserBalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, loserBettorAddr, params.DefaultBondDenom)
@@ -143,14 +150,14 @@ func (ts *TestSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	}, winner1PayoutProfit, winner2PayoutProfit
 }
 
-func (ts *TestSuite) placeTestBet(bettorAddr sdk.AccAddress, marketUID, oddsUID string, betID uint64, betFee sdk.Int, expErr error) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
+func (ts *TestBetSuite) placeTestBet(bettorAddr sdk.AccAddress, marketUID, oddsUID string, betID uint64, amount sdk.Int, betFee sdk.Int, expErr error) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
 		MarketUID:         marketUID,
 		OddsUID:           oddsUID,
 		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "1.5",
-		Amount:            sdk.NewInt(100),
+		Amount:            amount,
 		BetFee:            betFee,
 		Status:            bettypes.Bet_STATUS_PENDING,
 		Creator:           bettorAddr.String(),
@@ -163,6 +170,9 @@ func (ts *TestSuite) placeTestBet(bettorAddr sdk.AccAddress, marketUID, oddsUID 
 	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
+	betFeeCollectorBalanceBeforePlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollector), params.DefaultBondDenom)
+	liquidityPoolBalanceBeforePlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityPool), params.DefaultBondDenom)
+
 	betFulfillment, err := ts.k.ProcessBetPlacement(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddr, bet.BetFee, bet.OddsType, bet.OddsValue, 1,
@@ -171,6 +181,12 @@ func (ts *TestSuite) placeTestBet(bettorAddr sdk.AccAddress, marketUID, oddsUID 
 		require.ErrorIs(ts.t, expErr, err)
 	} else {
 		require.NoError(ts.t, err)
+
+		betFeeCollectorBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollector), params.DefaultBondDenom)
+		require.Equal(ts.t, bet.BetFee.Int64(), betFeeCollectorBalanceAfterPlacement.Sub(betFeeCollectorBalanceBeforePlacement).Amount.Int64())
+
+		liquidityPoolBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityPool), params.DefaultBondDenom)
+		require.Equal(ts.t, bet.Amount.Int64(), liquidityPoolBalanceAfterPlacement.Sub(liquidityPoolBalanceBeforePlacement).Amount.Int64())
 	}
 
 	return bet, payoutProfit, betFulfillment
