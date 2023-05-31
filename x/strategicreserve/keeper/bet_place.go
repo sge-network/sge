@@ -100,9 +100,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			}
 			// if the available liquidity is less than remaining payout profit that
 			// need to be paid, we should use all of available liquidity pull for the calculations.
-			if err = k.fulfill(ctx, fInfo, betAmountToFulfill, fInfo.inProcessItem.availableLiquidity); err != nil {
-				return err
-			}
+			k.fulfill(ctx, fInfo, betAmountToFulfill, fInfo.inProcessItem.availableLiquidity)
 			setFulfilled = true
 		default:
 			// availableLiquidty is positive and more than remaining payout profit that
@@ -111,9 +109,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			if fInfo.isLiquidityLessThanThreshold(sdk.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
 				setFulfilled = true
 			}
-			if err := k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt()); err != nil {
-				return err
-			}
+			k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt())
 		}
 
 		if setFulfilled {
@@ -251,7 +247,7 @@ func (k Keeper) fulfill(
 	fInfo *fulfillmentInfo,
 	betAmountToFulfill,
 	payoutProfitToFulfill sdk.Int,
-) error {
+) {
 	fInfo.inProcessItem.participationExposure.SetCurrentRound(betAmountToFulfill, payoutProfitToFulfill)
 	fInfo.inProcessItem.participation.SetCurrentRound(&fInfo.inProcessItem.participationExposure, fInfo.oddsUID, betAmountToFulfill)
 
@@ -279,8 +275,6 @@ func (k Keeper) fulfill(
 		fInfo.inProcessItem.participation.Index,
 	)
 	k.SetParticipationBetPair(ctx, participationBetPair, fInfo.betID)
-
-	return nil
 }
 
 // prepareParticipationExposuresForNextRound prepares the participation exposures for the next round of queue process.
@@ -395,7 +389,7 @@ func (fInfo *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
 }
 
 func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
-	return fInfo.inProcessItem.availableLiquidity.ToDec().LTE(fInfo.payoutProfit)
+	return fInfo.inProcessItem.availableLiquidity.LTE(fInfo.payoutProfit.TruncateInt())
 }
 
 func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
