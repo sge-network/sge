@@ -15,17 +15,17 @@ func (k Keeper) SetReward(ctx sdk.Context, reward types.RewardK) {
 }
 
 func (k Keeper) RewardUsers(ctx sdk.Context, msg *types.MsgRewardUser) error {
-	storeRewards, err := types.NewRewardK(ctx, msg)
-	if err != nil {
-		return err
-	}
+	//storeRewards, err := types.NewRewardK(ctx, msg)
+	//if err != nil {
+	//	return err
+	//}
 	for _, awardee := range msg.Reward.Awardees {
 		err := k.RewardUser(ctx, msg.Creator, msg.Reward.RewardType.String(), awardee.Amount, awardee.Address)
 		if err != nil {
 			return sdkerrors.Wrap(err, "Something failed")
 		}
 	}
-	k.SetReward(ctx, storeRewards)
+	//k.SetReward(ctx, storeRewards)
 	return nil
 }
 
