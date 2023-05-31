@@ -26,6 +26,7 @@ import (
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	rewardmoduletypes "github.com/sge-network/sge/x/rewards/types"
 	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
 
 	// unnamed import of statik for swagger UI support
@@ -47,6 +48,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		marketmoduletypes.StoreKey,
 		ovmmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
+		rewardmoduletypes.StoreKey,
 	)
 
 	// Define transient store keys

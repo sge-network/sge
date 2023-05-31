@@ -1,5 +1,5 @@
 syntax = "proto3";
-package sgenetwork.sge.reward;
+package sgenetwork.sge.rewards;
 
 import "gogoproto/gogo.proto";
 
