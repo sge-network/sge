@@ -240,7 +240,7 @@ $ %s query strategicreserve book-exposures %s
 // GetCmdQueryOrderBookExposure implements the bookexposure query command.
 func GetCmdQueryOrderBookExposure() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "book-exposure [order-book-id] [odd-uid]",
+		Use:   "book-exposure [order-book-id] [odds-uid]",
 		Short: "Query a book exposure",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a book exposure.

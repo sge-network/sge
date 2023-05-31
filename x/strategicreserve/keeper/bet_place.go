@@ -26,35 +26,35 @@ type fulfillmentInfo struct {
 	fulfillments     []*bettypes.BetFulfillment
 }
 
-func (info *fulfillmentInfo) setItemFulfilledAndRemove() {
-	info.inProcessItem.setFulfilled()
-	info.removeQueueItem()
+func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
+	fInfo.inProcessItem.setFulfilled()
+	fInfo.removeQueueItem()
 }
 
-func (info *fulfillmentInfo) removeQueueItem() {
-	info.fulfillmentQueue = info.fulfillmentQueue[1:]
+func (fInfo *fulfillmentInfo) removeQueueItem() {
+	fInfo.fulfillmentQueue = fInfo.fulfillmentQueue[1:]
 }
 
-func (info *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
-	return len(info.fulfillmentQueue) > 0
+func (fInfo *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
+	return len(fInfo.fulfillmentQueue) > 0
 }
 
-func (info *fulfillmentInfo) IsFulfilled() bool {
+func (fInfo *fulfillmentInfo) IsFulfilled() bool {
 	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return info.payoutProfit.LT(sdk.OneDec()) || len(info.fulfillmentQueue) == 0
+	return fInfo.payoutProfit.LT(sdk.OneDec()) || len(fInfo.fulfillmentQueue) == 0
 }
 
-func (info *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
+func (fInfo *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
 	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return info.payoutProfit.GTE(sdk.OneDec())
+	return fInfo.payoutProfit.GTE(sdk.OneDec())
 }
 
-func (info *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
-	return info.inProcessItem.availableLiquidity.ToDec().LTE(info.payoutProfit)
+func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
+	return fInfo.inProcessItem.availableLiquidity.ToDec().LTE(fInfo.payoutProfit)
 }
 
-func (info *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
-	diff := info.inProcessItem.availableLiquidity.Sub(info.payoutProfit.TruncateInt())
+func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
+	diff := fInfo.inProcessItem.availableLiquidity.Sub(fInfo.payoutProfit.TruncateInt())
 	return diff.LTE(threshold)
 }
 
@@ -310,7 +310,7 @@ func (k Keeper) initFulfillmentInfo(
 	return fInfo, nil
 }
 
-func (fInfo fulfillmentInfo) validate() error {
+func (fInfo *fulfillmentInfo) validate() error {
 	for _, participationIndex := range fInfo.fulfillmentQueue {
 		_, found := fInfo.fulfillmentMap[participationIndex]
 		if !found {

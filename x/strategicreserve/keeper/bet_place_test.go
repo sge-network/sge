@@ -63,7 +63,6 @@ func NewTestBetSuite(t *testing.T) TestBetSuite {
 }
 
 func (ts *TestBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
-
 	ts.tApp.MarketKeeper.SetMarket(ts.ctx, ts.market)
 
 	err := ts.k.InitiateOrderBook(ts.ctx, ts.market.UID, []string{
