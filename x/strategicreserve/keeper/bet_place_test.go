@@ -9,6 +9,7 @@ import (
 	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/strategicreserve/keeper"
 	"github.com/sge-network/sge/x/strategicreserve/types"
@@ -22,21 +23,19 @@ func TestBetPlacement(t *testing.T) {
 }
 
 type TestBetSuite struct {
-	t                *testing.T
-	k                *keeper.KeeperTest
-	ctx              sdk.Context
-	tApp             simappUtil.TestApp
-	betFee           sdk.Int
-	participationFee sdk.Int
-	market           markettypes.Market
-	participations   []types.OrderBookParticipation
+	t        *testing.T
+	k        *keeper.KeeperTest
+	ctx      sdk.Context
+	tApp     simappUtil.TestApp
+	betFee   sdk.Int
+	market   markettypes.Market
+	deposits []housetypes.Deposit
 }
 
 func NewTestBetSuite(t *testing.T) TestBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	betFee := sdk.NewInt(10)
-	participationFee := sdk.NewInt(10)
 
 	marketUID := uuid.NewString()
 	market := markettypes.Market{
@@ -54,13 +53,13 @@ func NewTestBetSuite(t *testing.T) TestBetSuite {
 		BookUID: marketUID,
 	}
 
-	participations := []types.OrderBookParticipation{
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), Liquidity: sdk.NewInt(8000)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user3"].Address.String(), Liquidity: sdk.NewInt(10000)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user4"].Address.String(), Liquidity: sdk.NewInt(10000)},
+	deposits := []housetypes.Deposit{
+		{DepositorAddress: simappUtil.TestParamUsers["user2"].Address.String(), Amount: sdk.NewInt(8010)},
+		{DepositorAddress: simappUtil.TestParamUsers["user3"].Address.String(), Amount: sdk.NewInt(10010)},
+		{DepositorAddress: simappUtil.TestParamUsers["user4"].Address.String(), Amount: sdk.NewInt(10010)},
 	}
 
-	return TestBetSuite{t, k, ctx, *tApp, betFee, participationFee, market, participations}
+	return TestBetSuite{t, k, ctx, *tApp, betFee, market, deposits}
 }
 
 func (ts *TestBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
@@ -74,14 +73,21 @@ func (ts *TestBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	})
 	require.NoError(ts.t, err)
 
-	ts.participations[0].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[0].ParticipantAddress), ts.market.BookUID, ts.participations[0].Liquidity, ts.participationFee)
+	found := false
+	participationIndex, err := ts.tApp.HouseKeeper.Deposit(ts.ctx, ts.deposits[0].DepositorAddress, ts.deposits[0].DepositorAddress, ts.market.BookUID, ts.deposits[0].Amount)
 	require.NoError(ts.t, err)
+	ts.deposits[0], found = ts.tApp.HouseKeeper.GetDeposit(ts.ctx, ts.deposits[0].DepositorAddress, ts.market.UID, participationIndex)
+	require.True(ts.t, found)
 
-	ts.participations[1].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[1].ParticipantAddress), ts.market.BookUID, ts.participations[1].Liquidity, ts.participationFee)
+	participationIndex, err = ts.tApp.HouseKeeper.Deposit(ts.ctx, ts.deposits[1].DepositorAddress, ts.deposits[1].DepositorAddress, ts.market.BookUID, ts.deposits[1].Amount)
 	require.NoError(ts.t, err)
+	ts.deposits[1], found = ts.tApp.HouseKeeper.GetDeposit(ts.ctx, ts.deposits[1].DepositorAddress, ts.market.UID, participationIndex)
+	require.True(ts.t, found)
 
-	ts.participations[2].Index, err = ts.k.InitiateOrderBookParticipation(ts.ctx, sdk.MustAccAddressFromBech32(ts.participations[2].ParticipantAddress), ts.market.BookUID, ts.participations[2].Liquidity, ts.participationFee)
+	participationIndex, err = ts.tApp.HouseKeeper.Deposit(ts.ctx, ts.deposits[2].DepositorAddress, ts.deposits[2].DepositorAddress, ts.market.BookUID, ts.deposits[2].Amount)
 	require.NoError(ts.t, err)
+	ts.deposits[2], found = ts.tApp.HouseKeeper.GetDeposit(ts.ctx, ts.deposits[2].DepositorAddress, ts.market.UID, participationIndex)
+	require.True(ts.t, found)
 
 	oddsExposures, found := ts.k.GetOrderBookOddsExposure(ts.ctx, ts.market.BookUID, ts.market.Odds[0].UID)
 	require.True(ts.t, found)
@@ -128,7 +134,7 @@ func (ts *TestBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	//
 	failedWinnerBettorAddr := simappUtil.TestParamUsers["user7"].Address
 	failedWinnerBetID := uint64(3)
-	ts.placeTestBet(failedWinnerBettorAddr, ts.market.UID, ts.market.Odds[0].UID, failedWinnerBetID, sdk.NewInt(100000000000), ts.betFee, types.ErrInternalProcessingBet)
+	ts.placeTestBet(failedWinnerBettorAddr, ts.market.UID, ts.market.Odds[0].UID, failedWinnerBetID, sdk.NewInt(100000000000), ts.betFee, types.ErrParticipationsCanNotCoverthePayoutProfit)
 
 	///// loser bet placement
 	//
