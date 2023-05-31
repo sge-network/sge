@@ -9,7 +9,7 @@ import (
 )
 
 func TestOrderBookSettlement(t *testing.T) {
-	ts := NewTestBetSuite(t)
+	ts := newTestBetSuite(t)
 	participant1BalanceBeforeDeposit := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx, sdk.MustAccAddressFromBech32(ts.deposits[0].DepositorAddress),
 		params.DefaultBondDenom).Amount
@@ -59,7 +59,7 @@ func TestOrderBookSettlement(t *testing.T) {
 			// subtract participation fee
 			Sub(ts.deposits[0].Fee).
 			// add loser bet amount
-			Add(bets[0].Amount),
+			Add(bets[2].Amount),
 		participant1BalanceAfterSettlement)
 
 	participant2BalanceAfterSettlement := ts.tApp.BankKeeper.GetBalance(

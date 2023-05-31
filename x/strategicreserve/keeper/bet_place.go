@@ -8,99 +8,6 @@ import (
 	"github.com/spf13/cast"
 )
 
-type fulfillmentInfo struct {
-	betUID                  string
-	betID                   uint64
-	oddsUID                 string
-	oddsType                bettypes.OddsType
-	oddsVal                 string
-	maxLossMultiplier       sdk.Dec
-	betAmount               sdk.Int
-	payoutProfit            sdk.Dec
-	fulfiledBetAmount       sdk.Int
-	totalAvailableLiquidity sdk.Int
-
-	fulfillmentQueue []uint64
-	fulfillmentMap   fulfillmentMap
-	inProcessItem    fulfillmentItem
-	fulfillments     []*bettypes.BetFulfillment
-}
-
-func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
-	fInfo.inProcessItem.setFulfilled()
-	fInfo.removeQueueItem()
-}
-
-func (fInfo *fulfillmentInfo) removeQueueItem() {
-	fInfo.fulfillmentQueue = fInfo.fulfillmentQueue[1:]
-}
-
-func (fInfo *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
-	return len(fInfo.fulfillmentQueue) > 0
-}
-
-func (fInfo *fulfillmentInfo) IsFulfilled() bool {
-	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return fInfo.payoutProfit.LT(sdk.OneDec()) || len(fInfo.fulfillmentQueue) == 0
-}
-
-func (fInfo *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
-	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return fInfo.payoutProfit.GTE(sdk.OneDec())
-}
-
-func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
-	return fInfo.inProcessItem.availableLiquidity.ToDec().LTE(fInfo.payoutProfit)
-}
-
-func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
-	diff := fInfo.inProcessItem.availableLiquidity.Sub(fInfo.payoutProfit.TruncateInt())
-	return diff.LTE(threshold)
-}
-
-type fulfillmentItem struct {
-	availableLiquidity    sdk.Int
-	participation         types.OrderBookParticipation
-	participationExposure types.ParticipationExposure
-}
-
-func (item *fulfillmentItem) noLiquidityAvailable() bool {
-	return item.availableLiquidity.LTE(sdk.ZeroInt())
-}
-
-func (item *fulfillmentItem) setFulfilled() {
-	item.participationExposure.IsFulfilled = true
-	item.participation.ExposuresNotFilled--
-}
-
-func (item *fulfillmentItem) setAvailableLiquidity(maxLossMultiplier sdk.Dec) {
-	item.availableLiquidity = item.calcAvailableLiquidity(maxLossMultiplier)
-}
-
-func (item *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdk.Dec) sdk.Int {
-	return maxLossMultiplier.
-		MulInt(item.participation.CurrentRoundLiquidity).
-		Sub(sdk.NewDecFromInt(item.participationExposure.Exposure)).TruncateInt()
-}
-
-func (item *fulfillmentItem) allExposureFulfilled() bool {
-	return item.participation.ExposuresNotFilled == 0
-}
-
-type fulfillmentMap map[uint64]fulfillmentItem
-
-func (fMap fulfillmentMap) setParticipation(participation types.OrderBookParticipation) {
-	fItem := fMap[participation.Index]
-	fItem.participation = participation
-	fMap[participation.Index] = fItem
-}
-
-func (fMap fulfillmentMap) setExposure(participationIndex uint64, exposure types.ParticipationExposure) {
-	fItem := fMap[participationIndex]
-	fItem.participationExposure = exposure
-	fMap[participationIndex] = fItem
-}
-
 // ProcessBetPlacement processes bet placement
 func (k Keeper) ProcessBetPlacement(
 	ctx sdk.Context,
@@ -181,9 +88,10 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		// availableLiquidty is the available amount of tokens to be used from the participation exposure
 		fInfo.inProcessItem.setAvailableLiquidity(fInfo.maxLossMultiplier)
 
+		setFulfilled := false
 		switch {
 		case fInfo.inProcessItem.noLiquidityAvailable():
-			fInfo.setItemFulfilledAndRemove()
+			setFulfilled = true
 		case fInfo.notEnoughLiquidityAvailable():
 			var betAmountToFulfill sdk.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(fInfo.oddsType, fInfo.oddsVal, fInfo.inProcessItem.availableLiquidity.ToDec(), truncatedBetAmount)
@@ -195,17 +103,21 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			if err = k.fulfill(ctx, fInfo, betAmountToFulfill, fInfo.inProcessItem.availableLiquidity); err != nil {
 				return err
 			}
-			fInfo.setItemFulfilledAndRemove()
+			setFulfilled = true
 		default:
 			// availableLiquidty is positive and more than remaining payout profit that
 			// need to be paid, so we can cover all of payout profits with available liquidity.
 			// this case appends the last fulfillment
 			if fInfo.isLiquidityLessThanThreshold(sdk.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
-				fInfo.setItemFulfilledAndRemove()
+				setFulfilled = true
 			}
 			if err := k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt()); err != nil {
 				return err
 			}
+		}
+
+		if setFulfilled {
+			fInfo.setItemFulfilledAndRemove()
 		}
 
 		k.SetParticipationExposure(ctx, fInfo.inProcessItem.participationExposure)
@@ -439,4 +351,97 @@ func (k Keeper) refreshQueueAndState(ctx sdk.Context, fInfo *fulfillmentInfo, bo
 	}
 
 	return nil
+}
+
+type fulfillmentInfo struct {
+	betUID                  string
+	betID                   uint64
+	oddsUID                 string
+	oddsType                bettypes.OddsType
+	oddsVal                 string
+	maxLossMultiplier       sdk.Dec
+	betAmount               sdk.Int
+	payoutProfit            sdk.Dec
+	fulfiledBetAmount       sdk.Int
+	totalAvailableLiquidity sdk.Int
+
+	fulfillmentQueue []uint64
+	fulfillmentMap   fulfillmentMap
+	inProcessItem    fulfillmentItem
+	fulfillments     []*bettypes.BetFulfillment
+}
+
+func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
+	fInfo.inProcessItem.setFulfilled()
+	fInfo.removeQueueItem()
+}
+
+func (fInfo *fulfillmentInfo) removeQueueItem() {
+	fInfo.fulfillmentQueue = fInfo.fulfillmentQueue[1:]
+}
+
+func (fInfo *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
+	return len(fInfo.fulfillmentQueue) > 0
+}
+
+func (fInfo *fulfillmentInfo) IsFulfilled() bool {
+	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
+	return fInfo.payoutProfit.LT(sdk.OneDec()) || len(fInfo.fulfillmentQueue) == 0
+}
+
+func (fInfo *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
+	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
+	return fInfo.payoutProfit.GTE(sdk.OneDec())
+}
+
+func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
+	return fInfo.inProcessItem.availableLiquidity.ToDec().LTE(fInfo.payoutProfit)
+}
+
+func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
+	diff := fInfo.inProcessItem.availableLiquidity.Sub(fInfo.payoutProfit.TruncateInt())
+	return diff.LTE(threshold)
+}
+
+type fulfillmentItem struct {
+	availableLiquidity    sdk.Int
+	participation         types.OrderBookParticipation
+	participationExposure types.ParticipationExposure
+}
+
+func (fItem *fulfillmentItem) noLiquidityAvailable() bool {
+	return fItem.availableLiquidity.LTE(sdk.ZeroInt())
+}
+
+func (fItem *fulfillmentItem) setFulfilled() {
+	fItem.participationExposure.IsFulfilled = true
+	fItem.participation.ExposuresNotFilled--
+}
+
+func (fItem *fulfillmentItem) setAvailableLiquidity(maxLossMultiplier sdk.Dec) {
+	fItem.availableLiquidity = fItem.calcAvailableLiquidity(maxLossMultiplier)
+}
+
+func (fItem *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdk.Dec) sdk.Int {
+	return maxLossMultiplier.
+		MulInt(fItem.participation.CurrentRoundLiquidity).
+		Sub(sdk.NewDecFromInt(fItem.participationExposure.Exposure)).TruncateInt()
+}
+
+func (fItem *fulfillmentItem) allExposureFulfilled() bool {
+	return fItem.participation.ExposuresNotFilled == 0
+}
+
+type fulfillmentMap map[uint64]fulfillmentItem
+
+func (fMap fulfillmentMap) setParticipation(participation types.OrderBookParticipation) {
+	fItem := fMap[participation.Index]
+	fItem.participation = participation
+	fMap[participation.Index] = fItem
+}
+
+func (fMap fulfillmentMap) setExposure(participationIndex uint64, exposure types.ParticipationExposure) {
+	fItem := fMap[participationIndex]
+	fItem.participationExposure = exposure
+	fMap[participationIndex] = fItem
 }

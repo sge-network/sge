@@ -11,12 +11,12 @@ import (
 )
 
 func TestBetSettlement(t *testing.T) {
-	ts := NewTestBetSuite(t)
+	ts := newTestBetSuite(t)
 	bets, winner1PayoutProfit, winner2PayoutProfit := ts.placeBetsAndTest()
 	ts.settleBetsAndTest(bets, winner1PayoutProfit, winner2PayoutProfit)
 }
 
-func (ts *TestBetSuite) settleBetsAndTest(bets []bettypes.Bet, winner1PayoutProfit, winner2PayoutProfit sdk.Dec) {
+func (ts *testBetSuite) settleBetsAndTest(bets []bettypes.Bet, winner1PayoutProfit, winner2PayoutProfit sdk.Dec) {
 	winner1BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[0].Creator), params.DefaultBondDenom).Amount
 	winner2BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[1].Creator), params.DefaultBondDenom).Amount
 	loserBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, sdk.MustAccAddressFromBech32(bets[2].Creator), params.DefaultBondDenom).Amount
