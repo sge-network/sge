@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -27,9 +28,13 @@ func NewMsgRewardUser(creator string, addresses string, amounts string, rType st
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "Invalid Meta (%s)", meta)
 	}
+	rewardTypeEnum, found := RewardType_value[rType]
+	if !found {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "Invalid Reward type (%s)", rType, " Choose from values - ", reflect.ValueOf(RewardType_value).MapKeys())
+	}
 	rewards := Reward{
 		Awardees:    getAwardeesList(addressList, amountList),
-		RewardType:  RewardType(RewardType_value[rType]),
+		RewardType:  RewardType(rewardTypeEnum),
 		Meta:        metaData,
 		IncentiveId: incentiveId,
 	}
@@ -107,10 +112,6 @@ func (msg *MsgRewardUser) validateAwardeeAmounts() error {
 			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid amount: ", awardee.Amount)
 		}
 	}
-	return nil
-}
-
-func (msg *MsgRewardUser) validateReferralType() error {
 	return nil
 }
 
