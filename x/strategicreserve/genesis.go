@@ -41,10 +41,6 @@ func InitGenesis(ctx sdk.Context, keeper keeper.Keeper, data *types.GenesisState
 		keeper.SetParticipationBetPair(ctx, pb, betID.ID)
 	}
 
-	for _, pl := range data.PayoutLock {
-		keeper.SetPayoutLock(ctx, string(pl))
-	}
-
 	keeper.SetOrderBookStats(ctx, data.Stats)
 
 	keeper.SetParams(ctx, data.Params)
@@ -88,11 +84,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	}
 
 	genesis.ParticipationBetPairExposureList, err = k.GetAllParticipationBetPair(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	genesis.PayoutLock, err = k.GetAllPayoutLock(ctx)
 	if err != nil {
 		panic(err)
 	}

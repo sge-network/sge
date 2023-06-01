@@ -65,7 +65,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				ParticipationIndex: 1,
 			},
 		},
-		PayoutLock: [][]byte{},
 		Stats: types.OrderBookStats{
 			ResolvedUnsettled: []string{marketUID},
 		},

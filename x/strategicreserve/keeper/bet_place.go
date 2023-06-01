@@ -20,12 +20,6 @@ func (k Keeper) ProcessBetPlacement(
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 ) ([]*bettypes.BetFulfillment, error) {
-	// If lock exists, return error
-	// Lock already exists means the bet is already placed for the given bet-uid
-	if k.payoutLockExists(ctx, betUID) {
-		return nil, sdkerrors.Wrapf(types.ErrLockAlreadyExists, "%s", betUID)
-	}
-
 	// get book data by its id
 	book, found := k.GetOrderBook(ctx, bookUID)
 	if !found {
@@ -59,9 +53,6 @@ func (k Keeper) ProcessBetPlacement(
 	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityPool, fInfo.fulfiledBetAmount); err != nil {
 		return nil, err
 	}
-
-	// Create a unique lock in the Payout Store for the bet
-	k.SetPayoutLock(ctx, betUID)
 
 	return fInfo.fulfillments, nil
 }

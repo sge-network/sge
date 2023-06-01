@@ -48,9 +48,6 @@ message GenesisState {
   repeated ParticipationBetPair participation_bet_pair_exposure_list = 8
       [ (gogoproto.nullable) = false ];
 
-  // payout_lock defines the current locks for the payouts.
-  repeated bytes payout_lock = 9 [ (gogoproto.nullable) = false ];
-
   // stats is the statistics of the order book.
-  OrderBookStats stats = 10 [ (gogoproto.nullable) = false ];
+  OrderBookStats stats = 9 [ (gogoproto.nullable) = false ];
 }

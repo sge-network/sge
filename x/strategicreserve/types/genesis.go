@@ -18,7 +18,6 @@ func DefaultGenesis() *GenesisState {
 		ParticipationExposureByIndexList:    []ParticipationExposure{},
 		HistoricalParticipationExposureList: []ParticipationExposure{},
 		ParticipationBetPairExposureList:    []ParticipationBetPair{},
-		PayoutLock:                          [][]byte{},
 		Stats:                               OrderBookStats{ResolvedUnsettled: []string{}},
 	}
 }

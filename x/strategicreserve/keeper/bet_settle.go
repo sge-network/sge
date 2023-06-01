@@ -16,11 +16,6 @@ func (k Keeper) RefundBettor(
 	betAmount, betFee, payout sdk.Int,
 	uniqueLock string,
 ) (err error) {
-	// if no lock exist means that there is nothing to be processed.
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
 	// transfer bet amount from `book_liquidity_pool` to bettor's account.
 	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, bettorAddress, betAmount)
 	if err != nil {
@@ -32,9 +27,6 @@ func (k Keeper) RefundBettor(
 	if err != nil {
 		return
 	}
-
-	// delete the lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
 
 	return nil
 }
@@ -51,11 +43,6 @@ func (k Keeper) BettorWins(
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) (err error) {
-	// if no lock exist means that there is nothing to be processed.
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
 	for _, betFulfillment := range betFulfillments {
 		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
 		if !found {
@@ -75,9 +62,6 @@ func (k Keeper) BettorWins(
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
-	// Delete lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
-
 	return nil
 }
 
@@ -92,11 +76,6 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {
-	// if no lock exist means that there is nothing to be processed.
-	if !k.payoutLockExists(ctx, uniqueLock) {
-		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
-	}
-
 	for _, betFulfillment := range betFulfillments {
 		// update amount to be transferred to house
 		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
@@ -109,9 +88,6 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
-
-	// Delete lock from the payout store as the bet is settled
-	k.removePayoutLock(ctx, uniqueLock)
 
 	return nil
 }
