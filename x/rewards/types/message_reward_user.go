@@ -83,10 +83,51 @@ func (msg *MsgRewardUser) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgRewardUser) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
+func validateAddress(address string, errorString string) error {
+	_, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, errorString, err)
+	}
+	return nil
+}
+
+func (msg *MsgRewardUser) validateAwardeeAddresses() error {
+	for _, awardee := range msg.Reward.Awardees {
+		err := validateAddress(awardee.GetAddress(), "invalid awardee address (%s)")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (msg *MsgRewardUser) validateAwardeeAmounts() error {
+	for _, awardee := range msg.Reward.Awardees {
+		if awardee.Amount <= 0 {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid amount: ", awardee.Amount)
+		}
+	}
+	return nil
+}
+
+func (msg *MsgRewardUser) validateReferralType() error {
+	return nil
+}
+
+func (msg *MsgRewardUser) ValidateBasic() error {
+	err := validateAddress(msg.Creator, "invalid creator address (%s)")
+	if err != nil {
+		return err
+	}
+
+	err = msg.validateAwardeeAddresses()
+	if err != nil {
+		return err
+	}
+
+	err = msg.validateAwardeeAmounts()
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -96,7 +137,5 @@ func (msg *MsgRewardUser) ValidateSanity(ctx sdk.Context, p *Params) error {
 	if err != nil {
 		return err
 	}
-
-	// TODO Check for total awardees, their sum limit
 	return nil
 }
