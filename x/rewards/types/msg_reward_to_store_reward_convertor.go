@@ -15,6 +15,7 @@ func (c msgRewardToStoreReward) Convert(msg *MsgRewardUser) (RewardK, error) {
 	reward.IncentiveUID = msg.Reward.IncentiveId
 	reward.Awardees = awardees
 	reward.Meta = msg.Reward.Meta
+	reward.Creator = msg.Creator
 
 	return reward, nil
 }
