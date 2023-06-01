@@ -15,6 +15,9 @@ func (k Keeper) SetReward(ctx sdk.Context, reward types.RewardK) {
 }
 
 func (k Keeper) RewardUsers(ctx sdk.Context, msg *types.MsgRewardUser) error {
+	if k.IsIncentiveIdPresent(ctx, msg.Reward.IncentiveId) {
+		return sdkerrors.Wrapf(sdkerrors.ErrConflict, "IncentiveId already present")
+	}
 	storeRewards, err := types.NewRewardK(ctx, msg)
 	if err != nil {
 		return err
@@ -41,4 +44,13 @@ func (k Keeper) RewardUser(ctx sdk.Context, creator string, rewardType string, a
 		return err
 	}
 	return nil
+}
+
+func (k Keeper) IsIncentiveIdPresent(ctx sdk.Context, incentiveId string) bool {
+	rewardStore := k.getRewardStore(ctx)
+	rewardKey := types.GetRewardKey(incentiveId)
+	if rewardStore.Get(rewardKey) == nil {
+		return false
+	}
+	return true
 }
