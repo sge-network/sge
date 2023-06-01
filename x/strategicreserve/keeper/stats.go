@@ -27,8 +27,8 @@ func (k Keeper) GetOrderBookStats(ctx sdk.Context) (val types.OrderBookStats) {
 	return val
 }
 
-// SetOrderBookAsSettled sets the orderbook as settled.
-func (k Keeper) SetOrderBookAsSettled(ctx sdk.Context, orderBookUID string) error {
+// SetOrderBookAsUnsettledResolved sets the orderbook as settled.
+func (k Keeper) SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error {
 	book, found := k.GetOrderBook(ctx, orderBookUID)
 	if !found {
 		return sdkerrors.Wrapf(types.ErrOrderBookNotFound, "%s", orderBookUID)

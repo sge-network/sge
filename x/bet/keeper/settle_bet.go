@@ -157,7 +157,7 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 		// we need to remove its uid from the list of unsettled resolved bets.
 		if !pendingBetExists {
 			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
-			err = k.srKeeper.SetOrderBookAsSettled(ctx, marketUID)
+			err = k.srKeeper.SetOrderBookAsUnsettledResolved(ctx, marketUID)
 			if err != nil {
 				return fmt.Errorf("could not resolve strategicreserve %s %s", marketUID, err)
 			}
