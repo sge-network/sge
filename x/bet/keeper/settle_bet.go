@@ -76,6 +76,10 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
+	if err := k.srKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.BetFee); err != nil {
+		return err
+	}
+
 	k.updateSettlementState(ctx, bet, uid2ID.ID)
 
 	return nil

@@ -40,4 +40,5 @@ type SRKeeper interface {
 	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
 	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
 	SetOrderBookAsSettled(ctx sdk.Context, orderBookUID string) error
+	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdk.Int) error
 }
