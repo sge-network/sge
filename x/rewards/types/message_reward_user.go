@@ -130,6 +130,23 @@ func (msg *MsgRewardUser) ValidateBasic() error {
 	if err != nil {
 		return err
 	}
+
+	err = msg.validateAwardeeNumber()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (msg *MsgRewardUser) validateAwardeeNumber() error {
+	switch msg.Reward.RewardType {
+	case RewardType_REFERRAL:
+		if len(msg.Reward.Awardees) != 2 {
+			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "For referral there should be 2 awardees")
+		}
+	default:
+		return nil
+	}
 	return nil
 }
 
