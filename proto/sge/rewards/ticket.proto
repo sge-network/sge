@@ -1,0 +1,18 @@
+syntax = "proto3";
+package sgenetwork.sge.rewards;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/rewards/types";
+
+// RewardK represents the awardees, types and amount
+message RewardsTicketPayload {
+  // incentive_uid is the external UID to identify the payout
+  string incentive_uid = 1 [
+    (gogoproto.customname) = "IncentiveUID",
+    (gogoproto.jsontag) = "incentive_uid",
+    json_name = "incentive_uid"
+  ];
+
+  map<string, string> meta = 2;
+}
