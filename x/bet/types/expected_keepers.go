@@ -36,7 +36,7 @@ type OVMKeeper interface {
 // SRKeeper defines the expected interface needed to process bet placement
 type SRKeeper interface {
 	ProcessBetPlacement(ctx sdk.Context, betUID, bookUID, oddsUID string, maxLossMultiplier sdk.Dec, betAmount sdk.Int, payoutProfit sdk.Dec, bettorAddress sdk.AccAddress, betFee sdk.Int, oddsType OddsType, oddsVal string, betID uint64) ([]*BetFulfillment, error)
-	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string) error
+	RefundBettor(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, betFee, payout sdk.Int, uniqueLock string) error
 	BettorWins(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
 	BettorLoses(ctx sdk.Context, bettorAddress sdk.AccAddress, betAmount, payout sdk.Int, uniqueLock string, fulfillment []*BetFulfillment, bookUID string) error
 	SetOrderBookAsSettled(ctx sdk.Context, orderBookUID string) error

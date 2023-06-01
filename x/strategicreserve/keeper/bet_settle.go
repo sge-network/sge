@@ -13,7 +13,7 @@ import (
 func (k Keeper) RefundBettor(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount, payout sdk.Int,
+	betAmount, betFee, payout sdk.Int,
 	uniqueLock string,
 ) (err error) {
 	// if no lock exist means that there is nothing to be processed.
@@ -21,8 +21,14 @@ func (k Keeper) RefundBettor(
 		return sdkerrors.Wrapf(types.ErrPayoutLockDoesnotExist, uniqueLock)
 	}
 
-	// transfer bet amount from `bet_reserve` to bettor's account.
+	// transfer bet amount from `book_liquidity_pool` to bettor's account.
 	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, bettorAddress, betAmount)
+	if err != nil {
+		return
+	}
+
+	// transfer bet fee from `bet_fee_collector` to bettor's account.
+	err = k.transferFundsFromModuleToAccount(ctx, bettypes.BetFeeCollector, bettorAddress, betFee)
 	if err != nil {
 		return
 	}

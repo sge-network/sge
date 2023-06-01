@@ -55,7 +55,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 			return err
 		}
 
-		if err := k.srKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.srKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.BetFee, payoutProfit.TruncateInt(), bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRRefund, "%s", err)
 		}
 
