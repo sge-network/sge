@@ -13,7 +13,7 @@ const TypeMsgRewardUser = "reward_user"
 
 var _ sdk.Msg = &MsgRewardUser{}
 
-func NewMsgRewardUser(creator string, addresses string, amounts string, rType string, meta string, incentiveId string) (
+func NewMsgRewardUser(creator string, addresses string, amounts string, rType string, meta string, incentiveId string, ticket string) (
 	*MsgRewardUser, error) {
 	addressList := strings.Split(addresses, ",")
 	amountList, err := mapStringsToInts(strings.Split(amounts, ","))
@@ -41,6 +41,7 @@ func NewMsgRewardUser(creator string, addresses string, amounts string, rType st
 	return &MsgRewardUser{
 		Creator: creator,
 		Reward:  &rewards,
+		Ticket:  ticket,
 	}, nil
 }
 

@@ -8,5 +8,6 @@ import (
 
 // x/rewards module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrSample                    = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrInTicketPayloadValidation = sdkerrors.Register(ModuleName, 1007, "error in ticket payload validation")
 )

@@ -7,15 +7,15 @@ import (
 	"github.com/sge-network/sge/x/rewards/types"
 )
 
-func (k Keeper) SetReward(ctx sdk.Context, reward types.RewardK) {
-	rewardKey := types.GetRewardKey(reward.IncentiveUID)
+func (k Keeper) SetReward(ctx sdk.Context, reward types.RewardK, incentiveId string) {
+	rewardKey := types.GetRewardKey(incentiveId)
 	store := k.getRewardStore(ctx)
 	b := k.cdc.MustMarshal(&reward)
 	store.Set(rewardKey, b)
 }
 
-func (k Keeper) RewardUsers(ctx sdk.Context, msg *types.MsgRewardUser) error {
-	if k.IsIncentiveIdPresent(ctx, msg.Reward.IncentiveId) {
+func (k Keeper) RewardUsers(ctx sdk.Context, msg *types.MsgRewardUser, incentiveId string) error {
+	if k.IsIncentiveIdPresent(ctx, incentiveId) {
 		return sdkerrors.Wrapf(sdkerrors.ErrConflict, "IncentiveId already present")
 	}
 	storeRewards, err := types.NewRewardK(ctx, msg)
@@ -28,7 +28,7 @@ func (k Keeper) RewardUsers(ctx sdk.Context, msg *types.MsgRewardUser) error {
 			return sdkerrors.Wrap(err, "Something failed")
 		}
 	}
-	k.SetReward(ctx, storeRewards)
+	k.SetReward(ctx, storeRewards, incentiveId)
 	return nil
 }
 
