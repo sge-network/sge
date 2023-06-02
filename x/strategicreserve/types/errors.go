@@ -42,6 +42,7 @@ var (
 	ErrInFeeGrantAllowance                      = sdkerrors.Register(ModuleName, 6032, "fee grant allowance grant failed")
 	ErrInSrPoolFeeGrant                         = sdkerrors.Register(ModuleName, 6033, "sr pool sdk fee grant failed")
 	ErrParticipationsCanNotCoverthePayoutProfit = sdkerrors.Register(ModuleName, 6034, "not enought fund in the participations to cover the payout")
+	ErrUnknownMarketStatus                      = sdkerrors.Register(ModuleName, 6035, "unknown market status of orderbook settlement")
 )
 
 // x/strategicreserve module sentinel error text

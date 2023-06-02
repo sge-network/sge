@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cast"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
@@ -25,14 +26,19 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 
 	book, found := k.GetOrderBook(ctx, orderBookUID)
 	if !found {
-		return fmt.Errorf("strategicreserve not found %s", orderBookUID)
+		return fmt.Errorf("orderbook not found %s", orderBookUID)
 	}
 	if book.Status != types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_RESOLVED {
-		return fmt.Errorf("strategicreserve status not resolved %s", orderBookUID)
+		return fmt.Errorf("orderbook status not resolved %s", orderBookUID)
+	}
+
+	market, found := k.marketKeeper.GetMarket(ctx, orderBookUID)
+	if !found {
+		return fmt.Errorf("market not found %s", orderBookUID)
 	}
 
 	// settle order book active deposits.
-	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, toFetch)
+	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, market.Status, toFetch)
 	if err != nil {
 		return fmt.Errorf("could not settle strategicreserve %s %s", orderBookUID, err)
 	}
@@ -47,7 +53,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 }
 
 // batchSettlementOfParticipation settles active deposits of a strategicreserve
-func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, countToBeSettled uint64) (allSettled bool, err error) {
+func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, marketStatus markettypes.MarketStatus, countToBeSettled uint64) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
@@ -57,7 +63,7 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 	}
 	for _, bookParticipation := range bookParticipations {
 		if !bookParticipation.IsSettled {
-			err = k.settleParticipation(ctx, bookParticipation)
+			err = k.settleParticipation(ctx, bookParticipation, marketStatus)
 			if err != nil {
 				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
 					bookParticipation, err)
@@ -73,24 +79,43 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 	return allSettled, nil
 }
 
-func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation) error {
+func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation, marketStatus markettypes.MarketStatus) error {
 	if bp.IsSettled {
 		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
 
-	depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
-	// transfer amount to depositor address
-	err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, depositPlusProfit)
-	if err != nil {
-		return err
+	refundHouseDepositFee := false
+
+	switch marketStatus {
+	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
+		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+		// transfer amount to depositor address
+		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, depositPlusProfit)
+		if err != nil {
+			return err
+		}
+		if bp.NotParticipatedInBetFulfillment() {
+			refundHouseDepositFee = true
+
+		}
+	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
+		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
+		// transfer amount to depositor address
+		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, bp.Liquidity)
+		if err != nil {
+			return err
+		}
+		refundHouseDepositFee = true
+	default:
+		return sdkerrors.Wrapf(types.ErrUnknownMarketStatus, "order book %s,  market status %s", bp.OrderBookUID, marketStatus)
 	}
 
-	if bp.NotParticipatedInBetFulfillment() {
+	if refundHouseDepositFee {
 		// get corresponding deposit to extract house fee
 		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
 		if !found {
@@ -98,12 +123,7 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		}
 
 		// give back the participation fee to the depositor account
-		err = k.transferFundsFromModuleToAccount(
-			ctx,
-			housetypes.HouseFeeCollector,
-			sdk.MustAccAddressFromBech32(bp.ParticipantAddress),
-			deposit.Fee,
-		)
+		err = k.transferFundsFromModuleToAccount(ctx, housetypes.HouseFeeCollector, depositorAddress, deposit.Fee)
 		if err != nil {
 			return err
 		}
