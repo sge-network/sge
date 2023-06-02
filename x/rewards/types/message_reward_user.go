@@ -13,7 +13,7 @@ const TypeMsgRewardUser = "reward_user"
 
 var _ sdk.Msg = &MsgRewardUser{}
 
-func NewMsgRewardUser(creator string, addresses string, amounts string, rType string, meta string, incentiveId string, ticket string) (
+func NewMsgRewardUser(creator string, addresses string, amounts string, rType string, meta string, ticket string) (
 	*MsgRewardUser, error) {
 	addressList := strings.Split(addresses, ",")
 	amountList, err := mapStringsToInts(strings.Split(amounts, ","))
@@ -33,10 +33,9 @@ func NewMsgRewardUser(creator string, addresses string, amounts string, rType st
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "Invalid Reward type (%s)", rType, " Choose from values - ", reflect.ValueOf(RewardType_value).MapKeys())
 	}
 	rewards := Reward{
-		Awardees:    getAwardeesList(addressList, amountList),
-		RewardType:  RewardType(rewardTypeEnum),
-		Meta:        metaData,
-		IncentiveId: incentiveId,
+		Awardees:   getAwardeesList(addressList, amountList),
+		RewardType: RewardType(rewardTypeEnum),
+		Meta:       metaData,
 	}
 	return &MsgRewardUser{
 		Creator: creator,

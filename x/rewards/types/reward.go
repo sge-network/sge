@@ -6,8 +6,9 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func NewRewardK(ctx sdk.Context, msg *MsgRewardUser) (RewardK, error) {
+func NewRewardK(ctx sdk.Context, msg *MsgRewardUser, incentiveId string) (RewardK, error) {
 	storeRewards, err := MsgRewardToStoreReward.Convert(msg)
+	storeRewards.IncentiveUID = incentiveId
 	if err != nil {
 		return RewardK{}, sdkerrors.Wrap(err, "Unable to convert MsgRewardUser to store object")
 	}
