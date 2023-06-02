@@ -22,7 +22,6 @@ import (
 	"github.com/sge-network/sge/utils"
 	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
 	ovmtypes "github.com/sge-network/sge/x/ovm/types"
-	strategicreservetypes "github.com/sge-network/sge/x/strategicreserve/types"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
@@ -159,11 +158,6 @@ func GetTestObjectsWithOptions(options Options) (*TestApp, sdk.Context, error) {
 	setMinterParams(tApp, ctx)
 
 	if err := generateSimappAccountCoins(&ctx, tApp); err != nil {
-		return &TestApp{}, sdk.Context{}, err
-	}
-
-	err := SetModuleAccountCoins(&ctx, tApp.BankKeeper, strategicreservetypes.DataFeeCollector, GenesisModuleAccountsBalances[strategicreservetypes.DataFeeCollector])
-	if err != nil {
 		return &TestApp{}, sdk.Context{}, err
 	}
 

@@ -101,7 +101,6 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		}
 		if bp.NotParticipatedInBetFulfillment() {
 			refundHouseDepositFee = true
-
 		}
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:

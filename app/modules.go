@@ -74,7 +74,6 @@ var mAccPerms = map[string][]string{
 	ibctransfertypes.ModuleName:                        {authtypes.Minter, authtypes.Burner},
 	betmoduletypes.BetFeeCollector:                     nil,
 	housemoduletypes.HouseFeeCollector:                 nil,
-	strategicreservemoduletypes.DataFeeCollector:       nil,
 	strategicreservemoduletypes.OrderBookLiquidityPool: nil,
 }
 

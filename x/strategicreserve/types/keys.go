@@ -20,8 +20,6 @@ const (
 
 // module accounts constants
 const (
-	// DataFeeCollector is the module account responsible for the payment of the market manipulation
-	DataFeeCollector = "data_fee_collector"
 	// OrderBookLiquidityPool defines the account name for book liquidity for the participants.
 	OrderBookLiquidityPool = "orderbook_liquidity_pool"
 )

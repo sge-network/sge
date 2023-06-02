@@ -14,8 +14,3 @@ func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
 		panic(fmt.Sprintf("end block no %d failed : %s", ctx.BlockHeight(), err.Error()))
 	}
 }
-
-// BeginBlocker settles the active deposits of resolved order books
-func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
-	k.InvokeSdkFeeGrantIfNotExists(ctx)
-}
