@@ -6,7 +6,8 @@ import (
 )
 
 func (k Keeper) WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdk.Int) error {
-	if err := k.transferFundsFromModuleToAccount(ctx, bettypes.BetFeeCollector, marketCreator, betFee); err != nil {
+	// refund market creator's account from bet fee collector.
+	if err := k.reFund(bettypes.BetFeeCollectorFunder{}, ctx, marketCreator, betFee); err != nil {
 		return err
 	}
 	return nil

@@ -118,13 +118,13 @@ func (k Keeper) InitiateOrderBookParticipation(
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	// Transfer liquidity amount from book participation  to `house_deposit_collector` Account
-	if err = k.transferFundsFromAccountToModule(ctx, addr, types.OrderBookLiquidityPool, liquidity); err != nil {
+	// fund order book liquidity pool from participant's account.
+	if err = k.fund(types.OrderBookLiquidityFunder{}, ctx, addr, liquidity); err != nil {
 		return
 	}
 
-	// Transfer fee from book participation  to `house_fee_collector` Account
-	if err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseFeeCollector, fee); err != nil {
+	// fund house fee collector from participant's account.
+	if err = k.fund(housetypes.HouseFeeCollectorFunder{}, ctx, addr, fee); err != nil {
 		return
 	}
 
@@ -184,7 +184,8 @@ func (k Keeper) WithdrawOrderBookParticipation(
 		return sdk.Int{}, err
 	}
 
-	if err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, withdrawalAmt); err != nil {
+	// refund participant's account from order book liquidity pool.
+	if err = k.reFund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, withdrawalAmt); err != nil {
 		return sdk.Int{}, err
 	}
 

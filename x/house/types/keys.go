@@ -20,8 +20,8 @@ const (
 
 // module accounts constants
 const (
-	// HouseFeeCollector defines the account name for house participation fee
-	HouseFeeCollector = "house_fee_collector"
+	// houseFeeCollector defines the account name for house participation fee
+	houseFeeCollector = "house_fee_collector"
 )
 
 var (

@@ -94,9 +94,8 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 	switch marketStatus {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		// transfer amount to depositor address
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, depositPlusProfit)
-		if err != nil {
+		// refund participant's account from orderbook liquidity pool.
+		if err := k.reFund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, depositPlusProfit); err != nil {
 			return err
 		}
 		if bp.NotParticipatedInBetFulfillment() {
@@ -104,9 +103,8 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		}
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
-		// transfer amount to depositor address
-		err = k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityPool, depositorAddress, bp.Liquidity)
-		if err != nil {
+		// refund participant's account from orderbook liquidity pool.
+		if err := k.reFund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, bp.Liquidity); err != nil {
 			return err
 		}
 		refundHouseDepositFee = true
@@ -120,10 +118,8 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		if !found {
 			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
 		}
-
-		// give back the participation fee to the depositor account
-		err = k.transferFundsFromModuleToAccount(ctx, housetypes.HouseFeeCollector, depositorAddress, deposit.Fee)
-		if err != nil {
+		// refund participant's account from orderbook liquidity pool.
+		if err := k.reFund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, deposit.Fee); err != nil {
 			return err
 		}
 	}

@@ -36,21 +36,20 @@ func (k Keeper) ProcessBetPlacement(
 		return nil, err
 	}
 
-	err = k.fulfillBetByParticipationQueue(ctx, &fInfo, &book, bookExposure.FulfillmentQueue)
-	if err != nil {
+	if err = k.fulfillBetByParticipationQueue(ctx, &fInfo, &book, bookExposure.FulfillmentQueue); err != nil {
 		return nil, err
 	}
 
 	bookExposure.FulfillmentQueue = fInfo.fulfillmentQueue
 	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
-	// Transfer bet fee from bettor to the `bet` module account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, bettypes.BetFeeCollector, betFee); err != nil {
+	// fund bet fee collector from bettor's account.
+	if err := k.fund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
 		return nil, err
 	}
 
-	// Transfer bet amount from bettor to `bet_collector` Account
-	if err = k.transferFundsFromAccountToModule(ctx, bettorAddress, types.OrderBookLiquidityPool, fInfo.fulfiledBetAmount); err != nil {
+	// fund order book liquidity pool from bettor's account.
+	if err := k.fund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, fInfo.fulfiledBetAmount); err != nil {
 		return nil, err
 	}
 

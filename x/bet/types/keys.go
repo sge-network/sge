@@ -26,8 +26,8 @@ const (
 )
 
 const (
-	// BetFeeCollector is the module account name for the bet fee collection module account.
-	BetFeeCollector = "bet_fee_collector"
+	// betFeeCollector is the module account name for the bet fee collection module account.
+	betFeeCollector = "bet_fee_collector"
 )
 
 var (

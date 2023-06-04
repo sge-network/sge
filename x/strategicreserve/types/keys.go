@@ -20,8 +20,8 @@ const (
 
 // module accounts constants
 const (
-	// OrderBookLiquidityPool defines the account name for book liquidity for the participants.
-	OrderBookLiquidityPool = "orderbook_liquidity_pool"
+	// orderBookLiquidityPool defines the account name for book liquidity for the participants.
+	orderBookLiquidityPool = "orderbook_liquidity_pool"
 )
 
 var (
