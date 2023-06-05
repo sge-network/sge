@@ -204,7 +204,7 @@ func (k Keeper) batchSettlementOfMarket(
 		settledCount++
 	}
 
-	return
+	return settledCount, nil
 }
 
 // checkBetStatus checks status of bet. It returns an error if
