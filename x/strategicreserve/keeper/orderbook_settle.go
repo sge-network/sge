@@ -38,7 +38,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	}
 
 	// settle order book active deposits.
-	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, market.Status, toFetch)
+	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, market, toFetch)
 	if err != nil {
 		return fmt.Errorf("could not settle strategicreserve %s %s", orderBookUID, err)
 	}
@@ -53,7 +53,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 }
 
 // batchSettlementOfParticipation settles active deposits of a strategicreserve
-func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, marketStatus markettypes.MarketStatus, countToBeSettled uint64) (allSettled bool, err error) {
+func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, market markettypes.Market, countToBeSettled uint64) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
@@ -63,7 +63,7 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 	}
 	for _, bookParticipation := range bookParticipations {
 		if !bookParticipation.IsSettled {
-			err = k.settleParticipation(ctx, bookParticipation, marketStatus)
+			err = k.settleParticipation(ctx, bookParticipation, market)
 			if err != nil {
 				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
 					bookParticipation, err)
@@ -79,7 +79,7 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 	return allSettled, nil
 }
 
-func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation, marketStatus markettypes.MarketStatus) error {
+func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation, market markettypes.Market) error {
 	if bp.IsSettled {
 		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
 	}
@@ -89,9 +89,9 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
 	}
 
-	refundHouseDepositFee := false
+	refundHouseDepositFeeToDepositor := false
 
-	switch marketStatus {
+	switch market.Status {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
 		// refund participant's account from orderbook liquidity pool.
@@ -99,7 +99,7 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 			return err
 		}
 		if bp.NotParticipatedInBetFulfillment() {
-			refundHouseDepositFee = true
+			refundHouseDepositFeeToDepositor = true
 		}
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
@@ -107,19 +107,25 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		if err := k.reFund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, bp.Liquidity); err != nil {
 			return err
 		}
-		refundHouseDepositFee = true
+		refundHouseDepositFeeToDepositor = true
 	default:
-		return sdkerrors.Wrapf(types.ErrUnknownMarketStatus, "order book %s,  market status %s", bp.OrderBookUID, marketStatus)
+		return sdkerrors.Wrapf(types.ErrUnknownMarketStatus, "order book %s,  market status %s", bp.OrderBookUID, market.Status)
 	}
 
-	if refundHouseDepositFee {
-		// get corresponding deposit to extract house fee
-		deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
-		if !found {
-			return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
-		}
+	// get corresponding deposit to extract house fee
+	deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
+	if !found {
+		return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
+	}
+
+	if refundHouseDepositFeeToDepositor {
 		// refund participant's account from orderbook liquidity pool.
 		if err := k.reFund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, deposit.Fee); err != nil {
+			return err
+		}
+	} else {
+		// refund participant's account from orderbook liquidity pool.
+		if err := k.reFund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), deposit.Fee); err != nil {
 			return err
 		}
 	}
