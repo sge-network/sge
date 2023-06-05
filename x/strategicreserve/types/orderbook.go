@@ -8,7 +8,11 @@ import (
 // NewOrderBook creates a new orderbook object
 //
 //nolint:interfacer
-func NewOrderBook(bookUID string, participationCount, oddsCount uint64, status OrderBookStatus) OrderBook {
+func NewOrderBook(
+	bookUID string,
+	participationCount, oddsCount uint64,
+	status OrderBookStatus,
+) OrderBook {
 	return OrderBook{
 		UID:                bookUID,
 		ParticipationCount: participationCount,

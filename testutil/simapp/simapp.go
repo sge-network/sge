@@ -45,8 +45,17 @@ type Options struct {
 func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 	db := tmdb.NewMemDB()
 	encCdc := app.MakeEncodingConfig()
-	appInstance := app.NewSgeApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, "", invCheckPeriod, encCdc,
-		sdksimapp.EmptyAppOptions{})
+	appInstance := app.NewSgeApp(
+		log.NewNopLogger(),
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		"",
+		invCheckPeriod,
+		encCdc,
+		sdksimapp.EmptyAppOptions{},
+	)
 	if withGenesis {
 		return &TestApp{SgeApp: *appInstance}, app.NewDefaultGenesisState()
 	}
@@ -77,7 +86,11 @@ func Setup(isCheckTx bool) *TestApp {
 }
 
 // SetupWithGenesisAccounts sets up the genesis accounts for testing
-func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Options, balances ...banktypes.Balance) *TestApp {
+func SetupWithGenesisAccounts(
+	genAccs []authtypes.GenesisAccount,
+	options Options,
+	balances ...banktypes.Balance,
+) *TestApp {
 	appInstance, genesisState := setup(true, 0)
 
 	authGenesis := authtypes.NewGenesisState(authtypes.DefaultParams(), genAccs)
@@ -99,7 +112,12 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 		totalSupply = totalSupply.Add(b.Coins...)
 	}
 
-	bankGenesis := banktypes.NewGenesisState(banktypes.DefaultGenesisState().Params, balances, totalSupply, []banktypes.Metadata{})
+	bankGenesis := banktypes.NewGenesisState(
+		banktypes.DefaultGenesisState().Params,
+		balances,
+		totalSupply,
+		[]banktypes.Metadata{},
+	)
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
 	{
@@ -127,7 +145,9 @@ func SetupWithGenesisAccounts(genAccs []authtypes.GenesisAccount, options Option
 	)
 
 	appInstance.Commit()
-	appInstance.BeginBlock(abci.RequestBeginBlock{Header: tmproto.Header{Height: appInstance.LastBlockHeight() + 1}})
+	appInstance.BeginBlock(
+		abci.RequestBeginBlock{Header: tmproto.Header{Height: appInstance.LastBlockHeight() + 1}},
+	)
 
 	return appInstance
 }
@@ -225,7 +245,12 @@ func SetAccountCoins(ctx *sdk.Context, k bankkeeper.Keeper, addr sdk.AccAddress,
 }
 
 // SetModuleAccountCoins sets the balance of accounts for testing
-func SetModuleAccountCoins(ctx *sdk.Context, k bankkeeper.Keeper, moduleName string, amount int64) error {
+func SetModuleAccountCoins(
+	ctx *sdk.Context,
+	k bankkeeper.Keeper,
+	moduleName string,
+	amount int64,
+) error {
 	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(amount)))
 	err := k.MintCoins(*ctx, mintmoduletypes.ModuleName, coin)
 	if err != nil {
@@ -256,7 +281,9 @@ var DefaultConsensusParams = &abci.ConsensusParams{
 	},
 }
 
-func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abci.ValidatorUpdate, banktypes.Balance) {
+func stakingDefaultTestGenesis(
+	tApp *TestApp,
+) (*stakingtypes.GenesisState, []abci.ValidatorUpdate, banktypes.Balance) {
 	defaultParams := stakingtypes.DefaultParams()
 	defaultParams.BondDenom = params.DefaultBondDenom
 
@@ -293,7 +320,11 @@ func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abc
 		Tokens:          valPower1,
 		DelegatorShares: valPower1.ToDec(),
 		Description:     stakingtypes.NewDescription("hoop", "", "", "", ""),
-		Commission:      stakingtypes.NewCommission(sdk.NewDecWithPrec(5, 1), sdk.NewDecWithPrec(5, 1), sdk.NewDec(0)),
+		Commission: stakingtypes.NewCommission(
+			sdk.NewDecWithPrec(5, 1),
+			sdk.NewDecWithPrec(5, 1),
+			sdk.NewDec(0),
+		),
 	}
 	bondedVal2 := stakingtypes.Validator{
 		OperatorAddress: sdk.ValAddress(addr2).String(),
@@ -302,7 +333,11 @@ func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abc
 		Tokens:          valPower2,
 		DelegatorShares: valPower2.ToDec(),
 		Description:     stakingtypes.NewDescription("bloop", "", "", "", ""),
-		Commission:      stakingtypes.NewCommission(sdk.NewDecWithPrec(5, 1), sdk.NewDecWithPrec(5, 1), sdk.NewDec(0)),
+		Commission: stakingtypes.NewCommission(
+			sdk.NewDecWithPrec(5, 1),
+			sdk.NewDecWithPrec(5, 1),
+			sdk.NewDec(0),
+		),
 	}
 
 	// append new bonded validators to the list
@@ -310,13 +345,19 @@ func stakingDefaultTestGenesis(tApp *TestApp) (*stakingtypes.GenesisState, []abc
 	// mint coins in the bonded pool representing the validators coins
 
 	var valudatorUpdates []abci.ValidatorUpdate
-	valudatorUpdates = append(valudatorUpdates, bondedVal1.ABCIValidatorUpdate(sdk.DefaultPowerReduction))
+	valudatorUpdates = append(
+		valudatorUpdates,
+		bondedVal1.ABCIValidatorUpdate(sdk.DefaultPowerReduction),
+	)
 	delegations = append(delegations, stakingtypes.Delegation{
 		DelegatorAddress: addr1.String(),
 		ValidatorAddress: bondedVal1.OperatorAddress,
 		Shares:           bondedVal1.DelegatorShares,
 	})
-	valudatorUpdates = append(valudatorUpdates, bondedVal2.ABCIValidatorUpdate(sdk.DefaultPowerReduction))
+	valudatorUpdates = append(
+		valudatorUpdates,
+		bondedVal2.ABCIValidatorUpdate(sdk.DefaultPowerReduction),
+	)
 	delegations = append(delegations, stakingtypes.Delegation{
 		DelegatorAddress: addr2.String(),
 		ValidatorAddress: bondedVal2.OperatorAddress,
@@ -355,7 +396,11 @@ func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *te
 }
 
 func validatorDefaultCommission() stakingtypes.CommissionRates {
-	return stakingtypes.NewCommissionRates(sdk.MustNewDecFromStr("0.1"), sdk.MustNewDecFromStr("0.2"), sdk.MustNewDecFromStr("0.01"))
+	return stakingtypes.NewCommissionRates(
+		sdk.MustNewDecFromStr("0.1"),
+		sdk.MustNewDecFromStr("0.2"),
+		sdk.MustNewDecFromStr("0.01"),
+	)
 }
 
 func GenerateOvmPublicKeys(n int) (pubKeys []string) {

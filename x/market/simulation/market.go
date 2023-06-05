@@ -26,7 +26,11 @@ func SimulateMsgAddMarket(
 
 		// TODO: Handling the AddMarket simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "AddMarket simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"AddMarket simulation not implemented",
+		), nil, nil
 	}
 }
 
@@ -45,6 +49,10 @@ func SimulateMsgResolveMarket(
 
 		// TODO: Handling the ResolveMarket simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ResolveMarket simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"ResolveMarket simulation not implemented",
+		), nil, nil
 	}
 }

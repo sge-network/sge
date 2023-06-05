@@ -55,7 +55,11 @@ func (gs GenesisState) Validate() error {
 			}
 
 			if !exposureFound {
-				return fmt.Errorf("book with id %s not found for odds with uid %s", be.OrderBookUID, be.OddsUID)
+				return fmt.Errorf(
+					"book with id %s not found for odds with uid %s",
+					be.OrderBookUID,
+					be.OddsUID,
+				)
 			}
 
 			if be.OrderBookUID == b.UID {
@@ -65,7 +69,11 @@ func (gs GenesisState) Validate() error {
 
 		exposureCount := cast.ToUint64(oddsCount)
 		if exposureCount != b.OddsCount {
-			return fmt.Errorf("book with id %s count does not match the odds exposure count %d", b.UID, exposureCount)
+			return fmt.Errorf(
+				"book with id %s count does not match the odds exposure count %d",
+				b.UID,
+				exposureCount,
+			)
 		}
 	}
 

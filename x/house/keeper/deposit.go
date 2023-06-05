@@ -78,12 +78,22 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	deposit.ParticipationIndex = participationIndex
 
 	k.SetDeposit(ctx, deposit)
-	emitTransactionEvent(ctx, types.TypeMsgDeposit, cast.ToString(participationIndex), creator, depositor)
+	emitTransactionEvent(
+		ctx,
+		types.TypeMsgDeposit,
+		cast.ToString(participationIndex),
+		creator,
+		depositor,
+	)
 
 	return participationIndex, err
 }
 
-func emitTransactionEvent(ctx sdk.Context, emitType string, participationIndex, creator, depositor string) {
+func emitTransactionEvent(
+	ctx sdk.Context,
+	emitType string,
+	participationIndex, creator, depositor string,
+) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,

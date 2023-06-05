@@ -12,7 +12,12 @@ type iModuleFunder interface {
 	GetModuleAcc() string
 }
 
-func (k *Keeper) fund(mf iModuleFunder, ctx sdk.Context, senderAcc sdk.AccAddress, amount sdk.Int) error {
+func (k *Keeper) fund(
+	mf iModuleFunder,
+	ctx sdk.Context,
+	senderAcc sdk.AccAddress,
+	amount sdk.Int,
+) error {
 	mAcc := mf.GetModuleAcc()
 
 	// Get the spendable balance of the account holder
@@ -20,7 +25,11 @@ func (k *Keeper) fund(mf iModuleFunder, ctx sdk.Context, senderAcc sdk.AccAddres
 
 	// If account holder has insufficient balance, return error
 	if usgeCoins.LT(amount) {
-		return sdkerrors.Wrapf(types.ErrInsufficientAccountBalance, "account Address: %s", senderAcc.String())
+		return sdkerrors.Wrapf(
+			types.ErrInsufficientAccountBalance,
+			"account Address: %s",
+			senderAcc.String(),
+		)
 	}
 
 	amt := sdk.NewCoins(sdk.NewCoin(params.BaseCoinUnit, amount))
@@ -34,10 +43,19 @@ func (k *Keeper) fund(mf iModuleFunder, ctx sdk.Context, senderAcc sdk.AccAddres
 	return nil
 }
 
-func (k *Keeper) reFund(mf iModuleFunder, ctx sdk.Context, recieverAcc sdk.AccAddress, amount sdk.Int) error {
+func (k *Keeper) reFund(
+	mf iModuleFunder,
+	ctx sdk.Context,
+	recieverAcc sdk.AccAddress,
+	amount sdk.Int,
+) error {
 	mAcc := mf.GetModuleAcc()
 	// Get the balance of the sender module account
-	balance := k.bankKeeper.GetBalance(ctx, k.accountKeeper.GetModuleAddress(mAcc), params.DefaultBondDenom)
+	balance := k.bankKeeper.GetBalance(
+		ctx,
+		k.accountKeeper.GetModuleAddress(mAcc),
+		params.DefaultBondDenom,
+	)
 
 	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
 

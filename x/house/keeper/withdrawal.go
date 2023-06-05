@@ -9,7 +9,12 @@ import (
 
 // SetWithdrawal sets a withdrawal.
 func (k Keeper) SetWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
-	withdrawalKey := types.GetWithdrawalKey(withdrawal.Address, withdrawal.MarketUID, withdrawal.ParticipationIndex, withdrawal.ID)
+	withdrawalKey := types.GetWithdrawalKey(
+		withdrawal.Address,
+		withdrawal.MarketUID,
+		withdrawal.ParticipationIndex,
+		withdrawal.ID,
+	)
 
 	store := k.getWithdrawalStore(ctx)
 	b := k.cdc.MustMarshal(&withdrawal)
@@ -35,7 +40,14 @@ func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err
 }
 
 // Withdraw performs a withdrawal of coins of unused amount corresponding to a deposit.
-func (k Keeper) Withdraw(ctx sdk.Context, creator, depositorAddr string, marketUID string, participationIndex uint64, mode types.WithdrawalMode, witAmt sdk.Int) (uint64, error) {
+func (k Keeper) Withdraw(
+	ctx sdk.Context,
+	creator, depositorAddr string,
+	marketUID string,
+	participationIndex uint64,
+	mode types.WithdrawalMode,
+	witAmt sdk.Int,
+) (uint64, error) {
 	// Get the deposit object
 	deposit, found := k.GetDeposit(ctx, depositorAddr, marketUID, participationIndex)
 	if !found {
@@ -55,9 +67,24 @@ func (k Keeper) Withdraw(ctx sdk.Context, creator, depositorAddr string, marketU
 	withdrawalID := deposit.WithdrawalCount + 1
 
 	// Create the withdrawal object
-	withdrawal := types.NewWithdrawal(withdrawalID, creator, depositorAddr, marketUID, participationIndex, witAmt, mode)
+	withdrawal := types.NewWithdrawal(
+		withdrawalID,
+		creator,
+		depositorAddr,
+		marketUID,
+		participationIndex,
+		witAmt,
+		mode,
+	)
 
-	withdrawalAmt, err := k.srKeeper.WithdrawOrderBookParticipation(ctx, depositorAddr, marketUID, participationIndex, mode, witAmt)
+	withdrawalAmt, err := k.srKeeper.WithdrawOrderBookParticipation(
+		ctx,
+		depositorAddr,
+		marketUID,
+		participationIndex,
+		mode,
+		witAmt,
+	)
 	if err != nil {
 		return participationIndex, sdkerrors.Wrapf(types.ErrSRLiquidateProcessing, "%s", err)
 	}

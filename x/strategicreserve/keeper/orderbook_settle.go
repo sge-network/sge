@@ -53,7 +53,12 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 }
 
 // batchSettlementOfParticipation settles active deposits of a strategicreserve
-func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID string, market markettypes.Market, countToBeSettled uint64) (allSettled bool, err error) {
+func (k Keeper) batchSettlementOfParticipation(
+	ctx sdk.Context,
+	orderBookUID string,
+	market markettypes.Market,
+	countToBeSettled uint64,
+) (allSettled bool, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
 	allSettled, settled := true, 0
@@ -65,8 +70,11 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 		if !bookParticipation.IsSettled {
 			err = k.settleParticipation(ctx, bookParticipation, market)
 			if err != nil {
-				return allSettled, fmt.Errorf("failed to settle deposit of batch settlement for participation %#v: %s",
-					bookParticipation, err)
+				return allSettled, fmt.Errorf(
+					"failed to settle deposit of batch settlement for participation %#v: %s",
+					bookParticipation,
+					err,
+				)
 			}
 			settled++
 			allSettled = false
@@ -79,9 +87,18 @@ func (k Keeper) batchSettlementOfParticipation(ctx sdk.Context, orderBookUID str
 	return allSettled, nil
 }
 
-func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipation, market markettypes.Market) error {
+func (k Keeper) settleParticipation(
+	ctx sdk.Context,
+	bp types.OrderBookParticipation,
+	market markettypes.Market,
+) error {
 	if bp.IsSettled {
-		return sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s %d", bp.OrderBookUID, bp.Index)
+		return sdkerrors.Wrapf(
+			types.ErrBookParticipationAlreadySettled,
+			"%s %d",
+			bp.OrderBookUID,
+			bp.Index,
+		)
 	}
 
 	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
@@ -109,7 +126,12 @@ func (k Keeper) settleParticipation(ctx sdk.Context, bp types.OrderBookParticipa
 		}
 		refundHouseDepositFeeToDepositor = true
 	default:
-		return sdkerrors.Wrapf(types.ErrUnknownMarketStatus, "order book %s,  market status %s", bp.OrderBookUID, market.Status)
+		return sdkerrors.Wrapf(
+			types.ErrUnknownMarketStatus,
+			"order book %s,  market status %s",
+			bp.OrderBookUID,
+			market.Status,
+		)
 	}
 
 	// get corresponding deposit to extract house fee

@@ -88,7 +88,12 @@ func (k Keeper) GetBetIDs(ctx sdk.Context) (list []types.UID2ID, err error) {
 }
 
 // SetPendingBet sets an pending bet
-func (k Keeper) SetPendingBet(ctx sdk.Context, pendingBet *types.PendingBet, id uint64, marketUID string) {
+func (k Keeper) SetPendingBet(
+	ctx sdk.Context,
+	pendingBet *types.PendingBet,
+	id uint64,
+	marketUID string,
+) {
 	store := k.getPendingStore(ctx)
 	b := k.cdc.MustMarshal(pendingBet)
 	store.Set(types.PendingBetOfMarketKey(marketUID, id), b)
@@ -135,7 +140,12 @@ func (k Keeper) RemovePendingBet(ctx sdk.Context, marketUID string, betID uint64
 }
 
 // SetSettledBet sets a settled bet
-func (k Keeper) SetSettledBet(ctx sdk.Context, settledBet *types.SettledBet, id uint64, blockHeight int64) {
+func (k Keeper) SetSettledBet(
+	ctx sdk.Context,
+	settledBet *types.SettledBet,
+	id uint64,
+	blockHeight int64,
+) {
 	store := k.getSettledStore(ctx)
 	b := k.cdc.MustMarshal(settledBet)
 	store.Set(types.SettledBetOfMarketKey(blockHeight, id), b)

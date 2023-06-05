@@ -70,7 +70,10 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.AddMarket(wctx, types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.AddMarket(
+			wctx,
+			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
@@ -80,16 +83,22 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 			"uid":      u1,
 			"start_ts": uint64(time.Now().Add(time.Minute).Unix()),
 			"end_ts":   uint64(time.Now().Add(time.Minute * 5).Unix()),
-			"odds":     []types.Odds{{UID: uuid.NewString(), Meta: "odds 1"}, {UID: uuid.NewString(), Meta: "odds 2"}},
-			"exp":      9999999999,
-			"iat":      1111111111,
-			"meta":     "Winner of x:y",
-			"status":   types.MarketStatus_MARKET_STATUS_ACTIVE,
+			"odds": []types.Odds{
+				{UID: uuid.NewString(), Meta: "odds 1"},
+				{UID: uuid.NewString(), Meta: "odds 2"},
+			},
+			"exp":    9999999999,
+			"iat":    1111111111,
+			"meta":   "Winner of x:y",
+			"status": types.MarketStatus_MARKET_STATUS_ACTIVE,
 		}
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.AddMarket(wctx, types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.AddMarket(
+			wctx,
+			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrMarketAlreadyExist)
 		assert.Nil(t, response)
 	})
@@ -154,7 +163,10 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.UpdateMarket(wctx, types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.UpdateMarket(
+			wctx,
+			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
 	})
@@ -169,7 +181,10 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.UpdateMarket(wctx, types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.UpdateMarket(
+			wctx,
+			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrMarketCanNotBeAltered)
 		assert.Nil(t, response)
 	})

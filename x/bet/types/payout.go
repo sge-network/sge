@@ -55,7 +55,12 @@ func CalculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec)
 
 // CalculateBetAmountInt calculates the amount of bet according to bet odds value and payout profit
 // and returns the int and the truncated decimal part.
-func CalculateBetAmountInt(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec, truncatedBetAmount sdk.Dec) (sdk.Int, sdk.Dec, error) {
+func CalculateBetAmountInt(
+	oddsType OddsType,
+	oddsVal string,
+	payoutProfit sdk.Dec,
+	truncatedBetAmount sdk.Dec,
+) (sdk.Int, sdk.Dec, error) {
 	expectedBetAmountDec, err := CalculateBetAmount(oddsType, oddsVal, payoutProfit)
 	if err != nil {
 		return sdk.Int{}, sdk.Dec{}, err

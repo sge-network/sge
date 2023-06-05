@@ -147,17 +147,28 @@ func NewAppKeeper(
 
 	// set the BaseApp's parameter store
 	bApp.SetParamStore(
-		appKeepers.ParamsKeeper.Subspace(baseapp.Paramspace).WithKeyTable(paramskeeper.ConsensusParamsKeyTable()),
+		appKeepers.ParamsKeeper.Subspace(baseapp.Paramspace).
+			WithKeyTable(paramskeeper.ConsensusParamsKeyTable()),
 	)
 
 	// add capability keeper and ScopeToModule for ibc module
-	appKeepers.CapabilityKeeper = capabilitykeeper.NewKeeper(appCodec, appKeepers.keys[capabilitytypes.StoreKey], appKeepers.memKeys[capabilitytypes.MemStoreKey])
+	appKeepers.CapabilityKeeper = capabilitykeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[capabilitytypes.StoreKey],
+		appKeepers.memKeys[capabilitytypes.MemStoreKey],
+	)
 
 	// grant capabilities for the ibc and ibc-transfer modules
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
-	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
-	appKeepers.ScopedICAControllerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
-	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
+	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
+		ibctransfertypes.ModuleName,
+	)
+	appKeepers.ScopedICAControllerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
+		icacontrollertypes.SubModuleName,
+	)
+	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
+		icahosttypes.SubModuleName,
+	)
 
 	appKeepers.CapabilityKeeper.Seal()
 
@@ -305,10 +316,14 @@ func NewAppKeeper(
 	transferIBCModule := transfer.NewIBCModule(appKeepers.TransferKeeper)
 
 	appKeepers.ICAControllerKeeper = icacontrollerkeeper.NewKeeper(
-		appCodec, appKeepers.keys[icacontrollertypes.StoreKey], appKeepers.GetSubspace(icacontrollertypes.SubModuleName),
+		appCodec,
+		appKeepers.keys[icacontrollertypes.StoreKey],
+		appKeepers.GetSubspace(icacontrollertypes.SubModuleName),
 		appKeepers.IBCKeeper.ChannelKeeper, // may be replaced with middleware such as ics29 fee
-		appKeepers.IBCKeeper.ChannelKeeper, &appKeepers.IBCKeeper.PortKeeper,
-		appKeepers.ScopedICAControllerKeeper, bApp.MsgServiceRouter(),
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedICAControllerKeeper,
+		bApp.MsgServiceRouter(),
 	)
 
 	appKeepers.ICAHostKeeper = icahostkeeper.NewKeeper(
@@ -374,11 +389,33 @@ func NewAppKeeper(
 	)
 	appKeepers.StrategicReserveKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
-	appKeepers.OVMModule = ovmmodule.NewAppModule(appCodec, appKeepers.OVMKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper)
-	appKeepers.MarketModule = marketmodule.NewAppModule(appCodec, appKeepers.MarketKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.OVMKeeper)
-	appKeepers.BetModule = betmodule.NewAppModule(appCodec, appKeepers.BetKeeper, appKeepers.AccountKeeper, appKeepers.BankKeeper, appKeepers.MarketKeeper, appKeepers.StrategicReserveKeeper, appKeepers.OVMKeeper)
+	appKeepers.OVMModule = ovmmodule.NewAppModule(
+		appCodec,
+		appKeepers.OVMKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+	)
+	appKeepers.MarketModule = marketmodule.NewAppModule(
+		appCodec,
+		appKeepers.MarketKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.OVMKeeper,
+	)
+	appKeepers.BetModule = betmodule.NewAppModule(
+		appCodec,
+		appKeepers.BetKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.MarketKeeper,
+		appKeepers.StrategicReserveKeeper,
+		appKeepers.OVMKeeper,
+	)
 	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
-	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(appCodec, appKeepers.StrategicReserveKeeper)
+	appKeepers.StrategicReserveModule = strategicreservemodule.NewAppModule(
+		appCodec,
+		appKeepers.StrategicReserveKeeper,
+	)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()

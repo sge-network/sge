@@ -107,7 +107,13 @@ func TestNextPhaseAfterAppendToEndPhase(t *testing.T) {
 
 	minter.PhaseStep = int32(len(params.Phases) + 1)
 
-	params.Phases = append(params.Phases, types.Phase{YearCoefficient: sdk.MustNewDecFromStr("1"), Inflation: sdk.MustNewDecFromStr("0.032042723631508678")})
+	params.Phases = append(
+		params.Phases,
+		types.Phase{
+			YearCoefficient: sdk.MustNewDecFromStr("1"),
+			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+		},
+	)
 	phase, _ := minter.CurrentPhase(params, 351)
 	require.Equal(t, params.Phases[len(params.Phases)-1].Inflation, phase.Inflation)
 
@@ -119,22 +125,61 @@ func TestNextPhaseAfterRelaceEndPhase(t *testing.T) {
 	params := types.DefaultParams()
 
 	params.BlocksPerYear = 100
-	params.Phases = []types.Phase{{YearCoefficient: sdk.MustNewDecFromStr("1"), Inflation: sdk.MustNewDecFromStr("0.00000000000000000")}, types.EndPhase()}
+	params.Phases = []types.Phase{
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("1"),
+			Inflation:       sdk.MustNewDecFromStr("0.00000000000000000"),
+		},
+		types.EndPhase(),
+	}
 
 	minter.PhaseStep = 2
 
 	params.Phases = []types.Phase{
-		{YearCoefficient: sdk.MustNewDecFromStr("2.5"), Inflation: sdk.MustNewDecFromStr("0.00000000000000000")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.229787234042553191")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.286259541984732824")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.150250417362270451")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.116459627329192547")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.088041085840058694")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.063246661981728742")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.040871934604904632")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.032042723631508678")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.019710906701708279")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.003903708523096942")},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("2.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.00000000000000000"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.229787234042553191"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.286259541984732824"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.150250417362270451"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.116459627329192547"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.088041085840058694"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.063246661981728742"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.040871934604904632"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.019710906701708279"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.003903708523096942"),
+		},
 	}
 	phase, _ := minter.CurrentPhase(params, 250)
 	require.Equal(t, params.Phases[0].Inflation, phase.Inflation)
@@ -236,8 +281,16 @@ func TestBlockProvisions(t *testing.T) {
 
 		phaseDeviation := sdk.NewInt(tc.expProvision).Sub(currentPhaseProvision).Abs().Int64()
 		allowedPhaseDeviation := int64(4)
-		require.LessOrEqual(t, phaseDeviation, allowedPhaseDeviation,
-			"Test Index: %v\nPhaseProvisions: %v\nPhaseProvision: %v\nExpected: %v\n", i, minter.PhaseProvisions, currentPhaseProvision, tc.expProvision)
+		require.LessOrEqual(
+			t,
+			phaseDeviation,
+			allowedPhaseDeviation,
+			"Test Index: %v\nPhaseProvisions: %v\nPhaseProvision: %v\nExpected: %v\n",
+			i,
+			minter.PhaseProvisions,
+			currentPhaseProvision,
+			tc.expProvision,
+		)
 	}
 
 	expTotalSupply := sdk.NewInt(1600000000000000)
@@ -256,7 +309,11 @@ func TestAnnualProvisions(t *testing.T) {
 	firstPhase := params.Phases[0]
 	minter.PhaseStep = 1
 	minter.Inflation = firstPhase.Inflation
-	minter.PhaseProvisions = minter.NextPhaseProvisions(sdk.NewInt(totalSupply), sdk.NewInt(excludeAmount), firstPhase)
+	minter.PhaseProvisions = minter.NextPhaseProvisions(
+		sdk.NewInt(totalSupply),
+		sdk.NewInt(excludeAmount),
+		firstPhase,
+	)
 	t.Log(minter.PhaseProvisions)
 	annualProvisions := minter.AnnualProvisions(firstPhase)
 

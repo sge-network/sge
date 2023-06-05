@@ -16,7 +16,9 @@ func (k Keeper) SetParticipationBetPair(ctx sdk.Context, bp types.ParticipationB
 }
 
 // GetAllParticipationBetPair returns all participation bet pairs used during genesis dump.
-func (k Keeper) GetAllParticipationBetPair(ctx sdk.Context) (list []types.ParticipationBetPair, err error) {
+func (k Keeper) GetAllParticipationBetPair(
+	ctx sdk.Context,
+) (list []types.ParticipationBetPair, err error) {
 	store := k.getParticipationBetPairStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 

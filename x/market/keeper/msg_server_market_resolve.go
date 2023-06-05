@@ -9,7 +9,10 @@ import (
 )
 
 // ResolveMarket accepts ticket containing resolution markets and return response after processing
-func (k msgServer) ResolveMarket(goCtx context.Context, msg *types.MsgResolveMarket) (*types.MsgResolveMarketResponse, error) {
+func (k msgServer) ResolveMarket(
+	goCtx context.Context,
+	msg *types.MsgResolveMarket,
+) (*types.MsgResolveMarketResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolutionPayload types.MarketResolutionTicketPayload
@@ -37,7 +40,13 @@ func (k msgServer) ResolveMarket(goCtx context.Context, msg *types.MsgResolveMar
 
 	resolvedMarket := k.Keeper.ResolveMarket(ctx, market, &resolutionPayload)
 
-	emitTransactionEvent(ctx, types.TypeMsgResolveMarkets, resolvedMarket.UID, resolvedMarket.BookUID, msg.Creator)
+	emitTransactionEvent(
+		ctx,
+		types.TypeMsgResolveMarkets,
+		resolvedMarket.UID,
+		resolvedMarket.BookUID,
+		msg.Creator,
+	)
 
 	return &types.MsgResolveMarketResponse{
 		Data: resolvedMarket,

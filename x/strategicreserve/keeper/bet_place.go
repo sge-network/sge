@@ -31,7 +31,18 @@ func (k Keeper) ProcessBetPlacement(
 		return nil, sdkerrors.Wrapf(types.ErrOrderBookExposureNotFound, "%s , %s", bookUID, oddsUID)
 	}
 
-	fInfo, err := k.initFulfillmentInfo(ctx, betAmount, payoutProfit, betUID, betID, oddsUID, oddsType, oddsVal, maxLossMultiplier, &book)
+	fInfo, err := k.initFulfillmentInfo(
+		ctx,
+		betAmount,
+		payoutProfit,
+		betUID,
+		betID,
+		oddsUID,
+		oddsType,
+		oddsVal,
+		maxLossMultiplier,
+		&book,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +95,12 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			setFulfilled = true
 		case fInfo.notEnoughLiquidityAvailable():
 			var betAmountToFulfill sdk.Int
-			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(fInfo.oddsType, fInfo.oddsVal, fInfo.inProcessItem.availableLiquidity.ToDec(), truncatedBetAmount)
+			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
+				fInfo.oddsType,
+				fInfo.oddsVal,
+				fInfo.inProcessItem.availableLiquidity.ToDec(),
+				truncatedBetAmount,
+			)
 			if err != nil {
 				return err
 			}
@@ -220,12 +236,21 @@ func (fInfo *fulfillmentInfo) validate() error {
 			return sdkerrors.Wrapf(types.ErrParticipationExposureNotFound, "%d", participationIndex)
 		}
 		if participationExposure.participationExposure.IsFulfilled {
-			return sdkerrors.Wrapf(types.ErrParticipationExposureAlreadyFilled, "%d", participationIndex)
+			return sdkerrors.Wrapf(
+				types.ErrParticipationExposureAlreadyFilled,
+				"%d",
+				participationIndex,
+			)
 		}
 	}
 
 	if fInfo.totalAvailableLiquidity.LT(fInfo.payoutProfit.TruncateInt()) {
-		return sdkerrors.Wrapf(types.ErrParticipationsCanNotCoverthePayoutProfit, "total liquidity %s, payout %s", fInfo.totalAvailableLiquidity, fInfo.payoutProfit)
+		return sdkerrors.Wrapf(
+			types.ErrParticipationsCanNotCoverthePayoutProfit,
+			"total liquidity %s, payout %s",
+			fInfo.totalAvailableLiquidity,
+			fInfo.payoutProfit,
+		)
 	}
 
 	return nil
@@ -239,7 +264,11 @@ func (k Keeper) fulfill(
 	payoutProfitToFulfill sdk.Int,
 ) {
 	fInfo.inProcessItem.participationExposure.SetCurrentRound(betAmountToFulfill, payoutProfitToFulfill)
-	fInfo.inProcessItem.participation.SetCurrentRound(&fInfo.inProcessItem.participationExposure, fInfo.oddsUID, betAmountToFulfill)
+	fInfo.inProcessItem.participation.SetCurrentRound(
+		&fInfo.inProcessItem.participationExposure,
+		fInfo.oddsUID,
+		betAmountToFulfill,
+	)
 
 	fInfo.fulfillments = append(fInfo.fulfillments, bettypes.NewBetFulfillment(
 		fInfo.inProcessItem.participation.ParticipantAddress,
@@ -268,8 +297,16 @@ func (k Keeper) fulfill(
 }
 
 // prepareParticipationExposuresForNextRound prepares the participation exposures for the next round of queue process.
-func (k Keeper) prepareParticipationExposuresForNextRound(ctx sdk.Context, fInfo *fulfillmentInfo, bookUID string) error {
-	participationExposures, err := k.GetExposureByOrderBookAndParticipationIndex(ctx, bookUID, fInfo.inProcessItem.participation.Index)
+func (k Keeper) prepareParticipationExposuresForNextRound(
+	ctx sdk.Context,
+	fInfo *fulfillmentInfo,
+	bookUID string,
+) error {
+	participationExposures, err := k.GetExposureByOrderBookAndParticipationIndex(
+		ctx,
+		bookUID,
+		fInfo.inProcessItem.participation.Index,
+	)
 	if err != nil {
 		return err
 	}
@@ -282,7 +319,10 @@ func (k Keeper) prepareParticipationExposuresForNextRound(ctx sdk.Context, fInfo
 			k.SetParticipationExposure(ctx, newPe)
 			if pe.OddsUID == fInfo.inProcessItem.participationExposure.OddsUID {
 				fInfo.inProcessItem.participationExposure = newPe
-				fInfo.fulfillmentMap.setExposure(pe.ParticipationIndex, fInfo.inProcessItem.participationExposure)
+				fInfo.fulfillmentMap.setExposure(
+					pe.ParticipationIndex,
+					fInfo.inProcessItem.participationExposure,
+				)
 			}
 		}
 	}
@@ -291,7 +331,11 @@ func (k Keeper) prepareParticipationExposuresForNextRound(ctx sdk.Context, fInfo
 }
 
 // prepareParticipationForNextRound prepares the participation for the next round of queue process.
-func (k Keeper) prepareParticipationForNextRound(ctx sdk.Context, fInfo *fulfillmentInfo, notFilledExposures uint64) {
+func (k Keeper) prepareParticipationForNextRound(
+	ctx sdk.Context,
+	fInfo *fulfillmentInfo,
+	notFilledExposures uint64,
+) {
 	// prepare participation for the next round
 	fInfo.inProcessItem.participation.ResetForNextRound(notFilledExposures)
 	fInfo.fulfillmentMap.setParticipation(fInfo.inProcessItem.participation)
@@ -301,7 +345,11 @@ func (k Keeper) prepareParticipationForNextRound(ctx sdk.Context, fInfo *fulfill
 }
 
 // prepareOddsExposuresForNextRound prepares the odds expsures for the next round of queue process.
-func (k Keeper) prepareOddsExposuresForNextRound(ctx sdk.Context, fInfo *fulfillmentInfo, bookUID string) error {
+func (k Keeper) prepareOddsExposuresForNextRound(
+	ctx sdk.Context,
+	fInfo *fulfillmentInfo,
+	bookUID string,
+) error {
 	if fInfo.inProcessItem.participation.IsEligibleForNextRound() {
 		boes, err := k.GetOddsExposuresByOrderBook(ctx, bookUID)
 		if err != nil {
@@ -318,7 +366,11 @@ func (k Keeper) prepareOddsExposuresForNextRound(ctx sdk.Context, fInfo *fulfill
 }
 
 // refreshQueueAndState refresh the fulfillment queue for the next round.
-func (k Keeper) refreshQueueAndState(ctx sdk.Context, fInfo *fulfillmentInfo, book *types.OrderBook) error {
+func (k Keeper) refreshQueueAndState(
+	ctx sdk.Context,
+	fInfo *fulfillmentInfo,
+	book *types.OrderBook,
+) error {
 	fInfo.inProcessItem.participation.TrimCurrentRoundLiquidity()
 
 	err := k.prepareParticipationExposuresForNextRound(ctx, fInfo, book.UID)
@@ -424,7 +476,10 @@ func (fMap fulfillmentMap) setParticipation(participation types.OrderBookPartici
 	fMap[participation.Index] = fItem
 }
 
-func (fMap fulfillmentMap) setExposure(participationIndex uint64, exposure types.ParticipationExposure) {
+func (fMap fulfillmentMap) setExposure(
+	participationIndex uint64,
+	exposure types.ParticipationExposure,
+) {
 	fItem := fMap[participationIndex]
 	fItem.participationExposure = exposure
 	fMap[participationIndex] = fItem

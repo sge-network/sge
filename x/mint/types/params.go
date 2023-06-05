@@ -55,16 +55,46 @@ var (
 
 	// DefaultPhases is the default value for inflation phases
 	DefaultPhases = []Phase{
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.229787234042553191")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.286259541984732824")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.150250417362270451")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.116459627329192547")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.088041085840058694")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.063246661981728742")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.040871934604904632")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.032042723631508678")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.019710906701708279")},
-		{YearCoefficient: sdk.MustNewDecFromStr("0.5"), Inflation: sdk.MustNewDecFromStr("0.003903708523096942")},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.229787234042553191"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.286259541984732824"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.150250417362270451"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.116459627329192547"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.088041085840058694"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.063246661981728742"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.040871934604904632"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.019710906701708279"),
+		},
+		{
+			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
+			Inflation:       sdk.MustNewDecFromStr("0.003903708523096942"),
+		},
 	}
 )
 
@@ -160,13 +190,17 @@ func NonePhase() Phase {
 // EndPhase returns end phase which there is no phase item with remaining blocks
 func EndPhase() Phase {
 	maxUInt64 := new(big.Int).SetUint64(math.MaxUint64)
-	return Phase{Inflation: sdk.MustNewDecFromStr("0"), YearCoefficient: sdk.NewDecFromBigInt(maxUInt64)}
+	return Phase{
+		Inflation:       sdk.MustNewDecFromStr("0"),
+		YearCoefficient: sdk.NewDecFromBigInt(maxUInt64),
+	}
 }
 
 // IsEndPhase returns true if the phase is equal to end phase props
 func IsEndPhase(phase Phase) bool {
 	endPhase := EndPhase()
-	if phase.Inflation.Equal(endPhase.Inflation) && phase.YearCoefficient.Equal(endPhase.YearCoefficient) {
+	if phase.Inflation.Equal(endPhase.Inflation) &&
+		phase.YearCoefficient.Equal(endPhase.YearCoefficient) {
 		return true
 	}
 	return false

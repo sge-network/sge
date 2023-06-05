@@ -42,9 +42,18 @@ func (k Keeper) BettorWins(
 	orderBookUID string,
 ) error {
 	for _, betFulfillment := range betFulfillments {
-		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
+		orderBookParticipation, found := k.GetOrderBookParticipation(
+			ctx,
+			orderBookUID,
+			betFulfillment.ParticipationIndex,
+		)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", orderBookUID, betFulfillment.ParticipationIndex)
+			return sdkerrors.Wrapf(
+				types.ErrOrderBookParticipationNotFound,
+				"%s, %d",
+				orderBookUID,
+				betFulfillment.ParticipationIndex,
+			)
 		}
 
 		betAmountAndPayout := betFulfillment.PayoutProfit.Add(betFulfillment.BetAmount)
@@ -55,7 +64,9 @@ func (k Keeper) BettorWins(
 
 		// update actual profit of the participation, the bettor is the winner, so we need to
 		// payout from the participant profit.
-		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Sub(betFulfillment.PayoutProfit)
+		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Sub(
+			betFulfillment.PayoutProfit,
+		)
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
@@ -75,14 +86,25 @@ func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
 ) error {
 	for _, betFulfillment := range betFulfillments {
 		// update amount to be transferred to house
-		orderBookParticipation, found := k.GetOrderBookParticipation(ctx, orderBookUID, betFulfillment.ParticipationIndex)
+		orderBookParticipation, found := k.GetOrderBookParticipation(
+			ctx,
+			orderBookUID,
+			betFulfillment.ParticipationIndex,
+		)
 		if !found {
-			return sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", orderBookUID, betFulfillment.ParticipationIndex)
+			return sdkerrors.Wrapf(
+				types.ErrOrderBookParticipationNotFound,
+				"%s, %d",
+				orderBookUID,
+				betFulfillment.ParticipationIndex,
+			)
 		}
 
 		// update actual profit of the participation, the bettor is the loser, so we need to
 		// add the lost bet amount to the participant profit.
-		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Add(betFulfillment.BetAmount)
+		orderBookParticipation.ActualProfit = orderBookParticipation.ActualProfit.Add(
+			betFulfillment.BetAmount,
+		)
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 

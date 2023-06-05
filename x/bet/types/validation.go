@@ -46,7 +46,8 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 		return ErrEmptyOddsValue
 	}
 
-	if ticketData.SelectedOdds.MaxLossMultiplier.IsNil() || ticketData.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+	if ticketData.SelectedOdds.MaxLossMultiplier.IsNil() ||
+		ticketData.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
 		return ErrMaxLossMultiplierCanNotBeZero
 	}
 

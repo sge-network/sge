@@ -12,7 +12,10 @@ import (
 )
 
 // ParticipationExposures queries participation exposures info for given strategicreserve
-func (k Keeper) ParticipationExposures(c context.Context, req *types.QueryParticipationExposuresRequest) (*types.QueryParticipationExposuresResponse, error) {
+func (k Keeper) ParticipationExposures(
+	c context.Context,
+	req *types.QueryParticipationExposuresRequest,
+) (*types.QueryParticipationExposuresResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -24,18 +27,25 @@ func (k Keeper) ParticipationExposures(c context.Context, req *types.QueryPartic
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByOrderBookKey(req.OrderBookUid))
-	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var participationExposure types.ParticipationExposure
-		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
-			return false, err
-		}
+	exposureStore := prefix.NewStore(
+		store,
+		types.GetParticipationExposuresByOrderBookKey(req.OrderBookUid),
+	)
+	pageRes, err := query.FilteredPaginate(
+		exposureStore,
+		req.Pagination,
+		func(key []byte, value []byte, accumulate bool) (bool, error) {
+			var participationExposure types.ParticipationExposure
+			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
+				return false, err
+			}
 
-		if accumulate {
-			participationExposures = append(participationExposures, participationExposure)
-		}
-		return true, nil
-	})
+			if accumulate {
+				participationExposures = append(participationExposures, participationExposure)
+			}
+			return true, nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -47,7 +57,10 @@ func (k Keeper) ParticipationExposures(c context.Context, req *types.QueryPartic
 }
 
 // ParticipationExposure queries participation exposure info for given order book id and participation index
-func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryParticipationExposureRequest) (*types.QueryParticipationExposureResponse, error) {
+func (k Keeper) ParticipationExposure(
+	c context.Context,
+	req *types.QueryParticipationExposureRequest,
+) (*types.QueryParticipationExposureResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -64,18 +77,25 @@ func (k Keeper) ParticipationExposure(c context.Context, req *types.QueryPartici
 	var participationExposures []types.ParticipationExposure
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationExposureByIndexKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.OrderBookUid, req.ParticipationIndex))
-	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var participationExposure types.ParticipationExposure
-		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
-			return false, err
-		}
+	exposureStore := prefix.NewStore(
+		store,
+		types.GetParticipationByIndexKey(req.OrderBookUid, req.ParticipationIndex),
+	)
+	pageRes, err := query.FilteredPaginate(
+		exposureStore,
+		req.Pagination,
+		func(key []byte, value []byte, accumulate bool) (bool, error) {
+			var participationExposure types.ParticipationExposure
+			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
+				return false, err
+			}
 
-		if accumulate {
-			participationExposures = append(participationExposures, participationExposure)
-		}
-		return true, nil
-	})
+			if accumulate {
+				participationExposures = append(participationExposures, participationExposure)
+			}
+			return true, nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -101,18 +121,28 @@ func (k Keeper) HistoricalParticipationExposures(
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.HistoricalParticipationExposureKeyPrefix)
-	exposureStore := prefix.NewStore(store, types.GetParticipationExposuresByOrderBookKey(req.OrderBookUid))
-	pageRes, err := query.FilteredPaginate(exposureStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var participationExposure types.ParticipationExposure
-		if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
-			return false, err
-		}
+	exposureStore := prefix.NewStore(
+		store,
+		types.GetParticipationExposuresByOrderBookKey(req.OrderBookUid),
+	)
+	pageRes, err := query.FilteredPaginate(
+		exposureStore,
+		req.Pagination,
+		func(key []byte, value []byte, accumulate bool) (bool, error) {
+			var participationExposure types.ParticipationExposure
+			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
+				return false, err
+			}
 
-		if accumulate {
-			historicalParticipationExposures = append(historicalParticipationExposures, participationExposure)
-		}
-		return true, nil
-	})
+			if accumulate {
+				historicalParticipationExposures = append(
+					historicalParticipationExposures,
+					participationExposure,
+				)
+			}
+			return true, nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -124,7 +154,10 @@ func (k Keeper) HistoricalParticipationExposures(
 }
 
 // ParticipationFulfilledBets queries participation fulfilled bets info for given order book id and participation index
-func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryParticipationFulfilledBetsRequest) (*types.QueryParticipationFulfilledBetsResponse, error) {
+func (k Keeper) ParticipationFulfilledBets(
+	c context.Context,
+	req *types.QueryParticipationFulfilledBetsRequest,
+) (*types.QueryParticipationFulfilledBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "empty request")
 	}
@@ -141,18 +174,25 @@ func (k Keeper) ParticipationFulfilledBets(c context.Context, req *types.QueryPa
 	var participationBets []types.ParticipationBetPair
 
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationBetPairKeyPrefix)
-	betsStore := prefix.NewStore(store, types.GetParticipationByIndexKey(req.OrderBookUid, req.ParticipationIndex))
-	pageRes, err := query.FilteredPaginate(betsStore, req.Pagination, func(key []byte, value []byte, accumulate bool) (bool, error) {
-		var participationBet types.ParticipationBetPair
-		if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
-			return false, err
-		}
+	betsStore := prefix.NewStore(
+		store,
+		types.GetParticipationByIndexKey(req.OrderBookUid, req.ParticipationIndex),
+	)
+	pageRes, err := query.FilteredPaginate(
+		betsStore,
+		req.Pagination,
+		func(key []byte, value []byte, accumulate bool) (bool, error) {
+			var participationBet types.ParticipationBetPair
+			if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
+				return false, err
+			}
 
-		if accumulate {
-			participationBets = append(participationBets, participationBet)
-		}
-		return true, nil
-	})
+			if accumulate {
+				participationBets = append(participationBets, participationBet)
+			}
+			return true, nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

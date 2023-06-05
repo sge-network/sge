@@ -11,10 +11,13 @@ import (
 //
 //nolint:interfacer
 func NewOrderBookParticipation(
-	index uint64, orderBookUID string, participantAddress string,
+	index uint64,
+	orderBookUID string,
+	participantAddress string,
 	exposuresNotFilled uint64,
 	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
-	currentRoundMaxLossOddsUID string, actualProfit sdk.Int,
+	currentRoundMaxLossOddsUID string,
+	actualProfit sdk.Int,
 ) OrderBookParticipation {
 	return OrderBookParticipation{
 		Index:                      index,
@@ -49,9 +52,17 @@ func (p OrderBookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
 
 // ValidateWithdraw determines if the participation is allowed
 // to be withdrawn or not.
-func (p *OrderBookParticipation) ValidateWithdraw(depositorAddress string, participationIndex uint64) error {
+func (p *OrderBookParticipation) ValidateWithdraw(
+	depositorAddress string,
+	participationIndex uint64,
+) error {
 	if p.IsSettled {
-		return sdkerrors.Wrapf(ErrBookParticipationAlreadySettled, "%s, %d", p.OrderBookUID, participationIndex)
+		return sdkerrors.Wrapf(
+			ErrBookParticipationAlreadySettled,
+			"%s, %d",
+			p.OrderBookUID,
+			participationIndex,
+		)
 	}
 
 	if p.ParticipantAddress != depositorAddress {
@@ -73,7 +84,10 @@ func (p *OrderBookParticipation) IsWithdrawable() bool {
 }
 
 // WithdrawableAmount returns the withdrawable amount according to the withdrawal mode and max withdrawable amount.
-func (p *OrderBookParticipation) WithdrawableAmount(mode housetypes.WithdrawalMode, amount sdk.Int) (sdk.Int, error) {
+func (p *OrderBookParticipation) WithdrawableAmount(
+	mode housetypes.WithdrawalMode,
+	amount sdk.Int,
+) (sdk.Int, error) {
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := p.maxWithdrawableAmount()
 
@@ -81,12 +95,22 @@ func (p *OrderBookParticipation) WithdrawableAmount(mode housetypes.WithdrawalMo
 	switch mode {
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
-			return sdk.Int{}, sdkerrors.Wrapf(ErrMaxWithdrawableAmountIsZero, "%d, %d", p.CurrentRoundLiquidity, p.CurrentRoundMaxLoss)
+			return sdk.Int{}, sdkerrors.Wrapf(
+				ErrMaxWithdrawableAmountIsZero,
+				"%d, %d",
+				p.CurrentRoundLiquidity,
+				p.CurrentRoundMaxLoss,
+			)
 		}
 		withdrawalAmt = maxTransferableAmount
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
-			return sdk.Int{}, sdkerrors.Wrapf(ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
+			return sdk.Int{}, sdkerrors.Wrapf(
+				ErrWithdrawalAmountIsTooLarge,
+				": got %s, max %s",
+				amount,
+				maxTransferableAmount,
+			)
 		}
 		withdrawalAmt = amount
 	default:
@@ -131,14 +155,22 @@ func (p *OrderBookParticipation) ResetForNextRound(notFilledExposures uint64) {
 }
 
 // SetCurrentRound sets the current round total bet amount and max loss.
-func (p *OrderBookParticipation) SetCurrentRound(pe *ParticipationExposure, oddsUID string, betAmount sdk.Int) {
+func (p *OrderBookParticipation) SetCurrentRound(
+	pe *ParticipationExposure,
+	oddsUID string,
+	betAmount sdk.Int,
+) {
 	p.TotalBetAmount = p.TotalBetAmount.Add(betAmount)
 	p.CurrentRoundTotalBetAmount = p.CurrentRoundTotalBetAmount.Add(betAmount)
 	p.setMaxLoss(pe, oddsUID, betAmount)
 }
 
 // setMaxLoss sets the max loss of the the cirrent round.
-func (p *OrderBookParticipation) setMaxLoss(pe *ParticipationExposure, oddsUID string, betAmount sdk.Int) {
+func (p *OrderBookParticipation) setMaxLoss(
+	pe *ParticipationExposure,
+	oddsUID string,
+	betAmount sdk.Int,
+) {
 	// max loss is the maximum amount that an exposure may lose.
 	maxLoss := pe.CalculateMaxLoss(p.CurrentRoundTotalBetAmount)
 	switch {

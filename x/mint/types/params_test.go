@@ -21,19 +21,33 @@ func TestParamsYML(t *testing.T) {
 	}
 
 	ymlStr := param.String()
-	require.Equal(t, "mintdenom: usge\nblocks_per_year: 10\nphases:\n- inflation: \"10.000000000000000000\"\n  year_coefficient: \"1.000000000000000000\"\nexclude_amount: \"100\"\n", ymlStr)
+	require.Equal(
+		t,
+		"mintdenom: usge\nblocks_per_year: 10\nphases:\n- inflation: \"10.000000000000000000\"\n  year_coefficient: \"1.000000000000000000\"\nexclude_amount: \"100\"\n",
+		ymlStr,
+	)
 }
 
 func TestIsPhaseAtStep(t *testing.T) {
 	defaultParams := types.DefaultParams()
-	p := types.NewParams(defaultParams.MintDenom, defaultParams.BlocksPerYear, defaultParams.ExcludeAmount, defaultParams.Phases)
+	p := types.NewParams(
+		defaultParams.MintDenom,
+		defaultParams.BlocksPerYear,
+		defaultParams.ExcludeAmount,
+		defaultParams.Phases,
+	)
 	firstDefaultStep := p.GetPhaseAtStep(1)
 	require.Equal(t, defaultParams.Phases[0], firstDefaultStep)
 }
 
 func TestIsPhaseEndPhase(t *testing.T) {
 	defaultParams := types.DefaultParams()
-	p := types.NewParams(defaultParams.MintDenom, defaultParams.BlocksPerYear, defaultParams.ExcludeAmount, defaultParams.Phases)
+	p := types.NewParams(
+		defaultParams.MintDenom,
+		defaultParams.BlocksPerYear,
+		defaultParams.ExcludeAmount,
+		defaultParams.Phases,
+	)
 	require.False(t, p.IsEndPhaseByStep(1))
 	require.False(t, p.IsEndPhaseByStep(2))
 	require.False(t, p.IsEndPhaseByStep(3))

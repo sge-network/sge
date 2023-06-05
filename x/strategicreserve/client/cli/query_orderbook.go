@@ -170,10 +170,16 @@ $ %s query strategicreserve book-participation %s %d
 
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("particiapnt index argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf(
+					"particiapnt index argument provided must be a non-negative-integer: %v",
+					err,
+				)
 			}
 
-			params := &types.QueryOrderBookParticipationRequest{OrderBookUid: orderBookUID, ParticipationIndex: particiapationIndex}
+			params := &types.QueryOrderBookParticipationRequest{
+				OrderBookUid:       orderBookUID,
+				ParticipationIndex: particiapationIndex,
+			}
 			res, err := queryClient.OrderBookParticipation(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -243,12 +249,15 @@ func GetCmdQueryOrderBookExposure() *cobra.Command {
 		Use:   "book-exposure [order-book-id] [odds-uid]",
 		Short: "Query a book exposure",
 		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query details about a book exposure.
+			fmt.Sprintf(
+				`Query details about a book exposure.
 
 Example:
 $ %s query strategicreserve book-exposure %s %s
 `,
-				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", "9991c60f-2025-48ce-ae79-1dc110f16990",
+				version.AppName,
+				"5531c60f-2025-48ce-ae79-1dc110f16000",
+				"9991c60f-2025-48ce-ae79-1dc110f16990",
 			),
 		),
 		Args: cobra.ExactArgs(2),

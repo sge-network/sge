@@ -53,7 +53,11 @@ func TestCalculateDecimalPayout(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			payoutProfit, err := types.CalculatePayoutProfit(types.OddsType_ODDS_TYPE_DECIMAL, tc.oddsValue, sdk.NewInt(tc.betAmount))
+			payoutProfit, err := types.CalculatePayoutProfit(
+				types.OddsType_ODDS_TYPE_DECIMAL,
+				tc.oddsValue,
+				sdk.NewInt(tc.betAmount),
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -61,7 +65,11 @@ func TestCalculateDecimalPayout(t *testing.T) {
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payoutProfit.TruncateInt()), "expected: %d, actual: %d", tc.expVal, payoutProfit)
 			}
 
-			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_DECIMAL, tc.oddsValue, payoutProfit)
+			calcBetAmount, err := types.CalculateBetAmount(
+				types.OddsType_ODDS_TYPE_DECIMAL,
+				tc.oddsValue,
+				payoutProfit,
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -176,7 +184,11 @@ func TestCalculateFractionalPayout(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			payoutProfit, err := types.CalculatePayoutProfit(types.OddsType_ODDS_TYPE_FRACTIONAL, tc.oddsValue, sdk.NewInt(tc.betAmount))
+			payoutProfit, err := types.CalculatePayoutProfit(
+				types.OddsType_ODDS_TYPE_FRACTIONAL,
+				tc.oddsValue,
+				sdk.NewInt(tc.betAmount),
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -184,7 +196,11 @@ func TestCalculateFractionalPayout(t *testing.T) {
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payoutProfit.TruncateInt()), "expected: %d, actual: %d", tc.expVal, payoutProfit)
 			}
 
-			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_FRACTIONAL, tc.oddsValue, payoutProfit)
+			calcBetAmount, err := types.CalculateBetAmount(
+				types.OddsType_ODDS_TYPE_FRACTIONAL,
+				tc.oddsValue,
+				payoutProfit,
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -215,7 +231,11 @@ func TestCalculateFractionalBetAmount(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_FRACTIONAL, tc.oddsValue, tc.payoutProfit)
+			calcBetAmount, err := types.CalculateBetAmount(
+				types.OddsType_ODDS_TYPE_FRACTIONAL,
+				tc.oddsValue,
+				tc.payoutProfit,
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -288,7 +308,11 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			payoutProfit, err := types.CalculatePayoutProfit(types.OddsType_ODDS_TYPE_MONEYLINE, tc.oddsValue, sdk.NewInt(tc.betAmount))
+			payoutProfit, err := types.CalculatePayoutProfit(
+				types.OddsType_ODDS_TYPE_MONEYLINE,
+				tc.oddsValue,
+				sdk.NewInt(tc.betAmount),
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -296,7 +320,11 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 				require.True(t, sdk.NewInt(tc.expVal).Equal(payoutProfit.TruncateInt()), "expected: %d, actual: %d", tc.expVal, payoutProfit)
 			}
 
-			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_MONEYLINE, tc.oddsValue, payoutProfit)
+			calcBetAmount, err := types.CalculateBetAmount(
+				types.OddsType_ODDS_TYPE_MONEYLINE,
+				tc.oddsValue,
+				payoutProfit,
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
@@ -327,7 +355,11 @@ func TestCalculateMoneylineBetAmount(t *testing.T) {
 
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			calcBetAmount, err := types.CalculateBetAmount(types.OddsType_ODDS_TYPE_MONEYLINE, tc.oddsValue, tc.payoutProfit)
+			calcBetAmount, err := types.CalculateBetAmount(
+				types.OddsType_ODDS_TYPE_MONEYLINE,
+				tc.oddsValue,
+				tc.payoutProfit,
+			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {

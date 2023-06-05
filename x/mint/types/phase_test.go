@@ -15,5 +15,9 @@ func TestPhaseYML(t *testing.T) {
 	}
 
 	ymlStr := phase.String()
-	require.Equal(t, "inflation: \"10.000000000000000000\"\nyear_coefficient: \"1.000000000000000000\"\n", ymlStr)
+	require.Equal(
+		t,
+		"inflation: \"10.000000000000000000\"\nyear_coefficient: \"1.000000000000000000\"\n",
+		ymlStr,
+	)
 }

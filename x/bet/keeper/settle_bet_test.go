@@ -300,7 +300,13 @@ func TestBatchSettleBet(t *testing.T) {
 
 		marketStats := tApp.MarketKeeper.GetMarketStats(ctx)
 
-		t.Logf("block: %d, pending bets: %d, settled bets: %d, resolved markets: %v\n", i, len(pendingBets), len(settledBets), marketStats.ResolvedUnsettled)
+		t.Logf(
+			"block: %d, pending bets: %d, settled bets: %d, resolved markets: %v\n",
+			i,
+			len(pendingBets),
+			len(settledBets),
+			marketStats.ResolvedUnsettled,
+		)
 		require.GreaterOrEqual(t, int(p.BatchSettlementCount)*i, len(settledBets))
 	}
 

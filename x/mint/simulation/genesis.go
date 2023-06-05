@@ -39,7 +39,12 @@ func RandomizedGenState(simState *module.SimulationState) {
 
 	// params
 	mintDenom := params.DefaultBondDenom
-	params := types.NewParams(mintDenom, types.BlocksPerYear, types.DefaultExcludeAmount, types.DefaultParams().Phases)
+	params := types.NewParams(
+		mintDenom,
+		types.BlocksPerYear,
+		types.DefaultExcludeAmount,
+		types.DefaultParams().Phases,
+	)
 
 	mintGenesis := types.NewGenesisState(types.InitialMinter(inflation), params)
 

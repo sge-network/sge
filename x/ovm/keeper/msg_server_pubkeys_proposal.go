@@ -11,7 +11,10 @@ import (
 )
 
 // SubmitPubkeysChangeProposal is the main transaction of OVM to add or delete the keys to the chain.
-func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types.MsgSubmitPubkeysChangeProposalRequest) (*types.MsgSubmitPubkeysChangeProposalResponse, error) {
+func (k msgServer) SubmitPubkeysChangeProposal(
+	goCtx context.Context,
+	msg *types.MsgSubmitPubkeysChangeProposalRequest,
+) (*types.MsgSubmitPubkeysChangeProposalResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	keyVault, found := k.GetKeyVault(ctx)
@@ -48,12 +51,24 @@ func (k msgServer) SubmitPubkeysChangeProposal(goCtx context.Context, msg *types
 	// set proposal statistics
 	k.Keeper.SetProposalStats(ctx, stats)
 
-	emitSumitProposalEvent(ctx, types.TypeMsgCreatePubKeyChaneProposal, proposal.Id, proposal.Creator, proposal.Modifications.String())
+	emitSumitProposalEvent(
+		ctx,
+		types.TypeMsgCreatePubKeyChaneProposal,
+		proposal.Id,
+		proposal.Creator,
+		proposal.Modifications.String(),
+	)
 
 	return &types.MsgSubmitPubkeysChangeProposalResponse{Success: true}, nil
 }
 
-func emitSumitProposalEvent(ctx sdk.Context, emitType string, id uint64, creator string, content string) {
+func emitSumitProposalEvent(
+	ctx sdk.Context,
+	emitType string,
+	id uint64,
+	creator string,
+	content string,
+) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,

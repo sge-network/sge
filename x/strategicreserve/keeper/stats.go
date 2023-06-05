@@ -60,7 +60,9 @@ func (k Keeper) RemoveUnsettledResolvedOrderBook(ctx sdk.Context, orderBookUID s
 	if len(stats.ResolvedUnsettled) > 0 {
 		for i, e := range stats.ResolvedUnsettled {
 			if e == orderBookUID {
-				stats.ResolvedUnsettled = append(stats.ResolvedUnsettled[:i], stats.ResolvedUnsettled[i+1:]...)
+				stats.ResolvedUnsettled = append(
+					stats.ResolvedUnsettled[:i],
+					stats.ResolvedUnsettled[i+1:]...)
 			}
 		}
 	}

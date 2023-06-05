@@ -43,7 +43,11 @@ func TestQueryParams(t *testing.T) {
 			err = json.Unmarshal(res.Bytes(), &params)
 			fmt.Println(params)
 			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshallable.
-			require.EqualError(t, err, "json: cannot unmarshal string into Go struct field Params.params.blocks_per_year of type int64")
+			require.EqualError(
+				t,
+				err,
+				"json: cannot unmarshal string into Go struct field Params.params.blocks_per_year of type int64",
+			)
 
 			defaultParams := types.DefaultParams()
 			defaultParams.BlocksPerYear = 0

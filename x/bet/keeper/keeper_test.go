@@ -87,7 +87,12 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	require.NotNil(t, resAddMarket)
 }
 
-func addTestMarketBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, count int) (uids []string) {
+func addTestMarketBatch(
+	t testing.TB,
+	tApp *simappUtil.TestApp,
+	ctx sdk.Context,
+	count int,
+) (uids []string) {
 	for i := 0; i < count; i++ {
 		testCreator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
 		uid := uuid.NewString()
@@ -119,7 +124,13 @@ func addTestMarketBatch(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context,
 	return uids
 }
 
-func placeTestBet(ctx sdk.Context, t testing.TB, tApp *simappUtil.TestApp, betUID string, selectedOdds *types.BetOdds) {
+func placeTestBet(
+	ctx sdk.Context,
+	t testing.TB,
+	tApp *simappUtil.TestApp,
+	betUID string,
+	selectedOdds *types.BetOdds,
+) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)

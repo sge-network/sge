@@ -14,7 +14,17 @@ func TestApp(t *testing.T) {
 	panicFunc := func() {
 		db := tmdb.NewMemDB()
 		encCdc := app.MakeEncodingConfig()
-		app.NewSgeApp(log.NewNopLogger(), db, nil, true, map[int64]bool{}, "", 0, encCdc, sdksimapp.EmptyAppOptions{})
+		app.NewSgeApp(
+			log.NewNopLogger(),
+			db,
+			nil,
+			true,
+			map[int64]bool{},
+			"",
+			0,
+			encCdc,
+			sdksimapp.EmptyAppOptions{},
+		)
 	}
 	require.NotPanics(t, panicFunc)
 }

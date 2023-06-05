@@ -171,7 +171,11 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 }
 
 // batchSettlementOfMarket settles pending bets of a markets
-func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, countToBeSettled uint32) (settledCount uint32, err error) {
+func (k Keeper) batchSettlementOfMarket(
+	ctx sdk.Context,
+	marketUID string,
+	countToBeSettled uint32,
+) (settledCount uint32, err error) {
 	// initialize iterator for the certain number of pending bets
 	// equal to countToBeSettled
 	iterator := sdk.KVStorePrefixIteratorPaginated(

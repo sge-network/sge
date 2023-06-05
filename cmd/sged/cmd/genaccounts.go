@@ -49,7 +49,12 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 
 			config.SetRoot(clientCtx.HomeDir)
 
-			addr, genAccount, balances, err := getAccountAddressAndBalances(cmd, args[0], args[1], clientCtx.HomeDir)
+			addr, genAccount, balances, err := getAccountAddressAndBalances(
+				cmd,
+				args[0],
+				args[1],
+				clientCtx.HomeDir,
+			)
 			if err != nil {
 				return err
 			}
@@ -207,7 +212,11 @@ func getVestingParams(cmd *cobra.Command) (int64, int64, sdk.Coins, error) {
 	return vestingStart, vestingEnd, vestingAmt, nil
 }
 
-func getAndValidateGeneisAccount(cmd *cobra.Command, addr sdk.AccAddress, balances banktypes.Balance) (authtypes.GenesisAccount, error) {
+func getAndValidateGeneisAccount(
+	cmd *cobra.Command,
+	addr sdk.AccAddress,
+	balances banktypes.Balance,
+) (authtypes.GenesisAccount, error) {
 	// create concrete account type based on input parameters
 	var genAccount authtypes.GenesisAccount
 	baseAccount := authtypes.NewBaseAccount(addr, nil, genesisAccountNumber, genesisSquenceNumber)
@@ -217,7 +226,11 @@ func getAndValidateGeneisAccount(cmd *cobra.Command, addr sdk.AccAddress, balanc
 	}
 
 	if !vestingAmt.IsZero() {
-		baseVestingAccount := authvesting.NewBaseVestingAccount(baseAccount, vestingAmt.Sort(), vestingEnd)
+		baseVestingAccount := authvesting.NewBaseVestingAccount(
+			baseAccount,
+			vestingAmt.Sort(),
+			vestingEnd,
+		)
 
 		if (balances.Coins.IsZero() && !baseVestingAccount.OriginalVesting.IsZero()) ||
 			baseVestingAccount.OriginalVesting.IsAnyGT(balances.Coins) {

@@ -36,16 +36,28 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 	}
 
 	if len(payload.Meta) > MaxAllowedCharactersForMeta {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", MaxAllowedCharactersForMeta)
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"meta length should be less than %d characters",
+			MaxAllowedCharactersForMeta,
+		)
 	}
 
 	oddsSet := make(map[string]Odds, len(payload.Odds))
 	for _, o := range payload.Odds {
 		if o.Meta == "" {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta is mandatory for odds with uuid %s", o.UID)
+			return sdkerrors.Wrapf(
+				sdkerrors.ErrInvalidRequest,
+				"meta is mandatory for odds with uuid %s",
+				o.UID,
+			)
 		}
 		if len(o.Meta) > MaxAllowedCharactersForMeta {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "meta length should be less than %d characters", MaxAllowedCharactersForMeta)
+			return sdkerrors.Wrapf(
+				sdkerrors.ErrInvalidRequest,
+				"meta length should be less than %d characters",
+				MaxAllowedCharactersForMeta,
+			)
 		}
 		o.Meta = sanitize.XSS(o.Meta)
 		if !utils.IsValidUID(o.UID) {
@@ -72,7 +84,10 @@ func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) e
 	// updating the status to something other than active and inactive
 	if !(payload.Status == MarketStatus_MARKET_STATUS_ACTIVE ||
 		payload.Status == MarketStatus_MARKET_STATUS_INACTIVE) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "supported update status is active or inactive")
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"supported update status is active or inactive",
+		)
 	}
 
 	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
@@ -95,22 +110,35 @@ func (payload *MarketResolutionTicketPayload) Validate() error {
 	if !(payload.Status == MarketStatus_MARKET_STATUS_CANCELED ||
 		payload.Status == MarketStatus_MARKET_STATUS_ABORTED ||
 		payload.Status == MarketStatus_MARKET_STATUS_RESULT_DECLARED) {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "resolution status passed for the market is invalid")
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"resolution status passed for the market is invalid",
+		)
 	}
 
 	switch payload.Status {
 	case MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		if len(payload.WinnerOddsUIDs) > maxWinnerUIDs {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "currently only %d winner uid is allowed", maxWinnerUIDs)
+			return sdkerrors.Wrapf(
+				sdkerrors.ErrInvalidRequest,
+				"currently only %d winner uid is allowed",
+				maxWinnerUIDs,
+			)
 		}
 	default:
 		if len(payload.WinnerOddsUIDs) > 0 {
-			return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "winner odds should be set if the status is 'result declared'")
+			return sdkerrors.Wrapf(
+				sdkerrors.ErrInvalidRequest,
+				"winner odds should be set if the status is 'result declared'",
+			)
 		}
 	}
 
 	if payload.ResolutionTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid resolution timestamp for the market")
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"invalid resolution timestamp for the market",
+		)
 	}
 
 	if !utils.IsValidUID(payload.UID) {
@@ -118,7 +146,10 @@ func (payload *MarketResolutionTicketPayload) Validate() error {
 	}
 
 	if payload.Status == MarketStatus_MARKET_STATUS_RESULT_DECLARED && len(payload.WinnerOddsUIDs) < 1 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "not provided enough winner odds for the market")
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"not provided enough winner odds for the market",
+		)
 	}
 
 	for _, wid := range payload.WinnerOddsUIDs {
@@ -165,7 +196,10 @@ func validateMarketTS(ctx sdk.Context, startTS, endTS uint64) error {
 	}
 
 	if startTS >= endTS || startTS == 0 {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid start timestamp for the market, cannot be (greater than eql to EndTs) or 0")
+		return sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"invalid start timestamp for the market, cannot be (greater than eql to EndTs) or 0",
+		)
 	}
 
 	return nil

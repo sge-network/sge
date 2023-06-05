@@ -46,8 +46,16 @@ func DefaultParams() Params {
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
-		paramtypes.NewParamSetPair(KeyMaxBetByUIDQueryCount, &p.MaxBetByUidQueryCount, validateMaxBetByUIDQueryCount),
+		paramtypes.NewParamSetPair(
+			KeyBatchSettlementCount,
+			&p.BatchSettlementCount,
+			validateBatchSettlementCount,
+		),
+		paramtypes.NewParamSetPair(
+			KeyMaxBetByUIDQueryCount,
+			&p.MaxBetByUidQueryCount,
+			validateMaxBetByUIDQueryCount,
+		),
 	}
 }
 

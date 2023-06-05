@@ -21,7 +21,10 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func networkWithPubkeysChangeProposalObjects(t *testing.T, n int) (*network.Network, []types.PublicKeysChangeProposal) {
+func networkWithPubkeysChangeProposalObjects(
+	t *testing.T,
+	n int,
+) (*network.Network, []types.PublicKeysChangeProposal) {
 	t.Helper()
 	cfg := network.DefaultConfig()
 	state := types.GenesisState{}
