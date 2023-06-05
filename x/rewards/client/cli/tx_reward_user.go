@@ -27,7 +27,7 @@ func CmdRewardUser() *cobra.Command {
 			}
 
 			msg, err := types.NewMsgRewardUser(
-				clientCtx.GetFromAddress().String(), args[0], args[1], args[2], args[3], args[5],
+				clientCtx.GetFromAddress().String(), args[0], args[1], args[2], args[3], args[4],
 			)
 			if err != nil {
 				return err
