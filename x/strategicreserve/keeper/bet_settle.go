@@ -21,7 +21,7 @@ func (k Keeper) RefundBettor(
 		return err
 	}
 
-	// refund bettor's account from orderbook liquidity pool.
+	// refund bettor's account from bet fee collector.
 	if err := k.reFund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
 		return err
 	}

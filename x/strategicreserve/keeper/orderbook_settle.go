@@ -141,12 +141,12 @@ func (k Keeper) settleParticipation(
 	}
 
 	if refundHouseDepositFeeToDepositor {
-		// refund participant's account from orderbook liquidity pool.
+		// refund participant's account from house fee collector.
 		if err := k.reFund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, deposit.Fee); err != nil {
 			return err
 		}
 	} else {
-		// refund participant's account from orderbook liquidity pool.
+		// refund participant's account from house fee collector.
 		if err := k.reFund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), deposit.Fee); err != nil {
 			return err
 		}
