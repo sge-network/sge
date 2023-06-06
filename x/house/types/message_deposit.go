@@ -83,8 +83,9 @@ func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
 func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participationIndex uint64) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(sdk.EventTypeMessage, typeMsgDeposit, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, msg.MarketUID),
 		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(participationIndex)),
-		sdk.NewAttribute(attributeKeyParticipationIndex, depositor),
+		sdk.NewAttribute(attributeKeyDepositor, depositor),
 	)
 	emitter.Emit()
 }
