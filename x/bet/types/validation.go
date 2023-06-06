@@ -5,11 +5,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 // BetFieldsValidation validates fields of the given bet
 func BetFieldsValidation(bet *PlaceBetFields) error {
-	if !IsValidUID(bet.UID) {
+	if !utils.IsValidUID(bet.UID) {
 		return ErrInvalidBetUID
 	}
 
@@ -34,11 +35,11 @@ func (ticketData *BetPlacementTicketPayload) Validate(creator string) error {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
-	if !IsValidUID(ticketData.SelectedOdds.MarketUID) {
+	if !utils.IsValidUID(ticketData.SelectedOdds.MarketUID) {
 		return ErrInvalidMarketUID
 	}
 
-	if !IsValidUID(ticketData.SelectedOdds.UID) {
+	if !utils.IsValidUID(ticketData.SelectedOdds.UID) {
 		return ErrInvalidOddsUID
 	}
 

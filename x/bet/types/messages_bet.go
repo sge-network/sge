@@ -1,7 +1,6 @@
 package types
 
 import (
-	"regexp"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -77,24 +76,6 @@ func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
 		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
 	)
 	emitter.Emit()
-}
-
-// isValidUUID validates the uid
-func isValidUUID(uid string) bool {
-	r := regexp.MustCompile(
-		"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
-	)
-	return r.MatchString(uid)
-}
-
-// IsValidUID validates the uid
-func IsValidUID(uid string) bool {
-	if len(uid) == 0 || uid == "" || strings.Contains(uid, " ") ||
-		!isValidUUID(uid) {
-		return false
-	}
-
-	return true
 }
 
 // NewBet creates and returns a new bet from given message
