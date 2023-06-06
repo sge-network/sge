@@ -3,6 +3,8 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 // typeMsgVotePubkeysChange is type of message MsgPubkeysChangeProposalRequest
@@ -55,4 +57,15 @@ func (msg *MsgVotePubkeysChangeRequest) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgVotePubkeysChangeRequest) EmitEvent(ctx *sdk.Context, proposalID uint64, publicKey string, vote ProposalVote) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgVotePubkeysChange, msg.Creator,
+		sdk.NewAttribute(attributeKeyPubkeysChangeProposalID, cast.ToString(proposalID)),
+		sdk.NewAttribute(attributeKeyVoterPubKey, publicKey),
+		sdk.NewAttribute(attributeKeyVote, vote.String()),
+	)
+	emitter.Emit()
 }

@@ -1,13 +1,8 @@
 package types
 
 const (
-	AttributeKeyParticipationIndex = "deposit_participation_index"
-	AttributeKeyDepositor          = "deposit_depositor"
+	attributeValueCategory = ModuleName
 
-	// AttributeValueCategory is the event attribute for category as module name
-	AttributeValueCategory = ModuleName
-)
-
-const (
-	TypeMsgDeposit = "create_deposit"
+	attributeKeyParticipationIndex = "participation_index"
+	attributeKeyDepositor          = "depositor"
 )

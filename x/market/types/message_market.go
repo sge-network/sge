@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const typeMsgAddMarket = "add_market"
@@ -55,6 +56,16 @@ func (msg *MsgAddMarket) ValidateBasic() error {
 	return nil
 }
 
+// EmitEvent emits the event for the message success.
+func (msg *MsgAddMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgAddMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
+	)
+	emitter.Emit()
+}
+
 // typeMsgUpdateMarket is the market name of update market
 const typeMsgUpdateMarket = "update_market"
 
@@ -105,4 +116,14 @@ func (msg *MsgUpdateMarket) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgUpdateMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgUpdateMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
+	)
+	emitter.Emit()
 }

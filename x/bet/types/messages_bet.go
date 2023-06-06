@@ -6,11 +6,12 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const (
-	// TypeMsgPlaceBet is type of message MsgPlaceBet
-	TypeMsgPlaceBet = "place_bet"
+	// typeMsgPlaceBet is type of message MsgPlaceBet
+	typeMsgPlaceBet = "place_bet"
 	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
 	SettlementUIDsThreshold = 10
 	// BetPlacementThreshold is the threshold for the number bets in bulk placement tx
@@ -37,7 +38,7 @@ func (msg *MsgPlaceBet) Route() string {
 
 // Type returns type of its message
 func (msg *MsgPlaceBet) Type() string {
-	return TypeMsgPlaceBet
+	return typeMsgPlaceBet
 }
 
 // GetSigners returns the signers of its message
@@ -67,6 +68,15 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgPlaceBet, msg.Creator,
+		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
+	)
+	emitter.Emit()
 }
 
 // isValidUUID validates the uid

@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 const typeMsgWithdraw = "withdraw"
@@ -76,4 +77,14 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgWithdraw) EmitEvent(ctx *sdk.Context, depositor string) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgWithdraw, msg.Creator,
+		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(msg.ParticipationIndex)),
+		sdk.NewAttribute(attributeKeyParticipationIndex, depositor),
+	)
+	emitter.Emit()
 }

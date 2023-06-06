@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const typeMsgResolveMarket = "resolve_market"
@@ -54,4 +55,14 @@ func (msg *MsgResolveMarket) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgResolveMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgResolveMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
+	)
+	emitter.Emit()
 }

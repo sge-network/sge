@@ -3,6 +3,8 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 // typeMsgPubkeysChangeProposal is type of message MsgPubkeysChangeProposalRequest
@@ -53,4 +55,14 @@ func (msg *MsgSubmitPubkeysChangeProposalRequest) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgSubmitPubkeysChangeProposalRequest) EmitEvent(ctx *sdk.Context, proposalID uint64, content string) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgPubkeysChangeProposal, msg.Creator,
+		sdk.NewAttribute(attributeKeyPubkeysChangeProposalID, cast.ToString(proposalID)),
+		sdk.NewAttribute(attributeKeyContent, content),
+	)
+	emitter.Emit()
 }

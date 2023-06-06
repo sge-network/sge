@@ -4,6 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 const typeMsgDeposit = "deposit"
@@ -76,4 +77,14 @@ func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participationIndex uint64) {
+	emitter := utils.NewEventEmitter(ctx)
+	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgDeposit, msg.Creator,
+		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(participationIndex)),
+		sdk.NewAttribute(attributeKeyParticipationIndex, depositor),
+	)
+	emitter.Emit()
 }
