@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cast"
 )
 
-const typeMsgDeposit = "deposit"
+const typeMsgDeposit = "house_deposit"
 
 var _ sdk.Msg = &MsgDeposit{}
 

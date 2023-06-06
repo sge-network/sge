@@ -6,7 +6,7 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgAddMarket = "add_market"
+const typeMsgAddMarket = "market_add"
 
 var _ sdk.Msg = &MsgAddMarket{}
 
@@ -67,7 +67,7 @@ func (msg *MsgAddMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) 
 }
 
 // typeMsgUpdateMarket is the market name of update market
-const typeMsgUpdateMarket = "update_market"
+const typeMsgUpdateMarket = "market_update"
 
 var _ sdk.Msg = &MsgUpdateMarket{}
 

@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cast"
 )
 
-const typeMsgWithdraw = "withdraw"
+const typeMsgWithdraw = "house_withdraw"
 
 var _ sdk.Msg = &MsgWithdraw{}
 

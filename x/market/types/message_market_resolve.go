@@ -6,7 +6,7 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgResolveMarket = "resolve_market"
+const typeMsgResolveMarket = "market_resolve"
 
 var _ sdk.Msg = &MsgResolveMarket{}
 
