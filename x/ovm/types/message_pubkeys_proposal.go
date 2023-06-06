@@ -24,14 +24,10 @@ func NewMsgPubkeysChangeProposalRequest(
 }
 
 // Route returns the module's message router key.
-func (msg *MsgSubmitPubkeysChangeProposalRequest) Route() string {
-	return RouterKey
-}
+func (msg *MsgSubmitPubkeysChangeProposalRequest) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (msg *MsgSubmitPubkeysChangeProposalRequest) Type() string {
-	return typeMsgPubkeysChangeProposal
-}
+func (msg *MsgSubmitPubkeysChangeProposalRequest) Type() string { return typeMsgPubkeysChangeProposal }
 
 // GetSigners returns the signers of its message
 func (msg *MsgSubmitPubkeysChangeProposalRequest) GetSigners() []sdk.AccAddress {

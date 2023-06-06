@@ -26,14 +26,10 @@ func NewMsgWithdraw(creator string, marketUID string, amount sdk.Int,
 }
 
 // Route return the message route for slashing
-func (msg *MsgWithdraw) Route() string {
-	return RouterKey
-}
+func (msg *MsgWithdraw) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgWithdraw) Type() string {
-	return typeMsgWithdraw
-}
+func (msg *MsgWithdraw) Type() string { return typeMsgWithdraw }
 
 // GetSigners return the creators address
 func (msg *MsgWithdraw) GetSigners() []sdk.AccAddress {

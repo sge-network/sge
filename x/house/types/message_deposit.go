@@ -22,14 +22,10 @@ func NewMsgDeposit(creator, marketUID string, amount sdk.Int, ticket string) *Ms
 }
 
 // Route return the message route for slashing
-func (msg *MsgDeposit) Route() string {
-	return RouterKey
-}
+func (msg *MsgDeposit) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgDeposit) Type() string {
-	return typeMsgDeposit
-}
+func (msg *MsgDeposit) Type() string { return typeMsgDeposit }
 
 // GetSigners return the creators address
 func (msg *MsgDeposit) GetSigners() []sdk.AccAddress {
