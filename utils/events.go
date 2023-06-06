@@ -2,19 +2,20 @@ package utils
 
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
-func NewEventEmitter(ctx *sdk.Context) EventEmitter {
-	return EventEmitter{ctx: ctx}
+func NewEventEmitter(ctx *sdk.Context, category string) EventEmitter {
+	return EventEmitter{ctx: ctx, category: category}
 }
 
 type EventEmitter struct {
-	ctx    *sdk.Context
-	Events []sdk.Event
+	ctx      *sdk.Context
+	category string
+	Events   []sdk.Event
 }
 
-func (em *EventEmitter) AddMsg(ty, category, msgType, creator string, attrs ...sdk.Attribute) {
+func (em *EventEmitter) AddMsg(ty, msgType, creator string, attrs ...sdk.Attribute) {
 	// prepend the standard attributes
 	msgAttrs := append([]sdk.Attribute{
-		sdk.NewAttribute(sdk.AttributeKeyModule, category),
+		sdk.NewAttribute(sdk.AttributeKeyModule, em.category),
 		sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
 		sdk.NewAttribute(sdk.AttributeKeySender, creator),
 	}, attrs...)

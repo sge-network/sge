@@ -72,8 +72,8 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 
 // EmitEvent emits the event for the message success.
 func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
-	emitter := utils.NewEventEmitter(ctx)
-	emitter.AddMsg(sdk.EventTypeMessage, attributeValueCategory, typeMsgPlaceBet, msg.Creator,
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(sdk.EventTypeMessage, typeMsgPlaceBet, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
 	)
 	emitter.Emit()
