@@ -26,6 +26,10 @@ func SimulateMsgUpdateMarket(
 
 		// TODO: Handling the UpdateMarket simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "UpdateMarket simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"UpdateMarket simulation not implemented",
+		), nil, nil
 	}
 }

@@ -28,10 +28,13 @@ func TestChangePubkeysVote(t *testing.T) {
 		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
-		resp, err := msgk.SubmitPubkeysChangeProposal(wctx, &types.MsgSubmitPubkeysChangeProposalRequest{
-			Creator: creator.Address.String(),
-			Ticket:  singedProposalTicket,
-		})
+		resp, err := msgk.SubmitPubkeysChangeProposal(
+			wctx,
+			&types.MsgSubmitPubkeysChangeProposalRequest{
+				Creator: creator.Address.String(),
+				Ticket:  singedProposalTicket,
+			},
+		)
 		require.NoError(t, err)
 		require.Equal(t, true, resp.Success)
 
@@ -68,10 +71,13 @@ func TestChangePubkeysVote(t *testing.T) {
 		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
-		resp, err := msgk.SubmitPubkeysChangeProposal(wctx, &types.MsgSubmitPubkeysChangeProposalRequest{
-			Creator: creator.Address.String(),
-			Ticket:  singedProposalTicket,
-		})
+		resp, err := msgk.SubmitPubkeysChangeProposal(
+			wctx,
+			&types.MsgSubmitPubkeysChangeProposalRequest{
+				Creator: creator.Address.String(),
+				Ticket:  singedProposalTicket,
+			},
+		)
 		require.NoError(t, err)
 		require.Equal(t, true, resp.Success)
 

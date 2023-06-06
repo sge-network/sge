@@ -46,7 +46,12 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 }
 
 // verifyTicketWithKeyUnmarshal verifies the ticket using the provided publiv key first, then if the token was verified, it unmarshal the data of ticket into clm.
-func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr string, clm interface{}, pubKeys ...string) error {
+func (k Keeper) verifyTicketWithKeyUnmarshal(
+	goCtx context.Context,
+	ticketStr string,
+	clm interface{},
+	pubKeys ...string,
+) error {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// construct new ticket object from string ticket
@@ -78,7 +83,10 @@ func (k Keeper) verifyTicketWithKeyUnmarshal(goCtx context.Context, ticketStr st
 
 		// pubkey is not registered so it is invalid
 		if !isRegistered {
-			return fmt.Errorf("the provided public key is not registered in the blockchain store: %s", pk)
+			return fmt.Errorf(
+				"the provided public key is not registered in the blockchain store: %s",
+				pk,
+			)
 		}
 	}
 

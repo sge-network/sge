@@ -83,7 +83,12 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome),
-		genutilcli.GenTxCmd(app.ModuleBasics, encodingConfig.TxConfig, banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome),
+		genutilcli.GenTxCmd(
+			app.ModuleBasics,
+			encodingConfig.TxConfig,
+			banktypes.GenesisBalancesIterator{},
+			app.DefaultNodeHome,
+		),
 		genutilcli.ValidateGenesisCmd(app.ModuleBasics),
 		AddGenesisAccountCmd(app.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
@@ -158,7 +163,12 @@ func txCommand() *cobra.Command {
 }
 
 // newApp is an AppCreator
-func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts servertypes.AppOptions) servertypes.Application {
+func newApp(
+	logger log.Logger,
+	db dbm.DB,
+	traceStore io.Writer,
+	appOpts servertypes.AppOptions,
+) servertypes.Application {
 	var cache sdk.MultiStorePersistentCache
 
 	if cast.ToBool(appOpts.Get(server.FlagInterBlockCache)) {
@@ -186,7 +196,11 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts serverty
 	}
 
 	return app.NewSgeApp(
-		logger, db, traceStore, true, skipUpgradeHeights,
+		logger,
+		db,
+		traceStore,
+		true,
+		skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
 		app.MakeEncodingConfig(), // Ideally, we would reuse the one created by NewRootCmd.
@@ -201,19 +215,36 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, appOpts serverty
 		baseapp.SetIndexEvents(cast.ToStringSlice(appOpts.Get(server.FlagIndexEvents))),
 		baseapp.SetSnapshotStore(snapshotStore),
 		baseapp.SetSnapshotInterval(cast.ToUint64(appOpts.Get(server.FlagStateSyncSnapshotInterval))),
-		baseapp.SetSnapshotKeepRecent(cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent))),
+		baseapp.SetSnapshotKeepRecent(
+			cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
+		),
 	)
 }
 
 func createSimappAndExport(
-	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
+	logger log.Logger,
+	db dbm.DB,
+	traceStore io.Writer,
+	height int64,
+	forZeroHeight bool,
+	jailAllowedAddrs []string,
 	appOpts servertypes.AppOptions,
 ) (servertypes.ExportedApp, error) {
 	encCfg := app.MakeEncodingConfig() // Ideally, we would reuse the one created by NewRootCmd.
 	encCfg.Marshaler = codec.NewProtoCodec(encCfg.InterfaceRegistry)
 	var sgeApp *app.SgeApp
 	if height != -1 {
-		sgeApp = app.NewSgeApp(logger, db, traceStore, false, map[int64]bool{}, "", cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)), encCfg, appOpts)
+		sgeApp = app.NewSgeApp(
+			logger,
+			db,
+			traceStore,
+			false,
+			map[int64]bool{},
+			"",
+			cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
+			encCfg,
+			appOpts,
+		)
 
 		if err := sgeApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err

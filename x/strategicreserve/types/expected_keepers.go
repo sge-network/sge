@@ -18,10 +18,24 @@ type AccountKeeper interface {
 // BankKeeper defines the expected bank keeper methods.
 type BankKeeper interface {
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
-	SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, recipientModule string, amt sdk.Coins) error
+	SendCoinsFromAccountToModule(
+		ctx sdk.Context,
+		senderAddr sdk.AccAddress,
+		recipientModule string,
+		amt sdk.Coins,
+	) error
 	GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin
-	SendCoinsFromModuleToModule(ctx sdk.Context, senderModule, recipientModule string, amt sdk.Coins) error
-	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
+	SendCoinsFromModuleToModule(
+		ctx sdk.Context,
+		senderModule, recipientModule string,
+		amt sdk.Coins,
+	) error
+	SendCoinsFromModuleToAccount(
+		ctx sdk.Context,
+		senderModule string,
+		recipientAddr sdk.AccAddress,
+		amt sdk.Coins,
+	) error
 }
 
 // BetKeeper defines the expected bet keeper methods.
@@ -36,7 +50,11 @@ type MarketKeeper interface {
 
 // MarketKeeper defines the expected market keeper methods.
 type HouseKeeper interface {
-	GetDeposit(ctx sdk.Context, depositorAddress, marketUID string, participationIndex uint64) (val housetypes.Deposit, found bool)
+	GetDeposit(
+		ctx sdk.Context,
+		depositorAddress, marketUID string,
+		participationIndex uint64,
+	) (val housetypes.Deposit, found bool)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
@@ -46,6 +64,10 @@ type OVMKeeper interface {
 
 // FeeGrantKeeper defines the expected interface needed for the fee grant.
 type FeeGrantKeeper interface {
-	GrantAllowance(ctx sdk.Context, granter, grantee sdk.AccAddress, feeAllowance sdkfeegrant.FeeAllowanceI) error
+	GrantAllowance(
+		ctx sdk.Context,
+		granter, grantee sdk.AccAddress,
+		feeAllowance sdkfeegrant.FeeAllowanceI,
+	) error
 	GetAllowance(ctx sdk.Context, granter, grantee sdk.AccAddress) (sdkfeegrant.FeeAllowanceI, error)
 }

@@ -20,8 +20,8 @@ const (
 
 // module accounts constants
 const (
-	// HouseFeeCollector defines the account name for house participation fee
-	HouseFeeCollector = "house_fee_collector"
+	// houseFeeCollector defines the account name for house participation fee
+	houseFeeCollector = "house_fee_collector"
 )
 
 var (
@@ -31,7 +31,9 @@ var (
 
 // GetDepositKey creates the key for deposit bond with market and participation
 func GetDepositKey(depositorAddr string, marketUID string, participationIndex uint64) []byte {
-	return append(GetDepositListPrefix(depositorAddr), append(utils.StrBytes(marketUID), utils.Uint64ToBytes(participationIndex)...)...)
+	return append(
+		GetDepositListPrefix(depositorAddr),
+		append(utils.StrBytes(marketUID), utils.Uint64ToBytes(participationIndex)...)...)
 }
 
 // GetDepositListPrefix creates the key for deposit bond with market
@@ -40,8 +42,15 @@ func GetDepositListPrefix(depositorAddr string) []byte {
 }
 
 // GetWithdrawalKey creates the key for withdrawal bond with market and deposit
-func GetWithdrawalKey(depositorAddr string, marketUID string, participationIndex uint64, id uint64) []byte {
-	return append(GetDepositKey(depositorAddr, marketUID, participationIndex), utils.Uint64ToBytes(id)...)
+func GetWithdrawalKey(
+	depositorAddr string,
+	marketUID string,
+	participationIndex uint64,
+	id uint64,
+) []byte {
+	return append(
+		GetDepositKey(depositorAddr, marketUID, participationIndex),
+		utils.Uint64ToBytes(id)...)
 }
 
 // GetWithdrawalListPrefix creates the key for withdrawals bond with market

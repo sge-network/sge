@@ -19,11 +19,19 @@ func (k msgServer) Withdraw(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	if err := payload.Validate(msg.Creator); err != nil {
+	depositorAddr := msg.Creator
+	if payload.DepositorAddress != "" {
+		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
+			return nil, err
+		}
+		depositorAddr = payload.DepositorAddress
+	}
+
+	if err := payload.Validate(depositorAddr); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
-	id, err := k.Keeper.Withdraw(ctx, msg.Creator, msg.MarketUID,
+	id, err := k.Keeper.Withdraw(ctx, msg.Creator, depositorAddr, msg.MarketUID,
 		msg.ParticipationIndex, msg.Mode, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process withdrawal")

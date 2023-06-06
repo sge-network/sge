@@ -28,7 +28,8 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	currentPhase, currentPhaseStep := minter.CurrentPhase(params, currentBlock)
 
 	// set the new minter properties if the phase has changed or inflation has changed
-	if currentPhaseStep != cast.ToInt(minter.PhaseStep) || !minter.Inflation.Equal(currentPhase.Inflation) {
+	if currentPhaseStep != cast.ToInt(minter.PhaseStep) ||
+		!minter.Inflation.Equal(currentPhase.Inflation) {
 		// set new inflation rate
 		newInflation := currentPhase.Inflation
 		minter.Inflation = newInflation
@@ -38,7 +39,11 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 
 		// set phase provisions of new phase step
 		totalSupply := k.TokenSupply(ctx, params.MintDenom)
-		minter.PhaseProvisions = minter.NextPhaseProvisions(totalSupply, params.ExcludeAmount, currentPhase)
+		minter.PhaseProvisions = minter.NextPhaseProvisions(
+			totalSupply,
+			params.ExcludeAmount,
+			currentPhase,
+		)
 
 		// store minter
 		k.SetMinter(ctx, minter)
@@ -69,7 +74,10 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	if mintedCoin.Amount.IsInt64() {
-		defer telemetry.ModuleSetGauge(types.ModuleName, float32(mintedCoin.Amount.Int64()), gaugeKeys...)
+		defer telemetry.ModuleSetGauge(
+			types.ModuleName,
+			float32(mintedCoin.Amount.Int64()),
+			gaugeKeys...)
 	}
 
 	ctx.EventManager().EmitEvent(

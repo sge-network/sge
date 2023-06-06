@@ -16,7 +16,10 @@ func (k Keeper) SetOrderBookOddsExposure(ctx sdk.Context, boe types.OrderBookOdd
 }
 
 // GetOrderBookOddsExposure returns a specific book odds exposure.
-func (k Keeper) GetOrderBookOddsExposure(ctx sdk.Context, bookUID, oddsUID string) (val types.OrderBookOddsExposure, found bool) {
+func (k Keeper) GetOrderBookOddsExposure(
+	ctx sdk.Context,
+	bookUID, oddsUID string,
+) (val types.OrderBookOddsExposure, found bool) {
 	marketsStore := k.getOrderBookOddsExposureStore(ctx)
 	exposureKey := types.GetOrderBookOddsExposureKey(bookUID, oddsUID)
 	b := marketsStore.Get(exposureKey)
@@ -30,7 +33,10 @@ func (k Keeper) GetOrderBookOddsExposure(ctx sdk.Context, bookUID, oddsUID strin
 }
 
 // GetOddsExposuresByOrderBook returns all exposures for an order book.
-func (k Keeper) GetOddsExposuresByOrderBook(ctx sdk.Context, bookUID string) (list []types.OrderBookOddsExposure, err error) {
+func (k Keeper) GetOddsExposuresByOrderBook(
+	ctx sdk.Context,
+	bookUID string,
+) (list []types.OrderBookOddsExposure, err error) {
 	store := k.getOrderBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookOddsExposuresKey(bookUID))
 
@@ -48,7 +54,9 @@ func (k Keeper) GetOddsExposuresByOrderBook(ctx sdk.Context, bookUID string) (li
 }
 
 // GetAllOrderBookExposures returns all order book exposures used during genesis dump.
-func (k Keeper) GetAllOrderBookExposures(ctx sdk.Context) (list []types.OrderBookOddsExposure, err error) {
+func (k Keeper) GetAllOrderBookExposures(
+	ctx sdk.Context,
+) (list []types.OrderBookOddsExposure, err error) {
 	store := k.getOrderBookOddsExposureStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 

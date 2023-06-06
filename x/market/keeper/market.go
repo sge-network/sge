@@ -51,7 +51,11 @@ func (k Keeper) GetMarkets(ctx sdk.Context) (list []types.Market, err error) {
 }
 
 // ResolveMarket updates a market with its resolution
-func (k Keeper) ResolveMarket(ctx sdk.Context, storedMarket types.Market, resolutionMarket *types.MarketResolutionTicketPayload) *types.Market {
+func (k Keeper) ResolveMarket(
+	ctx sdk.Context,
+	storedMarket types.Market,
+	resolutionMarket *types.MarketResolutionTicketPayload,
+) *types.Market {
 	storedMarket.ResolutionTS = resolutionMarket.ResolutionTS
 	storedMarket.Status = resolutionMarket.Status
 

@@ -74,7 +74,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	))
 
 	var weightMsgResolveMarket int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgResolveMarket, &weightMsgResolveMarket, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		opWeightMsgResolveMarket,
+		&weightMsgResolveMarket,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgResolveMarket = defaultWeightMsgResolveMarket
 		},

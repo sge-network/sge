@@ -11,7 +11,10 @@ const typeMsgVotePubkeysChange = "pubkeys_change_vote"
 var _ sdk.Msg = &MsgVotePubkeysChangeRequest{}
 
 // MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
-func NewMsgVotePubkeysChangeRequest(creator, ticket string, voterIndex uint32) *MsgVotePubkeysChangeRequest {
+func NewMsgVotePubkeysChangeRequest(
+	creator, ticket string,
+	voterIndex uint32,
+) *MsgVotePubkeysChangeRequest {
 	return &MsgVotePubkeysChangeRequest{
 		Creator:       creator,
 		Ticket:        ticket,

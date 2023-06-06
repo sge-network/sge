@@ -19,7 +19,16 @@ type AccountKeeper interface {
 // dependencies.
 type BankKeeper interface {
 	GetSupply(ctx sdk.Context, denom string) sdk.Coin
-	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
-	SendCoinsFromModuleToModule(ctx sdk.Context, senderModule, recipientModule string, amt sdk.Coins) error
+	SendCoinsFromModuleToAccount(
+		ctx sdk.Context,
+		senderModule string,
+		recipientAddr sdk.AccAddress,
+		amt sdk.Coins,
+	) error
+	SendCoinsFromModuleToModule(
+		ctx sdk.Context,
+		senderModule, recipientModule string,
+		amt sdk.Coins,
+	) error
 	MintCoins(ctx sdk.Context, name string, amt sdk.Coins) error
 }

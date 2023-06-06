@@ -25,6 +25,8 @@ var (
 	ErrInTicketVerification      = sdkerrors.Register(ModuleName, 5015, "error in ticket verification process")
 	ErrInTicketPayloadValidation = sdkerrors.Register(ModuleName, 5016, "error in ticket payload validation")
 	ErrUserKycFailed             = sdkerrors.Register(ModuleName, 5017, "the account failed the KYC Validation")
+	ErrAuthorizationNotFound     = sdkerrors.Register(ModuleName, 5018, "no authorization found")
+	ErrAuthorizationNotAccepted  = sdkerrors.Register(ModuleName, 5019, "authorization not accepted")
 )
 
 const (

@@ -167,8 +167,18 @@ func TestPlaceBet(t *testing.T) {
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
-				{UID: "odds1", MarketUID: "uid_success", Value: "2.52", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				{UID: "odds2", MarketUID: "uid_success", Value: "1.50", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				{
+					UID:               "odds1",
+					MarketUID:         "uid_success",
+					Value:             "2.52",
+					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				},
+				{
+					UID:               "odds2",
+					MarketUID:         "uid_success",
+					Value:             "1.50",
+					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				},
 			},
 			bet: &types.Bet{
 				UID:               "betUID",

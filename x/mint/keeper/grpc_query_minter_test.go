@@ -24,7 +24,11 @@ func TestMinterQuery(t *testing.T) {
 
 	phaseProvisions, err := k.PhaseProvisions(wctx, &types.QueryPhaseProvisionsRequest{})
 	require.NoError(t, err)
-	require.Equal(t, &types.QueryPhaseProvisionsResponse{PhaseProvisions: k.GetMinter(ctx).PhaseProvisions}, phaseProvisions)
+	require.Equal(
+		t,
+		&types.QueryPhaseProvisionsResponse{PhaseProvisions: k.GetMinter(ctx).PhaseProvisions},
+		phaseProvisions,
+	)
 
 	endPhaseStatus, err := k.EndPhaseStatus(wctx, &types.QueryEndPhaseStatusRequest{})
 	require.NoError(t, err)

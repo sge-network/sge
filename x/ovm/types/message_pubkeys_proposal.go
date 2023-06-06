@@ -11,7 +11,10 @@ const typeMsgPubkeysChangeProposal = "pubkeys_change_proposal"
 var _ sdk.Msg = &MsgSubmitPubkeysChangeProposalRequest{}
 
 // MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
-func NewMsgPubkeysChangeProposalRequest(creator string, txs string) *MsgSubmitPubkeysChangeProposalRequest {
+func NewMsgPubkeysChangeProposalRequest(
+	creator string,
+	txs string,
+) *MsgSubmitPubkeysChangeProposalRequest {
 	return &MsgSubmitPubkeysChangeProposalRequest{
 		Creator: creator,
 		Ticket:  txs,

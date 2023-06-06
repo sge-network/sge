@@ -13,7 +13,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createNBet(tApp *simappUtil.TestApp, keeper *keeper.KeeperTest, ctx sdk.Context, n int) []types.Bet {
+func createNBet(
+	tApp *simappUtil.TestApp,
+	keeper *keeper.KeeperTest,
+	ctx sdk.Context,
+	n int,
+) []types.Bet {
 	items := make([]types.Bet, n)
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	tApp.MarketKeeper.SetMarket(ctx, testMarket)

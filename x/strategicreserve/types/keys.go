@@ -20,23 +20,32 @@ const (
 
 // module accounts constants
 const (
-	// DataFeeCollector is the module account responsible for the payment of the market manipulation
-	DataFeeCollector = "data_fee_collector"
-	// HouseDepositCollector defines the account name for book liquidity for the bettors
-	HouseDepositCollector = "house_deposit_collector"
+	// orderBookLiquidityPool defines the account name for book liquidity for the participants.
+	orderBookLiquidityPool = "orderbook_liquidity_pool"
 )
 
 var (
-	OrderBookKeyPrefix                       = []byte{0x00} // prefix for keys that store books
-	OrderBookParticipationKeyPrefix          = []byte{0x01} // prefix for keys that store book participations
-	OrderBookOddsExposureKeyPrefix           = []byte{0x02} // prefix for keys that store book odds exposures
-	ParticipationExposureKeyPrefix           = []byte{0x03} // prefix for keys that store participation exposures
-	PayoutLockKeyPrefix                      = []byte{0x04} // prefix for keys that store payout locks
-	ParticipationExposureByIndexKeyPrefix    = []byte{0x05} // prefix for keys that store participation exposures
-	HistoricalParticipationExposureKeyPrefix = []byte{0x06} // prefix for keys that store historical participation exposures
-	OrderBookStatsKeyPrefix                  = []byte{0x07} // prefix for keys that store book stats
-	ParticipationBetPairKeyPrefix            = []byte{0x08} // prefix for keys that store book participation and bet pairs
-	FeeGrantPrefix                           = []byte{0x09} // prefix for keys that store fee grants
+	OrderBookKeyPrefix              = []byte{0x00} // prefix for keys that store books
+	OrderBookParticipationKeyPrefix = []byte{
+		0x01,
+	} // prefix for keys that store book participations
+	OrderBookOddsExposureKeyPrefix = []byte{
+		0x02,
+	} // prefix for keys that store book odds exposures
+	ParticipationExposureKeyPrefix = []byte{
+		0x03,
+	} // prefix for keys that store participation exposures
+	ParticipationExposureByIndexKeyPrefix = []byte{
+		0x04,
+	} // prefix for keys that store participation exposures
+	HistoricalParticipationExposureKeyPrefix = []byte{
+		0x05,
+	} // prefix for keys that store historical participation exposures
+	OrderBookStatsKeyPrefix       = []byte{0x06} // prefix for keys that store book stats
+	ParticipationBetPairKeyPrefix = []byte{
+		0x07,
+	} // prefix for keys that store book participation and bet pairs
+	FeeGrantPrefix = []byte{0x08} // prefix for keys that store fee grants
 )
 
 // GetOrderBookKey returns the bytes of an book key
@@ -96,5 +105,7 @@ func GetHistoricalParticipationExposureKey(bookUID, oddsUID string, index, round
 
 // GetParticipationBetPairKey creates the bond between participation and bet
 func GetParticipationBetPairKey(bookUID string, bookParticipationIndex uint64, betID uint64) []byte {
-	return append(GetParticipationByIndexKey(bookUID, bookParticipationIndex), utils.Uint64ToBytes(betID)...)
+	return append(
+		GetParticipationByIndexKey(bookUID, bookParticipationIndex),
+		utils.Uint64ToBytes(betID)...)
 }

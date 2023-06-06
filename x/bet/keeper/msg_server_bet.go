@@ -8,7 +8,10 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 )
 
-func (k msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*types.MsgPlaceBetResponse, error) {
+func (k msgServer) PlaceBet(
+	goCtx context.Context,
+	msg *types.MsgPlaceBet,
+) (*types.MsgPlaceBetResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists

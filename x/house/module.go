@@ -47,7 +47,11 @@ func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 }
 
 // ValidateGenesis performs genesis state validation for the house module.
-func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(
+	cdc codec.JSONCodec,
+	config client.TxEncodingConfig,
+	bz json.RawMessage,
+) error {
 	var data types.GenesisState
 	if err := cdc.UnmarshalJSON(bz, &data); err != nil {
 		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
@@ -111,11 +115,16 @@ func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sd
 
 // RegisterServices registers a GRPC query service to respond to the module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper))
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 }
 
 // InitGenesis performs genesis initialization for the house module.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(
+	ctx sdk.Context,
+	cdc codec.JSONCodec,
+	data json.RawMessage,
+) []abci.ValidatorUpdate {
 	var genesisState types.GenesisState
 
 	cdc.MustUnmarshalJSON(data, &genesisState)

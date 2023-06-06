@@ -28,10 +28,16 @@ func (a DepositAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.Accept
 	}
 
 	if a.SpendLimit.LT(mDeposit.Amount) {
-		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf("requested amount is more than spend limit")
+		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
+			"requested amount is more than spend limit",
+		)
 	}
 
-	return authz.AcceptResponse{Accept: true, Delete: false, Updated: &DepositAuthorization{SpendLimit: mDeposit.Amount}}, nil
+	return authz.AcceptResponse{
+		Accept:  true,
+		Delete:  false,
+		Updated: &DepositAuthorization{SpendLimit: mDeposit.Amount},
+	}, nil
 }
 
 // ValidateBasic implements Authorization.ValidateBasic.

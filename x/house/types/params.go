@@ -39,7 +39,11 @@ func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinDeposit, validateMinimumDeposit),
-		paramtypes.NewParamSetPair(KeyHouseParticipationFee, &p.HouseParticipationFee, validateHouseParticipationFee),
+		paramtypes.NewParamSetPair(
+			KeyHouseParticipationFee,
+			&p.HouseParticipationFee,
+			validateHouseParticipationFee,
+		),
 	}
 }
 

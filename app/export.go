@@ -132,7 +132,10 @@ func (app *SgeApp) reInitializeAllDelegators(ctx sdk.Context, dels stakingtypes.
 	}
 }
 
-func (app *SgeApp) getJailAllowedValidatorsMap(ctx sdk.Context, jailAllowedAddrs []string) (bool, map[string]bool) {
+func (app *SgeApp) getJailAllowedValidatorsMap(
+	ctx sdk.Context,
+	jailAllowedAddrs []string,
+) (bool, map[string]bool) {
 	applyAllowedAddrs := false
 
 	// check if there is a allowed address list
@@ -174,27 +177,37 @@ func (app *SgeApp) withdrawAllDelegatorRewards(ctx sdk.Context) []stakingtypes.D
 
 func (app *SgeApp) resetRedelegationCreationHeight(ctx sdk.Context) {
 	// iterate through redelegations, reset creation height
-	app.StakingKeeper.IterateRedelegations(ctx, func(_ int64, red stakingtypes.Redelegation) (stop bool) {
-		for i := range red.Entries {
-			red.Entries[i].CreationHeight = 0
-		}
-		app.StakingKeeper.SetRedelegation(ctx, red)
-		return false
-	})
+	app.StakingKeeper.IterateRedelegations(
+		ctx,
+		func(_ int64, red stakingtypes.Redelegation) (stop bool) {
+			for i := range red.Entries {
+				red.Entries[i].CreationHeight = 0
+			}
+			app.StakingKeeper.SetRedelegation(ctx, red)
+			return false
+		},
+	)
 }
 
 func (app *SgeApp) resetUnboundingdelegationCreationHeight(ctx sdk.Context) {
 	// iterate through unbonding delegations, reset creation height
-	app.StakingKeeper.IterateUnbondingDelegations(ctx, func(_ int64, ubd stakingtypes.UnbondingDelegation) (stop bool) {
-		for i := range ubd.Entries {
-			ubd.Entries[i].CreationHeight = 0
-		}
-		app.StakingKeeper.SetUnbondingDelegation(ctx, ubd)
-		return false
-	})
+	app.StakingKeeper.IterateUnbondingDelegations(
+		ctx,
+		func(_ int64, ubd stakingtypes.UnbondingDelegation) (stop bool) {
+			for i := range ubd.Entries {
+				ubd.Entries[i].CreationHeight = 0
+			}
+			app.StakingKeeper.SetUnbondingDelegation(ctx, ubd)
+			return false
+		},
+	)
 }
 
-func (app *SgeApp) resetValidatorsBondHeights(ctx sdk.Context, applyAllowedAddrs bool, allowedAddrsMap map[string]bool) {
+func (app *SgeApp) resetValidatorsBondHeights(
+	ctx sdk.Context,
+	applyAllowedAddrs bool,
+	allowedAddrsMap map[string]bool,
+) {
 	// Iterate through validators by power descending, reset bond heights, and
 	// update bond intra-tx counters.
 	store := ctx.KVStore(app.AppKeepers.GetKey(stakingtypes.StoreKey))

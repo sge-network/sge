@@ -4,26 +4,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 )
 
 // RegisterCodec registers module codec to the app codec
-func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgInvokeFeeGrant{}, "strategicreserve/InvokeFeeGrant", nil)
-	cdc.RegisterConcrete(&DataFeeCollectorFeedProposal{}, "strategicreserve/DataFeeCollectorFeedProposal", nil)
-}
+func RegisterCodec(cdc *codec.LegacyAmino) {}
 
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil))
-	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgInvokeFeeGrant{},
-	)
-
-	registry.RegisterImplementations(
-		(*govtypes.Content)(nil),
-		&DataFeeCollectorFeedProposal{},
-	)
 }
 
 var (

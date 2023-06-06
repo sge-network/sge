@@ -8,7 +8,10 @@ import (
 // NewOrderBookOddsExposure creates a new book odds exposure object
 //
 //nolint:interfacer
-func NewOrderBookOddsExposure(orderBookUID, oddsUID string, fulfillmentQueue []uint64) OrderBookOddsExposure {
+func NewOrderBookOddsExposure(
+	orderBookUID, oddsUID string,
+	fulfillmentQueue []uint64,
+) OrderBookOddsExposure {
 	return OrderBookOddsExposure{
 		OrderBookUID:     orderBookUID,
 		OddsUID:          oddsUID,
@@ -28,7 +31,12 @@ func (boe OrderBookOddsExposure) String() string {
 // NewParticipationExposure creates a new participation exposure object
 //
 //nolint:interfacer
-func NewParticipationExposure(orderBookUID, oddsUID string, exposure, betAmount sdk.Int, participationIndex, round uint64, isFulfilled bool) ParticipationExposure {
+func NewParticipationExposure(
+	orderBookUID, oddsUID string,
+	exposure, betAmount sdk.Int,
+	participationIndex, round uint64,
+	isFulfilled bool,
+) ParticipationExposure {
 	return ParticipationExposure{
 		OrderBookUID:       orderBookUID,
 		OddsUID:            oddsUID,
@@ -38,6 +46,19 @@ func NewParticipationExposure(orderBookUID, oddsUID string, exposure, betAmount 
 		IsFulfilled:        isFulfilled,
 		Round:              round,
 	}
+}
+
+// NextRound returns the next round participation object extracted from the current round properties.
+func (pe ParticipationExposure) NextRound() ParticipationExposure {
+	return NewParticipationExposure(
+		pe.OrderBookUID,
+		pe.OddsUID,
+		sdk.ZeroInt(),
+		sdk.ZeroInt(),
+		pe.ParticipationIndex,
+		pe.Round+1,
+		false,
+	)
 }
 
 // String returns a human readable string representation of a participationExposure.
@@ -52,7 +73,14 @@ func (pe ParticipationExposure) String() string {
 // CalculateMaxLoss calculates the maximum amount of loss for an exposure
 // according to the bet amount.
 func (pe ParticipationExposure) CalculateMaxLoss(totalBetAmount sdk.Int) sdk.Int {
-	return pe.Exposure.
-		Sub(totalBetAmount).
-		Add(pe.BetAmount)
+	return pe.Exposure.Add(pe.BetAmount).Sub(totalBetAmount)
+}
+
+// SetCurrentRound sets the current round bet amount and payout profit.
+func (pe *ParticipationExposure) SetCurrentRound(betAmount, payoutProfit sdk.Int) {
+	// add the payout profit to the
+	pe.Exposure = pe.Exposure.Add(payoutProfit)
+
+	// add the bet amount that is being fulfilled to the exposure and participation
+	pe.BetAmount = pe.BetAmount.Add(betAmount)
 }

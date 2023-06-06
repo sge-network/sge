@@ -1,21 +1,28 @@
 version: 1
 accounts:
-  - name: treasury
-    coins: ["9000000000000usge"]
-  - name: seed
-    coins: ["1000000000000usge"]
+  - name: cold
+    coins: ["100000000000000usge"]
+    mnemonic: stairs lobster urge panic air mad acoustic find coin used valid unaware people clog excuse velvet couple draw say slow polar glass pepper scrap
+  - name: hot
+    mnemonic: assist theme marine fan crucial ancient leopard when away stand utility tooth silent regret vibrant unknown demand device tiny useless adapt manage tiny provide
+  - name: admin
+    mnemonic: patch donor arena plug burst silk cram day charge valve prize awake remind wolf resource silk oyster man tray police ritual immune foot beef
+  - name: oracle
+    mnemonic: better ketchup radio relax scheme worth foam utility bamboo moon slab trade tackle hobby once pass daughter isolate nice cost level swim view final
 validators:
-  - name: treasury
+  - name: cold
     bonded: "1000000000000usge"
+    app:
+      minimum-gas-prices: "10usge"
 genesis:
   app_state:
     bank:
       balances:
-        - address: "sge1kypq29kggkextekt869pwpfukj6lsw38c8a43w"
-          coins: [{"denom": "usge", "amount": "500000000000"}]
+        - address: "sge12m8k4n37tcqt5fk0s90jk3t8gz8rkgl33cu407"
+          coins: [{"denom": "usge", "amount": "10000000000"}]
       supply:
         - denom: "usge"
-          amount: "500000000000"
+          amount: "10000000000"
     staking:
       params:
         bond_denom: "usge"
