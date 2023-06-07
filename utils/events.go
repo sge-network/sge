@@ -2,8 +2,6 @@ package utils
 
 import sdk "github.com/cosmos/cosmos-sdk/types"
 
-const AttributeKeyCreator = "creator"
-
 func NewEventEmitter(ctx *sdk.Context, category string) EventEmitter {
 	return EventEmitter{ctx: ctx, category: category}
 }
@@ -14,15 +12,13 @@ type EventEmitter struct {
 	Events   []sdk.Event
 }
 
-func (em *EventEmitter) AddMsg(ty, msgType, creator string, attrs ...sdk.Attribute) {
-	// prepend the standard attributes
-	msgAttrs := append([]sdk.Attribute{
+func (em *EventEmitter) AddMsg(msgType, sender string, attrs ...sdk.Attribute) {
+	em.addEvent(sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, em.category),
 		sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
-		sdk.NewAttribute(AttributeKeyCreator, creator),
-	}, attrs...)
-
-	em.addEvent(sdk.EventTypeMessage, msgAttrs...)
+		sdk.NewAttribute(sdk.AttributeKeySender, sender),
+	)
+	em.addEvent(msgType, attrs...)
 }
 
 func (em *EventEmitter) addEvent(ty string, attrs ...sdk.Attribute) {

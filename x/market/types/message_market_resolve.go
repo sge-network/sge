@@ -54,11 +54,10 @@ func (msg *MsgResolveMarket) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgResolveMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+func (msg *MsgResolveMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(sdk.EventTypeMessage, typeMsgResolveMarket, msg.Creator,
+	emitter.AddMsg(typeMsgResolveMarket, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
-		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
 	)
 	emitter.Emit()
 }

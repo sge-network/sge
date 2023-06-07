@@ -55,7 +55,7 @@ func (msg *MsgAddMarket) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgAddMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(sdk.EventTypeMessage, typeMsgAddMarket, msg.Creator,
+	emitter.AddMsg(typeMsgAddMarket, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
 	)
@@ -111,11 +111,10 @@ func (msg *MsgUpdateMarket) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgUpdateMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+func (msg *MsgUpdateMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(sdk.EventTypeMessage, typeMsgUpdateMarket, msg.Creator,
+	emitter.AddMsg(typeMsgUpdateMarket, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
-		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
 	)
 	emitter.Emit()
 }

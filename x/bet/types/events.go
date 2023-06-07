@@ -2,5 +2,7 @@ package types
 
 const (
 	attributeValueCategory = ModuleName
-	attributeKeyBetUID     = "uid"
+
+	attributeKeyBetUID     = "bet_uid"
+	attributeKeyBetCreator = "bet_creator"
 )

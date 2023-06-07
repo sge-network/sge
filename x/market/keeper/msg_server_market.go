@@ -104,7 +104,7 @@ func (k msgServer) UpdateMarket(
 	// update market is successful, update the module state
 	k.Keeper.SetMarket(ctx, market)
 
-	msg.EmitEvent(&ctx, market.UID, market.BookUID)
+	msg.EmitEvent(&ctx, market.UID)
 
 	return &types.MsgUpdateMarketResponse{Data: &market}, nil
 }

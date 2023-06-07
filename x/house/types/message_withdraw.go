@@ -78,9 +78,11 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgWithdraw) EmitEvent(ctx *sdk.Context, depositor string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(sdk.EventTypeMessage, typeMsgWithdraw, msg.Creator,
+	emitter.AddMsg(typeMsgWithdraw, msg.Creator,
+		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
+		sdk.NewAttribute(attributeKeyDepositor, depositor),
+		sdk.NewAttribute(attributeKeyMarketUID, msg.MarketUID),
 		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(msg.ParticipationIndex)),
-		sdk.NewAttribute(attributeKeyParticipationIndex, depositor),
 	)
 	emitter.Emit()
 }

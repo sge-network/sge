@@ -56,7 +56,7 @@ func (msg *MsgSubmitPubkeysChangeProposalRequest) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgSubmitPubkeysChangeProposalRequest) EmitEvent(ctx *sdk.Context, proposalID uint64, content string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(sdk.EventTypeMessage, typeMsgPubkeysChangeProposal, msg.Creator,
+	emitter.AddMsg(typeMsgPubkeysChangeProposal, msg.Creator,
 		sdk.NewAttribute(attributeKeyPubkeysChangeProposalID, cast.ToString(proposalID)),
 		sdk.NewAttribute(attributeKeyContent, content),
 	)
