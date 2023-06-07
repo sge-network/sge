@@ -6,8 +6,8 @@ The Bet module emits the following events
 
 |  Type         |  Attribute Key|    Attribute Value    |
 |:-------------:|:-------------:|:---------------------:|
-| place_bet     | bet_creator   |  {creator}            |
-| place_bet     | bet_uid       |  {bet_uid}            |
+| bet_place     | bet_creator   |  {creator}            |
+| bet_place     | bet_uid       |  {bet_uid}            |
 | message       | module        |  bet                  |
-| message       | action        |  place_bet            |
+| message       | action        |  bet_place            |
 | message       | sender        |  {creator}            |
