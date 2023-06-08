@@ -1,6 +1,8 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -81,8 +83,9 @@ func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participati
 	emitter.AddMsg(typeMsgDeposit, msg.Creator,
 		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyDepositor, depositor),
-		sdk.NewAttribute(attributeKeyMarketUID, msg.MarketUID),
-		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(participationIndex)),
+		sdk.NewAttribute(attributeKeyMarketUIDParticipantIndex,
+			strings.Join([]string{msg.MarketUID, cast.ToString(participationIndex)}, "#"),
+		),
 	)
 	emitter.Emit()
 }

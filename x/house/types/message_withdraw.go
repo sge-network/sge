@@ -1,6 +1,8 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -81,8 +83,9 @@ func (msg *MsgWithdraw) EmitEvent(ctx *sdk.Context, depositor string) {
 	emitter.AddMsg(typeMsgWithdraw, msg.Creator,
 		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyDepositor, depositor),
-		sdk.NewAttribute(attributeKeyMarketUID, msg.MarketUID),
-		sdk.NewAttribute(attributeKeyParticipationIndex, cast.ToString(msg.ParticipationIndex)),
+		sdk.NewAttribute(attributeKeyMarketUIDParticipantIndex,
+			strings.Join([]string{msg.MarketUID, cast.ToString(msg.ParticipationIndex)}, "#"),
+		),
 	)
 	emitter.Emit()
 }

@@ -18,7 +18,9 @@ func (em *EventEmitter) AddMsg(msgType, sender string, attrs ...sdk.Attribute) {
 		sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
 		sdk.NewAttribute(sdk.AttributeKeySender, sender),
 	)
-	em.addEvent(msgType, attrs...)
+	if len(attrs) > 0 {
+		em.addEvent(msgType, attrs...)
+	}
 }
 
 func (em *EventEmitter) addEvent(ty string, attrs ...sdk.Attribute) {
