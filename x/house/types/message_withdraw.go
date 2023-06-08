@@ -83,7 +83,7 @@ func (msg *MsgWithdraw) EmitEvent(ctx *sdk.Context, depositor string) {
 	emitter.AddMsg(typeMsgWithdraw, msg.Creator,
 		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyDepositor, depositor),
-		sdk.NewAttribute(attributeKeyMarketUIDParticipantIndex,
+		sdk.NewAttribute(attributeKeyWithdrawMarketUIDParticipantIndex,
 			strings.Join([]string{msg.MarketUID, cast.ToString(msg.ParticipationIndex)}, "#"),
 		),
 	)

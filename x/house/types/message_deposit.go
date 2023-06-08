@@ -83,7 +83,7 @@ func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participati
 	emitter.AddMsg(typeMsgDeposit, msg.Creator,
 		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyDepositor, depositor),
-		sdk.NewAttribute(attributeKeyMarketUIDParticipantIndex,
+		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
 			strings.Join([]string{msg.MarketUID, cast.ToString(participationIndex)}, "#"),
 		),
 	)
