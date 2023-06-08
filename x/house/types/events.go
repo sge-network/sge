@@ -3,8 +3,8 @@ package types
 const (
 	attributeValueCategory = ModuleName
 
-	attributeKeyMarketUIDParticipantIndex = "deposit_market_index"
-
-	attributeKeyCreator   = "creator"
-	attributeKeyDepositor = "depositor"
+	attributeKeyCreator                           = "creator"
+	attributeKeyDepositor                         = "depositor"
+	attributeKeyDepositMarketUIDParticipantIndex  = "deposit_market_index"
+	attributeKeyWithdrawMarketUIDParticipantIndex = "withdraw_market_index"
 )
