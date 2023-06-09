@@ -9,7 +9,11 @@ import (
 
 // RegisterCodec registers module codec to the app codec
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgSubmitPubkeysChangeProposalRequest{}, "ovm/SubmitPubkeysChangeProposal", nil)
+	cdc.RegisterConcrete(
+		&MsgSubmitPubkeysChangeProposalRequest{},
+		"ovm/SubmitPubkeysChangeProposal",
+		nil,
+	)
 	cdc.RegisterConcrete(&MsgVotePubkeysChangeRequest{}, "ovm/VotePubkeysChange", nil)
 }
 

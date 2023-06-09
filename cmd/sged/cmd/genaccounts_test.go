@@ -31,7 +31,13 @@ func TestSampleCMD(t *testing.T) {
 	ctx := val.ClientCtx
 	sec := hd.Secp256k1
 
-	keyInfo, _, err := ctx.Keyring.NewMnemonic("genUser1", keyring.English, sdk.FullFundraiserPath, "", sec)
+	keyInfo, _, err := ctx.Keyring.NewMnemonic(
+		"genUser1",
+		keyring.English,
+		sdk.FullFundraiserPath,
+		"",
+		sec,
+	)
 	require.NoError(t, err)
 
 	userHomeDir, err := os.UserHomeDir()

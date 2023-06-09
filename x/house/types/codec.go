@@ -4,6 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
@@ -12,12 +13,19 @@ import (
 // on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgDeposit{}, "house/MsgDeposit", nil)
+	cdc.RegisterConcrete(&MsgWithdraw{}, "house/MsgWithdraw", nil)
 }
 
 // RegisterInterfaces registers the x/house interfaces types with the interface registry
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeposit{},
+		&MsgWithdraw{},
+	)
+	registry.RegisterImplementations(
+		(*authz.Authorization)(nil),
+		&DepositAuthorization{},
+		&WithdrawAuthorization{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

@@ -14,10 +14,9 @@ import (
 )
 
 const (
-	keyMinBetAmount      = "MinBetAmount"
-	keyMinBetFee         = "MinBetFee"
-	keyMaxBetFee         = "MaxBetFee"
-	keyMaxSrContribution = "MaxSrContribution"
+	keyMinBetAmount = "MinBetAmount"
+	keyMinBetFee    = "MinBetFee"
+	keyMaxBetFee    = "MaxBetFee"
 )
 
 // ParamChanges defines the parameters that can be modified by param change proposals
@@ -37,11 +36,6 @@ func ParamChanges(r *rand.Rand) []simtypes.ParamChange {
 		simulation.NewSimParamChange(types.ModuleName, keyMaxBetFee,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%d\"", GenMaxBetFee(r))
-			},
-		),
-		simulation.NewSimParamChange(types.ModuleName, keyMaxSrContribution,
-			func(r *rand.Rand) string {
-				return fmt.Sprintf("\"%d\"", GenMaxSrContribution(r))
 			},
 		),
 	}

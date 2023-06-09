@@ -64,14 +64,28 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 
 // AddTestAddrsIncremental constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrsIncremental(tApp *TestApp, ctx sdk.Context, accNum int, accAmt sdk.Int) []sdk.AccAddress {
+func AddTestAddrsIncremental(
+	tApp *TestApp,
+	ctx sdk.Context,
+	accNum int,
+	accAmt sdk.Int,
+) []sdk.AccAddress {
 	return addTestAddrs(tApp, ctx, accNum, accAmt, createIncrementalAccounts)
 }
 
-func addTestAddrs(app *TestApp, ctx sdk.Context, accNum int, accAmt sdk.Int, strategy generateAccountStrategy) []sdk.AccAddress {
+func addTestAddrs(
+	app *TestApp,
+	ctx sdk.Context,
+	accNum int,
+	accAmt sdk.Int,
+	strategy generateAccountStrategy,
+) []sdk.AccAddress {
 	testAddrs := strategy(accNum)
 
-	initCoins := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, accAmt), sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt))
+	initCoins := sdk.NewCoins(
+		sdk.NewCoin(sdk.DefaultBondDenom, accAmt),
+		sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt),
+	)
 
 	for _, addr := range testAddrs {
 		initAccountWithCoins(app, ctx, addr, initCoins)
@@ -123,8 +137,12 @@ func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	// start at 10 to avoid changing 1 to 01, 2 to 02, etc
 	for i := 100; i < (numPubKeys + 100); i++ {
 		numString := cast.ToString(i)
-		buffer.WriteString("0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF") // base pubkey string
-		buffer.WriteString(numString)                                                       // adding on final two digits to make pubkeys unique
+		buffer.WriteString(
+			"0B485CFC0EECC619440448436F8FC9DF40566F2369E72400281454CB552AF",
+		) // base pubkey string
+		buffer.WriteString(
+			numString,
+		) // adding on final two digits to make pubkeys unique
 		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))
 		buffer.Reset()
 	}

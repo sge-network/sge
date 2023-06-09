@@ -40,3 +40,6 @@ var (
 	// TestOVMPrivateKeys represents test private keys needed for ovm
 	TestOVMPrivateKeys []ed25519.PrivateKey
 )
+
+// GenesisModuleAccountsBalances holds the test genesis module accounts balance map.
+var GenesisModuleAccountsBalances = map[string]int64{}

@@ -14,10 +14,9 @@ import (
 
 // Simulation parameter constants
 const (
-	MinBetAmount      = "MinBetAmount"
-	MinBetFee         = "MinBetFee"
-	MaxBetFee         = "MaxBetFee"
-	MaxSrContribution = "MaxSrContribution"
+	MinBetAmount = "MinBetAmount"
+	MinBetFee    = "MinBetFee"
+	MaxBetFee    = "MaxBetFee"
 )
 
 // GenMinBetAmount randomized min bet amount
@@ -32,11 +31,6 @@ func GenMinBetFee(r *rand.Rand) sdk.Int {
 
 // GenMaxBetFee randomized max bet fee
 func GenMaxBetFee(r *rand.Rand) sdk.Int {
-	return sdk.NewInt(int64(r.Intn(99)))
-}
-
-// GenMaxSrContribution randomized st contribution
-func GenMaxSrContribution(r *rand.Rand) sdk.Int {
 	return sdk.NewInt(int64(r.Intn(99)))
 }
 
@@ -58,12 +52,6 @@ func RandomizedGenState(simState *module.SimulationState) {
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, MaxBetFee, &maxBetFee, simState.Rand,
 		func(r *rand.Rand) { maxBetFee = GenMaxBetFee(r) },
-	)
-
-	var maxSrContribution sdk.Int
-	simState.AppParams.GetOrGenerate(
-		simState.Cdc, MaxSrContribution, &maxSrContribution, simState.Rand,
-		func(r *rand.Rand) { maxSrContribution = GenMaxSrContribution(r) },
 	)
 
 	defaultGenesis := types.DefaultGenesis()

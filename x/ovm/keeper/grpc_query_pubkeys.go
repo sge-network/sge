@@ -10,7 +10,10 @@ import (
 )
 
 // PubKeys returns list of the public keys
-func (k Keeper) PubKeys(goCtx context.Context, req *types.QueryPubKeysRequest) (*types.QueryPubKeysResponse, error) {
+func (k Keeper) PubKeys(
+	goCtx context.Context,
+	req *types.QueryPubKeysRequest,
+) (*types.QueryPubKeysResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, types.ErrTextInvalidRequest)
 	}

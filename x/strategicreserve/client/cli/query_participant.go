@@ -86,10 +86,16 @@ $ %s query strategicreserve participation-exposure %s %d
 			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("participation index argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf(
+					"participation index argument provided must be a non-negative-integer: %v",
+					err,
+				)
 			}
 
-			params := &types.QueryParticipationExposureRequest{OrderBookUid: orderBookUID, ParticipationIndex: particiapationIndex}
+			params := &types.QueryParticipationExposureRequest{
+				OrderBookUid:       orderBookUID,
+				ParticipationIndex: particiapationIndex,
+			}
 			res, err := queryClient.ParticipationExposure(cmd.Context(), params)
 			if err != nil {
 				return err
@@ -178,7 +184,10 @@ $ %s query strategicreserve participation-bets %s %d
 			orderBookUID := args[0]
 			particiapationIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapationIndex < 1 {
-				return fmt.Errorf("particiapnt index argument provided must be a non-negative-integer: %v", err)
+				return fmt.Errorf(
+					"particiapnt index argument provided must be a non-negative-integer: %v",
+					err,
+				)
 			}
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

@@ -23,11 +23,10 @@ func TestParamChangest(t *testing.T) {
 		{"market/MinBetAmount", "MinBetAmount", "market"},
 		{"market/MinBetFee", "MinBetFee", "market"},
 		{"market/MaxBetFee", "MaxBetFee", "market"},
-		{"market/MaxSrContribution", "MaxSrContribution", "market"},
 	}
 
 	paramChanges := simulation.ParamChanges(r)
-	require.Len(t, paramChanges, 4)
+	require.Len(t, paramChanges, 3)
 
 	for i, p := range paramChanges {
 		require.Equal(t, expected[i].composedKey, p.ComposedKey())

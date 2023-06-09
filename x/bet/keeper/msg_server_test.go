@@ -11,7 +11,9 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 )
 
-func setupMsgServerAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
+func setupMsgServerAndApp(
+	t testing.TB,
+) (*simappUtil.TestApp, *keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	return tApp, k, keeper.NewMsgServerImpl(*k), ctx, sdk.WrapSDKContext(ctx)
 }

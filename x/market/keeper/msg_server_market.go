@@ -9,7 +9,10 @@ import (
 )
 
 // AddMarket accepts ticket containing creation market and return response after processing
-func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*types.MsgAddMarketResponse, error) {
+func (k msgServer) AddMarket(
+	goCtx context.Context,
+	msg *types.MsgAddMarket,
+) (*types.MsgAddMarketResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.MarketAddTicketPayload
@@ -32,7 +35,7 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 	for _, odds := range addPayload.Odds {
 		oddsUIDs = append(oddsUIDs, odds.UID)
 	}
-	err := k.srKeeper.InitiateOrderBook(ctx, addPayload.UID, addPayload.SrContributionForHouse, oddsUIDs)
+	err := k.srKeeper.InitiateOrderBook(ctx, addPayload.UID, oddsUIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}
@@ -46,7 +49,6 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 		params.NewMarketBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Meta,
 		addPayload.UID,
-		addPayload.SrContributionForHouse,
 		addPayload.Status,
 	)
 
@@ -61,7 +63,10 @@ func (k msgServer) AddMarket(goCtx context.Context, msg *types.MsgAddMarket) (*t
 }
 
 // UpdateMarket accepts ticket containing update market and return response after processing
-func (k msgServer) UpdateMarket(goCtx context.Context, msg *types.MsgUpdateMarket) (*types.MsgUpdateMarketResponse, error) {
+func (k msgServer) UpdateMarket(
+	goCtx context.Context,
+	msg *types.MsgUpdateMarket,
+) (*types.MsgUpdateMarketResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updatePayload types.MarketUpdateTicketPayload
@@ -90,7 +95,10 @@ func (k msgServer) UpdateMarket(goCtx context.Context, msg *types.MsgUpdateMarke
 	// replace current data with payload values
 	market.StartTS = updatePayload.StartTS
 	market.EndTS = updatePayload.EndTS
-	market.BetConstraints = params.NewMarketBetConstraints(updatePayload.MinBetAmount, updatePayload.BetFee)
+	market.BetConstraints = params.NewMarketBetConstraints(
+		updatePayload.MinBetAmount,
+		updatePayload.BetFee,
+	)
 	market.Status = updatePayload.Status
 
 	// update market is successful, update the module state

@@ -13,7 +13,10 @@ import (
 )
 
 // PublicKeysChangeProposal returns a specific proposal by its id and status
-func (k Keeper) PublicKeysChangeProposal(c context.Context, req *types.QueryPublicKeysChangeProposalRequest) (*types.QueryPublicKeysChangeProposalResponse, error) {
+func (k Keeper) PublicKeysChangeProposal(
+	c context.Context,
+	req *types.QueryPublicKeysChangeProposalRequest,
+) (*types.QueryPublicKeysChangeProposalResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -32,7 +35,10 @@ func (k Keeper) PublicKeysChangeProposal(c context.Context, req *types.QueryPubl
 }
 
 // PublicKeysChangeProposals returns list of the pubkeys change proposal
-func (k Keeper) PublicKeysChangeProposals(goCtx context.Context, req *types.QueryPublicKeysChangeProposalsRequest) (*types.QueryPublicKeysChangeProposalsResponse, error) {
+func (k Keeper) PublicKeysChangeProposals(
+	goCtx context.Context,
+	req *types.QueryPublicKeysChangeProposalsRequest,
+) (*types.QueryPublicKeysChangeProposalsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}

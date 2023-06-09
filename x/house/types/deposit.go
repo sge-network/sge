@@ -6,9 +6,14 @@ import (
 )
 
 // NewDeposit creates a new deposit object
-func NewDeposit(creator, marketUID string, amount, totalAmount sdk.Int, withdrawalCount uint64) Deposit {
+func NewDeposit(
+	creator, depositorAddress, marketUID string,
+	amount, totalAmount sdk.Int,
+	withdrawalCount uint64,
+) Deposit {
 	return Deposit{
 		Creator:               creator,
+		DepositorAddress:      depositorAddress,
 		MarketUID:             marketUID,
 		Amount:                amount,
 		WithdrawalCount:       withdrawalCount,

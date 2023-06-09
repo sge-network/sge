@@ -53,9 +53,3 @@ func (k Keeper) getOrderBookOddsExposureStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.OrderBookOddsExposureKeyPrefix)
 }
-
-// getPayoutLockStore gets the store containing all payout locks.
-func (k Keeper) getPayoutLockStore(ctx sdk.Context) prefix.Store {
-	store := ctx.KVStore(k.storeKey)
-	return prefix.NewStore(store, types.PayoutLockKeyPrefix)
-}

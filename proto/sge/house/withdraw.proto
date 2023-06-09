@@ -11,8 +11,11 @@ message Withdrawal {
   option (gogoproto.goproto_getters) = false;
   option (gogoproto.goproto_stringer) = false;
 
+  // creator is the bech32-encoded address of the depositor.
+  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+
   // withdrawal is the withdrawal attempt id.
-  uint64 id = 1 [
+  uint64 id = 2 [
     (gogoproto.customname) = "ID",
     (gogoproto.jsontag) = "id",
     json_name = "id",
@@ -20,25 +23,25 @@ message Withdrawal {
   ];
 
   // address is the bech32-encoded address of the depositor.
-  string address = 2 [ (gogoproto.moretags) = "yaml:\"address\"" ];
+  string address = 3 [ (gogoproto.moretags) = "yaml:\"address\"" ];
 
   // market_uid is the uid of market against which the deposit is
   // being made.
-  string market_uid = 3 [
+  string market_uid = 4 [
     (gogoproto.customname) = "MarketUID",
     (gogoproto.jsontag) = "market_uid",
     json_name = "market_uid"
   ];
 
   // participation_index is the id corresponding to the book participation
-  uint64 participation_index = 4
+  uint64 participation_index = 5
       [ (gogoproto.moretags) = "yaml:\"participation_index\"" ];
 
   // mode is the withdrawal mode enum value
-  WithdrawalMode mode = 5 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
+  WithdrawalMode mode = 6 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
 
   // amount is the amount being withdrawn.
-  string amount = 6 [
+  string amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"amount\""

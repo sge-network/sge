@@ -26,6 +26,10 @@ func SimulateMsgChangePubkeysListProposal(
 
 		// TODO: Handling the change pubkeys proposal simulation
 
-		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "ChangePubkeysListProposal simulation not implemented"), nil, nil
+		return simtypes.NoOpMsg(
+			types.ModuleName,
+			msg.Type(),
+			"ChangePubkeysListProposal simulation not implemented",
+		), nil, nil
 	}
 }

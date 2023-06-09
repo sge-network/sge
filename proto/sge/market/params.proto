@@ -28,10 +28,4 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // max_sr_contribution is the default max sr contribution for a market.
-  string max_sr_contribution = 5 [
-    (gogoproto.moretags) = "yaml:\"max_sr_contribution\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
 }

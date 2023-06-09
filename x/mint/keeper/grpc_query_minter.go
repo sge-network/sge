@@ -8,7 +8,10 @@ import (
 )
 
 // Inflation returns current inflation.
-func (k Keeper) Inflation(c context.Context, _ *types.QueryInflationRequest) (*types.QueryInflationResponse, error) {
+func (k Keeper) Inflation(
+	c context.Context,
+	_ *types.QueryInflationRequest,
+) (*types.QueryInflationResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	minter := k.GetMinter(ctx)
 
@@ -16,7 +19,10 @@ func (k Keeper) Inflation(c context.Context, _ *types.QueryInflationRequest) (*t
 }
 
 // PhaseStep returns phase step.
-func (k Keeper) PhaseStep(c context.Context, _ *types.QueryPhaseStepRequest) (*types.QueryPhaseStepResponse, error) {
+func (k Keeper) PhaseStep(
+	c context.Context,
+	_ *types.QueryPhaseStepRequest,
+) (*types.QueryPhaseStepResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	minter := k.GetMinter(ctx)
 
@@ -24,7 +30,10 @@ func (k Keeper) PhaseStep(c context.Context, _ *types.QueryPhaseStepRequest) (*t
 }
 
 // PhaseProvisions returns current phase provision.
-func (k Keeper) PhaseProvisions(c context.Context, _ *types.QueryPhaseProvisionsRequest) (*types.QueryPhaseProvisionsResponse, error) {
+func (k Keeper) PhaseProvisions(
+	c context.Context,
+	_ *types.QueryPhaseProvisionsRequest,
+) (*types.QueryPhaseProvisionsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	minter := k.GetMinter(ctx)
 
@@ -32,10 +41,15 @@ func (k Keeper) PhaseProvisions(c context.Context, _ *types.QueryPhaseProvisions
 }
 
 // EndPhaseStatus returns end phase status.
-func (k Keeper) EndPhaseStatus(c context.Context, _ *types.QueryEndPhaseStatusRequest) (*types.QueryEndPhaseStatusResponse, error) {
+func (k Keeper) EndPhaseStatus(
+	c context.Context,
+	_ *types.QueryEndPhaseStatusRequest,
+) (*types.QueryEndPhaseStatusResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
 	minter := k.GetMinter(ctx)
 	params := k.GetParams(ctx)
 
-	return &types.QueryEndPhaseStatusResponse{IsInEndPhase: params.IsEndPhaseByStep(int(minter.PhaseStep))}, nil
+	return &types.QueryEndPhaseStatusResponse{
+		IsInEndPhase: params.IsEndPhaseByStep(int(minter.PhaseStep)),
+	}, nil
 }

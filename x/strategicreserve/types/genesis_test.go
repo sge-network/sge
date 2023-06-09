@@ -36,7 +36,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				OrderBookUID:       marketUID,
 				Index:              1,
 				ParticipantAddress: testAddress,
-				IsModuleAccount:    true,
 			},
 		},
 		ParticipationExposureList: []types.ParticipationExposure{
@@ -66,7 +65,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				ParticipationIndex: 1,
 			},
 		},
-		PayoutLock: [][]byte{},
 		Stats: types.OrderBookStats{
 			ResolvedUnsettled: []string{marketUID},
 		},
@@ -74,7 +72,9 @@ func TestGenesisState_Validate(t *testing.T) {
 	}
 
 	invalidParticipantAddress := validState
-	invalidParticipantAddress.OrderBookParticipationList = []types.OrderBookParticipation{validState.OrderBookParticipationList[0]}
+	invalidParticipantAddress.OrderBookParticipationList = []types.OrderBookParticipation{
+		validState.OrderBookParticipationList[0],
+	}
 	invalidParticipantAddress.OrderBookParticipationList[0].ParticipantAddress = "wrong"
 
 	notEqualOrderBookCount := validState

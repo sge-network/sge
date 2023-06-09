@@ -76,7 +76,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
@@ -93,7 +96,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
 	})
@@ -110,7 +116,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrMarketResolutionNotAllowed)
 		assert.Nil(t, response)
 	})
@@ -127,7 +136,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
@@ -144,7 +156,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
@@ -161,7 +176,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
 	})
@@ -178,7 +196,10 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(wctx, types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket))
+		response, err := msgk.ResolveMarket(
+			wctx,
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+		)
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)
 	})

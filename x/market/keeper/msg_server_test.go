@@ -10,12 +10,16 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-func setupMsgServerAndKeeper(t testing.TB) (*keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
+func setupMsgServerAndKeeper(
+	t testing.TB,
+) (*keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
 	_, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
 	return k, msgk, ctx, wctx
 }
 
-func setupMsgServerAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
+func setupMsgServerAndApp(
+	t testing.TB,
+) (*simappUtil.TestApp, *keeper.KeeperTest, types.MsgServer, sdk.Context, context.Context) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	return tApp, k, keeper.NewMsgServerImpl(*k), ctx, sdk.WrapSDKContext(ctx)
 }

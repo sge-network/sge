@@ -50,7 +50,9 @@ func (k Keeper) RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 	if len(stats.ResolvedUnsettled) > 0 {
 		for i, e := range stats.ResolvedUnsettled {
 			if e == marketUID {
-				stats.ResolvedUnsettled = append(stats.ResolvedUnsettled[:i], stats.ResolvedUnsettled[i+1:]...)
+				stats.ResolvedUnsettled = append(
+					stats.ResolvedUnsettled[:i],
+					stats.ResolvedUnsettled[i+1:]...)
 			}
 		}
 	}

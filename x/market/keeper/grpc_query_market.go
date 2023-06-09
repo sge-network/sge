@@ -12,7 +12,10 @@ import (
 )
 
 // Markets returns all the markets
-func (k Keeper) Markets(c context.Context, req *types.QueryMarketsRequest) (*types.QueryMarketsResponse, error) {
+func (k Keeper) Markets(
+	c context.Context,
+	req *types.QueryMarketsRequest,
+) (*types.QueryMarketsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -39,7 +42,10 @@ func (k Keeper) Markets(c context.Context, req *types.QueryMarketsRequest) (*typ
 }
 
 // Market returns a specific markets by its UID
-func (k Keeper) Market(c context.Context, req *types.QueryMarketRequest) (*types.QueryMarketResponse, error) {
+func (k Keeper) Market(
+	c context.Context,
+	req *types.QueryMarketRequest,
+) (*types.QueryMarketResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -57,7 +63,10 @@ func (k Keeper) Market(c context.Context, req *types.QueryMarketRequest) (*types
 }
 
 // MarketsByUIDs return success markets and failed markets by uids back to the caller
-func (k Keeper) MarketsByUIDs(goCtx context.Context, req *types.QueryMarketsByUIDsRequest) (*types.QueryMarketsByUIDsResponse, error) {
+func (k Keeper) MarketsByUIDs(
+	goCtx context.Context,
+	req *types.QueryMarketsByUIDsRequest,
+) (*types.QueryMarketsByUIDsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}

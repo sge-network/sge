@@ -10,7 +10,10 @@ import (
 )
 
 // VotePubkeysChange is the main transaction of OVM to vote for a pubkeys list change proposal.
-func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePubkeysChangeRequest) (*types.MsgVotePubkeysChangeResponse, error) {
+func (k msgServer) VotePubkeysChange(
+	goCtx context.Context,
+	msg *types.MsgVotePubkeysChangeRequest,
+) (*types.MsgVotePubkeysChangeResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	keyVault, found := k.GetKeyVault(ctx)
@@ -20,7 +23,10 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 
 	// voter index is out of range of current public keys in the vault
 	if cast.ToUint32(len(keyVault.PublicKeys)) <= msg.VoterKeyIndex {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidPubKey, "index is not in the valid range of public keys indices")
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidPubKey,
+			"index is not in the valid range of public keys indices",
+		)
 	}
 
 	// pick the voter public key from the public key list of the vault
@@ -32,7 +38,11 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 	payload := types.ProposalVotePayload{}
 	err := k.verifyTicketWithKeyUnmarshal(goCtx, msg.Ticket, &payload, voterPubKey)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket should be signed by the provided pub key: %s", err)
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"ticket should be signed by the provided pub key: %s",
+			err,
+		)
 	}
 
 	err = payload.Validate()
@@ -41,16 +51,28 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 	}
 
 	// get public key change proposal
-	proposal, found := k.GetPubkeysChangeProposal(ctx, types.ProposalStatus_PROPOSAL_STATUS_ACTIVE, payload.ProposalId)
+	proposal, found := k.GetPubkeysChangeProposal(
+		ctx,
+		types.ProposalStatus_PROPOSAL_STATUS_ACTIVE,
+		payload.ProposalId,
+	)
 	if !found {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "proposal not fount with id %d", &payload.ProposalId)
+		return nil, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidRequest,
+			"proposal not fount with id %d",
+			&payload.ProposalId,
+		)
 	}
 
 	// check if the voter public key already voted or not
 	// a public key can participate in the voting just for one time
 	for _, voter := range proposal.Votes {
 		if voter.PublicKey == voterPubKey {
-			return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "vote already set for this pubkey %s", msg.Creator)
+			return nil, sdkerrors.Wrapf(
+				sdkerrors.ErrInvalidRequest,
+				"vote already set for this pubkey %s",
+				msg.Creator,
+			)
 		}
 	}
 
@@ -64,12 +86,26 @@ func (k msgServer) VotePubkeysChange(goCtx context.Context, msg *types.MsgVotePu
 	// set proposal with updated votes in the module state
 	k.SetPubkeysChangeProposal(ctx, proposal)
 
-	emitVoteEvent(ctx, types.TypeMsgCreatePubKeyChaneProposalVote, msg.Creator, payload.ProposalId, vote.PublicKey, vote.Vote)
+	emitVoteEvent(
+		ctx,
+		types.TypeMsgCreatePubKeyChaneProposalVote,
+		msg.Creator,
+		payload.ProposalId,
+		vote.PublicKey,
+		vote.Vote,
+	)
 
 	return &types.MsgVotePubkeysChangeResponse{Success: true}, nil
 }
 
-func emitVoteEvent(ctx sdk.Context, emitType string, creator string, proposalID uint64, publicKey string, vote types.ProposalVote) {
+func emitVoteEvent(
+	ctx sdk.Context,
+	emitType string,
+	creator string,
+	proposalID uint64,
+	publicKey string,
+	vote types.ProposalVote,
+) {
 	ctx.EventManager().EmitEvents(sdk.Events{
 		sdk.NewEvent(
 			emitType,

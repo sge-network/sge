@@ -17,7 +17,9 @@ func IsValidUID(uid string) bool {
 
 // isValidUUID validates the uid
 func isValidUUID(uid string) bool {
-	r := regexp.MustCompile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$")
+	r := regexp.MustCompile(
+		"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+	)
 	return r.MatchString(uid)
 	// _, err := uuid.Parse(uid)
 	// return err == nil

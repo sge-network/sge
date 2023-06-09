@@ -20,18 +20,12 @@ var (
 
 	// KeyMaxBetFee is the maximum bet fee param key
 	KeyMaxBetFee = []byte("MaxBetFee")
-
-	// KeyMaxSRContribution is the min bet amount param key
-	KeyMaxSRContribution = []byte("MaxSRContribution")
 )
 
 // default params
 var (
 	// DefaultMinBetAmount is the default minimum bet amount allowed
 	DefaultMinBetAmount = sdk.NewInt(1000000)
-
-	// DefaultMaxSRContribution is the default maximum sr contribution allowed
-	DefaultMaxSRContribution = sdk.NewInt(10000000)
 
 	// DefaultMinBetFee is the default minimum bet fee amount allowed
 	DefaultMinBetFee = sdk.NewInt(0)
@@ -48,10 +42,9 @@ func ParamKeyTable() paramtypes.KeyTable {
 // NewParams creates a new Params instance
 func NewParams() Params {
 	return Params{
-		MinBetAmount:      DefaultMinBetAmount,
-		MinBetFee:         DefaultMinBetFee,
-		MaxBetFee:         DefaultMaxBetFee,
-		MaxSrContribution: DefaultMaxSRContribution,
+		MinBetAmount: DefaultMinBetAmount,
+		MinBetFee:    DefaultMinBetFee,
+		MaxBetFee:    DefaultMaxBetFee,
 	}
 }
 
@@ -66,7 +59,6 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		paramtypes.NewParamSetPair(KeyMinBetAmount, &p.MinBetAmount, validateMinBetAmount),
 		paramtypes.NewParamSetPair(KeyMinBetFee, &p.MinBetFee, validateMinBetFeePercentage),
 		paramtypes.NewParamSetPair(KeyMaxBetFee, &p.MaxBetFee, validateMaxBetFeePercentage),
-		paramtypes.NewParamSetPair(KeyMaxSRContribution, &p.MaxSrContribution, validateMaxSRContribution),
 	}
 }
 
@@ -118,19 +110,6 @@ func validateMaxBetFeePercentage(i interface{}) error {
 
 	if v.LT(sdk.ZeroInt()) {
 		return fmt.Errorf("maximum bet fee must be positive: %d", v.Int64())
-	}
-
-	return nil
-}
-
-func validateMaxSRContribution(i interface{}) error {
-	v, ok := i.(sdk.Int)
-	if !ok {
-		return fmt.Errorf("invalid parameter type: %T", i)
-	}
-
-	if v.LTE(sdk.OneInt()) {
-		return fmt.Errorf("max SR contribution must be positive: %d", v.Int64())
 	}
 
 	return nil

@@ -56,7 +56,11 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations := make([]simtypes.WeightedOperation, 0)
 
 	var weightMsgChangePubkeysListProposal int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgChangePubkeysListProposal, &weightMsgChangePubkeysListProposal, nil,
+	simState.AppParams.GetOrGenerate(
+		simState.Cdc,
+		opWeightMsgChangePubkeysListProposal,
+		&weightMsgChangePubkeysListProposal,
+		nil,
 		func(_ *rand.Rand) {
 			weightMsgChangePubkeysListProposal = defaultWeightMsgChangePubkeysListProposal
 		},

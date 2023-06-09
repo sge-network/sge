@@ -13,7 +13,10 @@ import (
 )
 
 // Deposits queries all deposits
-func (k Keeper) Deposits(c context.Context, req *types.QueryDepositsRequest) (*types.QueryDepositsResponse, error) {
+func (k Keeper) Deposits(
+	c context.Context,
+	req *types.QueryDepositsRequest,
+) (*types.QueryDepositsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}

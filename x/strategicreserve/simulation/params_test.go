@@ -21,7 +21,11 @@ func TestParamChangest(t *testing.T) {
 		subspace    string
 	}{
 		{"strategicreserve/BatchSettlementCount", "BatchSettlementCount", "strategicreserve"},
-		{"strategicreserve/MaxOrderBookParticipations", "MaxOrderBookParticipations", "strategicreserve"},
+		{
+			"strategicreserve/MaxOrderBookParticipations",
+			"MaxOrderBookParticipations",
+			"strategicreserve",
+		},
 		{"strategicreserve/RequeueThreshold", "RequeueThreshold", "strategicreserve"},
 	}
 

@@ -47,7 +47,10 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 }
 
 // BetsByCreator returns all bets of certain creator sort-able by pagination attributes
-func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRequest) (*types.QueryBetsByCreatorResponse, error) {
+func (k Keeper) BetsByCreator(
+	c context.Context,
+	req *types.QueryBetsByCreatorRequest,
+) (*types.QueryBetsByCreatorResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -74,7 +77,10 @@ func (k Keeper) BetsByCreator(c context.Context, req *types.QueryBetsByCreatorRe
 }
 
 // BetsByUIDs returns bets with selected uids
-func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest) (*types.QueryBetsByUIDsResponse, error) {
+func (k Keeper) BetsByUIDs(
+	c context.Context,
+	req *types.QueryBetsByUIDsRequest,
+) (*types.QueryBetsByUIDsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -126,7 +132,10 @@ func (k Keeper) BetsByUIDs(c context.Context, req *types.QueryBetsByUIDsRequest)
 }
 
 // PendingBets returns pending bets of a market
-func (k Keeper) PendingBets(c context.Context, req *types.QueryPendingBetsRequest) (*types.QueryPendingBetsResponse, error) {
+func (k Keeper) PendingBets(
+	c context.Context,
+	req *types.QueryPendingBetsRequest,
+) (*types.QueryPendingBetsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -134,24 +143,31 @@ func (k Keeper) PendingBets(c context.Context, req *types.QueryPendingBetsReques
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	pendingBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingBetListOfMarketPrefix(req.MarketUid))
+	pendingBetStore := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.PendingBetListOfMarketPrefix(req.MarketUid),
+	)
 
-	pageRes, err := query.Paginate(pendingBetStore, req.Pagination, func(key []byte, value []byte) error {
-		var pendingBet types.PendingBet
-		if err := k.cdc.Unmarshal(value, &pendingBet); err != nil {
-			return err
-		}
-
-		uid2ID, found := k.GetBetID(ctx, pendingBet.UID)
-		if found {
-			bet, found := k.GetBet(ctx, pendingBet.Creator, uid2ID.ID)
-			if found {
-				bets = append(bets, bet)
+	pageRes, err := query.Paginate(
+		pendingBetStore,
+		req.Pagination,
+		func(key []byte, value []byte) error {
+			var pendingBet types.PendingBet
+			if err := k.cdc.Unmarshal(value, &pendingBet); err != nil {
+				return err
 			}
-		}
 
-		return nil
-	})
+			uid2ID, found := k.GetBetID(ctx, pendingBet.UID)
+			if found {
+				bet, found := k.GetBet(ctx, pendingBet.Creator, uid2ID.ID)
+				if found {
+					bets = append(bets, bet)
+				}
+			}
+
+			return nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -160,7 +176,10 @@ func (k Keeper) PendingBets(c context.Context, req *types.QueryPendingBetsReques
 }
 
 // SettledBetsOfHeight returns settled bets of a certain height
-func (k Keeper) SettledBetsOfHeight(c context.Context, req *types.QuerySettledBetsOfHeightRequest) (*types.QuerySettledBetsOfHeightResponse, error) {
+func (k Keeper) SettledBetsOfHeight(
+	c context.Context,
+	req *types.QuerySettledBetsOfHeightRequest,
+) (*types.QuerySettledBetsOfHeightResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -168,24 +187,31 @@ func (k Keeper) SettledBetsOfHeight(c context.Context, req *types.QuerySettledBe
 	var bets []types.Bet
 	ctx := sdk.UnwrapSDKContext(c)
 
-	settledBetStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetListOfBlockHeightPrefix(req.BlockHeight))
+	settledBetStore := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.SettledBetListOfBlockHeightPrefix(req.BlockHeight),
+	)
 
-	pageRes, err := query.Paginate(settledBetStore, req.Pagination, func(key []byte, value []byte) error {
-		var settledBet types.SettledBet
-		if err := k.cdc.Unmarshal(value, &settledBet); err != nil {
-			return err
-		}
-
-		uid2ID, found := k.GetBetID(ctx, settledBet.UID)
-		if found {
-			bet, found := k.GetBet(ctx, settledBet.BettorAddress, uid2ID.ID)
-			if found {
-				bets = append(bets, bet)
+	pageRes, err := query.Paginate(
+		settledBetStore,
+		req.Pagination,
+		func(key []byte, value []byte) error {
+			var settledBet types.SettledBet
+			if err := k.cdc.Unmarshal(value, &settledBet); err != nil {
+				return err
 			}
-		}
 
-		return nil
-	})
+			uid2ID, found := k.GetBetID(ctx, settledBet.UID)
+			if found {
+				bet, found := k.GetBet(ctx, settledBet.BettorAddress, uid2ID.ID)
+				if found {
+					bets = append(bets, bet)
+				}
+			}
+
+			return nil
+		},
+	)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -216,7 +242,11 @@ func (k Keeper) Bet(c context.Context, req *types.QueryBetRequest) (*types.Query
 
 	market, found := k.marketKeeper.GetMarket(ctx, val.MarketUID)
 	if !found {
-		return nil, status.Errorf(codes.NotFound, "corresponding market with id %s not found", val.MarketUID)
+		return nil, status.Errorf(
+			codes.NotFound,
+			"corresponding market with id %s not found",
+			val.MarketUID,
+		)
 	}
 
 	return &types.QueryBetResponse{Bet: val, Market: market}, nil

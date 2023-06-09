@@ -44,7 +44,18 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 		}
 	}()
 
-	app := app.NewSgeApp(logger, db, nil, true, map[int64]bool{}, app.DefaultNodeHome, sdksimapp.FlagPeriodValue, app.MakeEncodingConfig(), sdksimapp.EmptyAppOptions{}, interBlockCacheOpt())
+	app := app.NewSgeApp(
+		logger,
+		db,
+		nil,
+		true,
+		map[int64]bool{},
+		app.DefaultNodeHome,
+		sdksimapp.FlagPeriodValue,
+		app.MakeEncodingConfig(),
+		sdksimapp.EmptyAppOptions{},
+		interBlockCacheOpt(),
+	)
 
 	// Run randomized simulation:w
 	_, simParams, simErr := simulation.SimulateFromSeed(
@@ -107,7 +118,18 @@ func TestAppStateDeterminism(t *testing.T) {
 			}
 
 			db := dbm.NewMemDB()
-			app := app.NewSgeApp(logger, db, nil, true, map[int64]bool{}, app.DefaultNodeHome, sdksimapp.FlagPeriodValue, app.MakeEncodingConfig(), sdksimapp.EmptyAppOptions{}, interBlockCacheOpt())
+			app := app.NewSgeApp(
+				logger,
+				db,
+				nil,
+				true,
+				map[int64]bool{},
+				app.DefaultNodeHome,
+				sdksimapp.FlagPeriodValue,
+				app.MakeEncodingConfig(),
+				sdksimapp.EmptyAppOptions{},
+				interBlockCacheOpt(),
+			)
 
 			fmt.Printf(
 				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
@@ -136,8 +158,15 @@ func TestAppStateDeterminism(t *testing.T) {
 
 			if j != 0 {
 				require.Equal(
-					t, string(appHashList[0]), string(appHashList[j]),
-					"non-determinism in seed %d: %d/%d, attempt: %d/%d\n", config.Seed, i+1, numSeeds, j+1, numTimesToRunPerSeed,
+					t,
+					string(appHashList[0]),
+					string(appHashList[j]),
+					"non-determinism in seed %d: %d/%d, attempt: %d/%d\n",
+					config.Seed,
+					i+1,
+					numSeeds,
+					j+1,
+					numTimesToRunPerSeed,
 				)
 			}
 		}

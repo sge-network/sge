@@ -25,11 +25,19 @@ func (k *KeyVault) GetLeader() string {
 func (k *KeyVault) validatePubKeys() error {
 	count := len(k.PublicKeys)
 	if count < MinPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be less than %d", count, MinPubKeysCount)
+		return fmt.Errorf(
+			"total number of pubkeys is %d, this should not be less than %d",
+			count,
+			MinPubKeysCount,
+		)
 	}
 
 	if count > MaxPubKeysCount {
-		return fmt.Errorf("total number of pubkeys is %d, this should not be more than %d", count, MinPubKeysCount)
+		return fmt.Errorf(
+			"total number of pubkeys is %d, this should not be more than %d",
+			count,
+			MinPubKeysCount,
+		)
 	}
 
 	for _, pubKey := range k.PublicKeys {

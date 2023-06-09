@@ -20,6 +20,16 @@ import (
 	"github.com/sge-network/sge/x/strategicreserve/types"
 )
 
+var (
+	_ module.AppModule      = AppModule{}
+	_ module.AppModuleBasic = AppModuleBasic{}
+)
+
+// ----------------------------------------------------------------------------
+// AppModuleBasic
+// ----------------------------------------------------------------------------
+//
+
 // AppModuleBasic defines the basic application module used by the strategicreserve module.
 type AppModuleBasic struct {
 	cdc codec.BinaryCodec
@@ -31,11 +41,16 @@ func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic { return AppModuleB
 // Name returns the strategicreserve module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
 
-// RegisterLegacyAminoCodec registers the strategicreserve module's types on the given LegacyAmino codec.
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {}
+// RegisterCodec registers the codec for the app module basic
+func (AppModuleBasic) RegisterCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
+
+// RegisterLegacyAminoCodec registers the legacy amino codec for the app module basic
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
 
 // RegisterInterfaces registers the module's interface types
-func (b AppModuleBasic) RegisterInterfaces(registry cdctypes.InterfaceRegistry) {}
+func (b AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
+	types.RegisterInterfaces(reg)
+}
 
 // DefaultGenesis returns default genesis state as raw bytes for the strategicreserve module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
@@ -43,7 +58,11 @@ func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 }
 
 // ValidateGenesis performs genesis state validation for the strategicreserve module.
-func (AppModuleBasic) ValidateGenesis(cdc codec.JSONCodec, config client.TxEncodingConfig, bz json.RawMessage) error {
+func (AppModuleBasic) ValidateGenesis(
+	cdc codec.JSONCodec,
+	config client.TxEncodingConfig,
+	bz json.RawMessage,
+) error {
 	var genState types.GenesisState
 	if err := cdc.UnmarshalJSON(bz, &genState); err != nil {
 		return fmt.Errorf("failed to unmarshal %s genesis state: %w", types.ModuleName, err)
@@ -62,14 +81,10 @@ func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *r
 }
 
 // GetTxCmd returns the root tx command for the strategicreserve module.
-func (AppModuleBasic) GetTxCmd() *cobra.Command {
-	return nil
-}
+func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
 
 // GetQueryCmd returns no root query command for the strategicreserve module.
-func (AppModuleBasic) GetQueryCmd() *cobra.Command {
-	return cli.GetQueryCmd(types.StoreKey)
-}
+func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd(types.StoreKey) }
 
 // AppModule implements an application module for the strategicreserve module.
 type AppModule struct {
@@ -90,14 +105,10 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper) AppModule {
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
 // Route returns the message routing key for the strategicreserve module.
-func (am AppModule) Route() sdk.Route {
-	return sdk.Route{}
-}
+func (am AppModule) Route() sdk.Route { return sdk.Route{} }
 
 // QuerierRoute returns the strategicreserve module's querier route name.
-func (AppModule) QuerierRoute() string {
-	return types.QuerierRoute
-}
+func (AppModule) QuerierRoute() string { return types.QuerierRoute }
 
 // LegacyQuerierHandler returns the strategicreserve module sdk.Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
@@ -110,7 +121,11 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 }
 
 // InitGenesis performs genesis initialization for the strategicreserve module.
-func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.RawMessage) []abci.ValidatorUpdate {
+func (am AppModule) InitGenesis(
+	ctx sdk.Context,
+	cdc codec.JSONCodec,
+	data json.RawMessage,
+) []abci.ValidatorUpdate {
 	var genesisState types.GenesisState
 
 	cdc.MustUnmarshalJSON(data, &genesisState)
@@ -129,7 +144,7 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 1 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the module.
-func (am AppModule) BeginBlock(_ sdk.Context, _ abci.RequestBeginBlock) {}
+func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {}
 
 // EndBlock executes all ABCI EndBlock logic respective to the module. It
 // returns no validator updates.

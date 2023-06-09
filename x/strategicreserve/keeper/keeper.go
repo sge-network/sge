@@ -13,19 +13,23 @@ import (
 
 // keeper of the strategicreserve store
 type Keeper struct {
-	storeKey      sdk.StoreKey
-	cdc           codec.BinaryCodec
-	paramstore    paramtypes.Subspace
-	bankKeeper    types.BankKeeper
-	accountKeeper types.AccountKeeper
-	BetKeeper     types.BetKeeper
-	marketKeeper  types.MarketKeeper
+	storeKey       sdk.StoreKey
+	cdc            codec.BinaryCodec
+	paramstore     paramtypes.Subspace
+	bankKeeper     types.BankKeeper
+	accountKeeper  types.AccountKeeper
+	BetKeeper      types.BetKeeper
+	marketKeeper   types.MarketKeeper
+	houseKeeper    types.HouseKeeper
+	ovmKeeper      types.OVMKeeper
+	feeGrantKeeper types.FeeGrantKeeper
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
 type SdkExpectedKeepers struct {
-	BankKeeper    types.BankKeeper
-	AccountKeeper types.AccountKeeper
+	BankKeeper     types.BankKeeper
+	AccountKeeper  types.AccountKeeper
+	FeeGrantKeeper types.FeeGrantKeeper
 }
 
 // NewKeeper creates a new strategicreserve Keeper instance
@@ -41,11 +45,12 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		storeKey:      key,
-		cdc:           cdc,
-		paramstore:    ps,
-		bankKeeper:    expectedKeepers.BankKeeper,
-		accountKeeper: expectedKeepers.AccountKeeper,
+		storeKey:       key,
+		cdc:            cdc,
+		paramstore:     ps,
+		bankKeeper:     expectedKeepers.BankKeeper,
+		accountKeeper:  expectedKeepers.AccountKeeper,
+		feeGrantKeeper: expectedKeepers.FeeGrantKeeper,
 	}
 }
 
@@ -57,6 +62,16 @@ func (k *Keeper) SetBetKeeper(betKeeper types.BetKeeper) {
 // SetMarketKeeper sets the market module keeper to the order book keeper.
 func (k *Keeper) SetMarketKeeper(marketKeeper types.MarketKeeper) {
 	k.marketKeeper = marketKeeper
+}
+
+// SetMarketKeeper sets the market module keeper to the order book keeper.
+func (k *Keeper) SetHouseKeeper(houseKeeper types.HouseKeeper) {
+	k.houseKeeper = houseKeeper
+}
+
+// SetOVMKeeper sets the ovm module keeper to the market keeper.
+func (k *Keeper) SetOVMKeeper(ovmKeeper types.OVMKeeper) {
+	k.ovmKeeper = ovmKeeper
 }
 
 // Logger returns the logger of the keeper

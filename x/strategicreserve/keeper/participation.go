@@ -11,7 +11,10 @@ import (
 
 // SetOrderBookParticipation sets a book participation.
 func (k Keeper) SetOrderBookParticipation(ctx sdk.Context, participation types.OrderBookParticipation) {
-	participationKey := types.GetOrderBookParticipationKey(participation.OrderBookUID, participation.Index)
+	participationKey := types.GetOrderBookParticipationKey(
+		participation.OrderBookUID,
+		participation.Index,
+	)
 
 	store := k.getParticipationStore(ctx)
 	b := k.cdc.MustMarshal(&participation)
@@ -19,7 +22,11 @@ func (k Keeper) SetOrderBookParticipation(ctx sdk.Context, participation types.O
 }
 
 // GetOrderBookParticipation returns a specific participation of an order book by index.
-func (k Keeper) GetOrderBookParticipation(ctx sdk.Context, bookUID string, index uint64) (val types.OrderBookParticipation, found bool) {
+func (k Keeper) GetOrderBookParticipation(
+	ctx sdk.Context,
+	bookUID string,
+	index uint64,
+) (val types.OrderBookParticipation, found bool) {
 	store := k.getParticipationStore(ctx)
 	aprticipationKey := types.GetOrderBookParticipationKey(bookUID, index)
 	b := store.Get(aprticipationKey)
@@ -33,7 +40,10 @@ func (k Keeper) GetOrderBookParticipation(ctx sdk.Context, bookUID string, index
 }
 
 // GetParticipationsOfOrderBook returns all participations for an order book.
-func (k Keeper) GetParticipationsOfOrderBook(ctx sdk.Context, bookUID string) (list []types.OrderBookParticipation, err error) {
+func (k Keeper) GetParticipationsOfOrderBook(
+	ctx sdk.Context,
+	bookUID string,
+) (list []types.OrderBookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookParticipationsKey(bookUID))
 
@@ -51,7 +61,9 @@ func (k Keeper) GetParticipationsOfOrderBook(ctx sdk.Context, bookUID string) (l
 }
 
 // GetAllOrderBookParticipations returns all book participations used during genesis dump.
-func (k Keeper) GetAllOrderBookParticipations(ctx sdk.Context) (list []types.OrderBookParticipation, err error) {
+func (k Keeper) GetAllOrderBookParticipations(
+	ctx sdk.Context,
+) (list []types.OrderBookParticipation, err error) {
 	store := k.getParticipationStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -113,21 +125,18 @@ func (k Keeper) InitiateOrderBookParticipation(
 
 	bookParticipation := types.NewOrderBookParticipation(
 		index, book.UID, addr.String(),
-		book.OddsCount, // all of odds need to be filled in the next steps
-		false,
+		book.OddsCount,       // all of odds need to be filled in the next steps
 		liquidity, liquidity, // int the start, liquidity and current round liquidity are the same
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
-	// Transfer fee from book participation to the feeAccountName
-	err = k.transferFundsFromAccountToModule(ctx, addr, housetypes.HouseParticipationFeeName, fee)
-	if err != nil {
+	// fund order book liquidity pool from participant's account.
+	if err = k.fund(types.OrderBookLiquidityFunder{}, ctx, addr, liquidity); err != nil {
 		return
 	}
 
-	// Transfer liquidity amount from book participation  to `book_liquidity_pool` Account
-	err = k.transferFundsFromAccountToModule(ctx, addr, types.OrderBookLiquidityName, liquidity)
-	if err != nil {
+	// fund house fee collector from participant's account.
+	if err = k.fund(housetypes.HouseFeeCollectorFunder{}, ctx, addr, fee); err != nil {
 		return
 	}
 
@@ -135,16 +144,8 @@ func (k Keeper) InitiateOrderBookParticipation(
 	k.SetOrderBookParticipation(ctx, bookParticipation)
 
 	// Update book odds exposures and add particiapnt exposures
-	boes, err := k.GetOddsExposuresByOrderBook(ctx, bookParticipation.OrderBookUID)
-	if err != nil {
+	if err = k.initParticipationExposures(ctx, book.UID, index); err != nil {
 		return
-	}
-	for _, boe := range boes {
-		boe.FulfillmentQueue = append(boe.FulfillmentQueue, index)
-		k.SetOrderBookOddsExposure(ctx, boe)
-
-		pe := types.NewParticipationExposure(book.UID, boe.OddsUID, sdk.ZeroInt(), sdk.ZeroInt(), index, 1, false)
-		k.SetParticipationExposure(ctx, pe)
 	}
 
 	// Update strategicreserve
@@ -153,77 +154,108 @@ func (k Keeper) InitiateOrderBookParticipation(
 	return index, nil
 }
 
+// initParticipationExposures initialize the odds and participation exposures for the
+// participation at index.
+func (k Keeper) initParticipationExposures(
+	ctx sdk.Context,
+	orderBookUID string,
+	participationIndex uint64,
+) error {
+	// Update book odds exposures and add particiapnt exposures
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
+	if err != nil {
+		return err
+	}
+	for _, boe := range boes {
+		boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
+		k.SetOrderBookOddsExposure(ctx, boe)
+
+		pe := types.NewParticipationExposure(
+			orderBookUID,
+			boe.OddsUID,
+			sdk.ZeroInt(),
+			sdk.ZeroInt(),
+			participationIndex,
+			1,
+			false,
+		)
+		k.SetParticipationExposure(ctx, pe)
+	}
+
+	return nil
+}
+
 // WithdrawOrderBookParticipation withdraws the order book participation to the bettor's account
 func (k Keeper) WithdrawOrderBookParticipation(
-	ctx sdk.Context, depositorAddr, bookUID string, participationIndex uint64, mode housetypes.WithdrawalMode, amount sdk.Int,
+	ctx sdk.Context,
+	depositorAddr, bookUID string,
+	participationIndex uint64,
+	mode housetypes.WithdrawalMode,
+	amount sdk.Int,
 ) (sdk.Int, error) {
 	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
 	if err != nil {
-		return sdk.Int{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDesositor, err)
+		return sdk.Int{}, sdkerrors.Wrapf(
+			sdkerrors.ErrInvalidAddress,
+			types.ErrTextInvalidDesositor,
+			err,
+		)
 	}
 
 	bp, found := k.GetOrderBookParticipation(ctx, bookUID, participationIndex)
 	if !found {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrOrderBookParticipationNotFound, "%s, %d", bookUID, participationIndex)
+		return sdk.Int{}, sdkerrors.Wrapf(
+			types.ErrOrderBookParticipationNotFound,
+			"%s, %d",
+			bookUID,
+			participationIndex,
+		)
 	}
 
-	if bp.IsSettled {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrBookParticipationAlreadySettled, "%s, %d", bookUID, participationIndex)
+	if err = bp.ValidateWithdraw(depositorAddr, participationIndex); err != nil {
+		return sdk.Int{}, err
 	}
 
-	if bp.ParticipantAddress != depositorAddr {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+	withdrawalAmt, err := bp.WithdrawableAmount(mode, amount)
+	if err != nil {
+		return sdk.Int{}, err
 	}
 
-	if bp.IsModuleAccount {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrDepositorIsModuleAccount, "%s", bp.ParticipantAddress)
+	// refund participant's account from order book liquidity pool.
+	if err = k.reFund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, withdrawalAmt); err != nil {
+		return sdk.Int{}, err
 	}
 
-	// Calculate max amount that can be transferred
-	maxTransferableAmount := bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss)
-
-	var withdrawalAmt sdk.Int
-	switch mode {
-	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
-		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
-			return sdk.Int{}, sdkerrors.Wrapf(types.ErrMaxWithdrawableAmountIsZero, "%d, %d", bp.CurrentRoundLiquidity, bp.CurrentRoundMaxLoss)
-		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, maxTransferableAmount)
-		if err != nil {
-			return sdk.Int{}, err
-		}
-		withdrawalAmt = maxTransferableAmount
-	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
-		if maxTransferableAmount.LT(amount) {
-			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalAmountIsTooLarge, ": got %s, max %s", amount, maxTransferableAmount)
-		}
-		err := k.transferFundsFromModuleToAccount(ctx, types.OrderBookLiquidityName, depositorAddress, amount)
-		if err != nil {
-			return sdk.Int{}, err
-		}
-		withdrawalAmt = amount
-	default:
-		return sdk.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
-	}
-
-	bp.CurrentRoundLiquidity = bp.CurrentRoundLiquidity.Sub(withdrawalAmt)
-	bp.Liquidity = bp.Liquidity.Sub(withdrawalAmt)
+	bp.SetLiquidityAfterWithdrawal(withdrawalAmt)
 	k.SetOrderBookParticipation(ctx, bp)
 
-	if bp.CurrentRoundLiquidity.Sub(bp.CurrentRoundMaxLoss).LTE(sdk.ZeroInt()) {
-		boes, err := k.GetOddsExposuresByOrderBook(ctx, bookUID)
+	if err = k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp); err != nil {
+		return sdk.Int{}, err
+	}
+
+	return withdrawalAmt, nil
+}
+
+func (k Keeper) removeNotWithdrawableFromFulfillmentQueue(
+	ctx sdk.Context,
+	bp types.OrderBookParticipation,
+) error {
+	if !bp.IsWithdrawable() {
+		boes, err := k.GetOddsExposuresByOrderBook(ctx, bp.OrderBookUID)
 		if err != nil {
-			return sdk.Int{}, err
+			return err
 		}
 		for _, boe := range boes {
 			for i, pn := range boe.FulfillmentQueue {
 				if pn == bp.Index {
-					boe.FulfillmentQueue = append(boe.FulfillmentQueue[:i], boe.FulfillmentQueue[i+1:]...)
+					boe.FulfillmentQueue = append(
+						boe.FulfillmentQueue[:i],
+						boe.FulfillmentQueue[i+1:]...)
 				}
 			}
 			k.SetOrderBookOddsExposure(ctx, boe)
 		}
 	}
 
-	return withdrawalAmt, nil
+	return nil
 }

@@ -55,7 +55,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 			return err
 		}
 
-		if err := k.srKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.srKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.BetFee, payoutProfit.TruncateInt(), bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInSRRefund, "%s", err)
 		}
 
@@ -73,6 +73,10 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 	}
 
 	if err := k.settleResolvedBet(ctx, &bet); err != nil {
+		return err
+	}
+
+	if err := k.srKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.BetFee); err != nil {
 		return err
 	}
 
@@ -153,7 +157,7 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 		// we need to remove its uid from the list of unsettled resolved bets.
 		if !pendingBetExists {
 			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
-			err = k.srKeeper.SetOrderBookAsSettled(ctx, marketUID)
+			err = k.srKeeper.SetOrderBookAsUnsettledResolved(ctx, marketUID)
 			if err != nil {
 				return fmt.Errorf("could not resolve strategicreserve %s %s", marketUID, err)
 			}
@@ -167,7 +171,11 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 }
 
 // batchSettlementOfMarket settles pending bets of a markets
-func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, countToBeSettled uint32) (settledCount uint32, err error) {
+func (k Keeper) batchSettlementOfMarket(
+	ctx sdk.Context,
+	marketUID string,
+	countToBeSettled uint32,
+) (settledCount uint32, err error) {
 	// initialize iterator for the certain number of pending bets
 	// equal to countToBeSettled
 	iterator := sdk.KVStorePrefixIteratorPaginated(
@@ -196,7 +204,7 @@ func (k Keeper) batchSettlementOfMarket(ctx sdk.Context, marketUID string, count
 		settledCount++
 	}
 
-	return
+	return settledCount, nil
 }
 
 // checkBetStatus checks status of bet. It returns an error if

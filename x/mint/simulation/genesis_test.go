@@ -52,7 +52,12 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, "usge", mintGenesis.Params.MintDenom)
 	bp, _ := mintGenesis.Minter.BlockProvisions(mintGenesis.Params, 1)
 	require.Equal(t, "0usge", bp.String())
-	require.Equal(t, "0.000000000000000000", mintGenesis.Minter.NextPhaseProvisions(sdk.OneInt(), types.DefaultExcludeAmount, types.NonePhase()).String())
+	require.Equal(
+		t,
+		"0.000000000000000000",
+		mintGenesis.Minter.NextPhaseProvisions(sdk.OneInt(), types.DefaultExcludeAmount, types.NonePhase()).
+			String(),
+	)
 	require.Equal(t, "0.229787234042553191", params.GetPhaseAtStep(1).Inflation.String())
 	require.Equal(t, "0.286259541984732824", params.GetPhaseAtStep(2).Inflation.String())
 	require.Equal(t, "0.150250417362270451", params.GetPhaseAtStep(3).Inflation.String())
@@ -63,7 +68,11 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(t, "0.032042723631508678", params.GetPhaseAtStep(8).Inflation.String())
 	require.Equal(t, "0.019710906701708279", params.GetPhaseAtStep(9).Inflation.String())
 	require.Equal(t, "0.003903708523096942", params.GetPhaseAtStep(10).Inflation.String())
-	require.Equal(t, "0.000000000000000000", params.GetPhaseAtStep(types.EndPhaseAlias).Inflation.String())
+	require.Equal(
+		t,
+		"0.000000000000000000",
+		params.GetPhaseAtStep(types.EndPhaseAlias).Inflation.String(),
+	)
 	require.Equal(t, "0.170000000000000000", mintGenesis.Minter.Inflation.String())
 	_, nextPhaseIndex := mintGenesis.Minter.CurrentPhase(mintGenesis.Params, 1)
 	require.Equal(t, 1, nextPhaseIndex)

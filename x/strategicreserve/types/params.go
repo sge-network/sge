@@ -44,8 +44,16 @@ func NewParams(maxOrderBookParticipations, batchSettlementCount, requeueThreshol
 // Implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMaxOrderBookParticipations, &p.MaxOrderBookParticipations, validateMaxOrderBookParticipations),
-		paramtypes.NewParamSetPair(KeyBatchSettlementCount, &p.BatchSettlementCount, validateBatchSettlementCount),
+		paramtypes.NewParamSetPair(
+			KeyMaxOrderBookParticipations,
+			&p.MaxOrderBookParticipations,
+			validateMaxOrderBookParticipations,
+		),
+		paramtypes.NewParamSetPair(
+			KeyBatchSettlementCount,
+			&p.BatchSettlementCount,
+			validateBatchSettlementCount,
+		),
 		paramtypes.NewParamSetPair(KeyRequeueThreshold, &p.RequeueThreshold, validateRequeueThreshold),
 	}
 }
