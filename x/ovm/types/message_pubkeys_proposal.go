@@ -8,7 +8,7 @@ import (
 )
 
 // typeMsgPubkeysChangeProposal is type of message MsgPubkeysChangeProposalRequest
-const typeMsgPubkeysChangeProposal = "dvm_proposal_pubkeys_change"
+const typeMsgPubkeysChangeProposal = "ovm_proposal_pubkeys_change"
 
 var _ sdk.Msg = &MsgSubmitPubkeysChangeProposalRequest{}
 
