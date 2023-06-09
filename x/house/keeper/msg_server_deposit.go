@@ -47,6 +47,8 @@ func (k msgServer) Deposit(goCtx context.Context,
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
 
+	msg.EmitEvent(&ctx, depositorAddr, participationIndex)
+
 	return &types.MsgDepositResponse{
 		MarketUID:          msg.MarketUID,
 		ParticipationIndex: participationIndex,

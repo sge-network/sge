@@ -3,10 +3,12 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 // typeMsgPubkeysChangeProposal is type of message MsgPubkeysChangeProposalRequest
-const typeMsgPubkeysChangeProposal = "pubkeys_change_proposal"
+const typeMsgPubkeysChangeProposal = "ovm_proposal_pubkeys_change"
 
 var _ sdk.Msg = &MsgSubmitPubkeysChangeProposalRequest{}
 
@@ -22,14 +24,10 @@ func NewMsgPubkeysChangeProposalRequest(
 }
 
 // Route returns the module's message router key.
-func (msg *MsgSubmitPubkeysChangeProposalRequest) Route() string {
-	return RouterKey
-}
+func (msg *MsgSubmitPubkeysChangeProposalRequest) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (msg *MsgSubmitPubkeysChangeProposalRequest) Type() string {
-	return typeMsgPubkeysChangeProposal
-}
+func (msg *MsgSubmitPubkeysChangeProposalRequest) Type() string { return typeMsgPubkeysChangeProposal }
 
 // GetSigners returns the signers of its message
 func (msg *MsgSubmitPubkeysChangeProposalRequest) GetSigners() []sdk.AccAddress {
@@ -53,4 +51,14 @@ func (msg *MsgSubmitPubkeysChangeProposalRequest) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgSubmitPubkeysChangeProposalRequest) EmitEvent(ctx *sdk.Context, proposalID uint64, content string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgPubkeysChangeProposal, msg.Creator,
+		sdk.NewAttribute(attributeKeyPubkeysChangeProposalID, cast.ToString(proposalID)),
+		sdk.NewAttribute(attributeKeyContent, content),
+	)
+	emitter.Emit()
 }

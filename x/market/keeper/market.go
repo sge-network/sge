@@ -75,20 +75,3 @@ func (k Keeper) ResolveMarket(
 
 	return &storedMarket
 }
-
-func emitTransactionEvent(ctx sdk.Context, emitType string, uid, bookUID, creator string) {
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			emitType,
-			sdk.NewAttribute(types.AttributeKeyMarketsSuccessUID, uid),
-			sdk.NewAttribute(types.AttributeKeyOrderBookUID, bookUID),
-			sdk.NewAttribute(types.AttributeKeyEventsCreator, creator),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.ModuleName),
-			sdk.NewAttribute(sdk.AttributeKeyAction, emitType),
-			sdk.NewAttribute(sdk.AttributeKeySender, creator),
-		),
-	})
-}

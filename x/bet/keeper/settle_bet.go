@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
@@ -14,7 +15,7 @@ const singlePageNum = 1
 
 // SettleBet settles a single bet and updates it in KVStore
 func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) error {
-	if !types.IsValidUID(betUID) {
+	if !utils.IsValidUID(betUID) {
 		return types.ErrInvalidBetUID
 	}
 

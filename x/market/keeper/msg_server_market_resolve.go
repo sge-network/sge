@@ -40,13 +40,7 @@ func (k msgServer) ResolveMarket(
 
 	resolvedMarket := k.Keeper.ResolveMarket(ctx, market, &resolutionPayload)
 
-	emitTransactionEvent(
-		ctx,
-		types.TypeMsgResolveMarkets,
-		resolvedMarket.UID,
-		resolvedMarket.BookUID,
-		msg.Creator,
-	)
+	msg.EmitEvent(&ctx, market.UID)
 
 	return &types.MsgResolveMarketResponse{
 		Data: resolvedMarket,

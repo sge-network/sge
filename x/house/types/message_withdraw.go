@@ -1,12 +1,15 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
-const typeMsgWithdraw = "withdraw"
+const typeMsgWithdraw = "house_withdraw"
 
 var _ sdk.Msg = &MsgWithdraw{}
 
@@ -25,14 +28,10 @@ func NewMsgWithdraw(creator string, marketUID string, amount sdk.Int,
 }
 
 // Route return the message route for slashing
-func (msg *MsgWithdraw) Route() string {
-	return RouterKey
-}
+func (msg *MsgWithdraw) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgWithdraw) Type() string {
-	return typeMsgWithdraw
-}
+func (msg *MsgWithdraw) Type() string { return typeMsgWithdraw }
 
 // GetSigners return the creators address
 func (msg *MsgWithdraw) GetSigners() []sdk.AccAddress {
@@ -76,4 +75,17 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgWithdraw) EmitEvent(ctx *sdk.Context, depositor string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgWithdraw, msg.Creator,
+		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
+		sdk.NewAttribute(attributeKeyDepositor, depositor),
+		sdk.NewAttribute(attributeKeyWithdrawMarketUIDParticipantIndex,
+			strings.Join([]string{msg.MarketUID, cast.ToString(msg.ParticipationIndex)}, "#"),
+		),
+	)
+	emitter.Emit()
 }

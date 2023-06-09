@@ -2,34 +2,34 @@
 
 The Market module emits the following events:
 
-## *MsgMarketCreated*
+## *MsgAddMarket*
 
 | **Type**                   | **Attribute Key**         | **Attribute Value**   |
 |----------------------------|---------------------------|-----------------------|
-| create_markets             | markets_success_uid       | {uid}                 |
-| create_markets             | markets_book_uid          | {book_uid}            |
-| message                    | module                    | Market                |
-| message                    | action                    | create_markets        |
+| market_add                 | uid                       | {uid}                 |
+| market_add                 | orderbook_uid             | {orderbook_uid}       |
+| message                    | module                    | market                |
+| message                    | action                    | market_add            |
 | message                    | sender                    | {creator}             |
 
 ---
 
-## *MsgMarketResolution*
+## *MsgUpdateMarket*
 
 |   **Type**               |     **Attribute Key**       | **Attribute Value**   |
 |:------------------------:|:---------------------------:|:---------------------:|
-| update_markets           | markets_success_uid         | {uid}                 |
-| message                  | module                      | Market                |
-| message                  | action                      | update_markets        |
+| market_update            | uid                         | {uid}                 |
+| message                  | module                      | market                |
+| message                  | action                      | market_update         |
 | message                  | sender                      | {creator}             |
 
 ---
 
-## *MsgMarketUpdate*
+## *MsgResolveMarket*
 
 | **Type**                  | **Attribute Key**        | **Attribute Value**   |
 |---------------------------|--------------------------|-----------------------|
-| resolve_markets           | markets_success_uid      | {uid}                 |
-| message                   | module                   | Market                |
-| message                   | action                   | resolve_markets       |
+| market_resolve            | uid                      | {uid}                 |
+| message                   | module                   | market                |
+| message                   | action                   | market_resolve        |
 | message                   | sender                   | {creator}             |

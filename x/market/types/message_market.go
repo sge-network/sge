@@ -3,9 +3,10 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgAddMarket = "add_market"
+const typeMsgAddMarket = "market_add"
 
 var _ sdk.Msg = &MsgAddMarket{}
 
@@ -18,14 +19,10 @@ func NewMsgAddMarket(creator string, ticket string) *MsgAddMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgAddMarket) Route() string {
-	return RouterKey
-}
+func (msg *MsgAddMarket) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgAddMarket) Type() string {
-	return typeMsgAddMarket
-}
+func (msg *MsgAddMarket) Type() string { return typeMsgAddMarket }
 
 // GetSigners return the creators address
 func (msg *MsgAddMarket) GetSigners() []sdk.AccAddress {
@@ -55,8 +52,18 @@ func (msg *MsgAddMarket) ValidateBasic() error {
 	return nil
 }
 
+// EmitEvent emits the event for the message success.
+func (msg *MsgAddMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgAddMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
+	)
+	emitter.Emit()
+}
+
 // typeMsgUpdateMarket is the market name of update market
-const typeMsgUpdateMarket = "update_market"
+const typeMsgUpdateMarket = "market_update"
 
 var _ sdk.Msg = &MsgUpdateMarket{}
 
@@ -69,14 +76,10 @@ func NewMsgUpdateMarket(creator, ticket string) *MsgUpdateMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgUpdateMarket) Route() string {
-	return RouterKey
-}
+func (msg *MsgUpdateMarket) Route() string { return RouterKey }
 
 // Type return the update market type
-func (msg *MsgUpdateMarket) Type() string {
-	return typeMsgUpdateMarket
-}
+func (msg *MsgUpdateMarket) Type() string { return typeMsgUpdateMarket }
 
 // GetSigners return the creators address
 func (msg *MsgUpdateMarket) GetSigners() []sdk.AccAddress {
@@ -105,4 +108,13 @@ func (msg *MsgUpdateMarket) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgUpdateMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgUpdateMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+	)
+	emitter.Emit()
 }

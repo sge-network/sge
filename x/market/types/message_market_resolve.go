@@ -3,9 +3,10 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgResolveMarket = "resolve_market"
+const typeMsgResolveMarket = "market_resolve"
 
 var _ sdk.Msg = &MsgResolveMarket{}
 
@@ -18,14 +19,10 @@ func NewMsgResolveMarket(creator, ticket string) *MsgResolveMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgResolveMarket) Route() string {
-	return RouterKey
-}
+func (msg *MsgResolveMarket) Route() string { return RouterKey }
 
 // Type return the resolve market type
-func (msg *MsgResolveMarket) Type() string {
-	return typeMsgResolveMarket
-}
+func (msg *MsgResolveMarket) Type() string { return typeMsgResolveMarket }
 
 // GetSigners return the creators address
 func (msg *MsgResolveMarket) GetSigners() []sdk.AccAddress {
@@ -54,4 +51,13 @@ func (msg *MsgResolveMarket) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgResolveMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgResolveMarket, msg.Creator,
+		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
+	)
+	emitter.Emit()
 }

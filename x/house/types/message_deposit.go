@@ -1,12 +1,15 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
-const typeMsgDeposit = "deposit"
+const typeMsgDeposit = "house_deposit"
 
 var _ sdk.Msg = &MsgDeposit{}
 
@@ -21,14 +24,10 @@ func NewMsgDeposit(creator, marketUID string, amount sdk.Int, ticket string) *Ms
 }
 
 // Route return the message route for slashing
-func (msg *MsgDeposit) Route() string {
-	return RouterKey
-}
+func (msg *MsgDeposit) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgDeposit) Type() string {
-	return typeMsgDeposit
-}
+func (msg *MsgDeposit) Type() string { return typeMsgDeposit }
 
 // GetSigners return the creators address
 func (msg *MsgDeposit) GetSigners() []sdk.AccAddress {
@@ -76,4 +75,17 @@ func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participationIndex uint64) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgDeposit, msg.Creator,
+		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
+		sdk.NewAttribute(attributeKeyDepositor, depositor),
+		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
+			strings.Join([]string{msg.MarketUID, cast.ToString(participationIndex)}, "#"),
+		),
+	)
+	emitter.Emit()
 }

@@ -54,7 +54,7 @@ func (k msgServer) AddMarket(
 
 	k.Keeper.SetMarket(ctx, market)
 
-	emitTransactionEvent(ctx, types.TypeMsgCreateMarkets, market.UID, market.BookUID, msg.Creator)
+	msg.EmitEvent(&ctx, market.UID, market.BookUID)
 
 	return &types.MsgAddMarketResponse{
 		Error: "",
@@ -104,7 +104,7 @@ func (k msgServer) UpdateMarket(
 	// update market is successful, update the module state
 	k.Keeper.SetMarket(ctx, market)
 
-	emitTransactionEvent(ctx, types.TypeMsgUpdateMarkets, market.UID, market.BookUID, msg.Creator)
+	msg.EmitEvent(&ctx, market.UID)
 
 	return &types.MsgUpdateMarketResponse{Data: &market}, nil
 }

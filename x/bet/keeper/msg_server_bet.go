@@ -36,23 +36,7 @@ func (k msgServer) PlaceBet(
 		return nil, sdkerrors.Wrapf(types.ErrInBetPlacement, "%s", err)
 	}
 
-	emitBetEvent(ctx, types.TypeMsgPlaceBet, msg.Bet.UID, msg.Creator)
+	msg.EmitEvent(&ctx)
 
 	return &types.MsgPlaceBetResponse{Bet: msg.Bet}, nil
-}
-
-func emitBetEvent(ctx sdk.Context, msgType string, betUID string, betCreator string) {
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			msgType,
-			sdk.NewAttribute(types.AttributeKeyBetCreator, betCreator),
-			sdk.NewAttribute(types.AttributeKeyBetUID, betUID),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
-			sdk.NewAttribute(sdk.AttributeKeySender, betCreator),
-		),
-	})
 }

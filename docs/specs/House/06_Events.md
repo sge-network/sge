@@ -1,3 +1,25 @@
 # **Events**
 
-The House module does not emit any events (yet).
+The House module emits the following events
+
+## *MsgDeposit*
+
+|  Type         |    Attribute Key    |         Attribute Value           |
+|:-------------:|:-------------------:|:---------------------------------:|
+| house_deposit | creator             |  {creator}                        |
+| house_deposit | depositor           |  {depositor}                      |
+| house_deposit | deposit_market_index|  {market_uid#participation_index} |
+| message       | module              |  house                            |
+| message       | action              |  house_deposit                    |
+| message       | sender              |  {creator}                        |
+
+## *MsgWithdraw*
+
+|  Type          |    Attribute Key     |        Attribute Value            |
+|:--------------:|:--------------------:|:---------------------------------:|
+| house_withdraw | creator              |  {creator}                        |
+| house_withdraw | depositor            |  {depositor}                      |
+| house_withdraw | withdraw_market_index|  {market_uid#participation_index} |
+| message        | module               |  house                            |
+| message        | action               |  house_withdraw                   |
+| message        | sender               |  {creator}                        |

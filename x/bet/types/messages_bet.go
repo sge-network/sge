@@ -1,16 +1,16 @@
 package types
 
 import (
-	"regexp"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const (
-	// TypeMsgPlaceBet is type of message MsgPlaceBet
-	TypeMsgPlaceBet = "place_bet"
+	// typeMsgPlaceBet is type of message MsgPlaceBet
+	typeMsgPlaceBet = "bet_place"
 	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
 	SettlementUIDsThreshold = 10
 	// BetPlacementThreshold is the threshold for the number bets in bulk placement tx
@@ -31,14 +31,10 @@ func NewMsgPlaceBet(
 }
 
 // Route returns the module's message router key.
-func (msg *MsgPlaceBet) Route() string {
-	return RouterKey
-}
+func (msg *MsgPlaceBet) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (msg *MsgPlaceBet) Type() string {
-	return TypeMsgPlaceBet
-}
+func (msg *MsgPlaceBet) Type() string { return typeMsgPlaceBet }
 
 // GetSigners returns the signers of its message
 func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
@@ -69,22 +65,14 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 	return nil
 }
 
-// isValidUUID validates the uid
-func isValidUUID(uid string) bool {
-	r := regexp.MustCompile(
-		"^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+// EmitEvent emits the event for the message success.
+func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgPlaceBet, msg.Creator,
+		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),
+		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
 	)
-	return r.MatchString(uid)
-}
-
-// IsValidUID validates the uid
-func IsValidUID(uid string) bool {
-	if len(uid) == 0 || uid == "" || strings.Contains(uid, " ") ||
-		!isValidUUID(uid) {
-		return false
-	}
-
-	return true
+	emitter.Emit()
 }
 
 // NewBet creates and returns a new bet from given message
