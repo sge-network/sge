@@ -16,10 +16,10 @@ import (
 func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
-	// get the first resolved orderboook to process corresponding active deposits.
+	// get the first resolved orderbook to process corresponding active deposits.
 	orderBookUID, found := k.GetFirstUnsettledResolvedOrderBook(ctx)
 
-	// return if there is no resolved orderboook.
+	// return if there is no resolved orderbook.
 	if !found {
 		return nil
 	}
@@ -40,10 +40,10 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	// settle order book active deposits.
 	allSettled, err := k.batchSettlementOfParticipation(ctx, orderBookUID, market, toFetch)
 	if err != nil {
-		return fmt.Errorf("could not settle orderboook %s %s", orderBookUID, err)
+		return fmt.Errorf("could not settle orderbook %s %s", orderBookUID, err)
 	}
 
-	// if there is not any active deposit for orderboook
+	// if there is not any active deposit for orderbook
 	// we need to remove its uid from the list of unsettled resolved orderbooks.
 	if allSettled {
 		k.RemoveUnsettledResolvedOrderBook(ctx, orderBookUID)
@@ -52,7 +52,7 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	return nil
 }
 
-// batchSettlementOfParticipation settles active deposits of an orderboook
+// batchSettlementOfParticipation settles active deposits of an orderbook
 func (k Keeper) batchSettlementOfParticipation(
 	ctx sdk.Context,
 	orderBookUID string,

@@ -30,7 +30,7 @@ var (
 // ----------------------------------------------------------------------------
 //
 
-// AppModuleBasic defines the basic application module used by the orderboook module.
+// AppModuleBasic defines the basic application module used by the orderbook module.
 type AppModuleBasic struct {
 	cdc codec.BinaryCodec
 }
@@ -38,7 +38,7 @@ type AppModuleBasic struct {
 // NewAppModuleBasic creates app module basic object
 func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic { return AppModuleBasic{cdc: cdc} }
 
-// Name returns the orderboook module's name.
+// Name returns the orderbook module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
 
 // RegisterCodec registers the codec for the app module basic
@@ -52,12 +52,12 @@ func (b AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {
 	types.RegisterInterfaces(reg)
 }
 
-// DefaultGenesis returns default genesis state as raw bytes for the orderboook module.
+// DefaultGenesis returns default genesis state as raw bytes for the orderbook module.
 func (AppModuleBasic) DefaultGenesis(cdc codec.JSONCodec) json.RawMessage {
 	return cdc.MustMarshalJSON(types.DefaultGenesis())
 }
 
-// ValidateGenesis performs genesis state validation for the orderboook module.
+// ValidateGenesis performs genesis state validation for the orderbook module.
 func (AppModuleBasic) ValidateGenesis(
 	cdc codec.JSONCodec,
 	config client.TxEncodingConfig,
@@ -70,23 +70,23 @@ func (AppModuleBasic) ValidateGenesis(
 	return genState.Validate()
 }
 
-// RegisterRESTRoutes registers the REST routes for the orderboook module.
+// RegisterRESTRoutes registers the REST routes for the orderbook module.
 func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
 
-// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the orderboook module.
+// RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the orderbook module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
 	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
 		panic(err)
 	}
 }
 
-// GetTxCmd returns the root tx command for the orderboook module.
+// GetTxCmd returns the root tx command for the orderbook module.
 func (AppModuleBasic) GetTxCmd() *cobra.Command { return nil }
 
-// GetQueryCmd returns no root query command for the orderboook module.
+// GetQueryCmd returns no root query command for the orderbook module.
 func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd(types.StoreKey) }
 
-// AppModule implements an application module for the orderboook module.
+// AppModule implements an application module for the orderbook module.
 type AppModule struct {
 	AppModuleBasic
 
@@ -101,16 +101,16 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper) AppModule {
 	}
 }
 
-// RegisterInvariants registers the orderboook module invariants.
+// RegisterInvariants registers the orderbook module invariants.
 func (am AppModule) RegisterInvariants(_ sdk.InvariantRegistry) {}
 
-// Route returns the message routing key for the orderboook module.
+// Route returns the message routing key for the orderbook module.
 func (am AppModule) Route() sdk.Route { return sdk.Route{} }
 
-// QuerierRoute returns the orderboook module's querier route name.
+// QuerierRoute returns the orderbook module's querier route name.
 func (AppModule) QuerierRoute() string { return types.QuerierRoute }
 
-// LegacyQuerierHandler returns the orderboook module sdk.Querier.
+// LegacyQuerierHandler returns the orderbook module sdk.Querier.
 func (am AppModule) LegacyQuerierHandler(legacyQuerierCdc *codec.LegacyAmino) sdk.Querier {
 	return nil
 }
@@ -120,7 +120,7 @@ func (am AppModule) RegisterServices(cfg module.Configurator) {
 	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
 }
 
-// InitGenesis performs genesis initialization for the orderboook module.
+// InitGenesis performs genesis initialization for the orderbook module.
 func (am AppModule) InitGenesis(
 	ctx sdk.Context,
 	cdc codec.JSONCodec,
@@ -134,7 +134,7 @@ func (am AppModule) InitGenesis(
 	return []abci.ValidatorUpdate{}
 }
 
-// ExportGenesis returns the exported genesis state as raw bytes for the orderboook module.
+// ExportGenesis returns the exported genesis state as raw bytes for the orderbook module.
 func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.RawMessage {
 	gs := ExportGenesis(ctx, am.keeper)
 	return cdc.MustMarshalJSON(gs)

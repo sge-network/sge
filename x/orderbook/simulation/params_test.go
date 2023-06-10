@@ -20,13 +20,13 @@ func TestParamChanges(t *testing.T) {
 		key         string
 		subspace    string
 	}{
-		{"orderboook/BatchSettlementCount", "BatchSettlementCount", "orderboook"},
+		{"orderbook/BatchSettlementCount", "BatchSettlementCount", "orderbook"},
 		{
-			"orderboook/MaxOrderBookParticipations",
+			"orderbook/MaxOrderBookParticipations",
 			"MaxOrderBookParticipations",
-			"orderboook",
+			"orderbook",
 		},
-		{"orderboook/RequeueThreshold", "RequeueThreshold", "orderboook"},
+		{"orderbook/RequeueThreshold", "RequeueThreshold", "orderbook"},
 	}
 
 	paramChanges := simulation.ParamChanges(r)

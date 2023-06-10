@@ -11,7 +11,7 @@ import (
 func GetQueryCmd(queryRoute string) *cobra.Command {
 	orderBookQueryCmd := &cobra.Command{
 		Use:                        types.ModuleName,
-		Short:                      "Querying commands for the orderboook module",
+		Short:                      "Querying commands for the orderbook module",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,

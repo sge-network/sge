@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// ParticipationExposures queries participation exposures info for a given orderboook
+// ParticipationExposures queries participation exposures info for a given orderbook
 func (k Keeper) ParticipationExposures(
 	c context.Context,
 	req *types.QueryParticipationExposuresRequest,
@@ -106,7 +106,7 @@ func (k Keeper) ParticipationExposure(
 	}, nil
 }
 
-// HistoricalParticipationExposures queries historical participation exposures info for given orderboook
+// HistoricalParticipationExposures queries historical participation exposures info for given orderbook
 func (k Keeper) HistoricalParticipationExposures(
 	c context.Context, req *types.QueryHistoricalParticipationExposuresRequest,
 ) (*types.QueryHistoricalParticipationExposuresResponse, error) {

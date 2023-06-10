@@ -6,7 +6,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/orderboook module sentinel errors
+// x/orderbook module sentinel errors
 var (
 	ErrInTicketVerification                 = sdkerrors.Register(ModuleName, 6001, "ticket verification failed")
 	ErrInTicketPayloadValidation            = sdkerrors.Register(ModuleName, 6002, "ticket validation failed")
@@ -39,7 +39,7 @@ var (
 	ErrUnknownMarketStatus                  = sdkerrors.Register(ModuleName, 6030, "unknown market status of orderbook settlement")
 )
 
-// ErrTextInvalidDepositor x/orderboook module sentinel error text
+// ErrTextInvalidDepositor x/orderbook module sentinel error text
 const (
 	ErrTextInvalidDepositor = "invalid depositor address (%s)"
 )

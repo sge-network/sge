@@ -61,7 +61,7 @@ func (k Keeper) OrderBooks(
 	return &types.QueryOrderBooksResponse{Orderbooks: orderBooks, Pagination: pageRes}, nil
 }
 
-// OrderBook queries orderboook info for given order book id
+// OrderBook queries orderbook info for given order book id
 func (k Keeper) OrderBook(
 	c context.Context,
 	req *types.QueryOrderBookRequest,
@@ -83,7 +83,7 @@ func (k Keeper) OrderBook(
 	return &types.QueryOrderBookResponse{OrderBook: orderBook}, nil
 }
 
-// OrderBookParticipations queries participation info for a given orderboook
+// OrderBookParticipations queries participation info for a given orderbook
 func (k Keeper) OrderBookParticipations(
 	c context.Context,
 	req *types.QueryOrderBookParticipationsRequest,
@@ -162,7 +162,7 @@ func (k Keeper) OrderBookParticipation(
 	}, nil
 }
 
-// OrderBookExposures queries exposures info for given orderboook
+// OrderBookExposures queries exposures info for given orderbook
 func (k Keeper) OrderBookExposures(
 	c context.Context,
 	req *types.QueryOrderBookExposuresRequest,

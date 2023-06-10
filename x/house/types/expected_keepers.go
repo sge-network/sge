@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
-// OrderbookKeeper defines the expected orderboook keeper.
+// OrderbookKeeper defines the expected orderbook keeper.
 type OrderbookKeeper interface {
 	InitiateOrderBookParticipation(ctx sdk.Context, addr sdk.AccAddress,
 		bookUID string, liquidity, fee sdk.Int) (uint64, error)

@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryParticipationExposures implements the command to query all the participation exposures to a specific orderboook.
+// GetCmdQueryParticipationExposures implements the command to query all the participation exposures to a specific orderbook.
 func GetCmdQueryParticipationExposures() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "participation-exposures [order-book-id]",
@@ -21,7 +21,7 @@ func GetCmdQueryParticipationExposures() *cobra.Command {
 			fmt.Sprintf(`Query participation exposures on an individual order book.
 
 Example:
-$ %s query orderboook participation-exposures %s
+$ %s query orderbook participation-exposures %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -70,7 +70,7 @@ func GetCmdQueryParticipationExposure() *cobra.Command {
 			fmt.Sprintf(`Query details about a participation exposure.
 
 Example:
-$ %s query orderboook participation-exposure %s %d
+$ %s query orderbook participation-exposure %s %d
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", 1,
 			),
@@ -110,7 +110,7 @@ $ %s query orderboook participation-exposure %s %d
 	return cmd
 }
 
-// GetCmdQueryHistoricalParticipationExposures implements the command to query all the historical participation exposures to a specific orderboook.
+// GetCmdQueryHistoricalParticipationExposures implements the command to query all the historical participation exposures to a specific orderbook.
 func GetCmdQueryHistoricalParticipationExposures() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "historical-participation-exposures [order-book-id]",
@@ -119,7 +119,7 @@ func GetCmdQueryHistoricalParticipationExposures() *cobra.Command {
 			fmt.Sprintf(`Query historical participation exposures on an individual order book.
 
 Example:
-$ %s query orderboook historical-participation-exposures %s
+$ %s query orderbook historical-participation-exposures %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -159,7 +159,7 @@ $ %s query orderboook historical-participation-exposures %s
 	return cmd
 }
 
-// GetCmdQueryParticipationBets implements the command to query all the participation fulfilled bets to a specific orderboook.
+// GetCmdQueryParticipationBets implements the command to query all the participation fulfilled bets to a specific orderbook.
 func GetCmdQueryParticipationBets() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "participation-bets [order-book-id] [participation-index]",
@@ -168,7 +168,7 @@ func GetCmdQueryParticipationBets() *cobra.Command {
 			fmt.Sprintf(`Query participation fulfilled bets on an individual order book.
 
 Example:
-$ %s query orderboook participation-bets %s %d
+$ %s query orderbook participation-bets %s %d
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", 2,
 			),

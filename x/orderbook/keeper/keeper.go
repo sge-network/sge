@@ -11,7 +11,7 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
-// Keeper keeper of the orderboook store
+// Keeper keeper of the orderbook store
 type Keeper struct {
 	storeKey       sdk.StoreKey
 	cdc            codec.BinaryCodec
@@ -32,7 +32,7 @@ type SdkExpectedKeepers struct {
 	FeeGrantKeeper types.FeeGrantKeeper
 }
 
-// NewKeeper creates a new orderboook Keeper instance
+// NewKeeper creates a new orderbook Keeper instance
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	key sdk.StoreKey,

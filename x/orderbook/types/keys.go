@@ -5,13 +5,13 @@ import (
 )
 
 const (
-	// ModuleName is the name of the orderboook module
-	ModuleName = "orderboook"
+	// ModuleName is the name of the orderbook module
+	ModuleName = "orderbook"
 
 	// StoreKey is the string store representation
 	StoreKey = ModuleName
 
-	// RouterKey is the message route for orderboook
+	// RouterKey is the message route for orderbook
 	RouterKey = ModuleName
 
 	// QuerierRoute defines the module's query routing key

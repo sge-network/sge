@@ -22,7 +22,7 @@ func GetCmdQueryOrderBooks() *cobra.Command {
 			fmt.Sprintf(`Query details about all order books on a network.
 
 Example:
-$ %s query orderboook orderbooks
+$ %s query orderbook orderbooks
 `,
 				version.AppName,
 			),
@@ -56,16 +56,16 @@ $ %s query orderboook orderbooks
 	return cmd
 }
 
-// GetCmdQueryOrderBook implements the orderboook query command.
+// GetCmdQueryOrderBook implements the orderbook query command.
 func GetCmdQueryOrderBook() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "orderbook [order-book-id]",
-		Short: "Query a orderboook",
+		Short: "Query a orderbook",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a order book.
 
 Example:
-$ %s query orderboook orderbook %s
+$ %s query orderbook orderbook %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -95,7 +95,7 @@ $ %s query orderboook orderbook %s
 	return cmd
 }
 
-// GetCmdQueryOrderBookParticipations implements the command to query all the participations to a specific orderboook.
+// GetCmdQueryOrderBookParticipations implements the command to query all the participations to a specific orderbook.
 func GetCmdQueryOrderBookParticipations() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-participations [order-book-id]",
@@ -104,7 +104,7 @@ func GetCmdQueryOrderBookParticipations() *cobra.Command {
 			fmt.Sprintf(`Query participations on an individual order book.
 
 Example:
-$ %s query orderboook book-participations %s
+$ %s query orderbook book-participations %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -153,7 +153,7 @@ func GetCmdQueryOrderBookParticipation() *cobra.Command {
 			fmt.Sprintf(`Query details about a book participation.
 
 Example:
-$ %s query orderboook book-participation %s %d
+$ %s query orderbook book-participation %s %d
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", 1,
 			),
@@ -194,7 +194,7 @@ $ %s query orderboook book-participation %s %d
 	return cmd
 }
 
-// GetCmdQueryOrderBookExposures implements the command to query all the exposures to a specific orderboook.
+// GetCmdQueryOrderBookExposures implements the command to query all the exposures to a specific orderbook.
 func GetCmdQueryOrderBookExposures() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "book-exposures [order-book-id]",
@@ -203,7 +203,7 @@ func GetCmdQueryOrderBookExposures() *cobra.Command {
 			fmt.Sprintf(`Query exposures on an individual order book.
 
 Example:
-$ %s query orderboook book-exposures %s
+$ %s query orderbook book-exposures %s
 `,
 				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000",
 			),
@@ -253,7 +253,7 @@ func GetCmdQueryOrderBookExposure() *cobra.Command {
 				`Query details about a book exposure.
 
 Example:
-$ %s query orderboook book-exposure %s %s
+$ %s query orderbook book-exposure %s %s
 `,
 				version.AppName,
 				"5531c60f-2025-48ce-ae79-1dc110f16000",

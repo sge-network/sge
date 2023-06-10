@@ -148,7 +148,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 		return
 	}
 
-	// Update orderboook
+	// Update orderbook
 	k.SetOrderBook(ctx, book)
 
 	return index, nil

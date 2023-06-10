@@ -45,7 +45,7 @@ func (k Keeper) SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID st
 	return nil
 }
 
-// GetFirstUnsettledResolvedOrderBook returns first element of resolved orderboook that have active deposits
+// GetFirstUnsettledResolvedOrderBook returns first element of resolved orderbook that have active deposits
 func (k Keeper) GetFirstUnsettledResolvedOrderBook(ctx sdk.Context) (string, bool) {
 	stats := k.GetOrderBookStats(ctx)
 	if len(stats.ResolvedUnsettled) > 0 {

@@ -160,7 +160,7 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 			k.marketKeeper.RemoveUnsettledResolvedMarket(ctx, marketUID)
 			err = k.orderbookKeeper.SetOrderBookAsUnsettledResolved(ctx, marketUID)
 			if err != nil {
-				return fmt.Errorf("could not resolve orderboook %s %s", marketUID, err)
+				return fmt.Errorf("could not resolve orderbook %s %s", marketUID, err)
 			}
 		}
 

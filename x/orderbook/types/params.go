@@ -27,7 +27,7 @@ var (
 	KeyRequeueThreshold = []byte("RequeueThreshold")
 )
 
-// ParamKeyTable ParamTable for orderboook module
+// ParamKeyTable ParamTable for orderbook module
 func ParamKeyTable() paramtypes.KeyTable {
 	return paramtypes.NewKeyTable().RegisterParamSet(&Params{})
 }
