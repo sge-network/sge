@@ -4,5 +4,4 @@ package consts
 const (
 	ErrTextInvalidRequest         = "invalid request"
 	ErrModuleAccountHasNotBeenSet = "%s module account has not been set"
-	ErrEmptyRequest               = "empty request"
 )

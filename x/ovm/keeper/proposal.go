@@ -72,7 +72,7 @@ func (k Keeper) GetAllPubkeysChangeProposals(
 	return
 }
 
-// RemoveProposal removes an pubkeys change proposal.
+// RemoveProposal removes a pubkeys change proposal.
 func (k Keeper) RemoveProposal(ctx sdk.Context, status types.ProposalStatus, id uint64) {
 	store := k.getPubKeysChangeProposalStore(ctx)
 	store.Delete(types.PubkeysChangeProposalKey(status, id))
@@ -83,7 +83,7 @@ func (k Keeper) FinishProposals(ctx sdk.Context) error {
 	return k.finishPubkeysChangeProposals(ctx)
 }
 
-// finishPubkeysChangeProposals sets all of active pubkeys change proposals as finished.
+// finishPubkeysChangeProposals sets all active pubkeys change proposals as finished.
 func (k Keeper) finishPubkeysChangeProposals(ctx sdk.Context) error {
 	activeProposals, err := k.GetAllPubkeysChangeProposalsByStatus(
 		ctx,

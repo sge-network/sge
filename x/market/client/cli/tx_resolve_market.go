@@ -12,7 +12,7 @@ import (
 func CmdResolveMarket() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resolve [ticket]",
-		Short: "set resolution of an market",
+		Short: "set resolution of a market",
 		Long:  "Resolve a market with ticket.",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

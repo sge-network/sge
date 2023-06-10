@@ -77,7 +77,7 @@ func (k Keeper) Withdraw(
 		mode,
 	)
 
-	withdrawalAmt, err := k.srKeeper.WithdrawOrderBookParticipation(
+	withdrawalAmt, err := k.orderbookKeeper.WithdrawOrderBookParticipation(
 		ctx,
 		depositorAddr,
 		marketUID,
@@ -86,7 +86,7 @@ func (k Keeper) Withdraw(
 		witAmt,
 	)
 	if err != nil {
-		return participationIndex, sdkerrors.Wrapf(types.ErrSRLiquidateProcessing, "%s", err)
+		return participationIndex, sdkerrors.Wrapf(types.ErrOBLiquidateProcessing, "%s", err)
 	}
 
 	withdrawal.Amount = withdrawalAmt

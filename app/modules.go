@@ -49,8 +49,8 @@ import (
 	marketmodule "github.com/sge-network/sge/x/market"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 
-	strategicreservemodule "github.com/sge-network/sge/x/strategicreserve"
-	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 
 	ovmmodule "github.com/sge-network/sge/x/ovm"
 	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
@@ -85,9 +85,9 @@ var mAccPerms = map[string][]string{
 		authtypes.Minter,
 		authtypes.Burner,
 	},
-	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():                 nil,
-	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():             nil,
-	strategicreservemoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
+	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
+	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():      nil,
+	orderbookmoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,
@@ -115,7 +115,7 @@ var ModuleBasics = module.NewBasicManager(
 	ica.AppModuleBasic{},
 	betmodule.AppModuleBasic{},
 	marketmodule.AppModuleBasic{},
-	strategicreservemodule.AppModuleBasic{},
+	orderbookmodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
 )
@@ -179,7 +179,7 @@ func appModules(
 
 		app.BetModule,
 		app.MarketModule,
-		app.StrategicReserveModule,
+		app.OrderbookModule,
 		app.OVMModule,
 		app.HouseModule,
 		// this line is u
@@ -267,7 +267,7 @@ func orderBeginBlockers() []string {
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
-		strategicreservemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}
@@ -296,7 +296,7 @@ func orderEndBlockers() []string {
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
-		strategicreservemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}
@@ -325,7 +325,7 @@ func orderInitBlockers() []string {
 		vestingtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
-		strategicreservemoduletypes.ModuleName,
+		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
 	}

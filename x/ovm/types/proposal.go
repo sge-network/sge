@@ -41,7 +41,7 @@ func (proposal *PublicKeysChangeProposal) DecideResult(keyvault *KeyVault) Propo
 		return ProposalResult_PROPOSAL_RESULT_APPROVED
 	}
 
-	// else if the yes and no votes counts are equal and we can not make decision for
+	// else if the yes and no votes counts are equal, and we can not make decision for
 	// result of the proposal
 	return ProposalResult_PROPOSAL_RESULT_UNSPECIFIED
 }

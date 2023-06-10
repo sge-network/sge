@@ -21,13 +21,13 @@ import (
 )
 
 const (
-	flagVestingStart     = "vesting-start-time"
-	flagVestingEnd       = "vesting-end-time"
-	flagVestingAmt       = "vesting-amount"
-	genesisAccountNumber = 0
-	genesisSquenceNumber = 0
-	defaultVestingStart  = 0
-	defaultVestingEnd    = 0
+	flagVestingStart      = "vesting-start-time"
+	flagVestingEnd        = "vesting-end-time"
+	flagVestingAmt        = "vesting-amount"
+	genesisAccountNumber  = 0
+	genesisSequenceNumber = 0
+	defaultVestingStart   = 0
+	defaultVestingEnd     = 0
 )
 
 // AddGenesisAccountCmd returns add-genesis-account cobra Command.
@@ -96,7 +96,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 
 	cmd.Flags().String(flags.FlagHome, defaultNodeHome, argAppHome)
 	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, argKeyringBackend)
-	cmd.Flags().String(flagVestingAmt, "", argVestingaccountCoins)
+	cmd.Flags().String(flagVestingAmt, "", argVestingAccountCoins)
 	cmd.Flags().Int64(flagVestingStart, defaultVestingStart, argVestingScheduleStart)
 	cmd.Flags().Int64(flagVestingEnd, defaultVestingEnd, argVestingScheduleEnd)
 	flags.AddQueryFlagsToCmd(cmd)
@@ -130,8 +130,8 @@ func getAccountAddress(cmd *cobra.Command, address string, homeDir string) (sdk.
 }
 
 func getAccountAddressAndBalances(cmd *cobra.Command,
-	addRessOrKeyName,
-	conins,
+	addressOrKeyName,
+	coins,
 	homeDir string,
 ) (
 	sdk.AccAddress,
@@ -139,18 +139,18 @@ func getAccountAddressAndBalances(cmd *cobra.Command,
 	banktypes.Balance,
 	error,
 ) {
-	addr, err := getAccountAddress(cmd, addRessOrKeyName, homeDir)
+	addr, err := getAccountAddress(cmd, addressOrKeyName, homeDir)
 	if err != nil {
 		return sdk.AccAddress{}, nil, banktypes.Balance{}, err
 	}
 
-	coins, err := sdk.ParseCoinsNormalized(conins)
+	cns, err := sdk.ParseCoinsNormalized(coins)
 	if err != nil {
 		return sdk.AccAddress{}, nil, banktypes.Balance{}, fmt.Errorf(errTextCoinsParsingFailed, err)
 	}
 
-	balances := banktypes.Balance{Address: addr.String(), Coins: coins.Sort()}
-	genAccount, err := getAndValidateGeneisAccount(cmd, addr, balances)
+	balances := banktypes.Balance{Address: addr.String(), Coins: cns.Sort()}
+	genAccount, err := getAndValidateGenesisAccount(cmd, addr, balances)
 	if err != nil {
 		return sdk.AccAddress{}, nil, banktypes.Balance{}, err
 	}
@@ -212,14 +212,14 @@ func getVestingParams(cmd *cobra.Command) (int64, int64, sdk.Coins, error) {
 	return vestingStart, vestingEnd, vestingAmt, nil
 }
 
-func getAndValidateGeneisAccount(
+func getAndValidateGenesisAccount(
 	cmd *cobra.Command,
 	addr sdk.AccAddress,
 	balances banktypes.Balance,
 ) (authtypes.GenesisAccount, error) {
 	// create concrete account type based on input parameters
 	var genAccount authtypes.GenesisAccount
-	baseAccount := authtypes.NewBaseAccount(addr, nil, genesisAccountNumber, genesisSquenceNumber)
+	baseAccount := authtypes.NewBaseAccount(addr, nil, genesisAccountNumber, genesisSequenceNumber)
 	vestingStart, vestingEnd, vestingAmt, err := getVestingParams(cmd)
 	if err != nil {
 		return nil, err

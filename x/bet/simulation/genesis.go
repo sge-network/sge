@@ -18,7 +18,7 @@ const (
 	MaxBetByUIDQueryCount = "MaxBetByUidQueryCount"
 )
 
-// GenBatchSettlementCount randomized bathc settlement count
+// GenBatchSettlementCount randomized batch settlement count
 func GenBatchSettlementCount(r *rand.Rand) uint32 {
 	return cast.ToUint32(r.Intn(99))
 }

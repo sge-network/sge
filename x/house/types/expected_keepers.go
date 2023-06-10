@@ -8,8 +8,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
-// SRKeeper defines the expected strategicreserve keeper.
-type SRKeeper interface {
+// OrderbookKeeper defines the expected orderboook keeper.
+type OrderbookKeeper interface {
 	InitiateOrderBookParticipation(ctx sdk.Context, addr sdk.AccAddress,
 		bookUID string, liquidity, fee sdk.Int) (uint64, error)
 	WithdrawOrderBookParticipation(ctx sdk.Context, depAddr,

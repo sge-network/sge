@@ -24,14 +24,14 @@ func (k Keeper) getBetStatsStore(ctx sdk.Context) prefix.Store {
 	return betStore
 }
 
-// getPendingStore returns pending bet store ready for iterating
-func (k Keeper) getPendingStore(ctx sdk.Context) prefix.Store {
+// getPendingBetStore returns pending bet store ready for iterating
+func (k Keeper) getPendingBetStore(ctx sdk.Context) prefix.Store {
 	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingBetListPrefix)
 	return betStore
 }
 
-// getSettledStore returns settled bet store ready for iterating
-func (k Keeper) getSettledStore(ctx sdk.Context) prefix.Store {
+// getSettledBetStore returns settled bet store ready for iterating
+func (k Keeper) getSettledBetStore(ctx sdk.Context) prefix.Store {
 	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetListPrefix)
 	return betStore
 }

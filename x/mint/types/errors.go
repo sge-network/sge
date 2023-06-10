@@ -6,7 +6,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/mint module sentinel errors
+// ErrMintDenomIsBlank x/mint module sentinel errors
 var (
 	ErrMintDenomIsBlank = sdkerrors.Register(ModuleName, 3001, "mint denom cannot be blank")
 )

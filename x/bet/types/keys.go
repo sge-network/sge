@@ -54,13 +54,13 @@ func BetIDKey(creator string, id uint64) []byte {
 }
 
 // PendingBetListOfMarketPrefix returns prefix of
-// the certain market pending bet list.
+// pending bet list of a certain market .
 func PendingBetListOfMarketPrefix(marketID string) []byte {
 	return append(PendingBetListPrefix, utils.StrBytes(marketID)...)
 }
 
 // PendingBetOfMarketKey return the key of
-// a certain pending bet of a market.
+// a certain pending bets of a market.
 func PendingBetOfMarketKey(marketID string, id uint64) []byte {
 	return append(utils.StrBytes(marketID), utils.Uint64ToBytes(id)...)
 }

@@ -150,10 +150,10 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		for _, v := range marketItem.Odds {
 			oddsUIDs = append(oddsUIDs, v.UID)
 		}
-		err = tApp.StrategicReserveKeeper.InitiateOrderBook(ctx, marketItem.UID, oddsUIDs)
+		err = tApp.OrderbookKeeper.InitiateOrderBook(ctx, marketItem.UID, oddsUIDs)
 		require.NoError(t, err)
 
-		_, err = tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
 			marketItem.UID,

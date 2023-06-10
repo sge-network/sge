@@ -12,7 +12,7 @@ const typeMsgPubkeysChangeProposal = "ovm_proposal_pubkeys_change"
 
 var _ sdk.Msg = &MsgSubmitPubkeysChangeProposalRequest{}
 
-// MsgSubmitPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
+// NewMsgPubkeysChangeProposalRequest returns a MsgSubmitPubkeysChangeProposalRequest using given data
 func NewMsgPubkeysChangeProposalRequest(
 	creator string,
 	txs string,

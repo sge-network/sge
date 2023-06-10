@@ -32,7 +32,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 var (
-	// Amino is the legacy aminto codec
+	// Amino is the legacy amino codec
 	Amino = codec.NewLegacyAmino()
 	// ModuleCdc is the codec of the module
 	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())

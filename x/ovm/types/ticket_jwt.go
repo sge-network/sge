@@ -54,7 +54,7 @@ func (t *jwtTicket) Unmarshal(v interface{}) error {
 	return nil
 }
 
-// Verify verifies the ticket signature with the given public key. if the ticket is verified by the
+// Verify verifies the ticket signature with the given public key. if the ticket is verified by
 // the key, then return nil else return invalid signature error
 func (t *jwtTicket) Verify(key string) error {
 	_, err := t.verifyJwtKey(key)
@@ -68,7 +68,7 @@ func (t *jwtTicket) Verify(key string) error {
 	return ErrInvalidSignature
 }
 
-// VerifyAny verifies the ticket signature with the given public keys. if the ticket is verified by the
+// VerifyAny verifies the ticket signature with the given public keys. if the ticket is verified by
 // the key, then return nil else return invalid signature error
 func (t *jwtTicket) VerifyAny(keys []string) error {
 	verified := false

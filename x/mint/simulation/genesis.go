@@ -13,7 +13,7 @@ import (
 	"github.com/sge-network/sge/x/mint/types"
 )
 
-// Simulation parameter constants
+// Inflation Simulation parameter constants
 const (
 	Inflation = "inflation"
 )

@@ -8,7 +8,7 @@ import (
 
 // NewWithdrawal creates a new withdrawal object
 //
-//nolint:interfacer
+//nolint:interface
 func NewWithdrawal(
 	id uint64,
 	creator, depositorAddr, marketUID string,
@@ -32,7 +32,7 @@ func MustMarshalWithdrawal(cdc codec.BinaryCodec, withdrawal Withdrawal) []byte 
 	return cdc.MustMarshal(&withdrawal)
 }
 
-// return the withdrawal
+// UnmarshalWithdrawal return the withdrawal
 func UnmarshalWithdrawal(cdc codec.BinaryCodec, value []byte) (withdrawal Withdrawal, err error) {
 	err = cdc.Unmarshal(value, &withdrawal)
 	return withdrawal, err

@@ -9,7 +9,7 @@ import (
 	"github.com/sge-network/sge/x/house/types"
 )
 
-// NewDecodeStore returns a decoder function closure that unmarshals the KVPair's
+// NewDecodeStore returns a decoder function closure that unmarshal the KVPair's
 // Value to the corresponding house type.
 func NewDecodeStore(cdc codec.BinaryCodec) func(kvA, kvB kv.Pair) string {
 	return func(kvA, kvB kv.Pair) string {

@@ -1,7 +1,7 @@
 # Note that any updates to this files will not be applied in CI
 # until this file is merged into main. This is due to oddities of the labeller Github Action.
 "C:app-wiring":
-  # Match all of app folder except wasm sub-folder
+  # Match all app folder except wasm sub-folder
   - app/*.go
   - app/keepers/**/*
   - app/params/**/*
@@ -16,8 +16,8 @@
   - x/mint/**/*
 "C:x/market":
   - x/market/**/*
-"C:x/strategicreserve":
-  - x/strategicreserve/**/*
+"C:x/orderbook":
+  - x/orderbook/**/*
 "T:build":
   - Makefile
   - scripts/*

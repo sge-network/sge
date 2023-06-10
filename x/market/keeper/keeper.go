@@ -13,12 +13,12 @@ import (
 
 // Keeper is the type for module properties
 type Keeper struct {
-	cdc        codec.BinaryCodec
-	storeKey   sdk.StoreKey
-	memKey     sdk.StoreKey
-	paramStore paramtypes.Subspace
-	ovmKeeper  types.OVMKeeper
-	srKeeper   types.SRKeeper
+	cdc             codec.BinaryCodec
+	storeKey        sdk.StoreKey
+	memKey          sdk.StoreKey
+	paramStore      paramtypes.Subspace
+	ovmKeeper       types.OVMKeeper
+	orderbookKeeper types.OrderbookKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -41,9 +41,9 @@ func NewKeeper(
 	}
 }
 
-// SetSRKeeper sets the sr module keeper to the market keeper.
-func (k *Keeper) SetSRKeeper(srKeeper types.SRKeeper) {
-	k.srKeeper = srKeeper
+// SetOrderbookKeeper sets the orderbook module keeper to the market keeper.
+func (k *Keeper) SetOrderbookKeeper(srKeeper types.OrderbookKeeper) {
+	k.orderbookKeeper = srKeeper
 }
 
 // SetOVMKeeper sets the ovm module keeper to the market keeper.

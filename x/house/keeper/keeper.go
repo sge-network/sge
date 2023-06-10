@@ -10,12 +10,12 @@ import (
 
 // Keeper of the house store
 type Keeper struct {
-	storeKey    sdk.StoreKey
-	cdc         codec.BinaryCodec
-	paramstore  paramtypes.Subspace
-	authzKeeper types.AuthzKeeper
-	srKeeper    types.SRKeeper
-	ovmKeeper   types.OVMKeeper
+	storeKey        sdk.StoreKey
+	cdc             codec.BinaryCodec
+	paramstore      paramtypes.Subspace
+	authzKeeper     types.AuthzKeeper
+	orderbookKeeper types.OrderbookKeeper
+	ovmKeeper       types.OVMKeeper
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -27,7 +27,7 @@ type SdkExpectedKeepers struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	key sdk.StoreKey,
-	srKeeper types.SRKeeper,
+	orderbookKeeper types.OrderbookKeeper,
 	ovmKeeper types.OVMKeeper,
 	ps paramtypes.Subspace,
 	expectedKeepers SdkExpectedKeepers,
@@ -38,11 +38,11 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		storeKey:    key,
-		cdc:         cdc,
-		srKeeper:    srKeeper,
-		ovmKeeper:   ovmKeeper,
-		paramstore:  ps,
-		authzKeeper: expectedKeepers.AuthzKeeper,
+		storeKey:        key,
+		cdc:             cdc,
+		orderbookKeeper: orderbookKeeper,
+		ovmKeeper:       ovmKeeper,
+		paramstore:      ps,
+		authzKeeper:     expectedKeepers.AuthzKeeper,
 	}
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/sge-network/sge/x/mint/simulation"
 )
 
-func TestParamChangest(t *testing.T) {
+func TestParamChanges(t *testing.T) {
 	s := rand.NewSource(1)
 	//#nosec
 	r := rand.New(s)

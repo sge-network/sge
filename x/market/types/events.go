@@ -1,8 +1,7 @@
 package types
 
 const (
-	attributeValueCategory = ModuleName
-
+	attributeValueCategory         = ModuleName
 	attributeKeyMarketUID          = "uid"
 	attributeKeyMarketOrderBookUID = "orderbook_uid"
 )

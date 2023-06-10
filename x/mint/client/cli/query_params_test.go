@@ -42,7 +42,7 @@ func TestQueryParams(t *testing.T) {
 			var params types.QueryParamsResponse
 			err = json.Unmarshal(res.Bytes(), &params)
 			fmt.Println(params)
-			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshallable.
+			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshall-able.
 			require.EqualError(
 				t,
 				err,

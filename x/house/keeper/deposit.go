@@ -66,11 +66,11 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 		return
 	}
 
-	participationIndex, err = k.srKeeper.InitiateOrderBookParticipation(
+	participationIndex, err = k.orderbookKeeper.InitiateOrderBookParticipation(
 		ctx, depositorAddr, marketUID, deposit.Liquidity, deposit.Fee,
 	)
 	if err != nil {
-		err = sdkerrors.Wrapf(types.ErrSRDepositProcessing, "%s", err)
+		err = sdkerrors.Wrapf(types.ErrOBDepositProcessing, "%s", err)
 		return
 	}
 

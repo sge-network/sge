@@ -94,7 +94,7 @@ func (k Keeper) SetPendingBet(
 	id uint64,
 	marketUID string,
 ) {
-	store := k.getPendingStore(ctx)
+	store := k.getPendingBetStore(ctx)
 	b := k.cdc.MustMarshal(pendingBet)
 	store.Set(types.PendingBetOfMarketKey(marketUID, id), b)
 }
@@ -117,7 +117,7 @@ func (k Keeper) IsAnyPendingBetForMarket(ctx sdk.Context, marketUID string) (the
 
 // GetPendingBets returns list of the pending bets
 func (k Keeper) GetPendingBets(ctx sdk.Context) (list []types.PendingBet, err error) {
-	store := k.getPendingStore(ctx)
+	store := k.getPendingBetStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
@@ -135,7 +135,7 @@ func (k Keeper) GetPendingBets(ctx sdk.Context) (list []types.PendingBet, err er
 
 // RemovePendingBet removes an pending bet
 func (k Keeper) RemovePendingBet(ctx sdk.Context, marketUID string, betID uint64) {
-	store := k.getPendingStore(ctx)
+	store := k.getPendingBetStore(ctx)
 	store.Delete(types.PendingBetOfMarketKey(marketUID, betID))
 }
 
@@ -146,14 +146,14 @@ func (k Keeper) SetSettledBet(
 	id uint64,
 	blockHeight int64,
 ) {
-	store := k.getSettledStore(ctx)
+	store := k.getSettledBetStore(ctx)
 	b := k.cdc.MustMarshal(settledBet)
 	store.Set(types.SettledBetOfMarketKey(blockHeight, id), b)
 }
 
 // GetSettledBets returns list of the pending bets
 func (k Keeper) GetSettledBets(ctx sdk.Context) (list []types.SettledBet, err error) {
-	store := k.getSettledStore(ctx)
+	store := k.getSettledBetStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer func() {
