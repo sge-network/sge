@@ -35,7 +35,7 @@ func (k msgServer) AddMarket(
 	for _, odds := range addPayload.Odds {
 		oddsUIDs = append(oddsUIDs, odds.UID)
 	}
-	err := k.srKeeper.InitiateOrderBook(ctx, addPayload.UID, oddsUIDs)
+	err := k.orderbookKeeper.InitiateOrderBook(ctx, addPayload.UID, oddsUIDs)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInOrderBookInitiation, "%s", err)
 	}

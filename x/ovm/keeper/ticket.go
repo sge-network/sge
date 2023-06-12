@@ -45,7 +45,7 @@ func (k Keeper) VerifyTicketUnmarshal(goCtx context.Context, ticketStr string, c
 	return k.verifyTicketWithKeyUnmarshal(goCtx, ticketStr, clm)
 }
 
-// verifyTicketWithKeyUnmarshal verifies the ticket using the provided publiv key first, then if the token was verified, it unmarshal the data of ticket into clm.
+// verifyTicketWithKeyUnmarshal verifies the ticket using the provided public key first, then if the token was verified, it unmarshal the data of ticket into clm.
 func (k Keeper) verifyTicketWithKeyUnmarshal(
 	goCtx context.Context,
 	ticketStr string,
@@ -75,8 +75,8 @@ func (k Keeper) verifyTicketWithKeyUnmarshal(
 	for _, pk := range pubKeys {
 		// check if the provided pubkey is registered or not
 		isRegistered := false
-		for _, registereedPubKey := range keyVault.PublicKeys {
-			if registereedPubKey == pk {
+		for _, registeredPubKey := range keyVault.PublicKeys {
+			if registeredPubKey == pk {
 				isRegistered = true
 			}
 		}

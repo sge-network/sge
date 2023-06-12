@@ -56,17 +56,17 @@ func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
 	// add each phase blocks until reaching the range which the current block is in
 	for i := 0; i < len(params.Phases); i++ {
-		// add current phase blocks to cummulative blocks
+		// add current phase blocks to cumulative blocks
 		cumulativeBlock = cumulativeBlock.Add(params.getPhaseBlocks(i + 1))
 
 		currentStep = i + 1
 
-		// if the current block is less than or equal to cummulative blocks
+		// if the current block is less than or equal to cumulative blocks
 		// this means that we are in the i+1 step which is set in above line
 		if sdk.NewDec(currentBlock).LTE(cumulativeBlock) {
 			found = true
 			// it is the current phase
-			// so there is no need for furthur phase blocks check
+			// so there is no need for further phase blocks check
 			break
 		}
 	}
@@ -77,7 +77,7 @@ func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 		return EndPhase(), EndPhaseAlias
 	}
 
-	// the phase has found and we need to return the phase specifications
+	// return the phase specifications
 	return params.GetPhaseAtStep(currentStep), currentStep
 }
 

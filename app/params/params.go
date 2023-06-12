@@ -2,7 +2,7 @@ package params
 
 // App Parameters
 const (
-	// HumanCoinUnit is human readable representation of the coin name
+	// HumanCoinUnit is human-readable representation of the coin name
 	HumanCoinUnit = "sge"
 	// BaseCoinUnit is the actual name of coin used in transaction
 	BaseCoinUnit = "usge"

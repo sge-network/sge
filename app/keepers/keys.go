@@ -26,7 +26,7 @@ import (
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
-	strategicreservemoduletypes "github.com/sge-network/sge/x/strategicreserve/types"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -42,7 +42,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
 		icacontrollertypes.StoreKey, icahosttypes.StoreKey,
-		strategicreservemoduletypes.StoreKey,
+		orderbookmoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
 		marketmoduletypes.StoreKey,
 		ovmmoduletypes.StoreKey,

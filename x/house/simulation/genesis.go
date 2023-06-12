@@ -19,7 +19,7 @@ const (
 	MinDeposit            = "MinDeposit"
 )
 
-// GenHouseParticipationFee randomized bathc settlement count
+// GenHouseParticipationFee randomized batch settlement count
 func GenHouseParticipationFee(r *rand.Rand) sdk.Dec {
 	return sdk.NewDec(cast.ToInt64(r.Intn(99)))
 }

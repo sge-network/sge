@@ -9,7 +9,7 @@ import (
 
 // Ticket is the Interface of ticket.
 type Ticket interface {
-	// Unmarshal unmarshals the information of the ticket to the v. v must be a pointer.
+	// Unmarshal the information of the ticket to the v. v must be a pointer.
 	Unmarshal(v interface{}) error
 
 	// Verify verifies the ticket signature with the leader public key. if the ticket is verified,

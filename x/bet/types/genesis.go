@@ -55,7 +55,7 @@ func (gs GenesisState) Validate() error {
 		betUIDMap[uid] = struct{}{}
 	}
 
-	// Set all the bet
+	// Set all the bets
 	for _, bet := range gs.BetList {
 		var id uint64
 		for _, uid2ID := range gs.Uid2IdList {

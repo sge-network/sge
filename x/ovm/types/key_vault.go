@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-// GetLeader sets the current leader of public keys.
+// SetLeader sets the current leader of public keys.
 func (k *KeyVault) SetLeader(leaderIndex uint32) {
 	keys, leaderKey := utils.PopStrAtIndex(k.PublicKeys, leaderIndex)
 

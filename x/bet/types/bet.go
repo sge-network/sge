@@ -21,12 +21,12 @@ func NewSettledBet(uid, bettorAddress string) *SettledBet {
 func NewBetFulfillment(
 	participantAddress string,
 	participationIndex uint64,
-	betAmount, pyoutProfit sdk.Int,
+	betAmount, payoutProfit sdk.Int,
 ) *BetFulfillment {
 	return &BetFulfillment{
 		ParticipantAddress: participantAddress,
 		ParticipationIndex: participationIndex,
 		BetAmount:          betAmount,
-		PayoutProfit:       pyoutProfit,
+		PayoutProfit:       payoutProfit,
 	}
 }

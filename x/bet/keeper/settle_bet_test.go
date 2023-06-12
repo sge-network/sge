@@ -170,7 +170,7 @@ func TestSettleBet(t *testing.T) {
 				tApp.MarketKeeper.SetMarket(ctx, resetMarket)
 
 				if resetMarket.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
-					_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+					_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 						ctx,
 						simappUtil.TestParamUsers["user1"].Address,
 						resetMarket.UID,
@@ -234,7 +234,7 @@ func TestBatchSettleBet(t *testing.T) {
 		}
 		tApp.MarketKeeper.SetMarket(ctx, market)
 
-		_, err := tApp.StrategicReserveKeeper.InitiateOrderBookParticipation(
+		_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
 			market.UID,

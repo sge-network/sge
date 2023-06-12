@@ -44,7 +44,7 @@ func (AppModuleBasic) Name() string { return types.ModuleName }
 // RegisterCodec registers the codec for the app module basic
 func (AppModuleBasic) RegisterCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
 
-// RegisterLegacyAminoCodec registers the lagacy amino codec for the app module basic
+// RegisterLegacyAminoCodec registers the legacy amino codec for the app module basic
 func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
 
 // RegisterInterfaces registers the module's interface types
@@ -98,7 +98,7 @@ type AppModule struct {
 	accountKeeper types.AccountKeeper
 	bankKeeper    types.BankKeeper
 	marketKeeper  types.MarketKeeper
-	srKeeper      types.SRKeeper
+	srKeeper      types.OrderbookKeeper
 	ovmKeeper     types.OVMKeeper
 }
 
@@ -109,7 +109,7 @@ func NewAppModule(
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	marketKeeper types.MarketKeeper,
-	srKeeper types.SRKeeper,
+	srKeeper types.OrderbookKeeper,
 	ovmKeeper types.OVMKeeper,
 ) AppModule {
 	return AppModule{

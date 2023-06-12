@@ -74,7 +74,7 @@ func TestQueryMarketCLI(t *testing.T) {
 					tc.idUID,
 				}
 				args = append(args, tc.args...)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdShowMarket(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdGetMarket(), args)
 				if tc.err != nil {
 					stat, ok := status.FromError(tc.err)
 					require.True(t, ok)

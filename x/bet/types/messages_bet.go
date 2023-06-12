@@ -11,10 +11,6 @@ import (
 const (
 	// typeMsgPlaceBet is type of message MsgPlaceBet
 	typeMsgPlaceBet = "bet_place"
-	// SettlementUIDsThreshold is the threshold for the number of UIDs in bulk settlement tx
-	SettlementUIDsThreshold = 10
-	// BetPlacementThreshold is the threshold for the number bets in bulk placement tx
-	BetPlacementThreshold = 10
 )
 
 var _ sdk.Msg = &MsgPlaceBet{}

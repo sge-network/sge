@@ -33,8 +33,8 @@ type OVMKeeper interface {
 	VerifyTicketUnmarshal(goCtx context.Context, ticket string, clm interface{}) error
 }
 
-// SRKeeper defines the expected interface needed to process bet placement
-type SRKeeper interface {
+// OrderbookKeeper defines the expected interface needed to process bet placement
+type OrderbookKeeper interface {
 	ProcessBetPlacement(
 		ctx sdk.Context,
 		betUID, bookUID, oddsUID string,
