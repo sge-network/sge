@@ -11,7 +11,7 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
-// Keeper keeper of the orderbook store
+// Keeper of the orderbook store
 type Keeper struct {
 	storeKey       sdk.StoreKey
 	cdc            codec.BinaryCodec
