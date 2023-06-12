@@ -101,7 +101,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 	k.SetSettledBet(ctx, types.NewSettledBet(bet.UID, bet.Creator), betID, ctx.BlockHeight())
 }
 
-// settleResolvedBet settles a bet by calling strategicReserve functions to unlock fund and payout
+// settleResolvedBet settles a bet by calling order book functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
 func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
