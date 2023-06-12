@@ -1,5 +1,5 @@
 package simulation
 
 const (
-	errTextInvalidSRKey = "invalid orderbook key %X"
+	errTextInvalidOrderBookKey = "invalid orderbook key %X"
 )

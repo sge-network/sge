@@ -42,8 +42,8 @@ func NewKeeper(
 }
 
 // SetOrderbookKeeper sets the orderbook module keeper to the market keeper.
-func (k *Keeper) SetOrderbookKeeper(srKeeper types.OrderbookKeeper) {
-	k.orderbookKeeper = srKeeper
+func (k *Keeper) SetOrderbookKeeper(orderBookKeeper types.OrderbookKeeper) {
+	k.orderbookKeeper = orderBookKeeper
 }
 
 // SetOVMKeeper sets the ovm module keeper to the market keeper.

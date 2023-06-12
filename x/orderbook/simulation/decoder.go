@@ -55,7 +55,7 @@ func NewDecodeStore(cdc codec.BinaryCodec) func(kvA, kvB kv.Pair) string {
 			cdc.MustUnmarshal(kvB.Value, &marketStatsB)
 			return fmt.Sprintf("%v\n%v", marketStatsA, marketStatsB)
 		default:
-			panic(fmt.Sprintf(errTextInvalidSRKey, kvA.Key))
+			panic(fmt.Sprintf(errTextInvalidOrderBookKey, kvA.Key))
 		}
 	}
 }
