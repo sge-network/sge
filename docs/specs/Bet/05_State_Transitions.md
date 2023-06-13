@@ -56,6 +56,7 @@ When this  is processed:
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
+- If the market result is declared, the `WithdrawBetFee` method of the `orderbook` module is being called and transfers the bet fee to the market creator's account balance.
 - Store the updated bet in the state.
 
 ---

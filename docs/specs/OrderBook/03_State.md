@@ -20,9 +20,10 @@ message Params {
   uint64 batch_settlement_count = 2
       [ (gogoproto.moretags) = "yaml:\"batch_settlement_count\"" ];
 
-  // requeue_threshold is the threshold at which a participation is requeued in orderbook.
+  // requeue_threshold is the threshold at which a participation is re-queued in
+  // orderbook.
   uint64 requeue_threshold = 3
-  [ (gogoproto.moretags) = "yaml:\"requeue_threshold\"" ];
+      [ (gogoproto.moretags) = "yaml:\"requeue_threshold\"" ];
 }
 ```
 
@@ -55,7 +56,7 @@ message OrderBook {
   OrderBookStatus status = 4;
 }
 
-// OrderBookStatus is the enum type for the status of the orderbook.
+// OrderBookStatus is the enum type for the status of the order book.
 enum OrderBookStatus {
   // invalid
   ORDER_BOOK_STATUS_UNSPECIFIED = 0;
@@ -68,9 +69,9 @@ enum OrderBookStatus {
 }
 ```
 
-## **BookParticipation**
+## **OrderBookParticipation**
 
-The Book BookParticipation keeps track of the particiapation of an order book.
+The order book participation keeps track of the particiapation of an order book.
 
 ```proto
 // OrderBookParticipation represents the participants of an order book.
@@ -93,31 +94,27 @@ message OrderBookParticipation {
   string participant_address = 3
       [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
 
-  // is_module_account represents if the participant is a module account or not.
-  bool is_module_account = 4
-      [ (gogoproto.moretags) = "yaml:\"is_module_account\"" ];
-
   // liquidity is the total initial liquidity provided.
-  string liquidity = 5 [
+  string liquidity = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"liquidity\""
   ];
 
   // current_round_liquidity is the liquidity provided for the current round.
-  string current_round_liquidity = 6 [
+  string current_round_liquidity = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_liquidity\""
   ];
 
-  // exposures_not_filled reresents if all of the exposures of the participation
+  // exposures_not_filled represents if all of the exposures of the participation
   // are filled or not.
-  uint64 exposures_not_filled = 7
+  uint64 exposures_not_filled = 6
       [ (gogoproto.moretags) = "yaml:\"exposures_not_filled\"" ];
 
   // total_bet_amount is the total bet amount corresponding to all exposures.
-  string total_bet_amount = 8 [
+  string total_bet_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"total_bet_amount\""
@@ -125,21 +122,21 @@ message OrderBookParticipation {
 
   // current_round_total_bet_amount is the total bet amount corresponding to all
   // exposures in the current round.
-  string current_round_total_bet_amount = 9 [
+  string current_round_total_bet_amount = 8 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_total_bet_amount\""
   ];
 
   // max_loss is the total bet amount corresponding to all exposure.
-  string max_loss = 10 [
+  string max_loss = 9 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"max_loss\""
   ];
 
   // current_round_max_loss is the current round max loss.
-  string current_round_max_loss = 11 [
+  string current_round_max_loss = 10 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_max_loss\""
@@ -147,7 +144,7 @@ message OrderBookParticipation {
 
   // current_round_max_loss_odds_uid is the total max loss corresponding to
   // all exposures.
-  string current_round_max_loss_odds_uid = 12 [
+  string current_round_max_loss_odds_uid = 11 [
     (gogoproto.customname) = "CurrentRoundMaxLossOddsUID",
     (gogoproto.jsontag) = "current_round_max_loss_odds_uid",
     json_name = "current_round_max_loss_odds_uid",
@@ -155,14 +152,14 @@ message OrderBookParticipation {
   ];
 
   // actual_profit is the actual profit of the participation fulfillment.
-  string actual_profit = 13 [
+  string actual_profit = 12 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"actual_profit\""
   ];
 
   // is_settled represents if the participation is settled or not.
-  bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
+  bool is_settled = 13 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
 }
 ```
 
