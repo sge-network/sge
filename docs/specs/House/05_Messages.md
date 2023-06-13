@@ -57,7 +57,7 @@ message MsgDepositResponse {
 
 ## **Deposit Ticket Payload**
 
-This ticket is being used for validating the KYC.
+This ticket is being used for validating the KYC and authorization.
 
 ```proto
 // DepositTicketPayload indicates data of the deposit ticket.
@@ -65,6 +65,8 @@ message DepositTicketPayload {
   // kyc_data contains the details of user kyc.
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
+  // depositor_address is the account who makes a deposit
+  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 }
 ```
 
@@ -76,6 +78,7 @@ The transaction will fail if:
   - Invalid creator address
   - Empty or invalid market uid
   - Invalid amount
+  - No Authorization grant found for the grantee (creator) and granter (depositor)
 
 ---
 
@@ -143,7 +146,7 @@ message MsgWithdrawResponse {
 
 ## **Withdraw Ticket Payload**
 
-This ticket is being used for validating the KYC.
+This ticket is being used for validating the KYC and authorization.
 
 ```proto
 // WithdrawTicketPayload indicates data of the withdrawal ticket.
@@ -151,5 +154,7 @@ message WithdrawTicketPayload {
   // kyc_data contains the details of user kyc.
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
+  // depositor_address is the account who makes a deposit
+  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 }
 ```
