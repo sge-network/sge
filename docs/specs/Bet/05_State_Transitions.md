@@ -6,9 +6,9 @@ This section defines the state transitions of the bet module's KVStore in all sc
 
 When this is processed:
 
-- If the ticket is valid a new bet will be created with the given data and will be added to the `bet module's KVStore`.
+- If the ticket is valid a new bet will be created with the given data and will be added to the `Bet` module state.
 - The pending bet, ID map and statistics will update accordingly.
-- Strategic Reserve module bet placement processor will calculate and transfer bet amount to the corresponding module account.
+- `orderbook` module bet placement processor will calculate and transfer bet amount and bet fee to the corresponding module accounts.
 
 ```go
 newBet := &types.Bet{
@@ -20,13 +20,11 @@ newBet := &types.Bet{
     OddsValue:          <msg.Ticket.OddsValue>,
     Amount:             msg.Amount,
     BetFee:             <will be calculated>,
-    Ticket:             msg.Ticket,
     Status:             types.Bet_STATUS_PLACED
     Result:             types.Bet_RESULT_PENDING
-    Verified:           true,
     CreatedAt:          <current timestamp of block time>,
     MaxLossMultiplier:  <the coefficient of multiplicitation of the maximum loss>,
-    BetFulfillment:     <bet fulfilment by the strategic reserve>
+    BetFulfillment:     <bet fulfilments by the orderbook>
 }
 ```
 
@@ -36,12 +34,14 @@ newBet := &types.Bet{
 
 When this  is processed:
 
-- If corresponding market is aborted or canceled, the bet will be updated in the `bet module's KVStore` as below:
+- If corresponding market is aborted or canceled, the bet will be updated in the `Bet` module state as below:
 
     ```go
     bet.Result = types.Bet_RESULT_REFUNDED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
+
+    and the `RefundBettor` method of the `orderbook` module will be called to refund the bet amount and bet fee.
 
 - Resolve the bet result based on the market result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
 
@@ -50,13 +50,13 @@ When this  is processed:
     bet.Status = types.Bet_STATUS_RESULT_DECLARED
     ```
 
-- Call `Strategic Reserve module` to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled:
+- Call `orderbook` module `BettorLoses` or `BettorWins` methods to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled:
 
     ```go
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- Store the updated bet in the `bet module's KVStore`.
+- Store the updated bet in the state.
 
 ---
 
@@ -68,5 +68,5 @@ Batch bet settlement happens in the end-blocker of the bet module:
     - for each market:
         1. Settle the bets one by by querying the market bets.
         2. Remove the resolved market from the list if there is no more active bet.
-        3. Call strategic reserve's method to set the order book as settled
+        3. Call orderbook's win/lose methods to transfer the appropriate amounts.
 2. Check the `BatchSettlementCount` parameter of bet module and let the rest of bets for the nex block.

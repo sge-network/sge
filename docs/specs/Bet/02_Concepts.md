@@ -1,6 +1,6 @@
 # **Concepts**
 
-Bet module is tasked with placement and settlement of the bets. the user can place bet on a same market multiple times with different or equal odds through commandline or singing and broadcasting the bet placement/settlement message.
+Bet module is tasked with placement and settlement of the bets. the user can place bet on a same market multiple times with different or equal odds through commandline or singing and broadcasting the bet placement message.
 
 > Bet Placement will be done using a ticket containing odds info signed by a trusted source. Verifying this ticket will be done in the placement state itself.
 > Bet amount can not be less than a minimum amount which is defined for each market. A module parameter is used for this purpose.
@@ -13,27 +13,27 @@ Before accepting bet some validation should take place:
 - Market level validation:
   - Market is active for bet placement.
     - Market is not already resolved or canceled.
-    - Maximum cap for market has not already reached (based on bet amount deducted by betting fee).
     - Bet amount (deducted by betting fee) is not less than the minimum allowed bet amount.
 - Bet level validation:
+  - Provided UUID is valid.
   - Odds Value and the validations according to the American, British and decimal odds.
+  - Check if the max loss multiplier is positive and less than 1.
 - OVM level validation:
   - All data provided in placement request is valid e.g. odds value.
 - KYC Validation:
   - If Ignore is false in bet ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a bet to be placed.
   - If Ignore is true in bet ticket payload, then kyc validation is not required and bet can be placed without kyc check.
 
+Placement Assumptions:
+
+- For bet placement user can raise a request to place a single bet, it can be done for a single bet only.
+- When a user is raising a transaction to place a bet, the creator of the transaction is the owner of the  bet.
+
 After a bet is accepted:
 
-- Corresponding betting fee will be deducted from total bet amount
-- Betting fee will be transferred to the module account of bet module. this is done by the strategic reserve module.
-- The rest of bet amount will be transferred and locked in Strategic Reserve module
-
-For bet placement user can raise a request to place a single bet. Also, the same for bet settlement, it can be done for a single bet only.
-
-When a user is raising a transaction to place a bet, the creator of the transaction is the owner of the  bet. But in the case of bet settlement transaction, creator of the transaction can be different from owner of the bet, means that anyone can raise a settlement request for any bet.
-
-> Bet settlement is not going to be done automatically in Blockchain, a transaction needs to be done to settle bets, by the owner or by anyone else on the behalf of user. In this TX payout is done and fund is transferred from Strategic Reserve to bettor's account.
+- Bet amount transfer to the `orderbook_liquidity_pool` module account this is done by the `orderbook` module.
+- Betting fee will be transferred to the `bet_fee_collector` module account. this is done by the `orderbook` module.
+- Bet fulfillments are being processed by `orderbook` module in the `ProcessBetPlacement` keeper's method.
 
 ## Supported Odds Types
 

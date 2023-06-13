@@ -2,14 +2,14 @@
 
 ## **KVStore**
 
-State in bet module is defined by its KVStore. This KVStore has three prefixes:
+State in bet module is defined by its KVStore. This KVStore has five prefixes:
 
-1. Store for all bets of a certain creator, using this pattern, blockchain is able to return list of all bets, bets of a certain creator and a single bet. The key prefix is created dynamically using this combination: `BetListPrefix`+`{Creator Address}`+`{Secuancial ID}`
+1. All bets of a certain creator, using this pattern, blockchain is able to return list of all bets, bets of a certain creator and a single bet. The key prefix is created dynamically using this combination: `BetListPrefix`+`{Creator Address}`+`{Secuential Bet ID}`
 
-2. Store for the map of BetID and BetUID. this helps to get corresponding ID of the bet by issuing the UID. The keys are UIDs of bets and the values are sequencial generated IDs by blockchain.
-3. Store for the pending bets of a certain Market to help batch settlement.
-4. Store for the settled bets of a block height to keep track of the settled bets for the oracle services.
-5. Store for the Bet statistics that contains the count of the total bets used to create next sequencial BetID.
+2. Map of BetID and BetUID. this helps to get corresponding ID of the bet by issuing the UID. The keys are UIDs of bets and the values are sequencial generated IDs by blockchain.
+3. Pending bets of a certain Market to help batch settlement.
+4. Settled bets of a block height to keep track of the settled bets for the oracle services.
+5. Bet statistics that contains the count of the total bets used to create next sequencial BetID.
 
 The bet model in the Proto files is as below:
 
@@ -22,8 +22,11 @@ The bet model in the Proto files is as below:
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // batch_settlement_count is the batch settlement bet counts.
+  // batch_settlement_count is the batch settlement bet count.
   uint32 batch_settlement_count = 1;
+
+  // max_bet_by_uid_query_count is the maximum bet by uid query items count.
+  uint32 max_bet_by_uid_query_count = 2;
 }
 ```
 
@@ -219,11 +222,11 @@ message BetFulfillment {
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"bet_amount\""
   ];
-  // payout amount fulfilled by the participation
-  string payout_amount = 4 [
+  // payout_profit is the fulfilled profit by the participation.
+  string payout_profit = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"payout_amount\""
+    (gogoproto.moretags) = "yaml:\"payout_profit\""
   ];
 }
 ```
