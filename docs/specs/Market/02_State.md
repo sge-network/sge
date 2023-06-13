@@ -8,25 +8,25 @@
 
 ```proto
 // Params defines the parameters for the module.
-// contains bet constraints associated to a market.
+// It contains bet constraints associated to a market.
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  // min_bet_amount default minimum bet amount for a market.
+  // min_bet_amount is the default minimum bet amount for a market.
   string min_bet_amount = 1 [
     (gogoproto.moretags) = "yaml:\"min_bet_amount\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // min_bet_fee default minimum bet fee for a market.
+  // min_bet_fee is the default minimum bet fee for a market.
   string min_bet_fee = 3 [
     (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
-  // max_sr_contribution default max sr contribution for a market.
-  string max_sr_contribution = 4 [
-    (gogoproto.moretags) = "yaml:\"max_sr_contribution\"",
+  // max_bet_fee is the default maximum bet fee for a market.
+  string max_bet_fee = 4 [
+    (gogoproto.moretags) = "yaml:\"max_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
@@ -135,8 +135,6 @@ message Market {
 **BetConstraints**: Optional field which can put restrictions for bet acceptance criteria.
 
 **Meta**: Human-Readable data of the market.
-
-**SrContributionForHouse** The contribution of SR for the house corresponding to the market.
 
 **BookID** The ID of the created order book
 

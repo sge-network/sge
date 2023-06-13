@@ -3,10 +3,10 @@
 ## **Params**
 
 1. `max_book_participations`: is the maximum participations allowed for a book.
-2. `batch_settlement_count`: is the count of bets to be automatically settlement in strategic reserve.
+2. `batch_settlement_count`: is the count of bets to be automatically settlement in `orderbook`.
 
 ```proto
-// Params defines the parameters for the strategic reserve module.
+// Params defines the parameters for the orderbook module.
 message Params {
   option (gogoproto.equal) = true;
   option (gogoproto.goproto_stringer) = false;

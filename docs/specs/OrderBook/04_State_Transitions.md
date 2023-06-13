@@ -1,6 +1,6 @@
 # **State Transitions**
 
-This section defines the state transitions of the strategic reserve module's KVStore in all scenarios:
+This section defines the state transitions of the `orderbook` module's KVStore in all scenarios:
 
 ## **Order Book Initialization**
 

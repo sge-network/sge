@@ -199,7 +199,7 @@ message SettledBet {
 
 ## **BetFulfillment**
 
-Strategic reserve module's end blocker, process the settled markets and corresponsing
+The `orderbook` module's end blocker, process the settled markets and corresponsing
 bets, the payout fulfillment is stored in the bet module state for each bet with this type.
 
 ```proto
