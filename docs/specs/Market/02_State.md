@@ -4,7 +4,7 @@
 
 1. `min_bet_amount`: The minimum allowed bet amount that can be set in the whole system.
 2. `min_bet_fee`: The minimum bet fee allowed across the system.
-3. `max_sr_contribution`: The maximum allowed contribution by th sr module across the system.
+3. `max_bet_fee`: The maximum bet fee allowed across the system.
 
 ```proto
 // Params defines the parameters for the module.
@@ -36,20 +36,24 @@ message Params {
 ## **Bet Constraints**
 
 ```proto
-// MarketBetConstraints parent group for a market
+// MarketBetConstraints is the bet constrains type for the market
 message MarketBetConstraints {
-  string min_amount = 2[
+  // min_amount is the minimum allowed bet amount for a market.
+  string min_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable)   = false];
+    (gogoproto.nullable) = false
+  ];
 
-
-  cosmos.base.v1beta1.Coin bet_fee = 3
-  [(gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coin", (gogoproto.nullable) = false];
+  // bet_fee is the fee that the bettor needs to pay to bet on the market.
+  string bet_fee = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 ```
 
 **MarketBetConstraints**: Optional field which can put restrictions for bet acceptance criteria, this optional config help provide more
-granular control of different categories of market. We can modify here following:
+granular control of different categories of market. We can modify following properties:
 
 ***MinBetAmount***: Minimum bet amount particular to this market.
 
@@ -103,16 +107,8 @@ message Market {
   MarketBetConstraints bet_constraints = 9;
   // meta contains human-readable metadata of the market.
   string meta = 10;
-  // sr_contribution_for_house is the amount of contribution by sr for the house
-  string sr_contribution_for_house = 11 [
-    (gogoproto.customname) = "SrContributionForHouse",
-    (gogoproto.jsontag) = "sr_contribution_for_house",
-    json_name = "sr_contribution_for_house",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
   // book_uid is the unique identifier corresponding to the book
-  string book_uid = 12 [
+  string book_uid = 11 [
     (gogoproto.customname) = "BookUID",
     (gogoproto.jsontag) = "book_uid",
     json_name = "book_uid"
@@ -175,7 +171,7 @@ enum MarketStatus {
 Is the type to represent odds item.
 
 ```proto
-// Odds is a representation of and market odds items.
+// Odds is a representation of market odds.
 message Odds {
   // uid is the universal unique identifier of the odds.
   string uid = 1 [
