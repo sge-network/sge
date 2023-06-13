@@ -1,11 +1,11 @@
 # **Events**
 
-The minting module emits the following events:
+The `mint` module emits the following events:
 
 ## **BeginBlocker**
 
-| Type  |   Attribute Key   | Attribute Value  |
-|:----: |:----------------: |:---------------: |
-| mint  | inflation         |                  |
-| mint  | phase_provisions  |                  |
-| mint  | amount            |                  |
+| Type  |   Attribute Key   | Attribute Value           |
+|:----: |:----------------: |:-------------------------:|
+| mint  | inflation         |{current_inflation}        |
+| mint  | phase_provisions  |{current_phase_provision}  |
+| mint  | amount            |{minted_amount}            |

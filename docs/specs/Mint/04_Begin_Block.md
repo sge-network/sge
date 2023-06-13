@@ -94,7 +94,7 @@ func (m Minter) NextPhaseProvisions(totalSupply sdk.Int, excludeAmount sdk.Int, 
 
 ## **Block Provision**
 
-Calculate the provisions generated for each block based on current phase provisions. The provisions are then minted by the mint module's ModuleMinterAccount and then transferred to the auth's FeeCollector ModuleAccount.
+Calculate the provisions generated for each block based on current phase provisions. The provisions are then minted by the `mint` module's ModuleMinterAccount and then transferred to the auth's FeeCollector ModuleAccount.
 
 ```go
 // BlockProvisions returns the provisions for a block based on the phase
