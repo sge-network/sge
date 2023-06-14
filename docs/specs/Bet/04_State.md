@@ -16,6 +16,7 @@ The bet model in the Proto files is as below:
 ## **Params**
 
 1. `batch_settlement_count`: is the count of bets to be automatically settlement in end-blocker.
+2. `max_bet_by_uid_query_count`: is the max count of bets to be returned in the bets by uids query.
 
 ```proto
 // Params defines the parameters for the module.
