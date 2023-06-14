@@ -750,20 +750,141 @@ func (m *QueryOrderBookExposureResponse) GetOrderBookExposure() OrderBookOddsExp
 	return OrderBookOddsExposure{}
 }
 
-// QueryParticipationExposuresRequest is the request type for the
-// Query/ParticipationExposures RPC method
-type QueryParticipationExposuresRequest struct {
+// QueryOrderBookParticipationExposuresRequest is the request type for the
+// Query/OrderBookParticipationExposures RPC method
+type QueryOrderBookParticipationExposuresRequest struct {
 	// order_book_uid defines the order book uid to query for.
 	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
 	// pagination defines optional pagination for the request.
 	Pagination *query.PageRequest `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
+func (m *QueryOrderBookParticipationExposuresRequest) Reset() {
+	*m = QueryOrderBookParticipationExposuresRequest{}
+}
+func (m *QueryOrderBookParticipationExposuresRequest) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryOrderBookParticipationExposuresRequest) ProtoMessage() {}
+func (*QueryOrderBookParticipationExposuresRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8b016841afa49a45, []int{14}
+}
+func (m *QueryOrderBookParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOrderBookParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOrderBookParticipationExposuresRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.Merge(m, src)
+}
+func (m *QueryOrderBookParticipationExposuresRequest) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOrderBookParticipationExposuresRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOrderBookParticipationExposuresRequest proto.InternalMessageInfo
+
+func (m *QueryOrderBookParticipationExposuresRequest) GetOrderBookUid() string {
+	if m != nil {
+		return m.OrderBookUid
+	}
+	return ""
+}
+
+func (m *QueryOrderBookParticipationExposuresRequest) GetPagination() *query.PageRequest {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryOrderBookParticipationExposuresResponse is the response type for the
+// Query/OrderBookParticipationExposures RPC method.
+type QueryOrderBookParticipationExposuresResponse struct {
+	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
+	// pagination defines the pagination in the response.
+	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
+func (m *QueryOrderBookParticipationExposuresResponse) Reset() {
+	*m = QueryOrderBookParticipationExposuresResponse{}
+}
+func (m *QueryOrderBookParticipationExposuresResponse) String() string {
+	return proto.CompactTextString(m)
+}
+func (*QueryOrderBookParticipationExposuresResponse) ProtoMessage() {}
+func (*QueryOrderBookParticipationExposuresResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_8b016841afa49a45, []int{15}
+}
+func (m *QueryOrderBookParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QueryOrderBookParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QueryOrderBookParticipationExposuresResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.Merge(m, src)
+}
+func (m *QueryOrderBookParticipationExposuresResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QueryOrderBookParticipationExposuresResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QueryOrderBookParticipationExposuresResponse proto.InternalMessageInfo
+
+func (m *QueryOrderBookParticipationExposuresResponse) GetParticipationExposures() []ParticipationExposure {
+	if m != nil {
+		return m.ParticipationExposures
+	}
+	return nil
+}
+
+func (m *QueryOrderBookParticipationExposuresResponse) GetPagination() *query.PageResponse {
+	if m != nil {
+		return m.Pagination
+	}
+	return nil
+}
+
+// QueryParticipationExposuresRequest is the request type for the
+// Query/ParticipationExposures RPC method.
+type QueryParticipationExposuresRequest struct {
+	// order_book_uid defines the order book id to query for.
+	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
+	// participation_index is the index of participation to query for.
+	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
+	// pagination defines the pagination in the response.
+	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
+}
+
 func (m *QueryParticipationExposuresRequest) Reset()         { *m = QueryParticipationExposuresRequest{} }
 func (m *QueryParticipationExposuresRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParticipationExposuresRequest) ProtoMessage()    {}
 func (*QueryParticipationExposuresRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8b016841afa49a45, []int{14}
+	return fileDescriptor_8b016841afa49a45, []int{16}
 }
 func (m *QueryParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -799,6 +920,13 @@ func (m *QueryParticipationExposuresRequest) GetOrderBookUid() string {
 	return ""
 }
 
+func (m *QueryParticipationExposuresRequest) GetParticipationIndex() uint64 {
+	if m != nil {
+		return m.ParticipationIndex
+	}
+	return 0
+}
+
 func (m *QueryParticipationExposuresRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
@@ -806,9 +934,10 @@ func (m *QueryParticipationExposuresRequest) GetPagination() *query.PageRequest 
 	return nil
 }
 
-// QueryParticipationExposuresResponse is the response type for the
+// QueryParticipationExposureResponse is the response type for the
 // Query/ParticipationExposures RPC method.
 type QueryParticipationExposuresResponse struct {
+	// participation_exposure defines the participation exposure info.
 	ParticipationExposures []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposures,json=participationExposures,proto3" json:"participation_exposures"`
 	// pagination defines the pagination in the response.
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -818,7 +947,7 @@ func (m *QueryParticipationExposuresResponse) Reset()         { *m = QueryPartic
 func (m *QueryParticipationExposuresResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParticipationExposuresResponse) ProtoMessage()    {}
 func (*QueryParticipationExposuresResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8b016841afa49a45, []int{15}
+	return fileDescriptor_8b016841afa49a45, []int{17}
 }
 func (m *QueryParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -855,127 +984,6 @@ func (m *QueryParticipationExposuresResponse) GetParticipationExposures() []Part
 }
 
 func (m *QueryParticipationExposuresResponse) GetPagination() *query.PageResponse {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-// QueryParticipationExposureRequest is the request type for the
-// Query/ParticipationExposure RPC method.
-type QueryParticipationExposureRequest struct {
-	// order_book_uid defines the order book id to query for.
-	OrderBookUid string `protobuf:"bytes,1,opt,name=order_book_uid,json=orderBookUid,proto3" json:"order_book_uid,omitempty"`
-	// participation_index is the index of participation to query for.
-	ParticipationIndex uint64 `protobuf:"varint,2,opt,name=participation_index,json=participationIndex,proto3" json:"participation_index,omitempty"`
-	// pagination defines the pagination in the response.
-	Pagination *query.PageRequest `protobuf:"bytes,3,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryParticipationExposureRequest) Reset()         { *m = QueryParticipationExposureRequest{} }
-func (m *QueryParticipationExposureRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipationExposureRequest) ProtoMessage()    {}
-func (*QueryParticipationExposureRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8b016841afa49a45, []int{16}
-}
-func (m *QueryParticipationExposureRequest) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryParticipationExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryParticipationExposureRequest.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryParticipationExposureRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipationExposureRequest.Merge(m, src)
-}
-func (m *QueryParticipationExposureRequest) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryParticipationExposureRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipationExposureRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryParticipationExposureRequest proto.InternalMessageInfo
-
-func (m *QueryParticipationExposureRequest) GetOrderBookUid() string {
-	if m != nil {
-		return m.OrderBookUid
-	}
-	return ""
-}
-
-func (m *QueryParticipationExposureRequest) GetParticipationIndex() uint64 {
-	if m != nil {
-		return m.ParticipationIndex
-	}
-	return 0
-}
-
-func (m *QueryParticipationExposureRequest) GetPagination() *query.PageRequest {
-	if m != nil {
-		return m.Pagination
-	}
-	return nil
-}
-
-// QueryParticipationExposureResponse is the response type for the
-// Query/ParticipationExposure RPC method.
-type QueryParticipationExposureResponse struct {
-	// participation_exposure defines the participation exposure info.
-	ParticipationExposure []ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposure,json=participationExposure,proto3" json:"participation_exposure"`
-	// pagination defines the pagination in the response.
-	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
-}
-
-func (m *QueryParticipationExposureResponse) Reset()         { *m = QueryParticipationExposureResponse{} }
-func (m *QueryParticipationExposureResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryParticipationExposureResponse) ProtoMessage()    {}
-func (*QueryParticipationExposureResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_8b016841afa49a45, []int{17}
-}
-func (m *QueryParticipationExposureResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *QueryParticipationExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_QueryParticipationExposureResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *QueryParticipationExposureResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryParticipationExposureResponse.Merge(m, src)
-}
-func (m *QueryParticipationExposureResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *QueryParticipationExposureResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryParticipationExposureResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_QueryParticipationExposureResponse proto.InternalMessageInfo
-
-func (m *QueryParticipationExposureResponse) GetParticipationExposure() []ParticipationExposure {
-	if m != nil {
-		return m.ParticipationExposure
-	}
-	return nil
-}
-
-func (m *QueryParticipationExposureResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -1241,10 +1249,10 @@ func init() {
 	proto.RegisterType((*QueryOrderBookExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryOrderBookExposuresResponse")
 	proto.RegisterType((*QueryOrderBookExposureRequest)(nil), "sgenetwork.sge.orderbook.QueryOrderBookExposureRequest")
 	proto.RegisterType((*QueryOrderBookExposureResponse)(nil), "sgenetwork.sge.orderbook.QueryOrderBookExposureResponse")
+	proto.RegisterType((*QueryOrderBookParticipationExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryOrderBookParticipationExposuresRequest")
+	proto.RegisterType((*QueryOrderBookParticipationExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryOrderBookParticipationExposuresResponse")
 	proto.RegisterType((*QueryParticipationExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposuresRequest")
 	proto.RegisterType((*QueryParticipationExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposuresResponse")
-	proto.RegisterType((*QueryParticipationExposureRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposureRequest")
-	proto.RegisterType((*QueryParticipationExposureResponse)(nil), "sgenetwork.sge.orderbook.QueryParticipationExposureResponse")
 	proto.RegisterType((*QueryHistoricalParticipationExposuresRequest)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipationExposuresRequest")
 	proto.RegisterType((*QueryHistoricalParticipationExposuresResponse)(nil), "sgenetwork.sge.orderbook.QueryHistoricalParticipationExposuresResponse")
 	proto.RegisterType((*QueryParticipationFulfilledBetsRequest)(nil), "sgenetwork.sge.orderbook.QueryParticipationFulfilledBetsRequest")
@@ -1254,80 +1262,79 @@ func init() {
 func init() { proto.RegisterFile("sge/orderbook/query.proto", fileDescriptor_8b016841afa49a45) }
 
 var fileDescriptor_8b016841afa49a45 = []byte{
-	// 1153 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x58, 0x5f, 0x6f, 0xdb, 0x54,
-	0x14, 0xef, 0xed, 0x46, 0xa1, 0x67, 0x08, 0xa9, 0xa7, 0x6d, 0xd2, 0x5a, 0x6b, 0xda, 0x7a, 0xd3,
-	0x3a, 0xa0, 0xb5, 0xdb, 0x82, 0xf6, 0x47, 0xb4, 0x03, 0xa2, 0xd1, 0x6d, 0x08, 0xd4, 0x52, 0xd4,
-	0x17, 0x78, 0x28, 0x4e, 0x72, 0xe7, 0x59, 0x4d, 0x73, 0x3d, 0xdb, 0x81, 0x4e, 0x55, 0x5f, 0x10,
-	0x12, 0x6f, 0x08, 0x6d, 0x0f, 0x7b, 0xe1, 0x2b, 0xf0, 0x0d, 0x78, 0x42, 0x93, 0xd8, 0x63, 0xa5,
-	0x49, 0x80, 0x84, 0x34, 0xa1, 0x86, 0x07, 0xf8, 0x12, 0x80, 0x7c, 0x7d, 0xed, 0xc6, 0x89, 0x1d,
-	0xff, 0x69, 0xd0, 0xd8, 0x5b, 0x92, 0xeb, 0x73, 0xce, 0xef, 0xcf, 0x39, 0xd7, 0xf7, 0x06, 0x26,
-	0x6d, 0x9d, 0xaa, 0xcc, 0xaa, 0x51, 0xab, 0xc2, 0xd8, 0x8e, 0x7a, 0xb7, 0x49, 0xad, 0x7b, 0x8a,
-	0x69, 0x31, 0x87, 0xe1, 0x84, 0xad, 0xd3, 0x06, 0x75, 0xbe, 0x60, 0xd6, 0x8e, 0x62, 0xeb, 0x54,
-	0x09, 0x9e, 0x92, 0x5e, 0xab, 0x32, 0x7b, 0x97, 0xd9, 0x6a, 0x45, 0xb3, 0xa9, 0x17, 0xa2, 0x7e,
-	0xbe, 0x54, 0xa1, 0x8e, 0xb6, 0xa4, 0x9a, 0x9a, 0x6e, 0x34, 0x34, 0xc7, 0x60, 0x0d, 0x2f, 0x8b,
-	0x34, 0xa6, 0x33, 0x9d, 0xf1, 0x8f, 0xaa, 0xfb, 0x49, 0xfc, 0x7a, 0x56, 0x67, 0x4c, 0xaf, 0x53,
-	0x55, 0x33, 0x0d, 0x55, 0x6b, 0x34, 0x98, 0xc3, 0x43, 0x6c, 0xb1, 0x2a, 0x85, 0x41, 0x99, 0x9a,
-	0xa5, 0xed, 0xfa, 0x6b, 0x53, 0xe1, 0xb5, 0xe0, 0x93, 0x58, 0x9e, 0xed, 0x0a, 0x75, 0x8c, 0xaa,
-	0x61, 0xb6, 0x23, 0x3a, 0x1b, 0x7e, 0x84, 0xee, 0x99, 0xcc, 0x6e, 0x5a, 0xd4, 0x5b, 0x95, 0xc7,
-	0x00, 0x3f, 0x72, 0x19, 0x6d, 0xf0, 0xa2, 0x9b, 0xf4, 0x6e, 0x93, 0xda, 0x8e, 0xbc, 0x05, 0xa3,
-	0xa1, 0x5f, 0x6d, 0x93, 0x35, 0x6c, 0x8a, 0xd7, 0x60, 0xc8, 0x03, 0x37, 0x41, 0x66, 0xc8, 0xc5,
-	0x33, 0xcb, 0x33, 0x4a, 0x9c, 0x66, 0x8a, 0x17, 0x59, 0x3e, 0xfd, 0xf8, 0xe9, 0xf4, 0xc0, 0xa6,
-	0x88, 0x92, 0xf7, 0xa0, 0xc0, 0xd3, 0xae, 0xbb, 0x8f, 0x95, 0x19, 0xdb, 0xf1, 0x0b, 0x62, 0x01,
-	0x86, 0x6c, 0x47, 0x73, 0x9a, 0x5e, 0xe6, 0xe1, 0x4d, 0xf1, 0x0d, 0xd7, 0x00, 0x8e, 0x25, 0x9e,
-	0x18, 0xe4, 0x55, 0x2f, 0x28, 0x9e, 0x1f, 0x8a, 0xeb, 0x87, 0xe2, 0x59, 0x28, 0xfc, 0x50, 0x36,
-	0x34, 0x9d, 0x8a, 0x9c, 0x9b, 0x6d, 0x91, 0xf2, 0xf7, 0x04, 0x8a, 0x5d, 0xa5, 0x05, 0xab, 0x5b,
-	0x00, 0x01, 0x6e, 0xb7, 0xfe, 0xa9, 0x8b, 0x67, 0x96, 0xcf, 0xc5, 0x33, 0x0b, 0x32, 0x08, 0x72,
-	0x6d, 0xc1, 0x78, 0x23, 0x02, 0xee, 0x5c, 0x22, 0x5c, 0x0f, 0x47, 0x08, 0xef, 0x2a, 0x8c, 0x87,
-	0xe1, 0xfa, 0x42, 0x9d, 0x87, 0x57, 0x78, 0xbd, 0x6d, 0xb7, 0xe0, 0x76, 0xd3, 0xa8, 0x09, 0xc1,
-	0x5e, 0x66, 0xfe, 0x93, 0x5b, 0x46, 0x4d, 0xae, 0x74, 0x0a, 0x1d, 0x90, 0xbd, 0x29, 0xc8, 0xf2,
-	0x78, 0x61, 0x63, 0x06, 0xb2, 0xc3, 0x41, 0x19, 0xf9, 0x01, 0x81, 0x73, 0xe1, 0x22, 0x1b, 0xed,
-	0xdd, 0x67, 0x67, 0x42, 0xdc, 0x37, 0xa3, 0x5b, 0x04, 0xce, 0xf7, 0x46, 0x25, 0x84, 0xb0, 0x60,
-	0xb2, 0x0d, 0x56, 0x68, 0x70, 0xfc, 0x26, 0x58, 0x4c, 0xa1, 0x4b, 0x28, 0xbb, 0x10, 0xa9, 0xc8,
-	0xa2, 0x6b, 0xf7, 0xaf, 0x3d, 0xf6, 0x41, 0xee, 0x41, 0x32, 0x9b, 0xf2, 0x2a, 0x8c, 0x86, 0xd8,
-	0x6f, 0x1b, 0x8d, 0x1a, 0xdd, 0xe3, 0xe8, 0x4e, 0x6f, 0x62, 0x68, 0xe9, 0x96, 0xbb, 0x22, 0x3f,
-	0xec, 0x6d, 0x7c, 0xa0, 0xb0, 0x09, 0x13, 0x71, 0x0a, 0x8b, 0xc6, 0xcb, 0x2b, 0x70, 0x21, 0x5a,
-	0x60, 0xf9, 0x1b, 0x02, 0xa5, 0x30, 0xb2, 0xf7, 0xc4, 0x6e, 0xf7, 0x8c, 0xba, 0xf1, 0x09, 0x81,
-	0xe9, 0x58, 0x40, 0x42, 0x26, 0x1d, 0xc6, 0xda, 0x10, 0xf9, 0xdb, 0xb3, 0xdf, 0x83, 0x6a, 0x0a,
-	0x89, 0xd6, 0x6b, 0x35, 0xdb, 0xcf, 0x2b, 0x14, 0x42, 0xd6, 0x55, 0xb0, 0x7f, 0xdd, 0xf7, 0x19,
-	0x4c, 0x45, 0x93, 0xca, 0x26, 0xf2, 0x24, 0xbc, 0xc4, 0x6a, 0x35, 0x9b, 0xaf, 0x0f, 0xf2, 0xf5,
-	0x17, 0xdd, 0xef, 0xee, 0xfe, 0xf5, 0x75, 0xac, 0x91, 0x81, 0x6c, 0x14, 0x46, 0x23, 0x64, 0x13,
-	0x8d, 0x95, 0x53, 0xb5, 0x91, 0x2e, 0xd5, 0xe4, 0xfb, 0x44, 0x8c, 0x5a, 0xa8, 0xd3, 0x9e, 0x71,
-	0x5b, 0x3d, 0xf5, 0x27, 0x30, 0x0e, 0x94, 0xd0, 0xa8, 0x01, 0xc5, 0xf0, 0x68, 0x67, 0xe8, 0xae,
-	0xc8, 0xd4, 0xfe, 0xfc, 0x99, 0x91, 0x75, 0xfb, 0xd7, 0x61, 0x3f, 0x12, 0x98, 0x8d, 0x27, 0xf8,
-	0xdf, 0xee, 0x6f, 0x1d, 0x2e, 0x9d, 0xca, 0xed, 0xd2, 0x6f, 0x3d, 0x5b, 0x27, 0x30, 0xa9, 0x0e,
-	0x85, 0x68, 0x93, 0x4e, 0xe6, 0xd1, 0x78, 0xa4, 0x47, 0xfd, 0xb3, 0xe8, 0x3b, 0x02, 0xf3, 0x9c,
-	0xdd, 0x4d, 0xc3, 0x76, 0x98, 0x65, 0x54, 0xb5, 0xfa, 0xff, 0x69, 0x44, 0xfe, 0x24, 0xb0, 0x90,
-	0x12, 0xde, 0xf3, 0x3e, 0x2c, 0x3f, 0x11, 0xb8, 0xd0, 0xdd, 0x67, 0x6b, 0xcd, 0xfa, 0x6d, 0xa3,
-	0x5e, 0xa7, 0xb5, 0x32, 0x75, 0xec, 0xe7, 0x64, 0x62, 0x7e, 0x21, 0x30, 0x97, 0xc8, 0x44, 0xd8,
-	0x55, 0x85, 0x30, 0x92, 0xed, 0x0a, 0x75, 0x7c, 0xa7, 0x94, 0x94, 0x4e, 0x95, 0xa9, 0xb3, 0xa1,
-	0x19, 0x96, 0xbf, 0xfb, 0x9b, 0x1d, 0x6b, 0xfd, 0xf3, 0x68, 0xf9, 0xd1, 0x08, 0xbc, 0xc0, 0x99,
-	0xe1, 0x57, 0x04, 0x86, 0xbc, 0xcb, 0x11, 0xce, 0xc7, 0xc3, 0xec, 0xbe, 0x93, 0x49, 0x0b, 0x29,
-	0x9f, 0xf6, 0xaa, 0xcb, 0x53, 0x5f, 0x3e, 0xf9, 0xe3, 0xc1, 0x60, 0x11, 0xc7, 0xd5, 0xa8, 0xdb,
-	0x25, 0xde, 0x27, 0x00, 0xc7, 0x77, 0x21, 0x5c, 0x4c, 0x48, 0xde, 0x75, 0x63, 0x93, 0x96, 0x32,
-	0x44, 0x08, 0x48, 0xd3, 0x1c, 0xd2, 0x24, 0x16, 0x3b, 0x20, 0xed, 0x7b, 0x97, 0xbd, 0x03, 0x7c,
-	0x48, 0x60, 0x38, 0x88, 0x43, 0x35, 0x6d, 0x05, 0x1f, 0xd2, 0x62, 0xfa, 0x00, 0x81, 0x68, 0x8e,
-	0x23, 0x9a, 0xc5, 0xe9, 0x4e, 0x44, 0xe1, 0x29, 0x39, 0xc0, 0x43, 0x02, 0xc5, 0x98, 0x1b, 0x05,
-	0xae, 0xa6, 0x2d, 0x1b, 0x79, 0x3f, 0x92, 0xae, 0xe5, 0x0d, 0x17, 0x1c, 0x2e, 0x71, 0x0e, 0x8b,
-	0xa8, 0x24, 0x70, 0x08, 0xff, 0x39, 0x60, 0x63, 0x8b, 0x40, 0x21, 0x3a, 0x37, 0xae, 0xe4, 0x82,
-	0xe4, 0x13, 0x5a, 0xcd, 0x19, 0x2d, 0xf8, 0x7c, 0xc0, 0xf9, 0xac, 0xe1, 0xf5, 0x6c, 0x7c, 0xd4,
-	0xfd, 0x88, 0x3d, 0xeb, 0x00, 0x7f, 0x20, 0x80, 0xdd, 0x87, 0x6f, 0xbc, 0x92, 0x16, 0x63, 0xe7,
-	0x6b, 0x4c, 0xba, 0x9a, 0x23, 0x52, 0x30, 0x5b, 0xe2, 0xcc, 0x5e, 0xc7, 0x57, 0x93, 0x98, 0x05,
-	0x6f, 0x1e, 0x7c, 0x44, 0x60, 0xa4, 0x2b, 0x23, 0x5e, 0xce, 0x8a, 0xc1, 0x07, 0x7f, 0x25, 0x7b,
-	0xa0, 0xc0, 0xbe, 0xc2, 0xb1, 0x5f, 0xc2, 0x37, 0x53, 0x63, 0x57, 0xf7, 0xfd, 0xd3, 0xfd, 0x01,
-	0xfe, 0x4c, 0xa0, 0x10, 0xfd, 0xfa, 0x4d, 0xec, 0xb5, 0x9e, 0x87, 0x8a, 0xc4, 0x5e, 0xeb, 0xfd,
-	0xce, 0x97, 0xdf, 0xe6, 0xac, 0xae, 0xe2, 0xe5, 0x4c, 0xbd, 0xb6, 0x70, 0xec, 0xcf, 0x5f, 0x04,
-	0xc6, 0x23, 0x6b, 0xe0, 0x5b, 0x79, 0x90, 0xf9, 0xb4, 0x56, 0xf2, 0x05, 0x0b, 0x56, 0x5b, 0x9c,
-	0xd5, 0x3a, 0x7e, 0x98, 0x93, 0x55, 0xcc, 0x28, 0xfd, 0x43, 0x60, 0x26, 0xe9, 0x34, 0x85, 0x6b,
-	0x09, 0xc8, 0x53, 0x9e, 0x16, 0xa5, 0x1b, 0x27, 0xce, 0x23, 0xc4, 0x78, 0x9f, 0x8b, 0x71, 0x1d,
-	0xcb, 0x49, 0x62, 0xdc, 0x09, 0x32, 0x2e, 0xc4, 0xb9, 0xfd, 0x37, 0x01, 0x29, 0xfe, 0x68, 0x82,
-	0xef, 0x64, 0x71, 0x2d, 0xea, 0x7c, 0x26, 0xbd, 0x7b, 0x82, 0x0c, 0x82, 0xef, 0xa7, 0x9c, 0xef,
-	0x16, 0x7e, 0xdc, 0x8f, 0xed, 0x53, 0xbd, 0xed, 0xd7, 0xe0, 0xc7, 0xab, 0xf2, 0xda, 0xe3, 0xa3,
-	0x12, 0x39, 0x3c, 0x2a, 0x91, 0xdf, 0x8f, 0x4a, 0xe4, 0xdb, 0x56, 0x69, 0xe0, 0xb0, 0x55, 0x1a,
-	0xf8, 0xb5, 0x55, 0x1a, 0xf8, 0x64, 0x5e, 0x37, 0x9c, 0x3b, 0xcd, 0x8a, 0x52, 0x65, 0xbb, 0x6e,
-	0xe1, 0x05, 0x41, 0x82, 0x83, 0xd8, 0x6b, 0x83, 0xe1, 0xdc, 0x33, 0xa9, 0x5d, 0x19, 0xe2, 0x7f,
-	0x3e, 0xbf, 0xf1, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xdf, 0xd0, 0x62, 0x5f, 0x8f, 0x17, 0x00,
-	0x00,
+	// 1139 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x58, 0x4f, 0x6f, 0xdc, 0x44,
+	0x14, 0xcf, 0xa4, 0x25, 0x90, 0x57, 0x84, 0x94, 0x97, 0x34, 0x9b, 0x58, 0xcd, 0x26, 0x75, 0xab,
+	0xa6, 0xd0, 0xc4, 0x4e, 0x02, 0xea, 0x1f, 0x29, 0x29, 0xb0, 0x6a, 0xd3, 0x16, 0x81, 0x12, 0x82,
+	0x72, 0x81, 0x43, 0xf0, 0xee, 0x4e, 0x5d, 0x2b, 0x9b, 0x1d, 0xd7, 0xf6, 0x42, 0xaa, 0x28, 0x17,
+	0x84, 0xc4, 0x0d, 0x21, 0x7a, 0xe8, 0x01, 0xbe, 0x02, 0xdf, 0x80, 0x1b, 0x48, 0xf4, 0x18, 0xa9,
+	0x07, 0x38, 0x55, 0x28, 0x8b, 0x04, 0x07, 0x2e, 0x7c, 0x01, 0x40, 0x1e, 0x8f, 0x9d, 0xf5, 0xda,
+	0x5e, 0xff, 0xc9, 0x4a, 0xa5, 0xdc, 0x76, 0xf7, 0xf9, 0xbd, 0xf7, 0xfb, 0xf3, 0x66, 0x3c, 0xb3,
+	0x30, 0x69, 0xeb, 0x54, 0x65, 0x56, 0x9d, 0x5a, 0x55, 0xc6, 0xb6, 0xd5, 0xfb, 0x2d, 0x6a, 0x3d,
+	0x50, 0x4c, 0x8b, 0x39, 0x0c, 0x27, 0x6c, 0x9d, 0x36, 0xa9, 0xf3, 0x29, 0xb3, 0xb6, 0x15, 0x5b,
+	0xa7, 0x4a, 0xf0, 0x94, 0xf4, 0x5a, 0x8d, 0xd9, 0x3b, 0xcc, 0x56, 0xab, 0x9a, 0x4d, 0xbd, 0x14,
+	0xf5, 0x93, 0xc5, 0x2a, 0x75, 0xb4, 0x45, 0xd5, 0xd4, 0x74, 0xa3, 0xa9, 0x39, 0x06, 0x6b, 0x7a,
+	0x55, 0xa4, 0x31, 0x9d, 0xe9, 0x8c, 0x7f, 0x54, 0xdd, 0x4f, 0xe2, 0xd7, 0x33, 0x3a, 0x63, 0x7a,
+	0x83, 0xaa, 0x9a, 0x69, 0xa8, 0x5a, 0xb3, 0xc9, 0x1c, 0x9e, 0x62, 0x8b, 0xa8, 0x14, 0x06, 0x65,
+	0x6a, 0x96, 0xb6, 0xe3, 0xc7, 0xa6, 0xc2, 0xb1, 0xe0, 0x93, 0x08, 0x9f, 0x8d, 0xa4, 0x3a, 0x46,
+	0xcd, 0x30, 0x3b, 0x11, 0x9d, 0x09, 0x3f, 0x42, 0x77, 0x4d, 0x66, 0xb7, 0x2c, 0xea, 0x45, 0xe5,
+	0x31, 0xc0, 0xf7, 0x5d, 0x46, 0xeb, 0xbc, 0xe9, 0x06, 0xbd, 0xdf, 0xa2, 0xb6, 0x23, 0x6f, 0xc2,
+	0x68, 0xe8, 0x57, 0xdb, 0x64, 0x4d, 0x9b, 0xe2, 0x75, 0x18, 0xf2, 0xc0, 0x4d, 0x90, 0x19, 0x72,
+	0xf1, 0xd4, 0xd2, 0x8c, 0x92, 0xa4, 0x99, 0xe2, 0x65, 0x56, 0x4e, 0x3e, 0x7e, 0x3a, 0x3d, 0xb0,
+	0x21, 0xb2, 0xe4, 0x5d, 0x18, 0xe7, 0x65, 0xd7, 0xdc, 0xc7, 0x2a, 0x8c, 0x6d, 0xfb, 0x0d, 0x71,
+	0x1c, 0x86, 0x6c, 0x47, 0x73, 0x5a, 0x5e, 0xe5, 0xe1, 0x0d, 0xf1, 0x0d, 0x57, 0x01, 0x8e, 0x24,
+	0x9e, 0x18, 0xe4, 0x5d, 0x2f, 0x28, 0x9e, 0x1f, 0x8a, 0xeb, 0x87, 0xe2, 0x59, 0x28, 0xfc, 0x50,
+	0xd6, 0x35, 0x9d, 0x8a, 0x9a, 0x1b, 0x1d, 0x99, 0xf2, 0x77, 0x04, 0x4a, 0x91, 0xd6, 0x82, 0xd5,
+	0x1d, 0x80, 0x00, 0xb7, 0xdb, 0xff, 0xc4, 0xc5, 0x53, 0x4b, 0xe7, 0x92, 0x99, 0x05, 0x15, 0x04,
+	0xb9, 0x8e, 0x64, 0xbc, 0x15, 0x03, 0x77, 0x36, 0x15, 0xae, 0x87, 0x23, 0x84, 0x77, 0x05, 0x4e,
+	0x87, 0xe1, 0xfa, 0x42, 0x9d, 0x87, 0x57, 0x78, 0xbf, 0x2d, 0xb7, 0xe1, 0x56, 0xcb, 0xa8, 0x0b,
+	0xc1, 0x5e, 0x66, 0xfe, 0x93, 0x9b, 0x46, 0x5d, 0xae, 0x76, 0x0b, 0x1d, 0x90, 0xbd, 0x2d, 0xc8,
+	0xf2, 0x7c, 0x61, 0x63, 0x0e, 0xb2, 0xc3, 0x41, 0x1b, 0xf9, 0x21, 0x81, 0x73, 0xe1, 0x26, 0xeb,
+	0x9d, 0xd3, 0x67, 0xe7, 0x42, 0xdc, 0x37, 0xa3, 0xdb, 0x04, 0xce, 0xf7, 0x46, 0x25, 0x84, 0xb0,
+	0x60, 0xb2, 0x03, 0x56, 0x68, 0xe1, 0xf8, 0x43, 0xb0, 0x90, 0x41, 0x97, 0x50, 0x75, 0x21, 0x52,
+	0x89, 0xc5, 0xf7, 0xee, 0xdf, 0x78, 0xec, 0x81, 0xdc, 0x83, 0x64, 0x3e, 0xe5, 0x55, 0x18, 0x0d,
+	0xb1, 0xdf, 0x32, 0x9a, 0x75, 0xba, 0xcb, 0xd1, 0x9d, 0xdc, 0xc0, 0x50, 0xe8, 0x8e, 0x1b, 0x91,
+	0x1f, 0xf5, 0x36, 0x3e, 0x50, 0xd8, 0x84, 0x89, 0x24, 0x85, 0xc5, 0xe0, 0x15, 0x15, 0x78, 0x3c,
+	0x5e, 0x60, 0xf9, 0x4b, 0x02, 0xe5, 0x30, 0xb2, 0x9b, 0x62, 0xb7, 0x7b, 0x46, 0xd3, 0xf8, 0x84,
+	0xc0, 0x74, 0x22, 0x20, 0x21, 0x93, 0x0e, 0x63, 0x1d, 0x88, 0xfc, 0xed, 0xd9, 0x9f, 0x41, 0x35,
+	0x83, 0x44, 0x6b, 0xf5, 0xba, 0xed, 0xd7, 0x15, 0x0a, 0x21, 0x8b, 0x34, 0xec, 0xdf, 0xf4, 0x7d,
+	0x0c, 0x53, 0xf1, 0xa4, 0xf2, 0x89, 0x3c, 0x09, 0x2f, 0xb1, 0x7a, 0xdd, 0xe6, 0xf1, 0x41, 0x1e,
+	0x7f, 0xd1, 0xfd, 0xee, 0xee, 0x5f, 0x5f, 0x24, 0x1a, 0x19, 0xc8, 0x46, 0x61, 0x34, 0x46, 0x36,
+	0x31, 0x58, 0x05, 0x55, 0x1b, 0x89, 0xa8, 0x26, 0x7f, 0x43, 0xe0, 0x52, 0x8f, 0x61, 0x7f, 0xc6,
+	0xf3, 0xf5, 0x3b, 0x81, 0xb9, 0x6c, 0xe8, 0x84, 0x6a, 0x4d, 0x28, 0x85, 0x17, 0x7b, 0x8e, 0x79,
+	0x8b, 0x2d, 0xed, 0xaf, 0x48, 0x33, 0xb6, 0x6f, 0xff, 0x66, 0xee, 0x07, 0x22, 0xb6, 0xbc, 0x7e,
+	0xc8, 0x9f, 0x77, 0xcb, 0xeb, 0xf2, 0xeb, 0x44, 0x61, 0xbf, 0x9e, 0xfa, 0x5b, 0xe7, 0xff, 0xd5,
+	0xa6, 0x6f, 0xfd, 0x81, 0xbc, 0x6d, 0xd8, 0x0e, 0xb3, 0x8c, 0x9a, 0xd6, 0xf8, 0x2f, 0xad, 0x97,
+	0x3f, 0x08, 0xcc, 0x67, 0x84, 0xf7, 0xbc, 0x3b, 0xf1, 0x13, 0x81, 0x0b, 0xd1, 0x51, 0x5b, 0x6d,
+	0x35, 0xee, 0x1a, 0x8d, 0x06, 0xad, 0x57, 0xa8, 0xf3, 0xbc, 0x2c, 0x9a, 0x9f, 0x09, 0xcc, 0xa6,
+	0x32, 0x11, 0x76, 0xd5, 0x20, 0x8c, 0x64, 0xab, 0x4a, 0x1d, 0xdf, 0x29, 0x25, 0xa3, 0x53, 0x15,
+	0xea, 0xac, 0x6b, 0x86, 0xe5, 0xbf, 0x13, 0xcc, 0xae, 0x58, 0xff, 0x3c, 0x5a, 0x3a, 0x1c, 0x81,
+	0x17, 0x38, 0x33, 0xfc, 0x9c, 0xc0, 0x90, 0x77, 0x65, 0xc2, 0xb9, 0x64, 0x98, 0xd1, 0x9b, 0x9a,
+	0x34, 0x9f, 0xf1, 0x69, 0xaf, 0xbb, 0x3c, 0xf5, 0xd9, 0x93, 0xdf, 0x1e, 0x0e, 0x96, 0xf0, 0xb4,
+	0x1a, 0x77, 0xe7, 0xc4, 0xaf, 0x09, 0xc0, 0xd1, 0x0d, 0x09, 0x17, 0x52, 0x8a, 0x47, 0xee, 0x71,
+	0xd2, 0x62, 0x8e, 0x0c, 0x01, 0x69, 0x9a, 0x43, 0x9a, 0xc4, 0x52, 0x17, 0xa4, 0x3d, 0xef, 0x0a,
+	0xb8, 0x8f, 0x8f, 0x08, 0x0c, 0x07, 0x79, 0xa8, 0x66, 0xed, 0xe0, 0x43, 0x5a, 0xc8, 0x9e, 0x20,
+	0x10, 0xcd, 0x72, 0x44, 0x67, 0x71, 0xba, 0x1b, 0x51, 0x78, 0x95, 0xec, 0xe3, 0x01, 0x81, 0x52,
+	0xc2, 0x3d, 0x03, 0x57, 0xb2, 0xb6, 0x8d, 0xbd, 0x35, 0x49, 0xd7, 0x8b, 0xa6, 0x0b, 0x0e, 0x97,
+	0x39, 0x87, 0x05, 0x54, 0x52, 0x38, 0x84, 0xff, 0x32, 0xb0, 0xb1, 0x4d, 0x60, 0x3c, 0xbe, 0x36,
+	0x2e, 0x17, 0x82, 0xe4, 0x13, 0x5a, 0x29, 0x98, 0x2d, 0xf8, 0xbc, 0xcb, 0xf9, 0xac, 0xe2, 0x8d,
+	0x7c, 0x7c, 0xd4, 0xbd, 0x98, 0x3d, 0x6b, 0x1f, 0xbf, 0x27, 0x80, 0xd1, 0x23, 0x39, 0x5e, 0xcd,
+	0x8a, 0xb1, 0xfb, 0x35, 0x26, 0x5d, 0x2b, 0x90, 0x29, 0x98, 0x2d, 0x72, 0x66, 0x97, 0xf0, 0xd5,
+	0x34, 0x66, 0xc1, 0x9b, 0x07, 0x7f, 0x24, 0x30, 0x12, 0xa9, 0x88, 0x57, 0xf2, 0x62, 0xf0, 0xc1,
+	0x5f, 0xcd, 0x9f, 0x28, 0xb0, 0x2f, 0x73, 0xec, 0x97, 0xf1, 0x8d, 0xcc, 0xd8, 0xd5, 0x3d, 0xff,
+	0xcc, 0xbf, 0x8f, 0x7f, 0x11, 0x98, 0x4e, 0x39, 0xb8, 0xe2, 0xcd, 0x42, 0x63, 0x13, 0xf1, 0x67,
+	0xf5, 0xb8, 0x65, 0x04, 0xe1, 0x37, 0x39, 0xe1, 0x6b, 0x78, 0x25, 0xd7, 0x18, 0xce, 0x1f, 0x59,
+	0xf7, 0x27, 0x81, 0xf1, 0x04, 0xaa, 0xcb, 0xe9, 0x5b, 0x79, 0x0f, 0x86, 0x2b, 0x05, 0xb3, 0x05,
+	0xb1, 0x4d, 0x4e, 0x6c, 0x0d, 0xdf, 0x2b, 0x48, 0x2c, 0x61, 0xa1, 0xfd, 0x43, 0x60, 0x26, 0xed,
+	0xac, 0x85, 0x69, 0xe6, 0x64, 0x3c, 0x4b, 0x4a, 0xb7, 0x8e, 0x5d, 0x47, 0x88, 0xf1, 0x0e, 0x17,
+	0xe3, 0x06, 0x56, 0xd2, 0xc4, 0xb8, 0x17, 0x54, 0x9c, 0x4f, 0x32, 0xfc, 0x6f, 0x02, 0x52, 0xf2,
+	0xc1, 0x05, 0xdf, 0xca, 0x63, 0x5b, 0xdc, 0xe9, 0x4d, 0x7a, 0xfb, 0x18, 0x15, 0x04, 0xdf, 0x8f,
+	0x38, 0xdf, 0x4d, 0xfc, 0xa0, 0x1f, 0x9b, 0xab, 0x7a, 0xd7, 0xef, 0xc1, 0x0f, 0x5f, 0x95, 0xd5,
+	0xc7, 0x87, 0x65, 0x72, 0x70, 0x58, 0x26, 0xbf, 0x1e, 0x96, 0xc9, 0x57, 0xed, 0xf2, 0xc0, 0x41,
+	0xbb, 0x3c, 0xf0, 0x4b, 0xbb, 0x3c, 0xf0, 0xe1, 0x9c, 0x6e, 0x38, 0xf7, 0x5a, 0x55, 0xa5, 0xc6,
+	0x76, 0xdc, 0xc6, 0xf3, 0x82, 0x04, 0x07, 0xb1, 0xdb, 0x01, 0xc3, 0x79, 0x60, 0x52, 0xbb, 0x3a,
+	0xc4, 0xff, 0xb0, 0x7e, 0xfd, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xb8, 0x89, 0x3e, 0x08, 0xc3,
+	0x17, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1359,12 +1366,12 @@ type QueryClient interface {
 	// OrderBookExposure queries exposure info for the given order book and odds
 	// universal unique identifier.
 	OrderBookExposure(ctx context.Context, in *QueryOrderBookExposureRequest, opts ...grpc.CallOption) (*QueryOrderBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given order book
+	// OrderBookParticipationExposures queries exposures info for given order book
 	// participations.
-	ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given order book
+	OrderBookParticipationExposures(ctx context.Context, in *QueryOrderBookParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationExposuresResponse, error)
+	// ParticipationExposures queries exposure info for given order book
 	// participation.
-	ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error)
+	ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
 	// the given order book participation.
 	HistoricalParticipationExposures(ctx context.Context, in *QueryHistoricalParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryHistoricalParticipationExposuresResponse, error)
@@ -1444,18 +1451,18 @@ func (c *queryClient) OrderBookExposure(ctx context.Context, in *QueryOrderBookE
 	return out, nil
 }
 
-func (c *queryClient) ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error) {
-	out := new(QueryParticipationExposuresResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationExposures", in, out, opts...)
+func (c *queryClient) OrderBookParticipationExposures(ctx context.Context, in *QueryOrderBookParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryOrderBookParticipationExposuresResponse, error) {
+	out := new(QueryOrderBookParticipationExposuresResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/OrderBookParticipationExposures", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *queryClient) ParticipationExposure(ctx context.Context, in *QueryParticipationExposureRequest, opts ...grpc.CallOption) (*QueryParticipationExposureResponse, error) {
-	out := new(QueryParticipationExposureResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationExposure", in, out, opts...)
+func (c *queryClient) ParticipationExposures(ctx context.Context, in *QueryParticipationExposuresRequest, opts ...grpc.CallOption) (*QueryParticipationExposuresResponse, error) {
+	out := new(QueryParticipationExposuresResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/ParticipationExposures", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1499,12 +1506,12 @@ type QueryServer interface {
 	// OrderBookExposure queries exposure info for the given order book and odds
 	// universal unique identifier.
 	OrderBookExposure(context.Context, *QueryOrderBookExposureRequest) (*QueryOrderBookExposureResponse, error)
-	// ParticipationExposures queries exposures info for given order book
+	// OrderBookParticipationExposures queries exposures info for given order book
 	// participations.
-	ParticipationExposures(context.Context, *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error)
-	// ParticipationExposure queries exposure info for given order book
+	OrderBookParticipationExposures(context.Context, *QueryOrderBookParticipationExposuresRequest) (*QueryOrderBookParticipationExposuresResponse, error)
+	// ParticipationExposures queries exposure info for given order book
 	// participation.
-	ParticipationExposure(context.Context, *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error)
+	ParticipationExposures(context.Context, *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error)
 	// HistoricalParticipationExposures queries historical exposures info for
 	// the given order book participation.
 	HistoricalParticipationExposures(context.Context, *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error)
@@ -1538,11 +1545,11 @@ func (*UnimplementedQueryServer) OrderBookExposures(ctx context.Context, req *Qu
 func (*UnimplementedQueryServer) OrderBookExposure(ctx context.Context, req *QueryOrderBookExposureRequest) (*QueryOrderBookExposureResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookExposure not implemented")
 }
+func (*UnimplementedQueryServer) OrderBookParticipationExposures(ctx context.Context, req *QueryOrderBookParticipationExposuresRequest) (*QueryOrderBookParticipationExposuresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipationExposures not implemented")
+}
 func (*UnimplementedQueryServer) ParticipationExposures(ctx context.Context, req *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposures not implemented")
-}
-func (*UnimplementedQueryServer) ParticipationExposure(ctx context.Context, req *QueryParticipationExposureRequest) (*QueryParticipationExposureResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposure not implemented")
 }
 func (*UnimplementedQueryServer) HistoricalParticipationExposures(ctx context.Context, req *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HistoricalParticipationExposures not implemented")
@@ -1681,6 +1688,24 @@ func _Query_OrderBookExposure_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_OrderBookParticipationExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QueryOrderBookParticipationExposuresRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).OrderBookParticipationExposures(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.orderbook.Query/OrderBookParticipationExposures",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).OrderBookParticipationExposures(ctx, req.(*QueryOrderBookParticipationExposuresRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Query_ParticipationExposures_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QueryParticipationExposuresRequest)
 	if err := dec(in); err != nil {
@@ -1695,24 +1720,6 @@ func _Query_ParticipationExposures_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).ParticipationExposures(ctx, req.(*QueryParticipationExposuresRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_ParticipationExposure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryParticipationExposureRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).ParticipationExposure(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/ParticipationExposure",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).ParticipationExposure(ctx, req.(*QueryParticipationExposureRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1786,12 +1793,12 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_OrderBookExposure_Handler,
 		},
 		{
-			MethodName: "ParticipationExposures",
-			Handler:    _Query_ParticipationExposures_Handler,
+			MethodName: "OrderBookParticipationExposures",
+			Handler:    _Query_OrderBookParticipationExposures_Handler,
 		},
 		{
-			MethodName: "ParticipationExposure",
-			Handler:    _Query_ParticipationExposure_Handler,
+			MethodName: "ParticipationExposures",
+			Handler:    _Query_ParticipationExposures_Handler,
 		},
 		{
 			MethodName: "HistoricalParticipationExposures",
@@ -2336,6 +2343,97 @@ func (m *QueryOrderBookExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int,
 	return len(dAtA) - i, nil
 }
 
+func (m *QueryOrderBookParticipationExposuresRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOrderBookParticipationExposuresRequest) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOrderBookParticipationExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.OrderBookUid) > 0 {
+		i -= len(m.OrderBookUid)
+		copy(dAtA[i:], m.OrderBookUid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *QueryOrderBookParticipationExposuresResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QueryOrderBookParticipationExposuresResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QueryOrderBookParticipationExposuresResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Pagination != nil {
+		{
+			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintQuery(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ParticipationExposures) > 0 {
+		for iNdEx := len(m.ParticipationExposures) - 1; iNdEx >= 0; iNdEx-- {
+			{
+				size, err := m.ParticipationExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
+				if err != nil {
+					return 0, err
+				}
+				i -= size
+				i = encodeVarintQuery(dAtA, i, uint64(size))
+			}
+			i--
+			dAtA[i] = 0xa
+		}
+	}
+	return len(dAtA) - i, nil
+}
+
 func (m *QueryParticipationExposuresRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -2366,7 +2464,12 @@ func (m *QueryParticipationExposuresRequest) MarshalToSizedBuffer(dAtA []byte) (
 			i = encodeVarintQuery(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x1a
+	}
+	if m.ParticipationIndex != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipationIndex))
+		i--
+		dAtA[i] = 0x10
 	}
 	if len(m.OrderBookUid) > 0 {
 		i -= len(m.OrderBookUid)
@@ -2414,102 +2517,6 @@ func (m *QueryParticipationExposuresResponse) MarshalToSizedBuffer(dAtA []byte) 
 		for iNdEx := len(m.ParticipationExposures) - 1; iNdEx >= 0; iNdEx-- {
 			{
 				size, err := m.ParticipationExposures[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintQuery(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryParticipationExposureRequest) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryParticipationExposureRequest) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryParticipationExposureRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x1a
-	}
-	if m.ParticipationIndex != 0 {
-		i = encodeVarintQuery(dAtA, i, uint64(m.ParticipationIndex))
-		i--
-		dAtA[i] = 0x10
-	}
-	if len(m.OrderBookUid) > 0 {
-		i -= len(m.OrderBookUid)
-		copy(dAtA[i:], m.OrderBookUid)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.OrderBookUid)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *QueryParticipationExposureResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *QueryParticipationExposureResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *QueryParticipationExposureResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if m.Pagination != nil {
-		{
-			size, err := m.Pagination.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintQuery(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.ParticipationExposure) > 0 {
-		for iNdEx := len(m.ParticipationExposure) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.ParticipationExposure[iNdEx].MarshalToSizedBuffer(dAtA[:i])
 				if err != nil {
 					return 0, err
 				}
@@ -2928,7 +2935,7 @@ func (m *QueryOrderBookExposureResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipationExposuresRequest) Size() (n int) {
+func (m *QueryOrderBookParticipationExposuresRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2945,7 +2952,7 @@ func (m *QueryParticipationExposuresRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipationExposuresResponse) Size() (n int) {
+func (m *QueryOrderBookParticipationExposuresResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2964,7 +2971,7 @@ func (m *QueryParticipationExposuresResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipationExposureRequest) Size() (n int) {
+func (m *QueryParticipationExposuresRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -2984,14 +2991,14 @@ func (m *QueryParticipationExposureRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryParticipationExposureResponse) Size() (n int) {
+func (m *QueryParticipationExposuresResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if len(m.ParticipationExposure) > 0 {
-		for _, e := range m.ParticipationExposure {
+	if len(m.ParticipationExposures) > 0 {
+		for _, e := range m.ParticipationExposures {
 			l = e.Size()
 			n += 1 + l + sovQuery(uint64(l))
 		}
@@ -4477,6 +4484,244 @@ func (m *QueryOrderBookExposureResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+func (m *QueryOrderBookParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOrderBookParticipationExposuresRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOrderBookParticipationExposuresRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageRequest{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QueryOrderBookParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QueryOrderBookParticipationExposuresResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QueryOrderBookParticipationExposuresResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposures", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ParticipationExposures = append(m.ParticipationExposures, ParticipationExposure{})
+			if err := m.ParticipationExposures[len(m.ParticipationExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthQuery
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Pagination == nil {
+				m.Pagination = &query.PageResponse{}
+			}
+			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
 func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4539,6 +4784,25 @@ func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
+			}
+			m.ParticipationIndex = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.ParticipationIndex |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
 			}
@@ -4655,263 +4919,6 @@ func (m *QueryParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 			}
 			m.ParticipationExposures = append(m.ParticipationExposures, ParticipationExposure{})
 			if err := m.ParticipationExposures[len(m.ParticipationExposures)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageResponse{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryParticipationExposureRequest) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipationExposureRequest: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipationExposureRequest: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field OrderBookUid", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.OrderBookUid = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationIndex", wireType)
-			}
-			m.ParticipationIndex = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.ParticipationIndex |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Pagination", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Pagination == nil {
-				m.Pagination = &query.PageRequest{}
-			}
-			if err := m.Pagination.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipQuery(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *QueryParticipationExposureResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowQuery
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: QueryParticipationExposureResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryParticipationExposureResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field ParticipationExposure", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowQuery
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthQuery
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthQuery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.ParticipationExposure = append(m.ParticipationExposure, ParticipationExposure{})
-			if err := m.ParticipationExposure[len(m.ParticipationExposure)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

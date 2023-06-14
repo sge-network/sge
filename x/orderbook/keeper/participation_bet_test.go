@@ -23,8 +23,8 @@ func createNParticipationBetPair(
 
 	for i := range items {
 		items[i].BetUID = uuid.NewString()
-		items[i].OrderBookUID = uuid.NewString()
-		items[i].ParticipationIndex = cast.ToUint64(i + 1)
+		items[i].OrderBookUID = testOrderBookUID
+		items[i].ParticipationIndex = testParticipationIndex
 
 		keeper.SetParticipationBetPair(ctx, items[i], cast.ToUint64(i+10))
 	}
