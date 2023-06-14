@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -18,7 +19,7 @@ func (k Keeper) OrderBooks(
 	req *types.QueryOrderBooksRequest,
 ) (*types.QueryOrderBooksResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	// validate the provided status, return all the orderbooks if the status is empty
@@ -67,11 +68,11 @@ func (k Keeper) OrderBook(
 	req *types.QueryOrderBookRequest,
 ) (*types.QueryOrderBookResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
+		return nil, status.Error(codes.InvalidArgument, "order book id can not be empty")
 	}
 
 	ctx := sdk.UnwrapSDKContext(c)
@@ -89,11 +90,11 @@ func (k Keeper) OrderBookParticipations(
 	req *types.QueryOrderBookParticipationsRequest,
 ) (*types.QueryOrderBookParticipationsResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
+		return nil, status.Error(codes.InvalidArgument, "order book id cannot be empty")
 	}
 	var orderBookParticipations []types.OrderBookParticipation
 	ctx := sdk.UnwrapSDKContext(c)
@@ -131,11 +132,11 @@ func (k Keeper) OrderBookParticipation(
 	req *types.QueryOrderBookParticipationRequest,
 ) (*types.QueryOrderBookParticipationResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
+		return nil, status.Error(codes.InvalidArgument, "order book id can not be empty")
 	}
 
 	if req.ParticipationIndex < 1 {
@@ -151,7 +152,7 @@ func (k Keeper) OrderBookParticipation(
 	if !found {
 		return nil, status.Errorf(
 			codes.NotFound,
-			"book participation %s, %d not found",
+			"order book participation %s, %d not found",
 			req.OrderBookUid,
 			req.ParticipationIndex,
 		)
@@ -168,11 +169,11 @@ func (k Keeper) OrderBookExposures(
 	req *types.QueryOrderBookExposuresRequest,
 ) (*types.QueryOrderBookExposuresResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id cannot be empty")
+		return nil, status.Error(codes.InvalidArgument, "order book id cannot be empty")
 	}
 	var orderBookExposures []types.OrderBookOddsExposure
 	ctx := sdk.UnwrapSDKContext(c)
@@ -210,11 +211,11 @@ func (k Keeper) OrderBookExposure(
 	req *types.QueryOrderBookExposureRequest,
 ) (*types.QueryOrderBookExposureResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
+		return nil, status.Error(codes.InvalidArgument, "order book id can not be empty")
 	}
 
 	if req.OddsUid == "" {
@@ -226,7 +227,7 @@ func (k Keeper) OrderBookExposure(
 	if !found {
 		return nil, status.Errorf(
 			codes.NotFound,
-			"book exposure %s, %s not found",
+			"order book exposure %s, %s not found",
 			req.OrderBookUid,
 			req.OddsUid,
 		)
