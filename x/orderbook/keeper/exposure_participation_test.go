@@ -9,7 +9,6 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
 
@@ -22,8 +21,8 @@ func createNParticipationExposure(
 	items := make([]types.ParticipationExposure, n)
 
 	for i := range items {
-		items[i].ParticipationIndex = cast.ToUint64(i + 1)
-		items[i].OrderBookUID = uuid.NewString()
+		items[i].ParticipationIndex = testParticipationIndex
+		items[i].OrderBookUID = testOrderBookUID
 		items[i].OddsUID = uuid.NewString()
 		items[i].Round = 1
 		items[i].IsFulfilled = false
@@ -31,6 +30,7 @@ func createNParticipationExposure(
 		items[i].Exposure = sdk.NewInt(100)
 
 		keeper.SetParticipationExposure(ctx, items[i])
+		keeper.SetHistoricalParticipationExposure(ctx, items[i])
 	}
 	return items
 }

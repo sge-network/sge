@@ -14,36 +14,39 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func TestOrderBookQuerySingle(t *testing.T) {
+func TestOrderBookExposureQuerySingle(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBook(tApp, k, ctx, 2)
+	msgs := createNOrderBookOddsExposure(tApp, k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryOrderBookRequest
-		response *types.QueryOrderBookResponse
+		request  *types.QueryOrderBookExposureRequest
+		response *types.QueryOrderBookExposureResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryOrderBookRequest{
-				OrderBookUid: msgs[0].UID,
+			request: &types.QueryOrderBookExposureRequest{
+				OrderBookUid: msgs[0].OrderBookUID,
+				OddsUid:      msgs[0].OddsUID,
 			},
-			response: &types.QueryOrderBookResponse{OrderBook: msgs[0]},
+			response: &types.QueryOrderBookExposureResponse{OrderBookExposure: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryOrderBookRequest{
-				OrderBookUid: msgs[1].UID,
+			request: &types.QueryOrderBookExposureRequest{
+				OrderBookUid: msgs[1].OrderBookUID,
+				OddsUid:      msgs[1].OddsUID,
 			},
-			response: &types.QueryOrderBookResponse{OrderBook: msgs[1]},
+			response: &types.QueryOrderBookExposureResponse{OrderBookExposure: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryOrderBookRequest{
+			request: &types.QueryOrderBookExposureRequest{
 				OrderBookUid: cast.ToString(100000),
+				OddsUid:      "9ca3b818-cfc3-43cd-987b-4cffdf01cc5e",
 			},
-			err: status.Error(codes.NotFound, "order book 100000 not found"),
+			err: status.Error(codes.NotFound, "order book exposure 100000, 9ca3b818-cfc3-43cd-987b-4cffdf01cc5e not found"),
 		},
 		{
 			desc: "InvalidRequest",
@@ -51,7 +54,7 @@ func TestOrderBookQuerySingle(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			response, err := k.OrderBook(wctx, tc.request)
+			response, err := k.OrderBookExposure(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 			} else {
@@ -65,13 +68,14 @@ func TestOrderBookQuerySingle(t *testing.T) {
 	}
 }
 
-func TestOrderBooksQueryPaginated(t *testing.T) {
+func TestOrderBookExposuresQueryPaginated(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBook(tApp, k, ctx, 5)
+	msgs := createNOrderBookOddsExposure(tApp, k, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryOrderBooksRequest {
-		return &types.QueryOrderBooksRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryOrderBookExposuresRequest {
+		return &types.QueryOrderBookExposuresRequest{
+			OrderBookUid: testOrderBookUID,
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -83,12 +87,12 @@ func TestOrderBooksQueryPaginated(t *testing.T) {
 	t.Run("ByOffset", func(t *testing.T) {
 		step := 2
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.OrderBooks(wctx, request(nil, uint64(i), uint64(step), false))
+			resp, err := k.OrderBookExposures(wctx, request(nil, uint64(i), uint64(step), false))
 			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.Orderbooks), step)
+			require.LessOrEqual(t, len(resp.OrderBookExposures), step)
 			require.Subset(t,
 				nullify.Fill(msgs),
-				nullify.Fill(resp.Orderbooks),
+				nullify.Fill(resp.OrderBookExposures),
 			)
 		}
 	})
@@ -96,27 +100,27 @@ func TestOrderBooksQueryPaginated(t *testing.T) {
 		step := 2
 		var next []byte
 		for i := 0; i < len(msgs); i += step {
-			resp, err := k.OrderBooks(wctx, request(next, 0, uint64(step), false))
+			resp, err := k.OrderBookExposures(wctx, request(next, 0, uint64(step), false))
 			require.NoError(t, err)
-			require.LessOrEqual(t, len(resp.Orderbooks), step)
+			require.LessOrEqual(t, len(resp.OrderBookExposures), step)
 			require.Subset(t,
 				nullify.Fill(msgs),
-				nullify.Fill(resp.Orderbooks),
+				nullify.Fill(resp.OrderBookExposures),
 			)
 			next = resp.Pagination.NextKey
 		}
 	})
 	t.Run("Total", func(t *testing.T) {
-		resp, err := k.OrderBooks(wctx, request(nil, 0, 0, true))
+		resp, err := k.OrderBookExposures(wctx, request(nil, 0, 0, true))
 		require.NoError(t, err)
 		require.Equal(t, len(msgs), int(resp.Pagination.Total))
 		require.ElementsMatch(t,
 			nullify.Fill(msgs),
-			nullify.Fill(resp.Orderbooks),
+			nullify.Fill(resp.OrderBookExposures),
 		)
 	})
 	t.Run("InvalidRequest", func(t *testing.T) {
-		_, err := k.OrderBooks(wctx, nil)
+		_, err := k.OrderBookExposures(wctx, nil)
 		require.ErrorIs(t, err, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest))
 	})
 }

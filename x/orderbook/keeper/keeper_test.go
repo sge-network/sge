@@ -11,7 +11,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var testOrderBookUID = uuid.NewString()
+var (
+	testOrderBookUID       = uuid.NewString()
+	testParticipationIndex = uint64(1)
+)
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	_, k, ctx := setupKeeperAndApp(t)
