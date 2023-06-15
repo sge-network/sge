@@ -46,10 +46,11 @@ func createTestMarket(
 	tApp *simappUtil.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
+	marketUID string,
 	status markettypes.MarketStatus,
 	oddsUIDs []string,
 ) markettypes.Market {
-	market := markettypes.NewMarket(testOrderBookUID,
+	market := markettypes.NewMarket(marketUID,
 		uuid.NewString(),
 		cast.ToUint64(ctx.BlockTime().Unix()),
 		cast.ToUint64(ctx.BlockTime().Add(5*time.Minute).Unix()),
@@ -62,7 +63,7 @@ func createTestMarket(
 			BetFee:    sdk.NewInt(1),
 		},
 		"test market",
-		testOrderBookUID,
+		marketUID,
 		status,
 	)
 	tApp.MarketKeeper.SetMarket(ctx, market)
@@ -175,13 +176,15 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			createTestMarket(tApp, k, ctx, tc.marketStatus, oddsUIDs)
+			marketUID := uuid.NewString()
+			createTestMarket(tApp, k, ctx, marketUID, tc.marketStatus, oddsUIDs)
 
-			k.InitiateOrderBook(ctx, testOrderBookUID, oddsUIDs)
+			err := k.InitiateOrderBook(ctx, marketUID, oddsUIDs)
+			require.NoError(t, err)
 
 			participationIndex, err := k.InitiateOrderBookParticipation(ctx,
 				tc.depositorAddr,
-				testOrderBookUID,
+				marketUID,
 				sdk.NewInt(1000),
 				sdk.NewInt(100))
 
@@ -241,25 +244,25 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			createTestMarket(tApp, k, ctx, markettypes.MarketStatus_MARKET_STATUS_ACTIVE, oddsUIDs)
+			marketUID := uuid.NewString()
+			createTestMarket(tApp, k, ctx, marketUID, markettypes.MarketStatus_MARKET_STATUS_ACTIVE, oddsUIDs)
 
-			k.InitiateOrderBook(ctx, testOrderBookUID, oddsUIDs)
+			err := k.InitiateOrderBook(ctx, marketUID, oddsUIDs)
+			require.NoError(t, err)
 
 			var participationIndex uint64
-			var err error
 			if !tc.depositAmount.IsZero() {
 				participationIndex, err = k.InitiateOrderBookParticipation(ctx,
 					tc.depositorAddr,
-					testOrderBookUID,
+					marketUID,
 					tc.depositAmount,
 					sdk.NewInt(100))
 				require.NoError(t, err)
-
 			}
 
 			withdrawnAmount, err := k.WithdrawOrderBookParticipation(ctx,
 				tc.depositorAddr.String(),
-				testOrderBookUID,
+				marketUID,
 				participationIndex,
 				tc.withdrawMode,
 				tc.withdrawAmount,
