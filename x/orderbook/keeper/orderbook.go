@@ -62,7 +62,6 @@ func (k Keeper) InitiateOrderBook(ctx sdk.Context, marketUID string, oddsUIDs []
 	// create new active book object
 	orderBook = types.NewOrderBook(
 		orderBookUID,
-		0,
 		uint64(len(oddsUIDs)),
 		types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_ACTIVE,
 	)
