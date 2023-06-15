@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/nullify"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
@@ -63,6 +64,30 @@ func TestParticipationGet(t *testing.T) {
 			nullify.Fill(rst),
 		)
 	}
+}
+
+func TestParticipationsOfOrderBookGet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNParticipation(tApp, k, ctx, 10)
+
+	rst, err := k.GetParticipationsOfOrderBook(ctx,
+		uuid.NewString(),
+	)
+	var expectedResp []types.OrderBookParticipation
+	require.NoError(t, err)
+	require.Equal(t,
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
+	)
+
+	rst, err = k.GetParticipationsOfOrderBook(ctx,
+		testOrderBookUID,
+	)
+	require.NoError(t, err)
+	require.Equal(t,
+		nullify.Fill(items),
+		nullify.Fill(rst),
+	)
 }
 
 func TestParticipationGetAll(t *testing.T) {

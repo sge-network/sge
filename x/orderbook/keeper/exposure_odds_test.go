@@ -30,6 +30,28 @@ func createNOrderBookOddsExposure(
 	return items
 }
 
+func TestOddsExposuresByOrderBookGet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNOrderBookOddsExposure(tApp, k, ctx, 10)
+
+	rst, err := k.GetOddsExposuresByOrderBook(ctx,
+		uuid.NewString(),
+	)
+	var expectedResp []types.OrderBookOddsExposure
+	require.NoError(t, err)
+	require.Equal(t,
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
+	)
+
+	rst, err = k.GetOddsExposuresByOrderBook(ctx,
+		testOrderBookUID,
+	)
+
+	require.NoError(t, err)
+	require.Equal(t, len(items), len(rst))
+}
+
 func TestOrderBookOddsExposureGet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	items := createNOrderBookOddsExposure(tApp, k, ctx, 10)

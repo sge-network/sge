@@ -30,6 +30,7 @@ func createNParticipationExposure(
 		items[i].Exposure = sdk.NewInt(100)
 
 		keeper.SetParticipationExposure(ctx, items[i])
+		keeper.SetParticipationExposureByIndex(ctx, items[i])
 		keeper.SetHistoricalParticipationExposure(ctx, items[i])
 	}
 	return items
@@ -61,6 +62,38 @@ func TestParticipationExposureGet(t *testing.T) {
 			nullify.Fill(rst),
 		)
 	}
+}
+
+func TestExposureByOrderBookAndParticipationIndexGet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNParticipationExposure(tApp, k, ctx, 10)
+
+	rst, err := k.GetExposureByOrderBookAndParticipationIndex(ctx,
+		items[0].OrderBookUID,
+		1000,
+	)
+	var expectedResp []types.ParticipationExposure
+	require.NoError(t, err)
+	require.Equal(t,
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
+	)
+
+	rst, err = k.GetExposureByOrderBookAndParticipationIndex(ctx,
+		testOrderBookUID,
+		testParticipationIndex,
+	)
+	require.NoError(t, err)
+	require.Equal(t, len(items), len(rst))
+}
+
+func TestAllHistoricalParticipationExposuresGet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNParticipationExposure(tApp, k, ctx, 10)
+
+	rst, err := k.GetAllHistoricalParticipationExposures(ctx)
+	require.NoError(t, err)
+	require.Equal(t, len(items), len(rst))
 }
 
 func TestParticipationExposureGetAll(t *testing.T) {
