@@ -69,3 +69,22 @@ func TestOrderBookGetAll(t *testing.T) {
 		nullify.Fill(orderBooks),
 	)
 }
+
+func TestInitiateOrderBook(t *testing.T) {
+	k, ctx := setupKeeper(t)
+
+	odds := []string{
+		uuid.NewString(),
+		uuid.NewString(),
+	}
+
+	err := k.InitiateOrderBook(ctx, testOrderBookUID, odds)
+	require.NoError(t, err)
+
+	exposures, err := k.GetAllOrderBookExposures(ctx)
+	require.NoError(t, err)
+	require.Equal(t, len(odds), len(exposures))
+
+	err = k.InitiateOrderBook(ctx, testOrderBookUID, odds)
+	require.ErrorIs(t, types.ErrOrderBookAlreadyPresent, err)
+}
