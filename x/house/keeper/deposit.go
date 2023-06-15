@@ -33,8 +33,8 @@ func (k Keeper) GetDeposit(ctx sdk.Context, depositorAddress,
 	return val, true
 }
 
-// GetDeposits returns list of deposits.
-func (k Keeper) GetDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
+// GetAllDeposits returns list of deposits.
+func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error) {
 	store := k.getDepositStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
