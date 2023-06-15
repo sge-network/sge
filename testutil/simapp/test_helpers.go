@@ -9,14 +9,17 @@ import (
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	minttypes "github.com/sge-network/sge/x/mint/types"
+	"github.com/golang-jwt/jwt"
 	"github.com/spf13/cast"
 )
 
 // PKs is a slice of public keys for test
-var PKs = CreateTestPubKeys(500)
+var PKs = createTestPubKeys(500)
 
-type generateAccountStrategy func(int) []sdk.AccAddress
+func CreateJwtTicket(claim jwt.MapClaims) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
+	return token.SignedString(TestOVMPrivateKeys[0])
+}
 
 // createIncrementalAccounts is a strategy used by addTestAddrs() in order to generated addresses in ascending order.
 func createIncrementalAccounts(accNum int) []sdk.AccAddress {
@@ -31,7 +34,7 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 		buffer.WriteString(numString) // adding on final two digits to make addresses unique
 		res, _ := sdk.AccAddressFromHex(buffer.String())
 		bech := res.String()
-		addr, _ := TestAddr(buffer.String(), bech)
+		addr, _ := testAddr(buffer.String(), bech)
 
 		addresses = append(addresses, addr)
 		buffer.Reset()
@@ -40,8 +43,8 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 	return addresses
 }
 
-// TestAddr returns sample account address
-func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
+// testAddr returns sample account address
+func testAddr(addr string, bech string) (sdk.AccAddress, error) {
 	res, err := sdk.AccAddressFromHex(addr)
 	if err != nil {
 		return nil, err
@@ -62,75 +65,8 @@ func TestAddr(addr string, bech string) (sdk.AccAddress, error) {
 	return res, nil
 }
 
-// AddTestAddrsIncremental constructs and returns accNum amount of accounts with an
-// initial balance of accAmt in random order
-func AddTestAddrsIncremental(
-	tApp *TestApp,
-	ctx sdk.Context,
-	accNum int,
-	accAmt sdk.Int,
-) []sdk.AccAddress {
-	return addTestAddrs(tApp, ctx, accNum, accAmt, createIncrementalAccounts)
-}
-
-func addTestAddrs(
-	app *TestApp,
-	ctx sdk.Context,
-	accNum int,
-	accAmt sdk.Int,
-	strategy generateAccountStrategy,
-) []sdk.AccAddress {
-	testAddrs := strategy(accNum)
-
-	initCoins := sdk.NewCoins(
-		sdk.NewCoin(sdk.DefaultBondDenom, accAmt),
-		sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt),
-	)
-
-	for _, addr := range testAddrs {
-		initAccountWithCoins(app, ctx, addr, initCoins)
-	}
-
-	return testAddrs
-}
-
-func initAccountWithCoins(app *TestApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
-	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
-	if err != nil {
-		panic(err)
-	}
-
-	err = app.BankKeeper.SendCoinsFromModuleToAccount(ctx, minttypes.ModuleName, addr, coins)
-	if err != nil {
-		panic(err)
-	}
-}
-
-// ConvertAddrsToValAddrs converts the provided addresses to ValAddress.
-func ConvertAddrsToValAddrs(addrs []sdk.AccAddress) []sdk.ValAddress {
-	valAddrs := make([]sdk.ValAddress, len(addrs))
-
-	for i, addr := range addrs {
-		valAddrs[i] = sdk.ValAddress(addr)
-	}
-
-	return valAddrs
-}
-
-// FundModuleAccount is a utility function that funds a module account by
-// minting and sending the coins to the address. This should be used for testing
-// purposes only!
-func FundModuleAccount(app *TestApp, ctx sdk.Context, recipientMod string, coins sdk.Coins) error {
-	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
-	if err != nil {
-		return err
-	}
-
-	return app.BankKeeper.SendCoinsFromModuleToModule(ctx, minttypes.ModuleName, recipientMod, coins)
-}
-
-// CreateTestPubKeys returns a total of numPubKeys public keys in ascending order.
-func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
+// createTestPubKeys returns a total of numPubKeys public keys in ascending order.
+func createTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 	var publicKeys []cryptotypes.PubKey
 	var buffer bytes.Buffer
 
@@ -143,14 +79,14 @@ func CreateTestPubKeys(numPubKeys int) []cryptotypes.PubKey {
 		buffer.WriteString(
 			numString,
 		) // adding on final two digits to make pubkeys unique
-		publicKeys = append(publicKeys, NewPubKeyFromHex(buffer.String()))
+		publicKeys = append(publicKeys, newPubKeyFromHex(buffer.String()))
 		buffer.Reset()
 	}
 	return publicKeys
 }
 
-// NewPubKeyFromHex returns a PubKey from a hex string.
-func NewPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
+// newPubKeyFromHex returns a PubKey from a hex string.
+func newPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
 	pkBytes, err := hex.DecodeString(pk)
 	if err != nil {
 		panic(err)
