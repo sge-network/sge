@@ -9,6 +9,7 @@ import (
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -192,5 +193,84 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 			}
 		})
 	}
+}
 
+func TestWithdrawOrderBookParticipation(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+
+	oddsUIDs := []string{uuid.NewString(), uuid.NewString()}
+
+	for _, tc := range []struct {
+		desc           string
+		depositorAddr  sdk.AccAddress
+		depositAmount  sdk.Int
+		withdrawMode   housetypes.WithdrawalMode
+		withdrawAmount sdk.Int
+
+		expWithdrawnAmount sdk.Int
+		err                error
+	}{
+		{
+			desc:          "no participation",
+			depositorAddr: simappUtil.TestParamUsers["user1"].Address,
+			depositAmount: sdk.ZeroInt(),
+			withdrawMode:  housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
+			err:           types.ErrOrderBookParticipationNotFound,
+		},
+		{
+			desc:           "withdraw amount too large",
+			depositorAddr:  simappUtil.TestParamUsers["user1"].Address,
+			depositAmount:  sdk.NewInt(1000),
+			withdrawMode:   housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
+			withdrawAmount: sdk.NewInt(10000),
+			err:            types.ErrWithdrawalAmountIsTooLarge,
+		},
+		{
+			desc:               "success full",
+			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
+			depositAmount:      sdk.NewInt(1000),
+			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
+			expWithdrawnAmount: sdk.NewInt(1000),
+		},
+		{
+			desc:               "success partial",
+			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
+			depositAmount:      sdk.NewInt(500),
+			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
+			expWithdrawnAmount: sdk.NewInt(500),
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			createTestMarket(tApp, k, ctx, markettypes.MarketStatus_MARKET_STATUS_ACTIVE, oddsUIDs)
+
+			k.InitiateOrderBook(ctx, testOrderBookUID, oddsUIDs)
+
+			var participationIndex uint64
+			var err error
+			if !tc.depositAmount.IsZero() {
+				participationIndex, err = k.InitiateOrderBookParticipation(ctx,
+					tc.depositorAddr,
+					testOrderBookUID,
+					tc.depositAmount,
+					sdk.NewInt(100))
+				require.NoError(t, err)
+
+			}
+
+			withdrawnAmount, err := k.WithdrawOrderBookParticipation(ctx,
+				tc.depositorAddr.String(),
+				testOrderBookUID,
+				participationIndex,
+				tc.withdrawMode,
+				tc.withdrawAmount,
+			)
+
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t, tc.expWithdrawnAmount, withdrawnAmount)
+			}
+		})
+	}
 }
