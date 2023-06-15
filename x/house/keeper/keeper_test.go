@@ -6,14 +6,15 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/house/keeper"
 	"github.com/stretchr/testify/require"
 )
 
 var (
-	testMarketUID          = uuid.NewString()
-	testParticipationIndex = uint64(1)
+	testMarketUID        = uuid.NewString()
+	testDepositorAddress = sample.AccAddress()
 )
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {

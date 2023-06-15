@@ -23,7 +23,7 @@ func createNDeposits(
 		items[i].Creator = sample.AccAddress()
 		items[i].MarketUID = testMarketUID
 		items[i].ParticipationIndex = uint64(i + 1)
-		items[i].DepositorAddress = sample.AccAddress()
+		items[i].DepositorAddress = testDepositorAddress
 		items[i].Amount = sdk.NewInt(100)
 		items[i].Liquidity = sdk.NewInt(90)
 		items[i].Fee = sdk.NewInt(10)

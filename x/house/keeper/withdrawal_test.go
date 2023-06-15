@@ -21,6 +21,7 @@ func createNWithdrawals(
 	for i := range items {
 		items[i].ID = uint64(i)
 		items[i].Creator = sample.AccAddress()
+		items[i].Address = testDepositorAddress
 		items[i].MarketUID = testMarketUID
 		items[i].ParticipationIndex = uint64(i + 1)
 		items[i].Mode = types.WithdrawalMode_WITHDRAWAL_MODE_FULL
