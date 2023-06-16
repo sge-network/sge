@@ -6,7 +6,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	"github.com/sge-network/sge/testutil/simapp"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/house/types"
@@ -74,7 +73,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"kyc_data":          testKyc,
 			"depositor_address": depositor.Address.String(),
 		}
-		ticket, err := simapp.CreateJwtTicket(ticketClaim)
+		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
@@ -98,7 +97,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"iat":      time.Now().Unix(),
 			"kyc_data": testKyc,
 		}
-		ticket, err := simapp.CreateJwtTicket(ticketClaim)
+		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
@@ -138,7 +137,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"depositor_address": depositor.Address.String(),
 			"kyc_data":          testKyc,
 		}
-		ticket, err := simapp.CreateJwtTicket(ticketClaim)
+		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
