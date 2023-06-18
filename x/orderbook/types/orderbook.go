@@ -9,13 +9,12 @@ import (
 //
 //nolint:interface
 func NewOrderBook(
-	bookUID string,
-	participationCount, oddsCount uint64,
+	bookUID string, oddsCount uint64,
 	status OrderBookStatus,
 ) OrderBook {
 	return OrderBook{
 		UID:                bookUID,
-		ParticipationCount: participationCount,
+		ParticipationCount: 0,
 		Status:             status,
 		OddsCount:          oddsCount,
 	}

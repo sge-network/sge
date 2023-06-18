@@ -25,8 +25,8 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 		GetCmdQueryOrderBookParticipation(),
 		GetCmdQueryOrderBookExposures(),
 		GetCmdQueryOrderBookExposure(),
+		GetCmdQueryOrderBookParticipationExposures(),
 		GetCmdQueryParticipationExposures(),
-		GetCmdQueryParticipationExposure(),
 		GetCmdQueryHistoricalParticipationExposures(),
 		GetCmdQueryParticipationBets(),
 	)

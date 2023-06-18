@@ -18,10 +18,10 @@ func (k Keeper) SetOrderBookOddsExposure(ctx sdk.Context, boe types.OrderBookOdd
 // GetOrderBookOddsExposure returns a specific book odds exposure.
 func (k Keeper) GetOrderBookOddsExposure(
 	ctx sdk.Context,
-	bookUID, oddsUID string,
+	orderBookUID, oddsUID string,
 ) (val types.OrderBookOddsExposure, found bool) {
 	marketsStore := k.getOrderBookOddsExposureStore(ctx)
-	exposureKey := types.GetOrderBookOddsExposureKey(bookUID, oddsUID)
+	exposureKey := types.GetOrderBookOddsExposureKey(orderBookUID, oddsUID)
 	b := marketsStore.Get(exposureKey)
 	if b == nil {
 		return val, false
@@ -35,10 +35,10 @@ func (k Keeper) GetOrderBookOddsExposure(
 // GetOddsExposuresByOrderBook returns all exposures for an order book.
 func (k Keeper) GetOddsExposuresByOrderBook(
 	ctx sdk.Context,
-	bookUID string,
+	orderBookUID string,
 ) (list []types.OrderBookOddsExposure, err error) {
 	store := k.getOrderBookOddsExposureStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookOddsExposuresKey(bookUID))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetOrderBookOddsExposuresKey(orderBookUID))
 
 	defer func() {
 		err = iterator.Close()
@@ -71,4 +71,59 @@ func (k Keeper) GetAllOrderBookExposures(
 	}
 
 	return
+}
+
+// initParticipationExposures initialize the odds and participation exposures for the
+// participation at index.
+func (k Keeper) initParticipationExposures(
+	ctx sdk.Context,
+	orderBookUID string,
+	participationIndex uint64,
+) error {
+	// Update book odds exposures and add participant exposures
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
+	if err != nil {
+		return err
+	}
+	for _, boe := range boes {
+		boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
+		k.SetOrderBookOddsExposure(ctx, boe)
+
+		pe := types.NewParticipationExposure(
+			orderBookUID,
+			boe.OddsUID,
+			sdk.ZeroInt(),
+			sdk.ZeroInt(),
+			participationIndex,
+			1,
+			false,
+		)
+		k.SetParticipationExposure(ctx, pe)
+	}
+
+	return nil
+}
+
+func (k Keeper) removeNotWithdrawableFromFulfillmentQueue(
+	ctx sdk.Context,
+	bp types.OrderBookParticipation,
+) error {
+	if !bp.IsWithdrawable() {
+		boes, err := k.GetOddsExposuresByOrderBook(ctx, bp.OrderBookUID)
+		if err != nil {
+			return err
+		}
+		for _, boe := range boes {
+			for i, pn := range boe.FulfillmentQueue {
+				if pn == bp.Index {
+					boe.FulfillmentQueue = append(
+						boe.FulfillmentQueue[:i],
+						boe.FulfillmentQueue[i+1:]...)
+				}
+			}
+			k.SetOrderBookOddsExposure(ctx, boe)
+		}
+	}
+
+	return nil
 }

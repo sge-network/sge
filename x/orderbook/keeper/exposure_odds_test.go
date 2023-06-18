@@ -9,54 +9,68 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
 
-func createNParticipation(
+func createNOrderBookOddsExposure(
 	tApp *simappUtil.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
-) []types.OrderBookParticipation {
-	items := make([]types.OrderBookParticipation, n)
+) []types.OrderBookOddsExposure {
+	items := make([]types.OrderBookOddsExposure, n)
 
 	for i := range items {
-		items[i].Index = cast.ToUint64(i + 1)
-		items[i].ParticipantAddress = simappUtil.TestParamUsers["user1"].Address.String()
-		items[i].OrderBookUID = uuid.NewString()
-		items[i].ActualProfit = sdk.NewInt(100)
-		items[i].CurrentRoundLiquidity = sdk.NewInt(100)
-		items[i].CurrentRoundMaxLoss = sdk.NewInt(100)
-		items[i].CurrentRoundTotalBetAmount = sdk.NewInt(100)
-		items[i].Liquidity = sdk.NewInt(100)
-		items[i].MaxLoss = sdk.NewInt(100)
-		items[i].TotalBetAmount = sdk.NewInt(100)
+		items[i].FulfillmentQueue = []uint64{1}
+		items[i].OddsUID = uuid.NewString()
+		items[i].OrderBookUID = testOrderBookUID
 
-		keeper.SetOrderBookParticipation(ctx, items[i])
+		keeper.SetOrderBookOddsExposure(ctx, items[i])
 	}
 	return items
 }
 
-func TestParticipationGet(t *testing.T) {
+func TestOddsExposuresByOrderBookGet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipation(tApp, k, ctx, 10)
+	items := createNOrderBookOddsExposure(tApp, k, ctx, 10)
 
-	rst, found := k.GetOrderBookParticipation(ctx,
-		items[0].OrderBookUID,
-		10000,
+	rst, err := k.GetOddsExposuresByOrderBook(ctx,
+		uuid.NewString(),
 	)
-	var expectedResp types.OrderBookParticipation
+	var expectedResp []types.OrderBookOddsExposure
+	require.NoError(t, err)
+	require.Equal(t,
+		nullify.Fill(expectedResp),
+		nullify.Fill(rst),
+	)
+
+	rst, err = k.GetOddsExposuresByOrderBook(ctx,
+		testOrderBookUID,
+	)
+
+	require.NoError(t, err)
+	require.Equal(t, len(items), len(rst))
+}
+
+func TestOrderBookOddsExposureGet(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNOrderBookOddsExposure(tApp, k, ctx, 10)
+
+	rst, found := k.GetOrderBookOddsExposure(ctx,
+		uuid.NewString(),
+		uuid.NewString(),
+	)
+	var expectedResp types.OrderBookOddsExposure
 	require.False(t, found)
 	require.Equal(t,
 		nullify.Fill(expectedResp),
 		nullify.Fill(rst),
 	)
 
-	for i, item := range items {
-		rst, found := k.GetOrderBookParticipation(ctx,
-			items[i].OrderBookUID,
-			uint64(i+1),
+	for _, item := range items {
+		rst, found := k.GetOrderBookOddsExposure(ctx,
+			item.OrderBookUID,
+			item.OddsUID,
 		)
 		require.True(t, found)
 		require.Equal(t,
@@ -66,14 +80,14 @@ func TestParticipationGet(t *testing.T) {
 	}
 }
 
-func TestParticipationGetAll(t *testing.T) {
+func TestOrderBookOddsExposureGetAll(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipation(tApp, k, ctx, 10)
+	items := createNOrderBookOddsExposure(tApp, k, ctx, 10)
 
-	participations, err := k.GetAllOrderBookParticipations(ctx)
+	exposures, err := k.GetAllOrderBookExposures(ctx)
 	require.NoError(t, err)
 	require.ElementsMatch(t,
 		nullify.Fill(items),
-		nullify.Fill(participations),
+		nullify.Fill(exposures),
 	)
 }

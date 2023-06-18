@@ -6,18 +6,19 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-// ParticipationExposures queries participation exposures info for a given orderbook
-func (k Keeper) ParticipationExposures(
+// OrderBookParticipationExposures queries participation exposures info for a given orderbook
+func (k Keeper) OrderBookParticipationExposures(
 	c context.Context,
-	req *types.QueryParticipationExposuresRequest,
-) (*types.QueryParticipationExposuresResponse, error) {
+	req *types.QueryOrderBookParticipationExposuresRequest,
+) (*types.QueryOrderBookParticipationExposuresResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
@@ -50,19 +51,19 @@ func (k Keeper) ParticipationExposures(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryParticipationExposuresResponse{
+	return &types.QueryOrderBookParticipationExposuresResponse{
 		ParticipationExposures: participationExposures,
 		Pagination:             pageRes,
 	}, nil
 }
 
-// ParticipationExposure queries participation exposure info for given order book id and participation index
-func (k Keeper) ParticipationExposure(
+// ParticipationExposures queries participation exposure info for given order book id and participation index
+func (k Keeper) ParticipationExposures(
 	c context.Context,
-	req *types.QueryParticipationExposureRequest,
-) (*types.QueryParticipationExposureResponse, error) {
+	req *types.QueryParticipationExposuresRequest,
+) (*types.QueryParticipationExposuresResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
@@ -100,9 +101,9 @@ func (k Keeper) ParticipationExposure(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryParticipationExposureResponse{
-		ParticipationExposure: participationExposures,
-		Pagination:            pageRes,
+	return &types.QueryParticipationExposuresResponse{
+		ParticipationExposures: participationExposures,
+		Pagination:             pageRes,
 	}, nil
 }
 
@@ -111,7 +112,7 @@ func (k Keeper) HistoricalParticipationExposures(
 	c context.Context, req *types.QueryHistoricalParticipationExposuresRequest,
 ) (*types.QueryHistoricalParticipationExposuresResponse, error) {
 	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
 
 	if req.OrderBookUid == "" {
@@ -150,55 +151,5 @@ func (k Keeper) HistoricalParticipationExposures(
 	return &types.QueryHistoricalParticipationExposuresResponse{
 		ParticipationExposures: historicalParticipationExposures,
 		Pagination:             pageRes,
-	}, nil
-}
-
-// ParticipationFulfilledBets queries participation fulfilled bets info for given order book id and participation index
-func (k Keeper) ParticipationFulfilledBets(
-	c context.Context,
-	req *types.QueryParticipationFulfilledBetsRequest,
-) (*types.QueryParticipationFulfilledBetsResponse, error) {
-	if req == nil {
-		return nil, status.Error(codes.InvalidArgument, "empty request")
-	}
-
-	if req.OrderBookUid == "" {
-		return nil, status.Error(codes.InvalidArgument, "book id can not be empty")
-	}
-
-	if req.ParticipationIndex < 1 {
-		return nil, status.Error(codes.InvalidArgument, "participation index can not be less than 1")
-	}
-
-	ctx := sdk.UnwrapSDKContext(c)
-	var participationBets []types.ParticipationBetPair
-
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.ParticipationBetPairKeyPrefix)
-	betsStore := prefix.NewStore(
-		store,
-		types.GetParticipationByIndexKey(req.OrderBookUid, req.ParticipationIndex),
-	)
-	pageRes, err := query.FilteredPaginate(
-		betsStore,
-		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
-			var participationBet types.ParticipationBetPair
-			if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
-				return false, err
-			}
-
-			if accumulate {
-				participationBets = append(participationBets, participationBet)
-			}
-			return true, nil
-		},
-	)
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &types.QueryParticipationFulfilledBetsResponse{
-		ParticipationBets: participationBets,
-		Pagination:        pageRes,
 	}, nil
 }

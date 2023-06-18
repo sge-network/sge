@@ -12,10 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// GetCmdQueryParticipationExposures implements the command to query all the participation exposures to a specific orderbook.
-func GetCmdQueryParticipationExposures() *cobra.Command {
+// GetCmdQueryOrderBookParticipationExposures implements the command to query all the participation exposures to a specific orderbook.
+func GetCmdQueryOrderBookParticipationExposures() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "participation-exposures [order-book-id]",
+		Use:   "orderbook-participation-exposures [order-book-id]",
 		Short: "Query all participation exposures for a specific order book",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query participation exposures on an individual order book.
@@ -41,12 +41,12 @@ $ %s query orderbook participation-exposures %s
 				return err
 			}
 
-			params := &types.QueryParticipationExposuresRequest{
+			params := &types.QueryOrderBookParticipationExposuresRequest{
 				OrderBookUid: orderBookUID,
 				Pagination:   pageReq,
 			}
 
-			res, err := queryClient.ParticipationExposures(cmd.Context(), params)
+			res, err := queryClient.OrderBookParticipationExposures(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -61,11 +61,11 @@ $ %s query orderbook participation-exposures %s
 	return cmd
 }
 
-// GetCmdQueryParticipationExposure implements the participation-exposure query command.
-func GetCmdQueryParticipationExposure() *cobra.Command {
+// GetCmdQueryParticipationExposures implements the participation-exposure query command.
+func GetCmdQueryParticipationExposures() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "participation-exposure [order-book-id] [participation-index]",
-		Short: "Query a participation exposure",
+		Use:   "participation-exposures [order-book-id] [participation-index]",
+		Short: "Query all participation exposures for a specific order book and participation",
 		Long: strings.TrimSpace(
 			fmt.Sprintf(`Query details about a participation exposure.
 
@@ -92,11 +92,11 @@ $ %s query orderbook participation-exposure %s %d
 				)
 			}
 
-			params := &types.QueryParticipationExposureRequest{
+			params := &types.QueryParticipationExposuresRequest{
 				OrderBookUid:       orderBookUID,
 				ParticipationIndex: participationIndex,
 			}
-			res, err := queryClient.ParticipationExposure(cmd.Context(), params)
+			res, err := queryClient.ParticipationExposures(cmd.Context(), params)
 			if err != nil {
 				return err
 			}
@@ -155,63 +155,6 @@ $ %s query orderbook historical-participation-exposures %s
 
 	flags.AddQueryFlagsToCmd(cmd)
 	flags.AddPaginationFlagsToCmd(cmd, "historical participation exposures")
-
-	return cmd
-}
-
-// GetCmdQueryParticipationBets implements the command to query all the participation fulfilled bets to a specific orderbook.
-func GetCmdQueryParticipationBets() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "participation-bets [order-book-id] [participation-index]",
-		Short: "Query all participation fulfilled bets for a specific order book",
-		Long: strings.TrimSpace(
-			fmt.Sprintf(`Query participation fulfilled bets on an individual order book.
-
-Example:
-$ %s query orderbook participation-bets %s %d
-`,
-				version.AppName, "5531c60f-2025-48ce-ae79-1dc110f16000", 2,
-			),
-		),
-		Args: cobra.ExactArgs(2),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			clientCtx, err := client.GetClientQueryContext(cmd)
-			if err != nil {
-				return err
-			}
-			queryClient := types.NewQueryClient(clientCtx)
-
-			orderBookUID := args[0]
-			participationIndex, err := cast.ToUint64E(args[1])
-			if err != nil || participationIndex < 1 {
-				return fmt.Errorf(
-					"particiapnt index argument provided must be a non-negative-integer: %v",
-					err,
-				)
-			}
-
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			params := &types.QueryParticipationFulfilledBetsRequest{
-				OrderBookUid:       orderBookUID,
-				ParticipationIndex: participationIndex,
-				Pagination:         pageReq,
-			}
-
-			res, err := queryClient.ParticipationFulfilledBets(cmd.Context(), params)
-			if err != nil {
-				return err
-			}
-
-			return clientCtx.PrintProto(res)
-		},
-	}
-
-	flags.AddQueryFlagsToCmd(cmd)
-	flags.AddPaginationFlagsToCmd(cmd, "participation fulfilled bets")
 
 	return cmd
 }
