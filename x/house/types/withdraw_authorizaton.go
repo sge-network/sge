@@ -17,17 +17,17 @@ func NewWithdrawAuthorization(withdrawLimit sdk.Int) *WithdrawAuthorization {
 
 // MsgTypeURL implements Authorization.MsgTypeURL.
 func (a WithdrawAuthorization) MsgTypeURL() string {
-	return sdk.MsgTypeURL(&MsgDeposit{})
+	return sdk.MsgTypeURL(&MsgWithdraw{})
 }
 
 // Accept implements Authorization.Accept.
 func (a WithdrawAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
-	mDeposit, ok := msg.(*MsgDeposit)
+	mWithdraw, ok := msg.(*MsgWithdraw)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
 	}
 
-	if a.WithdrawLimit.LT(mDeposit.Amount) {
+	if a.WithdrawLimit.LT(mWithdraw.Amount) {
 		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
 			"requested amount is more than withdraw limit",
 		)
@@ -36,7 +36,7 @@ func (a WithdrawAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.Accep
 	return authz.AcceptResponse{
 		Accept:  true,
 		Delete:  false,
-		Updated: &WithdrawAuthorization{WithdrawLimit: mDeposit.Amount},
+		Updated: &WithdrawAuthorization{WithdrawLimit: mWithdraw.Amount},
 	}, nil
 }
 
