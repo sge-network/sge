@@ -14,4 +14,4 @@
     * [State Transitions](../House/04_State_Transitions.md)
     * [Messages](../House/05_Messages.md)
     * [Events](../House/06_Events.md)
-  * [Strategic Reserve](../StrategicReserve/01_Overview.md)
+  * [Order Book](../OrderBook/01_Overview.md)

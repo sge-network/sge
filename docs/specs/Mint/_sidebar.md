@@ -13,4 +13,4 @@
     * [Parameters](../Mint/06_Parameters.md)
   * [Market](../Market/01_Overview.md)
   * [House](../House/01_Overview.md)
-  * [Strategic Reserve](../StrategicReserve/01_Overview.md)
+  * [Order Book](../OrderBook/01_Overview.md)
