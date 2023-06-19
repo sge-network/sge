@@ -6,6 +6,10 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	io "io"
+	math "math"
+	math_bits "math/bits"
+
 	query "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
@@ -14,15 +18,14 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	io "io"
-	math "math"
-	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+var (
+	_ = proto.Marshal
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -32,8 +35,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
 // Query/Params RPC method.
-type QueryParamsRequest struct {
-}
+type QueryParamsRequest struct{}
 
 func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
@@ -41,9 +43,11 @@ func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{0}
 }
+
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
@@ -56,12 +60,15 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
+
 func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
 }
+
 func (m *QueryParamsRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
 }
@@ -81,9 +88,11 @@ func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{1}
 }
+
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsResponse.Marshal(b, m, deterministic)
@@ -96,12 +105,15 @@ func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
+
 func (m *QueryParamsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsResponse.Merge(m, src)
 }
+
 func (m *QueryParamsResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryParamsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsResponse.DiscardUnknown(m)
 }
@@ -117,8 +129,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 
 // QueryPubKeysRequest is the request type for the public keys list query.
 // Query/PubKeys RPC method.
-type QueryPubKeysRequest struct {
-}
+type QueryPubKeysRequest struct{}
 
 func (m *QueryPubKeysRequest) Reset()         { *m = QueryPubKeysRequest{} }
 func (m *QueryPubKeysRequest) String() string { return proto.CompactTextString(m) }
@@ -126,9 +137,11 @@ func (*QueryPubKeysRequest) ProtoMessage()    {}
 func (*QueryPubKeysRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{2}
 }
+
 func (m *QueryPubKeysRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPubKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPubKeysRequest.Marshal(b, m, deterministic)
@@ -141,12 +154,15 @@ func (m *QueryPubKeysRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPubKeysRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPubKeysRequest.Merge(m, src)
 }
+
 func (m *QueryPubKeysRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPubKeysRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPubKeysRequest.DiscardUnknown(m)
 }
@@ -166,9 +182,11 @@ func (*QueryPubKeysResponse) ProtoMessage()    {}
 func (*QueryPubKeysResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{3}
 }
+
 func (m *QueryPubKeysResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPubKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPubKeysResponse.Marshal(b, m, deterministic)
@@ -181,12 +199,15 @@ func (m *QueryPubKeysResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPubKeysResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPubKeysResponse.Merge(m, src)
 }
+
 func (m *QueryPubKeysResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPubKeysResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPubKeysResponse.DiscardUnknown(m)
 }
@@ -213,9 +234,11 @@ func (*QueryPublicKeysChangeProposalRequest) ProtoMessage()    {}
 func (*QueryPublicKeysChangeProposalRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{4}
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPublicKeysChangeProposalRequest.Marshal(b, m, deterministic)
@@ -228,12 +251,15 @@ func (m *QueryPublicKeysChangeProposalRequest) XXX_Marshal(b []byte, determinist
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPublicKeysChangeProposalRequest.Merge(m, src)
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPublicKeysChangeProposalRequest.DiscardUnknown(m)
 }
@@ -267,9 +293,11 @@ func (*QueryPublicKeysChangeProposalResponse) ProtoMessage()    {}
 func (*QueryPublicKeysChangeProposalResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{5}
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPublicKeysChangeProposalResponse.Marshal(b, m, deterministic)
@@ -282,12 +310,15 @@ func (m *QueryPublicKeysChangeProposalResponse) XXX_Marshal(b []byte, determinis
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPublicKeysChangeProposalResponse.Merge(m, src)
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPublicKeysChangeProposalResponse.DiscardUnknown(m)
 }
@@ -314,9 +345,11 @@ func (*QueryPublicKeysChangeProposalsRequest) ProtoMessage()    {}
 func (*QueryPublicKeysChangeProposalsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{6}
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.Marshal(b, m, deterministic)
@@ -329,12 +362,15 @@ func (m *QueryPublicKeysChangeProposalsRequest) XXX_Marshal(b []byte, determinis
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.Merge(m, src)
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPublicKeysChangeProposalsRequest.DiscardUnknown(m)
 }
@@ -371,9 +407,11 @@ func (*QueryPublicKeysChangeProposalsResponse) ProtoMessage()    {}
 func (*QueryPublicKeysChangeProposalsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_40d67ba9adaeca00, []int{7}
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.Marshal(b, m, deterministic)
@@ -386,12 +424,15 @@ func (m *QueryPublicKeysChangeProposalsResponse) XXX_Marshal(b []byte, determini
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.Merge(m, src)
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPublicKeysChangeProposalsResponse.DiscardUnknown(m)
 }
@@ -469,8 +510,10 @@ var fileDescriptor_40d67ba9adaeca00 = []byte{
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
+var (
+	_ context.Context
+	_ grpc.ClientConn
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -547,18 +590,20 @@ type QueryServer interface {
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServer struct {
-}
+type UnimplementedQueryServer struct{}
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
+
 func (*UnimplementedQueryServer) PubKeys(ctx context.Context, req *QueryPubKeysRequest) (*QueryPubKeysResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PubKeys not implemented")
 }
+
 func (*UnimplementedQueryServer) PublicKeysChangeProposal(ctx context.Context, req *QueryPublicKeysChangeProposalRequest) (*QueryPublicKeysChangeProposalResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublicKeysChangeProposal not implemented")
 }
+
 func (*UnimplementedQueryServer) PublicKeysChangeProposals(ctx context.Context, req *QueryPublicKeysChangeProposalsRequest) (*QueryPublicKeysChangeProposalsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PublicKeysChangeProposals not implemented")
 }
@@ -941,6 +986,7 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *QueryParamsRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1049,9 +1095,11 @@ func (m *QueryPublicKeysChangeProposalsResponse) Size() (n int) {
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1102,6 +1150,7 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1185,6 +1234,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPubKeysRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1235,6 +1285,7 @@ func (m *QueryPubKeysRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPubKeysResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1317,6 +1368,7 @@ func (m *QueryPubKeysResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1405,6 +1457,7 @@ func (m *QueryPublicKeysChangeProposalRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1488,6 +1541,7 @@ func (m *QueryPublicKeysChangeProposalResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1593,6 +1647,7 @@ func (m *QueryPublicKeysChangeProposalsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1713,6 +1768,7 @@ func (m *QueryPublicKeysChangeProposalsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipQuery(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

@@ -5,17 +5,20 @@ package types
 
 import (
 	fmt "fmt"
-	_ "github.com/gogo/protobuf/gogoproto"
-	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
+
+	_ "github.com/gogo/protobuf/gogoproto"
+	proto "github.com/gogo/protobuf/proto"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+var (
+	_ = proto.Marshal
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -35,9 +38,11 @@ func (*KeyVault) ProtoMessage()    {}
 func (*KeyVault) Descriptor() ([]byte, []int) {
 	return fileDescriptor_58deae9100d60c6b, []int{0}
 }
+
 func (m *KeyVault) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *KeyVault) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_KeyVault.Marshal(b, m, deterministic)
@@ -50,12 +55,15 @@ func (m *KeyVault) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
+
 func (m *KeyVault) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_KeyVault.Merge(m, src)
 }
+
 func (m *KeyVault) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *KeyVault) XXX_DiscardUnknown() {
 	xxx_messageInfo_KeyVault.DiscardUnknown(m)
 }
@@ -134,6 +142,7 @@ func encodeVarintKeyVault(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *KeyVault) Size() (n int) {
 	if m == nil {
 		return 0
@@ -152,9 +161,11 @@ func (m *KeyVault) Size() (n int) {
 func sovKeyVault(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozKeyVault(x uint64) (n int) {
 	return sovKeyVault(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (m *KeyVault) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -237,6 +248,7 @@ func (m *KeyVault) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipKeyVault(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
