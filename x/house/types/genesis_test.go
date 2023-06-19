@@ -22,8 +22,6 @@ func TestGenesisState_Validate(t *testing.T) {
 				MarketUID:             MarketUID,
 				ParticipationIndex:    1,
 				Amount:                sdk.NewInt(10),
-				Fee:                   sdk.NewInt(1),
-				Liquidity:             sdk.NewInt(9),
 				WithdrawalCount:       1,
 				TotalWithdrawalAmount: sdk.NewInt(10),
 			},

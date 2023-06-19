@@ -25,8 +25,6 @@ func createNDeposits(
 		items[i].ParticipationIndex = uint64(i + 1)
 		items[i].DepositorAddress = testDepositorAddress
 		items[i].Amount = sdk.NewInt(100)
-		items[i].Liquidity = sdk.NewInt(90)
-		items[i].Fee = sdk.NewInt(10)
 		items[i].TotalWithdrawalAmount = sdk.NewInt(0)
 
 		keeper.SetDeposit(ctx, items[i])

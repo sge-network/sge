@@ -86,7 +86,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 	t.Run("no authorization found", func(t *testing.T) {
 		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
-			ID:       creator.Address.String(),
+			ID:       depositor.Address.String(),
 		}
 		ticketClaim := jwt.MapClaims{
 			"exp":               time.Now().Add(time.Minute * 5).Unix(),
@@ -98,10 +98,12 @@ func TestMsgServerWithdraw(t *testing.T) {
 		require.Nil(t, err)
 
 		inputWithdraw := &types.MsgWithdraw{
-			Creator:   creator.Address.String(),
-			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
-			Ticket:    ticket,
+			Creator:            creator.Address.String(),
+			MarketUID:          testMarketUID,
+			ParticipationIndex: deposit.ParticipationIndex,
+			Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
+			Amount:             sdk.NewInt(1000),
+			Ticket:             ticket,
 		}
 
 		_, err = msgk.Withdraw(wctx, inputWithdraw)

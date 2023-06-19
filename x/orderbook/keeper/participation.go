@@ -82,7 +82,7 @@ func (k Keeper) GetAllOrderBookParticipations(
 
 // InitiateOrderBookParticipation starts a participation on a book for a certain account.
 func (k Keeper) InitiateOrderBookParticipation(
-	ctx sdk.Context, addr sdk.AccAddress, bookUID string, liquidity, fee sdk.Int,
+	ctx sdk.Context, addr sdk.AccAddress, bookUID string, depositAmount, feeAmount sdk.Int,
 ) (index uint64, err error) {
 	market, found := k.marketKeeper.GetMarket(ctx, bookUID)
 	if !found {
@@ -123,10 +123,12 @@ func (k Keeper) InitiateOrderBookParticipation(
 		return
 	}
 
+	liquidity := depositAmount.Sub(feeAmount)
+
 	bookParticipation := types.NewOrderBookParticipation(
 		index, book.UID, addr.String(),
-		book.OddsCount,       // all odds need to be filled in the next steps
-		liquidity, liquidity, // int the start, liquidity and current round liquidity are the same
+		book.OddsCount,                  // all odds need to be filled in the next steps
+		liquidity, feeAmount, liquidity, // int the start, liquidity and current round liquidity are the same
 		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
 	)
 
@@ -136,7 +138,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 	}
 
 	// fund house fee collector from participant's account.
-	if err = k.fund(housetypes.HouseFeeCollectorFunder{}, ctx, addr, fee); err != nil {
+	if err = k.fund(housetypes.HouseFeeCollectorFunder{}, ctx, addr, feeAmount); err != nil {
 		return
 	}
 
@@ -154,53 +156,79 @@ func (k Keeper) InitiateOrderBookParticipation(
 	return index, nil
 }
 
-// WithdrawOrderBookParticipation withdraws the order book participation to the bettor's account
-func (k Keeper) WithdrawOrderBookParticipation(
+func (k Keeper) CalcWithdrawalAmount(
 	ctx sdk.Context,
-	depositorAddr, bookUID string,
+	depositorAddress string,
+	marketUID string,
 	participationIndex uint64,
 	mode housetypes.WithdrawalMode,
+	totalWithdrawnAmount sdk.Int,
 	amount sdk.Int,
 ) (sdk.Int, error) {
-	depositorAddress, err := sdk.AccAddressFromBech32(depositorAddr)
-	if err != nil {
-		return sdk.Int{}, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidAddress,
-			types.ErrTextInvalidDepositor,
-			err,
-		)
-	}
-
-	bp, found := k.GetOrderBookParticipation(ctx, bookUID, participationIndex)
+	bp, found := k.GetOrderBookParticipation(ctx, marketUID, participationIndex)
 	if !found {
 		return sdk.Int{}, sdkerrors.Wrapf(
 			types.ErrOrderBookParticipationNotFound,
 			"%s, %d",
-			bookUID,
+			marketUID,
 			participationIndex,
 		)
 	}
 
-	if err = bp.ValidateWithdraw(depositorAddr, participationIndex); err != nil {
-		return sdk.Int{}, err
+	if bp.IsSettled {
+		return sdk.Int{}, sdkerrors.Wrapf(
+			types.ErrBookParticipationAlreadySettled,
+			"%s, %d",
+			bp.OrderBookUID,
+			participationIndex,
+		)
 	}
 
-	withdrawalAmt, err := bp.WithdrawableAmount(mode, amount)
+	if bp.ParticipantAddress != depositorAddress {
+		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+	}
+
+	if mode == housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
+		if bp.Liquidity.Sub(totalWithdrawnAmount).LT(amount) {
+			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", amount.Int64())
+		}
+	}
+
+	withdrawAmount, err := bp.WithdrawableAmount(mode, amount)
 	if err != nil {
 		return sdk.Int{}, err
 	}
 
-	// refund participant's account from order book liquidity pool.
-	if err = k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, withdrawalAmt); err != nil {
-		return sdk.Int{}, err
+	return withdrawAmount, nil
+}
+
+// WithdrawOrderBookParticipation withdraws the order book participation to the bettor's account
+func (k Keeper) WithdrawOrderBookParticipation(
+	ctx sdk.Context, marketUID string,
+	participationIndex uint64,
+	amount sdk.Int,
+) error {
+	bp, found := k.GetOrderBookParticipation(ctx, marketUID, participationIndex)
+	if !found {
+		return sdkerrors.Wrapf(
+			types.ErrOrderBookParticipationNotFound,
+			"%s, %d",
+			marketUID,
+			participationIndex,
+		)
 	}
 
-	bp.SetLiquidityAfterWithdrawal(withdrawalAmt)
+	// refund participant's account from order book liquidity pool.
+	if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, sdk.MustAccAddressFromBech32(bp.ParticipantAddress), amount); err != nil {
+		return err
+	}
+
+	bp.SetLiquidityAfterWithdrawal(amount)
 	k.SetOrderBookParticipation(ctx, bp)
 
-	if err = k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp); err != nil {
-		return sdk.Int{}, err
+	if err := k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp); err != nil {
+		return err
 	}
 
-	return withdrawalAmt, nil
+	return nil
 }

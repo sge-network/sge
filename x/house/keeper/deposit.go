@@ -58,7 +58,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdk.ZeroInt(), 0)
 
-	deposit.SetHouseParticipationFee(k.GetHouseParticipationFee(ctx))
+	feeAmount := deposit.CalcHouseParticipationFeeAmount(k.GetHouseParticipationFee(ctx))
 
 	depositorAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
@@ -67,7 +67,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	}
 
 	participationIndex, err = k.orderbookKeeper.InitiateOrderBookParticipation(
-		ctx, depositorAddr, marketUID, deposit.Liquidity, deposit.Fee,
+		ctx, depositorAddr, marketUID, deposit.Amount, feeAmount,
 	)
 	if err != nil {
 		err = sdkerrors.Wrapf(types.ErrOBDepositProcessing, "%s", err)

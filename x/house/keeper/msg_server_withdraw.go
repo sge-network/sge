@@ -19,19 +19,43 @@ func (k msgServer) Withdraw(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
+	isOnBehalf := false
 	depositorAddr := msg.Creator
 	if payload.DepositorAddress != "" {
-		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
-			return nil, err
-		}
 		depositorAddr = payload.DepositorAddress
+		isOnBehalf = true
 	}
 
 	if err := payload.Validate(depositorAddr); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
-	id, err := k.Keeper.Withdraw(ctx, msg.Creator, depositorAddr, msg.MarketUID,
+	// Get the deposit object
+	deposit, found := k.GetDeposit(ctx, depositorAddr, msg.MarketUID, msg.ParticipationIndex)
+	if !found {
+		return nil, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", msg.MarketUID, msg.ParticipationIndex)
+	}
+
+	var err error
+	msg.Amount, err = k.orderbookKeeper.CalcWithdrawalAmount(ctx,
+		depositorAddr,
+		msg.MarketUID,
+		msg.ParticipationIndex,
+		msg.Mode,
+		deposit.TotalWithdrawalAmount,
+		msg.Amount,
+	)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	if isOnBehalf {
+		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
+			return nil, err
+		}
+	}
+
+	id, err := k.Keeper.Withdraw(ctx, deposit, msg.Creator, depositorAddr, msg.MarketUID,
 		msg.ParticipationIndex, msg.Mode, msg.Amount)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "process withdrawal")
