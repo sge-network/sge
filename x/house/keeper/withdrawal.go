@@ -42,29 +42,25 @@ func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err
 // Withdraw performs a withdrawal of coins of unused amount corresponding to a deposit.
 func (k Keeper) Withdraw(
 	ctx sdk.Context,
+	deposit types.Deposit,
 	creator, depositorAddr string,
 	marketUID string,
 	participationIndex uint64,
 	mode types.WithdrawalMode,
-	witAmt sdk.Int,
+	withdrawableAmount sdk.Int,
 ) (uint64, error) {
-	// Get the deposit object
-	deposit, found := k.GetDeposit(ctx, depositorAddr, marketUID, participationIndex)
-	if !found {
-		return 0, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", marketUID, participationIndex)
-	}
-
-	if deposit.DepositorAddress != depositorAddr {
-		return 0, sdkerrors.Wrapf(types.ErrWrongWithdrawCreator, ": %s", depositorAddr)
-	}
-
-	if mode == types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
-		if deposit.Liquidity.Sub(deposit.TotalWithdrawalAmount).LT(witAmt) {
-			return 0, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", witAmt.Int64())
-		}
-	}
-
+	// set next id
 	withdrawalID := deposit.WithdrawalCount + 1
+
+	err := k.orderbookKeeper.WithdrawOrderBookParticipation(
+		ctx,
+		marketUID,
+		participationIndex,
+		withdrawableAmount,
+	)
+	if err != nil {
+		return 0, sdkerrors.Wrapf(types.ErrOBLiquidateProcessing, "%s", err)
+	}
 
 	// Create the withdrawal object
 	withdrawal := types.NewWithdrawal(
@@ -73,27 +69,13 @@ func (k Keeper) Withdraw(
 		depositorAddr,
 		marketUID,
 		participationIndex,
-		witAmt,
+		withdrawableAmount,
 		mode,
 	)
-
-	withdrawalAmt, err := k.orderbookKeeper.WithdrawOrderBookParticipation(
-		ctx,
-		depositorAddr,
-		marketUID,
-		participationIndex,
-		mode,
-		witAmt,
-	)
-	if err != nil {
-		return participationIndex, sdkerrors.Wrapf(types.ErrOBLiquidateProcessing, "%s", err)
-	}
-
-	withdrawal.Amount = withdrawalAmt
 	k.SetWithdrawal(ctx, withdrawal)
 
 	deposit.WithdrawalCount++
-	deposit.TotalWithdrawalAmount = deposit.TotalWithdrawalAmount.Add(withdrawalAmt)
+	deposit.TotalWithdrawalAmount = deposit.TotalWithdrawalAmount.Add(withdrawableAmount)
 	k.SetDeposit(ctx, deposit)
 
 	return withdrawalID, nil

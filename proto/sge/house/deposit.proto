@@ -37,28 +37,12 @@ message Deposit {
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
 
-  // fee is deducted from the deposited amount for participation in the order
-  // book.
-  string fee = 6 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"fee\""
-  ];
-
-  // liquidity is the liquidity being provided to the order book after fee
-  // deduction.
-  string liquidity = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"liquidity\""
-  ];
-
   // withdrawal_count is the total count of the withdrawals from an order book
-  uint64 withdrawal_count = 8 [ (gogoproto.moretags) = "yaml:\"withdrawals\"" ];
+  uint64 withdrawal_count = 6 [ (gogoproto.moretags) = "yaml:\"withdrawals\"" ];
 
   // total_withdrawal_amount is the total amount withdrawn from the liquidity
   // provided
-  string total_withdrawal_amount = 9 [
+  string total_withdrawal_amount = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"total_withdrawal_amount\""

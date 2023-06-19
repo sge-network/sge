@@ -15,7 +15,7 @@ func NewOrderBookParticipation(
 	orderBookUID string,
 	participantAddress string,
 	exposuresNotFilled uint64,
-	liquidity, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
+	liquidity, fee, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
 	currentRoundMaxLossOddsUID string,
 	actualProfit sdk.Int,
 ) OrderBookParticipation {
@@ -24,6 +24,7 @@ func NewOrderBookParticipation(
 		OrderBookUID:               orderBookUID,
 		ParticipantAddress:         participantAddress,
 		Liquidity:                  liquidity,
+		Fee:                        fee,
 		CurrentRoundLiquidity:      currentRoundLiquidity,
 		ExposuresNotFilled:         exposuresNotFilled,
 		TotalBetAmount:             totalBetAmount,

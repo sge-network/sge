@@ -30,8 +30,7 @@ func (d *Deposit) String() string {
 	return string(out)
 }
 
-// SetHouseParticipationFee sets participation fee for house
-func (d *Deposit) SetHouseParticipationFee(feePercentage sdk.Dec) {
-	d.Fee = feePercentage.MulInt(d.Amount).RoundInt()
-	d.Liquidity = d.Amount.Sub(d.Fee)
+// CalcHouseParticipationFeeAmount sets participation fee amount for house
+func (d *Deposit) CalcHouseParticipationFeeAmount(feePercentage sdk.Dec) sdk.Int {
+	return feePercentage.MulInt(d.Amount).RoundInt()
 }

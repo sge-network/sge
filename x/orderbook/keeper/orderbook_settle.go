@@ -134,20 +134,14 @@ func (k Keeper) settleParticipation(
 		)
 	}
 
-	// get corresponding deposit to extract house fee
-	deposit, found := k.houseKeeper.GetDeposit(ctx, bp.ParticipantAddress, bp.OrderBookUID, bp.Index)
-	if !found {
-		return sdkerrors.Wrapf(types.ErrDepositNotFoundForParticipation, "%s", err)
-	}
-
 	if refundHouseDepositFeeToDepositor {
 		// refund participant's account from house fee collector.
-		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, deposit.Fee); err != nil {
+		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, bp.Fee); err != nil {
 			return err
 		}
 	} else {
 		// refund participant's account from house fee collector.
-		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), deposit.Fee); err != nil {
+		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), bp.Fee); err != nil {
 			return err
 		}
 	}
