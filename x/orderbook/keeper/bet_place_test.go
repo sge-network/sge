@@ -23,13 +23,14 @@ func TestBetPlacement(t *testing.T) {
 }
 
 type testBetSuite struct {
-	t        *testing.T
-	k        *keeper.KeeperTest
-	ctx      sdk.Context
-	tApp     simappUtil.TestApp
-	betFee   sdk.Int
-	market   markettypes.Market
-	deposits []housetypes.Deposit
+	t              *testing.T
+	k              *keeper.KeeperTest
+	ctx            sdk.Context
+	tApp           simappUtil.TestApp
+	betFee         sdk.Int
+	market         markettypes.Market
+	deposits       []housetypes.Deposit
+	participations []types.OrderBookParticipation
 }
 
 func newTestBetSuite(t *testing.T) testBetSuite {
@@ -68,7 +69,9 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 		},
 	}
 
-	return testBetSuite{t, k, ctx, *tApp, betFee, market, deposits}
+	participations := make([]types.OrderBookParticipation, len(deposits))
+
+	return testBetSuite{t, k, ctx, *tApp, betFee, market, deposits, participations}
 }
 
 func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
@@ -97,6 +100,12 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		participationIndex,
 	)
 	require.True(ts.t, found)
+	ts.participations[0], found = ts.k.GetOrderBookParticipation(
+		ts.ctx,
+		ts.market.UID,
+		participationIndex,
+	)
+	require.True(ts.t, found)
 
 	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
@@ -113,6 +122,12 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		participationIndex,
 	)
 	require.True(ts.t, found)
+	ts.participations[1], found = ts.k.GetOrderBookParticipation(
+		ts.ctx,
+		ts.market.UID,
+		participationIndex,
+	)
+	require.True(ts.t, found)
 
 	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
@@ -125,6 +140,12 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	ts.deposits[2], found = ts.tApp.HouseKeeper.GetDeposit(
 		ts.ctx,
 		ts.deposits[2].DepositorAddress,
+		ts.market.UID,
+		participationIndex,
+	)
+	require.True(ts.t, found)
+	ts.participations[2], found = ts.k.GetOrderBookParticipation(
+		ts.ctx,
 		ts.market.UID,
 		participationIndex,
 	)

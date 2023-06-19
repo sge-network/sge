@@ -57,7 +57,7 @@ func TestOrderBookSettlement(t *testing.T) {
 			// subtract first winner payoutprofit
 			Sub(winner1PayoutProfit.TruncateInt()).
 			// subtract participation fee
-			Sub(ts.deposits[0].Fee).
+			Sub(ts.participations[0].Fee).
 			// add loser bet amount
 			Add(bets[2].Amount),
 		participant1BalanceAfterSettlement)
@@ -70,7 +70,7 @@ func TestOrderBookSettlement(t *testing.T) {
 			// subtract second winner payoutprofit
 			Sub(winner2PayoutProfit.TruncateInt()).
 			// subtract participation fee
-			Sub(ts.deposits[1].Fee),
+			Sub(ts.participations[1].Fee),
 		participant2BalanceAfterSettlement)
 
 	participant3BalanceAfterSettlement := ts.tApp.BankKeeper.GetBalance(

@@ -34,6 +34,7 @@ func createNParticipation(
 		items[i].CurrentRoundMaxLoss = sdk.NewInt(100)
 		items[i].CurrentRoundTotalBetAmount = sdk.NewInt(100)
 		items[i].Liquidity = sdk.NewInt(100)
+		items[i].Fee = sdk.NewInt(10)
 		items[i].MaxLoss = sdk.NewInt(100)
 		items[i].TotalBetAmount = sdk.NewInt(100)
 
@@ -202,6 +203,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	oddsUIDs := []string{uuid.NewString(), uuid.NewString()}
+	fee := sdk.NewInt(100)
 
 	for _, tc := range []struct {
 		desc           string
@@ -226,21 +228,21 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 			depositAmount:  sdk.NewInt(1000),
 			withdrawMode:   housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
 			withdrawAmount: sdk.NewInt(10000),
-			err:            types.ErrWithdrawalAmountIsTooLarge,
+			err:            types.ErrWithdrawalTooLarge,
 		},
 		{
 			desc:               "success full",
 			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
 			depositAmount:      sdk.NewInt(1000),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-			expWithdrawnAmount: sdk.NewInt(1000),
+			expWithdrawnAmount: sdk.NewInt(1000).Sub(fee),
 		},
 		{
 			desc:               "success partial",
 			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
 			depositAmount:      sdk.NewInt(500),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-			expWithdrawnAmount: sdk.NewInt(500),
+			expWithdrawnAmount: sdk.NewInt(500).Sub(fee),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -260,13 +262,22 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 				require.NoError(t, err)
 			}
 
-			withdrawnAmount, err := k.WithdrawOrderBookParticipation(ctx,
+			withdrawnAmount, err := k.CalcWithdrawalAmount(ctx,
 				tc.depositorAddr.String(),
 				marketUID,
 				participationIndex,
 				tc.withdrawMode,
-				tc.withdrawAmount,
+				sdk.ZeroInt(),
+				tc.depositAmount,
 			)
+
+			if err == nil {
+				err = k.WithdrawOrderBookParticipation(ctx,
+					marketUID,
+					participationIndex,
+					withdrawnAmount,
+				)
+			}
 
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
