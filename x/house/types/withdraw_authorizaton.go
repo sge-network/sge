@@ -27,16 +27,20 @@ func (a WithdrawAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.Accep
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
 	}
 
-	if a.WithdrawLimit.LT(mWithdraw.Amount) {
+	limitLeft := a.WithdrawLimit.Sub(mWithdraw.Amount)
+	if limitLeft.IsNegative() {
 		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
 			"requested amount is more than withdraw limit",
 		)
+	}
+	if limitLeft.IsZero() {
+		return authz.AcceptResponse{Accept: true, Delete: true}, nil
 	}
 
 	return authz.AcceptResponse{
 		Accept:  true,
 		Delete:  false,
-		Updated: &WithdrawAuthorization{WithdrawLimit: mWithdraw.Amount},
+		Updated: &WithdrawAuthorization{WithdrawLimit: limitLeft},
 	}, nil
 }
 
