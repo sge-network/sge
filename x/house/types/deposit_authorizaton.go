@@ -27,16 +27,20 @@ func (a DepositAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.Accept
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
 	}
 
-	if a.SpendLimit.LT(mDeposit.Amount) {
+	limitLeft := a.SpendLimit.Sub(mDeposit.Amount)
+	if limitLeft.IsNegative() {
 		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
 			"requested amount is more than spend limit",
 		)
+	}
+	if limitLeft.IsZero() {
+		return authz.AcceptResponse{Accept: true, Delete: true}, nil
 	}
 
 	return authz.AcceptResponse{
 		Accept:  true,
 		Delete:  false,
-		Updated: &DepositAuthorization{SpendLimit: mDeposit.Amount},
+		Updated: &DepositAuthorization{SpendLimit: limitLeft},
 	}, nil
 }
 
