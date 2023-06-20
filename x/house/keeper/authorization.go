@@ -16,7 +16,7 @@ func (k Keeper) ValidateMsgAuthorization(
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid depositor address (%s)", err)
 	}
-	authorization, _ := k.authzKeeper.GetCleanAuthorization(
+	authorization, expiration := k.authzKeeper.GetCleanAuthorization(
 		ctx,
 		granteeAddr,
 		granterAddr,
@@ -30,9 +30,23 @@ func (k Keeper) ValidateMsgAuthorization(
 			depositor,
 		)
 	}
-	_, err = authorization.Accept(ctx, msg)
+	authRes, err := authorization.Accept(ctx, msg)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrAuthorizationNotAccepted, "%s", err)
 	}
+
+	if authRes.Delete {
+		err = k.authzKeeper.DeleteGrant(ctx, granteeAddr, granterAddr, sdk.MsgTypeURL(msg))
+	} else if authRes.Updated != nil {
+		err = k.authzKeeper.SaveGrant(ctx, granteeAddr, granterAddr, authRes.Updated, expiration)
+	}
+	if err != nil {
+		return err
+	}
+
+	if !authRes.Accept {
+		return types.ErrAuthorizationNotAccepted
+	}
+
 	return nil
 }
