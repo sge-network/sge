@@ -111,13 +111,23 @@ func TestMsgServerWithdraw(t *testing.T) {
 	})
 
 	t.Run("success", func(t *testing.T) {
+		grantAmount := sdk.NewInt(1000)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
 			creator.Address,
 			depositor.Address,
-			types.NewWithdrawAuthorization(sdk.NewInt(1000)),
+			types.NewWithdrawAuthorization(grantAmount),
 			time.Now().Add(5*time.Minute),
 		)
 		require.NoError(t, err)
+
+		authzBefore, _ := tApp.AuthzKeeper.GetCleanAuthorization(
+			ctx,
+			creator.Address,
+			depositor.Address,
+			sdk.MsgTypeURL(&types.MsgWithdraw{}),
+		)
+		authzBeforeW := authzBefore.(*types.WithdrawAuthorization)
+		require.Equal(t, grantAmount, authzBeforeW.WithdrawLimit)
 
 		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
@@ -146,5 +156,14 @@ func TestMsgServerWithdraw(t *testing.T) {
 		rst, err := k.GetAllWithdrawals(ctx)
 		require.NoError(t, err)
 		require.Equal(t, inputWithdraw.ParticipationIndex, rst[0].ParticipationIndex)
+
+		authzAfter, _ := tApp.AuthzKeeper.GetCleanAuthorization(ctx,
+			creator.Address,
+			depositor.Address,
+			sdk.MsgTypeURL(&types.MsgWithdraw{}),
+		)
+		authzAfterW := authzAfter.(*types.WithdrawAuthorization)
+		expectedAuthzGrant := grantAmount.Sub(sdk.NewInt(rst[0].Amount.Int64()))
+		require.Equal(t, expectedAuthzGrant, authzAfterW.WithdrawLimit)
 	})
 }
