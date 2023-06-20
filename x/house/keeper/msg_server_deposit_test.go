@@ -119,13 +119,24 @@ func TestMsgServerDeposit(t *testing.T) {
 	})
 
 	t.Run("success with authorization", func(t *testing.T) {
+		grantAmount := sdk.NewInt(1000)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
 			creator.Address,
 			depositor.Address,
-			types.NewDepositAuthorization(sdk.NewInt(1000)),
+			types.NewDepositAuthorization(grantAmount),
 			time.Now().Add(5*time.Minute),
 		)
 		require.NoError(t, err)
+
+		authzBefore, _ := tApp.AuthzKeeper.GetCleanAuthorization(
+			ctx,
+			creator.Address,
+			depositor.Address,
+			sdk.MsgTypeURL(&types.MsgDeposit{}),
+		)
+		authzBeforeW, ok := authzBefore.(*types.DepositAuthorization)
+		require.True(t, ok)
+		require.Equal(t, grantAmount, authzBeforeW.SpendLimit)
 
 		testKyc := &sgetypes.KycDataPayload{
 			Approved: true,
@@ -156,5 +167,20 @@ func TestMsgServerDeposit(t *testing.T) {
 		)
 		require.True(t, found)
 		require.Equal(t, inputDeposit.Creator, rst.Creator)
+
+		participation, found := tApp.OrderbookKeeper.GetOrderBookParticipation(
+			ctx,
+			testMarketUID,
+			depResp.ParticipationIndex,
+		)
+		require.True(t, found)
+		require.Equal(t, inputDeposit.Amount, participation.Liquidity.Add(participation.Fee))
+
+		authzAfter, _ := tApp.AuthzKeeper.GetCleanAuthorization(ctx,
+			creator.Address,
+			depositor.Address,
+			sdk.MsgTypeURL(&types.MsgDeposit{}),
+		)
+		require.Nil(t, authzAfter)
 	})
 }
