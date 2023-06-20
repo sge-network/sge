@@ -134,7 +134,8 @@ func TestMsgServerDeposit(t *testing.T) {
 			depositor.Address,
 			sdk.MsgTypeURL(&types.MsgDeposit{}),
 		)
-		authzBeforeW := authzBefore.(*types.DepositAuthorization)
+		authzBeforeW, ok := authzBefore.(*types.DepositAuthorization)
+		require.True(t, ok)
 		require.Equal(t, grantAmount, authzBeforeW.SpendLimit)
 
 		testKyc := &sgetypes.KycDataPayload{

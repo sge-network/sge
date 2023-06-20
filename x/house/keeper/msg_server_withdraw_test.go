@@ -126,7 +126,8 @@ func TestMsgServerWithdraw(t *testing.T) {
 			depositor.Address,
 			sdk.MsgTypeURL(&types.MsgWithdraw{}),
 		)
-		authzBeforeW := authzBefore.(*types.WithdrawAuthorization)
+		authzBeforeW, ok := authzBefore.(*types.WithdrawAuthorization)
+		require.True(t, ok)
 		require.Equal(t, grantAmount, authzBeforeW.WithdrawLimit)
 
 		testKyc := &sgetypes.KycDataPayload{
@@ -162,7 +163,8 @@ func TestMsgServerWithdraw(t *testing.T) {
 			depositor.Address,
 			sdk.MsgTypeURL(&types.MsgWithdraw{}),
 		)
-		authzAfterW := authzAfter.(*types.WithdrawAuthorization)
+		authzAfterW, ok := authzAfter.(*types.WithdrawAuthorization)
+		require.True(t, ok)
 		expectedAuthzGrant := grantAmount.Sub(sdk.NewInt(rst[0].Amount.Int64()))
 		require.Equal(t, expectedAuthzGrant, authzAfterW.WithdrawLimit)
 	})
