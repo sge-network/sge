@@ -21,6 +21,22 @@ func (k Keeper) SetWithdrawal(ctx sdk.Context, withdrawal types.Withdrawal) {
 	store.Set(withdrawalKey, b)
 }
 
+// GetWithdraw returns a specific withdrawal from the store.
+func (k Keeper) GetWithdraw(ctx sdk.Context, depositorAddress,
+	marketUID string, participationIndex, id uint64,
+) (val types.Withdrawal, found bool) {
+	marketsStore := k.getWithdrawalStore(ctx)
+	withdrawKey := types.GetWithdrawalKey(depositorAddress, marketUID, participationIndex, id)
+	b := marketsStore.Get(withdrawKey)
+	if b == nil {
+		return val, false
+	}
+
+	k.cdc.MustUnmarshal(b, &val)
+
+	return val, true
+}
+
 // GetAllWithdrawals returns all withdrawals used during genesis dump.
 func (k Keeper) GetAllWithdrawals(ctx sdk.Context) (list []types.Withdrawal, err error) {
 	store := k.getWithdrawalStore(ctx)
