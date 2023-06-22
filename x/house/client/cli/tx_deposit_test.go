@@ -31,7 +31,7 @@ func TestTXDepositCLI(t *testing.T) {
 	t.Run("Deposit", func(t *testing.T) {
 		for _, tc := range []struct {
 			desc      string
-			marketUid string
+			marketUID string
 			amount    string
 			ticket    string
 
@@ -39,14 +39,14 @@ func TestTXDepositCLI(t *testing.T) {
 			code uint32
 		}{
 			{
-				marketUid: "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				marketUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				amount:    "555",
 				ticket:    "ticket",
 
 				desc: "valid",
 			},
 			{
-				marketUid: "invalidUID",
+				marketUID: "invalidUID",
 				amount:    "555",
 				ticket:    "ticket",
 
@@ -54,7 +54,7 @@ func TestTXDepositCLI(t *testing.T) {
 				err:  fmt.Errorf("any error"),
 			},
 			{
-				marketUid: "6e31c60f-2025-48ce-ae79-1dc110f16355",
+				marketUID: "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				amount:    "invalidAmount",
 				ticket:    "ticket",
 
@@ -65,7 +65,7 @@ func TestTXDepositCLI(t *testing.T) {
 			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
-					tc.marketUid,
+					tc.marketUID,
 					tc.amount,
 					tc.ticket,
 				}
