@@ -19,6 +19,7 @@ The House module emits the following events
 |:--------------:|:--------------------:|:---------------------------------:|
 | house_withdraw | creator              |  {creator}                        |
 | house_withdraw | depositor            |  {depositor}                      |
+| house_withdraw | withdrawal_id        |  {withdrawal_id}                  |
 | house_withdraw | withdraw_market_index|  {market_uid#participation_index} |
 | message        | module               |  house                            |
 | message        | action               |  house_withdraw                   |
