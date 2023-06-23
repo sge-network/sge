@@ -6,24 +6,21 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -46,11 +43,9 @@ func (*MsgAddMarket) ProtoMessage()    {}
 func (*MsgAddMarket) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{0}
 }
-
 func (m *MsgAddMarket) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgAddMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgAddMarket.Marshal(b, m, deterministic)
@@ -63,15 +58,12 @@ func (m *MsgAddMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 		return b[:n], nil
 	}
 }
-
 func (m *MsgAddMarket) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgAddMarket.Merge(m, src)
 }
-
 func (m *MsgAddMarket) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgAddMarket) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgAddMarket.DiscardUnknown(m)
 }
@@ -106,11 +98,9 @@ func (*MsgAddMarketResponse) ProtoMessage()    {}
 func (*MsgAddMarketResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{1}
 }
-
 func (m *MsgAddMarketResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgAddMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgAddMarketResponse.Marshal(b, m, deterministic)
@@ -123,15 +113,12 @@ func (m *MsgAddMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-
 func (m *MsgAddMarketResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgAddMarketResponse.Merge(m, src)
 }
-
 func (m *MsgAddMarketResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgAddMarketResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgAddMarketResponse.DiscardUnknown(m)
 }
@@ -166,11 +153,9 @@ func (*MsgResolveMarket) ProtoMessage()    {}
 func (*MsgResolveMarket) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{2}
 }
-
 func (m *MsgResolveMarket) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgResolveMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgResolveMarket.Marshal(b, m, deterministic)
@@ -183,15 +168,12 @@ func (m *MsgResolveMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-
 func (m *MsgResolveMarket) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgResolveMarket.Merge(m, src)
 }
-
 func (m *MsgResolveMarket) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgResolveMarket) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgResolveMarket.DiscardUnknown(m)
 }
@@ -226,11 +208,9 @@ func (*MsgResolveMarketResponse) ProtoMessage()    {}
 func (*MsgResolveMarketResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{3}
 }
-
 func (m *MsgResolveMarketResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgResolveMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgResolveMarketResponse.Marshal(b, m, deterministic)
@@ -243,15 +223,12 @@ func (m *MsgResolveMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-
 func (m *MsgResolveMarketResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgResolveMarketResponse.Merge(m, src)
 }
-
 func (m *MsgResolveMarketResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgResolveMarketResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgResolveMarketResponse.DiscardUnknown(m)
 }
@@ -287,11 +264,9 @@ func (*MsgUpdateMarket) ProtoMessage()    {}
 func (*MsgUpdateMarket) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{4}
 }
-
 func (m *MsgUpdateMarket) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgUpdateMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgUpdateMarket.Marshal(b, m, deterministic)
@@ -304,15 +279,12 @@ func (m *MsgUpdateMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-
 func (m *MsgUpdateMarket) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgUpdateMarket.Merge(m, src)
 }
-
 func (m *MsgUpdateMarket) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgUpdateMarket) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgUpdateMarket.DiscardUnknown(m)
 }
@@ -347,11 +319,9 @@ func (*MsgUpdateMarketResponse) ProtoMessage()    {}
 func (*MsgUpdateMarketResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{5}
 }
-
 func (m *MsgUpdateMarketResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgUpdateMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgUpdateMarketResponse.Marshal(b, m, deterministic)
@@ -364,15 +334,12 @@ func (m *MsgUpdateMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-
 func (m *MsgUpdateMarketResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgUpdateMarketResponse.Merge(m, src)
 }
-
 func (m *MsgUpdateMarketResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgUpdateMarketResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgUpdateMarketResponse.DiscardUnknown(m)
 }
@@ -432,10 +399,8 @@ var fileDescriptor_d0e875658c4f19fd = []byte{
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ context.Context
-	_ grpc.ClientConn
-)
+var _ context.Context
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -499,16 +464,15 @@ type MsgServer interface {
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
-type UnimplementedMsgServer struct{}
+type UnimplementedMsgServer struct {
+}
 
 func (*UnimplementedMsgServer) AddMarket(ctx context.Context, req *MsgAddMarket) (*MsgAddMarketResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddMarket not implemented")
 }
-
 func (*UnimplementedMsgServer) ResolveMarket(ctx context.Context, req *MsgResolveMarket) (*MsgResolveMarketResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResolveMarket not implemented")
 }
-
 func (*UnimplementedMsgServer) UpdateMarket(ctx context.Context, req *MsgUpdateMarket) (*MsgUpdateMarketResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMarket not implemented")
 }
@@ -840,7 +804,6 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *MsgAddMarket) Size() (n int) {
 	if m == nil {
 		return 0
@@ -946,11 +909,9 @@ func (m *MsgUpdateMarketResponse) Size() (n int) {
 func sovTx(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *MsgAddMarket) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1065,7 +1026,6 @@ func (m *MsgAddMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgAddMarketResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1184,7 +1144,6 @@ func (m *MsgAddMarketResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgResolveMarket) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1299,7 +1258,6 @@ func (m *MsgResolveMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgResolveMarketResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1418,7 +1376,6 @@ func (m *MsgResolveMarketResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgUpdateMarket) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1533,7 +1490,6 @@ func (m *MsgUpdateMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgUpdateMarketResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1652,7 +1608,6 @@ func (m *MsgUpdateMarketResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipTx(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
