@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+	"github.com/google/uuid"
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/house/types"
@@ -12,6 +13,66 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
+
+func TestWithdrawQuerySingle(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	wctx := sdk.WrapSDKContext(ctx)
+	msgs := createNWithdrawals(k, ctx, 2)
+	for _, tc := range []struct {
+		desc     string
+		request  *types.QueryWithdrawalRequest
+		response *types.QueryWithdrawalResponse
+		err      error
+	}{
+		{
+			desc: "First",
+			request: &types.QueryWithdrawalRequest{
+				DepositorAddress:   msgs[0].Address,
+				MarketUid:          msgs[0].MarketUID,
+				ParticipationIndex: msgs[0].ParticipationIndex,
+				Id:                 msgs[0].ID,
+			},
+			response: &types.QueryWithdrawalResponse{Withdrawal: msgs[0]},
+		},
+		{
+			desc: "Second",
+			request: &types.QueryWithdrawalRequest{
+				DepositorAddress:   msgs[1].Address,
+				MarketUid:          msgs[1].MarketUID,
+				ParticipationIndex: msgs[1].ParticipationIndex,
+				Id:                 msgs[1].ID,
+			},
+			response: &types.QueryWithdrawalResponse{Withdrawal: msgs[1]},
+		},
+		{
+			desc: "KeyNotFound",
+			request: &types.QueryWithdrawalRequest{
+				DepositorAddress:   msgs[0].Address,
+				MarketUid:          uuid.NewString(),
+				ParticipationIndex: msgs[0].ParticipationIndex,
+				Id:                 msgs[0].ID,
+			},
+			err: status.Error(codes.NotFound, "not found"),
+		},
+		{
+			desc: "InvalidRequest",
+			err:  status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest),
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			response, err := k.Withdrawal(wctx, tc.request)
+			if tc.err != nil {
+				require.ErrorIs(t, err, tc.err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t,
+					nullify.Fill(tc.response),
+					nullify.Fill(response),
+				)
+			}
+		})
+	}
+}
 
 func TestWithdrawByAccountQueryPaginated(t *testing.T) {
 	k, ctx := setupKeeper(t)

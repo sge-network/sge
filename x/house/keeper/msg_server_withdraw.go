@@ -61,7 +61,7 @@ func (k msgServer) Withdraw(goCtx context.Context,
 		return nil, sdkerrors.Wrap(err, "process withdrawal")
 	}
 
-	msg.EmitEvent(&ctx, depositorAddr)
+	msg.EmitEvent(&ctx, depositorAddr, id)
 
 	return &types.MsgWithdrawResponse{
 		ID:                 id,
