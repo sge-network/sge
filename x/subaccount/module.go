@@ -1,21 +1,22 @@
-package bet
+package subaccount
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-
-	"github.com/gorilla/mux"
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/spf13/cobra"
-
-	abci "github.com/tendermint/tendermint/abci/types"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
+	"github.com/spf13/cobra"
+	abci "github.com/tendermint/tendermint/abci/types"
+
+	"github.com/sge-network/sge/x/subaccount/client/cli"
+	"github.com/sge-network/sge/x/subaccount/keeper"
+	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 var (
@@ -65,9 +66,6 @@ func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Rout
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
 func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
-		panic(err)
-	}
 }
 
 // GetTxCmd returns the module's root tx command.
@@ -83,12 +81,15 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd(type
 // AppModule implements the AppModule interface for the module.
 type AppModule struct {
 	AppModuleBasic
+
+	keeper keeper.Keeper
 }
 
 // NewAppModule creates new app module object
-func NewAppModule() AppModule {
+func NewAppModule(k keeper.Keeper) AppModule {
 	return AppModule{
 		AppModuleBasic: AppModuleBasic{},
+		keeper:         k,
 	}
 }
 
