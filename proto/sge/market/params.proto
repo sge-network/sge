@@ -17,13 +17,13 @@ message Params {
     (gogoproto.nullable) = false
   ];
   // min_bet_fee is the default minimum bet fee for a market.
-  string min_bet_fee = 3 [
+  string min_bet_fee = 2 [
     (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
   // max_bet_fee is the default maximum bet fee for a market.
-  string max_bet_fee = 4 [
+  string max_bet_fee = 3 [
     (gogoproto.moretags) = "yaml:\"max_bet_fee\"",
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
