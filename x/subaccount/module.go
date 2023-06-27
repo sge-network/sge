@@ -62,17 +62,16 @@ func (AppModuleBasic) ValidateGenesis(
 }
 
 // RegisterRESTRoutes registers the module's REST service handlers.
-func (AppModuleBasic) RegisterRESTRoutes(clientCtx client.Context, rtr *mux.Router) {}
+func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
-}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, _ *runtime.ServeMux) {}
 
 // GetTxCmd returns the module's root tx command.
-func (a AppModuleBasic) GetTxCmd() *cobra.Command { return cli.GetTxCmd() }
+func (AppModuleBasic) GetTxCmd() *cobra.Command { return cli.GetTxCmd() }
 
 // GetQueryCmd returns the module's root query command.
-func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd(types.StoreKey) }
+func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd() }
 
 // ----------------------------------------------------------------------------
 // AppModule

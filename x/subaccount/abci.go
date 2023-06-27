@@ -6,6 +6,4 @@ import (
 )
 
 // EndBlocker settles the active bets of resolved markets
-func EndBlocker(ctx sdk.Context, k keeper.Keeper) {
-
-}
+func EndBlocker(_ sdk.Context, _ keeper.Keeper) {}
