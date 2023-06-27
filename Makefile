@@ -159,15 +159,6 @@ distclean: clean
 
 proto-all: proto-format proto-gen
 
-proto:
-	@echo
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/protocgen.sh
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-
 docs:
 	@echo
 	@echo "=========== Generate Message ============"
