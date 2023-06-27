@@ -39,3 +39,26 @@ func (k Keeper) WithdrawalsByAccount(c context.Context,
 
 	return &types.QueryWithdrawalsByAccountResponse{Withdrawals: withdrawals, Pagination: pageRes}, nil
 }
+
+// Withdrawal returns specific withdrawal.
+func (k Keeper) Withdrawal(c context.Context,
+	req *types.QueryWithdrawalRequest,
+) (*types.QueryWithdrawalResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+	ctx := sdk.UnwrapSDKContext(c)
+
+	val, found := k.GetWithdraw(
+		ctx,
+		req.DepositorAddress,
+		req.MarketUid,
+		req.ParticipationIndex,
+		req.Id,
+	)
+	if !found {
+		return nil, status.Error(codes.NotFound, "not found")
+	}
+
+	return &types.QueryWithdrawalResponse{Withdrawal: val}, nil
+}
