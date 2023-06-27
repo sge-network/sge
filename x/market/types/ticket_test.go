@@ -119,10 +119,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
-				Meta: `Winner of x:y is the final winner of the game,
-				it is obvious the winner is not the champion yet but if it happens,
-				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift.
-				attention! this detail will not be stored in the chain because it's definitely a scam.`,
+				Meta:   simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -152,11 +149,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: `Winner odds of x:y is the final winner of the game,
-					it is obvious the winner is not the champion yet but if it happens,
-					the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift.
-					attention! this detail will not be stored in the chain because it's definitely a scam.`},
-					{UID: uuid.NewString(), Meta: "odds 2"},
+					{UID: uuid.NewString(), Meta: simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1)},
 				},
 				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
 				MinBetAmount: sdk.NewInt(1000000),
