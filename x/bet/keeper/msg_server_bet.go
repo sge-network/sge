@@ -20,17 +20,17 @@ func (k msgServer) PlaceBet(
 		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", msg.Bet.UID)
 	}
 
-	ticketData := &types.BetPlacementTicketPayload{}
-	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &ticketData)
+	payload := &types.BetPlacementTicketPayload{}
+	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &payload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	if err = ticketData.Validate(msg.Creator); err != nil {
+	if err = payload.Validate(msg.Creator); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
-	bet := types.NewBet(msg.Creator, msg.Bet, ticketData.OddsType, ticketData.SelectedOdds)
+	bet := types.NewBet(msg.Creator, msg.Bet, payload.OddsType, payload.SelectedOdds)
 
 	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInBetPlacement, "%s", err)
