@@ -2,8 +2,11 @@ package simapp
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"math"
 
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
@@ -95,4 +98,14 @@ func newPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
 		panic(errors.Wrap(errors.ErrInvalidPubKey, "invalid pubkey size"))
 	}
 	return &ed25519.PubKey{Key: pkBytes}
+}
+
+func RandomString(length int) string {
+	buff := make([]byte, int(math.Ceil(float64(length)/float64(1.33333333333))))
+	_, err := rand.Read(buff)
+	if err != nil {
+		panic(err)
+	}
+	str := base64.RawURLEncoding.EncodeToString(buff)
+	return str[:length] // strip 1 extra character we get from odd length results
 }
