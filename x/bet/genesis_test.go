@@ -54,8 +54,8 @@ func TestGenesis(t *testing.T) {
 		},
 	}
 
-	bet.InitGenesis(ctx, tApp.BetKeeper, genesisState)
-	got := bet.ExportGenesis(ctx, tApp.BetKeeper)
+	bet.InitGenesis(ctx, *tApp.BetKeeper, genesisState)
+	got := bet.ExportGenesis(ctx, *tApp.BetKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)
