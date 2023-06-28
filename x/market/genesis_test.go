@@ -27,8 +27,8 @@ func TestGenesis(t *testing.T) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	market.InitGenesis(ctx, tApp.MarketKeeper, genesisState)
-	got := market.ExportGenesis(ctx, tApp.MarketKeeper)
+	market.InitGenesis(ctx, *tApp.MarketKeeper, genesisState)
+	got := market.ExportGenesis(ctx, *tApp.MarketKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)
