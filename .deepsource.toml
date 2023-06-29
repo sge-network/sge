@@ -5,6 +5,8 @@ test_patterns = [
   "**/*_test.go"
 ]
 
+exclude_patterns = ["**/*_pb.go"]
+
 [[analyzers]]
 name = "shell"
 
@@ -15,7 +17,7 @@ name = "go"
   import_root = "github.com/sge-network/sge"
 
 [[transformers]]
-name = "gofumpt"
+name = "gofmt"
 
 [[transformers]]
-name = "gofmt"
+name = "gofumpt"
