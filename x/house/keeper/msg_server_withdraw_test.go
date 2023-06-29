@@ -27,10 +27,6 @@ func TestMsgServerWithdraw(t *testing.T) {
 		EndTS:   cast.ToUint64(ctx.BlockTime().Unix()) + 1000,
 		Odds:    testMarketOdds,
 		Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-		BetConstraints: &markettypes.MarketBetConstraints{
-			MinAmount: sdk.NewInt(1),
-			BetFee:    sdk.NewInt(1),
-		},
 	}
 
 	tApp.MarketKeeper.SetMarket(ctx, marketItem)

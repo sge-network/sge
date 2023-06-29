@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/golang-jwt/jwt"
@@ -193,12 +192,6 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 
 func TestValidateCreationMarket(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
-	t1 := time.Now()
-	params := k.GetParams(wctx)
-
-	negativeBetAmount := sdk.NewInt(-5)
-	lowerBetAmount := params.MinBetAmount.Sub(sdk.NewInt(5))
-
 	tests := []struct {
 		name string
 		msg  types.MarketAddTicketPayload
@@ -208,8 +201,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "valid request",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -223,8 +216,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "same timestamp",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -232,7 +225,7 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "end timestamp before current timestamp",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				EndTS:   uint64(t1.Add(-time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(-time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -240,8 +233,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "invalid uid",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     "invalid uuid",
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -254,8 +247,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "few odds than required",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -267,8 +260,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "invalid odds id",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -281,8 +274,8 @@ func TestValidateCreationMarket(t *testing.T) {
 			name: "duplicate odds id",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: "8779cf93-925c-4818-bc81-13c359e0deb8", Meta: "Odds 1"},
@@ -292,58 +285,26 @@ func TestValidateCreationMarket(t *testing.T) {
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
-			name: "invalid min amount, negative",
-			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:     uuid.NewString(),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "Odds 1"},
-					{UID: uuid.NewString(), Meta: "Odds 2"},
-				},
-				MinBetAmount: negativeBetAmount,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min amount, less than required",
-			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
-				UID:     uuid.NewString(),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "Odds 1"},
-					{UID: uuid.NewString(), Meta: "Odds 2"},
-				},
-				MinBetAmount: lowerBetAmount,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
 			name: "valid request, with bet constraint",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				MinBetAmount: params.MinBetAmount,
-				BetFee:       params.MinBetFee,
-				Meta:         "Winner of x:y",
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "Winner of x:y",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 		},
 		{
 			name: "large metadata",
 			msg: types.MarketAddTicketPayload{
 				Creator: sample.AccAddress(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -368,17 +329,11 @@ func TestValidateCreationMarket(t *testing.T) {
 
 func TestUpdateMarketValidation(t *testing.T) {
 	k, _, wctx, _ := setupMsgServerAndKeeper(t)
-	params := k.GetParams(wctx)
-
-	t1 := time.Now()
-
-	negativeBetAmount := sdk.NewInt(-5)
-	lowerBetAmount := params.MinBetAmount.Sub(sdk.NewInt(5))
 
 	market := types.Market{
 		Creator: sample.AccAddress(),
-		StartTS: uint64(t1.Add(time.Minute).Unix()),
-		EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+		StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+		EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 		UID:     uuid.NewString(),
 		Odds: []*types.Odds{
 			{UID: uuid.NewString(), Meta: "Odds 1"},
@@ -396,8 +351,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "valid request active",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 		},
@@ -405,8 +360,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "valid request inactive",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_INACTIVE,
 			},
 		},
@@ -414,8 +369,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "invalid status, declared",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -424,8 +379,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "invalid status, canceled",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_CANCELED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -434,8 +389,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "invalid status, aborted",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_ABORTED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -444,8 +399,8 @@ func TestUpdateMarketValidation(t *testing.T) {
 			name: "invalid status, unpecified",
 			msg: types.MarketUpdateTicketPayload{
 				UID:     uuid.NewString(),
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute * 2).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -453,37 +408,15 @@ func TestUpdateMarketValidation(t *testing.T) {
 		{
 			name: "same timestamp",
 			msg: types.MarketUpdateTicketPayload{
-				StartTS: uint64(t1.Add(time.Minute).Unix()),
-				EndTS:   uint64(t1.Add(time.Minute).Unix()),
+				StartTS: uint64(time.Now().Add(time.Minute).Unix()),
+				EndTS:   uint64(time.Now().Add(time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "end timestamp before current timestamp",
 			msg: types.MarketUpdateTicketPayload{
-				EndTS: uint64(t1.Add(-time.Minute).Unix()),
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min amount, negative",
-			msg: types.MarketUpdateTicketPayload{
-				UID:          uuid.NewString(),
-				StartTS:      uint64(t1.Add(time.Minute).Unix()),
-				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
-				MinBetAmount: negativeBetAmount,
-				BetFee:       params.MinBetFee,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min amount, less than required",
-			msg: types.MarketUpdateTicketPayload{
-				UID:          uuid.NewString(),
-				StartTS:      uint64(t1.Add(time.Minute).Unix()),
-				EndTS:        uint64(t1.Add(time.Minute * 2).Unix()),
-				MinBetAmount: lowerBetAmount,
-				BetFee:       params.MinBetFee,
+				EndTS: uint64(time.Now().Add(-time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
