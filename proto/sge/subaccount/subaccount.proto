@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
+import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
@@ -31,3 +32,11 @@ message Balance {
   ];
 }
 
+// LockedBalance defines a balance which is locked.
+message LockedBalance {
+  google.protobuf.Timestamp unlock_time = 1 [(gogoproto.stdtime) = true, (gogoproto.nullable) = true];
+  string amount = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+}
