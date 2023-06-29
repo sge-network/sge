@@ -69,13 +69,6 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 		oddsSet[o.UID] = Odds{}
 	}
 
-	betConstraints := p.NewMarketBetConstraints(payload.MinBetAmount, payload.BetFee)
-	if betConstraints != nil {
-		if err := betConstraints.validate(p); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
@@ -92,13 +85,6 @@ func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) e
 
 	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
 		return err
-	}
-
-	betConstraints := p.NewMarketBetConstraints(payload.MinBetAmount, payload.BetFee)
-	if betConstraints != nil {
-		if err := betConstraints.validate(p); err != nil {
-			return err
-		}
 	}
 
 	return nil

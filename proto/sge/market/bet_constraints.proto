@@ -1,0 +1,21 @@
+syntax = "proto3";
+package sgenetwork.sge.market;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/market/types";
+
+// MarketBetConstraints is the bet constrains type for the market
+message MarketBetConstraints {
+    // min_amount is the minimum allowed bet amount for a market.
+    string min_amount = 1 [
+      (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+      (gogoproto.nullable) = false
+    ];
+  
+    // bet_fee is the fee that the bettor needs to pay to bet on the market.
+    string bet_fee = 2 [
+      (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+      (gogoproto.nullable) = false
+    ];
+}

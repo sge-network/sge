@@ -46,7 +46,6 @@ func (k msgServer) AddMarket(
 		addPayload.StartTS,
 		addPayload.EndTS,
 		addPayload.Odds,
-		params.NewMarketBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Meta,
 		addPayload.UID,
 		addPayload.Status,
@@ -95,10 +94,6 @@ func (k msgServer) UpdateMarket(
 	// replace current data with payload values
 	market.StartTS = updatePayload.StartTS
 	market.EndTS = updatePayload.EndTS
-	market.BetConstraints = params.NewMarketBetConstraints(
-		updatePayload.MinBetAmount,
-		updatePayload.BetFee,
-	)
 	market.Status = updatePayload.Status
 
 	// update market is successful, update the module state

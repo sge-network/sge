@@ -26,17 +26,14 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check minimum bet amount allowed
-	betConstraints := market.GetBetConstraints()
-	if betConstraints == nil {
-		market.BetConstraints = k.marketKeeper.GetDefaultBetConstraints(ctx)
-	}
+	betConstraints := k.marketKeeper.GetDefaultBetConstraints(ctx)
 
-	if bet.Amount.LT(market.BetConstraints.MinAmount) {
+	if bet.Amount.LT(betConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
 	}
 
 	// modify the bet fee and subtracted amount
-	setBetFee(bet, market.BetConstraints.BetFee)
+	setBetFee(bet, betConstraints.BetFee)
 
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
