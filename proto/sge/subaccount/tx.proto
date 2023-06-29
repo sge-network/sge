@@ -1,7 +1,20 @@
 syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
+import "sge/subaccount/subaccount.proto";
+
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // Msg defines the Msg service.
 service Msg { }
+
+message MsgCreateSubAccount {
+  // sender is the msg signer.
+  string sender = 1;
+
+  // sub_account_owner is the owner of the subaccount.
+  string sub_account_owner = 2;
+
+  // locked_balances is the list of balance locks.
+  repeated LockedBalance locked_balances = 3;
+}
