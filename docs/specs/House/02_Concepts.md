@@ -12,3 +12,9 @@ resolution of the market.
 
 - If Ignore is false in deposit/withdraw ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a deposit/withdraw to be set.
 - If Ignore is true in deposit/withdraw ticket payload, then kyc validation is not required and deposit/withdraw can be happen without kyc check.
+
+## **Authorization**
+
+Authorization is being validated in each deposit and withdraw request that includes `depositor_address` in the ticket, This can be useful if and account has willing to deposit/withdraw on behalf of another accounts.
+To grant deposit/withdraw permission, granter needs to grant permission using the `authz` module of the Cosmos-SDK.
+After each deposit or withdrawal success, the spend or withdraw limit is being updated. If the spend limit gets zero, the grant record will remove from the authz state completely.
