@@ -5,6 +5,11 @@ test_patterns = [
   "**/*_test.go"
 ]
 
+exclude_patterns = [
+  "**/*.pb.go",
+  "**/*.pb.gw.go"
+]
+
 [[analyzers]]
 name = "shell"
 
