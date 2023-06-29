@@ -648,7 +648,7 @@ type QueryClient interface {
 	DepositsByAccount(ctx context.Context, in *QueryDepositsByAccountRequest, opts ...grpc.CallOption) (*QueryDepositsByAccountResponse, error)
 	// WithdrawalsByAccount queries withdrawals info for given account.
 	WithdrawalsByAccount(ctx context.Context, in *QueryWithdrawalsByAccountRequest, opts ...grpc.CallOption) (*QueryWithdrawalsByAccountResponse, error)
-	// Queries a wthdrawal by id.
+	// Queries a wthdrawal by depositor, market, participation index and id.
 	Withdrawal(ctx context.Context, in *QueryWithdrawalRequest, opts ...grpc.CallOption) (*QueryWithdrawalResponse, error)
 }
 
@@ -715,7 +715,7 @@ type QueryServer interface {
 	DepositsByAccount(context.Context, *QueryDepositsByAccountRequest) (*QueryDepositsByAccountResponse, error)
 	// WithdrawalsByAccount queries withdrawals info for given account.
 	WithdrawalsByAccount(context.Context, *QueryWithdrawalsByAccountRequest) (*QueryWithdrawalsByAccountResponse, error)
-	// Queries a wthdrawal by id.
+	// Queries a wthdrawal by depositor, market, participation index and id.
 	Withdrawal(context.Context, *QueryWithdrawalRequest) (*QueryWithdrawalResponse, error)
 }
 

@@ -6,10 +6,6 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-
 	query "github.com/cosmos/cosmos-sdk/types/query"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
@@ -18,14 +14,15 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -35,7 +32,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryParamsRequest is the request type for the Query/Params RPC method
 // Query/Params RPC method.
-type QueryParamsRequest struct{}
+type QueryParamsRequest struct {
+}
 
 func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
@@ -43,11 +41,9 @@ func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{0}
 }
-
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
@@ -60,15 +56,12 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
 }
-
 func (m *QueryParamsRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
 }
@@ -88,11 +81,9 @@ func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{1}
 }
-
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsResponse.Marshal(b, m, deterministic)
@@ -105,15 +96,12 @@ func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParamsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsResponse.Merge(m, src)
 }
-
 func (m *QueryParamsResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParamsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsResponse.DiscardUnknown(m)
 }
@@ -142,11 +130,9 @@ func (*QueryOrderBooksRequest) ProtoMessage()    {}
 func (*QueryOrderBooksRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{2}
 }
-
 func (m *QueryOrderBooksRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBooksRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBooksRequest.Marshal(b, m, deterministic)
@@ -159,15 +145,12 @@ func (m *QueryOrderBooksRequest) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBooksRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBooksRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBooksRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBooksRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBooksRequest.DiscardUnknown(m)
 }
@@ -203,11 +186,9 @@ func (*QueryOrderBooksResponse) ProtoMessage()    {}
 func (*QueryOrderBooksResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{3}
 }
-
 func (m *QueryOrderBooksResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBooksResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBooksResponse.Marshal(b, m, deterministic)
@@ -220,15 +201,12 @@ func (m *QueryOrderBooksResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBooksResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBooksResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBooksResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBooksResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBooksResponse.DiscardUnknown(m)
 }
@@ -261,11 +239,9 @@ func (*QueryOrderBookRequest) ProtoMessage()    {}
 func (*QueryOrderBookRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{4}
 }
-
 func (m *QueryOrderBookRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookRequest.Marshal(b, m, deterministic)
@@ -278,15 +254,12 @@ func (m *QueryOrderBookRequest) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookRequest.DiscardUnknown(m)
 }
@@ -313,11 +286,9 @@ func (*QueryOrderBookResponse) ProtoMessage()    {}
 func (*QueryOrderBookResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{5}
 }
-
 func (m *QueryOrderBookResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookResponse.Marshal(b, m, deterministic)
@@ -330,15 +301,12 @@ func (m *QueryOrderBookResponse) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookResponse.DiscardUnknown(m)
 }
@@ -368,11 +336,9 @@ func (*QueryOrderBookParticipationsRequest) ProtoMessage()    {}
 func (*QueryOrderBookParticipationsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{6}
 }
-
 func (m *QueryOrderBookParticipationsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationsRequest.Marshal(b, m, deterministic)
@@ -385,15 +351,12 @@ func (m *QueryOrderBookParticipationsRequest) XXX_Marshal(b []byte, deterministi
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationsRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationsRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationsRequest.DiscardUnknown(m)
 }
@@ -428,11 +391,9 @@ func (*QueryOrderBookParticipationsResponse) ProtoMessage()    {}
 func (*QueryOrderBookParticipationsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{7}
 }
-
 func (m *QueryOrderBookParticipationsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationsResponse.Marshal(b, m, deterministic)
@@ -445,15 +406,12 @@ func (m *QueryOrderBookParticipationsResponse) XXX_Marshal(b []byte, determinist
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationsResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationsResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationsResponse.DiscardUnknown(m)
 }
@@ -490,11 +448,9 @@ func (*QueryOrderBookParticipationRequest) ProtoMessage()    {}
 func (*QueryOrderBookParticipationRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{8}
 }
-
 func (m *QueryOrderBookParticipationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationRequest.Marshal(b, m, deterministic)
@@ -507,15 +463,12 @@ func (m *QueryOrderBookParticipationRequest) XXX_Marshal(b []byte, deterministic
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationRequest.DiscardUnknown(m)
 }
@@ -549,11 +502,9 @@ func (*QueryOrderBookParticipationResponse) ProtoMessage()    {}
 func (*QueryOrderBookParticipationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{9}
 }
-
 func (m *QueryOrderBookParticipationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationResponse.Marshal(b, m, deterministic)
@@ -566,15 +517,12 @@ func (m *QueryOrderBookParticipationResponse) XXX_Marshal(b []byte, deterministi
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationResponse.DiscardUnknown(m)
 }
@@ -603,11 +551,9 @@ func (*QueryOrderBookExposuresRequest) ProtoMessage()    {}
 func (*QueryOrderBookExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{10}
 }
-
 func (m *QueryOrderBookExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookExposuresRequest.Marshal(b, m, deterministic)
@@ -620,15 +566,12 @@ func (m *QueryOrderBookExposuresRequest) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookExposuresRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookExposuresRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookExposuresRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookExposuresRequest.DiscardUnknown(m)
 }
@@ -663,11 +606,9 @@ func (*QueryOrderBookExposuresResponse) ProtoMessage()    {}
 func (*QueryOrderBookExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{11}
 }
-
 func (m *QueryOrderBookExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookExposuresResponse.Marshal(b, m, deterministic)
@@ -680,15 +621,12 @@ func (m *QueryOrderBookExposuresResponse) XXX_Marshal(b []byte, deterministic bo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookExposuresResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookExposuresResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookExposuresResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookExposuresResponse.DiscardUnknown(m)
 }
@@ -724,11 +662,9 @@ func (*QueryOrderBookExposureRequest) ProtoMessage()    {}
 func (*QueryOrderBookExposureRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{12}
 }
-
 func (m *QueryOrderBookExposureRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookExposureRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookExposureRequest.Marshal(b, m, deterministic)
@@ -741,15 +677,12 @@ func (m *QueryOrderBookExposureRequest) XXX_Marshal(b []byte, deterministic bool
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookExposureRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookExposureRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookExposureRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookExposureRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookExposureRequest.DiscardUnknown(m)
 }
@@ -783,11 +716,9 @@ func (*QueryOrderBookExposureResponse) ProtoMessage()    {}
 func (*QueryOrderBookExposureResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{13}
 }
-
 func (m *QueryOrderBookExposureResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookExposureResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookExposureResponse.Marshal(b, m, deterministic)
@@ -800,15 +731,12 @@ func (m *QueryOrderBookExposureResponse) XXX_Marshal(b []byte, deterministic boo
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookExposureResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookExposureResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookExposureResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookExposureResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookExposureResponse.DiscardUnknown(m)
 }
@@ -834,7 +762,6 @@ type QueryOrderBookParticipationExposuresRequest struct {
 func (m *QueryOrderBookParticipationExposuresRequest) Reset() {
 	*m = QueryOrderBookParticipationExposuresRequest{}
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) String() string {
 	return proto.CompactTextString(m)
 }
@@ -842,11 +769,9 @@ func (*QueryOrderBookParticipationExposuresRequest) ProtoMessage() {}
 func (*QueryOrderBookParticipationExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{14}
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.Marshal(b, m, deterministic)
@@ -859,15 +784,12 @@ func (m *QueryOrderBookParticipationExposuresRequest) XXX_Marshal(b []byte, dete
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationExposuresRequest.DiscardUnknown(m)
 }
@@ -899,7 +821,6 @@ type QueryOrderBookParticipationExposuresResponse struct {
 func (m *QueryOrderBookParticipationExposuresResponse) Reset() {
 	*m = QueryOrderBookParticipationExposuresResponse{}
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) String() string {
 	return proto.CompactTextString(m)
 }
@@ -907,11 +828,9 @@ func (*QueryOrderBookParticipationExposuresResponse) ProtoMessage() {}
 func (*QueryOrderBookParticipationExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{15}
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.Marshal(b, m, deterministic)
@@ -924,15 +843,12 @@ func (m *QueryOrderBookParticipationExposuresResponse) XXX_Marshal(b []byte, det
 		return b[:n], nil
 	}
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.Merge(m, src)
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryOrderBookParticipationExposuresResponse.DiscardUnknown(m)
 }
@@ -970,11 +886,9 @@ func (*QueryParticipationExposuresRequest) ProtoMessage()    {}
 func (*QueryParticipationExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{16}
 }
-
 func (m *QueryParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParticipationExposuresRequest.Marshal(b, m, deterministic)
@@ -987,15 +901,12 @@ func (m *QueryParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParticipationExposuresRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParticipationExposuresRequest.Merge(m, src)
 }
-
 func (m *QueryParticipationExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParticipationExposuresRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParticipationExposuresRequest.DiscardUnknown(m)
 }
@@ -1038,11 +949,9 @@ func (*QueryParticipationExposuresResponse) ProtoMessage()    {}
 func (*QueryParticipationExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{17}
 }
-
 func (m *QueryParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParticipationExposuresResponse.Marshal(b, m, deterministic)
@@ -1055,15 +964,12 @@ func (m *QueryParticipationExposuresResponse) XXX_Marshal(b []byte, deterministi
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParticipationExposuresResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParticipationExposuresResponse.Merge(m, src)
 }
-
 func (m *QueryParticipationExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParticipationExposuresResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParticipationExposuresResponse.DiscardUnknown(m)
 }
@@ -1096,7 +1002,6 @@ type QueryHistoricalParticipationExposuresRequest struct {
 func (m *QueryHistoricalParticipationExposuresRequest) Reset() {
 	*m = QueryHistoricalParticipationExposuresRequest{}
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) String() string {
 	return proto.CompactTextString(m)
 }
@@ -1104,11 +1009,9 @@ func (*QueryHistoricalParticipationExposuresRequest) ProtoMessage() {}
 func (*QueryHistoricalParticipationExposuresRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{18}
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.Marshal(b, m, deterministic)
@@ -1121,15 +1024,12 @@ func (m *QueryHistoricalParticipationExposuresRequest) XXX_Marshal(b []byte, det
 		return b[:n], nil
 	}
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.Merge(m, src)
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryHistoricalParticipationExposuresRequest.DiscardUnknown(m)
 }
@@ -1161,7 +1061,6 @@ type QueryHistoricalParticipationExposuresResponse struct {
 func (m *QueryHistoricalParticipationExposuresResponse) Reset() {
 	*m = QueryHistoricalParticipationExposuresResponse{}
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) String() string {
 	return proto.CompactTextString(m)
 }
@@ -1169,11 +1068,9 @@ func (*QueryHistoricalParticipationExposuresResponse) ProtoMessage() {}
 func (*QueryHistoricalParticipationExposuresResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{19}
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.Marshal(b, m, deterministic)
@@ -1186,15 +1083,12 @@ func (m *QueryHistoricalParticipationExposuresResponse) XXX_Marshal(b []byte, de
 		return b[:n], nil
 	}
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.Merge(m, src)
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryHistoricalParticipationExposuresResponse.DiscardUnknown(m)
 }
@@ -1234,11 +1128,9 @@ func (*QueryParticipationFulfilledBetsRequest) ProtoMessage()    {}
 func (*QueryParticipationFulfilledBetsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{20}
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParticipationFulfilledBetsRequest.Marshal(b, m, deterministic)
@@ -1251,15 +1143,12 @@ func (m *QueryParticipationFulfilledBetsRequest) XXX_Marshal(b []byte, determini
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParticipationFulfilledBetsRequest.Merge(m, src)
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParticipationFulfilledBetsRequest.DiscardUnknown(m)
 }
@@ -1304,11 +1193,9 @@ func (*QueryParticipationFulfilledBetsResponse) ProtoMessage()    {}
 func (*QueryParticipationFulfilledBetsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_8b016841afa49a45, []int{21}
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParticipationFulfilledBetsResponse.Marshal(b, m, deterministic)
@@ -1321,15 +1208,12 @@ func (m *QueryParticipationFulfilledBetsResponse) XXX_Marshal(b []byte, determin
 		return b[:n], nil
 	}
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParticipationFulfilledBetsResponse.Merge(m, src)
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParticipationFulfilledBetsResponse.DiscardUnknown(m)
 }
@@ -1454,10 +1338,8 @@ var fileDescriptor_8b016841afa49a45 = []byte{
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ context.Context
-	_ grpc.ClientConn
-)
+var _ context.Context
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -1639,48 +1521,39 @@ type QueryServer interface {
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServer struct{}
+type UnimplementedQueryServer struct {
+}
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBooks(ctx context.Context, req *QueryOrderBooksRequest) (*QueryOrderBooksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBooks not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBook(ctx context.Context, req *QueryOrderBookRequest) (*QueryOrderBookResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBook not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBookParticipations(ctx context.Context, req *QueryOrderBookParticipationsRequest) (*QueryOrderBookParticipationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipations not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBookParticipation(ctx context.Context, req *QueryOrderBookParticipationRequest) (*QueryOrderBookParticipationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipation not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBookExposures(ctx context.Context, req *QueryOrderBookExposuresRequest) (*QueryOrderBookExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookExposures not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBookExposure(ctx context.Context, req *QueryOrderBookExposureRequest) (*QueryOrderBookExposureResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookExposure not implemented")
 }
-
 func (*UnimplementedQueryServer) OrderBookParticipationExposures(ctx context.Context, req *QueryOrderBookParticipationExposuresRequest) (*QueryOrderBookParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OrderBookParticipationExposures not implemented")
 }
-
 func (*UnimplementedQueryServer) ParticipationExposures(ctx context.Context, req *QueryParticipationExposuresRequest) (*QueryParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParticipationExposures not implemented")
 }
-
 func (*UnimplementedQueryServer) HistoricalParticipationExposures(ctx context.Context, req *QueryHistoricalParticipationExposuresRequest) (*QueryHistoricalParticipationExposuresResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HistoricalParticipationExposures not implemented")
 }
-
 func (*UnimplementedQueryServer) ParticipationFulfilledBets(ctx context.Context, req *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParticipationFulfilledBets not implemented")
 }
@@ -2855,7 +2728,6 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *QueryParamsRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -3216,11 +3088,9 @@ func (m *QueryParticipationFulfilledBetsResponse) Size() (n int) {
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3271,7 +3141,6 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3355,7 +3224,6 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBooksRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3474,7 +3342,6 @@ func (m *QueryOrderBooksRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBooksResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3595,7 +3462,6 @@ func (m *QueryOrderBooksResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3678,7 +3544,6 @@ func (m *QueryOrderBookRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3762,7 +3627,6 @@ func (m *QueryOrderBookResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3881,7 +3745,6 @@ func (m *QueryOrderBookParticipationsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4002,7 +3865,6 @@ func (m *QueryOrderBookParticipationsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4104,7 +3966,6 @@ func (m *QueryOrderBookParticipationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4188,7 +4049,6 @@ func (m *QueryOrderBookParticipationResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4307,7 +4167,6 @@ func (m *QueryOrderBookExposuresRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4428,7 +4287,6 @@ func (m *QueryOrderBookExposuresResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookExposureRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4543,7 +4401,6 @@ func (m *QueryOrderBookExposureRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookExposureResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4627,7 +4484,6 @@ func (m *QueryOrderBookExposureResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4746,7 +4602,6 @@ func (m *QueryOrderBookParticipationExposuresRequest) Unmarshal(dAtA []byte) err
 	}
 	return nil
 }
-
 func (m *QueryOrderBookParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -4867,7 +4722,6 @@ func (m *QueryOrderBookParticipationExposuresResponse) Unmarshal(dAtA []byte) er
 	}
 	return nil
 }
-
 func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5005,7 +4859,6 @@ func (m *QueryParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5126,7 +4979,6 @@ func (m *QueryParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryHistoricalParticipationExposuresRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5245,7 +5097,6 @@ func (m *QueryHistoricalParticipationExposuresRequest) Unmarshal(dAtA []byte) er
 	}
 	return nil
 }
-
 func (m *QueryHistoricalParticipationExposuresResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5366,7 +5217,6 @@ func (m *QueryHistoricalParticipationExposuresResponse) Unmarshal(dAtA []byte) e
 	}
 	return nil
 }
-
 func (m *QueryParticipationFulfilledBetsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5504,7 +5354,6 @@ func (m *QueryParticipationFulfilledBetsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *QueryParticipationFulfilledBetsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -5625,7 +5474,6 @@ func (m *QueryParticipationFulfilledBetsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipQuery(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

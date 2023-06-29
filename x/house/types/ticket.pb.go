@@ -5,21 +5,18 @@ package types
 
 import (
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	types "github.com/sge-network/sge/types"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -41,11 +38,9 @@ func (*DepositTicketPayload) ProtoMessage()    {}
 func (*DepositTicketPayload) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1f686c28436675f2, []int{0}
 }
-
 func (m *DepositTicketPayload) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *DepositTicketPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_DepositTicketPayload.Marshal(b, m, deterministic)
@@ -58,15 +53,12 @@ func (m *DepositTicketPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-
 func (m *DepositTicketPayload) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_DepositTicketPayload.Merge(m, src)
 }
-
 func (m *DepositTicketPayload) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *DepositTicketPayload) XXX_DiscardUnknown() {
 	xxx_messageInfo_DepositTicketPayload.DiscardUnknown(m)
 }
@@ -101,11 +93,9 @@ func (*WithdrawTicketPayload) ProtoMessage()    {}
 func (*WithdrawTicketPayload) Descriptor() ([]byte, []int) {
 	return fileDescriptor_1f686c28436675f2, []int{1}
 }
-
 func (m *WithdrawTicketPayload) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *WithdrawTicketPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_WithdrawTicketPayload.Marshal(b, m, deterministic)
@@ -118,15 +108,12 @@ func (m *WithdrawTicketPayload) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
-
 func (m *WithdrawTicketPayload) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_WithdrawTicketPayload.Merge(m, src)
 }
-
 func (m *WithdrawTicketPayload) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *WithdrawTicketPayload) XXX_DiscardUnknown() {
 	xxx_messageInfo_WithdrawTicketPayload.DiscardUnknown(m)
 }
@@ -267,7 +254,6 @@ func encodeVarintTicket(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *DepositTicketPayload) Size() (n int) {
 	if m == nil {
 		return 0
@@ -301,11 +287,9 @@ func (m *WithdrawTicketPayload) Size() (n int) {
 func sovTicket(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozTicket(x uint64) (n int) {
 	return sovTicket(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *DepositTicketPayload) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -421,7 +405,6 @@ func (m *DepositTicketPayload) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *WithdrawTicketPayload) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -537,7 +520,6 @@ func (m *WithdrawTicketPayload) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipTicket(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
