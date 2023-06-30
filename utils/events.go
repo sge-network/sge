@@ -13,17 +13,17 @@ type EventEmitter struct {
 }
 
 func (em *EventEmitter) AddMsg(msgType, sender string, attrs ...sdk.Attribute) {
-	em.addEvent(sdk.EventTypeMessage,
+	em.AddEvent(sdk.EventTypeMessage,
 		sdk.NewAttribute(sdk.AttributeKeyModule, em.category),
 		sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
 		sdk.NewAttribute(sdk.AttributeKeySender, sender),
 	)
 	if len(attrs) > 0 {
-		em.addEvent(msgType, attrs...)
+		em.AddEvent(msgType, attrs...)
 	}
 }
 
-func (em *EventEmitter) addEvent(ty string, attrs ...sdk.Attribute) {
+func (em *EventEmitter) AddEvent(ty string, attrs ...sdk.Attribute) {
 	em.Events = append(em.Events, sdk.NewEvent(ty, attrs...))
 }
 

@@ -70,4 +70,5 @@ type OrderbookKeeper interface {
 	) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdk.Int) error
+	PublishOrderBookEvent(ctx sdk.Context, orderBookUID string)
 }
