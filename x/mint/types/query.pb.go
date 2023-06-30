@@ -6,6 +6,10 @@ package types
 import (
 	context "context"
 	fmt "fmt"
+	io "io"
+	math "math"
+	math_bits "math/bits"
+
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
@@ -14,15 +18,14 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	io "io"
-	math "math"
-	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ = proto.Marshal
-var _ = fmt.Errorf
-var _ = math.Inf
+var (
+	_ = proto.Marshal
+	_ = fmt.Errorf
+	_ = math.Inf
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -32,8 +35,7 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
 // Query/Params RPC method.
-type QueryParamsRequest struct {
-}
+type QueryParamsRequest struct{}
 
 func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
@@ -41,9 +43,11 @@ func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{0}
 }
+
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsRequest.Marshal(b, m, deterministic)
@@ -56,12 +60,15 @@ func (m *QueryParamsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
+
 func (m *QueryParamsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsRequest.Merge(m, src)
 }
+
 func (m *QueryParamsRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryParamsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsRequest.DiscardUnknown(m)
 }
@@ -81,9 +88,11 @@ func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{1}
 }
+
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryParamsResponse.Marshal(b, m, deterministic)
@@ -96,12 +105,15 @@ func (m *QueryParamsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
+
 func (m *QueryParamsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryParamsResponse.Merge(m, src)
 }
+
 func (m *QueryParamsResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryParamsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryParamsResponse.DiscardUnknown(m)
 }
@@ -117,8 +129,7 @@ func (m *QueryParamsResponse) GetParams() Params {
 
 // QueryInflationRequest is the request type for the Query/Inflation RPC method.
 // Query/Inflation RPC method.
-type QueryInflationRequest struct {
-}
+type QueryInflationRequest struct{}
 
 func (m *QueryInflationRequest) Reset()         { *m = QueryInflationRequest{} }
 func (m *QueryInflationRequest) String() string { return proto.CompactTextString(m) }
@@ -126,9 +137,11 @@ func (*QueryInflationRequest) ProtoMessage()    {}
 func (*QueryInflationRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{2}
 }
+
 func (m *QueryInflationRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryInflationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryInflationRequest.Marshal(b, m, deterministic)
@@ -141,12 +154,15 @@ func (m *QueryInflationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
+
 func (m *QueryInflationRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryInflationRequest.Merge(m, src)
 }
+
 func (m *QueryInflationRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryInflationRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryInflationRequest.DiscardUnknown(m)
 }
@@ -167,9 +183,11 @@ func (*QueryInflationResponse) ProtoMessage()    {}
 func (*QueryInflationResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{3}
 }
+
 func (m *QueryInflationResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryInflationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryInflationResponse.Marshal(b, m, deterministic)
@@ -182,12 +200,15 @@ func (m *QueryInflationResponse) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
+
 func (m *QueryInflationResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryInflationResponse.Merge(m, src)
 }
+
 func (m *QueryInflationResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryInflationResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryInflationResponse.DiscardUnknown(m)
 }
@@ -196,8 +217,7 @@ var xxx_messageInfo_QueryInflationResponse proto.InternalMessageInfo
 
 // QueryPhaseStepRequest is the request type for the Query/Inflation RPC method.
 // Query/PhaseStep RPC method.
-type QueryPhaseStepRequest struct {
-}
+type QueryPhaseStepRequest struct{}
 
 func (m *QueryPhaseStepRequest) Reset()         { *m = QueryPhaseStepRequest{} }
 func (m *QueryPhaseStepRequest) String() string { return proto.CompactTextString(m) }
@@ -205,9 +225,11 @@ func (*QueryPhaseStepRequest) ProtoMessage()    {}
 func (*QueryPhaseStepRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{4}
 }
+
 func (m *QueryPhaseStepRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPhaseStepRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPhaseStepRequest.Marshal(b, m, deterministic)
@@ -220,12 +242,15 @@ func (m *QueryPhaseStepRequest) XXX_Marshal(b []byte, deterministic bool) ([]byt
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPhaseStepRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPhaseStepRequest.Merge(m, src)
 }
+
 func (m *QueryPhaseStepRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPhaseStepRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPhaseStepRequest.DiscardUnknown(m)
 }
@@ -246,9 +271,11 @@ func (*QueryPhaseStepResponse) ProtoMessage()    {}
 func (*QueryPhaseStepResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{5}
 }
+
 func (m *QueryPhaseStepResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPhaseStepResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPhaseStepResponse.Marshal(b, m, deterministic)
@@ -261,12 +288,15 @@ func (m *QueryPhaseStepResponse) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPhaseStepResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPhaseStepResponse.Merge(m, src)
 }
+
 func (m *QueryPhaseStepResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPhaseStepResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPhaseStepResponse.DiscardUnknown(m)
 }
@@ -282,8 +312,7 @@ func (m *QueryPhaseStepResponse) GetPhaseStep() int32 {
 
 // QueryPhaseProvisionsRequest is the request type for the
 // Query/PhaseProvisions RPC method.
-type QueryPhaseProvisionsRequest struct {
-}
+type QueryPhaseProvisionsRequest struct{}
 
 func (m *QueryPhaseProvisionsRequest) Reset()         { *m = QueryPhaseProvisionsRequest{} }
 func (m *QueryPhaseProvisionsRequest) String() string { return proto.CompactTextString(m) }
@@ -291,9 +320,11 @@ func (*QueryPhaseProvisionsRequest) ProtoMessage()    {}
 func (*QueryPhaseProvisionsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{6}
 }
+
 func (m *QueryPhaseProvisionsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPhaseProvisionsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPhaseProvisionsRequest.Marshal(b, m, deterministic)
@@ -306,12 +337,15 @@ func (m *QueryPhaseProvisionsRequest) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPhaseProvisionsRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPhaseProvisionsRequest.Merge(m, src)
 }
+
 func (m *QueryPhaseProvisionsRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPhaseProvisionsRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPhaseProvisionsRequest.DiscardUnknown(m)
 }
@@ -331,9 +365,11 @@ func (*QueryPhaseProvisionsResponse) ProtoMessage()    {}
 func (*QueryPhaseProvisionsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{7}
 }
+
 func (m *QueryPhaseProvisionsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryPhaseProvisionsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryPhaseProvisionsResponse.Marshal(b, m, deterministic)
@@ -346,12 +382,15 @@ func (m *QueryPhaseProvisionsResponse) XXX_Marshal(b []byte, deterministic bool)
 		return b[:n], nil
 	}
 }
+
 func (m *QueryPhaseProvisionsResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryPhaseProvisionsResponse.Merge(m, src)
 }
+
 func (m *QueryPhaseProvisionsResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryPhaseProvisionsResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryPhaseProvisionsResponse.DiscardUnknown(m)
 }
@@ -361,8 +400,7 @@ var xxx_messageInfo_QueryPhaseProvisionsResponse proto.InternalMessageInfo
 // QueryEndPhaseStatusRequest is the request type for the Query/Inflation RPC
 // method.
 // Query/EndPhaseStatus RPC method.
-type QueryEndPhaseStatusRequest struct {
-}
+type QueryEndPhaseStatusRequest struct{}
 
 func (m *QueryEndPhaseStatusRequest) Reset()         { *m = QueryEndPhaseStatusRequest{} }
 func (m *QueryEndPhaseStatusRequest) String() string { return proto.CompactTextString(m) }
@@ -370,9 +408,11 @@ func (*QueryEndPhaseStatusRequest) ProtoMessage()    {}
 func (*QueryEndPhaseStatusRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{8}
 }
+
 func (m *QueryEndPhaseStatusRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryEndPhaseStatusRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryEndPhaseStatusRequest.Marshal(b, m, deterministic)
@@ -385,12 +425,15 @@ func (m *QueryEndPhaseStatusRequest) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
+
 func (m *QueryEndPhaseStatusRequest) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryEndPhaseStatusRequest.Merge(m, src)
 }
+
 func (m *QueryEndPhaseStatusRequest) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryEndPhaseStatusRequest) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryEndPhaseStatusRequest.DiscardUnknown(m)
 }
@@ -412,9 +455,11 @@ func (*QueryEndPhaseStatusResponse) ProtoMessage()    {}
 func (*QueryEndPhaseStatusResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_448e6714a1bb8862, []int{9}
 }
+
 func (m *QueryEndPhaseStatusResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
+
 func (m *QueryEndPhaseStatusResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_QueryEndPhaseStatusResponse.Marshal(b, m, deterministic)
@@ -427,12 +472,15 @@ func (m *QueryEndPhaseStatusResponse) XXX_Marshal(b []byte, deterministic bool) 
 		return b[:n], nil
 	}
 }
+
 func (m *QueryEndPhaseStatusResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_QueryEndPhaseStatusResponse.Merge(m, src)
 }
+
 func (m *QueryEndPhaseStatusResponse) XXX_Size() int {
 	return m.Size()
 }
+
 func (m *QueryEndPhaseStatusResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_QueryEndPhaseStatusResponse.DiscardUnknown(m)
 }
@@ -503,8 +551,10 @@ var fileDescriptor_448e6714a1bb8862 = []byte{
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
+var (
+	_ context.Context
+	_ grpc.ClientConn
+)
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -594,21 +644,24 @@ type QueryServer interface {
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
-type UnimplementedQueryServer struct {
-}
+type UnimplementedQueryServer struct{}
 
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
+
 func (*UnimplementedQueryServer) Inflation(ctx context.Context, req *QueryInflationRequest) (*QueryInflationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Inflation not implemented")
 }
+
 func (*UnimplementedQueryServer) PhaseStep(ctx context.Context, req *QueryPhaseStepRequest) (*QueryPhaseStepResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PhaseStep not implemented")
 }
+
 func (*UnimplementedQueryServer) PhaseProvisions(ctx context.Context, req *QueryPhaseProvisionsRequest) (*QueryPhaseProvisionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PhaseProvisions not implemented")
 }
+
 func (*UnimplementedQueryServer) EndPhaseStatus(ctx context.Context, req *QueryEndPhaseStatusRequest) (*QueryEndPhaseStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EndPhaseStatus not implemented")
 }
@@ -1022,6 +1075,7 @@ func encodeVarintQuery(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+
 func (m *QueryParamsRequest) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1127,9 +1181,11 @@ func (m *QueryEndPhaseStatusResponse) Size() (n int) {
 func sovQuery(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
+
 func sozQuery(x uint64) (n int) {
 	return sovQuery(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
+
 func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1180,6 +1236,7 @@ func (m *QueryParamsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1263,6 +1320,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryInflationRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1313,6 +1371,7 @@ func (m *QueryInflationRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryInflationResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1396,6 +1455,7 @@ func (m *QueryInflationResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPhaseStepRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1446,6 +1506,7 @@ func (m *QueryPhaseStepRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPhaseStepResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1515,6 +1576,7 @@ func (m *QueryPhaseStepResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPhaseProvisionsRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1565,6 +1627,7 @@ func (m *QueryPhaseProvisionsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryPhaseProvisionsResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1648,6 +1711,7 @@ func (m *QueryPhaseProvisionsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryEndPhaseStatusRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1698,6 +1762,7 @@ func (m *QueryEndPhaseStatusRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func (m *QueryEndPhaseStatusResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1768,6 +1833,7 @@ func (m *QueryEndPhaseStatusResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+
 func skipQuery(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
