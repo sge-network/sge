@@ -133,7 +133,7 @@ func (app *SgeApp) reInitializeAllDelegators(ctx sdk.Context, dels stakingtypes.
 }
 
 func (app *SgeApp) getJailAllowedValidatorsMap(
-	ctx sdk.Context,
+	_ sdk.Context,
 	jailAllowedAddrs []string,
 ) (bool, map[string]bool) {
 	applyAllowedAddrs := false

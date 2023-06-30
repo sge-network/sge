@@ -21,7 +21,7 @@ func (a WithdrawAuthorization) MsgTypeURL() string {
 }
 
 // Accept implements Authorization.Accept.
-func (a WithdrawAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
+func (a WithdrawAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mWithdraw, ok := msg.(*MsgWithdraw)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")

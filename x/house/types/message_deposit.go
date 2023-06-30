@@ -66,7 +66,7 @@ func (msg *MsgDeposit) ValidateBasic() error {
 }
 
 // ValidateSanity validates deposit acceptability
-func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
+func (msg MsgDeposit) ValidateSanity(_ sdk.Context, p *Params) error {
 	if msg.Amount.LT(p.MinDeposit) {
 		return sdkerrors.Wrapf(
 			ErrDepositTooSmall, ": got %s, expected greater or equal to %d",
