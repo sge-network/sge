@@ -38,8 +38,8 @@ type OrderBookParticipation struct {
 	Fee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=fee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"fee" yaml:"fee"`
 	// current_round_liquidity is the liquidity provided for the current round.
 	CurrentRoundLiquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=current_round_liquidity,json=currentRoundLiquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_liquidity" yaml:"current_round_liquidity"`
-	// exposures_not_filled represents if all of the exposures of the participation
-	// are filled or not.
+	// exposures_not_filled represents if all of the exposures of the
+	// participation are filled or not.
 	ExposuresNotFilled uint64 `protobuf:"varint,7,opt,name=exposures_not_filled,json=exposuresNotFilled,proto3" json:"exposures_not_filled,omitempty" yaml:"exposures_not_filled"`
 	// total_bet_amount is the total bet amount corresponding to all exposures.
 	TotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=total_bet_amount,json=totalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"total_bet_amount" yaml:"total_bet_amount"`

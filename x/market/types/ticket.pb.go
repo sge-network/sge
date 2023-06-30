@@ -5,12 +5,7 @@ package types
 
 import (
 	fmt "fmt"
-<<<<<<< HEAD
-	_ "github.com/gogo/protobuf/gogoproto"
-=======
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/cosmos/gogoproto/gogoproto"
->>>>>>> master
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"

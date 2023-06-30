@@ -15,7 +15,8 @@ message Deposit {
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
 
   // creator is the bech32-encoded address of the depositor.
-  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
+  string depositor_address = 2
+      [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 
   // market_uid is the uid of market/order book against which deposit is being
   // made.

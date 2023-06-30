@@ -442,8 +442,8 @@ func (m *QueryWithdrawalsByAccountResponse) GetPagination() *query.PageResponse 
 	return nil
 }
 
-// QueryWithdrawalRequest is the request type for the Query/Withdrawal RPC method.
-// Query/Withdrawal RPC method.
+// QueryWithdrawalRequest is the request type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
 type QueryWithdrawalRequest struct {
 	DepositorAddress string `protobuf:"bytes,1,opt,name=depositor_address,json=depositorAddress,proto3" json:"depositor_address,omitempty"`
 	MarketUid        string `protobuf:"bytes,2,opt,name=market_uid,json=marketUid,proto3" json:"market_uid,omitempty"`
@@ -515,8 +515,8 @@ func (m *QueryWithdrawalRequest) GetId() uint64 {
 	return 0
 }
 
-// QueryWithdrawalResponse is the response type for the Query/Withdrawal RPC method.
-// Query/Withdrawal RPC method.
+// QueryWithdrawalResponse is the response type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
 type QueryWithdrawalResponse struct {
 	// withdrawal holds all the withdrawal properties.
 	Withdrawal Withdrawal `protobuf:"bytes,1,opt,name=withdrawal,proto3" json:"withdrawal"`
