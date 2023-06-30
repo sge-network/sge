@@ -67,16 +67,16 @@ func (k Keeper) ProcessBetPlacement(
 	return fInfo.fulfillments, nil
 }
 
-func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUid string) error {
+func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) error {
 	event := types.NewOrderBookEvent()
-	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUid)
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
 	if err != nil {
 		return err
 	}
 
 	for _, boe := range boes {
 		event.AddOrderBookOddsExposure(boe)
-		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUid, boe.OddsUID)
+		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUID, boe.OddsUID)
 		if err != nil {
 			return err
 		}
