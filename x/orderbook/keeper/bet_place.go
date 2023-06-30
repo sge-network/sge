@@ -1,12 +1,13 @@
 package keeper
 
 import (
+	"log"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
-	"log"
 )
 
 // ProcessBetPlacement processes bet placement
