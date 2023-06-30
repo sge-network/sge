@@ -11,7 +11,7 @@ import (
 )
 
 // Validate validates market add ticket payload.
-func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) error {
+func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context) error {
 	// remove xss attach prone characters
 	payload.Meta = sanitize.XSS(payload.Meta)
 	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
@@ -73,7 +73,7 @@ func (payload *MarketAddTicketPayload) Validate(ctx sdk.Context, p *Params) erro
 }
 
 // Validate validates market update ticket payload.
-func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) error {
+func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context) error {
 	// updating the status to something other than active and inactive
 	if !(payload.Status == MarketStatus_MARKET_STATUS_ACTIVE ||
 		payload.Status == MarketStatus_MARKET_STATUS_INACTIVE) {
@@ -83,11 +83,7 @@ func (payload *MarketUpdateTicketPayload) Validate(ctx sdk.Context, p *Params) e
 		)
 	}
 
-	if err := validateMarketTS(ctx, payload.StartTS, payload.EndTS); err != nil {
-		return err
-	}
-
-	return nil
+	return validateMarketTS(ctx, payload.StartTS, payload.EndTS)
 }
 
 // Validate validates market resolution ticket payload.

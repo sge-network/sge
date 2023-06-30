@@ -16,8 +16,7 @@ func (k KeeperTest) ValidateMarketResolution(
 }
 
 func (k KeeperTest) ValidateMarketAdd(ctx sdk.Context, addPayload types.MarketAddTicketPayload) error {
-	params := k.GetParams(ctx)
-	return addPayload.Validate(ctx, &params)
+	return addPayload.Validate(ctx)
 }
 
 func (k KeeperTest) ValidateMarketUpdate(
@@ -25,6 +24,5 @@ func (k KeeperTest) ValidateMarketUpdate(
 	updatePayload types.MarketUpdateTicketPayload,
 	currentMarket types.Market,
 ) error {
-	params := k.GetParams(ctx)
-	return updatePayload.Validate(ctx, &params)
+	return updatePayload.Validate(ctx)
 }

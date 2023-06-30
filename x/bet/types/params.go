@@ -88,11 +88,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	if err := validatePlacementConstraints(p.PlacementConstraints); err != nil {
-		return err
-	}
-
-	return nil
+	return validatePlacementConstraints(p.PlacementConstraints)
 }
 
 // String implements the Stringer interface.

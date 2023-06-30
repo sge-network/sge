@@ -14,7 +14,6 @@ import (
 )
 
 func TestAddMarketTicketPayloadValidation(t *testing.T) {
-	param := types.DefaultParams()
 	_, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
@@ -186,7 +185,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.payload.Validate(ctx, &param)
+			err := tt.payload.Validate(ctx)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -197,7 +196,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
-	param := types.DefaultParams()
 	_, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
@@ -239,7 +237,7 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.payload.Validate(ctx, &param)
+			err := tt.payload.Validate(ctx)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

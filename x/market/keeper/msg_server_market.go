@@ -20,9 +20,7 @@ func (k msgServer) AddMarket(
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	params := k.GetParams(ctx)
-
-	if err := addPayload.Validate(ctx, &params); err != nil {
+	if err := addPayload.Validate(ctx); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
@@ -84,10 +82,8 @@ func (k msgServer) UpdateMarket(
 		return nil, sdkerrors.Wrapf(types.ErrMarketCanNotBeAltered, "%s", market.Status)
 	}
 
-	params := k.GetParams(ctx)
-
 	// update market is not valid, return error
-	if err := updatePayload.Validate(ctx, &params); err != nil {
+	if err := updatePayload.Validate(ctx); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
