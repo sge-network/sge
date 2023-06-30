@@ -20,11 +20,9 @@ const (
 )
 
 var (
-	KeyMaxOrderBookParticipations = []byte("MaxOrderBookParticipations")
-
-	KeyBatchSettlementCount = []byte("BatchSettlementCount")
-
-	KeyRequeueThreshold = []byte("RequeueThreshold")
+	keyMaxOrderBookParticipations = []byte("MaxOrderBookParticipations")
+	keyBatchSettlementCount       = []byte("BatchSettlementCount")
+	keyRequeueThreshold           = []byte("RequeueThreshold")
 )
 
 // ParamKeyTable ParamTable for orderbook module
@@ -45,16 +43,20 @@ func NewParams(maxOrderBookParticipations, batchSettlementCount, requeueThreshol
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(
-			KeyMaxOrderBookParticipations,
+			keyMaxOrderBookParticipations,
 			&p.MaxOrderBookParticipations,
 			validateMaxOrderBookParticipations,
 		),
 		paramtypes.NewParamSetPair(
-			KeyBatchSettlementCount,
+			keyBatchSettlementCount,
 			&p.BatchSettlementCount,
 			validateBatchSettlementCount,
 		),
-		paramtypes.NewParamSetPair(KeyRequeueThreshold, &p.RequeueThreshold, validateRequeueThreshold),
+		paramtypes.NewParamSetPair(
+			keyRequeueThreshold,
+			&p.RequeueThreshold,
+			validateRequeueThreshold,
+		),
 	}
 }
 
@@ -86,7 +88,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return nil
+	return validateRequeueThreshold(p.RequeueThreshold)
 }
 
 func validateMaxOrderBookParticipations(i interface{}) error {

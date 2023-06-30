@@ -40,13 +40,13 @@ const (
 // parameter store keys
 var (
 	// KeyMintDenom is the mint denom param key
-	KeyMintDenom = []byte("MintDenom")
+	keyMintDenom = []byte("MintDenom")
 	// KeyBlocksPerYear is the blocks per year param key
-	KeyBlocksPerYear = []byte("BlocksPerYear")
+	keyBlocksPerYear = []byte("BlocksPerYear")
 	// KeyPhases is the inflation phases param key
-	KeyPhases = []byte("Phases")
+	keyPhases = []byte("Phases")
 	// KeyExcludeAmount is the excluded amount from inflation calculation param key
-	KeyExcludeAmount = []byte("ExcludeAmount")
+	keyExcludeAmount = []byte("ExcludeAmount")
 )
 
 var (
@@ -126,10 +126,10 @@ func DefaultParams() Params {
 // ParamSetPairs get the params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMintDenom, &p.MintDenom, validateMintDenom),
-		paramtypes.NewParamSetPair(KeyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
-		paramtypes.NewParamSetPair(KeyPhases, &p.Phases, validatePhases),
-		paramtypes.NewParamSetPair(KeyExcludeAmount, &p.ExcludeAmount, validateExcludeAmount),
+		paramtypes.NewParamSetPair(keyMintDenom, &p.MintDenom, validateMintDenom),
+		paramtypes.NewParamSetPair(keyBlocksPerYear, &p.BlocksPerYear, validateBlocksPerYear),
+		paramtypes.NewParamSetPair(keyPhases, &p.Phases, validatePhases),
+		paramtypes.NewParamSetPair(keyExcludeAmount, &p.ExcludeAmount, validateExcludeAmount),
 	}
 }
 
@@ -138,16 +138,16 @@ func (p Params) Validate() error {
 	if err := validateMintDenom(p.MintDenom); err != nil {
 		return err
 	}
+
 	if err := validateBlocksPerYear(p.BlocksPerYear); err != nil {
 		return err
 	}
+
 	if err := validatePhases(p.Phases); err != nil {
 		return err
 	}
-	if err := validateExcludeAmount(p.ExcludeAmount); err != nil {
-		return err
-	}
-	return nil
+
+	return validateExcludeAmount(p.ExcludeAmount)
 }
 
 // String implements the Stringer interface.

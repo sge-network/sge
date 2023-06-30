@@ -52,7 +52,7 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, s
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, &tApp.BetKeeper, ctx
+	return tApp, tApp.BetKeeper, ctx
 }
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
@@ -81,7 +81,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 		Ticket:  testAddMarketTicket,
 	}
 	wctx := sdk.WrapSDKContext(ctx)
-	marketSrv := marketkeeper.NewMsgServerImpl(tApp.MarketKeeper)
+	marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
 	resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
 	require.Nil(t, err)
 	require.NotNil(t, resAddMarket)
@@ -115,7 +115,7 @@ func addTestMarketBatch(
 			Ticket:  testAddMarketTicket,
 		}
 		wctx := sdk.WrapSDKContext(ctx)
-		marketSrv := marketkeeper.NewMsgServerImpl(tApp.MarketKeeper)
+		marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
 		resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
 		require.Nil(t, err)
 		require.NotNil(t, resAddMarket)
@@ -133,7 +133,7 @@ func placeTestBet(
 ) {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
-	betSrv := keeper.NewMsgServerImpl(tApp.BetKeeper)
+	betSrv := keeper.NewMsgServerImpl(*tApp.BetKeeper)
 	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       testCreator,
@@ -157,7 +157,7 @@ func placeTestBet(
 		Creator: testCreator,
 		Bet: &types.PlaceBetFields{
 			UID:    betUID,
-			Amount: sdk.NewInt(500),
+			Amount: sdk.NewInt(1000000),
 			Ticket: testPlaceBetTicket,
 		},
 	}

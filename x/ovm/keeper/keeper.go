@@ -16,7 +16,7 @@ type Keeper struct {
 	cdc        codec.BinaryCodec
 	storeKey   sdk.StoreKey
 	memKey     sdk.StoreKey
-	paramstore paramtypes.Subspace
+	paramStore paramtypes.Subspace
 }
 
 // NewKeeper creates new keeper object
@@ -35,7 +35,7 @@ func NewKeeper(
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
-		paramstore: ps,
+		paramStore: ps,
 	}
 }
 

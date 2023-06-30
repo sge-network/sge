@@ -34,20 +34,20 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ica "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts"
-	icacontrollerkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/keeper"
-	icacontrollertypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/controller/types"
-	icahost "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host"
-	icahostkeeper "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/keeper"
-	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
-	"github.com/cosmos/ibc-go/v3/modules/apps/transfer"
-	ibctransferkeeper "github.com/cosmos/ibc-go/v3/modules/apps/transfer/keeper"
-	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
-	ibcclient "github.com/cosmos/ibc-go/v3/modules/core/02-client"
-	ibcclienttypes "github.com/cosmos/ibc-go/v3/modules/core/02-client/types"
-	ibcporttypes "github.com/cosmos/ibc-go/v3/modules/core/05-port/types"
-	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
-	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
+	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
+	icacontrollerkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/keeper"
+	icacontrollertypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/controller/types"
+	icahost "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host"
+	icahostkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/keeper"
+	icahosttypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/types"
+	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
+	ibctransferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
+	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
+	ibcclient "github.com/cosmos/ibc-go/v4/modules/core/02-client"
+	ibcclienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
+	ibcporttypes "github.com/cosmos/ibc-go/v4/modules/core/05-port/types"
+	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	ibckeeper "github.com/cosmos/ibc-go/v4/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 
@@ -81,13 +81,12 @@ type AppKeepers struct {
 	tkeys   map[string]*sdk.TransientStoreKey
 	memKeys map[string]*sdk.MemoryStoreKey
 
-	// keepers
+	// SDK keepers
 	AccountKeeper       authkeeper.AccountKeeper
 	BankKeeper          bankkeeper.Keeper
 	CapabilityKeeper    *capabilitykeeper.Keeper
 	StakingKeeper       stakingkeeper.Keeper
 	SlashingKeeper      slashingkeeper.Keeper
-	MintKeeper          mintkeeper.Keeper
 	DistrKeeper         distrkeeper.Keeper
 	GovKeeper           govkeeper.Keeper
 	CrisisKeeper        crisiskeeper.Keeper
@@ -101,26 +100,30 @@ type AppKeepers struct {
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
 
-	MarketKeeper    marketmodulekeeper.Keeper
-	BetKeeper       betmodulekeeper.Keeper
-	OVMKeeper       ovmmodulekeeper.Keeper
-	OrderbookKeeper orderbookmodulekeeper.Keeper
-	HouseKeeper     housemodulekeeper.Keeper
-	MarketModule    marketmodule.AppModule
-	BetModule       betmodule.AppModule
-	OrderbookModule orderbookmodule.AppModule
-	HouseModule     housemodule.AppModule
+	//// SGE keepers \\\\
+	BetKeeper       *betmodulekeeper.Keeper
+	MarketKeeper    *marketmodulekeeper.Keeper
+	MintKeeper      mintkeeper.Keeper
+	HouseKeeper     *housemodulekeeper.Keeper
+	OrderbookKeeper *orderbookmodulekeeper.Keeper
+	OVMKeeper       *ovmmodulekeeper.Keeper
 
-	// modules
-	ICAModule      ica.AppModule
-	TransferModule transfer.AppModule
-	OVMModule      ovmmodule.AppModule
+	//// SGE modules \\\\
+	BetModule       betmodule.AppModule
+	MarketModule    marketmodule.AppModule
+	HouseModule     housemodule.AppModule
+	OrderbookModule orderbookmodule.AppModule
+	OVMModule       ovmmodule.AppModule
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper      capabilitykeeper.ScopedKeeper
 	ScopedICAControllerKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper       capabilitykeeper.ScopedKeeper
+
+	// IBC Modules
+	ICAModule      ica.AppModule
+	TransferModule transfer.AppModule
 }
 
 func NewAppKeeper(
@@ -212,17 +215,6 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.GetSubspace(stakingtypes.ModuleName),
-	)
-
-	appKeepers.OrderbookKeeper = *orderbookmodulekeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[orderbookmoduletypes.StoreKey],
-		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
-		orderbookmodulekeeper.SdkExpectedKeepers{
-			BankKeeper:     appKeepers.BankKeeper,
-			AccountKeeper:  appKeepers.AccountKeeper,
-			FeeGrantKeeper: appKeepers.FeeGrantKeeper,
-		},
 	)
 
 	appKeepers.MintKeeper = *mintkeeper.NewKeeper(
@@ -347,14 +339,27 @@ func NewAppKeeper(
 		appKeepers.SlashingKeeper,
 	)
 
-	appKeepers.OVMKeeper = *ovmmodulekeeper.NewKeeper(
+	//// SGE keepers \\\\
+
+	appKeepers.OrderbookKeeper = orderbookmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[orderbookmoduletypes.StoreKey],
+		appKeepers.GetSubspace(orderbookmoduletypes.ModuleName),
+		orderbookmodulekeeper.SdkExpectedKeepers{
+			BankKeeper:     appKeepers.BankKeeper,
+			AccountKeeper:  appKeepers.AccountKeeper,
+			FeeGrantKeeper: appKeepers.FeeGrantKeeper,
+		},
+	)
+
+	appKeepers.OVMKeeper = ovmmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[ovmmoduletypes.StoreKey],
 		appKeepers.keys[ovmmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(ovmmoduletypes.ModuleName),
 	)
 
-	appKeepers.MarketKeeper = *marketmodulekeeper.NewKeeper(
+	appKeepers.MarketKeeper = marketmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[marketmoduletypes.StoreKey],
 		appKeepers.keys[marketmoduletypes.MemStoreKey],
@@ -363,7 +368,7 @@ func NewAppKeeper(
 	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
 
-	appKeepers.BetKeeper = *betmodulekeeper.NewKeeper(
+	appKeepers.BetKeeper = betmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[betmoduletypes.StoreKey],
 		appKeepers.keys[betmoduletypes.MemStoreKey],
@@ -377,7 +382,7 @@ func NewAppKeeper(
 	appKeepers.OrderbookKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.OrderbookKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 
-	appKeepers.HouseKeeper = *housemodulekeeper.NewKeeper(
+	appKeepers.HouseKeeper = housemodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[housemoduletypes.StoreKey],
 		appKeepers.OrderbookKeeper,
@@ -389,32 +394,37 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
-	appKeepers.OVMModule = ovmmodule.NewAppModule(
+	//// SGE modules \\\\
+
+	appKeepers.BetModule = betmodule.NewAppModule(
 		appCodec,
-		appKeepers.OVMKeeper,
+		*appKeepers.BetKeeper,
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
+		appKeepers.MarketKeeper,
+		appKeepers.OrderbookKeeper,
+		appKeepers.OVMKeeper,
 	)
 	appKeepers.MarketModule = marketmodule.NewAppModule(
 		appCodec,
-		appKeepers.MarketKeeper,
+		*appKeepers.MarketKeeper,
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.OVMKeeper,
 	)
-	appKeepers.BetModule = betmodule.NewAppModule(
+	appKeepers.HouseModule = housemodule.NewAppModule(
 		appCodec,
-		appKeepers.BetKeeper,
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.MarketKeeper,
-		appKeepers.OrderbookKeeper,
-		appKeepers.OVMKeeper,
+		*appKeepers.HouseKeeper,
 	)
-	appKeepers.HouseModule = housemodule.NewAppModule(appCodec, appKeepers.HouseKeeper)
 	appKeepers.OrderbookModule = orderbookmodule.NewAppModule(
 		appCodec,
-		appKeepers.OrderbookKeeper,
+		*appKeepers.OrderbookKeeper,
+	)
+	appKeepers.OVMModule = ovmmodule.NewAppModule(
+		appCodec,
+		*appKeepers.OVMKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
 	)
 
 	// Create static IBC router, add transfer route, then set and seal it

@@ -24,7 +24,6 @@ type BankKeeper interface {
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
 	GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool)
-	GetDefaultBetConstraints(ctx sdk.Context) (params *markettypes.MarketBetConstraints)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 }
 
