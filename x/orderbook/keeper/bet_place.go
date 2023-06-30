@@ -63,8 +63,30 @@ func (k Keeper) ProcessBetPlacement(
 	if err := k.fund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, fInfo.fulfilledBetAmount); err != nil {
 		return nil, err
 	}
-
+	_ = k.PublishOrderBookEvent(ctx, bookUID)
 	return fInfo.fulfillments, nil
+}
+
+func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUid string) error {
+	event := types.NewOrderBookEvent()
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUid)
+	if err != nil {
+		return err
+	}
+
+	for _, boe := range boes {
+		event.AddOrderBookOddsExposure(boe)
+		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUid, boe.OddsUID)
+		if err != nil {
+			return err
+		}
+		for _, pe := range pes {
+			event.AddParticipationExposure(pe)
+		}
+	}
+
+	event.Emit(ctx)
+	return nil
 }
 
 // fulfillBetByParticipationQueue fulfills the bet placement payout using the participations

@@ -82,7 +82,7 @@ func (k Keeper) initParticipationExposures(
 ) error {
 	// Update book odds exposures and add participant exposures
 	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
-	bookEvent := types.OrderBookEvent{}
+	bookEvent := types.NewOrderBookEvent()
 	if err != nil {
 		return err
 	}
