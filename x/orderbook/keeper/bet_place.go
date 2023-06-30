@@ -1,8 +1,7 @@
 package keeper
 
 import (
-	"log"
-
+	"fmt"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -73,7 +72,7 @@ func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
 	event := types.NewOrderBookEvent()
 	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
 	if err != nil {
-		log.Println(err)
+		k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
 		return
 	}
 
@@ -81,7 +80,7 @@ func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
 		event.AddOrderBookOddsExposure(boe)
 		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUID, boe.OddsUID)
 		if err != nil {
-			log.Println(err)
+			k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
 			return
 		}
 		for _, pe := range pes {

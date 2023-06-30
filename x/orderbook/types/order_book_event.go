@@ -22,7 +22,7 @@ func (obe *OrderBookEvent) AddOrderBookOddsExposure(boe OrderBookOddsExposure) {
 
 func (obe *OrderBookEvent) Emit(ctx sdk.Context) {
 	emitter := utils.NewEventEmitter(&ctx, AttributeKeyCategoryOrderBookEvent)
-	emitter.AddEvent(AttributeKeyEventTypeOrderbook,
+	emitter.AddEvent(EventTypeOrderbook,
 		sdk.NewAttribute(AttributeOrderBookEvent, obe.String()),
 	)
 	emitter.Emit()
