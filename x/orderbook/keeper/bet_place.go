@@ -90,7 +90,6 @@ func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
 	}
 
 	event.Emit(ctx)
-	return
 }
 
 // fulfillBetByParticipationQueue fulfills the bet placement payout using the participations
