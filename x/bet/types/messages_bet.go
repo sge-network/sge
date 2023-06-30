@@ -54,11 +54,7 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
-	if err = BetFieldsValidation(msg.Bet); err != nil {
-		return err
-	}
-
-	return nil
+	return BetFieldsValidation(msg.Bet)
 }
 
 // EmitEvent emits the event for the message success.

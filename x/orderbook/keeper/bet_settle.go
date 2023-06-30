@@ -22,11 +22,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// refund bettor's account from bet fee collector.
-	if err := k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
-		return err
-	}
-
-	return nil
+	return k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee)
 }
 
 // BettorWins process bets in case bettor is the winner,

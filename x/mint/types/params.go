@@ -233,11 +233,7 @@ func validateMintDenom(i interface{}) error {
 	if strings.TrimSpace(v) == "" {
 		return ErrMintDenomIsBlank
 	}
-	if err := sdk.ValidateDenom(v); err != nil {
-		return err
-	}
-
-	return nil
+	return sdk.ValidateDenom(v)
 }
 
 func validateExcludeAmount(i interface{}) error {
