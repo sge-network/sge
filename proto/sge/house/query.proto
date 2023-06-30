@@ -36,7 +36,8 @@ service Query {
 
   // Queries a wthdrawal by depositor, market, participation index and id.
   rpc Withdrawal(QueryWithdrawalRequest) returns (QueryWithdrawalResponse) {
-    option (google.api.http).get = "/sge/withdrawal/{depositor_address}/{market_uid}/{participation_index}/{id}";
+    option (google.api.http).get = "/sge/withdrawal/{depositor_address}/"
+                                   "{market_uid}/{participation_index}/{id}";
   }
 }
 
@@ -108,8 +109,8 @@ message QueryWithdrawalsByAccountResponse {
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
-// QueryWithdrawalRequest is the request type for the Query/Withdrawal RPC method.
-// Query/Withdrawal RPC method.
+// QueryWithdrawalRequest is the request type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
 message QueryWithdrawalRequest {
   string depositor_address = 1;
   string market_uid = 2;
@@ -120,8 +121,8 @@ message QueryWithdrawalRequest {
   uint64 id = 4;
 }
 
-// QueryWithdrawalResponse is the response type for the Query/Withdrawal RPC method.
-// Query/Withdrawal RPC method.
+// QueryWithdrawalResponse is the response type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
 message QueryWithdrawalResponse {
   // withdrawal holds all the withdrawal properties.
   Withdrawal withdrawal = 1 [ (gogoproto.nullable) = false ];

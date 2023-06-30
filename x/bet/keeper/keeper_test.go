@@ -157,7 +157,7 @@ func placeTestBet(
 		Creator: testCreator,
 		Bet: &types.PlaceBetFields{
 			UID:    betUID,
-			Amount: sdk.NewInt(500),
+			Amount: sdk.NewInt(1000000),
 			Ticket: testPlaceBetTicket,
 		},
 	}

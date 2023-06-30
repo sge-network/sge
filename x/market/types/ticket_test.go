@@ -4,7 +4,6 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/sample"
@@ -15,7 +14,6 @@ import (
 )
 
 func TestAddMarketTicketPayloadValidation(t *testing.T) {
-	param := types.DefaultParams()
 	_, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
@@ -39,10 +37,8 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "odds 1"},
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "sample market",
 			},
 		},
 		{
@@ -134,10 +130,8 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: uuid.NewString(), Meta: ""},
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "sample market",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -151,10 +145,8 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				Odds: []*types.Odds{
 					{UID: uuid.NewString(), Meta: simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1)},
 				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "sample market",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -169,10 +161,8 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: "invalid uuid", Meta: "odds 1"},
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "sample market",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
@@ -187,35 +177,15 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: sampleUID, Meta: "odds 1"},
 					{UID: sampleUID, Meta: "odds 2"},
 				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid min bet amount",
-			payload: types.MarketAddTicketPayload{
-				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
-				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
-				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
-				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: "odds 1"},
-					{UID: uuid.NewString(), Meta: "odds 2"},
-				},
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(100000),
-				BetFee:       sdk.NewInt(10),
-				Meta:         "sample market",
+				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
+				Meta:   "sample market",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.payload.Validate(ctx, &param)
+			err := tt.payload.Validate(ctx)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return
@@ -226,7 +196,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
-	param := types.DefaultParams()
 	_, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
@@ -240,12 +209,10 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 		{
 			name: "valid",
 			payload: types.MarketUpdateTicketPayload{
-				UID:          uuid.NewString(),
-				StartTS:      cast.ToUint64(ctx.BlockTime().Unix()),
-				EndTS:        cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(1000000),
-				BetFee:       sdk.NewInt(10),
+				UID:     uuid.NewString(),
+				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
+				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
+				Status:  types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
 		},
 		{
@@ -267,22 +234,10 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
-		{
-			name: "invalid min bet amount",
-			payload: types.MarketUpdateTicketPayload{
-				UID:          uuid.NewString(),
-				StartTS:      cast.ToUint64(ctx.BlockTime().Unix()),
-				EndTS:        cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
-				Status:       types.MarketStatus_MARKET_STATUS_ACTIVE,
-				MinBetAmount: sdk.NewInt(100000),
-				BetFee:       sdk.NewInt(10),
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.payload.Validate(ctx, &param)
+			err := tt.payload.Validate(ctx)
 			if tt.err != nil {
 				require.ErrorIs(t, err, tt.err)
 				return

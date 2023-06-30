@@ -9,6 +9,7 @@ import (
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
+	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 )
 
@@ -49,7 +50,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(500),
+				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 				Status:    types.Bet_STATUS_SETTLED,
@@ -71,7 +72,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(500),
+				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -91,7 +92,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(300),
+				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -111,7 +112,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(500),
+				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -132,7 +133,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(500),
+				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 
@@ -162,10 +163,6 @@ func TestSettleBet(t *testing.T) {
 					EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 					Odds:    testMarketOdds,
 					Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-					BetConstraints: &markettypes.MarketBetConstraints{
-						MinAmount: sdk.NewInt(1),
-						BetFee:    sdk.NewInt(1),
-					},
 				}
 				tApp.MarketKeeper.SetMarket(ctx, resetMarket)
 
@@ -174,7 +171,7 @@ func TestSettleBet(t *testing.T) {
 						ctx,
 						simappUtil.TestParamUsers["user1"].Address,
 						resetMarket.UID,
-						sdk.NewInt(10000000),
+						sdk.NewInt(100000000),
 						sdk.NewInt(1),
 					)
 					require.NoError(t, err)
@@ -218,6 +215,7 @@ func TestBatchSettleBet(t *testing.T) {
 	k.SetParams(ctx, p)
 
 	marketCount := 5
+	participationCount := 3
 	marketBetCount := 10
 	allBetCount := marketCount * marketBetCount
 	blockCount := allBetCount/int(p.BatchSettlementCount) + 1
@@ -228,20 +226,19 @@ func TestBatchSettleBet(t *testing.T) {
 		require.True(t, found)
 
 		market.Status = markettypes.MarketStatus_MARKET_STATUS_ACTIVE
-		market.BetConstraints = &markettypes.MarketBetConstraints{
-			MinAmount: sdk.NewInt(1),
-			BetFee:    sdk.NewInt(1),
-		}
 		tApp.MarketKeeper.SetMarket(ctx, market)
 
-		_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
-			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
-			market.UID,
-			sdk.NewInt(10000000),
-			sdk.NewInt(1),
-		)
-		require.NoError(t, err)
+		depositorUser := 2
+		for i := depositorUser; i <= depositorUser+participationCount; i++ {
+			_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
+				ctx,
+				simappUtil.TestParamUsers["user"+cast.ToString(i)].Address,
+				market.UID,
+				sdk.NewInt(100000000),
+				sdk.NewInt(1),
+			)
+			require.NoError(t, err)
+		}
 
 		for i := 0; i < marketBetCount; i++ {
 			placeTestBet(ctx, t, tApp,

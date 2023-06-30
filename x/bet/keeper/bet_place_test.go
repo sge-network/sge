@@ -44,10 +44,6 @@ func TestPlaceBet(t *testing.T) {
 			market: &markettypes.Market{
 				UID:    "uid_inactive",
 				Status: markettypes.MarketStatus_MARKET_STATUS_INACTIVE,
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewInt(1),
-				},
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -61,10 +57,6 @@ func TestPlaceBet(t *testing.T) {
 			market: &markettypes.Market{
 				UID:    "uid_declared",
 				Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewInt(1),
-				},
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -79,10 +71,6 @@ func TestPlaceBet(t *testing.T) {
 				UID:    "uid_expired",
 				Status: markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 				EndTS:  0o00000000,
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewInt(1),
-				},
 			},
 			bet: &types.Bet{
 				UID:       "betUID",
@@ -100,10 +88,6 @@ func TestPlaceBet(t *testing.T) {
 				Odds: []*markettypes.Odds{
 					{UID: "odds1"},
 					{UID: "odds2"},
-				},
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewInt(1),
 				},
 			},
 			activeBetOdds: []*types.BetOdds{
@@ -131,10 +115,6 @@ func TestPlaceBet(t *testing.T) {
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1000),
-					BetFee:    sdk.NewInt(1),
-				},
 			},
 			activeBetOdds: []*types.BetOdds{
 				{UID: "odds1", MarketUID: "uid_lowBetAmount", Value: "2.52"},
@@ -161,10 +141,6 @@ func TestPlaceBet(t *testing.T) {
 					{UID: "odds1"},
 					{UID: "odds2"},
 				},
-				BetConstraints: &markettypes.MarketBetConstraints{
-					MinAmount: sdk.NewInt(1),
-					BetFee:    sdk.NewInt(1),
-				},
 			},
 			activeBetOdds: []*types.BetOdds{
 				{
@@ -184,7 +160,7 @@ func TestPlaceBet(t *testing.T) {
 				UID:               "betUID",
 				MarketUID:         "uid_success",
 				OddsUID:           "odds1",
-				Amount:            sdk.NewInt(1000),
+				Amount:            sdk.NewInt(1000000),
 				OddsValue:         "5",
 				OddsType:          types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
@@ -210,7 +186,7 @@ func TestPlaceBet(t *testing.T) {
 						ctx,
 						simappUtil.TestParamUsers["user1"].Address,
 						tc.market.UID,
-						sdk.NewInt(10000000),
+						sdk.NewInt(100000000),
 						sdk.NewInt(1),
 					)
 					require.NoError(t, err)

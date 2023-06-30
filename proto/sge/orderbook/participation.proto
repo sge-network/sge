@@ -46,8 +46,8 @@ message OrderBookParticipation {
     (gogoproto.moretags) = "yaml:\"current_round_liquidity\""
   ];
 
-  // exposures_not_filled represents if all of the exposures of the participation
-  // are filled or not.
+  // exposures_not_filled represents if all of the exposures of the
+  // participation are filled or not.
   uint64 exposures_not_filled = 7
       [ (gogoproto.moretags) = "yaml:\"exposures_not_filled\"" ];
 

@@ -7,25 +7,4 @@ option go_package = "github.com/sge-network/sge/x/market/types";
 
 // Params defines the parameters for the module.
 // It contains bet constraints associated to a market.
-message Params {
-  option (gogoproto.goproto_stringer) = false;
-
-  // min_bet_amount is the default minimum bet amount for a market.
-  string min_bet_amount = 1 [
-    (gogoproto.moretags) = "yaml:\"min_bet_amount\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // min_bet_fee is the default minimum bet fee for a market.
-  string min_bet_fee = 3 [
-    (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // max_bet_fee is the default maximum bet fee for a market.
-  string max_bet_fee = 4 [
-    (gogoproto.moretags) = "yaml:\"max_bet_fee\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-}
+message Params { option (gogoproto.goproto_stringer) = false; }
