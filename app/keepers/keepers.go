@@ -135,7 +135,7 @@ func NewAppKeeper(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
-	appOpts servertypes.AppOptions,
+	_ servertypes.AppOptions,
 ) AppKeepers {
 	appKeepers := AppKeepers{}
 	// Set keys KVStoreKey, TransientStoreKey, MemoryStoreKey

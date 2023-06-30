@@ -21,7 +21,7 @@ func (a DepositAuthorization) MsgTypeURL() string {
 }
 
 // Accept implements Authorization.Accept.
-func (a DepositAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
+func (a DepositAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mDeposit, ok := msg.(*MsgDeposit)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
