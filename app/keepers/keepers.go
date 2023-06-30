@@ -51,6 +51,7 @@ import (
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 	subaccount "github.com/sge-network/sge/x/subaccount/keeper"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -418,6 +419,7 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.OrderbookKeeper,
 	)
+	appKeepers.SubAccountKeeper = subaccount.NewKeeper(appKeepers.keys[subaccounttypes.StoreKey])
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()

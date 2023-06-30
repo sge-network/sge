@@ -14,3 +14,8 @@ const (
 	// QuerierRoute defines the module's query routing key
 	QuerierRoute = ModuleName
 )
+
+var (
+	// SubaccountIDPrefix is the key used to store the subaccount ID in the keeper KVStore
+	SubaccountIDPrefix = []byte{0x00}
+)
