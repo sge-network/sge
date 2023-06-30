@@ -5,7 +5,12 @@ package types
 
 import (
 	fmt "fmt"
+<<<<<<< HEAD
 	_ "github.com/gogo/protobuf/gogoproto"
+=======
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/cosmos/gogoproto/gogoproto"
+>>>>>>> master
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -195,6 +200,50 @@ func (m *Market) GetBookUID() string {
 	return ""
 }
 
+<<<<<<< HEAD
+=======
+// MarketBetConstraints is the bet constrains type for the market
+type MarketBetConstraints struct {
+	// min_amount is the minimum allowed bet amount for a market.
+	MinAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=min_amount,json=minAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"min_amount"`
+	// bet_fee is the fee that the bettor needs to pay to bet on the market.
+	BetFee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=bet_fee,json=betFee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"bet_fee"`
+}
+
+func (m *MarketBetConstraints) Reset()         { *m = MarketBetConstraints{} }
+func (m *MarketBetConstraints) String() string { return proto.CompactTextString(m) }
+func (*MarketBetConstraints) ProtoMessage()    {}
+func (*MarketBetConstraints) Descriptor() ([]byte, []int) {
+	return fileDescriptor_935a8ad1d6bee065, []int{1}
+}
+func (m *MarketBetConstraints) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MarketBetConstraints) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MarketBetConstraints.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MarketBetConstraints) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MarketBetConstraints.Merge(m, src)
+}
+func (m *MarketBetConstraints) XXX_Size() int {
+	return m.Size()
+}
+func (m *MarketBetConstraints) XXX_DiscardUnknown() {
+	xxx_messageInfo_MarketBetConstraints.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MarketBetConstraints proto.InternalMessageInfo
+
+>>>>>>> master
 func init() {
 	proto.RegisterEnum("sgenetwork.sge.market.MarketStatus", MarketStatus_name, MarketStatus_value)
 	proto.RegisterType((*Market)(nil), "sgenetwork.sge.market.Market")
@@ -719,6 +768,127 @@ func (m *Market) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< HEAD
+=======
+func (m *MarketBetConstraints) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowMarket
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MarketBetConstraints: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MarketBetConstraints: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MinAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMarket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMarket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMarket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.MinAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BetFee", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowMarket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthMarket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthMarket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.BetFee.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipMarket(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthMarket
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+>>>>>>> master
 func skipMarket(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

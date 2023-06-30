@@ -5,21 +5,18 @@ package types
 
 import (
 	fmt "fmt"
+	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/cosmos/gogoproto/gogoproto"
+	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
-
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/gogo/protobuf/gogoproto"
-	proto "github.com/gogo/protobuf/proto"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -156,11 +153,9 @@ func (*Bet) ProtoMessage()    {}
 func (*Bet) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{0}
 }
-
 func (m *Bet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *Bet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_Bet.Marshal(b, m, deterministic)
@@ -173,15 +168,12 @@ func (m *Bet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-
 func (m *Bet) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_Bet.Merge(m, src)
 }
-
 func (m *Bet) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *Bet) XXX_DiscardUnknown() {
 	xxx_messageInfo_Bet.DiscardUnknown(m)
 }
@@ -279,11 +271,9 @@ func (*UID2ID) ProtoMessage()    {}
 func (*UID2ID) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{1}
 }
-
 func (m *UID2ID) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *UID2ID) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_UID2ID.Marshal(b, m, deterministic)
@@ -296,15 +286,12 @@ func (m *UID2ID) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-
 func (m *UID2ID) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_UID2ID.Merge(m, src)
 }
-
 func (m *UID2ID) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *UID2ID) XXX_DiscardUnknown() {
 	xxx_messageInfo_UID2ID.DiscardUnknown(m)
 }
@@ -339,11 +326,9 @@ func (*PendingBet) ProtoMessage()    {}
 func (*PendingBet) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{2}
 }
-
 func (m *PendingBet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *PendingBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_PendingBet.Marshal(b, m, deterministic)
@@ -356,15 +341,12 @@ func (m *PendingBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-
 func (m *PendingBet) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_PendingBet.Merge(m, src)
 }
-
 func (m *PendingBet) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *PendingBet) XXX_DiscardUnknown() {
 	xxx_messageInfo_PendingBet.DiscardUnknown(m)
 }
@@ -399,11 +381,9 @@ func (*SettledBet) ProtoMessage()    {}
 func (*SettledBet) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{3}
 }
-
 func (m *SettledBet) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *SettledBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_SettledBet.Marshal(b, m, deterministic)
@@ -416,15 +396,12 @@ func (m *SettledBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-
 func (m *SettledBet) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_SettledBet.Merge(m, src)
 }
-
 func (m *SettledBet) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *SettledBet) XXX_DiscardUnknown() {
 	xxx_messageInfo_SettledBet.DiscardUnknown(m)
 }
@@ -468,11 +445,9 @@ func (*BetFulfillment) ProtoMessage()    {}
 func (*BetFulfillment) Descriptor() ([]byte, []int) {
 	return fileDescriptor_9bc076bb1a4d9f6e, []int{4}
 }
-
 func (m *BetFulfillment) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *BetFulfillment) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_BetFulfillment.Marshal(b, m, deterministic)
@@ -485,15 +460,12 @@ func (m *BetFulfillment) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-
 func (m *BetFulfillment) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_BetFulfillment.Merge(m, src)
 }
-
 func (m *BetFulfillment) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *BetFulfillment) XXX_DiscardUnknown() {
 	xxx_messageInfo_BetFulfillment.DiscardUnknown(m)
 }
@@ -888,7 +860,6 @@ func encodeVarintBet(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *Bet) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1018,11 +989,9 @@ func (m *BetFulfillment) Size() (n int) {
 func sovBet(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozBet(x uint64) (n int) {
 	return sovBet(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *Bet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1464,7 +1433,6 @@ func (m *Bet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *UID2ID) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1566,7 +1534,6 @@ func (m *UID2ID) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *PendingBet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1681,7 +1648,6 @@ func (m *PendingBet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *SettledBet) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1796,7 +1762,6 @@ func (m *SettledBet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *BetFulfillment) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1966,7 +1931,6 @@ func (m *BetFulfillment) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipBet(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0
