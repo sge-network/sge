@@ -58,7 +58,8 @@ func TestSampleCMD(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			args := []string{}
+			var args []string
+
 			args = append(args, fields...)
 			args = append(args, tc.args...)
 			_, err := clitestutil.ExecTestCLICmd(ctx, cmd.AddGenesisAccountCmd(defaultNodeHome), args)
