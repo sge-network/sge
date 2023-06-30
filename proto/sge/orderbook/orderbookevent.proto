@@ -9,6 +9,6 @@ import "sge/orderbook/exposure.proto";
 option go_package = "github.com/sge-network/sge/x/orderbook/types";
 
 message OrderBookEvent {
-  repeated ParticipationExposure participationExposure = 1;
-  repeated OrderBookOddsExposure orderBookOddsExposure = 2;
+  repeated ParticipationExposure participation_exposure = 1;
+  repeated OrderBookOddsExposure order_book_odds_exposure = 2;
 }
