@@ -23,7 +23,7 @@ func DefaultParams() Params {
 }
 
 // ParamSetPairs get the params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
+func (*Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{}
 }
 
