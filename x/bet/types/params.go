@@ -45,9 +45,9 @@ func NewParams() Params {
 	return Params{
 		BatchSettlementCount:  batchSettlementCount,
 		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
-		PlacementConstraints: PlacementConstraints{
+		Constraints: Constraints{
 			MinAmount: defaultMinBetAmount,
-			BetFee:    defaultBetFee,
+			Fee:       defaultBetFee,
 		},
 	}
 }
@@ -72,8 +72,8 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 		),
 		paramtypes.NewParamSetPair(
 			keyPlacementConstraints,
-			&p.PlacementConstraints,
-			validatePlacementConstraints,
+			&p.Constraints,
+			validateConstraints,
 		),
 	}
 }
@@ -88,7 +88,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return validatePlacementConstraints(p.PlacementConstraints)
+	return validateConstraints(p.Constraints)
 }
 
 // String implements the Stringer interface.
@@ -126,8 +126,8 @@ func validateMaxBetByUIDQueryCount(i interface{}) error {
 	return nil
 }
 
-func validatePlacementConstraints(i interface{}) error {
-	v, ok := i.(PlacementConstraints)
+func validateConstraints(i interface{}) error {
+	v, ok := i.(Constraints)
 	if !ok {
 		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
@@ -136,8 +136,8 @@ func validatePlacementConstraints(i interface{}) error {
 		return fmt.Errorf("minimum bet amount must be more than one: %d", v.MinAmount.Int64())
 	}
 
-	if v.BetFee.LT(sdk.ZeroInt()) {
-		return fmt.Errorf("minimum bet fee must be positive: %d", v.BetFee.Int64())
+	if v.Fee.LT(sdk.ZeroInt()) {
+		return fmt.Errorf("minimum bet fee must be positive: %d", v.Fee.Int64())
 	}
 
 	return nil

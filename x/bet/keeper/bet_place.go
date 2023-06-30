@@ -33,7 +33,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// modify the bet fee and subtracted amount
-	setBetFee(bet, betConstraints.BetFee)
+	setBetFee(bet, betConstraints.Fee)
 
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)

@@ -5,16 +5,16 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
-// PlacementConstraints is the bet constrains type for the bets
-message PlacementConstraints {
+// Constraints is the bet constrains type for the bets
+message Constraints {
   // min_amount is the minimum allowed bet amount.
   string min_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the fee that the bettor needs to pay to bet.
-  string bet_fee = 2 [
+  // fee is the fee that the bettor needs to pay to bet.
+  string fee = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

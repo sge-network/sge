@@ -46,9 +46,9 @@ genesis:
         min_deposit: [{ amount: "1", denom: "usge" }]
     bet:
       params:
-        placement_constraints:
+        constraints:
           min_amount: "1000000"
-          bet_fee: "100"
+          fee: "100"
     mint:
       minter:
         phase_provisions: "100000000000000.000000000000000000"

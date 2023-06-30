@@ -14,9 +14,9 @@ message Params {
   uint32 batch_settlement_count = 1;
   // max_bet_by_uid_query_count is the maximum bet by uid query items count.
   uint32 max_bet_by_uid_query_count = 2;
-  // placement_constraints is the bet placement constraints.
-  PlacementConstraints placement_constraints = 3 [
-    (gogoproto.moretags) = "yaml:\"placement_constraints\"",
+  // constraints is the bet constraints.
+  Constraints constraints = 3 [
+    (gogoproto.moretags) = "yaml:\"bet_constraints\"",
     (gogoproto.nullable) = false
   ];
 }
