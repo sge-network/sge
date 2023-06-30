@@ -50,6 +50,7 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	subaccount "github.com/sge-network/sge/x/subaccount/keeper"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -101,15 +102,16 @@ type AppKeepers struct {
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
 
-	MarketKeeper    marketmodulekeeper.Keeper
-	BetKeeper       betmodulekeeper.Keeper
-	OVMKeeper       ovmmodulekeeper.Keeper
-	OrderbookKeeper orderbookmodulekeeper.Keeper
-	HouseKeeper     housemodulekeeper.Keeper
-	MarketModule    marketmodule.AppModule
-	BetModule       betmodule.AppModule
-	OrderbookModule orderbookmodule.AppModule
-	HouseModule     housemodule.AppModule
+	MarketKeeper     marketmodulekeeper.Keeper
+	BetKeeper        betmodulekeeper.Keeper
+	OVMKeeper        ovmmodulekeeper.Keeper
+	OrderbookKeeper  orderbookmodulekeeper.Keeper
+	HouseKeeper      housemodulekeeper.Keeper
+	MarketModule     marketmodule.AppModule
+	BetModule        betmodule.AppModule
+	OrderbookModule  orderbookmodule.AppModule
+	HouseModule      housemodule.AppModule
+	SubAccountKeeper subaccount.Keeper
 
 	// modules
 	ICAModule      ica.AppModule
