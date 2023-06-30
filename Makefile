@@ -159,15 +159,6 @@ distclean: clean
 
 proto-all: proto-format proto-gen
 
-proto:
-	@echo
-	@echo "=========== Generate Message ============"
-	@echo
-	./scripts/protocgen.sh
-	@echo
-	@echo "=========== Generate Complete ============"
-	@echo
-
 docs:
 	@echo
 	@echo "=========== Generate Message ============"
@@ -190,6 +181,10 @@ protoVer=v0.8
 protoImageName=sgenetwork/sge-proto-gen:$(protoVer)
 containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
 containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
+
+# this can be used to regenrate the proto image
+proto-image:
+	cd proto; docker build -t $(protoImageName) -f Dockerfile .
 
 proto-gen:
 	@echo "Generating Protobuf files"
