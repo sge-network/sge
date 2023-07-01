@@ -27,10 +27,10 @@ func NewMsgPlaceBet(
 }
 
 // Route returns the module's message router key.
-func (msg *MsgPlaceBet) Route() string { return RouterKey }
+func (*MsgPlaceBet) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (msg *MsgPlaceBet) Type() string { return typeMsgPlaceBet }
+func (*MsgPlaceBet) Type() string { return typeMsgPlaceBet }
 
 // GetSigners returns the signers of its message
 func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {

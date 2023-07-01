@@ -2,6 +2,6 @@ package types
 
 type BetFeeCollectorFunder struct{}
 
-func (ol BetFeeCollectorFunder) GetModuleAcc() string {
+func (BetFeeCollectorFunder) GetModuleAcc() string {
 	return betFeeCollector
 }

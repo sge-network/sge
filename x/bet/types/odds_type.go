@@ -21,7 +21,7 @@ type OddsTypeI interface {
 type decimalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by decimal odds calculations
-func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
@@ -49,7 +49,7 @@ func (c *decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, 
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+func (*decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
@@ -81,7 +81,7 @@ func (c *decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (
 type fractionalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by fractional odds calculations
-func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (first part)/secondary)
@@ -125,7 +125,7 @@ func (c *fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.De
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (firstpart)/secondpart)
@@ -169,7 +169,7 @@ func (c *fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec
 type moneylineOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
-func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
@@ -204,7 +204,7 @@ func (c *moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec
 }
 
 // CalculateBetAmount calculates bet amount
-func (c *moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+func (*moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
