@@ -7,36 +7,26 @@ are the most critical to review. -->
 
 ## Type of change
 
-Please delete options that are not relevant.
+Please check the options that are relevant. This PR introduces
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Bug fix (non-breaking change which fixes an existing issue)
+- [ ] New feature (non-breaking change which adds new functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
 
 
-## Added Features
+## Features Description
 
-- [ ]
-
----
-
-## Modified Features
-
-- [ ]
+- [ ] NA
 
 ---
 
 ## Test Cases
 
-- [ ] Test A
-- [ ] Test B
+- [ ] NA
 
 ---
 
-## Change Log
-
----
 
 ## Documentation
 
