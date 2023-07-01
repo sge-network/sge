@@ -2,6 +2,6 @@ package types
 
 type HouseFeeCollectorFunder struct{}
 
-func (ol HouseFeeCollectorFunder) GetModuleAcc() string {
+func (HouseFeeCollectorFunder) GetModuleAcc() string {
 	return houseFeeCollector
 }

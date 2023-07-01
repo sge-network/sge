@@ -26,7 +26,7 @@ func (*Params) ParamSetPairs() paramtypes.ParamSetPairs {
 }
 
 // Validate validates the set of params
-func (p Params) Validate() error {
+func (Params) Validate() error {
 	return nil
 }
 

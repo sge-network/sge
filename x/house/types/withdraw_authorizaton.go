@@ -16,7 +16,7 @@ func NewWithdrawAuthorization(withdrawLimit sdk.Int) *WithdrawAuthorization {
 }
 
 // MsgTypeURL implements Authorization.MsgTypeURL.
-func (a WithdrawAuthorization) MsgTypeURL() string {
+func (WithdrawAuthorization) MsgTypeURL() string {
 	return sdk.MsgTypeURL(&MsgWithdraw{})
 }
 

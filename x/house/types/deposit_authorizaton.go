@@ -16,7 +16,7 @@ func NewDepositAuthorization(spendLimit sdk.Int) *DepositAuthorization {
 }
 
 // MsgTypeURL implements Authorization.MsgTypeURL.
-func (a DepositAuthorization) MsgTypeURL() string {
+func (DepositAuthorization) MsgTypeURL() string {
 	return sdk.MsgTypeURL(&MsgDeposit{})
 }
 
