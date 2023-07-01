@@ -7,7 +7,7 @@ import (
 )
 
 // RegisterCodec registers module codec to the app codec
-func RegisterCodec(cdc *codec.LegacyAmino) {}
+func RegisterCodec(_ *codec.LegacyAmino) {}
 
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
