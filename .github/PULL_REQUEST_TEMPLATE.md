@@ -35,6 +35,7 @@ Please check the options that are relevant. This PR introduces
 
 ## Checklist:
 
+- [ ] I have added change type (major|minor|patch) in the PR
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
