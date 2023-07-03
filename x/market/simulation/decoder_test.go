@@ -24,7 +24,7 @@ func TestDecodeStore(t *testing.T) {
 	uID := uuid.NewString()
 	market := types.NewMarket(
 		uID,
-		sample.AccAddress(),
+		sample.AccAddressAsString(),
 		cast.ToUint64(time.Now().UTC()),
 		cast.ToUint64(time.Now().Add(1*time.Hour).UTC().String()),
 		[]*types.Odds{

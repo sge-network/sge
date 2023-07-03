@@ -17,7 +17,7 @@ import (
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddress
+	_ = sample.AccAddressAsString
 	_ = betsimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind

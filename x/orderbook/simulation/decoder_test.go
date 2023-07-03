@@ -30,7 +30,7 @@ func TestDecodeStore(t *testing.T) {
 	participation := types.OrderBookParticipation{
 		Index:                      1,
 		OrderBookUID:               orderBookUID,
-		ParticipantAddress:         sample.AccAddress(),
+		ParticipantAddress:         sample.AccAddressAsString(),
 		Liquidity:                  sdk.NewInt(100),
 		CurrentRoundLiquidity:      sdk.NewInt(50),
 		ExposuresNotFilled:         1,

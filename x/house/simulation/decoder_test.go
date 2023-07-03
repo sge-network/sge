@@ -20,8 +20,8 @@ func TestDecodeStore(t *testing.T) {
 	dec := simulation.NewDecodeStore(cdc)
 
 	deposit := types.NewDeposit(
-		sample.AccAddress(),
-		sample.AccAddress(),
+		sample.AccAddressAsString(),
+		sample.AccAddressAsString(),
 		uuid.NewString(),
 		sdk.NewInt(100),
 		sdk.NewInt(1000),

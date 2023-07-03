@@ -20,7 +20,7 @@ func TestDecodeStore(t *testing.T) {
 	dec := simulation.NewDecodeStore(cdc)
 
 	bet := types.NewBet(
-		sample.AccAddress(),
+		sample.AccAddressAsString(),
 		&types.PlaceBetFields{
 			UID:    uuid.NewString(),
 			Amount: sdk.NewInt(10),

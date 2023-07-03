@@ -1,12 +1,10 @@
 package types
 
-// DONTCOVER
-
 import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// x/market module sentinel errors
 var (
+	// ErrUnlockTokenTimeExpired is the error for unlock time is expired
 	ErrUnlockTokenTimeExpired = sdkerrors.Register(ModuleName, 1, "token ")
 )

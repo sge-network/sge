@@ -24,7 +24,7 @@ func TestMsgServerAddMarket(t *testing.T) {
 	u1 := uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 	})
 
 	tests := []struct {
@@ -36,7 +36,7 @@ func TestMsgServerAddMarket(t *testing.T) {
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgAddMarket(sample.AccAddress(), ""),
+				msg: types.NewMsgAddMarket(sample.AccAddressAsString(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -56,7 +56,7 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 	u1 := uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 	})
 
 	t.Run("Error in ticket fields validation", func(t *testing.T) {
@@ -72,7 +72,7 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 
 		response, err := msgk.AddMarket(
 			wctx,
-			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgAddMarket(sample.AccAddressAsString(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -97,7 +97,7 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 
 		response, err := msgk.AddMarket(
 			wctx,
-			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgAddMarket(sample.AccAddressAsString(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketAlreadyExist)
 		assert.Nil(t, response)
@@ -113,7 +113,7 @@ func TestMsgServerUpdateMarket(t *testing.T) {
 	u1 := uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 	})
 
 	tests := []struct {
@@ -125,7 +125,7 @@ func TestMsgServerUpdateMarket(t *testing.T) {
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgUpdateMarket(sample.AccAddress(), ""),
+				msg: types.NewMsgUpdateMarket(sample.AccAddressAsString(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -146,11 +146,11 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 	u1, u2, u3 := uuid.NewString(), uuid.NewString(), uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 	})
 	k.SetMarket(ctx, types.Market{
 		UID:     u2,
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 		Status:  types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 	})
 
@@ -165,7 +165,7 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 
 		response, err := msgk.UpdateMarket(
 			wctx,
-			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgUpdateMarket(sample.AccAddressAsString(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
@@ -183,7 +183,7 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 
 		response, err := msgk.UpdateMarket(
 			wctx,
-			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgUpdateMarket(sample.AccAddressAsString(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketCanNotBeAltered)
 		assert.Nil(t, response)
@@ -206,7 +206,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "valid request",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -221,7 +221,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "same timestamp",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute).Unix()),
 			},
@@ -230,7 +230,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "end timestamp before current timestamp",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				EndTS:   uint64(t1.Add(-time.Minute).Unix()),
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -238,7 +238,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "invalid uid",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     "invalid uuid",
@@ -252,7 +252,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "few odds than required",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -265,7 +265,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "invalid odds id",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -279,7 +279,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "duplicate odds id",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -293,7 +293,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "invalid min amount, negative",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -308,7 +308,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "invalid min amount, less than required",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -323,7 +323,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "valid request, with bet constraint",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -340,7 +340,7 @@ func TestValidateCreationMarket(t *testing.T) {
 		{
 			name: "large metadata",
 			msg: types.MarketAddTicketPayload{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				StartTS: uint64(t1.Add(time.Minute).Unix()),
 				EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 				UID:     uuid.NewString(),
@@ -378,7 +378,7 @@ func TestUpdateMarketValidation(t *testing.T) {
 	lowerBetAmount := params.MinBetAmount.Sub(sdk.NewInt(5))
 
 	market := types.Market{
-		Creator: sample.AccAddress(),
+		Creator: sample.AccAddressAsString(),
 		StartTS: uint64(t1.Add(time.Minute).Unix()),
 		EndTS:   uint64(t1.Add(time.Minute * 2).Unix()),
 		UID:     uuid.NewString(),

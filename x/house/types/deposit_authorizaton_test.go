@@ -34,8 +34,8 @@ func TestDepositGrantValidateBasic(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			msgGrant, err := authz.NewMsgGrant(
-				sdk.MustAccAddressFromBech32(sample.AccAddress()),
-				sdk.MustAccAddressFromBech32(sample.AccAddress()),
+				sdk.MustAccAddressFromBech32(sample.AccAddressAsString()),
+				sdk.MustAccAddressFromBech32(sample.AccAddressAsString()),
 				&types.DepositAuthorization{
 					SpendLimit: tt.spendLimit,
 				},

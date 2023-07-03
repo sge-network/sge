@@ -26,7 +26,7 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 		{
 			name: "valid bet message",
 			msg: types.MsgPlaceBet{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				Bet: &types.PlaceBetFields{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 					Amount: sdk.NewInt(int64(10)),
@@ -37,7 +37,7 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 		{
 			name: "invalid bet UID",
 			msg: types.MsgPlaceBet{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 				Bet: &types.PlaceBetFields{
 					UID: "Invalid UID",
 				},

@@ -24,7 +24,7 @@ func TestMsgChangePubkeysListProposalValidateBasic(t *testing.T) {
 		}, {
 			name: "valid address",
 			msg: types.MsgSubmitPubkeysChangeProposalRequest{
-				Creator: sample.AccAddress(),
+				Creator: sample.AccAddressAsString(),
 			},
 		},
 	}
