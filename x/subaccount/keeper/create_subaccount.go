@@ -20,5 +20,14 @@ func (m msgServer) CreateSubAccount(
 		}
 	}
 
+	account, err := sdk.AccAddressFromBech32(request.SubAccountOwner)
+	if err != nil {
+		return nil, err
+	}
+
+	if m.keeper.HasSubAccount(sdkContext, account) {
+		return nil, types.ErrSubaccountAlreadyExist
+	}
+
 	return &types.MsgCreateAccountResponse{}, nil
 }

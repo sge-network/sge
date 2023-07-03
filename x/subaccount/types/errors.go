@@ -6,5 +6,8 @@ import (
 
 var (
 	// ErrUnlockTokenTimeExpired is the error for unlock time is expired
-	ErrUnlockTokenTimeExpired = sdkerrors.Register(ModuleName, 1, "token ")
+	ErrUnlockTokenTimeExpired = sdkerrors.Register(ModuleName, 1, "unlock time is expired")
+
+	// ErrSubaccountAlreadyExist is the error for account has already sub account
+	ErrSubaccountAlreadyExist = sdkerrors.Register(ModuleName, 2, "account has already sub account")
 )
