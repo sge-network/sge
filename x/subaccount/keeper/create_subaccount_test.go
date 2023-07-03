@@ -11,39 +11,75 @@ import (
 )
 
 func TestMsgServer_CreateSubAccount(t *testing.T) {
+	account := sample.AccAddress()
+	sender := sample.AccAddress()
 
+	_, _, msgServer, ctx := setupMsgServerAndApp(t)
+
+	someTime := time.Now().Add(10 * time.Minute)
+	msg := &types.MsgCreateSubAccountRequest{
+		Sender:          sender.String(),
+		SubAccountOwner: account.String(),
+		LockedBalances: []*types.LockedBalance{
+			{
+				UnlockTime: &someTime,
+				Amount:     sdk.NewInt(123),
+			},
+		},
+	}
+
+	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
+	require.NoError(t, err)
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 	beforeTime := time.Now().Add(-10 * time.Minute)
 	afterTime := time.Now().Add(10 * time.Minute)
 	account := sample.AccAddress()
+	sender := sample.AccAddress()
 
 	tests := []struct {
 		name        string
 		msg         types.MsgCreateSubAccountRequest
 		prepare     func(ctx sdk.Context, keeper keeper.Keeper)
-		expectedErr error
+		expectedErr string
 	}{
 		{
 			name: "unlock time is expired",
 			msg: types.MsgCreateSubAccountRequest{
-				Sender:          "someSender",
+				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
 					{
 						UnlockTime: &beforeTime,
-						Amount:     sdk.Int{},
+						Amount:     sdk.NewInt(123),
 					},
 				},
 			},
 			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
-			expectedErr: types.ErrUnlockTokenTimeExpired,
+			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
 			name: "account has already sub account",
 			msg: types.MsgCreateSubAccountRequest{
-				Sender:          "someSender",
+				Sender:          sender.String(),
+				SubAccountOwner: account.String(),
+				LockedBalances: []*types.LockedBalance{
+					{
+						UnlockTime: &afterTime,
+						Amount:     sdk.NewInt(123),
+					},
+				},
+			},
+			prepare: func(ctx sdk.Context, k keeper.Keeper) {
+				k.SetSubAccountOwner(ctx, 1, account)
+			},
+			expectedErr: types.ErrSubaccountAlreadyExist.Error(),
+		},
+		{
+			name: "invalid request",
+			msg: types.MsgCreateSubAccountRequest{
+				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
 					{
@@ -52,10 +88,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare: func(ctx sdk.Context, k keeper.Keeper) {
-				k.SetSubAccountOwner(ctx, 1, account)
-			},
-			expectedErr: types.ErrSubaccountAlreadyExist,
+			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			expectedErr: "invalid request",
 		},
 	}
 
@@ -67,7 +101,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 			tt.prepare(ctx, k)
 
 			_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &tt.msg)
-			require.EqualError(t, err, tt.expectedErr.Error())
+			require.ErrorContains(t, err, tt.expectedErr)
 		})
 	}
 }
