@@ -39,4 +39,19 @@ func (k Keeper) HasSubAccount(ctx sdk.Context, address sdk.AccAddress) bool {
 func (k Keeper) SetSubAccountOwner(ctx sdk.Context, id uint64, address sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(subaccounttypes.SubAccountOwnerKey(address), sdk.Uint64ToBigEndian(id))
+	// and reverse mapping
+	store.Set(subaccounttypes.SubAccountKey(id), address.Bytes())
+}
+
+// GetSubAccountByOwner returns the subaccount ID of an owner.
+func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) uint64 {
+	store := ctx.KVStore(k.storeKey)
+
+	return sdk.BigEndianToUint64(store.Get(subaccounttypes.SubAccountOwnerKey(address)))
+}
+
+func (k Keeper) GetSubAccountOwner(ctx sdk.Context, id uint64) sdk.AccAddress {
+	store := ctx.KVStore(k.storeKey)
+
+	return store.Get(subaccounttypes.SubAccountKey(id))
 }

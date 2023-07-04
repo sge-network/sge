@@ -4,7 +4,6 @@ import (
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -30,19 +29,24 @@ func (m msgServer) CreateSubAccount(
 	}
 
 	senderAccount, _ := sdk.AccAddressFromBech32(request.Sender)
-	account, _ := sdk.AccAddressFromBech32(request.SubAccountOwner)
-	if m.keeper.HasSubAccount(sdkContext, account) {
+	subaccountOwner, _ := sdk.AccAddressFromBech32(request.SubAccountOwner)
+	if m.keeper.HasSubAccount(sdkContext, subaccountOwner) {
 		return nil, types.ErrSubaccountAlreadyExist
 	}
 
 	m.keeper.NextID(sdkContext)
 	subaccountID := m.keeper.Peek(sdkContext)
+
 	subaccountAddress := types.NewModuleAccountFromSubAccount(subaccountID)
+	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
+	m.accountKeeper.SetAccount(sdkContext, address)
 
-	moduleAccount := authtypes.NewBaseAccountWithAddress(subaccountAddress)
-	m.accountKeeper.SetAccount(sdkContext, moduleAccount)
+	err = m.bankKeeper.SendCoins(sdkContext, senderAccount, subaccountAddress, moneyToSend)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to send coins")
+	}
 
-	err = m.bankKeeper.SendCoinsFromAccountToModule(sdkContext, senderAccount, subaccountAddress.String(), moneyToSend)
+	m.keeper.SetSubAccountOwner(sdkContext, subaccountID, subaccountOwner)
 
 	return &types.MsgCreateAccountResponse{}, nil
 }

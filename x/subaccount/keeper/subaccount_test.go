@@ -37,4 +37,12 @@ func TestSubAccountOwner(t *testing.T) {
 
 	// Account should have subaccount
 	require.True(t, k.HasSubAccount(ctx, address))
+
+	// Get subaccount ID
+	require.Equal(t, ID, k.GetSubAccountByOwner(ctx, address))
+
+	// Get owner of subaccount
+	require.Equal(t, address, k.GetSubAccountOwner(ctx, ID))
+	// Get account ID by owner
+	require.Equal(t, ID, k.GetSubAccountByOwner(ctx, address))
 }

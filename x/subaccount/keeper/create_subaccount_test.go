@@ -1,7 +1,9 @@
 package keeper_test
 
 import (
+	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -14,7 +16,13 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	account := sample.AccAddress()
 	sender := sample.AccAddress()
 
-	_, _, msgServer, ctx := setupMsgServerAndApp(t)
+	app, _, msgServer, ctx := setupMsgServerAndApp(t)
+
+	err := simapp.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	require.NoError(t, err)
+
+	// Check that the account has been created
+	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewModuleAccountFromSubAccount(1)))
 
 	someTime := time.Now().Add(10 * time.Minute)
 	msg := &types.MsgCreateSubAccountRequest{
@@ -28,8 +36,19 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 		},
 	}
 
-	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
+	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
+
+	// Check that the account has been created
+	require.True(t, app.AccountKeeper.HasAccount(ctx, types.NewModuleAccountFromSubAccount(1)))
+
+	// Check that the account has the correct balance
+	balance := app.BankKeeper.GetBalance(ctx, types.NewModuleAccountFromSubAccount(1), params.DefaultBondDenom)
+	require.Equal(t, sdk.NewInt(123), balance.Amount)
+
+	// Check that we can get the account by owner
+	owner := app.SubAccountKeeper.GetSubAccountOwner(ctx, 1)
+	require.Equal(t, account, owner)
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {

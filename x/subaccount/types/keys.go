@@ -23,8 +23,15 @@ var (
 
 	// SubAccountOwnerPrefix is the key used to store the subaccount owner in the keeper KVStore
 	SubAccountOwnerPrefix = []byte{0x01}
+
+	// SubAccountOwnerReversePrefix is the key used to store the subaccount owner by ID in the keeper KVStore
+	SubAccountOwnerReversePrefix = []byte{0x02}
 )
 
 func SubAccountOwnerKey(address types.AccAddress) []byte {
 	return append(SubAccountOwnerPrefix, address...)
+}
+
+func SubAccountKey(id uint64) []byte {
+	return append(SubAccountOwnerReversePrefix, types.Uint64ToBigEndian(id)...)
 }
