@@ -22,7 +22,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.NoError(t, err)
 
 	// Check that the account has been created
-	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewModuleAccountFromSubAccount(1)))
+	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
 	someTime := time.Now().Add(10 * time.Minute)
 	msg := &types.MsgCreateSubAccountRequest{
@@ -40,15 +40,21 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.NoError(t, err)
 
 	// Check that the account has been created
-	require.True(t, app.AccountKeeper.HasAccount(ctx, types.NewModuleAccountFromSubAccount(1)))
+	require.True(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
 	// Check that the account has the correct balance
-	balance := app.BankKeeper.GetBalance(ctx, types.NewModuleAccountFromSubAccount(1), params.DefaultBondDenom)
+	balance := app.BankKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1), params.DefaultBondDenom)
 	require.Equal(t, sdk.NewInt(123), balance.Amount)
 
 	// Check that we can get the account by owner
 	owner := app.SubAccountKeeper.GetSubAccountOwner(ctx, 1)
 	require.Equal(t, account, owner)
+
+	// check that balance unlocks are set correctly
+	lockedBalances := app.SubAccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
+	require.Len(t, lockedBalances, 1)
+	require.True(t, someTime.Equal(lockedBalances[0].UnlockTime))
+	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {

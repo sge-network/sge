@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/cosmos/cosmos-sdk/types"
 	"time"
+
+	"github.com/cosmos/cosmos-sdk/types"
 )
 
 // module constants
@@ -44,4 +45,8 @@ func SubAccountKey(id uint64) []byte {
 
 func LockedBalanceKey(address types.AccAddress, unlockTime time.Time) []byte {
 	return append(LockedBalancePrefix, append(address.Bytes(), types.FormatTimeBytes(unlockTime)...)...)
+}
+
+func LockedBalancePrefixKey(address types.AccAddress) []byte {
+	return append(LockedBalancePrefix, address.Bytes()...)
 }

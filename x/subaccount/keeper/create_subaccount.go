@@ -37,7 +37,7 @@ func (m msgServer) CreateSubAccount(
 	m.keeper.NextID(sdkContext)
 	subaccountID := m.keeper.Peek(sdkContext)
 
-	subaccountAddress := types.NewModuleAccountFromSubAccount(subaccountID)
+	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
 	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
 	m.accountKeeper.SetAccount(sdkContext, address)
 
@@ -47,6 +47,7 @@ func (m msgServer) CreateSubAccount(
 	}
 
 	m.keeper.SetSubAccountOwner(sdkContext, subaccountID, subaccountOwner)
+	m.keeper.SetLockedBalances(sdkContext, subaccountAddress, request.LockedBalances)
 
 	return &types.MsgCreateAccountResponse{}, nil
 }
