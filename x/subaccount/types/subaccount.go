@@ -31,8 +31,8 @@ func (msg *MsgCreateSubAccountRequest) Validate() error {
 
 // Validate performs a basic validation of the LockedBalance fields.
 func (lb *LockedBalance) Validate() error {
-	if lb.UnlockTime == nil {
-		return fmt.Errorf("unlock time is nil")
+	if lb.UnlockTime.IsZero() {
+		return fmt.Errorf("unlock time is zero")
 	}
 
 	if lb.Amount.IsNil() {

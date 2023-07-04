@@ -1,8 +1,11 @@
 package keeper_test
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/x/subaccount/types"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -45,4 +48,24 @@ func TestSubAccountOwner(t *testing.T) {
 	require.Equal(t, address, k.GetSubAccountOwner(ctx, ID))
 	// Get account ID by owner
 	require.Equal(t, ID, k.GetSubAccountByOwner(ctx, address))
+}
+
+func TestSetLockedBalances(t *testing.T) {
+	_, k, ctx := setupKeeperAndApp(t)
+
+	someUnlockTime := time.Now().Add(time.Hour * 24 * 365)
+	otherUnlockTime := time.Now().Add(time.Hour * 24 * 365 * 2)
+
+	balanceUnlocks := []types.LockedBalance{
+		{
+			Amount:     sdk.NewInt(10000),
+			UnlockTime: someUnlockTime,
+		},
+		{
+			Amount:     sdk.NewInt(20000),
+			UnlockTime: otherUnlockTime,
+		},
+	}
+
+	k.SetLockedBalances(ctx, 1, balanceUnlocks)
 }

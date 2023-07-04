@@ -28,7 +28,7 @@ func TestMsgCreateSubAccountRequest_Validate(t *testing.T) {
 				SubAccountOwner: owner.String(),
 				LockedBalances: []*LockedBalance{
 					{
-						UnlockTime: &someTime,
+						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
@@ -42,7 +42,7 @@ func TestMsgCreateSubAccountRequest_Validate(t *testing.T) {
 				SubAccountOwner: "someInvalidAddress",
 				LockedBalances: []*LockedBalance{
 					{
-						UnlockTime: &someTime,
+						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
@@ -50,18 +50,18 @@ func TestMsgCreateSubAccountRequest_Validate(t *testing.T) {
 			want: errors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid locked balance",
+			name: "unlock time zero",
 			msg: MsgCreateSubAccountRequest{
 				Sender:          sender.String(),
 				SubAccountOwner: owner.String(),
 				LockedBalances: []*LockedBalance{
 					{
-						UnlockTime: nil,
+						UnlockTime: time.Time{},
 						Amount:     sdk.NewInt(123),
 					},
 				},
 			},
-			want: fmt.Errorf("invalid locked balance: unlock time is nil"),
+			want: fmt.Errorf("invalid locked balance: unlock time is zero"),
 		},
 	}
 
@@ -80,17 +80,17 @@ func TestLockedBalanceValidate(t *testing.T) {
 		want error
 	}{
 		{
-			name: "nil unlock time",
+			name: "unlock time zero",
 			lb: LockedBalance{
-				UnlockTime: nil,
+				UnlockTime: time.Time{},
 				Amount:     sdk.Int{},
 			},
-			want: fmt.Errorf("unlock time is nil"),
+			want: fmt.Errorf("unlock time is zero"),
 		},
 		{
 			name: "negative amount",
 			lb: LockedBalance{
-				UnlockTime: &time.Time{},
+				UnlockTime: time.Now(),
 				Amount:     sdk.NewInt(-1),
 			},
 			want: fmt.Errorf("amount is negative"),
@@ -98,7 +98,7 @@ func TestLockedBalanceValidate(t *testing.T) {
 		{
 			name: "nil amount",
 			lb: LockedBalance{
-				UnlockTime: &time.Time{},
+				UnlockTime: time.Now(),
 				Amount:     sdk.Int{},
 			},
 			want: fmt.Errorf("amount is nil"),

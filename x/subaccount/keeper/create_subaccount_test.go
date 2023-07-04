@@ -30,7 +30,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 		SubAccountOwner: account.String(),
 		LockedBalances: []*types.LockedBalance{
 			{
-				UnlockTime: &someTime,
+				UnlockTime: someTime,
 				Amount:     sdk.NewInt(123),
 			},
 		},
@@ -70,7 +70,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
 					{
-						UnlockTime: &beforeTime,
+						UnlockTime: beforeTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
@@ -85,7 +85,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
 					{
-						UnlockTime: &afterTime,
+						UnlockTime: afterTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
@@ -102,7 +102,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
 					{
-						UnlockTime: &afterTime,
+						UnlockTime: afterTime,
 						Amount:     sdk.Int{},
 					},
 				},

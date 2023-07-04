@@ -1,6 +1,9 @@
 package types
 
-import "github.com/cosmos/cosmos-sdk/types"
+import (
+	"github.com/cosmos/cosmos-sdk/types"
+	"time"
+)
 
 // module constants
 const (
@@ -26,6 +29,9 @@ var (
 
 	// SubAccountOwnerReversePrefix is the key used to store the subaccount owner by ID in the keeper KVStore
 	SubAccountOwnerReversePrefix = []byte{0x02}
+
+	// LockedBalancePrefix is the key used to store the locked balance in the keeper KVStore
+	LockedBalancePrefix = []byte{0x03}
 )
 
 func SubAccountOwnerKey(address types.AccAddress) []byte {
@@ -34,4 +40,8 @@ func SubAccountOwnerKey(address types.AccAddress) []byte {
 
 func SubAccountKey(id uint64) []byte {
 	return append(SubAccountOwnerReversePrefix, types.Uint64ToBigEndian(id)...)
+}
+
+func LockedBalanceKey(address types.AccAddress, unlockTime time.Time) []byte {
+	return append(LockedBalancePrefix, append(address.Bytes(), types.FormatTimeBytes(unlockTime)...)...)
 }

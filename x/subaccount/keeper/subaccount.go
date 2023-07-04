@@ -50,6 +50,7 @@ func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) ui
 	return sdk.BigEndianToUint64(store.Get(subaccounttypes.SubAccountOwnerKey(address)))
 }
 
+// GetSubAccountOwner returns the owner of a subaccount.
 func (k Keeper) GetSubAccountOwner(ctx sdk.Context, id uint64) sdk.AccAddress {
 	store := ctx.KVStore(k.storeKey)
 
