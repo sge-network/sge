@@ -33,7 +33,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// modify the bet fee and subtracted amount
-	setBetFee(bet, betConstraints.Fee)
+	setFee(bet, betConstraints.Fee)
 
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -47,7 +47,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 
 	betFulfillment, err := k.orderbookKeeper.ProcessBetPlacement(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddress, bet.BetFee, bet.OddsType, bet.OddsValue, betID,
+		bettorAddress, bet.Fee, bet.OddsType, bet.OddsValue, betID,
 	)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrInOBPlacementProcessing, "%s", err)
@@ -102,8 +102,8 @@ func oddsExists(betOddsUID string, odds []*markettypes.Odds) bool {
 	return false
 }
 
-// setBetFee sets the bet fee and subtracted amount of bet object pointer
-func setBetFee(bet *types.Bet, betFee sdk.Int) {
-	bet.Amount = bet.Amount.Sub(betFee)
-	bet.BetFee = betFee
+// setFee sets the bet fee and subtracted amount of bet object pointer
+func setFee(bet *types.Bet, fee sdk.Int) {
+	bet.Amount = bet.Amount.Sub(fee)
+	bet.Fee = fee
 }

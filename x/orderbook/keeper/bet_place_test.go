@@ -183,7 +183,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		winner1BettorAddr,
 		params.DefaultBondDenom,
 	)
-	expWinner1BalanceAfterPlacement := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.BetFee)
+	expWinner1BalanceAfterPlacement := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.Fee)
 	require.Equal(
 		ts.t,
 		expWinner1BalanceAfterPlacement.Int64(),
@@ -221,7 +221,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		winner1BettorAddr,
 		params.DefaultBondDenom,
 	)
-	expWinner2BalanceAfterPlacement := winner2Bal.Amount.Sub(winner2Bet.Amount).Sub(winner2Bet.BetFee)
+	expWinner2BalanceAfterPlacement := winner2Bal.Amount.Sub(winner2Bet.Amount).Sub(winner2Bet.Fee)
 	require.Equal(
 		ts.t,
 		expWinner2BalanceAfterPlacement.Int64(),
@@ -272,7 +272,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		loserBettorAddr,
 		params.DefaultBondDenom,
 	)
-	expLoserBalanceAfterPlacement := loserBal.Amount.Sub(loserBet.Amount).Sub(loserBet.BetFee)
+	expLoserBalanceAfterPlacement := loserBal.Amount.Sub(loserBet.Amount).Sub(loserBet.Fee)
 	require.Equal(ts.t, expLoserBalanceAfterPlacement, loserBalAfterPlacement.Amount)
 
 	return []bettypes.Bet{
@@ -287,7 +287,7 @@ func (ts *testBetSuite) placeTestBet(
 	marketUID, oddsUID string,
 	betID uint64,
 	amount sdk.Int,
-	betFee sdk.Int,
+	fee sdk.Int,
 	expErr error,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{
@@ -297,7 +297,7 @@ func (ts *testBetSuite) placeTestBet(
 		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "1.1",
 		Amount:            amount,
-		BetFee:            betFee,
+		Fee:               fee,
 		Status:            bettypes.Bet_STATUS_PENDING,
 		Creator:           bettorAddr.String(),
 		CreatedAt:         cast.ToInt64(ts.ctx.BlockTime().Unix()),
@@ -320,7 +320,7 @@ func (ts *testBetSuite) placeTestBet(
 
 	betFulfillment, err := ts.k.ProcessBetPlacement(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.BetFee, bet.OddsType, bet.OddsValue, 1,
+		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1,
 	)
 	if expErr != nil {
 		require.ErrorIs(ts.t, expErr, err)
@@ -330,7 +330,7 @@ func (ts *testBetSuite) placeTestBet(
 		ts.tApp.BetKeeper.SetPendingBet(ts.ctx, &bettypes.PendingBet{Creator: bet.Creator, UID: bet.UID}, betID, marketUID)
 
 		betFeeCollectorBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollectorFunder{}.GetModuleAcc()), params.DefaultBondDenom)
-		require.Equal(ts.t, bet.BetFee.Int64(), betFeeCollectorBalanceAfterPlacement.Sub(betFeeCollectorBalanceBeforePlacement).Amount.Int64())
+		require.Equal(ts.t, bet.Fee.Int64(), betFeeCollectorBalanceAfterPlacement.Sub(betFeeCollectorBalanceBeforePlacement).Amount.Int64())
 
 		liquidityPoolBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityFunder{}.GetModuleAcc()), params.DefaultBondDenom)
 		require.Equal(ts.t, bet.Amount.Int64(), liquidityPoolBalanceAfterPlacement.Sub(liquidityPoolBalanceBeforePlacement).Amount.Int64())

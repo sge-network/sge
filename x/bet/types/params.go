@@ -14,8 +14,8 @@ const (
 )
 
 var (
-	defaultMinBetAmount = sdk.NewInt(1000000)
-	defaultBetFee       = sdk.NewInt(100)
+	defaultMinAmount = sdk.NewInt(1000000)
+	defaultFee       = sdk.NewInt(100)
 )
 
 // parameter store keys
@@ -46,8 +46,8 @@ func NewParams() Params {
 		BatchSettlementCount:  batchSettlementCount,
 		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
 		Constraints: Constraints{
-			MinAmount: defaultMinBetAmount,
-			Fee:       defaultBetFee,
+			MinAmount: defaultMinAmount,
+			Fee:       defaultFee,
 		},
 	}
 }

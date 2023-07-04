@@ -56,7 +56,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 			return err
 		}
 
-		if err := k.orderbookKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.BetFee, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.orderbookKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.Fee, payoutProfit.TruncateInt(), bet.UID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBRefund, "%s", err)
 		}
 
@@ -77,7 +77,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
-	if err := k.orderbookKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.BetFee); err != nil {
+	if err := k.orderbookKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee); err != nil {
 		return err
 	}
 

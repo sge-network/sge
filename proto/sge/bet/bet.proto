@@ -44,8 +44,8 @@ message Bet {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the betting fee user needs to pay for placing a bet
-  string bet_fee = 7 [
+  // fee is the betting fee user needs to pay for placing a bet
+  string fee = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
