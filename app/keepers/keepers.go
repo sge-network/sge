@@ -419,7 +419,7 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.OrderbookKeeper,
 	)
-	appKeepers.SubAccountKeeper = subaccount.NewKeeper(appKeepers.keys[subaccounttypes.StoreKey])
+	appKeepers.SubAccountKeeper = subaccount.NewKeeper(appCodec, appKeepers.keys[subaccounttypes.StoreKey])
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()

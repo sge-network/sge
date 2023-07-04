@@ -78,3 +78,20 @@ func TestSetLockedBalances(t *testing.T) {
 		require.True(t, lockedBalance.UnlockTime.Equal(balanceUnlocks[i].UnlockTime))
 	}
 }
+
+func TestSetBalances(t *testing.T) {
+	_, k, ctx := setupKeeperAndApp(t)
+
+	balance := types.Balance{
+		DepositedAmount: sdk.ZeroInt(),
+		SpentAmount:     sdk.ZeroInt(),
+		WithdrawmAmount: sdk.ZeroInt(),
+		LostAmount:      sdk.OneInt(),
+	}
+
+	account := types.NewAddressFromSubaccount(1)
+	k.SetBalance(ctx, account, balance)
+
+	// Get balance
+	require.Equal(t, balance, k.GetBalance(ctx, account))
+}

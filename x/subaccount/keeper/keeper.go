@@ -10,6 +10,6 @@ type Keeper struct {
 	storeKey sdk.StoreKey
 }
 
-func NewKeeper(storeKey sdk.StoreKey) Keeper {
-	return Keeper{storeKey: storeKey}
+func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey) Keeper {
+	return Keeper{storeKey: storeKey, cdc: cdc}
 }

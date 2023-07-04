@@ -88,3 +88,22 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, account sdk.AccAddress) []sub
 
 	return lockedBalances
 }
+
+// SetBalance saves the balance of an account.
+func (k Keeper) SetBalance(ctx sdk.Context, account sdk.AccAddress, balance subaccounttypes.Balance) {
+	store := ctx.KVStore(k.storeKey)
+
+	bz := k.cdc.MustMarshal(&balance)
+	store.Set(subaccounttypes.BalanceKey(account), bz)
+}
+
+// GetBalance returns the balance of an account.
+func (k Keeper) GetBalance(ctx sdk.Context, account sdk.AccAddress) subaccounttypes.Balance {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(subaccounttypes.BalanceKey(account))
+
+	balance := subaccounttypes.Balance{}
+	k.cdc.MustUnmarshal(bz, &balance)
+
+	return balance
+}

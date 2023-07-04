@@ -33,6 +33,9 @@ var (
 
 	// LockedBalancePrefix is the key used to store the locked balance in the keeper KVStore
 	LockedBalancePrefix = []byte{0x03}
+
+	// BalancePrefix saves the balance of an account.
+	BalancePrefix = []byte{0x04}
 )
 
 func SubAccountOwnerKey(address types.AccAddress) []byte {
@@ -49,4 +52,8 @@ func LockedBalanceKey(address types.AccAddress, unlockTime time.Time) []byte {
 
 func LockedBalancePrefixKey(address types.AccAddress) []byte {
 	return append(LockedBalancePrefix, address.Bytes()...)
+}
+
+func BalanceKey(address types.AccAddress) []byte {
+	return append(BalancePrefix, address.Bytes()...)
 }

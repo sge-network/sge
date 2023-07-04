@@ -55,6 +55,13 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.Len(t, lockedBalances, 1)
 	require.True(t, someTime.Equal(lockedBalances[0].UnlockTime))
 	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
+
+	// get the balance of the account
+	subaccountBalance := app.SubAccountKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1))
+	require.Equal(t, sdk.ZeroInt(), subaccountBalance.SpentAmount)
+	require.Equal(t, sdk.ZeroInt(), subaccountBalance.LostAmount)
+	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawmAmount)
+	require.Equal(t, sdk.NewInt(123), subaccountBalance.DepositedAmount)
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
