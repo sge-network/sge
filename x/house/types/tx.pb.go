@@ -6,25 +6,22 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	io "io"
-	math "math"
-	math_bits "math/bits"
-
 	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
-	_ "github.com/gogo/protobuf/gogoproto"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	io "io"
+	math "math"
+	math_bits "math/bits"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ = proto.Marshal
-	_ = fmt.Errorf
-	_ = math.Inf
-)
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the proto package it is being compiled against.
@@ -52,11 +49,9 @@ func (*MsgDeposit) ProtoMessage()    {}
 func (*MsgDeposit) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d3891d05e499977f, []int{0}
 }
-
 func (m *MsgDeposit) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgDeposit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgDeposit.Marshal(b, m, deterministic)
@@ -69,15 +64,12 @@ func (m *MsgDeposit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-
 func (m *MsgDeposit) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgDeposit.Merge(m, src)
 }
-
 func (m *MsgDeposit) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgDeposit) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgDeposit.DiscardUnknown(m)
 }
@@ -100,11 +92,9 @@ func (*MsgDepositResponse) ProtoMessage()    {}
 func (*MsgDepositResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d3891d05e499977f, []int{1}
 }
-
 func (m *MsgDepositResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgDepositResponse.Marshal(b, m, deterministic)
@@ -117,15 +107,12 @@ func (m *MsgDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, 
 		return b[:n], nil
 	}
 }
-
 func (m *MsgDepositResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgDepositResponse.Merge(m, src)
 }
-
 func (m *MsgDepositResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgDepositResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgDepositResponse.DiscardUnknown(m)
 }
@@ -168,11 +155,9 @@ func (*MsgWithdraw) ProtoMessage()    {}
 func (*MsgWithdraw) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d3891d05e499977f, []int{2}
 }
-
 func (m *MsgWithdraw) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgWithdraw) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgWithdraw.Marshal(b, m, deterministic)
@@ -185,15 +170,12 @@ func (m *MsgWithdraw) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-
 func (m *MsgWithdraw) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgWithdraw.Merge(m, src)
 }
-
 func (m *MsgWithdraw) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgWithdraw) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgWithdraw.DiscardUnknown(m)
 }
@@ -217,11 +199,9 @@ func (*MsgWithdrawResponse) ProtoMessage()    {}
 func (*MsgWithdrawResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d3891d05e499977f, []int{3}
 }
-
 func (m *MsgWithdrawResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-
 func (m *MsgWithdrawResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
 		return xxx_messageInfo_MsgWithdrawResponse.Marshal(b, m, deterministic)
@@ -234,15 +214,12 @@ func (m *MsgWithdrawResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-
 func (m *MsgWithdrawResponse) XXX_Merge(src proto.Message) {
 	xxx_messageInfo_MsgWithdrawResponse.Merge(m, src)
 }
-
 func (m *MsgWithdrawResponse) XXX_Size() int {
 	return m.Size()
 }
-
 func (m *MsgWithdrawResponse) XXX_DiscardUnknown() {
 	xxx_messageInfo_MsgWithdrawResponse.DiscardUnknown(m)
 }
@@ -317,10 +294,8 @@ var fileDescriptor_d3891d05e499977f = []byte{
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
-var (
-	_ context.Context
-	_ grpc.ClientConn
-)
+var _ context.Context
+var _ grpc.ClientConn
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the grpc package it is being compiled against.
@@ -377,12 +352,12 @@ type MsgServer interface {
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
-type UnimplementedMsgServer struct{}
+type UnimplementedMsgServer struct {
+}
 
 func (*UnimplementedMsgServer) Deposit(ctx context.Context, req *MsgDeposit) (*MsgDepositResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Deposit not implemented")
 }
-
 func (*UnimplementedMsgServer) Withdraw(ctx context.Context, req *MsgWithdraw) (*MsgWithdrawResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Withdraw not implemented")
 }
@@ -648,7 +623,6 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-
 func (m *MsgDeposit) Size() (n int) {
 	if m == nil {
 		return 0
@@ -739,11 +713,9 @@ func (m *MsgWithdrawResponse) Size() (n int) {
 func sovTx(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
-
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-
 func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -924,7 +896,6 @@ func (m *MsgDeposit) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgDepositResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1026,7 +997,6 @@ func (m *MsgDepositResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1245,7 +1215,6 @@ func (m *MsgWithdraw) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func (m *MsgWithdrawResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -1366,7 +1335,6 @@ func (m *MsgWithdrawResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-
 func skipTx(dAtA []byte) (n int, err error) {
 	l := len(dAtA)
 	iNdEx := 0

@@ -7,7 +7,7 @@ import (
 	context "context"
 	fmt "fmt"
 	query "github.com/cosmos/cosmos-sdk/types/query"
-	_ "github.com/gogo/protobuf/gogoproto"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -648,7 +648,7 @@ type QueryClient interface {
 	DepositsByAccount(ctx context.Context, in *QueryDepositsByAccountRequest, opts ...grpc.CallOption) (*QueryDepositsByAccountResponse, error)
 	// WithdrawalsByAccount queries withdrawals info for given account.
 	WithdrawalsByAccount(ctx context.Context, in *QueryWithdrawalsByAccountRequest, opts ...grpc.CallOption) (*QueryWithdrawalsByAccountResponse, error)
-	// Queries a wthdrawal by id.
+	// Queries a wthdrawal by depositor, market, participation index and id.
 	Withdrawal(ctx context.Context, in *QueryWithdrawalRequest, opts ...grpc.CallOption) (*QueryWithdrawalResponse, error)
 }
 
@@ -715,7 +715,7 @@ type QueryServer interface {
 	DepositsByAccount(context.Context, *QueryDepositsByAccountRequest) (*QueryDepositsByAccountResponse, error)
 	// WithdrawalsByAccount queries withdrawals info for given account.
 	WithdrawalsByAccount(context.Context, *QueryWithdrawalsByAccountRequest) (*QueryWithdrawalsByAccountResponse, error)
-	// Queries a wthdrawal by id.
+	// Queries a wthdrawal by depositor, market, participation index and id.
 	Withdrawal(context.Context, *QueryWithdrawalRequest) (*QueryWithdrawalResponse, error)
 }
 

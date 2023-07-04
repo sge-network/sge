@@ -1,0 +1,7 @@
+syntax = "proto3";
+package sgenetwork.sge.subaccount;
+
+option go_package = "github.com/sge-network/sge/x/subaccount/types";
+
+// Msg defines the Msg service.
+service Msg { }
