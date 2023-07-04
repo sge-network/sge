@@ -29,8 +29,7 @@ var (
 // ----------------------------------------------------------------------------
 
 // AppModuleBasic implements the AppModuleBasic interface for the module.
-type AppModuleBasic struct {
-}
+type AppModuleBasic struct{}
 
 // Name returns the module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
