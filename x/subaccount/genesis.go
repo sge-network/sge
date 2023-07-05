@@ -8,7 +8,9 @@ import (
 
 // InitGenesis initializes the module's state from a provided genesis
 // state.
-func InitGenesis(_ sdk.Context, _ keeper.Keeper, _ types.GenesisState) {}
+func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
+	k.SetParams(ctx, genState.Params)
+}
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(_ sdk.Context, _ keeper.Keeper) *types.GenesisState {

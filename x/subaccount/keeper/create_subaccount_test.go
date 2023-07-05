@@ -25,7 +25,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
 	someTime := time.Now().Add(10 * time.Minute)
-	msg := &types.MsgCreateSubAccountRequest{
+	msg := &types.MsgCreateSubAccount{
 		Sender:          sender.String(),
 		SubAccountOwner: account.String(),
 		LockedBalances: []*types.LockedBalance{
@@ -47,17 +47,17 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.Equal(t, sdk.NewInt(123), balance.Amount)
 
 	// Check that we can get the account by owner
-	owner := app.SubAccountKeeper.GetSubAccountOwner(ctx, 1)
+	owner := app.SubaccountKeeper.GetSubAccountOwner(ctx, 1)
 	require.Equal(t, account, owner)
 
 	// check that balance unlocks are set correctly
-	lockedBalances := app.SubAccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
+	lockedBalances := app.SubaccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
 	require.Len(t, lockedBalances, 1)
 	require.True(t, someTime.Equal(lockedBalances[0].UnlockTime))
 	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
 
 	// get the balance of the account
-	subaccountBalance := app.SubAccountKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1))
+	subaccountBalance := app.SubaccountKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1))
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.SpentAmount)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.LostAmount)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawmAmount)
@@ -72,13 +72,13 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		msg         types.MsgCreateSubAccountRequest
+		msg         types.MsgCreateSubAccount
 		prepare     func(ctx sdk.Context, keeper keeper.Keeper)
 		expectedErr string
 	}{
 		{
 			name: "unlock time is expired",
-			msg: types.MsgCreateSubAccountRequest{
+			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
@@ -93,7 +93,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "account has already sub account",
-			msg: types.MsgCreateSubAccountRequest{
+			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{
@@ -110,7 +110,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "invalid request",
-			msg: types.MsgCreateSubAccountRequest{
+			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []*types.LockedBalance{

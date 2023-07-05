@@ -50,7 +50,8 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
-	subaccount "github.com/sge-network/sge/x/subaccount/keeper"
+	"github.com/sge-network/sge/x/subaccount"
+	subaccountkeeper "github.com/sge-network/sge/x/subaccount/keeper"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	betmodule "github.com/sge-network/sge/x/bet"
@@ -102,6 +103,7 @@ type AppKeepers struct {
 	TransferKeeper      ibctransferkeeper.Keeper
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
+	SubaccountKeeper    subaccountkeeper.Keeper
 
 	MarketKeeper     marketmodulekeeper.Keeper
 	BetKeeper        betmodulekeeper.Keeper
@@ -112,7 +114,7 @@ type AppKeepers struct {
 	BetModule        betmodule.AppModule
 	OrderbookModule  orderbookmodule.AppModule
 	HouseModule      housemodule.AppModule
-	SubAccountKeeper subaccount.Keeper
+	SubaccountModule subaccount.AppModule
 
 	// modules
 	ICAModule      ica.AppModule
@@ -419,7 +421,12 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.OrderbookKeeper,
 	)
-	appKeepers.SubAccountKeeper = subaccount.NewKeeper(appCodec, appKeepers.keys[subaccounttypes.StoreKey])
+	appKeepers.SubaccountKeeper = subaccountkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[subaccounttypes.StoreKey],
+		appKeepers.GetSubspace(subaccounttypes.ModuleName),
+	)
+	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
@@ -462,6 +469,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
 	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
+	paramsKeeper.Subspace(subaccounttypes.ModuleName)
 
 	return paramsKeeper
 }

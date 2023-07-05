@@ -14,5 +14,5 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, keeper.Keeper, sdk.Co
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, tApp.SubAccountKeeper, ctx.WithBlockTime(time.Now())
+	return tApp, tApp.SubaccountKeeper, ctx.WithBlockTime(time.Now())
 }

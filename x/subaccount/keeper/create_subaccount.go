@@ -4,18 +4,17 @@ import (
 	"context"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 func (m msgServer) CreateSubAccount(
 	ctx context.Context,
-	request *types.MsgCreateSubAccountRequest,
+	request *types.MsgCreateSubAccount,
 ) (*types.MsgCreateAccountResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	moneyToSend := sdk.NewInt(0)
 
-	err := request.Validate()
+	err := request.ValidateBasic()
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid request")
 	}
@@ -36,11 +35,13 @@ func (m msgServer) CreateSubAccount(
 
 	subaccountID := m.keeper.NextID(sdkContext)
 
+	// ALERT: If someone frontruns the account creation, will be overwritten here
 	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
 	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
 	m.accountKeeper.SetAccount(sdkContext, address)
 
-	err = m.bankKeeper.SendCoins(sdkContext, senderAccount, subaccountAddress, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, moneyToSend)))
+	denom := m.keeper.GetParams(sdkContext).LockedBalanceDenom
+	err = m.bankKeeper.SendCoins(sdkContext, senderAccount, subaccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to send coins")
 	}

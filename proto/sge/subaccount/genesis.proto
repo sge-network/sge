@@ -2,8 +2,12 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
+import "sge/subaccount/params.proto";
+
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // GenesisState defines the subaccount module's genesis state.
 message GenesisState {
+  // params contains the subaccount parameters.
+  Params params = 1 [ (gogoproto.nullable) = false ];
 }
