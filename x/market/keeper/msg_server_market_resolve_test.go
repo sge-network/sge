@@ -23,7 +23,7 @@ func TestMsgServerResolveMarket(t *testing.T) {
 	u1 := uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddressAsString(),
+		Creator: sample.AccAddress(),
 	})
 
 	tests := []struct {
@@ -35,7 +35,7 @@ func TestMsgServerResolveMarket(t *testing.T) {
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgResolveMarket(sample.AccAddressAsString(), ""),
+				msg: types.NewMsgResolveMarket(sample.AccAddress(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -56,12 +56,12 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 	u1, u2, u3 := uuid.NewString(), uuid.NewString(), uuid.NewString()
 	k.SetMarket(ctx, types.Market{
 		UID:     u1,
-		Creator: sample.AccAddressAsString(),
+		Creator: sample.AccAddress(),
 		Status:  types.MarketStatus_MARKET_STATUS_ACTIVE,
 	})
 	k.SetMarket(ctx, types.Market{
 		UID:     u3,
-		Creator: sample.AccAddressAsString(),
+		Creator: sample.AccAddress(),
 		Status:  types.MarketStatus_MARKET_STATUS_CANCELED,
 	})
 
@@ -78,7 +78,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -98,7 +98,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
@@ -118,7 +118,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketResolutionNotAllowed)
 		assert.Nil(t, response)
@@ -138,7 +138,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -158,7 +158,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -178,7 +178,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -198,7 +198,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 
 		response, err := msgk.ResolveMarket(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddressAsString(), validEmptyTicket),
+			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)

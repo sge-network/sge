@@ -12,8 +12,8 @@ import (
 )
 
 func TestMsgCreateSubAccountRequest_Validate(t *testing.T) {
-	sender := sample.AccAddress()
-	owner := sample.AccAddress()
+	sender := sample.NativeAccAddress()
+	owner := sample.NativeAccAddress()
 
 	someTime := time.Now()
 	tests := []struct {

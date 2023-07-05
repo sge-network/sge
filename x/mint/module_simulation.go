@@ -17,7 +17,7 @@ import (
 
 // avoid unused import issue
 var (
-	_ = sample.AccAddressAsString
+	_ = sample.AccAddress
 	_ = mintsimulation.FindAccount
 	_ = simappparams.StakePerAccount
 	_ = simulation.MsgEntryKind

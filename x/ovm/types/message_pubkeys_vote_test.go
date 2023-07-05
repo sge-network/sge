@@ -26,7 +26,7 @@ func TestMsgChangePubkeysVoteValidateBasic(t *testing.T) {
 		{
 			name: "valid address",
 			msg: types.MsgVotePubkeysChangeRequest{
-				Creator:       sample.AccAddressAsString(),
+				Creator:       sample.AccAddress(),
 				VoterKeyIndex: 0,
 			},
 		},

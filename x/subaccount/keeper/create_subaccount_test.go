@@ -13,8 +13,8 @@ import (
 )
 
 func TestMsgServer_CreateSubAccount(t *testing.T) {
-	account := sample.AccAddress()
-	sender := sample.AccAddress()
+	account := sample.NativeAccAddress()
+	sender := sample.NativeAccAddress()
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
@@ -67,8 +67,8 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 	beforeTime := time.Now().Add(-10 * time.Minute)
 	afterTime := time.Now().Add(10 * time.Minute)
-	account := sample.AccAddress()
-	sender := sample.AccAddress()
+	account := sample.NativeAccAddress()
+	sender := sample.NativeAccAddress()
 
 	tests := []struct {
 		name        string

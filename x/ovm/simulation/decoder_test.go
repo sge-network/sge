@@ -29,7 +29,7 @@ func TestDecodeStore(t *testing.T) {
 
 	proposal := types.PublicKeysChangeProposal{
 		Id:      1,
-		Creator: sample.AccAddressAsString(),
+		Creator: sample.AccAddress(),
 		StartTS: cast.ToInt64(time.Now().UTC()),
 		Modifications: types.PubkeysChangeProposalPayload{
 			PublicKeys:  []string{"new key"},

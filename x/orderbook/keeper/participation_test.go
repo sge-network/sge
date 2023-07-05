@@ -166,7 +166,7 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 		},
 		{
 			desc:          "not enough fund",
-			depositorAddr: sdk.MustAccAddressFromBech32(sample.AccAddressAsString()),
+			depositorAddr: sdk.MustAccAddressFromBech32(sample.AccAddress()),
 			marketStatus:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 			err:           types.ErrInsufficientAccountBalance,
 		},

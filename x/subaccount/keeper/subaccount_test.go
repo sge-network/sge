@@ -28,7 +28,7 @@ func TestSubaccountID(t *testing.T) {
 func TestSubAccountOwner(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	address := sample.AccAddress()
+	address := sample.NativeAccAddress()
 
 	// Account should not have subaccount
 	require.Equal(t, false, k.HasSubAccount(ctx, address))

@@ -15,7 +15,7 @@ import (
 
 var (
 	testMarketUID        = uuid.NewString()
-	testDepositorAddress = sample.AccAddressAsString()
+	testDepositorAddress = sample.AccAddress()
 	testMarketOdds       = []*markettypes.Odds{
 		{UID: uuid.NewString(), Meta: "Odds 1"},
 		{UID: uuid.NewString(), Meta: "Odds 2"},

@@ -20,7 +20,7 @@ func createNDeposits(
 	items := make([]types.Deposit, n)
 
 	for i := range items {
-		items[i].Creator = sample.AccAddressAsString()
+		items[i].Creator = sample.AccAddress()
 		items[i].MarketUID = testMarketUID
 		items[i].ParticipationIndex = uint64(i + 1)
 		items[i].DepositorAddress = testDepositorAddress
