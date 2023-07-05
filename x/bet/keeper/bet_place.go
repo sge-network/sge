@@ -21,7 +21,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check if selected odds is valid
-	if !oddsExists(bet.OddsUID, market.Odds) {
+	if !market.HasOdds(bet.OddsUID) {
 		return types.ErrOddsUIDNotExist
 	}
 
@@ -33,7 +33,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// modify the bet fee and subtracted amount
-	setFee(bet, betConstraints.Fee)
+	bet.SetFee(betConstraints.Fee)
 
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
@@ -90,20 +90,4 @@ func (k Keeper) getMarket(ctx sdk.Context, marketID string) (markettypes.Market,
 	}
 
 	return market, nil
-}
-
-// oddsExists checks if bet odds id is present in the market list of odds uids
-func oddsExists(betOddsUID string, odds []*markettypes.Odds) bool {
-	for _, o := range odds {
-		if betOddsUID == o.UID {
-			return true
-		}
-	}
-	return false
-}
-
-// setFee sets the bet fee and subtracted amount of bet object pointer
-func setFee(bet *types.Bet, fee sdk.Int) {
-	bet.Amount = bet.Amount.Sub(fee)
-	bet.Fee = fee
 }

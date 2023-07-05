@@ -38,7 +38,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return types.ErrBettorAddressNotEqualToCreator
 	}
 
-	if err := checkBetStatus(bet.Status); err != nil {
+	if err := bet.CheckSettlementEligiblity(); err != nil {
 		// bet cancellation logic will reside here if this feature is requested
 		return err
 	}
@@ -69,7 +69,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 	}
 
 	// check if the bet odds is a winner odds or not and set the bet pointer states
-	if err := processBetResultAndStatus(&bet, market); err != nil {
+	if err := bet.SetResult(&market); err != nil {
 		return err
 	}
 
@@ -206,45 +206,4 @@ func (k Keeper) batchMarketSettlement(
 	}
 
 	return settledCount, nil
-}
-
-// checkBetStatus checks status of bet. It returns an error if
-// bet is canceled or settled already
-func checkBetStatus(betstatus types.Bet_Status) error {
-	switch betstatus {
-	case types.Bet_STATUS_SETTLED:
-		return types.ErrBetIsSettled
-	case types.Bet_STATUS_CANCELED:
-		return types.ErrBetIsCanceled
-	}
-
-	return nil
-}
-
-// processBetResultAndStatus determines the result and status of the given bet, it can be lost or won.
-func processBetResultAndStatus(bet *types.Bet, market markettypes.Market) error {
-	// check if market result is declared or not
-	if market.Status != markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
-		return types.ErrResultNotDeclared
-	}
-
-	var exist bool
-	for _, wid := range market.WinnerOddsUIDs {
-		if wid == bet.OddsUID {
-			exist = true
-			break
-		}
-	}
-
-	if exist {
-		// bettor is winner
-		bet.Result = types.Bet_RESULT_WON
-		bet.Status = types.Bet_STATUS_RESULT_DECLARED
-		return nil
-	}
-
-	// bettor is loser
-	bet.Result = types.Bet_RESULT_LOST
-	bet.Status = types.Bet_STATUS_RESULT_DECLARED
-	return nil
 }
