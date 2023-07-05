@@ -8,7 +8,11 @@ import (
 var _ sdk.Msg = &MsgCreateSubAccount{}
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {
-	return []sdk.AccAddress{sdk.AccAddress(msg.Sender)}
+	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{signer}
 }
 
 // ValidateBasic performs a basic validation of the MsgCreateSubAccountRequest fields.
