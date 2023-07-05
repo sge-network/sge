@@ -13,12 +13,12 @@ import (
 func TestSubaccountID(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	// Peek from beginning should return 0
-	require.Equal(t, uint64(0), k.Peek(ctx))
+	// Peek from beginning should return 1
+	require.Equal(t, uint64(1), k.Peek(ctx))
 
 	// NextID returns the actual ID and increments the ID
-	require.Equal(t, uint64(0), k.NextID(ctx))
-	require.Equal(t, uint64(1), k.Peek(ctx))
+	require.Equal(t, uint64(1), k.NextID(ctx))
+	require.Equal(t, uint64(2), k.Peek(ctx))
 
 	// We can set an arbitrary ID and continue from there
 	k.SetID(ctx, 100)

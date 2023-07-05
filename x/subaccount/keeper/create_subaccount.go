@@ -14,7 +14,6 @@ func (m msgServer) CreateSubAccount(
 ) (*types.MsgCreateAccountResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	moneyToSend := sdk.NewInt(0)
-	//moneyToSend := sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(0))
 
 	err := request.Validate()
 	if err != nil {
@@ -35,8 +34,7 @@ func (m msgServer) CreateSubAccount(
 		return nil, types.ErrSubaccountAlreadyExist
 	}
 
-	m.keeper.NextID(sdkContext)
-	subaccountID := m.keeper.Peek(sdkContext)
+	subaccountID := m.keeper.NextID(sdkContext)
 
 	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
 	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)

@@ -10,7 +10,7 @@ import (
 func (k Keeper) Peek(ctx sdk.Context) uint64 {
 	key := ctx.KVStore(k.storeKey).Get(subaccounttypes.SubaccountIDPrefix)
 	if key == nil {
-		return 0
+		return 1
 	}
 
 	return sdk.BigEndianToUint64(key)
