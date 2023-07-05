@@ -26,7 +26,7 @@ func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	// check minimum bet amount allowed
-	betConstraints := k.GetPlacementConstraints(ctx)
+	betConstraints := k.GetConstraints(ctx)
 
 	if bet.Amount.LT(betConstraints.MinAmount) {
 		return types.ErrBetAmountIsLow
