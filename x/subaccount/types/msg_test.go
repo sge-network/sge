@@ -1,13 +1,15 @@
-package types
+package types_test
 
 import (
 	"fmt"
+	"github.com/sge-network/sge/x/subaccount/types"
+	"testing"
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestMsgCreateSubAccount_Validate(t *testing.T) {
@@ -17,15 +19,15 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 	someTime := time.Now()
 	tests := []struct {
 		name string
-		msg  MsgCreateSubAccount
+		msg  types.MsgCreateSubAccount
 		want error
 	}{
 		{
 			name: "invalid sender",
-			msg: MsgCreateSubAccount{
+			msg: types.MsgCreateSubAccount{
 				Sender:          "someInvalidAddress",
 				SubAccountOwner: owner.String(),
-				LockedBalances: []*LockedBalance{
+				LockedBalances: []*types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -36,10 +38,10 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "invalid sub account owner",
-			msg: MsgCreateSubAccount{
+			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: "someInvalidAddress",
-				LockedBalances: []*LockedBalance{
+				LockedBalances: []*types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -50,10 +52,10 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "unlock time zero",
-			msg: MsgCreateSubAccount{
+			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: owner.String(),
-				LockedBalances: []*LockedBalance{
+				LockedBalances: []*types.LockedBalance{
 					{
 						UnlockTime: time.Time{},
 						Amount:     sdk.NewInt(123),

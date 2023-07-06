@@ -26,8 +26,8 @@ func (k Keeper) NextID(ctx sdk.Context) uint64 {
 }
 
 // SetID sets the ID to a given value.
-func (k Keeper) SetID(ctx sdk.Context, ID uint64) {
-	ctx.KVStore(k.storeKey).Set(subaccounttypes.SubaccountIDPrefix, sdk.Uint64ToBigEndian(ID))
+func (k Keeper) SetID(ctx sdk.Context, id uint64) {
+	ctx.KVStore(k.storeKey).Set(subaccounttypes.SubaccountIDPrefix, sdk.Uint64ToBigEndian(id))
 }
 
 // HasSubAccount returns true if the account has a subaccount.
@@ -69,7 +69,7 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, account sdk.AccAddress, locke
 func (k Keeper) GetLockedBalances(ctx sdk.Context, account sdk.AccAddress) []subaccounttypes.LockedBalance {
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).Iterator(nil, nil)
 
-	lockedBalances := []subaccounttypes.LockedBalance{}
+	var lockedBalances []subaccounttypes.LockedBalance
 
 	defer iterator.Close()
 

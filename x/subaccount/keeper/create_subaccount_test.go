@@ -1,6 +1,9 @@
 package keeper_test
 
 import (
+	"testing"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
@@ -8,8 +11,6 @@ import (
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestMsgServer_CreateSubAccount(t *testing.T) {

@@ -1,7 +1,8 @@
-package types
+package types_test
 
 import (
 	"fmt"
+	"github.com/sge-network/sge/x/subaccount/types"
 	"testing"
 	"time"
 
@@ -12,12 +13,12 @@ import (
 func TestLockedBalanceValidate(t *testing.T) {
 	tests := []struct {
 		name string
-		lb   LockedBalance
+		lb   types.LockedBalance
 		want error
 	}{
 		{
 			name: "unlock time zero",
-			lb: LockedBalance{
+			lb: types.LockedBalance{
 				UnlockTime: time.Time{},
 				Amount:     sdk.Int{},
 			},
@@ -25,7 +26,7 @@ func TestLockedBalanceValidate(t *testing.T) {
 		},
 		{
 			name: "negative amount",
-			lb: LockedBalance{
+			lb: types.LockedBalance{
 				UnlockTime: time.Now(),
 				Amount:     sdk.NewInt(-1),
 			},
@@ -33,7 +34,7 @@ func TestLockedBalanceValidate(t *testing.T) {
 		},
 		{
 			name: "nil amount",
-			lb: LockedBalance{
+			lb: types.LockedBalance{
 				UnlockTime: time.Now(),
 				Amount:     sdk.Int{},
 			},

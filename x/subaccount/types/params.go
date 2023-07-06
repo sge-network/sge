@@ -2,6 +2,7 @@ package types
 
 import (
 	"fmt"
+
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/sge-network/sge/app/params"
 	"gopkg.in/yaml.v2"
@@ -9,9 +10,7 @@ import (
 
 const DefaultBondDenom = params.DefaultBondDenom
 
-var (
-	KeyLockedBalanceDenom = []byte("LockedBalanceDenom")
-)
+var KeyLockedBalanceDenom = []byte("LockedBalanceDenom")
 
 // NewParams creates a new Params instance
 func NewParams(lockedBalanceDenom string) Params {

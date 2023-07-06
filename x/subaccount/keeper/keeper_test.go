@@ -1,9 +1,10 @@
 package keeper_test
 
 import (
-	"github.com/sge-network/sge/x/subaccount/keeper"
 	"testing"
 	"time"
+
+	"github.com/sge-network/sge/x/subaccount/keeper"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"

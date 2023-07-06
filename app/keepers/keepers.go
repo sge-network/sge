@@ -105,12 +105,12 @@ type AppKeepers struct {
 	SubaccountKeeper    subaccountkeeper.Keeper
 
 	//// SGE keepers \\\\
-	BetKeeper       *betmodulekeeper.Keeper
-	MarketKeeper    *marketmodulekeeper.Keeper
-	MintKeeper      mintkeeper.Keeper
-	HouseKeeper     *housemodulekeeper.Keeper
-	OrderbookKeeper *orderbookmodulekeeper.Keeper
-	OVMKeeper       *ovmmodulekeeper.Keeper
+	BetKeeper        *betmodulekeeper.Keeper
+	MarketKeeper     *marketmodulekeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	HouseKeeper      *housemodulekeeper.Keeper
+	OrderbookKeeper  *orderbookmodulekeeper.Keeper
+	OVMKeeper        *ovmmodulekeeper.Keeper
 	SubaccountModule subaccount.AppModule
 
 	//// SGE modules \\\\

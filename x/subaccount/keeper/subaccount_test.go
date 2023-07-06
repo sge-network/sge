@@ -1,11 +1,12 @@
 package keeper_test
 
 import (
+	"testing"
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 )
