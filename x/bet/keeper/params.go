@@ -16,7 +16,7 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 	k.paramstore.SetParamSet(ctx, &params)
 }
 
-// GetPlacementConstraints get bet constraint values of the bet placement constraints
-func (k Keeper) GetPlacementConstraints(ctx sdk.Context) (params types.Constraints) {
+// GetConstraints get bet constraint values of the bet placement constraints
+func (k Keeper) GetConstraints(ctx sdk.Context) (params types.Constraints) {
 	return k.GetParams(ctx).Constraints
 }

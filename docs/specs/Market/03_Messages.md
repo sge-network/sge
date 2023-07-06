@@ -62,20 +62,8 @@ message MarketAddTicketPayload {
   // creator is the address of the creator of the market.
   string creator = 6;
 
-  // min_bet_amount is the minimum allowed bet amount for a market.
-  string min_bet_amount = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that the bettor needs to pay to bet on the market.
-  string bet_fee = 8 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
   // meta contains human-readable metadata of the market.
-  string meta = 9;
+  string meta = 7;
 }
 ```
 
@@ -101,8 +89,6 @@ message MarketAddTicketPayload {
         }
     ],
     "status": 1,
-    "min_bet_amount": "1000000",
-    "bet_fee": "10",
     "meta": "Soccer: England vs USA",
     "iat": 1665140310,
     "exp": 1757788212
@@ -149,20 +135,8 @@ message MarketUpdateTicketPayload {
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
-  // min_bet_amount is the minimum allowed bet amount for a market.
-  string min_bet_amount = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that the bettor needs to pay to bet on the market.
-  string bet_fee = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
   // status is the status of the resolution.
-  MarketStatus status = 6;
+  MarketStatus status = 4;
 }
 ```
 
@@ -174,8 +148,6 @@ message MarketUpdateTicketPayload {
     "start_ts": 1668480139,
     "end_ts": 1883781609,
     "status": 1,
-    "min_bet_amount": "1000000",
-    "bet_fee": "10",
     "iat": 1665140310,
     "exp": 1757788212
 }

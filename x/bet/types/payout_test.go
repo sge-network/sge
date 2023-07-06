@@ -171,7 +171,7 @@ func TestCalculateFractionalPayout(t *testing.T) {
 			oddsValue: "5/s",
 			betAmount: defaultBetAmount,
 
-			err: types.ErrInConvertingOddsToInt,
+			err: types.ErrFractionalOddsIncorrectFormat,
 		},
 		{
 			desc:      "incorrect format",
@@ -302,7 +302,7 @@ func TestCalculateMoneylinePayout(t *testing.T) {
 			oddsValue: "15.6",
 			betAmount: defaultBetAmount,
 
-			err: types.ErrInConvertingOddsToInt,
+			err: types.ErrMoneylineOddsIncorrectFormat,
 		},
 	}
 

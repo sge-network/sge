@@ -1,7 +1,6 @@
 package types
 
 import (
-	"fmt"
 	"strings"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -26,7 +25,7 @@ func (*decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, er
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
+			sdkerrors.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
 	}
 
 	// odds value should not be negative or zero
@@ -54,7 +53,7 @@ func (*decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sd
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToDec, "%s", err)
+			sdkerrors.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
 	}
 
 	// odds value should not be negative or zero
@@ -94,14 +93,14 @@ func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec,
 	firstPart, ok := sdk.NewIntFromString(fraction[0])
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[0])
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
 	secondPart, ok := sdk.NewIntFromString(fraction[1])
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[1])
 	}
 
 	// fraction parts should be positive
@@ -119,7 +118,6 @@ func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec,
 
 	payout := amount.ToDec().Add(profit)
 
-	fmt.Println(payout)
 	// get the integer part of the payout
 	return payout, nil
 }
@@ -138,14 +136,14 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 	firstPart, ok := sdk.NewIntFromString(fraction[0])
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[0])
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
 	secondPart, ok := sdk.NewIntFromString(fraction[1])
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[1])
 	}
 
 	// fraction parts should be positive
@@ -174,7 +172,7 @@ func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, 
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrMoneylineOddsIncorrectFormat, "%s", oddsVal)
 	}
 
 	// moneyline values can be negative or positive, but zero is not acceptable
@@ -209,7 +207,7 @@ func (*moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
 		return sdk.ZeroDec(),
-			sdkerrors.Wrapf(ErrInConvertingOddsToInt, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrMoneylineOddsIncorrectFormat, "%s", oddsVal)
 	}
 
 	// moneyline values can be negative or positive, but zero is not acceptable

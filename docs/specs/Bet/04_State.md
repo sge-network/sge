@@ -17,6 +17,9 @@ The bet model in the Proto files is as below:
 
 1. `batch_settlement_count`: is the count of bets to be automatically settlement in end-blocker.
 2. `max_bet_by_uid_query_count`: is the max count of bets to be returned in the bets by uids query.
+3. `constraints` contains criteria of the bet placement.
+    - `min_amount` minimum bet amount while placement.
+    - `fee` bet fee amount payable by bettor.
 
 ```proto
 // Params defines the parameters for the module.
@@ -25,9 +28,34 @@ message Params {
 
   // batch_settlement_count is the batch settlement bet count.
   uint32 batch_settlement_count = 1;
-
   // max_bet_by_uid_query_count is the maximum bet by uid query items count.
   uint32 max_bet_by_uid_query_count = 2;
+  // constraints is the bet constraints.
+  Constraints constraints = 3 [
+    (gogoproto.moretags) = "yaml:\"constraints\"",
+    (gogoproto.nullable) = false
+  ];
+}
+```
+
+## **Constraints**
+
+Holds bet placement constraints of the bet module.
+
+```proto
+// Constraints is the bet constrains type for the bets
+message Constraints {
+  // min_amount is the minimum allowed bet amount.
+  string min_amount = 1 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // fee is the fee that the bettor needs to pay to bet.
+  string fee = 2 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 ```
 
@@ -74,8 +102,8 @@ message Bet {
     (gogoproto.nullable) = false
   ];
 
-  // bet_fee is the betting fee user needs to pay for placing a bet
-  string bet_fee = 7 [
+  // fee is the betting fee user needs to pay for placing a bet
+  string fee = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];

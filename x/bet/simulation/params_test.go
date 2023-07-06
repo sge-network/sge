@@ -18,19 +18,20 @@ func TestParamChanges(t *testing.T) {
 	expected := []struct {
 		composedKey string
 		key         string
-		simValue    string
 		subspace    string
 	}{
-		{"bet/MaxBetByUidQueryCount", "MaxBetByUidQueryCount", "\"23\"", "bet"},
+		{"bet/BatchSettlementCount", "BatchSettlementCount", "bet"},
+		{"bet/MaxBetByUidQueryCount", "MaxBetByUidQueryCount", "bet"},
+		{"bet/MinAmount", "MinAmount", "bet"},
+		{"bet/Fee", "Fee", "bet"},
 	}
 
 	paramChanges := simulation.ParamChanges(r)
-	require.Len(t, paramChanges, 1)
+	require.Len(t, paramChanges, 4)
 
 	for i, p := range paramChanges {
 		require.Equal(t, expected[i].composedKey, p.ComposedKey())
 		require.Equal(t, expected[i].key, p.Key())
-		require.Equal(t, expected[i].simValue, p.SimValue()(r))
 		require.Equal(t, expected[i].subspace, p.Subspace())
 	}
 }

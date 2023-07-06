@@ -16,7 +16,7 @@ message Params {
   uint32 max_bet_by_uid_query_count = 2;
   // constraints is the bet constraints.
   Constraints constraints = 3 [
-    (gogoproto.moretags) = "yaml:\"bet_constraints\"",
+    (gogoproto.moretags) = "yaml:\"constraints\"",
     (gogoproto.nullable) = false
   ];
 }

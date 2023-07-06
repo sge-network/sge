@@ -64,7 +64,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			MarketUID:         market.UID,
 			OddsValue:         "10",
 			Amount:            sdk.NewInt(10),
-			BetFee:            sdk.NewInt(1),
+			Fee:               sdk.NewInt(1),
 			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)
