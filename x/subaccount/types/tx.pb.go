@@ -27,6 +27,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgCreateSubAccount defines the Msg/CreateSubAccount request type.
 type MsgCreateSubAccount struct {
 	// sender is the msg signer.
 	Sender string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
@@ -90,6 +91,7 @@ func (m *MsgCreateSubAccount) GetLockedBalances() []*LockedBalance {
 	return nil
 }
 
+// MsgCreateAccountResponse defines the Msg/CreateAccount response type.
 type MsgCreateAccountResponse struct {
 }
 
@@ -168,6 +170,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// CreateSubAccount defines a method for creating a subaccount.
 	CreateSubAccount(ctx context.Context, in *MsgCreateSubAccount, opts ...grpc.CallOption) (*MsgCreateAccountResponse, error)
 }
 
@@ -190,6 +193,7 @@ func (c *msgClient) CreateSubAccount(ctx context.Context, in *MsgCreateSubAccoun
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// CreateSubAccount defines a method for creating a subaccount.
 	CreateSubAccount(context.Context, *MsgCreateSubAccount) (*MsgCreateAccountResponse, error)
 }
 

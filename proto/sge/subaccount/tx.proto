@@ -7,9 +7,11 @@ option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // Msg defines the Msg service.
 service Msg {
+  // CreateSubAccount defines a method for creating a subaccount.
   rpc CreateSubAccount(MsgCreateSubAccount) returns (MsgCreateAccountResponse);
 }
 
+// MsgCreateSubAccount defines the Msg/CreateSubAccount request type.
 message MsgCreateSubAccount {
   // sender is the msg signer.
   string sender = 1;
@@ -21,4 +23,5 @@ message MsgCreateSubAccount {
   repeated LockedBalance locked_balances = 3;
 }
 
+// MsgCreateAccountResponse defines the Msg/CreateAccount response type.
 message MsgCreateAccountResponse {}

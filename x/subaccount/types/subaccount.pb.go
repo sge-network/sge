@@ -28,6 +28,7 @@ var _ = time.Kitchen
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// Balance defines the balance of a subaccount.
 type Balance struct {
 	// deposited_amount keeps track of how much was deposited so far in the subaccount.
 	DepositedAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=deposited_amount,json=depositedAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"deposited_amount"`

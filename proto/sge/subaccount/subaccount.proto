@@ -6,6 +6,7 @@ import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
+// Balance defines the balance of a subaccount.
 message Balance {
   // deposited_amount keeps track of how much was deposited so far in the subaccount.
   string deposited_amount = 1 [
