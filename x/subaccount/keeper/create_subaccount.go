@@ -10,7 +10,7 @@ import (
 func (m msgServer) CreateSubAccount(
 	ctx context.Context,
 	request *types.MsgCreateSubAccount,
-) (*types.MsgCreateAccountResponse, error) {
+) (*types.MsgCreateSubAccountResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	moneyToSend := sdk.NewInt(0)
 
@@ -55,5 +55,5 @@ func (m msgServer) CreateSubAccount(
 		LostAmount:      sdk.ZeroInt(),
 	})
 
-	return &types.MsgCreateAccountResponse{}, nil
+	return &types.MsgCreateSubAccountResponse{}, nil
 }
