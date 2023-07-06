@@ -21,8 +21,8 @@ func TestGenesis(t *testing.T) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	ovm.InitGenesis(ctx, tApp.OVMKeeper, genesisState)
-	got := ovm.ExportGenesis(ctx, tApp.OVMKeeper)
+	ovm.InitGenesis(ctx, *tApp.OVMKeeper, genesisState)
+	got := ovm.ExportGenesis(ctx, *tApp.OVMKeeper)
 	require.NotNil(t, got)
 
 	nullify.Fill(&genesisState)

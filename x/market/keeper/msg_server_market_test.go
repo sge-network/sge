@@ -10,6 +10,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/sample"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -348,10 +349,7 @@ func TestValidateCreationMarket(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "Odds 1"},
 					{UID: uuid.NewString(), Meta: "Odds 2"},
 				},
-				Meta: `Winner of x:y is the final winner of the game,
-				it is obvious the winner is not the champion yet but if it happens,
-				the winning users will reward 1M dollars each plus a furnished villa in the Beverley hills as a gift.
-				attention! this detail will not be stored in the chain because it's definitely a scam.`,
+				Meta: simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1),
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},

@@ -33,5 +33,5 @@ func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, s
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 
-	return tApp, &tApp.HouseKeeper, ctx.WithBlockTime(time.Now())
+	return tApp, tApp.HouseKeeper, ctx.WithBlockTime(time.Now())
 }

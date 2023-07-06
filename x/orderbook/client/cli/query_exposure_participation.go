@@ -92,9 +92,15 @@ $ %s query orderbook participation-exposure %s %d
 				)
 			}
 
+			pageReq, err := client.ReadPageRequest(cmd.Flags())
+			if err != nil {
+				return err
+			}
+
 			params := &types.QueryParticipationExposuresRequest{
 				OrderBookUid:       orderBookUID,
 				ParticipationIndex: participationIndex,
+				Pagination:         pageReq,
 			}
 			res, err := queryClient.ParticipationExposures(cmd.Context(), params)
 			if err != nil {
@@ -106,6 +112,7 @@ $ %s query orderbook participation-exposure %s %d
 	}
 
 	flags.AddQueryFlagsToCmd(cmd)
+	flags.AddPaginationFlagsToCmd(cmd, "participation exposures")
 
 	return cmd
 }
