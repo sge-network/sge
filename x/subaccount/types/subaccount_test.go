@@ -2,9 +2,10 @@ package types_test
 
 import (
 	"fmt"
-	"github.com/sge-network/sge/x/subaccount/types"
 	"testing"
 	"time"
+
+	"github.com/sge-network/sge/x/subaccount/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
