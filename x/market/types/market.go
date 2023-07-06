@@ -46,7 +46,7 @@ func (m *Market) isActiveOrInactive() bool {
 		m.Status == MarketStatus_MARKET_STATUS_INACTIVE
 }
 
-// HasOdds determine if the inpur odds uid is present in
+// HasOdds determine if the input odds uid is present in
 // the market odds or not.
 func (m *Market) HasOdds(oddsUID string) bool {
 	for _, o := range m.Odds {
