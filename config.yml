@@ -38,8 +38,6 @@ genesis:
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5iPKVbSvyF1A1HDFaWMGlhBp/xTU70i8lMgOml79WM=\n-----END PUBLIC KEY-----",
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAueEgZMdKn6Bp0mcG04HrNAt1a0o7+0eNliQCNmbxkOQ=\n-----END PUBLIC KEY-----",
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAkMnWRwXXVlQqhpHq7LNVGwqA/E2LQY/6remOtilPKpI=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAeEQoiCf6zmsT0ViyY6HFoYhjG+Q4yULkeKCWDQjwpMY=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAef9+By/RbBXdSycfWlfVA1jNnWqcjZ7PI8Tt+pTPe+I=\n-----END PUBLIC KEY-----"
         ]
     gov:
       deposit_params:
