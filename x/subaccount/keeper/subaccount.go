@@ -61,7 +61,14 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, account sdk.AccAddress, locke
 	store := ctx.KVStore(k.storeKey)
 
 	for _, lockedBalance := range lockedBalances {
-		store.Set(subaccounttypes.LockedBalanceKey(account, lockedBalance.UnlockTime), sdk.Uint64ToBigEndian(lockedBalance.Amount.Uint64()))
+		amountBytes, err := lockedBalance.Amount.Marshal()
+		if err != nil {
+			panic(err)
+		}
+		store.Set(
+			subaccounttypes.LockedBalanceKey(account, lockedBalance.UnlockTime),
+			amountBytes,
+		)
 	}
 }
 
@@ -79,10 +86,14 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, account sdk.AccAddress) []sub
 			panic(err)
 		}
 
-		amount := sdk.BigEndianToUint64(iterator.Value())
+		amount := new(sdk.Int)
+		err = amount.Unmarshal(iterator.Value())
+		if err != nil {
+			panic(err)
+		}
 		lockedBalances = append(lockedBalances, subaccounttypes.LockedBalance{
 			UnlockTime: unlockTime,
-			Amount:     sdk.NewIntFromUint64(amount),
+			Amount:     *amount,
 		})
 	}
 
