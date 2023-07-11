@@ -28,8 +28,8 @@ func (m msgServer) CreateSubAccount(
 		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)
 	}
 
-	senderAccount, _ := sdk.AccAddressFromBech32(request.Sender)
-	subaccountOwner, _ := sdk.AccAddressFromBech32(request.SubAccountOwner)
+	senderAccount := sdk.MustAccAddressFromBech32(request.Sender)
+	subaccountOwner := sdk.MustAccAddressFromBech32(request.SubAccountOwner)
 	if m.keeper.HasSubAccount(sdkContext, subaccountOwner) {
 		return nil, types.ErrSubaccountAlreadyExist
 	}
