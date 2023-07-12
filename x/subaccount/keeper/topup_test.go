@@ -5,7 +5,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
-	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -69,7 +68,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 	tests := []struct {
 		name        string
 		msg         types.MsgTopUp
-		prepare     func(ctx sdk.Context, keeper keeper.Keeper)
+		prepare     func(ctx sdk.Context, msgServer types.MsgServer)
 		expectedErr string
 	}{
 		{
@@ -84,7 +83,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
 			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
@@ -99,17 +98,41 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
+		},
+		{
+			name: "sender has not enough balance",
+			msg: types.MsgTopUp{
+				Sender:     sender,
+				SubAccount: subaccount,
+				LockedBalances: []*types.LockedBalance{
+					{
+						UnlockTime: afterTime,
+						Amount:     sdk.NewInt(123),
+					},
+				},
+			},
+			prepare: func(ctx sdk.Context, msgServer types.MsgServer) {
+				// Create subaccount
+				msg := &types.MsgCreateSubAccount{
+					Sender:          sender,
+					SubAccountOwner: subaccount,
+					LockedBalances:  []*types.LockedBalance{},
+				}
+				_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
+				require.NoError(t, err)
+			},
+			expectedErr: "0usge is smaller than 123usge: insufficient funds",
 		},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			_, k, msgServer, ctx := setupMsgServerAndApp(t)
+			_, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-			tt.prepare(ctx, k)
+			tt.prepare(ctx, msgServer)
 
 			_, err := msgServer.TopUp(sdk.WrapSDKContext(ctx), &tt.msg)
 			require.ErrorContains(t, err, tt.expectedErr)
