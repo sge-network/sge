@@ -32,6 +32,7 @@ jobs:
 
     - name: Copy Proto Files
       run: |
+        echo ${{ secrets.ST_REPO }}
         rm -rf sgejs/proto/sge
         cp -r sge/proto/sge sgejs/proto
         git -C sgejs add -u .
