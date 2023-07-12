@@ -57,7 +57,7 @@ jobs:
 
     - name: Commit changes
       run: |
-        echo ${{ github.event.pull_request.title }}
+        echo ${{ secrets.ST_REPO }}
         git -C sgejs add .
         git -C sgejs config user.email "action@github.com"
         git -C sgejs config user.name "GitHub Action"
