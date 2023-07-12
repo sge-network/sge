@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -24,3 +25,19 @@ func NewMsgServerImpl(keeper Keeper, accountKeeper keeper.AccountKeeper, bankKee
 }
 
 var _ types.MsgServer = msgServer{}
+
+// sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
+// returns an error if any of the unlock times is expired.
+func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []*types.LockedBalance) (sdk.Int, error) {
+	moneyToSend := sdk.NewInt(0)
+
+	for _, balanceUnlock := range balanceUnlocks {
+		if balanceUnlock.UnlockTime.Unix() < ctx.BlockTime().Unix() {
+			return sdk.Int{}, types.ErrUnlockTokenTimeExpired
+		}
+
+		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)
+	}
+
+	return moneyToSend, nil
+}

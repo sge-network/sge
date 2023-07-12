@@ -90,9 +90,8 @@ func TestSetBalances(t *testing.T) {
 		LostAmount:      sdk.OneInt(),
 	}
 
-	account := types.NewAddressFromSubaccount(1)
-	k.SetBalance(ctx, account, balance)
+	k.SetBalance(ctx, 1, balance)
 
 	// Get balance
-	require.Equal(t, balance, k.GetBalance(ctx, account))
+	require.Equal(t, balance, k.GetBalance(ctx, 1))
 }
