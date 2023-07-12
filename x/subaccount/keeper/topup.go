@@ -24,7 +24,7 @@ func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 	subaccountID := m.keeper.GetSubAccountByOwner(sdkContext, subaccountOwner)
 	balance := m.keeper.GetBalance(sdkContext, subaccountID)
 
-	balance.DepositedAmount.Add(moneyToAdd)
+	balance.DepositedAmount = balance.DepositedAmount.Add(moneyToAdd)
 	m.keeper.SetBalance(sdkContext, subaccountID, balance)
 	m.keeper.SetLockedBalances(sdkContext, subaccountID, msg.LockedBalances)
 

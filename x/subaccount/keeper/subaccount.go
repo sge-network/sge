@@ -74,7 +74,8 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, id uint64, lockedBalances []*
 }
 
 // GetLockedBalances returns the locked balances of an account.
-func (k Keeper) GetLockedBalances(ctx sdk.Context, account sdk.AccAddress) []subaccounttypes.LockedBalance {
+func (k Keeper) GetLockedBalances(ctx sdk.Context, id uint64) []subaccounttypes.LockedBalance {
+	account := subaccounttypes.NewAddressFromSubaccount(id)
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).Iterator(nil, nil)
 
 	var lockedBalances []subaccounttypes.LockedBalance
