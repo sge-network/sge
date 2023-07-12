@@ -57,7 +57,8 @@ func (k Keeper) GetSubAccountOwner(ctx sdk.Context, id uint64) sdk.AccAddress {
 }
 
 // SetLockedBalances saves the locked balances of an account.
-func (k Keeper) SetLockedBalances(ctx sdk.Context, account sdk.AccAddress, lockedBalances []*subaccounttypes.LockedBalance) {
+func (k Keeper) SetLockedBalances(ctx sdk.Context, id uint64, lockedBalances []*subaccounttypes.LockedBalance) {
+	account := subaccounttypes.NewAddressFromSubaccount(id)
 	store := ctx.KVStore(k.storeKey)
 
 	for _, lockedBalance := range lockedBalances {

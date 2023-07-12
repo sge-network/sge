@@ -70,7 +70,7 @@ func TestSetLockedBalances(t *testing.T) {
 		},
 	}
 
-	k.SetLockedBalances(ctx, account, balanceUnlocks)
+	k.SetLockedBalances(ctx, 1, balanceUnlocks)
 
 	// Get locked balances
 	lockedBalances := k.GetLockedBalances(ctx, account)

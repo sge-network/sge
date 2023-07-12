@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -40,4 +41,17 @@ func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []*types.LockedBalance) (
 	}
 
 	return moneyToSend, nil
+}
+
+// sendCoinsToSubaccount sends the coins to the subaccount.
+func (m msgServer) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subaccountID uint64, moneyToSend sdk.Int) error {
+	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
+
+	denom := m.keeper.GetParams(ctx).LockedBalanceDenom
+	err := m.bankKeeper.SendCoins(ctx, senderAccount, subaccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+	if err != nil {
+		return errors.Wrap(err, "unable to send coins")
+	}
+
+	return nil
 }
