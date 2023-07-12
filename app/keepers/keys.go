@@ -19,6 +19,7 @@ import (
 	icahosttypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v3/modules/core/24-host"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
@@ -47,6 +48,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		marketmoduletypes.StoreKey,
 		ovmmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
+		subaccounttypes.StoreKey,
 	)
 
 	// Define transient store keys

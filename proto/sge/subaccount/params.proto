@@ -1,0 +1,14 @@
+syntax = "proto3";
+package sgenetwork.sge.subaccount;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/subaccount/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  // balance_denom defines the denom of the locked balances.
+  string locked_balance_denom = 1;
+}

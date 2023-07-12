@@ -50,6 +50,9 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v3/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	"github.com/sge-network/sge/x/subaccount"
+	subaccountkeeper "github.com/sge-network/sge/x/subaccount/keeper"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -99,14 +102,16 @@ type AppKeepers struct {
 	TransferKeeper      ibctransferkeeper.Keeper
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
+	SubaccountKeeper    subaccountkeeper.Keeper
 
 	//// SGE keepers \\\\
-	BetKeeper       *betmodulekeeper.Keeper
-	MarketKeeper    *marketmodulekeeper.Keeper
-	MintKeeper      mintkeeper.Keeper
-	HouseKeeper     *housemodulekeeper.Keeper
-	OrderbookKeeper *orderbookmodulekeeper.Keeper
-	OVMKeeper       *ovmmodulekeeper.Keeper
+	BetKeeper        *betmodulekeeper.Keeper
+	MarketKeeper     *marketmodulekeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	HouseKeeper      *housemodulekeeper.Keeper
+	OrderbookKeeper  *orderbookmodulekeeper.Keeper
+	OVMKeeper        *ovmmodulekeeper.Keeper
+	SubaccountModule subaccount.AppModule
 
 	//// SGE modules \\\\
 	BetModule       betmodule.AppModule
@@ -426,6 +431,12 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 	)
+	appKeepers.SubaccountKeeper = subaccountkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[subaccounttypes.StoreKey],
+		appKeepers.GetSubspace(subaccounttypes.ModuleName),
+	)
+	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
@@ -468,6 +479,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
 	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
+	paramsKeeper.Subspace(subaccounttypes.ModuleName)
 
 	return paramsKeeper
 }

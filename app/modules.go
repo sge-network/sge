@@ -42,6 +42,8 @@ import (
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint"
 	minttypes "github.com/sge-network/sge/x/mint/types"
+	"github.com/sge-network/sge/x/subaccount"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
@@ -118,6 +120,7 @@ var ModuleBasics = module.NewBasicManager(
 	orderbookmodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
+	subaccount.AppModuleBasic{},
 )
 
 func appModules(
@@ -182,6 +185,7 @@ func appModules(
 		app.OrderbookModule,
 		app.OVMModule,
 		app.HouseModule,
+		app.SubaccountModule,
 		// this line is u
 	}
 }
@@ -270,6 +274,7 @@ func orderBeginBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }
 
@@ -299,6 +304,7 @@ func orderEndBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }
 
@@ -328,5 +334,6 @@ func orderInitBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }
