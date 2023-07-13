@@ -9,7 +9,7 @@ env:
   NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
   NPM_VERSION: patch
 
-
+permissions: read-all
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -63,13 +63,15 @@ jobs:
         git -C sgejs commit --allow-empty -am "Codegen Deployment [skip ci]"
 
     - name: Determine NPM version
+      env:
+        PR_TITLE: ${{ github.event.pull_request.title }}
       run: |
         cd sgejs
-        if [[ "${{ github.event.pull_request.title }}" == *"major"* ]]; then
+        if [[ "$PR_TITLE" == *"major"* ]]; then
           echo "NPM_VERSION=major" >> $GITHUB_ENV
-        elif [[ "${{ github.event.pull_request.title }}" == *"minor"* ]]; then
+        elif [[ "$PR_TITLE" == *"minor"* ]]; then
           echo "NPM_VERSION=minor" >> $GITHUB_ENV
-        elif [[ "${{ github.event.pull_request.title }}" == *"patch"* ]]; then
+        elif [[ "$PR_TITLE" == *"patch"* ]]; then
           echo "NPM_VERSION=patch" >> $GITHUB_ENV
         fi
 
