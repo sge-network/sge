@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: ''
-assignees: ''
+assignees: @3eyedraga
 
 ---
 
@@ -20,7 +20,7 @@ Commit hash:
 Decribe the expected behaviour
 
 #### Actual behaviour
-Describe the actual behavious
+Describe the actual behaviour
 
 #### Steps to reproduce the bug
 1. Step 1
