@@ -1,14 +1,15 @@
 package keeper_test
 
 import (
+	"testing"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestMsgServerTopUp_HappyPath(t *testing.T) {

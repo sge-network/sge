@@ -5,8 +5,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var _ sdk.Msg = &MsgCreateSubAccount{}
-var _ sdk.Msg = &MsgTopUp{}
+var (
+	_ sdk.Msg = &MsgCreateSubAccount{}
+	_ sdk.Msg = &MsgTopUp{}
+)
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {
 	signer, err := sdk.AccAddressFromBech32(msg.Sender)
