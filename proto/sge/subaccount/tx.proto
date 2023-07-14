@@ -12,6 +12,8 @@ service Msg {
 
   // TopUp defines a method for topping up a subaccount.
   rpc TopUp(MsgTopUp) returns (MsgTopUpResponse);
+
+  rpc WithdrawUnlockedBalances(MsgWithdrawUnlockedBalances) returns (MsgWithdrawUnlockedBalancesResponse);
 }
 
 // MsgCreateSubAccount defines the Msg/CreateSubAccount request type.
@@ -43,3 +45,12 @@ message MsgTopUp {
 
 // MsgTopUpResponse defines the Msg/TopUp response type.
 message MsgTopUpResponse {}
+
+// MsgWithdrawUnlockedBalances defines the Msg/WithdrawUnlockedBalances request type.
+message MsgWithdrawUnlockedBalances {
+  // sender is the subaccount owner.
+  string sender = 1;
+}
+
+// MsgWithdrawUnlockedBalancesResponse defines the Msg/WithdrawUnlockedBalances response type.
+message MsgWithdrawUnlockedBalancesResponse {}
