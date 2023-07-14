@@ -67,3 +67,20 @@ func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
 	}
 	return []sdk.AccAddress{signer}
 }
+
+func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return errors.ErrInvalidAddress
+	}
+
+	return nil
+}
+
+func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
+	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{signer}
+}
