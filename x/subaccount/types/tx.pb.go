@@ -192,6 +192,7 @@ func (m *MsgTopUp) GetLockedBalances() []*LockedBalance {
 	return nil
 }
 
+// MsgTopUpResponse defines the Msg/TopUp response type.
 type MsgTopUpResponse struct {
 }
 
@@ -277,6 +278,7 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	// CreateSubAccount defines a method for creating a subaccount.
 	CreateSubAccount(ctx context.Context, in *MsgCreateSubAccount, opts ...grpc.CallOption) (*MsgCreateSubAccountResponse, error)
+	// TopUp defines a method for topping up a subaccount.
 	TopUp(ctx context.Context, in *MsgTopUp, opts ...grpc.CallOption) (*MsgTopUpResponse, error)
 }
 
@@ -310,6 +312,7 @@ func (c *msgClient) TopUp(ctx context.Context, in *MsgTopUp, opts ...grpc.CallOp
 type MsgServer interface {
 	// CreateSubAccount defines a method for creating a subaccount.
 	CreateSubAccount(context.Context, *MsgCreateSubAccount) (*MsgCreateSubAccountResponse, error)
+	// TopUp defines a method for topping up a subaccount.
 	TopUp(context.Context, *MsgTopUp) (*MsgTopUpResponse, error)
 }
 

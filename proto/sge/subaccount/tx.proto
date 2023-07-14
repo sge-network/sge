@@ -10,6 +10,7 @@ service Msg {
   // CreateSubAccount defines a method for creating a subaccount.
   rpc CreateSubAccount(MsgCreateSubAccount) returns (MsgCreateSubAccountResponse);
 
+  // TopUp defines a method for topping up a subaccount.
   rpc TopUp(MsgTopUp) returns (MsgTopUpResponse);
 }
 
@@ -40,4 +41,5 @@ message MsgTopUp {
   repeated LockedBalance locked_balances = 3;
 }
 
+// MsgTopUpResponse defines the Msg/TopUp response type.
 message MsgTopUpResponse {}
