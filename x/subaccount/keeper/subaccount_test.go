@@ -93,3 +93,39 @@ func TestSetBalances(t *testing.T) {
 	// Get balance
 	require.Equal(t, balance, k.GetBalance(ctx, 1))
 }
+
+func TestKeeper_GetLockedBalances(t *testing.T) {
+	_, k, ctx := setupKeeperAndApp(t)
+
+	beforeUnlockTime1 := time.Now().Add(-time.Hour * 24 * 365)
+	beforeUnlockTime2 := time.Now().Add(-time.Hour * 24 * 365 * 2)
+
+	afterUnlockTime1 := time.Now().Add(time.Hour * 24 * 365)
+	afterUnlockTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
+
+	// I added them unordered to make sure they are sorted
+	balanceUnlocks := []*types.LockedBalance{
+		{
+			Amount:     sdk.NewInt(10000),
+			UnlockTime: beforeUnlockTime1,
+		},
+		{
+			Amount:     sdk.NewInt(30000),
+			UnlockTime: afterUnlockTime1,
+		},
+		{
+			Amount:     sdk.NewInt(20000),
+			UnlockTime: beforeUnlockTime2,
+		},
+		{
+			Amount:     sdk.NewInt(40000),
+			UnlockTime: afterUnlockTime2,
+		},
+	}
+
+	k.SetLockedBalances(ctx, 1, balanceUnlocks)
+
+	// get unlocked balance
+	unlockedBalance := k.GetUnlockedBalance(ctx, 1)
+	require.True(t, unlockedBalance.Equal(sdk.NewInt(10000+20000)))
+}

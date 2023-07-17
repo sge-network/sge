@@ -8,6 +8,7 @@ import (
 var (
 	_ sdk.Msg = &MsgCreateSubAccount{}
 	_ sdk.Msg = &MsgTopUp{}
+	_ sdk.Msg = &MsgWithdrawUnlockedBalances{}
 )
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {

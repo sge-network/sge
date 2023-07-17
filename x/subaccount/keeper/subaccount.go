@@ -77,11 +77,9 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, id uint64, lockedBalances []*
 func (k Keeper) GetLockedBalances(ctx sdk.Context, id uint64) []subaccounttypes.LockedBalance {
 	account := subaccounttypes.NewAddressFromSubaccount(id)
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).Iterator(nil, nil)
-
-	var lockedBalances []subaccounttypes.LockedBalance
-
 	defer iterator.Close()
 
+	var lockedBalances []subaccounttypes.LockedBalance
 	for ; iterator.Valid(); iterator.Next() {
 		unlockTime, err := sdk.ParseTimeBytes(iterator.Key())
 		if err != nil {
@@ -100,6 +98,27 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, id uint64) []subaccounttypes.
 	}
 
 	return lockedBalances
+}
+
+// GetUnlockedBalance returns the unlocked balance of an account.
+func (k Keeper) GetUnlockedBalance(ctx sdk.Context, id uint64) sdk.Int {
+	account := subaccounttypes.NewAddressFromSubaccount(id)
+	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).
+		Iterator(nil, sdk.FormatTimeBytes(ctx.BlockTime()))
+
+	unlockedBalance := sdk.ZeroInt()
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		amount := new(sdk.Int)
+		err := amount.Unmarshal(iterator.Value())
+		if err != nil {
+			panic(err)
+		}
+		unlockedBalance = unlockedBalance.Add(*amount)
+	}
+
+	return unlockedBalance
 }
 
 // SetBalance saves the balance of an account.
