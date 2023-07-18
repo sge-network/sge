@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-// SimulateMsgPlaceBet returns an Operation function to run a state machine transition
-func SimulateMsgPlaceBet(
+// SimulateMsgPlace returns an Operation function to run a state machine transition
+func SimulateMsgPlace(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,

@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgPlaceBetValidateBasic(t *testing.T) {
+func TestMsgPlaceValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
 		msg  types.MsgPlace

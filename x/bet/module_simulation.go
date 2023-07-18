@@ -26,9 +26,9 @@ var (
 
 const (
 	//#nosec
-	opWeightMsgPlaceBet = "op_weight_msg_bet"
+	opWeightMsgPlace = "op_weight_msg_bet"
 	// TODO: Determine the simulation weight value
-	defaultWeightMsgPlaceBet int = 100
+	defaultWeightMsgPlace int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -55,15 +55,15 @@ func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
 func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgPlaceBet int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPlaceBet, &weightMsgPlaceBet, nil,
+	var weightMsgPlace int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgPlace, &weightMsgPlace, nil,
 		func(_ *rand.Rand) {
-			weightMsgPlaceBet = defaultWeightMsgPlaceBet
+			weightMsgPlace = defaultWeightMsgPlace
 		},
 	)
 	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgPlaceBet,
-		betsimulation.SimulateMsgPlaceBet(am.accountKeeper, am.bankKeeper, am.keeper),
+		weightMsgPlace,
+		betsimulation.SimulateMsgPlace(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	return operations

@@ -9,13 +9,13 @@ import (
 )
 
 const (
-	// typeMsgPlaceBet is type of message MsgPlaceBet
-	typeMsgPlaceBet = "bet_place"
+	// typeMsgPlace is type of message MsgPlace
+	typeMsgPlace = "bet_place"
 )
 
 var _ sdk.Msg = &MsgPlace{}
 
-// NewMsgPlace returns a MsgPlaceBet using given data
+// NewMsgPlace returns a MsgPlace using given data
 func NewMsgPlace(
 	creator string,
 	bet PlaceBetFields,
@@ -30,7 +30,7 @@ func NewMsgPlace(
 func (*MsgPlace) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (*MsgPlace) Type() string { return typeMsgPlaceBet }
+func (*MsgPlace) Type() string { return typeMsgPlace }
 
 // GetSigners returns the signers of its message
 func (msg *MsgPlace) GetSigners() []sdk.AccAddress {
@@ -60,7 +60,7 @@ func (msg *MsgPlace) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgPlace) EmitEvent(ctx *sdk.Context) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgPlaceBet, msg.Creator,
+	emitter.AddMsg(typeMsgPlace, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
 	)

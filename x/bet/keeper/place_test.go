@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPlaceBet(t *testing.T) {
+func TestPlace(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	ctx = ctx.WithBlockTime(time.Now())
 	tcs := []struct {
