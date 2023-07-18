@@ -50,7 +50,7 @@ func TestMsgAddValidateBasic(t *testing.T) {
 	}
 }
 
-func TestNewAddMarket(t *testing.T) {
+func TestNewAdd(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		expected := &types.MsgAdd{
 			Creator: uuid.NewString(),
@@ -64,7 +64,7 @@ func TestNewAddMarket(t *testing.T) {
 	})
 }
 
-func TestMsgUpdateMarketValidateBasic(t *testing.T) {
+func TestMsgUpdateValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
 		msg  types.MsgUpdate
@@ -104,7 +104,7 @@ func TestMsgUpdateMarketValidateBasic(t *testing.T) {
 	}
 }
 
-func TestNewUpdateMarket(t *testing.T) {
+func TestNewUpdate(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		expected := &types.MsgUpdate{
 			Creator: uuid.NewString(),

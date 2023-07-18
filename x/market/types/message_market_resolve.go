@@ -6,7 +6,7 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgResolveMarket = "market_resolve"
+const typeMsgResolve = "market_resolve"
 
 var _ sdk.Msg = &MsgResolve{}
 
@@ -22,7 +22,7 @@ func NewMsgResolve(creator, ticket string) *MsgResolve {
 func (*MsgResolve) Route() string { return RouterKey }
 
 // Type return the resolve market type
-func (*MsgResolve) Type() string { return typeMsgResolveMarket }
+func (*MsgResolve) Type() string { return typeMsgResolve }
 
 // GetSigners return the creators address
 func (msg *MsgResolve) GetSigners() []sdk.AccAddress {
@@ -56,7 +56,7 @@ func (msg *MsgResolve) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgResolve) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgResolveMarket, msg.Creator,
+	emitter.AddMsg(typeMsgResolve, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 	)
 	emitter.Emit()

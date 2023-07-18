@@ -6,7 +6,7 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgAddMarket = "market_add"
+const typeMsgAdd = "market_add"
 
 var _ sdk.Msg = &MsgAdd{}
 
@@ -22,7 +22,7 @@ func NewMsgAdd(creator string, ticket string) *MsgAdd {
 func (*MsgAdd) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (*MsgAdd) Type() string { return typeMsgAddMarket }
+func (*MsgAdd) Type() string { return typeMsgAdd }
 
 // GetSigners return the creators address
 func (msg *MsgAdd) GetSigners() []sdk.AccAddress {
@@ -55,15 +55,15 @@ func (msg *MsgAdd) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgAdd) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgAddMarket, msg.Creator,
+	emitter.AddMsg(typeMsgAdd, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
 	)
 	emitter.Emit()
 }
 
-// typeMsgUpdateMarket is the market name of update market
-const typeMsgUpdateMarket = "market_update"
+// typeMsgUpdate is the market name of update market
+const typeMsgUpdate = "market_update"
 
 var _ sdk.Msg = &MsgUpdate{}
 
@@ -79,7 +79,7 @@ func NewMsgUpdate(creator, ticket string) *MsgUpdate {
 func (*MsgUpdate) Route() string { return RouterKey }
 
 // Type return the update market type
-func (*MsgUpdate) Type() string { return typeMsgUpdateMarket }
+func (*MsgUpdate) Type() string { return typeMsgUpdate }
 
 // GetSigners return the creators address
 func (msg *MsgUpdate) GetSigners() []sdk.AccAddress {
@@ -113,7 +113,7 @@ func (msg *MsgUpdate) ValidateBasic() error {
 // EmitEvent emits the event for the message success.
 func (msg *MsgUpdate) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgUpdateMarket, msg.Creator,
+	emitter.AddMsg(typeMsgUpdate, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 	)
 	emitter.Emit()

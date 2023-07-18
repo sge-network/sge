@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgResolveMarketValidateBasic(t *testing.T) {
+func TestMsgResolveValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
 		msg  types.MsgResolve
@@ -50,7 +50,7 @@ func TestMsgResolveMarketValidateBasic(t *testing.T) {
 	}
 }
 
-func TestNewResolveMarket(t *testing.T) {
+func TestNewResolve(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		expected := &types.MsgResolve{
 			Creator: uuid.NewString(),

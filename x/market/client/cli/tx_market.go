@@ -9,7 +9,7 @@ import (
 )
 
 // CmdAddMarket CLI registration for add market command
-func CmdAddMarket() *cobra.Command {
+func CmdAdd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "add [ticket]",
 		Short: "create new market",
@@ -38,7 +38,7 @@ func CmdAddMarket() *cobra.Command {
 }
 
 // CmdUpdateMarket returns query for updating market transaction
-func CmdUpdateMarket() *cobra.Command {
+func CmdUpdate() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update [ticket]",
 		Short: "update market",

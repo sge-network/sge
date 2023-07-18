@@ -11,8 +11,8 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// SimulateMsgAddMarket simulates the add market flow
-func SimulateMsgAddMarket(
+// SimulateMsgAdd simulates the add market flow
+func SimulateMsgAdd(
 	_ types.AccountKeeper,
 	_ types.BankKeeper,
 	_ keeper.Keeper,
@@ -34,8 +34,8 @@ func SimulateMsgAddMarket(
 	}
 }
 
-// SimulateMsgResolveMarket simulates the resolve market flow
-func SimulateMsgResolveMarket(
+// SimulateMsgResolve simulates the resolve market flow
+func SimulateMsgResolve(
 	_ types.AccountKeeper,
 	_ types.BankKeeper,
 	_ keeper.Keeper,
