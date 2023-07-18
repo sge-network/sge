@@ -6,7 +6,6 @@ import (
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/market/types"
 	"github.com/spf13/cast"
@@ -30,7 +29,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "valid",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -45,7 +43,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid end time",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Unix()),
 			},
@@ -55,7 +52,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid status",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
@@ -66,7 +62,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid uuid",
 			payload: types.MarketAddTicketPayload{
 				UID:     "invalid uuid",
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_ACTIVE,
@@ -77,7 +72,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid odds count",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -91,7 +85,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "empty meta",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -107,7 +100,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "large meta",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -123,7 +115,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid odds meta",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -139,7 +130,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid odds long meta",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -154,7 +144,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "invalid odds uuid",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
@@ -170,7 +159,6 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 			name: "duplicate odds uuid",
 			payload: types.MarketAddTicketPayload{
 				UID:     uuid.NewString(),
-				Creator: sample.AccAddress(),
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{

@@ -34,11 +34,8 @@ message MarketAddTicketPayload {
   // status is the current status of the market.
   MarketStatus status = 5;
 
-  // creator is the address of the creator of the market.
-  string creator = 6;
-
   // meta contains human-readable metadata of the market.
-  string meta = 7;
+  string meta = 6;
 }
 
 // MarketUpdateTicketPayload indicates data of the market update ticket
