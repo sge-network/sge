@@ -9,20 +9,20 @@ The Market module exposes the following services:
 ```proto
 // Msg defines the Msg service.
 service Msg {
-    rpc AddMarket(MsgAddMarket) returns (MarketResponse);
-    rpc ResolveMarket(MsgResolveMarket) returns (MarketResponse);
-    rpc UpdateMarket(MsgUpdateMarket) returns (MarketResponse);
+    rpc Add(MsgAdd) returns (MarketResponse);
+    rpc Resolve(MsgResolve) returns (MarketResponse);
+    rpc Update(MsgUpdate) returns (MarketResponse);
 }
 ```
 
 ---
 
-## **MsgAddMarket**
+## **MsgAdd**
 
 This message is used to add new market to the chain
 
 ```proto
-message MsgAddMarket {
+message MsgAdd {
   string creator = 1;
   string ticket = 2;
 }
@@ -97,14 +97,14 @@ message MarketAddTicketPayload {
 
 ---
 
-## **MsgUpdateMarket**
+## **MsgUpdate**
 
 This message is used to update already existent markets on the chain
 
 ```proto
-// MsgUpdateMarket is the message type for updating market data.
+// MsgUpdate is the message type for updating market data.
 // in the state
-message MsgUpdateMarket {
+message MsgUpdate {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.
@@ -160,8 +160,8 @@ message MarketUpdateTicketPayload {
 This is the common response to all the messages
 
 ```proto
-// MsgAddMarketResponse response for adding market.
-message MsgAddMarketResponse {
+// MsgAddResponse response for adding market.
+message MsgAddResponse {
   // error contains an error if adding a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of market.
@@ -171,13 +171,13 @@ message MsgAddMarketResponse {
 
 ---
 
-## **MsgResolveMarket**
+## **MsgResolve**
 
 This message is used to resolve already existent markets on the chain
 
 ```proto
-// MsgResolveMarket is the message type for resolving a market.
-message MsgResolveMarket {
+// MsgResolve is the message type for resolving a market.
+message MsgResolve {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.

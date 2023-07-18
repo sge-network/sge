@@ -7,17 +7,17 @@ handler endpoints is as follows
 // Msg defines the Msg service.
 service Msg {
   // PlaceBet defines a method to place a bet with the given data
-  rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
+  rpc Place(MsgPlace) returns (MsgPlaceResponse);
 }
 ```
 
-## **MsgPlaceBet**
+## **MsgPlace**
 
 Within this message, the user specifies the bet information they wish to place.
 
 ```proto
-// MsgPlaceBet defines a message to place a bet with the given data
-message MsgPlaceBet {
+// MsgPlace defines a message to place a bet with the given data
+message MsgPlace {
   // creator is the bettor address
   string creator = 1;
 
@@ -44,9 +44,9 @@ message PlaceBetFields {
   string ticket = 3;
 }
 
-// MsgPlaceBetResponse is the returning value in the response
-// of MsgPlaceBet request.
-message MsgPlaceBetResponse { PlaceBetFields bet = 1; }
+// MsgPlaceResponse is the returning value in the response
+// of MsgPlace request.
+message MsgPlaceResponse { PlaceBetFields bet = 1; }
 ```
 
 ### **Sample Place bet ticket**

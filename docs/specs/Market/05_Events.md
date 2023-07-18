@@ -2,7 +2,7 @@
 
 The Market module emits the following events:
 
-## *MsgAddMarket*
+## *MsgAdd*
 
 | **Type**                   | **Attribute Key**         | **Attribute Value**   |
 |----------------------------|---------------------------|-----------------------|
@@ -14,7 +14,7 @@ The Market module emits the following events:
 
 ---
 
-## *MsgUpdateMarket*
+## *MsgUpdate*
 
 |   **Type**               |     **Attribute Key**       | **Attribute Value**   |
 |:------------------------:|:---------------------------:|:---------------------:|
@@ -25,7 +25,7 @@ The Market module emits the following events:
 
 ---
 
-## *MsgResolveMarket*
+## *MsgResolve*
 
 | **Type**                  | **Attribute Key**        | **Attribute Value**   |
 |---------------------------|--------------------------|-----------------------|
