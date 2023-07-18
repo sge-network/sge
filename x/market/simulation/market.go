@@ -20,7 +20,7 @@ func SimulateMsgAddMarket(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgAddMarket{
+		msg := &types.MsgAdd{
 			Creator: simAccount.Address.String(),
 		}
 
@@ -43,7 +43,7 @@ func SimulateMsgResolveMarket(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgResolveMarket{
+		msg := &types.MsgResolve{
 			Creator: simAccount.Address.String(),
 		}
 

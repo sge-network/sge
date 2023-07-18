@@ -8,58 +8,58 @@ option go_package = "github.com/sge-network/sge/x/market/types";
 
 // Msg defines the Msg service.
 service Msg {
-  // AddMarket defines a method to add the market with the given data.
-  rpc AddMarket(MsgAddMarket) returns (MsgAddMarketResponse);
-  // ResolveMarket defines a method to resolve the market.
-  rpc ResolveMarket(MsgResolveMarket) returns (MsgResolveMarketResponse);
-  // UpdateMarket defines a method to update a market.
-  rpc UpdateMarket(MsgUpdateMarket) returns (MsgUpdateMarketResponse);
+  // Add defines a method to add the market with the given data.
+  rpc Add(MsgAdd) returns (MsgAddResponse);
+  // Resolve defines a method to resolve the market.
+  rpc Resolve(MsgResolve) returns (MsgResolveResponse);
+  // Update defines a method to update a market.
+  rpc Update(MsgUpdate) returns (MsgUpdateResponse);
 }
 
-// MsgAddMarket is the message type for adding the market into the
+// MsgAdd is the message type for adding the market into the
 // state.
-message MsgAddMarket {
+message MsgAdd {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.
   string ticket = 2;
 }
 
-// MsgAddMarketResponse response for adding market.
-message MsgAddMarketResponse {
+// MsgAddResponse response for adding market.
+message MsgAddResponse {
   // error contains an error if adding a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of market.
   Market data = 2 [ (gogoproto.nullable) = true ];
 }
 
-// MsgResolveMarket is the message type for resolving a market.
-message MsgResolveMarket {
+// MsgResolve is the message type for resolving a market.
+message MsgResolve {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.
   string ticket = 2;
 }
 
-// MsgResolveMarketResponse response for resolving a market.
-message MsgResolveMarketResponse {
+// MsgResolveResponse response for resolving a market.
+message MsgResolveResponse {
   // error contains an error if resolving a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of market.
   Market data = 2 [ (gogoproto.nullable) = true ];
 }
 
-// MsgUpdateMarket is the message type for updating market data.
+// MsgUpdate is the message type for updating market data.
 // in the state
-message MsgUpdateMarket {
+message MsgUpdate {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.
   string ticket = 2;
 }
 
-// MsgUpdateMarketResponse response for updating a market.
-message MsgUpdateMarketResponse {
+// MsgUpdateResponse response for updating a market.
+message MsgUpdateResponse {
   // error contains an error if updating a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of market

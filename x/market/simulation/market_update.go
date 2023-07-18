@@ -20,7 +20,7 @@ func SimulateMsgUpdateMarket(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgUpdateMarket{
+		msg := &types.MsgUpdate{
 			Creator: simAccount.Address.String(),
 		}
 

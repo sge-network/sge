@@ -21,7 +21,7 @@ func CmdAddMarket() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgAddMarket(
+			msg := types.NewMsgAdd(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)
@@ -50,7 +50,7 @@ func CmdUpdateMarket() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgUpdateMarket(
+			msg := types.NewMsgUpdate(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)

@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgServerAddMarket(t *testing.T) {
+func TestMsgServerAdd(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgAddMarket
+		msg *types.MsgAdd
 	}
 
 	u1 := uuid.NewString()
@@ -27,13 +27,13 @@ func TestMsgServerAddMarket(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *types.MsgAddMarketResponse
+		want    *types.MsgAddResponse
 		wantErr error
 	}{
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgAddMarket(sample.AccAddress(), ""),
+				msg: types.NewMsgAdd(sample.AccAddress(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -41,7 +41,7 @@ func TestMsgServerAddMarket(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := msgk.AddMarket(wctx, tt.args.msg)
+			got, err := msgk.Add(wctx, tt.args.msg)
 			require.ErrorIs(t, err, tt.wantErr)
 			require.EqualValues(t, got, tt.want)
 		})
@@ -67,9 +67,9 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.AddMarket(
+		response, err := msgk.Add(
 			wctx,
-			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgAdd(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -92,19 +92,19 @@ func TestMsgServerAddMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.AddMarket(
+		response, err := msgk.Add(
 			wctx,
-			types.NewMsgAddMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgAdd(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketAlreadyExist)
 		assert.Nil(t, response)
 	})
 }
 
-func TestMsgServerUpdateMarket(t *testing.T) {
+func TestMsgServerUpdate(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgUpdateMarket
+		msg *types.MsgUpdate
 	}
 
 	u1 := uuid.NewString()
@@ -116,13 +116,13 @@ func TestMsgServerUpdateMarket(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *types.MsgUpdateMarketResponse
+		want    *types.MsgUpdateResponse
 		wantErr error
 	}{
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgUpdateMarket(sample.AccAddress(), ""),
+				msg: types.NewMsgUpdate(sample.AccAddress(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -130,7 +130,7 @@ func TestMsgServerUpdateMarket(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := msgk.UpdateMarket(wctx, tt.args.msg)
+			got, err := msgk.Update(wctx, tt.args.msg)
 			require.ErrorIs(t, err, tt.wantErr)
 			require.EqualValues(t, got, tt.want)
 		})
@@ -160,9 +160,9 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.UpdateMarket(
+		response, err := msgk.Update(
 			wctx,
-			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgUpdate(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
@@ -178,9 +178,9 @@ func TestMsgServerUpdateMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.UpdateMarket(
+		response, err := msgk.Update(
 			wctx,
-			types.NewMsgUpdateMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgUpdate(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketCanNotBeAltered)
 		assert.Nil(t, response)

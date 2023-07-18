@@ -21,7 +21,7 @@ func CmdResolveMarket() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgResolveMarket(
+			msg := types.NewMsgResolve(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)

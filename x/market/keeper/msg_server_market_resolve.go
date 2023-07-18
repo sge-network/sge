@@ -8,11 +8,11 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// ResolveMarket accepts ticket containing resolution markets and return response after processing
-func (k msgServer) ResolveMarket(
+// Resolve accepts ticket containing resolution markets and return response after processing
+func (k msgServer) Resolve(
 	goCtx context.Context,
-	msg *types.MsgResolveMarket,
-) (*types.MsgResolveMarketResponse, error) {
+	msg *types.MsgResolve,
+) (*types.MsgResolveResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var resolutionPayload types.MarketResolutionTicketPayload
@@ -38,11 +38,11 @@ func (k msgServer) ResolveMarket(
 		return nil, sdkerrors.Wrapf(types.ErrInvalidWinnerOdds, "%s", err)
 	}
 
-	resolvedMarket := k.Keeper.ResolveMarket(ctx, market, &resolutionPayload)
+	resolvedMarket := k.Keeper.Resolve(ctx, market, &resolutionPayload)
 
 	msg.EmitEvent(&ctx, market.UID)
 
-	return &types.MsgResolveMarketResponse{
+	return &types.MsgResolveResponse{
 		Data: resolvedMarket,
 	}, nil
 }

@@ -13,26 +13,26 @@ import (
 func TestMsgResolveMarketValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgResolveMarket
+		msg  types.MsgResolve
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgResolveMarket{
+			msg: types.MsgResolve{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
-			msg: types.MsgResolveMarket{
+			msg: types.MsgResolve{
 				Creator: sample.AccAddress(),
 				Ticket:  "Ticket",
 			},
 		},
 		{
 			name: "no ticket",
-			msg: types.MsgResolveMarket{
+			msg: types.MsgResolve{
 				Creator: sample.AccAddress(),
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -52,11 +52,11 @@ func TestMsgResolveMarketValidateBasic(t *testing.T) {
 
 func TestNewResolveMarket(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		expected := &types.MsgResolveMarket{
+		expected := &types.MsgResolve{
 			Creator: uuid.NewString(),
 			Ticket:  "Ticket",
 		}
-		res := types.NewMsgResolveMarket(
+		res := types.NewMsgResolve(
 			expected.Creator,
 			expected.Ticket,
 		)

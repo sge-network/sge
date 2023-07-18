@@ -38,7 +38,7 @@ func (ts *testBetSuite) settleBetsAndTest(
 
 	// resolve market
 	//
-	ts.tApp.MarketKeeper.ResolveMarket(ts.ctx, ts.market, &markettypes.MarketResolutionTicketPayload{
+	ts.tApp.MarketKeeper.Resolve(ts.ctx, ts.market, &markettypes.MarketResolutionTicketPayload{
 		UID:            ts.market.UID,
 		ResolutionTS:   ts.market.StartTS + 10,
 		WinnerOddsUIDs: []string{ts.market.Odds[0].UID, ts.market.Odds[1].UID},
