@@ -10,13 +10,13 @@ import (
 
 // RegisterCodec registers module codec to the app codec
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgPlaceBet{}, "bet/PlaceBet", nil)
+	cdc.RegisterConcrete(&MsgPlace{}, "bet/PlaceBet", nil)
 }
 
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgPlaceBet{},
+		&MsgPlace{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

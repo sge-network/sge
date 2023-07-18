@@ -24,7 +24,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(CmdPlaceBet())
+	cmd.AddCommand(CmdPlace())
 
 	return cmd
 }

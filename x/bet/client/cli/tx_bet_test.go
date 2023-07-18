@@ -71,7 +71,7 @@ func TestTXBetCLI(t *testing.T) {
 					tc.ticket,
 				}
 				args = append(args, commonArgs...)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdPlaceBet(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdPlace(), args)
 				if tc.err != nil {
 					require.NotNil(t, err)
 				} else {

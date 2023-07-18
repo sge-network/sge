@@ -8,18 +8,18 @@ option go_package = "github.com/sge-network/sge/x/bet/types";
 // Msg defines the Msg service.
 service Msg {
 
-  // PlaceBet defines a method to place a bet with the given data.
-  rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
+  // Place defines a method to place a bet with the given data.
+  rpc Place(MsgPlace) returns (MsgPlaceResponse);
 }
 
-// MsgPlaceBet defines a message to place a bet with the given data.
-message MsgPlaceBet {
+// MsgPlace defines a message to place a bet with the given data.
+message MsgPlace {
   // creator is the bettor address.
   string creator = 1;
   // PlaceBetFields contains bet fields.
   PlaceBetFields bet = 2;
 }
 
-// MsgPlaceBetResponse is the returning value in the response
-// of MsgPlaceBet request.
-message MsgPlaceBetResponse { PlaceBetFields bet = 1; }
+// MsgPlaceResponse is the returning value in the response
+// of MsgPlaceResponse request.
+message MsgPlaceResponse { PlaceBetFields bet = 1; }

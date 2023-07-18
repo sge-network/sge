@@ -13,19 +13,19 @@ import (
 func TestMsgPlaceBetValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgPlaceBet
+		msg  types.MsgPlace
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgPlace{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid bet message",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgPlace{
 				Creator: sample.AccAddress(),
 				Bet: &types.PlaceBetFields{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
@@ -36,7 +36,7 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid bet UID",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgPlace{
 				Creator: sample.AccAddress(),
 				Bet: &types.PlaceBetFields{
 					UID: "Invalid UID",

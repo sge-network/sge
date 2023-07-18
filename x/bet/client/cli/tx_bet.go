@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CmdPlaceBet implements a command to place and store a single bet
-func CmdPlaceBet() *cobra.Command {
+// CmdPlace implements a command to place and store a single bet
+func CmdPlace() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "place-bet [uid] [amount] [ticket]",
+		Use:   "place [uid] [amount] [ticket]",
 		Short: "Place bet",
 		Long:  "Place bet uuid, amount and ticket required.",
 		Args:  cobra.ExactArgs(3),
@@ -32,7 +32,7 @@ func CmdPlaceBet() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgPlaceBet(
+			msg := types.NewMsgPlace(
 				clientCtx.GetFromAddress().String(),
 				types.PlaceBetFields{
 					UID:    uid,

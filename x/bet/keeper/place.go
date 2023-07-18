@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-// PlaceBet stores a new bet in KVStore
-func (k Keeper) PlaceBet(ctx sdk.Context, bet *types.Bet) error {
+// Place stores a new bet in KVStore
+func (k Keeper) Place(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)

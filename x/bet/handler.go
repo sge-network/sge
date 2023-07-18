@@ -17,8 +17,8 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 		switch msg := msg.(type) {
-		case *types.MsgPlaceBet:
-			res, err := msgServer.PlaceBet(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgPlace:
+			res, err := msgServer.Place(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)

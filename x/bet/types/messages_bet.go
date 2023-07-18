@@ -13,27 +13,27 @@ const (
 	typeMsgPlaceBet = "bet_place"
 )
 
-var _ sdk.Msg = &MsgPlaceBet{}
+var _ sdk.Msg = &MsgPlace{}
 
-// NewMsgPlaceBet returns a MsgPlaceBet using given data
-func NewMsgPlaceBet(
+// NewMsgPlace returns a MsgPlaceBet using given data
+func NewMsgPlace(
 	creator string,
 	bet PlaceBetFields,
-) *MsgPlaceBet {
-	return &MsgPlaceBet{
+) *MsgPlace {
+	return &MsgPlace{
 		Creator: creator,
 		Bet:     &bet,
 	}
 }
 
 // Route returns the module's message router key.
-func (*MsgPlaceBet) Route() string { return RouterKey }
+func (*MsgPlace) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (*MsgPlaceBet) Type() string { return typeMsgPlaceBet }
+func (*MsgPlace) Type() string { return typeMsgPlaceBet }
 
 // GetSigners returns the signers of its message
-func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
+func (msg *MsgPlace) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -42,13 +42,13 @@ func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes returns sortJson form of its message
-func (msg *MsgPlaceBet) GetSignBytes() []byte {
+func (msg *MsgPlace) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic does some validate checks on its message
-func (msg *MsgPlaceBet) ValidateBasic() error {
+func (msg *MsgPlace) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
@@ -58,7 +58,7 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
+func (msg *MsgPlace) EmitEvent(ctx *sdk.Context) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgPlaceBet, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),

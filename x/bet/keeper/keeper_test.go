@@ -35,8 +35,8 @@ var (
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 	testCreator   string
-	testBet       *types.MsgPlaceBet
-	testAddMarket *markettypes.MsgAddMarket
+	testBet       *types.MsgPlace
+	testAddMarket *markettypes.MsgAdd
 
 	testMarket = markettypes.Market{
 		UID:     testMarketUID,
@@ -76,13 +76,13 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 	require.Nil(t, err)
 
-	testAddMarket = &markettypes.MsgAddMarket{
+	testAddMarket = &markettypes.MsgAdd{
 		Creator: testCreator,
 		Ticket:  testAddMarketTicket,
 	}
 	wctx := sdk.WrapSDKContext(ctx)
 	marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
-	resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
+	resAddMarket, err := marketSrv.Add(wctx, testAddMarket)
 	require.Nil(t, err)
 	require.NotNil(t, resAddMarket)
 }
@@ -110,13 +110,13 @@ func addTestMarketBatch(
 		testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 		require.Nil(t, err)
 
-		testAddMarket = &markettypes.MsgAddMarket{
+		testAddMarket = &markettypes.MsgAdd{
 			Creator: testCreator,
 			Ticket:  testAddMarketTicket,
 		}
 		wctx := sdk.WrapSDKContext(ctx)
 		marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
-		resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
+		resAddMarket, err := marketSrv.Add(wctx, testAddMarket)
 		require.Nil(t, err)
 		require.NotNil(t, resAddMarket)
 	}
@@ -153,7 +153,7 @@ func placeTestBet(
 	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
 	require.Nil(t, err)
 
-	testBet = &types.MsgPlaceBet{
+	testBet = &types.MsgPlace{
 		Creator: testCreator,
 		Bet: &types.PlaceBetFields{
 			UID:    betUID,
@@ -161,7 +161,7 @@ func placeTestBet(
 			Ticket: testPlaceBetTicket,
 		},
 	}
-	resPlaceBet, err := betSrv.PlaceBet(wctx, testBet)
+	resPlaceBet, err := betSrv.Place(wctx, testBet)
 	require.Nil(t, err)
 	require.NotNil(t, resPlaceBet)
 }

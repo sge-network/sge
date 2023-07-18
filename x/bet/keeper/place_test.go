@@ -193,7 +193,7 @@ func TestPlaceBet(t *testing.T) {
 				}
 			}
 
-			err := k.PlaceBet(ctx, tc.bet)
+			err := k.Place(ctx, tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

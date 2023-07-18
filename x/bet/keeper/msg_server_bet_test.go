@@ -14,14 +14,14 @@ import (
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
-func TestBetMsgServerPlaceBet(t *testing.T) {
+func TestBetMsgServerPlace(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
 	creator := simappUtil.TestParamUsers["user1"]
 	var err error
 
 	t.Run("Redundant UID", func(t *testing.T) {
 		betItem := types.Bet{UID: "betUID"}
-		inputMsg := &types.MsgPlaceBet{
+		inputMsg := &types.MsgPlace{
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID: betItem.UID,
@@ -29,12 +29,12 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		}
 
 		k.SetBet(ctx, betItem, 1)
-		_, err := msgk.PlaceBet(wctx, inputMsg)
+		_, err := msgk.Place(wctx, inputMsg)
 		require.ErrorIs(t, types.ErrDuplicateUID, err)
 	})
 
 	t.Run("Error in verifying ticket", func(t *testing.T) {
-		inputBet := &types.MsgPlaceBet{
+		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID:    "betUID_1",
@@ -43,7 +43,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
-		_, err = msgk.PlaceBet(wctx, inputBet)
+		_, err = msgk.Place(wctx, inputBet)
 		require.ErrorIs(t, types.ErrInTicketVerification, err)
 	})
 
@@ -64,7 +64,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
 
-		inputBet := &types.MsgPlaceBet{
+		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 
 			Bet: &types.PlaceBetFields{
@@ -74,7 +74,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
-		_, err = msgk.PlaceBet(wctx, inputBet)
+		_, err = msgk.Place(wctx, inputBet)
 		require.ErrorIs(t, types.ErrInTicketValidation, err)
 	})
 
@@ -93,7 +93,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
 
-		inputBet := &types.MsgPlaceBet{
+		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 
 			Bet: &types.PlaceBetFields{
@@ -103,7 +103,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			},
 		}
 
-		_, err = msgk.PlaceBet(wctx, inputBet)
+		_, err = msgk.Place(wctx, inputBet)
 		require.ErrorIs(t, types.ErrInBetPlacement, err)
 	})
 
@@ -122,7 +122,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		placeBetTicket, err := createJwtTicket(placeBetClaim)
 		require.Nil(t, err)
 
-		inputBet := &types.MsgPlaceBet{
+		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID:    "BetUID_2",
@@ -158,7 +158,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		)
 		require.NoError(t, err)
 
-		_, err = msgk.PlaceBet(wctx, inputBet)
+		_, err = msgk.Place(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found := k.GetBet(ctx,
 			creator.Address.String(),
@@ -175,7 +175,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 		require.Equal(t, types.BetStats{Count: 1}, stats)
 
 		inputBet.Bet.UID = "BetUID_3"
-		_, err = msgk.PlaceBet(wctx, inputBet)
+		_, err = msgk.Place(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found = k.GetBet(ctx,
 			creator.Address.String(),

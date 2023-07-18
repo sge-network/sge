@@ -25,7 +25,7 @@ func SimulateMsgPlaceBet(
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
 		i := r.Int()
-		msg := &types.MsgPlaceBet{
+		msg := &types.MsgPlace{
 			Creator: simAccount.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID: cast.ToString(i),
