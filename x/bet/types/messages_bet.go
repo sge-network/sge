@@ -27,10 +27,10 @@ func NewMsgPlaceBet(
 }
 
 // Route returns the module's message router key.
-func (msg *MsgPlaceBet) Route() string { return RouterKey }
+func (*MsgPlaceBet) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (msg *MsgPlaceBet) Type() string { return typeMsgPlaceBet }
+func (*MsgPlaceBet) Type() string { return typeMsgPlaceBet }
 
 // GetSigners returns the signers of its message
 func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
@@ -54,11 +54,7 @@ func (msg *MsgPlaceBet) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
-	if err = BetFieldsValidation(msg.Bet); err != nil {
-		return err
-	}
-
-	return nil
+	return BetFieldsValidation(msg.Bet)
 }
 
 // EmitEvent emits the event for the message success.

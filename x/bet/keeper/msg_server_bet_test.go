@@ -126,7 +126,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			Creator: creator.Address.String(),
 			Bet: &types.PlaceBetFields{
 				UID:    "BetUID_2",
-				Amount: sdk.NewInt(500),
+				Amount: sdk.NewInt(1000000),
 				Ticket: placeBetTicket,
 			},
 		}
@@ -138,10 +138,6 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			EndTS:   uint64(ctx.BlockTime().Unix()) + 1000,
 			Odds:    testMarketOdds,
 			Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-			BetConstraints: &markettypes.MarketBetConstraints{
-				MinAmount: sdk.NewInt(1),
-				BetFee:    sdk.NewInt(1),
-			},
 		}
 
 		tApp.MarketKeeper.SetMarket(ctx, marketItem)
@@ -157,7 +153,7 @@ func TestBetMsgServerPlaceBet(t *testing.T) {
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
 			marketItem.UID,
-			sdk.NewInt(10000000),
+			sdk.NewInt(100000000),
 			sdk.NewInt(1),
 		)
 		require.NoError(t, err)

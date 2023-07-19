@@ -16,7 +16,7 @@ type Keeper struct {
 	cdc        codec.BinaryCodec
 	storeKey   sdk.StoreKey
 	memKey     sdk.StoreKey
-	paramstore paramtypes.Subspace
+	paramStore paramtypes.Subspace
 }
 
 // NewKeeper creates new keeper object
@@ -35,11 +35,11 @@ func NewKeeper(
 		cdc:        cdc,
 		storeKey:   storeKey,
 		memKey:     memKey,
-		paramstore: ps,
+		paramStore: ps,
 	}
 }
 
 // Logger returns the logger object of this module
-func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+func (Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }

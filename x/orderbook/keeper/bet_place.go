@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -63,8 +65,31 @@ func (k Keeper) ProcessBetPlacement(
 	if err := k.fund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, fInfo.fulfilledBetAmount); err != nil {
 		return nil, err
 	}
-
+	k.PublishOrderBookEvent(ctx, bookUID)
 	return fInfo.fulfillments, nil
+}
+
+func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
+	event := types.NewOrderBookEvent()
+	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
+	if err != nil {
+		k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
+		return
+	}
+
+	for _, boe := range boes {
+		event.AddOrderBookOddsExposure(boe)
+		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUID, boe.OddsUID)
+		if err != nil {
+			k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
+			return
+		}
+		for _, pe := range pes {
+			event.AddParticipationExposure(pe)
+		}
+	}
+
+	event.Emit(ctx)
 }
 
 // fulfillBetByParticipationQueue fulfills the bet placement payout using the participations

@@ -13,8 +13,8 @@ import (
 func (k Keeper) RefundBettor(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount, betFee, payout sdk.Int,
-	uniqueLock string,
+	betAmount, betFee, _ sdk.Int,
+	_ string,
 ) error {
 	// refund bettor's account from orderbook liquidity pool.
 	if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, betAmount); err != nil {
@@ -22,11 +22,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// refund bettor's account from bet fee collector.
-	if err := k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
-		return err
-	}
-
-	return nil
+	return k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee)
 }
 
 // BettorWins process bets in case bettor is the winner,
@@ -35,9 +31,9 @@ func (k Keeper) RefundBettor(
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount sdk.Int,
-	payoutProfit sdk.Int,
-	uniqueLock string,
+	_ sdk.Int,
+	_ sdk.Int,
+	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {
@@ -77,10 +73,10 @@ func (k Keeper) BettorWins(
 // adds the bet amount to the actual profit of the participation
 // for each of the bet fulfillment records and,
 // removes the payout lock.
-func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
-	betAmount sdk.Int,
-	payoutProfit sdk.Int,
-	uniqueLock string,
+func (k Keeper) BettorLoses(ctx sdk.Context, _ sdk.AccAddress,
+	_ sdk.Int,
+	_ sdk.Int,
+	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {

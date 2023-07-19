@@ -19,10 +19,10 @@ func NewMsgResolveMarket(creator, ticket string) *MsgResolveMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgResolveMarket) Route() string { return RouterKey }
+func (*MsgResolveMarket) Route() string { return RouterKey }
 
 // Type return the resolve market type
-func (msg *MsgResolveMarket) Type() string { return typeMsgResolveMarket }
+func (*MsgResolveMarket) Type() string { return typeMsgResolveMarket }
 
 // GetSigners return the creators address
 func (msg *MsgResolveMarket) GetSigners() []sdk.AccAddress {

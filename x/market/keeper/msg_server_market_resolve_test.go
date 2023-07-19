@@ -4,8 +4,6 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/sample"
@@ -203,104 +201,4 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)
 	})
-}
-
-func TestValidateResolveMarket(t *testing.T) {
-	k, _, _, _ := setupMsgServerAndKeeper(t)
-	t1 := time.Now()
-
-	tests := []struct {
-		name string
-		msg  types.MarketResolutionTicketPayload
-		err  error
-	}{
-		{
-			name: "valid request",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-		},
-		{
-			name: "invalid resolution ts",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   0,
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid uid",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            "invalid uid",
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "empty winner odds",
-			msg: types.MarketResolutionTicketPayload{
-				UID:          uuid.NewString(),
-				ResolutionTS: uint64(t1.Unix()),
-				Status:       types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid winner odds",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{"invalid winner odds"},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg status inactive",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_INACTIVE,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg invalid enum status",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         6,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg invalid enum status, active",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_ACTIVE,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := k.ValidateMarketResolution(tt.msg)
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
 }
