@@ -44,6 +44,11 @@ genesis:
     gov:
       deposit_params:
         min_deposit: [{ amount: "1", denom: "usge" }]
+    bet:
+      params:
+        constraints:
+          min_amount: "1000000"
+          fee: "100"
     mint:
       minter:
         phase_provisions: "100000000000000.000000000000000000"
@@ -58,11 +63,6 @@ genesis:
             { inflation: "0.100000000000000000", year_coefficient: "1" },
           ]
         exclude_amount: "500000000000"
-    market:
-      params:
-        min_bet_amount: "1000000"
-        min_bet_fee: "0"
-        max_bet_fee: "100"
     orderbook:
       params:
         requeue_threshold: "1000"

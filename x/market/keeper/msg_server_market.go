@@ -20,9 +20,7 @@ func (k msgServer) AddMarket(
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	params := k.GetParams(ctx)
-
-	if err := addPayload.Validate(ctx, &params); err != nil {
+	if err := addPayload.Validate(ctx); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
@@ -46,7 +44,6 @@ func (k msgServer) AddMarket(
 		addPayload.StartTS,
 		addPayload.EndTS,
 		addPayload.Odds,
-		params.NewMarketBetConstraints(addPayload.MinBetAmount, addPayload.BetFee),
 		addPayload.Meta,
 		addPayload.UID,
 		addPayload.Status,
@@ -85,20 +82,14 @@ func (k msgServer) UpdateMarket(
 		return nil, sdkerrors.Wrapf(types.ErrMarketCanNotBeAltered, "%s", market.Status)
 	}
 
-	params := k.GetParams(ctx)
-
 	// update market is not valid, return error
-	if err := updatePayload.Validate(ctx, &params); err != nil {
+	if err := updatePayload.Validate(ctx); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
 	// replace current data with payload values
 	market.StartTS = updatePayload.StartTS
 	market.EndTS = updatePayload.EndTS
-	market.BetConstraints = params.NewMarketBetConstraints(
-		updatePayload.MinBetAmount,
-		updatePayload.BetFee,
-	)
 	market.Status = updatePayload.Status
 
 	// update market is successful, update the module state

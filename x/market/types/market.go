@@ -8,21 +8,19 @@ func NewMarket(
 	uid, creator string,
 	startTS, endTS uint64,
 	odds []*Odds,
-	betConstraints *MarketBetConstraints,
 	meta string,
 	bookUID string,
 	status MarketStatus,
 ) Market {
 	return Market{
-		UID:            uid,
-		Creator:        creator,
-		StartTS:        startTS,
-		EndTS:          endTS,
-		Odds:           odds,
-		BetConstraints: betConstraints,
-		Meta:           sanitize.XSS(meta),
-		BookUID:        bookUID,
-		Status:         status,
+		UID:     uid,
+		Creator: creator,
+		StartTS: startTS,
+		EndTS:   endTS,
+		Odds:    odds,
+		Meta:    sanitize.XSS(meta),
+		BookUID: bookUID,
+		Status:  status,
 	}
 }
 
@@ -46,4 +44,15 @@ func (m *Market) IsResolveAllowed() bool {
 func (m *Market) isActiveOrInactive() bool {
 	return m.Status == MarketStatus_MARKET_STATUS_ACTIVE ||
 		m.Status == MarketStatus_MARKET_STATUS_INACTIVE
+}
+
+// HasOdds determine if the input odds uid is present in
+// the market odds or not.
+func (m *Market) HasOdds(oddsUID string) bool {
+	for _, o := range m.Odds {
+		if oddsUID == o.UID {
+			return true
+		}
+	}
+	return false
 }

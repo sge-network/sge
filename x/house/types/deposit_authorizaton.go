@@ -16,12 +16,12 @@ func NewDepositAuthorization(spendLimit sdk.Int) *DepositAuthorization {
 }
 
 // MsgTypeURL implements Authorization.MsgTypeURL.
-func (a DepositAuthorization) MsgTypeURL() string {
+func (DepositAuthorization) MsgTypeURL() string {
 	return sdk.MsgTypeURL(&MsgDeposit{})
 }
 
 // Accept implements Authorization.Accept.
-func (a DepositAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
+func (a DepositAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mDeposit, ok := msg.(*MsgDeposit)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")

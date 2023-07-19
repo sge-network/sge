@@ -3,6 +3,7 @@ package types
 import (
 	fmt "fmt"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"gopkg.in/yaml.v2"
 )
@@ -12,15 +13,24 @@ const (
 	maxBetByUIDQueryCount = 10
 )
 
+var (
+	defaultMinAmount = sdk.NewInt(1000000)
+	defaultFee       = sdk.NewInt(100)
+)
+
 // parameter store keys
 var (
-	// KeyBatchSettlementCount is the batch settlement
+	// keyBatchSettlementCount is the batch settlement
 	// count of bets
-	KeyBatchSettlementCount = []byte("BatchSettlementCount")
+	keyBatchSettlementCount = []byte("BatchSettlementCount")
 
-	// KeyMaxBetByUIDQueryCount is the max count of
+	// keyMaxBetByUIDQueryCount is the max count of
 	// the queryable bets by UID list.
-	KeyMaxBetByUIDQueryCount = []byte("MaxBetByUidQueryCount")
+	keyMaxBetByUIDQueryCount = []byte("MaxBetByUidQueryCount")
+
+	// keyPlacementConstraints is the default bet placement
+	// constraints.
+	keyPlacementConstraints = []byte("PlacementConstraints")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -35,6 +45,10 @@ func NewParams() Params {
 	return Params{
 		BatchSettlementCount:  batchSettlementCount,
 		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
+		Constraints: Constraints{
+			MinAmount: defaultMinAmount,
+			Fee:       defaultFee,
+		},
 	}
 }
 
@@ -47,14 +61,19 @@ func DefaultParams() Params {
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
 		paramtypes.NewParamSetPair(
-			KeyBatchSettlementCount,
+			keyBatchSettlementCount,
 			&p.BatchSettlementCount,
 			validateBatchSettlementCount,
 		),
 		paramtypes.NewParamSetPair(
-			KeyMaxBetByUIDQueryCount,
+			keyMaxBetByUIDQueryCount,
 			&p.MaxBetByUidQueryCount,
 			validateMaxBetByUIDQueryCount,
+		),
+		paramtypes.NewParamSetPair(
+			keyPlacementConstraints,
+			&p.Constraints,
+			validateConstraints,
 		),
 	}
 }
@@ -69,7 +88,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return nil
+	return validateConstraints(p.Constraints)
 }
 
 // String implements the Stringer interface.
@@ -102,6 +121,23 @@ func validateMaxBetByUIDQueryCount(i interface{}) error {
 
 	if v <= 0 {
 		return fmt.Errorf("%s: %d", ErrTextMaxBetUIDQueryCountMustBePositive, v)
+	}
+
+	return nil
+}
+
+func validateConstraints(i interface{}) error {
+	v, ok := i.(Constraints)
+	if !ok {
+		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
+	}
+
+	if v.MinAmount.LTE(sdk.OneInt()) {
+		return fmt.Errorf("minimum bet amount must be more than one: %d", v.MinAmount.Int64())
+	}
+
+	if v.Fee.LT(sdk.ZeroInt()) {
+		return fmt.Errorf("minimum bet fee must be positive: %d", v.Fee.Int64())
 	}
 
 	return nil

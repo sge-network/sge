@@ -2,6 +2,6 @@ package types
 
 type OrderBookLiquidityFunder struct{}
 
-func (ol OrderBookLiquidityFunder) GetModuleAcc() string {
+func (OrderBookLiquidityFunder) GetModuleAcc() string {
 	return orderBookLiquidityPool
 }

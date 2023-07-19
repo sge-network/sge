@@ -82,12 +82,14 @@ func (k Keeper) initParticipationExposures(
 ) error {
 	// Update book odds exposures and add participant exposures
 	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
+	bookEvent := types.NewOrderBookEvent()
 	if err != nil {
 		return err
 	}
 	for _, boe := range boes {
 		boe.FulfillmentQueue = append(boe.FulfillmentQueue, participationIndex)
 		k.SetOrderBookOddsExposure(ctx, boe)
+		bookEvent.AddOrderBookOddsExposure(boe)
 
 		pe := types.NewParticipationExposure(
 			orderBookUID,
@@ -99,7 +101,9 @@ func (k Keeper) initParticipationExposures(
 			false,
 		)
 		k.SetParticipationExposure(ctx, pe)
+		bookEvent.AddParticipationExposure(pe)
 	}
+	bookEvent.Emit(ctx)
 
 	return nil
 }

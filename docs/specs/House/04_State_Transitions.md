@@ -8,6 +8,7 @@ Validations before modifiying the state:
 
 - If the sanity checks for making a deposit passes
 - If authorization grant found for the depositor address and creator
+- If the authorization spend limit exceeded.
 
 a new deposit will be created with the given data and will be added to the `House` module state.
 the order book participation will create in the background and its index will be assigned to the deposit.
@@ -36,6 +37,7 @@ Validations before modifiying the state:
 
 - If the amount is withdrawable
 - If authorization grant found for the depositor address and creator
+- If the authorization withdraw limit exceeded.
 
 The following changes will be made to the deposit
 

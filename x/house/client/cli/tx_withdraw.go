@@ -10,7 +10,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/sge-network/sge/x/house/types"
-	orderbooktypes "github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 )
@@ -39,8 +38,7 @@ func CmdWithdraw() *cobra.Command {
 
 			particiapntIndex, err := cast.ToUint64E(args[1])
 			if err != nil || particiapntIndex < 1 {
-				return fmt.Errorf("participant number should be a natural number between 1 and %v: %v",
-					orderbooktypes.KeyMaxOrderBookParticipations, err)
+				return fmt.Errorf("participant number should be a positive number")
 			}
 
 			argTicket := args[2]

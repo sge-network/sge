@@ -19,14 +19,10 @@ func TestParamChangest(t *testing.T) {
 		composedKey string
 		key         string
 		subspace    string
-	}{
-		{"market/MinBetAmount", "MinBetAmount", "market"},
-		{"market/MinBetFee", "MinBetFee", "market"},
-		{"market/MaxBetFee", "MaxBetFee", "market"},
-	}
+	}{}
 
 	paramChanges := simulation.ParamChanges(r)
-	require.Len(t, paramChanges, 3)
+	require.Len(t, paramChanges, 0)
 
 	for i, p := range paramChanges {
 		require.Equal(t, expected[i].composedKey, p.ComposedKey())

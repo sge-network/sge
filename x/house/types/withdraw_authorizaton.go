@@ -16,12 +16,12 @@ func NewWithdrawAuthorization(withdrawLimit sdk.Int) *WithdrawAuthorization {
 }
 
 // MsgTypeURL implements Authorization.MsgTypeURL.
-func (a WithdrawAuthorization) MsgTypeURL() string {
+func (WithdrawAuthorization) MsgTypeURL() string {
 	return sdk.MsgTypeURL(&MsgWithdraw{})
 }
 
 // Accept implements Authorization.Accept.
-func (a WithdrawAuthorization) Accept(ctx sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
+func (a WithdrawAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mWithdraw, ok := msg.(*MsgWithdraw)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")

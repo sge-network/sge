@@ -16,7 +16,7 @@ import (
 )
 
 func createNTestPubKeys(n int) ([]string, error) {
-	items := []string{}
+	var items []string
 
 	for i := 0; i < n; i++ {
 		pub1, _, err := ed25519.GenerateKey(rand.Reader)

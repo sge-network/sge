@@ -19,10 +19,10 @@ func NewMsgAddMarket(creator string, ticket string) *MsgAddMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgAddMarket) Route() string { return RouterKey }
+func (*MsgAddMarket) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgAddMarket) Type() string { return typeMsgAddMarket }
+func (*MsgAddMarket) Type() string { return typeMsgAddMarket }
 
 // GetSigners return the creators address
 func (msg *MsgAddMarket) GetSigners() []sdk.AccAddress {
@@ -76,10 +76,10 @@ func NewMsgUpdateMarket(creator, ticket string) *MsgUpdateMarket {
 }
 
 // Route return the message route for slashing
-func (msg *MsgUpdateMarket) Route() string { return RouterKey }
+func (*MsgUpdateMarket) Route() string { return RouterKey }
 
 // Type return the update market type
-func (msg *MsgUpdateMarket) Type() string { return typeMsgUpdateMarket }
+func (*MsgUpdateMarket) Type() string { return typeMsgUpdateMarket }
 
 // GetSigners return the creators address
 func (msg *MsgUpdateMarket) GetSigners() []sdk.AccAddress {
