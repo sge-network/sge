@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestPlaceBet(t *testing.T) {
+func TestWager(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	ctx = ctx.WithBlockTime(time.Now())
 	tcs := []struct {
@@ -193,7 +193,7 @@ func TestPlaceBet(t *testing.T) {
 				}
 			}
 
-			err := k.PlaceBet(ctx, tc.bet)
+			err := k.Wager(ctx, tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

@@ -2,7 +2,7 @@
 
 Bet module is tasked with placement and settlement of the bets. the user can place bet on a same market multiple times with different or equal odds through commandline or singing and broadcasting the bet placement message.
 
-> Bet Placement will be done using a ticket containing odds info signed by a trusted source. Verifying this ticket will be done in the placement state itself.
+> Wagering will be done using a ticket containing odds info signed by a trusted source. Verifying this ticket will be done in the placement state itself.
 > Bet amount can not be less than a minimum amount which is defined for each market. A module parameter is used for this purpose.
 > Also, a betting fee has been defined for each market, A module parameter is used for this purpose.
 
@@ -24,7 +24,7 @@ Before accepting bet some validation should take place:
   - If Ignore is false in bet ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a bet to be placed.
   - If Ignore is true in bet ticket payload, then kyc validation is not required and bet can be placed without kyc check.
 
-Placement Assumptions:
+Wager Assumptions:
 
 - For bet placement user can raise a request to place a single bet, it can be done for a single bet only.
 - When a user is raising a transaction to place a bet, the creator of the transaction is the owner of the  bet.
@@ -33,7 +33,7 @@ After a bet is accepted:
 
 - Bet amount transfer to the `orderbook_liquidity_pool` module account this is done by the `orderbook` module.
 - Betting fee will be transferred to the `bet_fee_collector` module account. this is done by the `orderbook` module.
-- Bet fulfillments are being processed by `orderbook` module in the `ProcessBetPlacement` keeper's method.
+- Bet fulfillments are being processed by `orderbook` module in the `ProcessWager` keeper's method.
 
 ## Supported Odds Types
 

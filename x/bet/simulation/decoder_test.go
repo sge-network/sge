@@ -21,7 +21,7 @@ func TestDecodeStore(t *testing.T) {
 
 	bet := types.NewBet(
 		sample.AccAddress(),
-		&types.PlaceBetFields{
+		&types.WagerProps{
 			UID:    uuid.NewString(),
 			Amount: sdk.NewInt(10),
 			Ticket: "",
