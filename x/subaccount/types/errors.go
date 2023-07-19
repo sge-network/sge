@@ -13,4 +13,7 @@ var (
 
 	// ErrSubaccountDoesNotExist is the error when sub account does not exist
 	ErrSubaccountDoesNotExist = sdkerrors.Register(ModuleName, 3, "sub account does not exist")
+
+	// ErrNothingToWithdraw is the error returned when there is nothing to withdraw
+	ErrNothingToWithdraw = sdkerrors.Register(ModuleName, 4, "nothing to withdraw")
 )

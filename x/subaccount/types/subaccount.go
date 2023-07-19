@@ -30,3 +30,25 @@ func (m *Balance) Available() sdk.Int {
 		Sub(m.SpentAmount).
 		Sub(m.LostAmount)
 }
+
+func (m *Balance) Spend(amt sdk.Int) error {
+	if !amt.IsPositive() {
+		return fmt.Errorf("amount is not positive")
+	}
+	if amt.GT(m.Available()) {
+		return fmt.Errorf("amount is greater than available")
+	}
+	m.SpentAmount = m.SpentAmount.Add(amt)
+	return nil
+}
+
+func (m *Balance) Unspend(amt sdk.Int) error {
+	if !amt.IsPositive() {
+		return fmt.Errorf("amount is not positive")
+	}
+	if amt.GT(m.SpentAmount) {
+		return fmt.Errorf("amount is greater than spent")
+	}
+	m.SpentAmount = m.SpentAmount.Sub(amt)
+	return nil
+}

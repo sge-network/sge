@@ -1,14 +1,15 @@
 package keeper_test
 
 import (
+	"testing"
+	"time"
+
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
@@ -52,7 +53,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
 		Sender: subaccountOwner.String(),
 	})
-	require.NoError(t, err)
+	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 
 	t.Log("balance of subaccount owner should be zero")
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
@@ -70,7 +71,13 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
 	require.True(t, balance.Amount.Equal(sdk.NewInt(100)), balance.Amount.String())
 
-	t.Log("expire second locked balance")
+	t.Log("expire second locked balance, also force money to be spent")
+	// we force some money to be spent on the subaccount to correctly test
+	// that if the amount is unlocked but spent, it will not be withdrawable.
+	subaccountBalance := app.SubaccountKeeper.GetBalance(ctx, 1)
+	require.NoError(t, subaccountBalance.Spend(sdk.NewInt(100)))
+	app.SubaccountKeeper.SetBalance(ctx, 1, subaccountBalance)
+
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 2 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
@@ -78,20 +85,38 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	t.Log("balance of subaccount owner should be the same as both expired locked balances")
+	t.Log("balance of subaccount owner should be the same as both expired locked balances minus spent money")
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
-	require.True(t, balance.Amount.Equal(sdk.NewInt(300)), balance.Amount.String())
+	require.Equal(t, sdk.NewInt(200), balance.Amount)
 
 	t.Log("check bank balance of sub account address")
 	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
-	require.True(t, balance.IsZero())
+	require.Equal(t, sdk.NewInt(100), balance.Amount)
 
-	t.Log("check balance of subaccount")
-	subaccountBalance := app.SubaccountKeeper.GetBalance(ctx, 1)
-	require.True(t, subaccountBalance.WithdrawmAmount.Equal(sdk.NewInt(300)))
-	require.True(t, subaccountBalance.DepositedAmount.Equal(sdk.NewInt(300)))
-	require.True(t, subaccountBalance.SpentAmount.IsZero())
-	require.True(t, subaccountBalance.LostAmount.IsZero())
+	t.Log("after unspending the money of the subaccount, the owner will be able to get the money back when withdrawing")
+	subaccountBalance = app.SubaccountKeeper.GetBalance(ctx, 1)
+	require.NoError(t, subaccountBalance.Unspend(sdk.NewInt(100)))
+	app.SubaccountKeeper.SetBalance(ctx, 1, subaccountBalance)
+	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
+		Sender: subaccountOwner.String(),
+	})
+	require.NoError(t, err)
+
+	// check balances
+	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
+	require.Equal(t, sdk.NewInt(0), balance.Amount)
+	subaccountBalance = app.SubaccountKeeper.GetBalance(ctx, 1)
+	require.Equal(t, sdk.NewInt(300), subaccountBalance.WithdrawmAmount)
+
+	// check that the owner has received the last money
+	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
+	require.Equal(t, sdk.NewInt(300), balance.Amount)
+
+	// check that the owner can't withdraw again
+	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
+		Sender: subaccountOwner.String(),
+	})
+	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 }
 
 func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {

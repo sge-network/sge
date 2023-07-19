@@ -25,6 +25,9 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
 	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
 	withdrawableBalance := sdk.MinInt(sdk.MinInt(balance.Available(), unlockedBalance), bankBalance.Amount)
+	if withdrawableBalance.IsZero() {
+		return nil, types.ErrNothingToWithdraw
+	}
 
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
 	m.keeper.SetBalance(sdkContext, subaccountID, balance)
