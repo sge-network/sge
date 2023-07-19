@@ -87,7 +87,7 @@ func TestResolveMarkets(t *testing.T) {
 			WinnerOddsUIDs: []string{"oddsUID1", "oddsUID2"},
 			Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 		}
-		k.ResolveMarket(ctx, item, &resMarketsIn)
+		k.Resolve(ctx, item, &resMarketsIn)
 		val, found := k.GetMarket(ctx, item.UID)
 		require.True(t, found)
 		require.Equal(t, resMarketsIn.ResolutionTS, val.ResolutionTS)

@@ -12,8 +12,8 @@ import (
 // RegisterLegacyAminoCodec registers the necessary x/house interfaces and concrete types
 // on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgDeposit{}, "house/MsgDeposit", nil)
-	cdc.RegisterConcrete(&MsgWithdraw{}, "house/MsgWithdraw", nil)
+	cdc.RegisterConcrete(&MsgDeposit{}, "house/Deposit", nil)
+	cdc.RegisterConcrete(&MsgWithdraw{}, "house/Withdraw", nil)
 }
 
 // RegisterInterfaces registers the x/house interfaces types with the interface registry

@@ -9,7 +9,7 @@ import (
 )
 
 // CmdResolveMarket registers the resolve market command
-func CmdResolveMarket() *cobra.Command {
+func CmdResolve() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "resolve [ticket]",
 		Short: "set resolution of a market",
@@ -21,7 +21,7 @@ func CmdResolveMarket() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgResolveMarket(
+			msg := types.NewMsgResolve(
 				clientCtx.GetFromAddress().String(),
 				args[0],
 			)

@@ -28,9 +28,9 @@ var (
 	// the queryable bets by UID list.
 	keyMaxBetByUIDQueryCount = []byte("MaxBetByUidQueryCount")
 
-	// keyPlacementConstraints is the default bet placement
+	// keyWagerConstraints is the default bet placement
 	// constraints.
-	keyPlacementConstraints = []byte("PlacementConstraints")
+	keyWagerConstraints = []byte("WagerConstraints")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -71,7 +71,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			validateMaxBetByUIDQueryCount,
 		),
 		paramtypes.NewParamSetPair(
-			keyPlacementConstraints,
+			keyWagerConstraints,
 			&p.Constraints,
 			validateConstraints,
 		),

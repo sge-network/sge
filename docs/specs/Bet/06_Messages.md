@@ -6,27 +6,27 @@ handler endpoints is as follows
 ```proto
 // Msg defines the Msg service.
 service Msg {
-  // PlaceBet defines a method to place a bet with the given data
-  rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
+  // Wager defines a method to place a bet with the given data
+  rpc Wager(MsgWager) returns (MsgWagerResponse);
 }
 ```
 
-## **MsgPlaceBet**
+## **MsgWager**
 
 Within this message, the user specifies the bet information they wish to place.
 
 ```proto
-// MsgPlaceBet defines a message to place a bet with the given data
-message MsgPlaceBet {
+// MsgWager defines a message to place a bet with the given data
+message MsgWager {
   // creator is the bettor address
   string creator = 1;
 
-  // bet is the info of bet to place
-  PlaceBetFields bet = 2;
+  // props is the info of bet to place
+  WagerProps props = 2;
 }
 
-// PlaceBetFields contains attributes which come in Place bet tx request.
-message PlaceBetFields {
+// WagerProps contains attributes which come in wager tx request.
+message WagerProps {
   // uid is the universal unique identifier assigned to bet.
   string uid = 1 [
     (gogoproto.customname) = "UID",
@@ -44,12 +44,12 @@ message PlaceBetFields {
   string ticket = 3;
 }
 
-// MsgPlaceBetResponse is the returning value in the response
-// of MsgPlaceBet request.
-message MsgPlaceBetResponse { PlaceBetFields bet = 1; }
+// MsgWagerResponse is the returning value in the response
+// of MsgWager request.
+message MsgWagerResponse { WagerProps props = 1; }
 ```
 
-### **Sample Place bet ticket**
+### **Sample Wager ticket**
 
 ```json
 {
@@ -72,7 +72,7 @@ message MsgPlaceBetResponse { PlaceBetFields bet = 1; }
 }
 ```
 
-### **Placement Failure cases**
+### **Wager Failure cases**
 
 The transaction will fail if:
 
@@ -92,7 +92,7 @@ The transaction will fail if:
 - The market does not contain the selected odds
 - Bet amount is less than minimum allowed amount
 - The creator address is not valid
-- There is an error in `ProcessBetPlacement` in `orderbook` module
+- There is an error in `ProcessWager` in `orderbook` module
 
 ### **What Happens if bet placement fails**
 

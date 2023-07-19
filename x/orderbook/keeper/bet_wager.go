@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-// ProcessBetPlacement processes bet placement
-func (k Keeper) ProcessBetPlacement(
+// ProcessWager processes bet placement
+func (k Keeper) ProcessWager(
 	ctx sdk.Context,
 	betUID, bookUID, oddsUID string,
 	maxLossMultiplier sdk.Dec,
@@ -92,7 +92,7 @@ func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
 	event.Emit(ctx)
 }
 
-// fulfillBetByParticipationQueue fulfills the bet placement payout using the participations
+// fulfillBetByParticipationQueue fulfills the bet wagering payout using the participations
 // that is stored in the state.
 func (k Keeper) fulfillBetByParticipationQueue(
 	ctx sdk.Context,

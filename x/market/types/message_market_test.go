@@ -10,29 +10,29 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgAddMarketValidateBasic(t *testing.T) {
+func TestMsgAddValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgAddMarket
+		msg  types.MsgAdd
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgAddMarket{
+			msg: types.MsgAdd{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
-			msg: types.MsgAddMarket{
+			msg: types.MsgAdd{
 				Creator: sample.AccAddress(),
 				Ticket:  "Ticket",
 			},
 		},
 		{
 			name: "no ticket",
-			msg: types.MsgAddMarket{
+			msg: types.MsgAdd{
 				Creator: sample.AccAddress(),
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -50,13 +50,13 @@ func TestMsgAddMarketValidateBasic(t *testing.T) {
 	}
 }
 
-func TestNewAddMarket(t *testing.T) {
+func TestNewAdd(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		expected := &types.MsgAddMarket{
+		expected := &types.MsgAdd{
 			Creator: uuid.NewString(),
 			Ticket:  "Ticket",
 		}
-		res := types.NewMsgAddMarket(
+		res := types.NewMsgAdd(
 			expected.Creator,
 			expected.Ticket,
 		)
@@ -64,29 +64,29 @@ func TestNewAddMarket(t *testing.T) {
 	})
 }
 
-func TestMsgUpdateMarketValidateBasic(t *testing.T) {
+func TestMsgUpdateValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgUpdateMarket
+		msg  types.MsgUpdate
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgUpdateMarket{
+			msg: types.MsgUpdate{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
-			msg: types.MsgUpdateMarket{
+			msg: types.MsgUpdate{
 				Creator: sample.AccAddress(),
 				Ticket:  "Ticket",
 			},
 		},
 		{
 			name: "no ticket",
-			msg: types.MsgUpdateMarket{
+			msg: types.MsgUpdate{
 				Creator: sample.AccAddress(),
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -104,13 +104,13 @@ func TestMsgUpdateMarketValidateBasic(t *testing.T) {
 	}
 }
 
-func TestNewUpdateMarket(t *testing.T) {
+func TestNewUpdate(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		expected := &types.MsgUpdateMarket{
+		expected := &types.MsgUpdate{
 			Creator: uuid.NewString(),
 			Ticket:  "Ticket",
 		}
-		res := types.NewMsgUpdateMarket(
+		res := types.NewMsgUpdate(
 			expected.Creator,
 			expected.Ticket,
 		)

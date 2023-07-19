@@ -9,31 +9,31 @@ import (
 )
 
 const (
-	// typeMsgPlaceBet is type of message MsgPlaceBet
-	typeMsgPlaceBet = "bet_place"
+	// typeMsgWager is type of message MsgWager
+	typeMsgWager = "bet_wager"
 )
 
-var _ sdk.Msg = &MsgPlaceBet{}
+var _ sdk.Msg = &MsgWager{}
 
-// NewMsgPlaceBet returns a MsgPlaceBet using given data
-func NewMsgPlaceBet(
+// NewMsgWager returns a MsgWager using given data
+func NewMsgWager(
 	creator string,
-	bet PlaceBetFields,
-) *MsgPlaceBet {
-	return &MsgPlaceBet{
+	props WagerProps,
+) *MsgWager {
+	return &MsgWager{
 		Creator: creator,
-		Bet:     &bet,
+		Props:   &props,
 	}
 }
 
 // Route returns the module's message router key.
-func (*MsgPlaceBet) Route() string { return RouterKey }
+func (*MsgWager) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (*MsgPlaceBet) Type() string { return typeMsgPlaceBet }
+func (*MsgWager) Type() string { return typeMsgWager }
 
 // GetSigners returns the signers of its message
-func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
+func (msg *MsgWager) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -42,40 +42,39 @@ func (msg *MsgPlaceBet) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes returns sortJson form of its message
-func (msg *MsgPlaceBet) GetSignBytes() []byte {
+func (msg *MsgWager) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic does some validate checks on its message
-func (msg *MsgPlaceBet) ValidateBasic() error {
+func (msg *MsgWager) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
-
-	return BetFieldsValidation(msg.Bet)
+	return WagerValidation(msg.Props)
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgPlaceBet) EmitEvent(ctx *sdk.Context) {
+func (msg *MsgWager) EmitEvent(ctx *sdk.Context) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgPlaceBet, msg.Creator,
+	emitter.AddMsg(typeMsgWager, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),
-		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
+		sdk.NewAttribute(attributeKeyBetUID, msg.Props.UID),
 	)
 	emitter.Emit()
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdds) *Bet {
+func NewBet(creator string, props *WagerProps, oddsType OddsType, odds *BetOdds) *Bet {
 	return &Bet{
 		Creator:           creator,
-		UID:               bet.UID,
+		UID:               props.UID,
 		MarketUID:         odds.MarketUID,
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
-		Amount:            bet.Amount,
+		Amount:            props.Amount,
 		OddsType:          oddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
 	}
