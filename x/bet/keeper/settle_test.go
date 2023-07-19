@@ -196,7 +196,7 @@ func TestSettleBet(t *testing.T) {
 				}
 			}
 
-			err := k.SettleBet(ctx, tc.bet.Creator, betUID)
+			err := k.Settle(ctx, tc.bet.Creator, betUID)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return
@@ -260,7 +260,7 @@ func TestBatchSettleBet(t *testing.T) {
 	for _, marketUID := range marketUIDs[:len(marketUIDs)-2] {
 		market, found := tApp.MarketKeeper.GetMarket(ctx, marketUID)
 		require.True(t, found)
-		tApp.MarketKeeper.ResolveMarket(ctx, market, &markettypes.MarketResolutionTicketPayload{
+		tApp.MarketKeeper.Resolve(ctx, market, &markettypes.MarketResolutionTicketPayload{
 			UID:            marketUID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID1, testOddsUID2, testOddsUID3},
@@ -270,7 +270,7 @@ func TestBatchSettleBet(t *testing.T) {
 
 	market, found := tApp.MarketKeeper.GetMarket(ctx, marketUIDs[len(marketUIDs)-2])
 	require.True(t, found)
-	tApp.MarketKeeper.ResolveMarket(ctx, market, &markettypes.MarketResolutionTicketPayload{
+	tApp.MarketKeeper.Resolve(ctx, market, &markettypes.MarketResolutionTicketPayload{
 		UID:          marketUIDs[len(marketUIDs)-2],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
 		Status:       markettypes.MarketStatus_MARKET_STATUS_CANCELED,
@@ -278,7 +278,7 @@ func TestBatchSettleBet(t *testing.T) {
 
 	market, found = tApp.MarketKeeper.GetMarket(ctx, marketUIDs[len(marketUIDs)-1])
 	require.True(t, found)
-	tApp.MarketKeeper.ResolveMarket(ctx, market, &markettypes.MarketResolutionTicketPayload{
+	tApp.MarketKeeper.Resolve(ctx, market, &markettypes.MarketResolutionTicketPayload{
 		UID:          marketUIDs[len(marketUIDs)-1],
 		ResolutionTS: uint64(ctx.BlockTime().Unix()) + 10000,
 		Status:       markettypes.MarketStatus_MARKET_STATUS_ABORTED,

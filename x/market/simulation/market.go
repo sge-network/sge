@@ -11,8 +11,8 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// SimulateMsgAddMarket simulates the add market flow
-func SimulateMsgAddMarket(
+// SimulateMsgAdd simulates the add market flow
+func SimulateMsgAdd(
 	_ types.AccountKeeper,
 	_ types.BankKeeper,
 	_ keeper.Keeper,
@@ -20,7 +20,7 @@ func SimulateMsgAddMarket(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgAddMarket{
+		msg := &types.MsgAdd{
 			Creator: simAccount.Address.String(),
 		}
 
@@ -34,8 +34,8 @@ func SimulateMsgAddMarket(
 	}
 }
 
-// SimulateMsgResolveMarket simulates the resolve market flow
-func SimulateMsgResolveMarket(
+// SimulateMsgResolve simulates the resolve market flow
+func SimulateMsgResolve(
 	_ types.AccountKeeper,
 	_ types.BankKeeper,
 	_ keeper.Keeper,
@@ -43,7 +43,7 @@ func SimulateMsgResolveMarket(
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgResolveMarket{
+		msg := &types.MsgResolve{
 			Creator: simAccount.Address.String(),
 		}
 
