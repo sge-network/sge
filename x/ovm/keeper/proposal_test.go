@@ -152,7 +152,7 @@ func TestFinishProposals(t *testing.T) {
 
 	keyVault, found := k.GetKeyVault(ctx)
 	require.True(t, found)
-	require.Equal(t, 7, len(keyVault.PublicKeys))
+	require.Equal(t, types.MinPubKeysCount, len(keyVault.PublicKeys))
 }
 
 func TestFinishProposal(t *testing.T) {

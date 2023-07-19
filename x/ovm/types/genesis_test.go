@@ -14,7 +14,7 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	pubkeys := simappUtil.GenerateOvmPublicKeys(7)
+	pubkeys := simappUtil.GenerateOvmPublicKeys(types.MaxPubKeysCount)
 
 	var votes []*types.Vote
 	for _, v := range pubkeys {
