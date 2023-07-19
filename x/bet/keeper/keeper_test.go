@@ -35,8 +35,8 @@ var (
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 	testCreator   string
-	testBet       *types.MsgPlaceBet
-	testAddMarket *markettypes.MsgAddMarket
+	testBet       *types.MsgWager
+	testAddMarket *markettypes.MsgAdd
 
 	testMarket = markettypes.Market{
 		UID:     testMarketUID,
@@ -76,13 +76,13 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 	require.Nil(t, err)
 
-	testAddMarket = &markettypes.MsgAddMarket{
+	testAddMarket = &markettypes.MsgAdd{
 		Creator: testCreator,
 		Ticket:  testAddMarketTicket,
 	}
 	wctx := sdk.WrapSDKContext(ctx)
 	marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
-	resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
+	resAddMarket, err := marketSrv.Add(wctx, testAddMarket)
 	require.Nil(t, err)
 	require.NotNil(t, resAddMarket)
 }
@@ -110,13 +110,13 @@ func addTestMarketBatch(
 		testAddMarketTicket, err := createJwtTicket(testAddMarketClaim)
 		require.Nil(t, err)
 
-		testAddMarket = &markettypes.MsgAddMarket{
+		testAddMarket = &markettypes.MsgAdd{
 			Creator: testCreator,
 			Ticket:  testAddMarketTicket,
 		}
 		wctx := sdk.WrapSDKContext(ctx)
 		marketSrv := marketkeeper.NewMsgServerImpl(*tApp.MarketKeeper)
-		resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
+		resAddMarket, err := marketSrv.Add(wctx, testAddMarket)
 		require.Nil(t, err)
 		require.NotNil(t, resAddMarket)
 	}
@@ -143,27 +143,27 @@ func placeTestBet(
 		selectedOdds = testSelectedBetOdds
 	}
 
-	testPlaceBetClaim := jwt.MapClaims{
+	testWagerClaim := jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
 		"odds_type":     1,
 	}
-	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
+	testWagerTicket, err := createJwtTicket(testWagerClaim)
 	require.Nil(t, err)
 
-	testBet = &types.MsgPlaceBet{
+	testBet = &types.MsgWager{
 		Creator: testCreator,
-		Bet: &types.PlaceBetFields{
+		Props: &types.WagerProps{
 			UID:    betUID,
 			Amount: sdk.NewInt(1000000),
-			Ticket: testPlaceBetTicket,
+			Ticket: testWagerTicket,
 		},
 	}
-	resPlaceBet, err := betSrv.PlaceBet(wctx, testBet)
+	resWagerBet, err := betSrv.Wager(wctx, testBet)
 	require.Nil(t, err)
-	require.NotNil(t, resPlaceBet)
+	require.NotNil(t, resWagerBet)
 }
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {

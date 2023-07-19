@@ -24,9 +24,11 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // OrderBookEvent to publish the order book event
 type OrderBookEvent struct {
-	// ParticipationExposure to publish the order book event, participation exposure
+	// ParticipationExposure to publish the order book event, participation
+	// exposure
 	ParticipationExposure []*ParticipationExposure `protobuf:"bytes,1,rep,name=participation_exposure,json=participationExposure,proto3" json:"participation_exposure,omitempty"`
-	// OrderBookOddsExposure to publish the order book event, order book odds exposure
+	// OrderBookOddsExposure to publish the order book event, order book odds
+	// exposure
 	OrderBookOddsExposure []*OrderBookOddsExposure `protobuf:"bytes,2,rep,name=order_book_odds_exposure,json=orderBookOddsExposure,proto3" json:"order_book_odds_exposure,omitempty"`
 }
 

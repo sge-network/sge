@@ -2,7 +2,7 @@
 
 This section defines the state transitions of the bet module's KVStore in all scenarios:
 
-## **Place bet**
+## **Wager**
 
 When this is processed:
 

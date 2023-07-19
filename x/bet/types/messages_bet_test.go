@@ -10,24 +10,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgPlaceBetValidateBasic(t *testing.T) {
+func TestMsgWagerValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgPlaceBet
+		msg  types.MsgWager
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgWager{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid bet message",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgWager{
 				Creator: sample.AccAddress(),
-				Bet: &types.PlaceBetFields{
+				Props: &types.WagerProps{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 					Amount: sdk.NewInt(int64(10)),
 					Ticket: "Ticket",
@@ -36,9 +36,9 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid bet UID",
-			msg: types.MsgPlaceBet{
+			msg: types.MsgWager{
 				Creator: sample.AccAddress(),
-				Bet: &types.PlaceBetFields{
+				Props: &types.WagerProps{
 					UID: "Invalid UID",
 				},
 			},
@@ -59,7 +59,7 @@ func TestMsgPlaceBetValidateBasic(t *testing.T) {
 
 func TestNewBet(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		inputBet := &types.PlaceBetFields{
+		inputBet := &types.WagerProps{
 			UID:    "betUid",
 			Ticket: "ticket",
 			Amount: sdk.NewInt(int64(10)),

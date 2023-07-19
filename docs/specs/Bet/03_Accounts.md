@@ -6,7 +6,7 @@ There is one account in the Bet module.
 
 During bet placement, betting fee is transferred from the bettor's account to the bet module account in the Bet module.
 
-## Placement Transfer
+## Wager Transfer
 
 The bet amount (deducted by betting fee) is transferred to the `orderbook_liquidity_pool` module account in `orderbook` module.
 

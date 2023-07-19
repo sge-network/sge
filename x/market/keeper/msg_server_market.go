@@ -8,11 +8,11 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// AddMarket accepts ticket containing creation market and return response after processing
-func (k msgServer) AddMarket(
+// Add accepts ticket containing creation market and return response after processing
+func (k msgServer) Add(
 	goCtx context.Context,
-	msg *types.MsgAddMarket,
-) (*types.MsgAddMarketResponse, error) {
+	msg *types.MsgAdd,
+) (*types.MsgAddResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var addPayload types.MarketAddTicketPayload
@@ -53,17 +53,17 @@ func (k msgServer) AddMarket(
 
 	msg.EmitEvent(&ctx, market.UID, market.BookUID)
 
-	return &types.MsgAddMarketResponse{
+	return &types.MsgAddResponse{
 		Error: "",
 		Data:  &market,
 	}, nil
 }
 
-// UpdateMarket accepts ticket containing update market and return response after processing
-func (k msgServer) UpdateMarket(
+// Update accepts ticket containing update market and return response after processing
+func (k msgServer) Update(
 	goCtx context.Context,
-	msg *types.MsgUpdateMarket,
-) (*types.MsgUpdateMarketResponse, error) {
+	msg *types.MsgUpdate,
+) (*types.MsgUpdateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	var updatePayload types.MarketUpdateTicketPayload
@@ -97,5 +97,5 @@ func (k msgServer) UpdateMarket(
 
 	msg.EmitEvent(&ctx, market.UID)
 
-	return &types.MsgUpdateMarketResponse{Data: &market}, nil
+	return &types.MsgUpdateResponse{Data: &market}, nil
 }

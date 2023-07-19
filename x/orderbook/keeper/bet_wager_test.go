@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestBetPlacement(t *testing.T) {
+func TestWager(t *testing.T) {
 	ts := newTestBetSuite(t)
 	ts.placeBetsAndTest()
 }
@@ -178,16 +178,16 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	winner1Bet.BetFulfillment = winner1BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner1Bet, winner1BetID)
-	winner1BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	winner1BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		winner1BettorAddr,
 		params.DefaultBondDenom,
 	)
-	expWinner1BalanceAfterPlacement := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.Fee)
+	expWinner1BalanceAfterWager := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.Fee)
 	require.Equal(
 		ts.t,
-		expWinner1BalanceAfterPlacement.Int64(),
-		winner1BalAfterPlacement.Amount.Int64(),
+		expWinner1BalanceAfterWager.Int64(),
+		winner1BalAfterWager.Amount.Int64(),
 	)
 
 	oddsExposures, found = ts.k.GetOrderBookOddsExposure(
@@ -216,16 +216,16 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 
 	winner2Bet.BetFulfillment = winner2BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner2Bet, winner2BetID)
-	winner2BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	winner2BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		winner1BettorAddr,
 		params.DefaultBondDenom,
 	)
-	expWinner2BalanceAfterPlacement := winner2Bal.Amount.Sub(winner2Bet.Amount).Sub(winner2Bet.Fee)
+	expWinner2BalanceAfterWager := winner2Bal.Amount.Sub(winner2Bet.Amount).Sub(winner2Bet.Fee)
 	require.Equal(
 		ts.t,
-		expWinner2BalanceAfterPlacement.Int64(),
-		winner2BalAfterPlacement.Amount.Int64(),
+		expWinner2BalanceAfterWager.Int64(),
+		winner2BalAfterWager.Amount.Int64(),
 	)
 	oddsExposures, found = ts.k.GetOrderBookOddsExposure(
 		ts.ctx,
@@ -267,13 +267,13 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	loserBet.BetFulfillment = loserBetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, loserBet, loserBetID)
-	loserBalAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	loserBalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		loserBettorAddr,
 		params.DefaultBondDenom,
 	)
-	expLoserBalanceAfterPlacement := loserBal.Amount.Sub(loserBet.Amount).Sub(loserBet.Fee)
-	require.Equal(ts.t, expLoserBalanceAfterPlacement, loserBalAfterPlacement.Amount)
+	expLoserBalanceAfterWager := loserBal.Amount.Sub(loserBet.Amount).Sub(loserBet.Fee)
+	require.Equal(ts.t, expLoserBalanceAfterWager, loserBalAfterWager.Amount)
 
 	return []bettypes.Bet{
 		winner1Bet,
@@ -307,18 +307,18 @@ func (ts *testBetSuite) placeTestBet(
 	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
-	betFeeCollectorBalanceBeforePlacement := ts.tApp.BankKeeper.GetBalance(
+	betFeeCollectorBalanceBeforeWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollectorFunder{}.GetModuleAcc()),
 		params.DefaultBondDenom,
 	)
-	liquidityPoolBalanceBeforePlacement := ts.tApp.BankKeeper.GetBalance(
+	liquidityPoolBalanceBeforeWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityFunder{}.GetModuleAcc()),
 		params.DefaultBondDenom,
 	)
 
-	betFulfillment, err := ts.k.ProcessBetPlacement(
+	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1,
 	)
@@ -329,11 +329,11 @@ func (ts *testBetSuite) placeTestBet(
 		ts.tApp.BetKeeper.SetBet(ts.ctx, bet, betID)
 		ts.tApp.BetKeeper.SetPendingBet(ts.ctx, &bettypes.PendingBet{Creator: bet.Creator, UID: bet.UID}, betID, marketUID)
 
-		betFeeCollectorBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollectorFunder{}.GetModuleAcc()), params.DefaultBondDenom)
-		require.Equal(ts.t, bet.Fee.Int64(), betFeeCollectorBalanceAfterPlacement.Sub(betFeeCollectorBalanceBeforePlacement).Amount.Int64())
+		betFeeCollectorBalanceAfterWager := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(bettypes.BetFeeCollectorFunder{}.GetModuleAcc()), params.DefaultBondDenom)
+		require.Equal(ts.t, bet.Fee.Int64(), betFeeCollectorBalanceAfterWager.Sub(betFeeCollectorBalanceBeforeWager).Amount.Int64())
 
-		liquidityPoolBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityFunder{}.GetModuleAcc()), params.DefaultBondDenom)
-		require.Equal(ts.t, bet.Amount.Int64(), liquidityPoolBalanceAfterPlacement.Sub(liquidityPoolBalanceBeforePlacement).Amount.Int64())
+		liquidityPoolBalanceAfterWager := ts.tApp.BankKeeper.GetBalance(ts.ctx, ts.tApp.AccountKeeper.GetModuleAddress(types.OrderBookLiquidityFunder{}.GetModuleAcc()), params.DefaultBondDenom)
+		require.Equal(ts.t, bet.Amount.Int64(), liquidityPoolBalanceAfterWager.Sub(liquidityPoolBalanceBeforeWager).Amount.Int64())
 	}
 
 	return bet, payoutProfit, betFulfillment

@@ -26,8 +26,8 @@ var (
 
 const (
 	//#nosec
-	opWeightMsgAddMarket          = "op_weight_msg_create_chain"
-	defaultWeightMsgAddMarket int = 100
+	opWeightMsgAdd          = "op_weight_msg_create_chain"
+	defaultWeightMsgAdd int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -54,10 +54,10 @@ func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
 func (AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgAddMarket int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddMarket, &weightMsgAddMarket, nil,
+	var weightMsgAdd int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAdd, &weightMsgAdd, nil,
 		func(_ *rand.Rand) {
-			weightMsgAddMarket = defaultWeightMsgAddMarket
+			weightMsgAdd = defaultWeightMsgAdd
 		},
 	)
 

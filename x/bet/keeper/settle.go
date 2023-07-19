@@ -13,8 +13,8 @@ import (
 // singlePageNum used to return single page result in pagination.
 const singlePageNum = 1
 
-// SettleBet settles a single bet and updates it in KVStore
-func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) error {
+// Settle settles a single bet and updates it in KVStore
+func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 	if !utils.IsValidUID(betUID) {
 		return types.ErrInvalidBetUID
 	}
@@ -73,7 +73,7 @@ func (k Keeper) SettleBet(ctx sdk.Context, bettorAddressStr, betUID string) erro
 		return err
 	}
 
-	if err := k.settleResolvedBet(ctx, &bet); err != nil {
+	if err := k.settleResolved(ctx, &bet); err != nil {
 		return err
 	}
 
@@ -101,9 +101,9 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 	k.SetSettledBet(ctx, types.NewSettledBet(bet.UID, bet.Creator), betID, ctx.BlockHeight())
 }
 
-// settleResolvedBet settles a bet by calling order book functions to unlock fund and payout
+// settleResolved settles a bet by calling order book functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
-func (k Keeper) settleResolvedBet(ctx sdk.Context, bet *types.Bet) error {
+func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
@@ -196,7 +196,7 @@ func (k Keeper) batchMarketSettlement(
 		var val types.PendingBet
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
-		err = k.SettleBet(ctx, val.Creator, val.UID)
+		err = k.Settle(ctx, val.Creator, val.UID)
 		if err != nil {
 			return
 		}

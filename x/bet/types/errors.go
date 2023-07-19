@@ -10,7 +10,7 @@ import (
 var (
 	ErrInTicketVerification                 = sdkerrors.Register(ModuleName, 2001, "ticket verification failed")
 	ErrInTicketValidation                   = sdkerrors.Register(ModuleName, 2002, "ticket validation failed")
-	ErrInBetPlacement                       = sdkerrors.Register(ModuleName, 2003, "bet placement failed")
+	ErrInWager                              = sdkerrors.Register(ModuleName, 2003, "bet placement failed")
 	ErrInvalidBetUID                        = sdkerrors.Register(ModuleName, 2004, "invalid Bet Uid")
 	ErrBetIsCanceled                        = sdkerrors.Register(ModuleName, 2005, "bet is already canceled")
 	ErrBetIsSettled                         = sdkerrors.Register(ModuleName, 2006, "bet is already settled")
@@ -25,7 +25,7 @@ var (
 	ErrNoMatchingBet                        = sdkerrors.Register(ModuleName, 2015, "bet not found")
 	ErrResultNotDeclared                    = sdkerrors.Register(ModuleName, 2016, "market result is not declared")
 	ErrDuplicateUID                         = sdkerrors.Register(ModuleName, 2017, "UID is already set")
-	ErrInOBPlacementProcessing              = sdkerrors.Register(ModuleName, 2018, "internal error in processing bet placement in orderbook")
+	ErrInOBWagerProcessing                  = sdkerrors.Register(ModuleName, 2018, "internal error in processing bet placement in orderbook")
 	ErrEndTSIsPassed                        = sdkerrors.Register(ModuleName, 2019, "market is expired")
 	ErrOddsUIDNotExist                      = sdkerrors.Register(ModuleName, 2020, "market does not have this odds UID")
 	ErrInOBRefund                           = sdkerrors.Register(ModuleName, 2021, "internal error in refunding user in Orderbook")

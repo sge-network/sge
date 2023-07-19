@@ -34,7 +34,7 @@ type OVMKeeper interface {
 
 // OrderbookKeeper defines the expected interface needed to process bet placement
 type OrderbookKeeper interface {
-	ProcessBetPlacement(
+	ProcessWager(
 		ctx sdk.Context,
 		betUID, bookUID, oddsUID string,
 		maxLossMultiplier sdk.Dec,
