@@ -2,6 +2,8 @@ package types
 
 import (
 	"fmt"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // Validate performs a basic validation of the LockedBalance fields.
@@ -19,4 +21,12 @@ func (lb *LockedBalance) Validate() error {
 	}
 
 	return nil
+}
+
+// Available reports the coins that are available in the subaccount.
+func (m *Balance) Available() sdk.Int {
+	return m.DepositedAmount.
+		Sub(m.WithdrawmAmount).
+		Sub(m.SpentAmount).
+		Sub(m.LostAmount)
 }

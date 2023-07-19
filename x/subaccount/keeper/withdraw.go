@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -20,8 +21,10 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 
 	balance, unlockedBalance, bankBalance := m.getBalances(sdkContext, subaccountID, subaccountAddr, params)
 
-	// calculate withdrawable balance
-	withdrawableBalance := sdk.MinInt(sdk.MinInt(balance.DepositedAmount, unlockedBalance), bankBalance.Amount)
+	// calculate withdrawable balance, which is the minimum between the available balance, and
+	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
+	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
+	withdrawableBalance := sdk.MinInt(sdk.MinInt(balance.Available(), unlockedBalance), bankBalance.Amount)
 
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
 	m.keeper.SetBalance(sdkContext, subaccountID, balance)
