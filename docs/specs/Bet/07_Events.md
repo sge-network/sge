@@ -2,7 +2,7 @@
 
 The Bet module emits the following events
 
-## *MsgPlace*
+## *MsgWager*
 
 |  Type         |  Attribute Key|    Attribute Value    |
 |:-------------:|:-------------:|:---------------------:|

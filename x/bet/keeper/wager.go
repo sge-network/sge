@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-// Place stores a new bet in KVStore
-func (k Keeper) Place(ctx sdk.Context, bet *types.Bet) error {
+// Wager stores a new bet in KVStore
+func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
@@ -45,12 +45,12 @@ func (k Keeper) Place(ctx sdk.Context, bet *types.Bet) error {
 	stats.Count++
 	betID := stats.Count
 
-	betFulfillment, err := k.orderbookKeeper.ProcessBetPlacement(
+	betFulfillment, err := k.orderbookKeeper.ProcessWager(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
 		bettorAddress, bet.Fee, bet.OddsType, bet.OddsValue, betID,
 	)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrInOBPlacementProcessing, "%s", err)
+		return sdkerrors.Wrapf(types.ErrInOBWagerProcessing, "%s", err)
 	}
 
 	// set bet as placed

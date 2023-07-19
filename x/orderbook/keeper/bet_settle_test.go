@@ -20,17 +20,17 @@ func (ts *testBetSuite) settleBetsAndTest(
 	bets []bettypes.Bet,
 	winner1PayoutProfit, winner2PayoutProfit sdk.Dec,
 ) {
-	winner1BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	winner1BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		sdk.MustAccAddressFromBech32(bets[0].Creator),
 		params.DefaultBondDenom,
 	).Amount
-	winner2BalAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	winner2BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		sdk.MustAccAddressFromBech32(bets[1].Creator),
 		params.DefaultBondDenom,
 	).Amount
-	loserBalanceAfterPlacement := ts.tApp.BankKeeper.GetBalance(
+	loserBalanceAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
 		sdk.MustAccAddressFromBech32(bets[2].Creator),
 		params.DefaultBondDenom,
@@ -54,7 +54,7 @@ func (ts *testBetSuite) settleBetsAndTest(
 		sdk.MustAccAddressFromBech32(bets[0].Creator),
 		params.DefaultBondDenom,
 	)
-	expWinner1BalanceAfterSettlement := winner1BalAfterPlacement.Add(bets[0].Amount).
+	expWinner1BalanceAfterSettlement := winner1BalAfterWager.Add(bets[0].Amount).
 		Add(winner1PayoutProfit.TruncateInt())
 	require.Equal(
 		ts.t,
@@ -67,7 +67,7 @@ func (ts *testBetSuite) settleBetsAndTest(
 		sdk.MustAccAddressFromBech32(bets[1].Creator),
 		params.DefaultBondDenom,
 	)
-	expWinner2BalanceAfterSettlement := winner2BalAfterPlacement.Add(bets[1].Amount).
+	expWinner2BalanceAfterSettlement := winner2BalAfterWager.Add(bets[1].Amount).
 		Add(winner2PayoutProfit.TruncateInt())
 	require.Equal(
 		ts.t,
@@ -82,7 +82,7 @@ func (ts *testBetSuite) settleBetsAndTest(
 	)
 	require.Equal(
 		ts.t,
-		loserBalanceAfterPlacement.Int64(),
+		loserBalanceAfterWager.Int64(),
 		loserBettorBalAfterSettlement.Amount.Int64(),
 	)
 }

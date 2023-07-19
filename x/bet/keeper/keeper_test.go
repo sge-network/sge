@@ -35,7 +35,7 @@ var (
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 	testCreator   string
-	testBet       *types.MsgPlace
+	testBet       *types.MsgWager
 	testAddMarket *markettypes.MsgAdd
 
 	testMarket = markettypes.Market{
@@ -143,27 +143,27 @@ func placeTestBet(
 		selectedOdds = testSelectedBetOdds
 	}
 
-	testPlaceBetClaim := jwt.MapClaims{
+	testWagerClaim := jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
 		"odds_type":     1,
 	}
-	testPlaceBetTicket, err := createJwtTicket(testPlaceBetClaim)
+	testWagerTicket, err := createJwtTicket(testWagerClaim)
 	require.Nil(t, err)
 
-	testBet = &types.MsgPlace{
+	testBet = &types.MsgWager{
 		Creator: testCreator,
 		Props: &types.WagerProps{
 			UID:    betUID,
 			Amount: sdk.NewInt(1000000),
-			Ticket: testPlaceBetTicket,
+			Ticket: testWagerTicket,
 		},
 	}
-	resPlaceBet, err := betSrv.Place(wctx, testBet)
+	resWagerBet, err := betSrv.Wager(wctx, testBet)
 	require.Nil(t, err)
-	require.NotNil(t, resPlaceBet)
+	require.NotNil(t, resWagerBet)
 }
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {

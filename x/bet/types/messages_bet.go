@@ -9,31 +9,31 @@ import (
 )
 
 const (
-	// typeMsgPlace is type of message MsgPlace
-	typeMsgPlace = "bet_place"
+	// typeMsgWager is type of message MsgWager
+	typeMsgWager = "bet_wager"
 )
 
-var _ sdk.Msg = &MsgPlace{}
+var _ sdk.Msg = &MsgWager{}
 
-// NewMsgPlace returns a MsgPlace using given data
-func NewMsgPlace(
+// NewMsgWager returns a MsgWager using given data
+func NewMsgWager(
 	creator string,
 	props WagerProps,
-) *MsgPlace {
-	return &MsgPlace{
+) *MsgWager {
+	return &MsgWager{
 		Creator: creator,
 		Props:   &props,
 	}
 }
 
 // Route returns the module's message router key.
-func (*MsgPlace) Route() string { return RouterKey }
+func (*MsgWager) Route() string { return RouterKey }
 
 // Type returns type of its message
-func (*MsgPlace) Type() string { return typeMsgPlace }
+func (*MsgWager) Type() string { return typeMsgWager }
 
 // GetSigners returns the signers of its message
-func (msg *MsgPlace) GetSigners() []sdk.AccAddress {
+func (msg *MsgWager) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -42,13 +42,13 @@ func (msg *MsgPlace) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes returns sortJson form of its message
-func (msg *MsgPlace) GetSignBytes() []byte {
+func (msg *MsgWager) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic does some validate checks on its message
-func (msg *MsgPlace) ValidateBasic() error {
+func (msg *MsgWager) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
@@ -58,9 +58,9 @@ func (msg *MsgPlace) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgPlace) EmitEvent(ctx *sdk.Context) {
+func (msg *MsgWager) EmitEvent(ctx *sdk.Context) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgPlace, msg.Creator,
+	emitter.AddMsg(typeMsgWager, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),
 		sdk.NewAttribute(attributeKeyBetUID, msg.Props.UID),
 	)

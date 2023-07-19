@@ -10,22 +10,22 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgPlaceValidateBasic(t *testing.T) {
+func TestMsgWagerValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgPlace
+		msg  types.MsgWager
 		err  error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgPlace{
+			msg: types.MsgWager{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "valid bet message",
-			msg: types.MsgPlace{
+			msg: types.MsgWager{
 				Creator: sample.AccAddress(),
 				Props: &types.WagerProps{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
@@ -36,7 +36,7 @@ func TestMsgPlaceValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid bet UID",
-			msg: types.MsgPlace{
+			msg: types.MsgWager{
 				Creator: sample.AccAddress(),
 				Props: &types.WagerProps{
 					UID: "Invalid UID",

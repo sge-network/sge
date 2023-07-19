@@ -8,10 +8,10 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 )
 
-func (k msgServer) Place(
+func (k msgServer) Wager(
 	goCtx context.Context,
-	msg *types.MsgPlace,
-) (*types.MsgPlaceResponse, error) {
+	msg *types.MsgWager,
+) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
@@ -32,11 +32,11 @@ func (k msgServer) Place(
 
 	bet := types.NewBet(msg.Creator, msg.Props, payload.OddsType, payload.SelectedOdds)
 
-	if err := k.Keeper.Place(ctx, bet); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInBetPlacement, "%s", err)
+	if err := k.Keeper.Wager(ctx, bet); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInWager, "%s", err)
 	}
 
 	msg.EmitEvent(&ctx)
 
-	return &types.MsgPlaceResponse{Props: msg.Props}, nil
+	return &types.MsgWagerResponse{Props: msg.Props}, nil
 }

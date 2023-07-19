@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-// SimulateMsgPlace returns an Operation function to run a state machine transition
-func SimulateMsgPlace(
+// SimulateMsgWager returns an Operation function to run a state machine transition
+func SimulateMsgWager(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
 	k keeper.Keeper,
@@ -25,7 +25,7 @@ func SimulateMsgPlace(
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 
 		i := r.Int()
-		msg := &types.MsgPlace{
+		msg := &types.MsgWager{
 			Creator: simAccount.Address.String(),
 			Props: &types.WagerProps{
 				UID: cast.ToString(i),
