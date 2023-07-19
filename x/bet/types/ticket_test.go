@@ -106,7 +106,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			p := types.PlacementTicketPayload{
+			p := types.WagerTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
 				OddsType:     tc.oddsType,

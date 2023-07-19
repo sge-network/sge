@@ -155,7 +155,7 @@ func placeTestBet(
 
 	testBet = &types.MsgPlace{
 		Creator: testCreator,
-		Bet: &types.PlaceBetFields{
+		Props: &types.WagerProps{
 			UID:    betUID,
 			Amount: sdk.NewInt(1000000),
 			Ticket: testPlaceBetTicket,

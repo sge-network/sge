@@ -34,7 +34,7 @@ func CmdPlace() *cobra.Command {
 
 			msg := types.NewMsgPlace(
 				clientCtx.GetFromAddress().String(),
-				types.PlaceBetFields{
+				types.WagerProps{
 					UID:    uid,
 					Amount: argAmountCosmosInt,
 					Ticket: argTicket,

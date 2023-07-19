@@ -27,7 +27,7 @@ func SimulateMsgPlace(
 		i := r.Int()
 		msg := &types.MsgPlace{
 			Creator: simAccount.Address.String(),
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID: cast.ToString(i),
 			},
 		}

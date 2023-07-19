@@ -27,7 +27,7 @@ func TestMsgPlaceValidateBasic(t *testing.T) {
 			name: "valid bet message",
 			msg: types.MsgPlace{
 				Creator: sample.AccAddress(),
-				Bet: &types.PlaceBetFields{
+				Props: &types.WagerProps{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 					Amount: sdk.NewInt(int64(10)),
 					Ticket: "Ticket",
@@ -38,7 +38,7 @@ func TestMsgPlaceValidateBasic(t *testing.T) {
 			name: "invalid bet UID",
 			msg: types.MsgPlace{
 				Creator: sample.AccAddress(),
-				Bet: &types.PlaceBetFields{
+				Props: &types.WagerProps{
 					UID: "Invalid UID",
 				},
 			},
@@ -59,7 +59,7 @@ func TestMsgPlaceValidateBasic(t *testing.T) {
 
 func TestNewBet(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
-		inputBet := &types.PlaceBetFields{
+		inputBet := &types.WagerProps{
 			UID:    "betUid",
 			Ticket: "ticket",
 			Amount: sdk.NewInt(int64(10)),

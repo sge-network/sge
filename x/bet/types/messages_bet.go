@@ -18,11 +18,11 @@ var _ sdk.Msg = &MsgPlace{}
 // NewMsgPlace returns a MsgPlace using given data
 func NewMsgPlace(
 	creator string,
-	bet PlaceBetFields,
+	props WagerProps,
 ) *MsgPlace {
 	return &MsgPlace{
 		Creator: creator,
-		Bet:     &bet,
+		Props:   &props,
 	}
 }
 
@@ -54,7 +54,7 @@ func (msg *MsgPlace) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
-	return BetFieldsValidation(msg.Bet)
+	return WagerValidation(msg.Props)
 }
 
 // EmitEvent emits the event for the message success.
@@ -62,20 +62,20 @@ func (msg *MsgPlace) EmitEvent(ctx *sdk.Context) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgPlace, msg.Creator,
 		sdk.NewAttribute(attributeKeyBetCreator, msg.Creator),
-		sdk.NewAttribute(attributeKeyBetUID, msg.Bet.UID),
+		sdk.NewAttribute(attributeKeyBetUID, msg.Props.UID),
 	)
 	emitter.Emit()
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, bet *PlaceBetFields, oddsType OddsType, odds *BetOdds) *Bet {
+func NewBet(creator string, props *WagerProps, oddsType OddsType, odds *BetOdds) *Bet {
 	return &Bet{
 		Creator:           creator,
-		UID:               bet.UID,
+		UID:               props.UID,
 		MarketUID:         odds.MarketUID,
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
-		Amount:            bet.Amount,
+		Amount:            props.Amount,
 		OddsType:          oddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
 	}

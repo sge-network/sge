@@ -23,7 +23,7 @@ func TestBetMsgServerPlace(t *testing.T) {
 		betItem := types.Bet{UID: "betUID"}
 		inputMsg := &types.MsgPlace{
 			Creator: creator.Address.String(),
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID: betItem.UID,
 			},
 		}
@@ -36,7 +36,7 @@ func TestBetMsgServerPlace(t *testing.T) {
 	t.Run("Error in verifying ticket", func(t *testing.T) {
 		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: "wrongTicket",
@@ -67,7 +67,7 @@ func TestBetMsgServerPlace(t *testing.T) {
 		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: placeBetTicket,
@@ -96,7 +96,7 @@ func TestBetMsgServerPlace(t *testing.T) {
 		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
 
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID:    "betUID_1",
 				Amount: sdk.NewInt(500),
 				Ticket: placeBetTicket,
@@ -124,7 +124,7 @@ func TestBetMsgServerPlace(t *testing.T) {
 
 		inputBet := &types.MsgPlace{
 			Creator: creator.Address.String(),
-			Bet: &types.PlaceBetFields{
+			Props: &types.WagerProps{
 				UID:    "BetUID_2",
 				Amount: sdk.NewInt(1000000),
 				Ticket: placeBetTicket,
@@ -167,14 +167,14 @@ func TestBetMsgServerPlace(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, inputBet.Creator, rst.Creator)
 
-		uid2ID, found := k.GetBetID(ctx, inputBet.Bet.UID)
+		uid2ID, found := k.GetBetID(ctx, inputBet.Props.UID)
 		require.True(t, found)
-		require.Equal(t, types.UID2ID{UID: inputBet.Bet.UID, ID: 1}, uid2ID)
+		require.Equal(t, types.UID2ID{UID: inputBet.Props.UID, ID: 1}, uid2ID)
 
 		stats := k.GetBetStats(ctx)
 		require.Equal(t, types.BetStats{Count: 1}, stats)
 
-		inputBet.Bet.UID = "BetUID_3"
+		inputBet.Props.UID = "BetUID_3"
 		_, err = msgk.Place(wctx, inputBet)
 		require.NoError(t, err)
 		rst, found = k.GetBet(ctx,
@@ -184,9 +184,9 @@ func TestBetMsgServerPlace(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, inputBet.Creator, rst.Creator)
 
-		uid2ID, found = k.GetBetID(ctx, inputBet.Bet.UID)
+		uid2ID, found = k.GetBetID(ctx, inputBet.Props.UID)
 		require.True(t, found)
-		require.Equal(t, types.UID2ID{UID: inputBet.Bet.UID, ID: 2}, uid2ID)
+		require.Equal(t, types.UID2ID{UID: inputBet.Props.UID, ID: 2}, uid2ID)
 
 		stats = k.GetBetStats(ctx)
 		require.Equal(t, types.BetStats{Count: 2}, stats)
