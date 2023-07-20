@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "sge/subaccount/subaccount.proto";
+import "sge/bet/tx.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
@@ -13,7 +14,11 @@ service Msg {
   // TopUp defines a method for topping up a subaccount.
   rpc TopUp(MsgTopUp) returns (MsgTopUpResponse);
 
+  // WithdrawUnlockedBalances defines a method for withdrawing unlocked balances.
   rpc WithdrawUnlockedBalances(MsgWithdrawUnlockedBalances) returns (MsgWithdrawUnlockedBalancesResponse);
+
+  // PlaceBet defines a method for placing a bet using a subaccount.
+  rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
 }
 
 // MsgCreateSubAccount defines the Msg/CreateSubAccount request type.
@@ -54,3 +59,13 @@ message MsgWithdrawUnlockedBalances {
 
 // MsgWithdrawUnlockedBalancesResponse defines the Msg/WithdrawUnlockedBalances response type.
 message MsgWithdrawUnlockedBalancesResponse {}
+
+// MsgPlaceBet wraps the MsgPlaceBet message. We need it in order not to have double interface registration conflicts.
+message MsgPlaceBet {
+  sgenetwork.sge.bet.MsgPlaceBet msg = 1;
+}
+
+// MsgBetResponse wraps the MsgPlaceBetResponse message. We need it in order not to have double interface registration conflicts.
+message MsgPlaceBetResponse {
+  sgenetwork.sge.bet.MsgPlaceBetResponse response = 1;
+}
