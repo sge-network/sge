@@ -13,19 +13,14 @@ func (m msgServer) CreateSubAccount(
 	request *types.MsgCreateSubAccount,
 ) (*types.MsgCreateSubAccountResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
-	moneyToSend := sdk.NewInt(0)
-
 	err := request.ValidateBasic()
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid request")
 	}
 
-	for _, balanceUnlock := range request.LockedBalances {
-		if balanceUnlock.UnlockTime.Unix() < sdkContext.BlockTime().Unix() {
-			return nil, types.ErrUnlockTokenTimeExpired
-		}
-
-		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)
+	moneyToSend, err := sumBalanceUnlocks(sdkContext, request.LockedBalances)
+	if err != nil {
+		return nil, err
 	}
 
 	senderAccount := sdk.MustAccAddressFromBech32(request.Sender)
@@ -41,15 +36,14 @@ func (m msgServer) CreateSubAccount(
 	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
 	m.accountKeeper.SetAccount(sdkContext, address)
 
-	denom := m.keeper.GetParams(sdkContext).LockedBalanceDenom
-	err = m.bankKeeper.SendCoins(sdkContext, senderAccount, subaccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+	err = m.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountID, moneyToSend)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to send coins")
 	}
 
 	m.keeper.SetSubAccountOwner(sdkContext, subaccountID, subaccountOwner)
-	m.keeper.SetLockedBalances(sdkContext, subaccountAddress, request.LockedBalances)
-	m.keeper.SetBalance(sdkContext, subaccountAddress, types.Balance{
+	m.keeper.SetLockedBalances(sdkContext, subaccountID, request.LockedBalances)
+	m.keeper.SetBalance(sdkContext, subaccountID, types.Balance{
 		DepositedAmount: moneyToSend,
 		SpentAmount:     sdk.ZeroInt(),
 		WithdrawmAmount: sdk.ZeroInt(),

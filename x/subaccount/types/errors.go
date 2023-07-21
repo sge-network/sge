@@ -10,4 +10,7 @@ var (
 
 	// ErrSubaccountAlreadyExist is the error for account has already sub account
 	ErrSubaccountAlreadyExist = sdkerrors.Register(ModuleName, 2, "account has already sub account")
+
+	// ErrSubaccountDoesNotExist is the error when sub account does not exist
+	ErrSubaccountDoesNotExist = sdkerrors.Register(ModuleName, 3, "sub account does not exist")
 )

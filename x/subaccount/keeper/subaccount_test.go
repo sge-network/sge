@@ -54,8 +54,6 @@ func TestSubAccountOwner(t *testing.T) {
 func TestSetLockedBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	account := types.NewAddressFromSubaccount(1)
-
 	someUnlockTime := time.Now().Add(time.Hour * 24 * 365)
 	otherUnlockTime := time.Now().Add(time.Hour * 24 * 365 * 2)
 
@@ -70,10 +68,10 @@ func TestSetLockedBalances(t *testing.T) {
 		},
 	}
 
-	k.SetLockedBalances(ctx, account, balanceUnlocks)
+	k.SetLockedBalances(ctx, 1, balanceUnlocks)
 
 	// Get locked balances
-	lockedBalances := k.GetLockedBalances(ctx, account)
+	lockedBalances := k.GetLockedBalances(ctx, 1)
 	for i, lockedBalance := range lockedBalances {
 		require.Equal(t, lockedBalance.Amount, balanceUnlocks[i].Amount)
 		require.True(t, lockedBalance.UnlockTime.Equal(balanceUnlocks[i].UnlockTime))
@@ -90,9 +88,8 @@ func TestSetBalances(t *testing.T) {
 		LostAmount:      sdk.OneInt(),
 	}
 
-	account := types.NewAddressFromSubaccount(1)
-	k.SetBalance(ctx, account, balance)
+	k.SetBalance(ctx, 1, balance)
 
 	// Get balance
-	require.Equal(t, balance, k.GetBalance(ctx, account))
+	require.Equal(t, balance, k.GetBalance(ctx, 1))
 }
