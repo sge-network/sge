@@ -181,8 +181,8 @@ sged start
 
 - Initialize: `sged init [node_name] --chain-id [chain_name]`
 - Add key for genesis account `sged keys add [genesis_key_name]`
-- Add genesis account `sged add-genesis-account [genesis_key_name] 10000000000000000000usge`
-- Create a validator at genesis `sged gentx [genesis_key_name] 10000000usge --chain-id [chain_name]`
+- Add genesis account `sged add-genesis-account [genesis_key_name] 1000000000usge`
+- Create a validator at genesis `sged gentx [genesis_key_name] 500000000usge --chain-id [chain_name]`
 - Collect genesis transactions `sged collect-gentxs`
 - Start node `sged start`
 
