@@ -36,18 +36,17 @@ func TestSubAccountOwner(t *testing.T) {
 	require.False(t, exists)
 
 	// Set subaccount owner
-	k.NextID(ctx)
-	ID := k.Peek(ctx)
-	k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1), owner)
+	id := k.NextID(ctx)
+	k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(id), owner)
 
 	// Account should have subaccount
-	_, exists = k.GetSubAccountOwner(ctx, owner)
+	_, exists = k.GetSubAccountByOwner(ctx, owner)
 	require.True(t, exists)
 
 	// Get subaccount ID
 	subAccountAddress, exists := k.GetSubAccountByOwner(ctx, owner)
 	require.True(t, exists)
-	require.Equal(t, types.NewAddressFromSubaccount(ID), subAccountAddress)
+	require.Equal(t, types.NewAddressFromSubaccount(id), subAccountAddress)
 
 	// Get owner of subaccount
 	gotOwner, exists := k.GetSubAccountOwner(ctx, subAccountAddress)
@@ -56,7 +55,7 @@ func TestSubAccountOwner(t *testing.T) {
 	// Get account ID by owner
 	gotSubAccount, exists := k.GetSubAccountByOwner(ctx, owner)
 	require.True(t, exists)
-	require.Equal(t, types.NewAddressFromSubaccount(ID), gotSubAccount)
+	require.Equal(t, types.NewAddressFromSubaccount(id), gotSubAccount)
 }
 
 func TestSetLockedBalances(t *testing.T) {

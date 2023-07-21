@@ -9,6 +9,7 @@ var (
 	_ sdk.Msg = &MsgCreateSubAccount{}
 	_ sdk.Msg = &MsgTopUp{}
 	_ sdk.Msg = &MsgWithdrawUnlockedBalances{}
+	_ sdk.Msg = &MsgPlaceBet{}
 )
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {
@@ -84,4 +85,12 @@ func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
 		panic(err)
 	}
 	return []sdk.AccAddress{signer}
+}
+
+func (m *MsgPlaceBet) ValidateBasic() error {
+	return m.Msg.ValidateBasic()
+}
+
+func (m *MsgPlaceBet) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
 }
