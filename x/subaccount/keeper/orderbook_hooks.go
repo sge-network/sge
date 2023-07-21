@@ -49,7 +49,8 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 	if !exists {
 		return
 	}
-	err := balance.Unspend(originalAmount.Add(fee))
+	totalUnspent := originalAmount.Add(fee)
+	err := balance.Unspend(totalUnspent)
 	if err != nil {
 		panic(err)
 	}
