@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
@@ -32,10 +31,6 @@ func TestDecodeStore(t *testing.T) {
 				UID:  uuid.NewString(),
 				Meta: "custom odds",
 			},
-		},
-		&types.MarketBetConstraints{
-			MinAmount: sdk.NewInt(10),
-			BetFee:    sdk.NewInt(1),
 		},
 		"custom metadata",
 		uID,

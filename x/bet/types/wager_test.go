@@ -11,12 +11,12 @@ import (
 func TestBetFieldsValidation(t *testing.T) {
 	tcs := []struct {
 		desc string
-		bet  *types.PlaceBetFields
+		bet  *types.WagerProps
 		err  error
 	}{
 		{
 			desc: "space in UID",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    " ",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
@@ -25,7 +25,7 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "invalid UID",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    "invalidUID",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
@@ -34,7 +34,7 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "invalid amount",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(-1)),
 				Ticket: "Ticket",
@@ -43,7 +43,7 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "empty amount",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Ticket: "Ticket",
 			},
@@ -51,7 +51,7 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "space in ticket",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: " ",
@@ -60,7 +60,7 @@ func TestBetFieldsValidation(t *testing.T) {
 		},
 		{
 			desc: "valid message",
-			bet: &types.PlaceBetFields{
+			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Amount: sdk.NewInt(int64(10)),
 				Ticket: "Ticket",
@@ -69,7 +69,7 @@ func TestBetFieldsValidation(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := types.BetFieldsValidation(tc.bet)
+			err := types.WagerValidation(tc.bet)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

@@ -6,7 +6,7 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	_ "github.com/cosmos/gogoproto/gogoproto"
+	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
@@ -28,27 +28,27 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgAddMarket is the message type for adding the market into the
+// MsgAdd is the message type for adding the market into the
 // state.
-type MsgAddMarket struct {
+type MsgAdd struct {
 	// creator is the address of the creator account of the market.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgAddMarket) Reset()         { *m = MsgAddMarket{} }
-func (m *MsgAddMarket) String() string { return proto.CompactTextString(m) }
-func (*MsgAddMarket) ProtoMessage()    {}
-func (*MsgAddMarket) Descriptor() ([]byte, []int) {
+func (m *MsgAdd) Reset()         { *m = MsgAdd{} }
+func (m *MsgAdd) String() string { return proto.CompactTextString(m) }
+func (*MsgAdd) ProtoMessage()    {}
+func (*MsgAdd) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{0}
 }
-func (m *MsgAddMarket) XXX_Unmarshal(b []byte) error {
+func (m *MsgAdd) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAdd) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddMarket.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAdd.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -58,52 +58,52 @@ func (m *MsgAddMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error)
 		return b[:n], nil
 	}
 }
-func (m *MsgAddMarket) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddMarket.Merge(m, src)
+func (m *MsgAdd) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAdd.Merge(m, src)
 }
-func (m *MsgAddMarket) XXX_Size() int {
+func (m *MsgAdd) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddMarket) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddMarket.DiscardUnknown(m)
+func (m *MsgAdd) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAdd.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddMarket proto.InternalMessageInfo
+var xxx_messageInfo_MsgAdd proto.InternalMessageInfo
 
-func (m *MsgAddMarket) GetCreator() string {
+func (m *MsgAdd) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgAddMarket) GetTicket() string {
+func (m *MsgAdd) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
 	return ""
 }
 
-// MsgAddMarketResponse response for adding market.
-type MsgAddMarketResponse struct {
+// MsgAddResponse response for adding market.
+type MsgAddResponse struct {
 	// error contains an error if adding a market faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	// data is the data of market.
 	Data *Market `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
-func (m *MsgAddMarketResponse) Reset()         { *m = MsgAddMarketResponse{} }
-func (m *MsgAddMarketResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgAddMarketResponse) ProtoMessage()    {}
-func (*MsgAddMarketResponse) Descriptor() ([]byte, []int) {
+func (m *MsgAddResponse) Reset()         { *m = MsgAddResponse{} }
+func (m *MsgAddResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgAddResponse) ProtoMessage()    {}
+func (*MsgAddResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{1}
 }
-func (m *MsgAddMarketResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgAddResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgAddMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgAddResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgAddMarketResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgAddResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -113,52 +113,52 @@ func (m *MsgAddMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *MsgAddMarketResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgAddMarketResponse.Merge(m, src)
+func (m *MsgAddResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgAddResponse.Merge(m, src)
 }
-func (m *MsgAddMarketResponse) XXX_Size() int {
+func (m *MsgAddResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgAddMarketResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgAddMarketResponse.DiscardUnknown(m)
+func (m *MsgAddResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgAddResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgAddMarketResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgAddResponse proto.InternalMessageInfo
 
-func (m *MsgAddMarketResponse) GetError() string {
+func (m *MsgAddResponse) GetError() string {
 	if m != nil {
 		return m.Error
 	}
 	return ""
 }
 
-func (m *MsgAddMarketResponse) GetData() *Market {
+func (m *MsgAddResponse) GetData() *Market {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-// MsgResolveMarket is the message type for resolving a market.
-type MsgResolveMarket struct {
+// MsgResolve is the message type for resolving a market.
+type MsgResolve struct {
 	// creator is the address of the creator account of the market.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgResolveMarket) Reset()         { *m = MsgResolveMarket{} }
-func (m *MsgResolveMarket) String() string { return proto.CompactTextString(m) }
-func (*MsgResolveMarket) ProtoMessage()    {}
-func (*MsgResolveMarket) Descriptor() ([]byte, []int) {
+func (m *MsgResolve) Reset()         { *m = MsgResolve{} }
+func (m *MsgResolve) String() string { return proto.CompactTextString(m) }
+func (*MsgResolve) ProtoMessage()    {}
+func (*MsgResolve) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{2}
 }
-func (m *MsgResolveMarket) XXX_Unmarshal(b []byte) error {
+func (m *MsgResolve) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgResolveMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgResolve) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgResolveMarket.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgResolve.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -168,52 +168,52 @@ func (m *MsgResolveMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, er
 		return b[:n], nil
 	}
 }
-func (m *MsgResolveMarket) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgResolveMarket.Merge(m, src)
+func (m *MsgResolve) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgResolve.Merge(m, src)
 }
-func (m *MsgResolveMarket) XXX_Size() int {
+func (m *MsgResolve) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgResolveMarket) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgResolveMarket.DiscardUnknown(m)
+func (m *MsgResolve) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgResolve.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgResolveMarket proto.InternalMessageInfo
+var xxx_messageInfo_MsgResolve proto.InternalMessageInfo
 
-func (m *MsgResolveMarket) GetCreator() string {
+func (m *MsgResolve) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgResolveMarket) GetTicket() string {
+func (m *MsgResolve) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
 	return ""
 }
 
-// MsgResolveMarketResponse response for resolving a market.
-type MsgResolveMarketResponse struct {
+// MsgResolveResponse response for resolving a market.
+type MsgResolveResponse struct {
 	// error contains an error if resolving a market faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	// data is the data of market.
 	Data *Market `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
-func (m *MsgResolveMarketResponse) Reset()         { *m = MsgResolveMarketResponse{} }
-func (m *MsgResolveMarketResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgResolveMarketResponse) ProtoMessage()    {}
-func (*MsgResolveMarketResponse) Descriptor() ([]byte, []int) {
+func (m *MsgResolveResponse) Reset()         { *m = MsgResolveResponse{} }
+func (m *MsgResolveResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgResolveResponse) ProtoMessage()    {}
+func (*MsgResolveResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{3}
 }
-func (m *MsgResolveMarketResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgResolveResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgResolveMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgResolveResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgResolveMarketResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgResolveResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -223,53 +223,53 @@ func (m *MsgResolveMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *MsgResolveMarketResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgResolveMarketResponse.Merge(m, src)
+func (m *MsgResolveResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgResolveResponse.Merge(m, src)
 }
-func (m *MsgResolveMarketResponse) XXX_Size() int {
+func (m *MsgResolveResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgResolveMarketResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgResolveMarketResponse.DiscardUnknown(m)
+func (m *MsgResolveResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgResolveResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgResolveMarketResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgResolveResponse proto.InternalMessageInfo
 
-func (m *MsgResolveMarketResponse) GetError() string {
+func (m *MsgResolveResponse) GetError() string {
 	if m != nil {
 		return m.Error
 	}
 	return ""
 }
 
-func (m *MsgResolveMarketResponse) GetData() *Market {
+func (m *MsgResolveResponse) GetData() *Market {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-// MsgUpdateMarket is the message type for updating market data.
+// MsgUpdate is the message type for updating market data.
 // in the state
-type MsgUpdateMarket struct {
+type MsgUpdate struct {
 	// creator is the address of the creator account of the market.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// ticket is the jwt ticket data.
 	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgUpdateMarket) Reset()         { *m = MsgUpdateMarket{} }
-func (m *MsgUpdateMarket) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateMarket) ProtoMessage()    {}
-func (*MsgUpdateMarket) Descriptor() ([]byte, []int) {
+func (m *MsgUpdate) Reset()         { *m = MsgUpdate{} }
+func (m *MsgUpdate) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdate) ProtoMessage()    {}
+func (*MsgUpdate) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{4}
 }
-func (m *MsgUpdateMarket) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdate) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdate) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateMarket.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdate.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -279,52 +279,52 @@ func (m *MsgUpdateMarket) XXX_Marshal(b []byte, deterministic bool) ([]byte, err
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateMarket) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateMarket.Merge(m, src)
+func (m *MsgUpdate) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdate.Merge(m, src)
 }
-func (m *MsgUpdateMarket) XXX_Size() int {
+func (m *MsgUpdate) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateMarket) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateMarket.DiscardUnknown(m)
+func (m *MsgUpdate) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdate.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateMarket proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdate proto.InternalMessageInfo
 
-func (m *MsgUpdateMarket) GetCreator() string {
+func (m *MsgUpdate) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgUpdateMarket) GetTicket() string {
+func (m *MsgUpdate) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
 	return ""
 }
 
-// MsgUpdateMarketResponse response for updating a market.
-type MsgUpdateMarketResponse struct {
+// MsgUpdateResponse response for updating a market.
+type MsgUpdateResponse struct {
 	// error contains an error if updating a market faces any issues.
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"`
 	// data is the data of market
 	Data *Market `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 }
 
-func (m *MsgUpdateMarketResponse) Reset()         { *m = MsgUpdateMarketResponse{} }
-func (m *MsgUpdateMarketResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgUpdateMarketResponse) ProtoMessage()    {}
-func (*MsgUpdateMarketResponse) Descriptor() ([]byte, []int) {
+func (m *MsgUpdateResponse) Reset()         { *m = MsgUpdateResponse{} }
+func (m *MsgUpdateResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgUpdateResponse) ProtoMessage()    {}
+func (*MsgUpdateResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_d0e875658c4f19fd, []int{5}
 }
-func (m *MsgUpdateMarketResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgUpdateResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgUpdateMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgUpdateResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgUpdateMarketResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgUpdateResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -334,26 +334,26 @@ func (m *MsgUpdateMarketResponse) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *MsgUpdateMarketResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgUpdateMarketResponse.Merge(m, src)
+func (m *MsgUpdateResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgUpdateResponse.Merge(m, src)
 }
-func (m *MsgUpdateMarketResponse) XXX_Size() int {
+func (m *MsgUpdateResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgUpdateMarketResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgUpdateMarketResponse.DiscardUnknown(m)
+func (m *MsgUpdateResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgUpdateResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgUpdateMarketResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgUpdateResponse proto.InternalMessageInfo
 
-func (m *MsgUpdateMarketResponse) GetError() string {
+func (m *MsgUpdateResponse) GetError() string {
 	if m != nil {
 		return m.Error
 	}
 	return ""
 }
 
-func (m *MsgUpdateMarketResponse) GetData() *Market {
+func (m *MsgUpdateResponse) GetData() *Market {
 	if m != nil {
 		return m.Data
 	}
@@ -361,41 +361,40 @@ func (m *MsgUpdateMarketResponse) GetData() *Market {
 }
 
 func init() {
-	proto.RegisterType((*MsgAddMarket)(nil), "sgenetwork.sge.market.MsgAddMarket")
-	proto.RegisterType((*MsgAddMarketResponse)(nil), "sgenetwork.sge.market.MsgAddMarketResponse")
-	proto.RegisterType((*MsgResolveMarket)(nil), "sgenetwork.sge.market.MsgResolveMarket")
-	proto.RegisterType((*MsgResolveMarketResponse)(nil), "sgenetwork.sge.market.MsgResolveMarketResponse")
-	proto.RegisterType((*MsgUpdateMarket)(nil), "sgenetwork.sge.market.MsgUpdateMarket")
-	proto.RegisterType((*MsgUpdateMarketResponse)(nil), "sgenetwork.sge.market.MsgUpdateMarketResponse")
+	proto.RegisterType((*MsgAdd)(nil), "sgenetwork.sge.market.MsgAdd")
+	proto.RegisterType((*MsgAddResponse)(nil), "sgenetwork.sge.market.MsgAddResponse")
+	proto.RegisterType((*MsgResolve)(nil), "sgenetwork.sge.market.MsgResolve")
+	proto.RegisterType((*MsgResolveResponse)(nil), "sgenetwork.sge.market.MsgResolveResponse")
+	proto.RegisterType((*MsgUpdate)(nil), "sgenetwork.sge.market.MsgUpdate")
+	proto.RegisterType((*MsgUpdateResponse)(nil), "sgenetwork.sge.market.MsgUpdateResponse")
 }
 
 func init() { proto.RegisterFile("sge/market/tx.proto", fileDescriptor_d0e875658c4f19fd) }
 
 var fileDescriptor_d0e875658c4f19fd = []byte{
-	// 360 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x4e, 0x4f, 0xd5,
-	0xcf, 0x4d, 0x2c, 0xca, 0x4e, 0x2d, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
-	0x12, 0x2d, 0x4e, 0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6, 0x2b, 0x4e, 0x4f, 0xd5,
-	0x83, 0xc8, 0x4b, 0x89, 0xa4, 0xe7, 0xa7, 0xe7, 0x83, 0x55, 0xe8, 0x83, 0x58, 0x10, 0xc5, 0x52,
-	0xe2, 0x48, 0x26, 0x40, 0x28, 0x88, 0x84, 0x92, 0x03, 0x17, 0x8f, 0x6f, 0x71, 0xba, 0x63, 0x4a,
-	0x8a, 0x2f, 0x58, 0x54, 0x48, 0x82, 0x8b, 0x3d, 0xb9, 0x28, 0x35, 0xb1, 0x24, 0xbf, 0x48, 0x82,
-	0x51, 0x81, 0x51, 0x83, 0x33, 0x08, 0xc6, 0x15, 0x12, 0xe3, 0x62, 0x2b, 0xc9, 0x4c, 0xce, 0x4e,
-	0x2d, 0x91, 0x60, 0x02, 0x4b, 0x40, 0x79, 0x4a, 0xd9, 0x5c, 0x22, 0xc8, 0x26, 0x04, 0xa5, 0x16,
-	0x17, 0xe4, 0xe7, 0x15, 0xa7, 0x0a, 0x49, 0x71, 0xb1, 0xa6, 0x16, 0x15, 0xc1, 0xcc, 0x71, 0x62,
-	0x39, 0x71, 0x4f, 0x9e, 0x31, 0x08, 0x22, 0x24, 0x64, 0xce, 0xc5, 0x92, 0x92, 0x58, 0x92, 0x08,
-	0x36, 0x89, 0xdb, 0x48, 0x56, 0x0f, 0xab, 0x57, 0xf4, 0x20, 0x06, 0x42, 0x75, 0x82, 0x35, 0x28,
-	0xb9, 0x70, 0x09, 0xf8, 0x16, 0xa7, 0x07, 0xa5, 0x16, 0xe7, 0xe7, 0x94, 0xa5, 0x92, 0xed, 0xe4,
-	0x7c, 0x2e, 0x09, 0x74, 0x53, 0x68, 0xeb, 0x6c, 0x67, 0x2e, 0x7e, 0xdf, 0xe2, 0xf4, 0xd0, 0x82,
-	0x94, 0xc4, 0x12, 0xf2, 0x5d, 0x9d, 0xc7, 0x25, 0x8e, 0x66, 0x08, 0x4d, 0x1d, 0x6d, 0xb4, 0x9d,
-	0x89, 0x8b, 0xd9, 0xb7, 0x38, 0x5d, 0x28, 0x96, 0x8b, 0x13, 0x91, 0x3e, 0x94, 0x71, 0xe9, 0x47,
-	0x4a, 0x02, 0x52, 0xda, 0x44, 0x28, 0x82, 0xbb, 0x3d, 0x93, 0x8b, 0x17, 0x35, 0x3e, 0xd5, 0x71,
-	0xeb, 0x46, 0x51, 0x28, 0xa5, 0x4f, 0xa4, 0x42, 0xb8, 0x55, 0x69, 0x5c, 0x3c, 0x28, 0x71, 0xa0,
-	0x86, 0xdb, 0x00, 0x64, 0x75, 0x52, 0x7a, 0xc4, 0xa9, 0x83, 0xd9, 0xe3, 0xe4, 0x7c, 0xe2, 0x91,
-	0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1,
-	0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x51, 0x9a, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a,
-	0xc9, 0xf9, 0xb9, 0xfa, 0xc5, 0xe9, 0xa9, 0xba, 0x50, 0x43, 0x41, 0x6c, 0xfd, 0x0a, 0x78, 0x16,
-	0xaf, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0x67, 0x50, 0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff,
-	0x54, 0x0c, 0x40, 0x72, 0xfd, 0x03, 0x00, 0x00,
+	// 352 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x93, 0xcf, 0x4a, 0xf3, 0x40,
+	0x14, 0xc5, 0x9b, 0xb6, 0x5f, 0x4a, 0xef, 0x07, 0x82, 0xe3, 0xbf, 0x12, 0x30, 0xd6, 0x82, 0xd0,
+	0x2e, 0x9c, 0x40, 0x5d, 0x08, 0x82, 0x82, 0x75, 0x29, 0xd9, 0x04, 0x45, 0x70, 0x97, 0x36, 0x97,
+	0x69, 0xa9, 0xed, 0x84, 0x99, 0x51, 0xeb, 0xd2, 0x37, 0xf0, 0xb1, 0xba, 0xec, 0xd2, 0x95, 0x48,
+	0xfb, 0x22, 0xd2, 0x99, 0x24, 0xba, 0xb0, 0x16, 0x0a, 0x5d, 0xcd, 0x4c, 0xce, 0xf9, 0x1d, 0x0e,
+	0xb9, 0x5c, 0xd8, 0x92, 0x0c, 0xbd, 0x41, 0x28, 0xfa, 0xa8, 0x3c, 0x35, 0xa2, 0xb1, 0xe0, 0x8a,
+	0x93, 0x1d, 0xc9, 0x70, 0x88, 0xea, 0x99, 0x8b, 0x3e, 0x95, 0x0c, 0xa9, 0xd1, 0x9d, 0x6d, 0xc6,
+	0x19, 0xd7, 0x0e, 0x6f, 0x7e, 0x33, 0x66, 0x67, 0xef, 0x47, 0x82, 0x39, 0x8c, 0x50, 0x3b, 0x03,
+	0xdb, 0x97, 0xec, 0x32, 0x8a, 0x48, 0x05, 0x4a, 0x1d, 0x81, 0xa1, 0xe2, 0xa2, 0x62, 0x55, 0xad,
+	0x7a, 0x39, 0x48, 0x9f, 0x64, 0x17, 0x6c, 0xd5, 0xeb, 0xf4, 0x51, 0x55, 0xf2, 0x5a, 0x48, 0x5e,
+	0x35, 0x84, 0x0d, 0xc3, 0x06, 0x28, 0x63, 0x3e, 0x94, 0x48, 0x1c, 0xf8, 0x87, 0x42, 0xa4, 0x09,
+	0xad, 0xe2, 0xf8, 0xe3, 0xc0, 0x0a, 0xcc, 0x27, 0x72, 0x0a, 0xc5, 0x28, 0x54, 0xa1, 0xce, 0xf8,
+	0xdf, 0xdc, 0xa7, 0xbf, 0xd6, 0xa7, 0xbe, 0x3e, 0x12, 0x52, 0x03, 0xb5, 0x0b, 0x00, 0x5f, 0xb2,
+	0x00, 0x25, 0x7f, 0x78, 0xc2, 0x15, 0x6a, 0xf6, 0x80, 0x7c, 0xf3, 0xeb, 0xad, 0x7a, 0x0e, 0x65,
+	0x5f, 0xb2, 0xdb, 0x38, 0x0a, 0xd5, 0x2a, 0x4d, 0xbb, 0xb0, 0x99, 0xe1, 0x6b, 0x2d, 0xda, 0x7c,
+	0xcd, 0x43, 0xc1, 0x97, 0x8c, 0x5c, 0x43, 0x61, 0x3e, 0xfb, 0x85, 0xa4, 0x1e, 0xaf, 0x73, 0xf4,
+	0xa7, 0x9c, 0x35, 0xbd, 0x83, 0x52, 0x3a, 0xa5, 0xc3, 0xc5, 0x44, 0x62, 0x71, 0x1a, 0x4b, 0x2d,
+	0x59, 0xf0, 0x0d, 0xd8, 0xc9, 0x3f, 0xad, 0x2e, 0x86, 0x8c, 0xc3, 0xa9, 0x2f, 0x73, 0xa4, 0xa9,
+	0xad, 0xab, 0xf1, 0xd4, 0xb5, 0x26, 0x53, 0xd7, 0xfa, 0x9c, 0xba, 0xd6, 0xdb, 0xcc, 0xcd, 0x4d,
+	0x66, 0x6e, 0xee, 0x7d, 0xe6, 0xe6, 0xee, 0x1b, 0xac, 0xa7, 0xba, 0x8f, 0x6d, 0xda, 0xe1, 0x03,
+	0x4f, 0x32, 0x3c, 0x4e, 0xe2, 0xe6, 0x77, 0x6f, 0x94, 0x2d, 0xe2, 0x4b, 0x8c, 0xb2, 0x6d, 0xeb,
+	0x35, 0x3a, 0xf9, 0x0a, 0x00, 0x00, 0xff, 0xff, 0x86, 0xc7, 0x1d, 0xcf, 0xa3, 0x03, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -410,12 +409,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// AddMarket defines a method to add the market with the given data.
-	AddMarket(ctx context.Context, in *MsgAddMarket, opts ...grpc.CallOption) (*MsgAddMarketResponse, error)
-	// ResolveMarket defines a method to resolve the market.
-	ResolveMarket(ctx context.Context, in *MsgResolveMarket, opts ...grpc.CallOption) (*MsgResolveMarketResponse, error)
-	// UpdateMarket defines a method to update a market.
-	UpdateMarket(ctx context.Context, in *MsgUpdateMarket, opts ...grpc.CallOption) (*MsgUpdateMarketResponse, error)
+	// Add defines a method to add the market with the given data.
+	Add(ctx context.Context, in *MsgAdd, opts ...grpc.CallOption) (*MsgAddResponse, error)
+	// Resolve defines a method to resolve the market.
+	Resolve(ctx context.Context, in *MsgResolve, opts ...grpc.CallOption) (*MsgResolveResponse, error)
+	// Update defines a method to update a market.
+	Update(ctx context.Context, in *MsgUpdate, opts ...grpc.CallOption) (*MsgUpdateResponse, error)
 }
 
 type msgClient struct {
@@ -426,27 +425,27 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) AddMarket(ctx context.Context, in *MsgAddMarket, opts ...grpc.CallOption) (*MsgAddMarketResponse, error) {
-	out := new(MsgAddMarketResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/AddMarket", in, out, opts...)
+func (c *msgClient) Add(ctx context.Context, in *MsgAdd, opts ...grpc.CallOption) (*MsgAddResponse, error) {
+	out := new(MsgAddResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/Add", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) ResolveMarket(ctx context.Context, in *MsgResolveMarket, opts ...grpc.CallOption) (*MsgResolveMarketResponse, error) {
-	out := new(MsgResolveMarketResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/ResolveMarket", in, out, opts...)
+func (c *msgClient) Resolve(ctx context.Context, in *MsgResolve, opts ...grpc.CallOption) (*MsgResolveResponse, error) {
+	out := new(MsgResolveResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/Resolve", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) UpdateMarket(ctx context.Context, in *MsgUpdateMarket, opts ...grpc.CallOption) (*MsgUpdateMarketResponse, error) {
-	out := new(MsgUpdateMarketResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/UpdateMarket", in, out, opts...)
+func (c *msgClient) Update(ctx context.Context, in *MsgUpdate, opts ...grpc.CallOption) (*MsgUpdateResponse, error) {
+	out := new(MsgUpdateResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.market.Msg/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -455,82 +454,82 @@ func (c *msgClient) UpdateMarket(ctx context.Context, in *MsgUpdateMarket, opts 
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// AddMarket defines a method to add the market with the given data.
-	AddMarket(context.Context, *MsgAddMarket) (*MsgAddMarketResponse, error)
-	// ResolveMarket defines a method to resolve the market.
-	ResolveMarket(context.Context, *MsgResolveMarket) (*MsgResolveMarketResponse, error)
-	// UpdateMarket defines a method to update a market.
-	UpdateMarket(context.Context, *MsgUpdateMarket) (*MsgUpdateMarketResponse, error)
+	// Add defines a method to add the market with the given data.
+	Add(context.Context, *MsgAdd) (*MsgAddResponse, error)
+	// Resolve defines a method to resolve the market.
+	Resolve(context.Context, *MsgResolve) (*MsgResolveResponse, error)
+	// Update defines a method to update a market.
+	Update(context.Context, *MsgUpdate) (*MsgUpdateResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) AddMarket(ctx context.Context, req *MsgAddMarket) (*MsgAddMarketResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddMarket not implemented")
+func (*UnimplementedMsgServer) Add(ctx context.Context, req *MsgAdd) (*MsgAddResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
 }
-func (*UnimplementedMsgServer) ResolveMarket(ctx context.Context, req *MsgResolveMarket) (*MsgResolveMarketResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResolveMarket not implemented")
+func (*UnimplementedMsgServer) Resolve(ctx context.Context, req *MsgResolve) (*MsgResolveResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Resolve not implemented")
 }
-func (*UnimplementedMsgServer) UpdateMarket(ctx context.Context, req *MsgUpdateMarket) (*MsgUpdateMarketResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateMarket not implemented")
+func (*UnimplementedMsgServer) Update(ctx context.Context, req *MsgUpdate) (*MsgUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_AddMarket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgAddMarket)
+func _Msg_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgAdd)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).AddMarket(ctx, in)
+		return srv.(MsgServer).Add(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.market.Msg/AddMarket",
+		FullMethod: "/sgenetwork.sge.market.Msg/Add",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).AddMarket(ctx, req.(*MsgAddMarket))
+		return srv.(MsgServer).Add(ctx, req.(*MsgAdd))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_ResolveMarket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgResolveMarket)
+func _Msg_Resolve_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgResolve)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).ResolveMarket(ctx, in)
+		return srv.(MsgServer).Resolve(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.market.Msg/ResolveMarket",
+		FullMethod: "/sgenetwork.sge.market.Msg/Resolve",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).ResolveMarket(ctx, req.(*MsgResolveMarket))
+		return srv.(MsgServer).Resolve(ctx, req.(*MsgResolve))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_UpdateMarket_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgUpdateMarket)
+func _Msg_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgUpdate)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).UpdateMarket(ctx, in)
+		return srv.(MsgServer).Update(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.market.Msg/UpdateMarket",
+		FullMethod: "/sgenetwork.sge.market.Msg/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).UpdateMarket(ctx, req.(*MsgUpdateMarket))
+		return srv.(MsgServer).Update(ctx, req.(*MsgUpdate))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -540,23 +539,23 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddMarket",
-			Handler:    _Msg_AddMarket_Handler,
+			MethodName: "Add",
+			Handler:    _Msg_Add_Handler,
 		},
 		{
-			MethodName: "ResolveMarket",
-			Handler:    _Msg_ResolveMarket_Handler,
+			MethodName: "Resolve",
+			Handler:    _Msg_Resolve_Handler,
 		},
 		{
-			MethodName: "UpdateMarket",
-			Handler:    _Msg_UpdateMarket_Handler,
+			MethodName: "Update",
+			Handler:    _Msg_Update_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sge/market/tx.proto",
 }
 
-func (m *MsgAddMarket) Marshal() (dAtA []byte, err error) {
+func (m *MsgAdd) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -566,12 +565,12 @@ func (m *MsgAddMarket) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddMarket) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAdd) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAdd) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -593,7 +592,7 @@ func (m *MsgAddMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgAddMarketResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgAddResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -603,12 +602,12 @@ func (m *MsgAddMarketResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgAddMarketResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgAddResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgAddMarketResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgAddResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -635,7 +634,7 @@ func (m *MsgAddMarketResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgResolveMarket) Marshal() (dAtA []byte, err error) {
+func (m *MsgResolve) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -645,12 +644,12 @@ func (m *MsgResolveMarket) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgResolveMarket) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgResolve) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgResolveMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgResolve) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -672,7 +671,7 @@ func (m *MsgResolveMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgResolveMarketResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgResolveResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -682,12 +681,12 @@ func (m *MsgResolveMarketResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgResolveMarketResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgResolveResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgResolveMarketResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgResolveResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -714,7 +713,7 @@ func (m *MsgResolveMarketResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateMarket) Marshal() (dAtA []byte, err error) {
+func (m *MsgUpdate) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -724,12 +723,12 @@ func (m *MsgUpdateMarket) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateMarket) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUpdate) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUpdate) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -751,7 +750,7 @@ func (m *MsgUpdateMarket) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgUpdateMarketResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgUpdateResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -761,12 +760,12 @@ func (m *MsgUpdateMarketResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgUpdateMarketResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgUpdateResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgUpdateMarketResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgUpdateResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -804,7 +803,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgAddMarket) Size() (n int) {
+func (m *MsgAdd) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -821,7 +820,7 @@ func (m *MsgAddMarket) Size() (n int) {
 	return n
 }
 
-func (m *MsgAddMarketResponse) Size() (n int) {
+func (m *MsgAddResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -838,7 +837,7 @@ func (m *MsgAddMarketResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgResolveMarket) Size() (n int) {
+func (m *MsgResolve) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -855,7 +854,7 @@ func (m *MsgResolveMarket) Size() (n int) {
 	return n
 }
 
-func (m *MsgResolveMarketResponse) Size() (n int) {
+func (m *MsgResolveResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -872,7 +871,7 @@ func (m *MsgResolveMarketResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateMarket) Size() (n int) {
+func (m *MsgUpdate) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -889,7 +888,7 @@ func (m *MsgUpdateMarket) Size() (n int) {
 	return n
 }
 
-func (m *MsgUpdateMarketResponse) Size() (n int) {
+func (m *MsgUpdateResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -912,7 +911,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgAddMarket) Unmarshal(dAtA []byte) error {
+func (m *MsgAdd) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -935,10 +934,10 @@ func (m *MsgAddMarket) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddMarket: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAdd: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddMarket: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAdd: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1026,7 +1025,7 @@ func (m *MsgAddMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgAddMarketResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgAddResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1049,10 +1048,10 @@ func (m *MsgAddMarketResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgAddMarketResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgAddResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgAddMarketResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgAddResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1144,7 +1143,7 @@ func (m *MsgAddMarketResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgResolveMarket) Unmarshal(dAtA []byte) error {
+func (m *MsgResolve) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1167,10 +1166,10 @@ func (m *MsgResolveMarket) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgResolveMarket: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgResolve: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgResolveMarket: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgResolve: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1258,7 +1257,7 @@ func (m *MsgResolveMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgResolveMarketResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgResolveResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1281,10 +1280,10 @@ func (m *MsgResolveMarketResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgResolveMarketResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgResolveResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgResolveMarketResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgResolveResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1376,7 +1375,7 @@ func (m *MsgResolveMarketResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateMarket) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdate) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1399,10 +1398,10 @@ func (m *MsgUpdateMarket) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateMarket: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdate: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateMarket: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdate: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1490,7 +1489,7 @@ func (m *MsgUpdateMarket) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgUpdateMarketResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgUpdateResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1513,10 +1512,10 @@ func (m *MsgUpdateMarketResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgUpdateMarketResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgUpdateResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgUpdateMarketResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgUpdateResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:

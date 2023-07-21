@@ -16,7 +16,7 @@ import (
 )
 
 func createNTestPubKeys(n int) ([]string, error) {
-	items := []string{}
+	var items []string
 
 	for i := 0; i < n; i++ {
 		pub1, _, err := ed25519.GenerateKey(rand.Reader)
@@ -67,7 +67,34 @@ func TestChangePubkeysListProposal(t *testing.T) {
 
 		createNActiveProposal(k, ctx, 1)
 		creator := simappUtil.TestParamUsers["user1"]
-		pubs, err := createNTestPubKeys(4)
+		pubs, err := createNTestPubKeys(types.MinPubKeysCount - 1)
+		require.NoError(t, err)
+
+		proposalTicket := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{
+			"public_keys":  pubs,
+			"leader_index": 0,
+			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
+		})
+		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		require.NoError(t, err)
+
+		resp, err := msgk.SubmitPubkeysChangeProposal(
+			wctx,
+			&types.MsgSubmitPubkeysChangeProposalRequest{
+				Creator: creator.Address.String(),
+				Ticket:  singedProposalTicket,
+			},
+		)
+		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.Nil(t, resp)
+	})
+
+	t.Run("lots of pubkeys", func(t *testing.T) {
+		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
+
+		createNActiveProposal(k, ctx, 1)
+		creator := simappUtil.TestParamUsers["user1"]
+		pubs, err := createNTestPubKeys(types.MaxPubKeysCount + 1)
 		require.NoError(t, err)
 
 		proposalTicket := jwt.NewWithClaims(jwt.SigningMethodEdDSA, jwt.MapClaims{

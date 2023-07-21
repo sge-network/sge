@@ -27,26 +27,26 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgPlaceBet defines a message to place a bet with the given data.
-type MsgPlaceBet struct {
+// MsgWager defines a message to place a bet with the given data.
+type MsgWager struct {
 	// creator is the bettor address.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// PlaceBetFields contains bet fields.
-	Bet *PlaceBetFields `protobuf:"bytes,2,opt,name=bet,proto3" json:"bet,omitempty"`
+	// props contains bet properties.
+	Props *WagerProps `protobuf:"bytes,2,opt,name=props,proto3" json:"props,omitempty"`
 }
 
-func (m *MsgPlaceBet) Reset()         { *m = MsgPlaceBet{} }
-func (m *MsgPlaceBet) String() string { return proto.CompactTextString(m) }
-func (*MsgPlaceBet) ProtoMessage()    {}
-func (*MsgPlaceBet) Descriptor() ([]byte, []int) {
+func (m *MsgWager) Reset()         { *m = MsgWager{} }
+func (m *MsgWager) String() string { return proto.CompactTextString(m) }
+func (*MsgWager) ProtoMessage()    {}
+func (*MsgWager) Descriptor() ([]byte, []int) {
 	return fileDescriptor_38b4167f68c2a7f8, []int{0}
 }
-func (m *MsgPlaceBet) XXX_Unmarshal(b []byte) error {
+func (m *MsgWager) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgPlaceBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgWager) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgPlaceBet.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgWager.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -56,50 +56,50 @@ func (m *MsgPlaceBet) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) 
 		return b[:n], nil
 	}
 }
-func (m *MsgPlaceBet) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPlaceBet.Merge(m, src)
+func (m *MsgWager) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWager.Merge(m, src)
 }
-func (m *MsgPlaceBet) XXX_Size() int {
+func (m *MsgWager) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgPlaceBet) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPlaceBet.DiscardUnknown(m)
+func (m *MsgWager) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWager.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgPlaceBet proto.InternalMessageInfo
+var xxx_messageInfo_MsgWager proto.InternalMessageInfo
 
-func (m *MsgPlaceBet) GetCreator() string {
+func (m *MsgWager) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgPlaceBet) GetBet() *PlaceBetFields {
+func (m *MsgWager) GetProps() *WagerProps {
 	if m != nil {
-		return m.Bet
+		return m.Props
 	}
 	return nil
 }
 
-// MsgPlaceBetResponse is the returning value in the response
-// of MsgPlaceBet request.
-type MsgPlaceBetResponse struct {
-	Bet *PlaceBetFields `protobuf:"bytes,1,opt,name=bet,proto3" json:"bet,omitempty"`
+// MsgWagerResponse is the returning value in the response
+// of MsgWagerResponse request.
+type MsgWagerResponse struct {
+	Props *WagerProps `protobuf:"bytes,1,opt,name=props,proto3" json:"props,omitempty"`
 }
 
-func (m *MsgPlaceBetResponse) Reset()         { *m = MsgPlaceBetResponse{} }
-func (m *MsgPlaceBetResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgPlaceBetResponse) ProtoMessage()    {}
-func (*MsgPlaceBetResponse) Descriptor() ([]byte, []int) {
+func (m *MsgWagerResponse) Reset()         { *m = MsgWagerResponse{} }
+func (m *MsgWagerResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgWagerResponse) ProtoMessage()    {}
+func (*MsgWagerResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_38b4167f68c2a7f8, []int{1}
 }
-func (m *MsgPlaceBetResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgWagerResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgPlaceBetResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgWagerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgPlaceBetResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgWagerResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -109,50 +109,49 @@ func (m *MsgPlaceBetResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte,
 		return b[:n], nil
 	}
 }
-func (m *MsgPlaceBetResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgPlaceBetResponse.Merge(m, src)
+func (m *MsgWagerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWagerResponse.Merge(m, src)
 }
-func (m *MsgPlaceBetResponse) XXX_Size() int {
+func (m *MsgWagerResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgPlaceBetResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgPlaceBetResponse.DiscardUnknown(m)
+func (m *MsgWagerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWagerResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgPlaceBetResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgWagerResponse proto.InternalMessageInfo
 
-func (m *MsgPlaceBetResponse) GetBet() *PlaceBetFields {
+func (m *MsgWagerResponse) GetProps() *WagerProps {
 	if m != nil {
-		return m.Bet
+		return m.Props
 	}
 	return nil
 }
 
 func init() {
-	proto.RegisterType((*MsgPlaceBet)(nil), "sgenetwork.sge.bet.MsgPlaceBet")
-	proto.RegisterType((*MsgPlaceBetResponse)(nil), "sgenetwork.sge.bet.MsgPlaceBetResponse")
+	proto.RegisterType((*MsgWager)(nil), "sgenetwork.sge.bet.MsgWager")
+	proto.RegisterType((*MsgWagerResponse)(nil), "sgenetwork.sge.bet.MsgWagerResponse")
 }
 
 func init() { proto.RegisterFile("sge/bet/tx.proto", fileDescriptor_38b4167f68c2a7f8) }
 
 var fileDescriptor_38b4167f68c2a7f8 = []byte{
-	// 251 bytes of a gzipped FileDescriptorProto
+	// 239 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x28, 0x4e, 0x4f, 0xd5,
 	0x4f, 0x4a, 0x2d, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2a, 0x4e,
 	0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6, 0x2b, 0x4e, 0x4f, 0xd5, 0x4b, 0x4a, 0x2d,
-	0x91, 0x92, 0x83, 0xa9, 0x2a, 0xc8, 0x49, 0x4c, 0x4e, 0x8d, 0x4f, 0x4a, 0x2d, 0x89, 0x4f, 0xcb,
-	0x4c, 0xcd, 0x49, 0x29, 0x86, 0xe8, 0x51, 0x8a, 0xe5, 0xe2, 0xf6, 0x2d, 0x4e, 0x0f, 0x00, 0x49,
-	0x3a, 0xa5, 0x96, 0x08, 0x49, 0x70, 0xb1, 0x27, 0x17, 0xa5, 0x26, 0x96, 0xe4, 0x17, 0x49, 0x30,
-	0x2a, 0x30, 0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x42, 0x26, 0x5c, 0xcc, 0x49, 0xa9, 0x25, 0x12, 0x4c,
-	0x0a, 0x8c, 0x1a, 0xdc, 0x46, 0x4a, 0x7a, 0x98, 0x56, 0xe9, 0xc1, 0x0c, 0x71, 0x03, 0x9b, 0x1f,
-	0x04, 0x52, 0xae, 0xe4, 0xcd, 0x25, 0x8c, 0x64, 0x7c, 0x50, 0x6a, 0x71, 0x41, 0x7e, 0x5e, 0x71,
-	0x2a, 0xcc, 0x30, 0x46, 0x92, 0x0c, 0x33, 0x8a, 0xe6, 0x62, 0xf6, 0x2d, 0x4e, 0x17, 0x0a, 0xe1,
-	0xe2, 0x80, 0xbb, 0x57, 0x1e, 0x9b, 0x5e, 0x24, 0x1b, 0xa5, 0xd4, 0x09, 0x28, 0x80, 0x39, 0xc9,
-	0xc9, 0xe1, 0xc4, 0x23, 0x39, 0xc6, 0x0b, 0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0,
-	0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39, 0x86, 0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0xd4, 0xd2, 0x33, 0x4b,
-	0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3, 0x73, 0xf5, 0x8b, 0xd3, 0x53, 0x75, 0xa1, 0xa6, 0x81, 0xd8,
-	0xfa, 0x15, 0x90, 0x18, 0xa8, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0x87, 0xa8, 0x31, 0x20, 0x00,
-	0x00, 0xff, 0xff, 0x88, 0xf7, 0xde, 0xca, 0x99, 0x01, 0x00, 0x00,
+	0x91, 0x12, 0x86, 0xa9, 0x2a, 0x4f, 0x4c, 0x4f, 0x2d, 0x82, 0x28, 0x54, 0x8a, 0xe2, 0xe2, 0xf0,
+	0x2d, 0x4e, 0x0f, 0x07, 0x89, 0x08, 0x49, 0x70, 0xb1, 0x27, 0x17, 0xa5, 0x26, 0x96, 0xe4, 0x17,
+	0x49, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x42, 0x26, 0x5c, 0xac, 0x05, 0x45, 0xf9,
+	0x05, 0xc5, 0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0xdc, 0x46, 0x72, 0x7a, 0x98, 0xc6, 0xeb, 0x81, 0xcd,
+	0x08, 0x00, 0xa9, 0x0a, 0x82, 0x28, 0x56, 0xf2, 0xe0, 0x12, 0x80, 0x99, 0x1d, 0x94, 0x5a, 0x5c,
+	0x90, 0x9f, 0x57, 0x9c, 0x8a, 0x30, 0x89, 0x91, 0x04, 0x93, 0x8c, 0x82, 0xb8, 0x98, 0x7d, 0x8b,
+	0xd3, 0x85, 0xbc, 0xb9, 0x58, 0x21, 0x2e, 0x95, 0xc1, 0xa6, 0x0d, 0x66, 0x97, 0x94, 0x0a, 0x3e,
+	0x59, 0x98, 0x4b, 0x9c, 0x1c, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23,
+	0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a,
+	0x2d, 0x3d, 0xb3, 0x24, 0xa3, 0x34, 0x49, 0x2f, 0x39, 0x3f, 0x57, 0xbf, 0x38, 0x3d, 0x55, 0x17,
+	0x6a, 0x14, 0x88, 0xad, 0x5f, 0x01, 0x09, 0xe7, 0xca, 0x82, 0xd4, 0xe2, 0x24, 0x36, 0x70, 0x10,
+	0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x41, 0x9b, 0xc2, 0x84, 0x7f, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -167,8 +166,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// PlaceBet defines a method to place a bet with the given data.
-	PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.CallOption) (*MsgPlaceBetResponse, error)
+	// Wager defines a method to place a bet with the given data.
+	Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOption) (*MsgWagerResponse, error)
 }
 
 type msgClient struct {
@@ -179,9 +178,9 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.CallOption) (*MsgPlaceBetResponse, error) {
-	out := new(MsgPlaceBetResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/PlaceBet", in, out, opts...)
+func (c *msgClient) Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOption) (*MsgWagerResponse, error) {
+	out := new(MsgWagerResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/Wager", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -190,36 +189,36 @@ func (c *msgClient) PlaceBet(ctx context.Context, in *MsgPlaceBet, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// PlaceBet defines a method to place a bet with the given data.
-	PlaceBet(context.Context, *MsgPlaceBet) (*MsgPlaceBetResponse, error)
+	// Wager defines a method to place a bet with the given data.
+	Wager(context.Context, *MsgWager) (*MsgWagerResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) PlaceBet(ctx context.Context, req *MsgPlaceBet) (*MsgPlaceBetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PlaceBet not implemented")
+func (*UnimplementedMsgServer) Wager(ctx context.Context, req *MsgWager) (*MsgWagerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Wager not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_PlaceBet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgPlaceBet)
+func _Msg_Wager_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgWager)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).PlaceBet(ctx, in)
+		return srv.(MsgServer).Wager(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.bet.Msg/PlaceBet",
+		FullMethod: "/sgenetwork.sge.bet.Msg/Wager",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).PlaceBet(ctx, req.(*MsgPlaceBet))
+		return srv.(MsgServer).Wager(ctx, req.(*MsgWager))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -229,15 +228,15 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PlaceBet",
-			Handler:    _Msg_PlaceBet_Handler,
+			MethodName: "Wager",
+			Handler:    _Msg_Wager_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sge/bet/tx.proto",
 }
 
-func (m *MsgPlaceBet) Marshal() (dAtA []byte, err error) {
+func (m *MsgWager) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -247,19 +246,19 @@ func (m *MsgPlaceBet) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgPlaceBet) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgWager) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgPlaceBet) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgWager) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.Bet != nil {
+	if m.Props != nil {
 		{
-			size, err := m.Bet.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Props.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -279,7 +278,7 @@ func (m *MsgPlaceBet) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgPlaceBetResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgWagerResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -289,19 +288,19 @@ func (m *MsgPlaceBetResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgPlaceBetResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgWagerResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgPlaceBetResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgWagerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if m.Bet != nil {
+	if m.Props != nil {
 		{
-			size, err := m.Bet.MarshalToSizedBuffer(dAtA[:i])
+			size, err := m.Props.MarshalToSizedBuffer(dAtA[:i])
 			if err != nil {
 				return 0, err
 			}
@@ -325,7 +324,7 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgPlaceBet) Size() (n int) {
+func (m *MsgWager) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -335,21 +334,21 @@ func (m *MsgPlaceBet) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	if m.Bet != nil {
-		l = m.Bet.Size()
+	if m.Props != nil {
+		l = m.Props.Size()
 		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
 
-func (m *MsgPlaceBetResponse) Size() (n int) {
+func (m *MsgWagerResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	if m.Bet != nil {
-		l = m.Bet.Size()
+	if m.Props != nil {
+		l = m.Props.Size()
 		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
@@ -361,7 +360,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgPlaceBet) Unmarshal(dAtA []byte) error {
+func (m *MsgWager) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -384,10 +383,10 @@ func (m *MsgPlaceBet) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPlaceBet: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgWager: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPlaceBet: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgWager: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -424,7 +423,7 @@ func (m *MsgPlaceBet) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Props", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -451,10 +450,10 @@ func (m *MsgPlaceBet) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Bet == nil {
-				m.Bet = &PlaceBetFields{}
+			if m.Props == nil {
+				m.Props = &WagerProps{}
 			}
-			if err := m.Bet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Props.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
@@ -479,7 +478,7 @@ func (m *MsgPlaceBet) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgPlaceBetResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgWagerResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -502,15 +501,15 @@ func (m *MsgPlaceBetResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgPlaceBetResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgWagerResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgPlaceBetResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgWagerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Bet", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Props", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -537,10 +536,10 @@ func (m *MsgPlaceBetResponse) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if m.Bet == nil {
-				m.Bet = &PlaceBetFields{}
+			if m.Props == nil {
+				m.Props = &WagerProps{}
 			}
-			if err := m.Bet.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if err := m.Props.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex

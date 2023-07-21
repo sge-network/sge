@@ -45,7 +45,7 @@ func ValidateMinter(minter Minter) error {
 }
 
 // CurrentPhase returns current phase of the inflation
-func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
+func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 	if currentBlock == 1 {
 		return params.GetPhaseAtStep(1), 1
 	}

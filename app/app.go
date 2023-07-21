@@ -31,7 +31,7 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ibcclientHandlers "github.com/cosmos/ibc-go/v3/modules/core/02-client/client"
+	ibcclientHandlers "github.com/cosmos/ibc-go/v4/modules/core/02-client/client"
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/sge-network/sge/app/keepers"

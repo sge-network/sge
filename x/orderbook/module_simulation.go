@@ -26,8 +26,8 @@ var (
 
 const (
 	//#nosec
-	opWeightMsgAddMarket          = "op_weight_msg_create_chain"
-	defaultWeightMsgAddMarket int = 100
+	opWeightMsgAdd          = "op_weight_msg_create_chain"
+	defaultWeightMsgAdd int = 100
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -41,7 +41,7 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 }
 
 // RandomizedParams creates randomized  param changes for the simulator
-func (am AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
+func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.ParamChange {
 	return orderbooksimulation.ParamChanges(r)
 }
 
@@ -51,13 +51,13 @@ func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
 }
 
 // WeightedOperations returns the all the gov module operations with their respective weights.
-func (am AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
+func (AppModule) WeightedOperations(simState module.SimulationState) []simtypes.WeightedOperation {
 	operations := make([]simtypes.WeightedOperation, 0)
 
-	var weightMsgAddMarket int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAddMarket, &weightMsgAddMarket, nil,
+	var weightMsgAdd int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgAdd, &weightMsgAdd, nil,
 		func(_ *rand.Rand) {
-			weightMsgAddMarket = defaultWeightMsgAddMarket
+			weightMsgAdd = defaultWeightMsgAdd
 		},
 	)
 

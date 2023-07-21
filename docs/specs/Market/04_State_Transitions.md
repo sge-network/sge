@@ -10,7 +10,6 @@ Validations:
 - Call the OVM module to validate the ticket internals and to retrieve the
   contents of the ticket.
 - If the ticket is valid, check if the market already exists.
-- Use default bet constraints if the `bet_fee` and `min_bet_amount` are not available in the ticket.
 
 Modifications:
 
@@ -28,7 +27,6 @@ newMarket := &type.Market{
  Status                 : <MarketStatus>
  ResolutionTS           : <uint64>
  Creator                : <string>
- BetConstraints         : <*MarketBetConstraints>
  Meta                   : <string>
  BookID                 : <string>
 }

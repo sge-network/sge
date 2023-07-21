@@ -6,7 +6,7 @@ set -eo pipefail
 go get github.com/cosmos/gogoproto@v1.4.10 2>/dev/null
 
 # get cosmos sdk from github
-go get github.com/cosmos/cosmos-sdk@v0.45.11 2>/dev/null
+go get github.com/cosmos/cosmos-sdk@v0.45.16 2>/dev/null
 
 echo "Generating gogo proto code"
 cd proto

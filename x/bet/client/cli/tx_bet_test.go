@@ -29,7 +29,7 @@ func TestTXBetCLI(t *testing.T) {
 		),
 	}
 
-	t.Run("Place bet", func(t *testing.T) {
+	t.Run("wager", func(t *testing.T) {
 		for _, tc := range []struct {
 			desc   string
 			uid    string
@@ -71,7 +71,7 @@ func TestTXBetCLI(t *testing.T) {
 					tc.ticket,
 				}
 				args = append(args, commonArgs...)
-				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdPlaceBet(), args)
+				out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdWager(), args)
 				if tc.err != nil {
 					require.NotNil(t, err)
 				} else {

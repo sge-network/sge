@@ -7,7 +7,7 @@ import (
 )
 
 // RegisterCodec registers module codec to the app codec
-func RegisterCodec(cdc *codec.LegacyAmino) {
+func RegisterCodec(_ *codec.LegacyAmino) {
 	// left empty because no message is available in this module
 }
 

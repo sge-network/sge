@@ -59,10 +59,6 @@ func createTestMarket(
 			{UID: oddsUIDs[0], Meta: "odds1"},
 			{UID: oddsUIDs[1], Meta: "odds2"},
 		},
-		&markettypes.MarketBetConstraints{
-			MinAmount: sdk.NewInt(10),
-			BetFee:    sdk.NewInt(1),
-		},
 		"test market",
 		marketUID,
 		status,

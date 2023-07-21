@@ -6,26 +6,26 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgAddMarket = "market_add"
+const typeMsgAdd = "market_add"
 
-var _ sdk.Msg = &MsgAddMarket{}
+var _ sdk.Msg = &MsgAdd{}
 
-// NewMsgAddMarket creates the new input for adding a market to blockchain
-func NewMsgAddMarket(creator string, ticket string) *MsgAddMarket {
-	return &MsgAddMarket{
+// NewMsgAdd creates the new input for adding a market to blockchain
+func NewMsgAdd(creator string, ticket string) *MsgAdd {
+	return &MsgAdd{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgAddMarket) Route() string { return RouterKey }
+func (*MsgAdd) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgAddMarket) Type() string { return typeMsgAddMarket }
+func (*MsgAdd) Type() string { return typeMsgAdd }
 
 // GetSigners return the creators address
-func (msg *MsgAddMarket) GetSigners() []sdk.AccAddress {
+func (msg *MsgAdd) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -34,13 +34,13 @@ func (msg *MsgAddMarket) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgAddMarket) GetSignBytes() []byte {
+func (msg *MsgAdd) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input creation market
-func (msg *MsgAddMarket) ValidateBasic() error {
+func (msg *MsgAdd) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -53,36 +53,36 @@ func (msg *MsgAddMarket) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgAddMarket) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
+func (msg *MsgAdd) EmitEvent(ctx *sdk.Context, marketUID, bookUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgAddMarket, msg.Creator,
+	emitter.AddMsg(typeMsgAdd, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 		sdk.NewAttribute(attributeKeyMarketOrderBookUID, bookUID),
 	)
 	emitter.Emit()
 }
 
-// typeMsgUpdateMarket is the market name of update market
-const typeMsgUpdateMarket = "market_update"
+// typeMsgUpdate is the market name of update market
+const typeMsgUpdate = "market_update"
 
-var _ sdk.Msg = &MsgUpdateMarket{}
+var _ sdk.Msg = &MsgUpdate{}
 
-// NewMsgUpdateMarket accepts the params to create new update body
-func NewMsgUpdateMarket(creator, ticket string) *MsgUpdateMarket {
-	return &MsgUpdateMarket{
+// NewMsgUpdate accepts the params to create new update body
+func NewMsgUpdate(creator, ticket string) *MsgUpdate {
+	return &MsgUpdate{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgUpdateMarket) Route() string { return RouterKey }
+func (*MsgUpdate) Route() string { return RouterKey }
 
 // Type return the update market type
-func (msg *MsgUpdateMarket) Type() string { return typeMsgUpdateMarket }
+func (*MsgUpdate) Type() string { return typeMsgUpdate }
 
 // GetSigners return the creators address
-func (msg *MsgUpdateMarket) GetSigners() []sdk.AccAddress {
+func (msg *MsgUpdate) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -91,13 +91,13 @@ func (msg *MsgUpdateMarket) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgUpdateMarket) GetSignBytes() []byte {
+func (msg *MsgUpdate) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input update market
-func (msg *MsgUpdateMarket) ValidateBasic() error {
+func (msg *MsgUpdate) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -111,9 +111,9 @@ func (msg *MsgUpdateMarket) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgUpdateMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
+func (msg *MsgUpdate) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgUpdateMarket, msg.Creator,
+	emitter.AddMsg(typeMsgUpdate, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 	)
 	emitter.Emit()

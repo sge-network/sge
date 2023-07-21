@@ -226,9 +226,5 @@ func (k Keeper) WithdrawOrderBookParticipation(
 	bp.SetLiquidityAfterWithdrawal(amount)
 	k.SetOrderBookParticipation(ctx, bp)
 
-	if err := k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp); err != nil {
-		return err
-	}
-
-	return nil
+	return k.removeNotWithdrawableFromFulfillmentQueue(ctx, bp)
 }

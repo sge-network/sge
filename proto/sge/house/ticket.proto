@@ -13,7 +13,8 @@ message DepositTicketPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   // depositor_address is the account who makes a deposit
-  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
+  string depositor_address = 2
+      [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 }
 
 // WithdrawTicketPayload indicates data of the withdrawal ticket.
@@ -22,5 +23,6 @@ message WithdrawTicketPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   // depositor_address is the account who makes a deposit
-  string depositor_address = 2 [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
+  string depositor_address = 2
+      [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
 }

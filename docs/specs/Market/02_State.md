@@ -2,62 +2,7 @@
 
 ## **Params**
 
-1. `min_bet_amount`: The minimum allowed bet amount that can be set in the whole system.
-2. `min_bet_fee`: The minimum bet fee allowed across the system.
-3. `max_bet_fee`: The maximum bet fee allowed across the system.
-
-```proto
-// Params defines the parameters for the module.
-// It contains bet constraints associated to a market.
-message Params {
-  option (gogoproto.goproto_stringer) = false;
-
-  // min_bet_amount is the default minimum bet amount for a market.
-  string min_bet_amount = 1 [
-    (gogoproto.moretags) = "yaml:\"min_bet_amount\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // min_bet_fee is the default minimum bet fee for a market.
-  string min_bet_fee = 3 [
-    (gogoproto.moretags) = "yaml:\"min_bet_fee\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // max_bet_fee is the default maximum bet fee for a market.
-  string max_bet_fee = 4 [
-    (gogoproto.moretags) = "yaml:\"max_bet_fee\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-}
-```
-
-## **Bet Constraints**
-
-```proto
-// MarketBetConstraints is the bet constrains type for the market
-message MarketBetConstraints {
-  // min_amount is the minimum allowed bet amount for a market.
-  string min_amount = 1 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that the bettor needs to pay to bet on the market.
-  string bet_fee = 2 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-}
-```
-
-**MarketBetConstraints**: Optional field which can put restrictions for bet acceptance criteria, this optional config help provide more
-granular control of different categories of market. We can modify following properties:
-
-***MinBetAmount***: Minimum bet amount particular to this market.
-
-***BetFee***: Fixed fee particular to the created market
+The market module does not have any parameters.
 
 ---
 
@@ -103,12 +48,10 @@ message Market {
   ];
   // creator is the address of the creator of market.
   string creator = 8;
-  // bet_constraints holds the constraints of market to accept bets.
-  MarketBetConstraints bet_constraints = 9;
   // meta contains human-readable metadata of the market.
-  string meta = 10;
+  string meta = 9;
   // book_uid is the unique identifier corresponding to the book
-  string book_uid = 11 [
+  string book_uid = 10 [
     (gogoproto.customname) = "BookUID",
     (gogoproto.jsontag) = "book_uid",
     json_name = "book_uid"
@@ -131,8 +74,6 @@ message Market {
 **ResolutionTS**: Timestamp when the market came to a resolution i.e. we received a resolution request for an market.
 
 **Creator**: Account responsible to create this market.
-
-**BetConstraints**: Optional field which can put restrictions for bet acceptance criteria.
 
 **Meta**: Human-Readable data of the market.
 

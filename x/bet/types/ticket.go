@@ -9,7 +9,7 @@ import (
 )
 
 // Validate validates fields of the given ticketData
-func (payload *BetPlacementTicketPayload) Validate(creator string) error {
+func (payload *WagerTicketPayload) Validate(creator string) error {
 	if payload.SelectedOdds == nil {
 		return ErrOddsDataNotFound
 	}
