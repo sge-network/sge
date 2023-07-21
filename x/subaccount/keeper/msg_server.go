@@ -44,11 +44,10 @@ func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []*types.LockedBalance) (
 }
 
 // sendCoinsToSubaccount sends the coins to the subaccount.
-func (m msgServer) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subaccountID uint64, moneyToSend sdk.Int) error {
-	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
+func (m msgServer) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subAccountAddress sdk.AccAddress, moneyToSend sdk.Int) error {
 
 	denom := m.keeper.GetParams(ctx).LockedBalanceDenom
-	err := m.bankKeeper.SendCoins(ctx, senderAccount, subaccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+	err := m.bankKeeper.SendCoins(ctx, senderAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
 	if err != nil {
 		return errors.Wrap(err, "unable to send coins")
 	}

@@ -25,7 +25,7 @@ func (m msgServer) CreateSubAccount(
 
 	senderAccount := sdk.MustAccAddressFromBech32(request.Sender)
 	subaccountOwner := sdk.MustAccAddressFromBech32(request.SubAccountOwner)
-	if m.keeper.HasSubAccount(sdkContext, subaccountOwner) {
+	if _, exists := m.keeper.GetSubAccountOwner(sdkContext, subaccountOwner); exists {
 		return nil, types.ErrSubaccountAlreadyExist
 	}
 
@@ -33,17 +33,17 @@ func (m msgServer) CreateSubAccount(
 
 	// ALERT: If someone frontruns the account creation, will be overwritten here
 	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
-	address := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
-	m.accountKeeper.SetAccount(sdkContext, address)
+	subaccountAccount := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
+	m.accountKeeper.SetAccount(sdkContext, subaccountAccount)
 
-	err = m.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountID, moneyToSend)
+	err = m.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountAddress, moneyToSend)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to send coins")
 	}
 
-	m.keeper.SetSubAccountOwner(sdkContext, subaccountID, subaccountOwner)
-	m.keeper.SetLockedBalances(sdkContext, subaccountID, request.LockedBalances)
-	m.keeper.SetBalance(sdkContext, subaccountID, types.Balance{
+	m.keeper.SetSubAccountOwner(sdkContext, subaccountAddress, subaccountOwner)
+	m.keeper.SetLockedBalances(sdkContext, subaccountAddress, request.LockedBalances)
+	m.keeper.SetBalance(sdkContext, subaccountAddress, types.Balance{
 		DepositedAmount: moneyToSend,
 		SpentAmount:     sdk.ZeroInt(),
 		WithdrawmAmount: sdk.ZeroInt(),

@@ -23,6 +23,7 @@ type Keeper struct {
 	houseKeeper    types.HouseKeeper
 	ovmKeeper      types.OVMKeeper
 	feeGrantKeeper types.FeeGrantKeeper
+	hooks          []Hook
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper

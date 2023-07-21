@@ -52,3 +52,11 @@ func (m *Balance) Unspend(amt sdk.Int) error {
 	m.SpentAmount = m.SpentAmount.Sub(amt)
 	return nil
 }
+
+func (m *Balance) AddLoss(amt sdk.Int) error {
+	if !amt.IsPositive() {
+		return fmt.Errorf("amount is not positive")
+	}
+	m.LostAmount = m.LostAmount.Add(amt)
+	return nil
+}

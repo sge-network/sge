@@ -32,9 +32,12 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
 
-	balance := k.GetBalance(ctx, 1)
+	subAccountAddr := types.NewAddressFromSubaccount(1)
+
+	balance, exists := k.GetBalance(ctx, subAccountAddr)
+	require.True(t, exists)
 	require.Equal(t, sdk.NewInt(0), balance.DepositedAmount)
-	balances := k.GetLockedBalances(ctx, 1)
+	balances := k.GetLockedBalances(ctx, subAccountAddr)
 	require.Len(t, balances, 0)
 
 	msgTopUp := &types.MsgTopUp{
@@ -51,9 +54,10 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	require.NoError(t, err)
 
 	// Check balance
-	balance = k.GetBalance(ctx, 1)
+	balance, exists = k.GetBalance(ctx, subAccountAddr)
+	require.True(t, exists)
 	require.Equal(t, sdk.NewInt(123), balance.DepositedAmount)
-	balances = k.GetLockedBalances(ctx, 1)
+	balances = k.GetLockedBalances(ctx, subAccountAddr)
 	require.Len(t, balances, 1)
 	require.True(t, afterTime.Equal(balances[0].UnlockTime))
 	require.Equal(t, sdk.NewInt(123), balances[0].Amount)

@@ -29,26 +29,34 @@ func TestSubaccountID(t *testing.T) {
 func TestSubAccountOwner(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	address := sample.NativeAccAddress()
+	owner := sample.NativeAccAddress()
 
 	// Account should not have subaccount
-	require.Equal(t, false, k.HasSubAccount(ctx, address))
+	_, exists := k.GetSubAccountOwner(ctx, owner)
+	require.False(t, exists)
 
 	// Set subaccount owner
 	k.NextID(ctx)
 	ID := k.Peek(ctx)
-	k.SetSubAccountOwner(ctx, ID, address)
+	k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1), owner)
 
 	// Account should have subaccount
-	require.True(t, k.HasSubAccount(ctx, address))
+	_, exists = k.GetSubAccountOwner(ctx, owner)
+	require.True(t, exists)
 
 	// Get subaccount ID
-	require.Equal(t, ID, k.GetSubAccountByOwner(ctx, address))
+	subAccountAddress, exists := k.GetSubAccountByOwner(ctx, owner)
+	require.True(t, exists)
+	require.Equal(t, types.NewAddressFromSubaccount(ID), subAccountAddress)
 
 	// Get owner of subaccount
-	require.Equal(t, address, k.GetSubAccountOwner(ctx, ID))
+	gotOwner, exists := k.GetSubAccountOwner(ctx, subAccountAddress)
+	require.True(t, exists)
+	require.Equal(t, owner, gotOwner)
 	// Get account ID by owner
-	require.Equal(t, ID, k.GetSubAccountByOwner(ctx, address))
+	gotSubAccount, exists := k.GetSubAccountByOwner(ctx, owner)
+	require.True(t, exists)
+	require.Equal(t, types.NewAddressFromSubaccount(ID), gotSubAccount)
 }
 
 func TestSetLockedBalances(t *testing.T) {
@@ -68,10 +76,12 @@ func TestSetLockedBalances(t *testing.T) {
 		},
 	}
 
-	k.SetLockedBalances(ctx, 1, balanceUnlocks)
+	addr := types.NewAddressFromSubaccount(1)
+
+	k.SetLockedBalances(ctx, addr, balanceUnlocks)
 
 	// Get locked balances
-	lockedBalances := k.GetLockedBalances(ctx, 1)
+	lockedBalances := k.GetLockedBalances(ctx, addr)
 	for i, lockedBalance := range lockedBalances {
 		require.Equal(t, lockedBalance.Amount, balanceUnlocks[i].Amount)
 		require.True(t, lockedBalance.UnlockTime.Equal(balanceUnlocks[i].UnlockTime))
@@ -88,10 +98,13 @@ func TestSetBalances(t *testing.T) {
 		LostAmount:      sdk.OneInt(),
 	}
 
-	k.SetBalance(ctx, 1, balance)
+	subAccAddr := types.NewAddressFromSubaccount(1)
+	k.SetBalance(ctx, subAccAddr, balance)
 
 	// Get balance
-	require.Equal(t, balance, k.GetBalance(ctx, 1))
+	gotBalance, exists := k.GetBalance(ctx, subAccAddr)
+	require.True(t, exists)
+	require.Equal(t, balance, gotBalance)
 }
 
 func TestKeeper_GetLockedBalances(t *testing.T) {
@@ -123,9 +136,10 @@ func TestKeeper_GetLockedBalances(t *testing.T) {
 		},
 	}
 
-	k.SetLockedBalances(ctx, 1, balanceUnlocks)
+	addr := types.NewAddressFromSubaccount(1)
+	k.SetLockedBalances(ctx, addr, balanceUnlocks)
 
 	// get unlocked balance
-	unlockedBalance := k.GetUnlockedBalance(ctx, 1)
+	unlockedBalance := k.GetUnlockedBalance(ctx, addr)
 	require.True(t, unlockedBalance.Equal(sdk.NewInt(10000+20000)))
 }
