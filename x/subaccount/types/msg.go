@@ -8,6 +8,7 @@ import (
 var (
 	_ sdk.Msg = &MsgCreateSubAccount{}
 	_ sdk.Msg = &MsgTopUp{}
+	_ sdk.Msg = &MsgWithdrawUnlockedBalances{}
 )
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {
@@ -61,6 +62,23 @@ func (msg *MsgTopUp) ValidateBasic() error {
 }
 
 func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
+	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{signer}
+}
+
+func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	if err != nil {
+		return errors.ErrInvalidAddress
+	}
+
+	return nil
+}
+
+func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
 	signer, err := sdk.AccAddressFromBech32(msg.Sender)
 	if err != nil {
 		panic(err)
