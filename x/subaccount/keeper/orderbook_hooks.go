@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"log"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
@@ -57,5 +55,4 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 		panic(err)
 	}
 	k.SetBalance(ctx, bettor, balance)
-	log.Printf("bettor refunded, yay!")
 }
