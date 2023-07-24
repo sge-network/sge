@@ -71,7 +71,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	require.NoError(t, err)
 
 	// add market
-	addTestMarket(t, app, ctx)
+	market := addTestMarket(t, app, ctx)
 
 	// start betting using the subaccount
 	betAmt := sdk.NewInt(1000).Mul(micro)
@@ -81,25 +81,86 @@ func TestMsgServer_Bet(t *testing.T) {
 	)
 	require.NoError(t, err)
 
+	// check subaccount balance
+	subAccAddr := types.NewAddressFromSubaccount(1)
+	balance, exists := k.GetBalance(ctx, subAccAddr)
+	require.True(t, exists)
+
+	require.Equal(t, balance.SpentAmount, betAmt)
+
 	t.Run("resolve market – better wins", func(t *testing.T) {
 		ctx, _ = ctx.CacheContext()
 		// resolve the market – better wins
+		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+			UID:            market.UID,
+			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+			WinnerOddsUIDs: []string{testOddsUID1},
+			Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		})
+		err := app.BetKeeper.BatchMarketSettlements(ctx)
+		require.NoError(t, err)
 
+		// now we check the subaccount balance
+		balance, exists := k.GetBalance(ctx, subAccAddr)
+		require.True(t, exists)
+		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
+
+		// now we want the user to have some balance which is the payout
+		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
+		require.Equal(t,
+			sdk.NewCoins(
+				sdk.NewCoin(
+					k.GetParams(ctx).LockedBalanceDenom,
+					betAmt.ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
+				)),
+			ownerBalance,
+		)
 	})
 	// resolve the market – better loses
 	t.Run("resolve market – better loses", func(t *testing.T) {
 		ctx, _ = ctx.CacheContext()
 		// resolve the market – better loses
+		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+			UID:            market.UID,
+			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+			WinnerOddsUIDs: []string{testOddsUID2},
+			Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		})
+		err := app.BetKeeper.BatchMarketSettlements(ctx)
+		require.NoError(t, err)
 
+		// now we check the subaccount balance
+		balance, exists := k.GetBalance(ctx, subAccAddr)
+		require.True(t, exists)
+		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
+		require.Equal(t, balance.LostAmount, betAmt)
+		// the owner has no balances
+		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
+		require.Equal(t, sdk.NewCoins(), ownerBalance)
 	})
 	t.Run("resolve market – refund", func(t *testing.T) {
 		ctx, _ = ctx.CacheContext()
 		// resolve the market – refund
+		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+			UID:            market.UID,
+			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+			WinnerOddsUIDs: []string{testOddsUID1},
+			Status:         markettypes.MarketStatus_MARKET_STATUS_CANCELED,
+		})
+		err := app.BetKeeper.BatchMarketSettlements(ctx)
+		require.NoError(t, err)
 
+		// now we check the subaccount balance
+		balance, exists := k.GetBalance(ctx, subAccAddr)
+		require.True(t, exists)
+		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
+
+		// the owner balance is zero
+		require.Equal(t, sdk.NewCoins(), app.BankKeeper.GetAllBalances(ctx, subAccOwner))
 	})
 }
 
-func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
+func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) *markettypes.Market {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
 		"uid":      testMarketUID,
@@ -140,6 +201,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 		sdk.NewInt(1),
 	)
 	require.NoError(t, err)
+	return resAddMarket.Data
 }
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {

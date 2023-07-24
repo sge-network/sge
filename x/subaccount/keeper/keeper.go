@@ -5,6 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -17,6 +18,10 @@ type BankKeeper interface {
 	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
 }
 
+type OrderBookKeeper interface {
+	RegisterHook(hooks orderbookmodulekeeper.Hook)
+}
+
 type Keeper struct {
 	cdc        codec.Codec
 	storeKey   sdk.StoreKey
@@ -27,13 +32,13 @@ type Keeper struct {
 	betKeeper BetKeeper
 }
 
-func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, ps paramtypes.Subspace, bankKeeper BankKeeper, ovmKeeper bettypes.OVMKeeper, betKeeper BetKeeper) Keeper {
+func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, ps paramtypes.Subspace, bankKeeper BankKeeper, ovmKeeper bettypes.OVMKeeper, betKeeper BetKeeper, obKeeper OrderBookKeeper) Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
-	return Keeper{
+	k := Keeper{
 		cdc:        cdc,
 		storeKey:   storeKey,
 		paramstore: ps,
@@ -41,4 +46,6 @@ func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, ps paramtypes.Subspace, b
 		ovmKeeper:  ovmKeeper,
 		betKeeper:  betKeeper,
 	}
+	obKeeper.RegisterHook(k)
+	return k
 }

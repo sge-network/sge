@@ -40,12 +40,27 @@ func (m msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketValidation, "%s", err)
 	}
 
+	// duplication end
+
 	// here we swap the original sender with the subaccount address
 	bet := bettypes.NewBet(subAccountAddress.String(), msg.Msg.Bet, payload.OddsType, payload.SelectedOdds)
+
+	// make subaccount balance adjustments
+	balance, exists := m.keeper.GetBalance(ctx, subAccountAddress)
+	if !exists {
+		panic("state corruption: subaccount balance not found")
+	}
+
+	err = balance.Spend(bet.Amount)
+	if err != nil {
+		return nil, err
+	}
 
 	if err := m.keeper.betKeeper.PlaceBet(ctx, bet); err != nil {
 		return nil, sdkerrors.Wrapf(bettypes.ErrInBetPlacement, "%s", err)
 	}
+
+	m.keeper.SetBalance(ctx, subAccountAddress, balance)
 
 	msg.Msg.EmitEvent(&ctx)
 

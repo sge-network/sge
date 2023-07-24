@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"log"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
@@ -21,7 +23,7 @@ func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalA
 	if !exists {
 		panic("subaccount owner not found")
 	}
-	err = k.bankKeeper.SendCoins(ctx, owner, bettor, sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, originalAmount)))
+	err = k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, profit)))
 	if err != nil {
 		panic(err)
 	}
@@ -55,4 +57,5 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 		panic(err)
 	}
 	k.SetBalance(ctx, bettor, balance)
+	log.Printf("bettor refunded, yay!")
 }

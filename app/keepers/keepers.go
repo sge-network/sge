@@ -438,6 +438,7 @@ func NewAppKeeper(
 		appKeepers.BankKeeper,
 		appKeepers.OVMKeeper,
 		appKeepers.BetKeeper,
+		appKeepers.OrderbookKeeper,
 	)
 	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
 
