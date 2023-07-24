@@ -81,9 +81,22 @@ func TestMsgServer_Bet(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	// resolve the market – better wins
+	t.Run("resolve market – better wins", func(t *testing.T) {
+		ctx, _ = ctx.CacheContext()
+		// resolve the market – better wins
+
+	})
 	// resolve the market – better loses
-	// resolve the market – refund
+	t.Run("resolve market – better loses", func(t *testing.T) {
+		ctx, _ = ctx.CacheContext()
+		// resolve the market – better loses
+
+	})
+	t.Run("resolve market – refund", func(t *testing.T) {
+		ctx, _ = ctx.CacheContext()
+		// resolve the market – refund
+
+	})
 }
 
 func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
@@ -110,6 +123,23 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 	resAddMarket, err := marketSrv.AddMarket(wctx, testAddMarket)
 	require.Nil(t, err)
 	require.NotNil(t, resAddMarket)
+
+	// add liquidity
+	err = simapp.FundAccount(
+		tApp.BankKeeper,
+		ctx,
+		simappUtil.TestParamUsers["user1"].Address,
+		sdk.NewCoins(sdk.NewCoin(tApp.SubaccountKeeper.GetParams(ctx).LockedBalanceDenom, sdk.NewInt(1_000_000).Mul(micro))),
+	)
+	require.NoError(t, err)
+	_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
+		ctx,
+		simappUtil.TestParamUsers["user1"].Address,
+		resAddMarket.Data.UID,
+		sdk.NewInt(1_000_000).Mul(micro),
+		sdk.NewInt(1),
+	)
+	require.NoError(t, err)
 }
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
@@ -124,7 +154,7 @@ func testBet(t testing.TB, better sdk.AccAddress, amount sdk.Int) *bettypes.MsgP
 		"selected_odds": testSelectedBetOdds,
 		"kyc_data": &sgetypes.KycDataPayload{
 			Approved: true,
-			ID:       testCreator,
+			ID:       better.String(),
 		},
 		"odds_type": 1,
 	})

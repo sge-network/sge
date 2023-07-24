@@ -435,7 +435,9 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.keys[subaccounttypes.StoreKey],
 		appKeepers.GetSubspace(subaccounttypes.ModuleName),
-		bApp.MsgServiceRouter(),
+		appKeepers.BankKeeper,
+		appKeepers.OVMKeeper,
+		appKeepers.BetKeeper,
 	)
 	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
 
