@@ -1,8 +1,6 @@
 package keeper
 
 import (
-	"log"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
@@ -112,8 +110,6 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 	}
 
 	k.SetBalance(ctx, house, balance)
-
-	log.Printf("house %s lost %s", house, lostAmt.QuoRaw(1_000_000).String())
 }
 
 func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount, fee sdk.Int) {
@@ -132,5 +128,4 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 	}
 
 	k.SetBalance(ctx, house, balance)
-	log.Printf("house %s refunded %s", house, originalAmount.String())
 }
