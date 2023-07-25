@@ -22,10 +22,21 @@ type BankKeeper interface {
 type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
 	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdk.Int) (participationIndex uint64, err error)
+	GetDeposit(ctx sdk.Context, depositorAddr, marketUID string, participationIndex uint64) (housetypes.Deposit, bool)
+	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr string, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount sdk.Int) (uint64, error)
 }
 
 type OrderBookKeeper interface {
 	RegisterHook(hooks orderbookmodulekeeper.Hook)
+	CalcWithdrawalAmount(
+		ctx sdk.Context,
+		depositorAddress string,
+		marketUID string,
+		participationIndex uint64,
+		mode housetypes.WithdrawalMode,
+		totalWithdrawnAmount sdk.Int,
+		amount sdk.Int,
+	) (sdk.Int, error)
 }
 
 type Keeper struct {
@@ -37,6 +48,7 @@ type Keeper struct {
 	ovmKeeper   bettypes.OVMKeeper
 	betKeeper   BetKeeper
 	houseKeeper HouseKeeper
+	obKeeper    OrderBookKeeper
 }
 
 func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, ps paramtypes.Subspace, bankKeeper BankKeeper, ovmKeeper bettypes.OVMKeeper, betKeeper BetKeeper, obKeeper OrderBookKeeper, hk HouseKeeper) Keeper {
@@ -53,6 +65,7 @@ func NewKeeper(cdc codec.Codec, storeKey sdk.StoreKey, ps paramtypes.Subspace, b
 		ovmKeeper:   ovmKeeper,
 		betKeeper:   betKeeper,
 		houseKeeper: hk,
+		obKeeper:    obKeeper,
 	}
 	obKeeper.RegisterHook(k)
 	return k

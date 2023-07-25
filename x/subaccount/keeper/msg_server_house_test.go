@@ -22,7 +22,7 @@ var (
 	bettor1Funds = sdk.NewInt(10).Mul(micro)
 )
 
-func TestMsgServer_HouseDeposit(t *testing.T) {
+func TestMsgServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
 	// do subaccount creation
@@ -64,7 +64,7 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 
 	// do house deposit
 	deposit := sdk.NewInt(1000).Mul(micro)
-	_, err = msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
+	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
 	require.NoError(t, err)
 	// check spend
 	subBalance, exists := k.GetBalance(ctx, subAccAddr)
@@ -149,6 +149,43 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 	})
 
 	// TODO: not partecipated in bet fulfillment.
+
+	t.Run("withdrawal", func(t *testing.T) {
+		ctx, _ := ctx.CacheContext()
+		_, err := msgServer.HouseWithdraw(sdk.WrapSDKContext(ctx), &types.MsgHouseWithdraw{Msg: houseWithdrawMsg(t, subAccOwner, deposit, depResp.Response.ParticipationIndex)})
+		require.NoError(t, err)
+
+		// do subaccount balance check
+		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		require.True(t, exists)
+
+		require.Equal(t, subBalance.SpentAmount.String(), sdk.NewInt(132000000).String()) // NOTE: there was a match in the bet + participate fee
+		require.Equal(t, subBalance.LostAmount.String(), sdk.ZeroInt().String())
+	})
+}
+
+func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdk.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
+	testKyc := &sgetypes.KycDataPayload{
+		Approved: true,
+		ID:       owner.String(),
+	}
+	ticketClaim := jwt.MapClaims{
+		"exp":      time.Now().Add(time.Minute * 5).Unix(),
+		"iat":      time.Now().Unix(),
+		"kyc_data": testKyc,
+	}
+	ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+	require.Nil(t, err)
+
+	inputWithdraw := &housetypes.MsgWithdraw{
+		Creator:            owner.String(),
+		MarketUID:          testMarketUID,
+		Amount:             amt,
+		ParticipationIndex: partecipationIndex,
+		Mode:               housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
+		Ticket:             ticket,
+	}
+	return inputWithdraw
 }
 
 func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdk.Int) *types.MsgHouseDeposit {
