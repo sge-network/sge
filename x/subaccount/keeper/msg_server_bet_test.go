@@ -89,7 +89,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	require.Equal(t, balance.SpentAmount, betAmt)
 
 	t.Run("resolve market – better wins", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		// resolve the market – better wins
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
@@ -118,7 +118,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	})
 	// resolve the market – better loses
 	t.Run("resolve market – better loses", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		// resolve the market – better loses
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
@@ -139,7 +139,7 @@ func TestMsgServer_Bet(t *testing.T) {
 		require.Equal(t, sdk.NewCoins(), ownerBalance)
 	})
 	t.Run("resolve market – refund", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		// resolve the market – refund
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,

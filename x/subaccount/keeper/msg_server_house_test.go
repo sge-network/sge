@@ -79,7 +79,7 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(deposit.ToDec()).TruncateInt()
 
 	t.Run("house wins", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -102,7 +102,7 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 	})
 
 	t.Run("house loses", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -125,7 +125,7 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
 	})
 	t.Run("house refund", func(t *testing.T) {
-		ctx, _ = ctx.CacheContext()
+		ctx, _ := ctx.CacheContext()
 		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -147,6 +147,8 @@ func TestMsgServer_HouseDeposit(t *testing.T) {
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
 	})
+
+	// TODO: not partecipated in bet fulfillment.
 }
 
 func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdk.Int) *types.MsgHouseDeposit {
