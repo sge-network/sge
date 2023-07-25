@@ -22,6 +22,17 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
 
+	// get subaccount balance, and check if it can spend
+	balance, exists := m.keeper.GetBalance(ctx, subAccountAddr)
+	if !exists {
+		panic("data corruption: subaccount balance not found")
+	}
+
+	err := balance.Spend(msg.Msg.Amount)
+	if err != nil {
+		return nil, err
+	}
+
 	// send house deposit from subaccount on behalf of the owner
 	participationIndex, err := m.keeper.houseKeeper.Deposit(
 		ctx,
@@ -33,7 +44,13 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
+
+	// update subaccount balance
+	m.keeper.SetBalance(ctx, subAccountAddr, balance)
+
+	// emit event
 	msg.Msg.EmitEvent(&ctx, subAccountAddr.String(), participationIndex)
+
 	return &types.MsgHouseDepositResponse{
 		Response: &housetypes.MsgDepositResponse{
 			MarketUID:          msg.Msg.MarketUID,
@@ -53,6 +70,10 @@ func (m msgServer) houseDeposit(ctx sdk.Context, msg *housetypes.MsgDeposit) err
 	var payload housetypes.DepositTicketPayload
 	if err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload); err != nil {
 		return sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
+	}
+
+	if payload.DepositorAddress != "" {
+		return sdkerrors.Wrapf(housetypes.ErrInTicketPayloadValidation, "in subaccount the depositor address must be empty")
 	}
 
 	depositorAddr := msg.Creator

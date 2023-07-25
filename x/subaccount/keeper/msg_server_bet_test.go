@@ -42,6 +42,7 @@ var (
 	subAccFunder = sample.NativeAccAddress()
 	micro        = sdk.NewInt(1_000_000)
 	subAccFunds  = sdk.NewInt(10_000).Mul(micro)
+	subAccAddr   = types.NewAddressFromSubaccount(1)
 )
 
 func TestMsgServer_Bet(t *testing.T) {
@@ -71,7 +72,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	require.NoError(t, err)
 
 	// add market
-	market := addTestMarket(t, app, ctx)
+	market := addTestMarket(t, app, ctx, true)
 
 	// start betting using the subaccount
 	betAmt := sdk.NewInt(1000).Mul(micro)
@@ -82,7 +83,6 @@ func TestMsgServer_Bet(t *testing.T) {
 	require.NoError(t, err)
 
 	// check subaccount balance
-	subAccAddr := types.NewAddressFromSubaccount(1)
 	balance, exists := k.GetBalance(ctx, subAccAddr)
 	require.True(t, exists)
 
@@ -160,7 +160,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	})
 }
 
-func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) *markettypes.Market {
+func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, prefund bool) *markettypes.Market {
 	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
 		"uid":      testMarketUID,
@@ -185,22 +185,24 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) *mar
 	require.Nil(t, err)
 	require.NotNil(t, resAddMarket)
 
-	// add liquidity
-	err = simapp.FundAccount(
-		tApp.BankKeeper,
-		ctx,
-		simappUtil.TestParamUsers["user1"].Address,
-		sdk.NewCoins(sdk.NewCoin(tApp.SubaccountKeeper.GetParams(ctx).LockedBalanceDenom, sdk.NewInt(1_000_000).Mul(micro))),
-	)
-	require.NoError(t, err)
-	_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
-		ctx,
-		simappUtil.TestParamUsers["user1"].Address,
-		resAddMarket.Data.UID,
-		sdk.NewInt(1_000_000).Mul(micro),
-		sdk.NewInt(1),
-	)
-	require.NoError(t, err)
+	if prefund {
+		// add liquidity
+		err = simapp.FundAccount(
+			tApp.BankKeeper,
+			ctx,
+			simappUtil.TestParamUsers["user1"].Address,
+			sdk.NewCoins(sdk.NewCoin(tApp.SubaccountKeeper.GetParams(ctx).LockedBalanceDenom, sdk.NewInt(1_000_000).Mul(micro))),
+		)
+		require.NoError(t, err)
+		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
+			ctx,
+			simappUtil.TestParamUsers["user1"].Address,
+			resAddMarket.Data.UID,
+			sdk.NewInt(1_000_000).Mul(micro),
+			sdk.NewInt(1),
+		)
+		require.NoError(t, err)
+	}
 	return resAddMarket.Data
 }
 

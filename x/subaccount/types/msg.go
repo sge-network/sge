@@ -3,6 +3,7 @@ package types
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 var (
@@ -88,9 +89,34 @@ func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
 }
 
 func (m *MsgPlaceBet) ValidateBasic() error {
+	if m.Msg == nil {
+		return sdkerrors.ErrInvalidRequest.Wrap("msg is nil")
+	}
 	return m.Msg.ValidateBasic()
 }
 
 func (m *MsgPlaceBet) GetSigners() []sdk.AccAddress {
 	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseDeposit) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseDeposit) ValidateBasic() error {
+	if m.Msg == nil {
+		return sdkerrors.ErrInvalidRequest.Wrap("msg is nil")
+	}
+	return m.Msg.ValidateBasic()
+}
+
+func (m *MsgHouseWithdraw) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseWithdraw) ValidateBasic() error {
+	if m.Msg == nil {
+		return sdkerrors.ErrInvalidRequest.Wrap("msg is nil")
+	}
+	return m.Msg.ValidateBasic()
 }
