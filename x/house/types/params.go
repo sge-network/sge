@@ -18,8 +18,8 @@ const (
 )
 
 var (
-	KeyMinDeposit            = []byte("MinDeposit")
-	KeyHouseParticipationFee = []byte("HouseParticipationFee")
+	keyMinDeposit            = []byte("MinDeposit")
+	keyHouseParticipationFee = []byte("HouseParticipationFee")
 )
 
 // ParamKeyTable for house module
@@ -38,9 +38,13 @@ func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
 // ParamSetPairs implements params.ParamSet
 func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 	return paramtypes.ParamSetPairs{
-		paramtypes.NewParamSetPair(KeyMinDeposit, &p.MinDeposit, validateMinimumDeposit),
 		paramtypes.NewParamSetPair(
-			KeyHouseParticipationFee,
+			keyMinDeposit,
+			&p.MinDeposit,
+			validateMinimumDeposit,
+		),
+		paramtypes.NewParamSetPair(
+			keyHouseParticipationFee,
 			&p.HouseParticipationFee,
 			validateHouseParticipationFee,
 		),
@@ -70,11 +74,7 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	if err := validateHouseParticipationFee(p.HouseParticipationFee); err != nil {
-		return err
-	}
-
-	return nil
+	return validateHouseParticipationFee(p.HouseParticipationFee)
 }
 
 // validateMinimumDeposit performs a minimum acceptable deposit validation

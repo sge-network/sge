@@ -30,7 +30,8 @@ func TestQueryParams(t *testing.T) {
 	} {
 		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
-			args := []string{}
+			var args []string
+
 			args = append(args, tc.args...)
 			res, err := clitestutil.ExecTestCLICmd(ctx, cli.GetCmdQueryParams(), args)
 			if tc.err != nil {

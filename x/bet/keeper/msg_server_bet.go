@@ -8,20 +8,20 @@ import (
 	"github.com/sge-network/sge/x/bet/types"
 )
 
-func (k msgServer) PlaceBet(
+func (k msgServer) Wager(
 	goCtx context.Context,
-	msg *types.MsgPlaceBet,
-) (*types.MsgPlaceBetResponse, error) {
+	msg *types.MsgWager,
+) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetBetID(ctx, msg.Bet.UID)
+	_, isFound := k.GetBetID(ctx, msg.Props.UID)
 	if isFound {
-		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", msg.Bet.UID)
+		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", msg.Props.UID)
 	}
 
-	payload := &types.BetPlacementTicketPayload{}
-	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Bet.Ticket, &payload)
+	payload := &types.WagerTicketPayload{}
+	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Props.Ticket, &payload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
@@ -30,13 +30,13 @@ func (k msgServer) PlaceBet(
 		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
-	bet := types.NewBet(msg.Creator, msg.Bet, payload.OddsType, payload.SelectedOdds)
+	bet := types.NewBet(msg.Creator, msg.Props, payload.OddsType, payload.SelectedOdds)
 
-	if err := k.Keeper.PlaceBet(ctx, bet); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInBetPlacement, "%s", err)
+	if err := k.Keeper.Wager(ctx, bet); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInWager, "%s", err)
 	}
 
 	msg.EmitEvent(&ctx)
 
-	return &types.MsgPlaceBetResponse{Bet: msg.Bet}, nil
+	return &types.MsgWagerResponse{Props: msg.Props}, nil
 }

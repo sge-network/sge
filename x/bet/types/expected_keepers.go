@@ -24,7 +24,6 @@ type BankKeeper interface {
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
 	GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool)
-	GetDefaultBetConstraints(ctx sdk.Context) (params *markettypes.MarketBetConstraints)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 }
 
@@ -35,7 +34,7 @@ type OVMKeeper interface {
 
 // OrderbookKeeper defines the expected interface needed to process bet placement
 type OrderbookKeeper interface {
-	ProcessBetPlacement(
+	ProcessWager(
 		ctx sdk.Context,
 		betUID, bookUID, oddsUID string,
 		maxLossMultiplier sdk.Dec,
@@ -71,4 +70,5 @@ type OrderbookKeeper interface {
 	) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdk.Int) error
+	PublishOrderBookEvent(ctx sdk.Context, orderBookUID string)
 }

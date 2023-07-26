@@ -29,7 +29,7 @@ func createNBet(
 		items[i].OddsValue = "10"
 		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
-		items[i].BetFee = sdk.NewInt(1)
+		items[i].Fee = sdk.NewInt(1)
 		items[i].MarketUID = testMarketUID
 		items[i].MaxLossMultiplier = sdk.NewDec(10)
 

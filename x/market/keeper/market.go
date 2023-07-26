@@ -50,8 +50,8 @@ func (k Keeper) GetMarkets(ctx sdk.Context) (list []types.Market, err error) {
 	return
 }
 
-// ResolveMarket updates a market with its resolution
-func (k Keeper) ResolveMarket(
+// Resolve updates a market with its resolution
+func (k Keeper) Resolve(
 	ctx sdk.Context,
 	storedMarket types.Market,
 	resolutionMarket *types.MarketResolutionTicketPayload,

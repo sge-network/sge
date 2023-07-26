@@ -11,16 +11,16 @@ import (
 	"github.com/sge-network/sge/x/market/types"
 )
 
-// SimulateMsgUpdateMarket simulates update market message
-func SimulateMsgUpdateMarket(
-	ak types.AccountKeeper,
-	bk types.BankKeeper,
-	k keeper.Keeper,
+// SimulateMsgUpdate simulates update market message
+func SimulateMsgUpdate(
+	_ types.AccountKeeper,
+	_ types.BankKeeper,
+	_ keeper.Keeper,
 ) simtypes.Operation {
 	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
 		simAccount, _ := simtypes.RandomAcc(r, accs)
-		msg := &types.MsgUpdateMarket{
+		msg := &types.MsgUpdate{
 			Creator: simAccount.Address.String(),
 		}
 

@@ -24,10 +24,10 @@ func NewMsgDeposit(creator, marketUID string, amount sdk.Int, ticket string) *Ms
 }
 
 // Route return the message route for slashing
-func (msg *MsgDeposit) Route() string { return RouterKey }
+func (*MsgDeposit) Route() string { return RouterKey }
 
 // Type returns the msg add market type
-func (msg *MsgDeposit) Type() string { return typeMsgDeposit }
+func (*MsgDeposit) Type() string { return typeMsgDeposit }
 
 // GetSigners return the creators address
 func (msg *MsgDeposit) GetSigners() []sdk.AccAddress {
@@ -66,7 +66,7 @@ func (msg *MsgDeposit) ValidateBasic() error {
 }
 
 // ValidateSanity validates deposit acceptability
-func (msg MsgDeposit) ValidateSanity(ctx sdk.Context, p *Params) error {
+func (msg MsgDeposit) ValidateSanity(_ sdk.Context, p *Params) error {
 	if msg.Amount.LT(p.MinDeposit) {
 		return sdkerrors.Wrapf(
 			ErrDepositTooSmall, ": got %s, expected greater or equal to %d",

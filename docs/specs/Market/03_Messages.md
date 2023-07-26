@@ -9,20 +9,20 @@ The Market module exposes the following services:
 ```proto
 // Msg defines the Msg service.
 service Msg {
-    rpc AddMarket(MsgAddMarket) returns (MarketResponse);
-    rpc ResolveMarket(MsgResolveMarket) returns (MarketResponse);
-    rpc UpdateMarket(MsgUpdateMarket) returns (MarketResponse);
+    rpc Add(MsgAdd) returns (MarketResponse);
+    rpc Resolve(MsgResolve) returns (MarketResponse);
+    rpc Update(MsgUpdate) returns (MarketResponse);
 }
 ```
 
 ---
 
-## **MsgAddMarket**
+## **MsgAdd**
 
 This message is used to add new market to the chain
 
 ```proto
-message MsgAddMarket {
+message MsgAdd {
   string creator = 1;
   string ticket = 2;
 }
@@ -62,20 +62,8 @@ message MarketAddTicketPayload {
   // creator is the address of the creator of the market.
   string creator = 6;
 
-  // min_bet_amount is the minimum allowed bet amount for a market.
-  string min_bet_amount = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that the bettor needs to pay to bet on the market.
-  string bet_fee = 8 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
   // meta contains human-readable metadata of the market.
-  string meta = 9;
+  string meta = 7;
 }
 ```
 
@@ -101,8 +89,6 @@ message MarketAddTicketPayload {
         }
     ],
     "status": 1,
-    "min_bet_amount": "1000000",
-    "bet_fee": "10",
     "meta": "Soccer: England vs USA",
     "iat": 1665140310,
     "exp": 1757788212
@@ -111,14 +97,14 @@ message MarketAddTicketPayload {
 
 ---
 
-## **MsgUpdateMarket**
+## **MsgUpdate**
 
 This message is used to update already existent markets on the chain
 
 ```proto
-// MsgUpdateMarket is the message type for updating market data.
+// MsgUpdate is the message type for updating market data.
 // in the state
-message MsgUpdateMarket {
+message MsgUpdate {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.
@@ -149,20 +135,8 @@ message MarketUpdateTicketPayload {
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
-  // min_bet_amount is the minimum allowed bet amount for a market.
-  string min_bet_amount = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
-  // bet_fee is the fee that the bettor needs to pay to bet on the market.
-  string bet_fee = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-
   // status is the status of the resolution.
-  MarketStatus status = 6;
+  MarketStatus status = 4;
 }
 ```
 
@@ -174,8 +148,6 @@ message MarketUpdateTicketPayload {
     "start_ts": 1668480139,
     "end_ts": 1883781609,
     "status": 1,
-    "min_bet_amount": "1000000",
-    "bet_fee": "10",
     "iat": 1665140310,
     "exp": 1757788212
 }
@@ -188,8 +160,8 @@ message MarketUpdateTicketPayload {
 This is the common response to all the messages
 
 ```proto
-// MsgAddMarketResponse response for adding market.
-message MsgAddMarketResponse {
+// MsgAddResponse response for adding market.
+message MsgAddResponse {
   // error contains an error if adding a market faces any issues.
   string error = 1 [ (gogoproto.nullable) = true ];
   // data is the data of market.
@@ -199,13 +171,13 @@ message MsgAddMarketResponse {
 
 ---
 
-## **MsgResolveMarket**
+## **MsgResolve**
 
 This message is used to resolve already existent markets on the chain
 
 ```proto
-// MsgResolveMarket is the message type for resolving a market.
-message MsgResolveMarket {
+// MsgResolve is the message type for resolving a market.
+message MsgResolve {
   // creator is the address of the creator account of the market.
   string creator = 1;
   // ticket is the jwt ticket data.

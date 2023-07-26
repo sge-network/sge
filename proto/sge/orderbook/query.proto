@@ -60,7 +60,8 @@ service Query {
 
   // OrderBookParticipationExposures queries exposures info for given order book
   // participations.
-  rpc OrderBookParticipationExposures(QueryOrderBookParticipationExposuresRequest)
+  rpc OrderBookParticipationExposures(
+      QueryOrderBookParticipationExposuresRequest)
       returns (QueryOrderBookParticipationExposuresResponse) {
     option (google.api.http).get =
         "/sge/orderbook/{order_book_uid}/participation-exposures";

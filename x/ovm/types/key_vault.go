@@ -36,7 +36,7 @@ func (k *KeyVault) validatePubKeys() error {
 		return fmt.Errorf(
 			"total number of pubkeys is %d, this should not be more than %d",
 			count,
-			MinPubKeysCount,
+			MaxPubKeysCount,
 		)
 	}
 

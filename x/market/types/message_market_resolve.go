@@ -6,26 +6,26 @@ import (
 	"github.com/sge-network/sge/utils"
 )
 
-const typeMsgResolveMarket = "market_resolve"
+const typeMsgResolve = "market_resolve"
 
-var _ sdk.Msg = &MsgResolveMarket{}
+var _ sdk.Msg = &MsgResolve{}
 
-// NewMsgResolveMarket accepts the params to create new resolution body
-func NewMsgResolveMarket(creator, ticket string) *MsgResolveMarket {
-	return &MsgResolveMarket{
+// NewMsgResolve accepts the params to create new resolution body
+func NewMsgResolve(creator, ticket string) *MsgResolve {
+	return &MsgResolve{
 		Creator: creator,
 		Ticket:  ticket,
 	}
 }
 
 // Route return the message route for slashing
-func (msg *MsgResolveMarket) Route() string { return RouterKey }
+func (*MsgResolve) Route() string { return RouterKey }
 
 // Type return the resolve market type
-func (msg *MsgResolveMarket) Type() string { return typeMsgResolveMarket }
+func (*MsgResolve) Type() string { return typeMsgResolve }
 
 // GetSigners return the creators address
-func (msg *MsgResolveMarket) GetSigners() []sdk.AccAddress {
+func (msg *MsgResolve) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -34,13 +34,13 @@ func (msg *MsgResolveMarket) GetSigners() []sdk.AccAddress {
 }
 
 // GetSignBytes return the marshalled bytes of the msg
-func (msg *MsgResolveMarket) GetSignBytes() []byte {
+func (msg *MsgResolve) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic validates the input resolution market
-func (msg *MsgResolveMarket) ValidateBasic() error {
+func (msg *MsgResolve) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -54,9 +54,9 @@ func (msg *MsgResolveMarket) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgResolveMarket) EmitEvent(ctx *sdk.Context, marketUID string) {
+func (msg *MsgResolve) EmitEvent(ctx *sdk.Context, marketUID string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgResolveMarket, msg.Creator,
+	emitter.AddMsg(typeMsgResolve, msg.Creator,
 		sdk.NewAttribute(attributeKeyMarketUID, marketUID),
 	)
 	emitter.Emit()

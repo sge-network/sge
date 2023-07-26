@@ -36,7 +36,7 @@ When a user deposits tokens:
 
 ---
 
-## **Process Bet Placement**
+## **Process Wager**
 
 1. Get order book and odds exposures.
 2. Check all fulfillment queue items:

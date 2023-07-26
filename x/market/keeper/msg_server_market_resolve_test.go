@@ -4,8 +4,6 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/sample"
@@ -14,10 +12,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgServerResolveMarket(t *testing.T) {
+func TestMsgServerResolve(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 	type args struct {
-		msg *types.MsgResolveMarket
+		msg *types.MsgResolve
 	}
 
 	u1 := uuid.NewString()
@@ -29,13 +27,13 @@ func TestMsgServerResolveMarket(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *types.MsgResolveMarketResponse
+		want    *types.MsgResolveResponse
 		wantErr error
 	}{
 		{
 			name: "test the empty or invalid format ticket",
 			args: args{
-				msg: types.NewMsgResolveMarket(sample.AccAddress(), ""),
+				msg: types.NewMsgResolve(sample.AccAddress(), ""),
 			},
 			want:    nil,
 			wantErr: types.ErrInTicketVerification,
@@ -43,7 +41,7 @@ func TestMsgServerResolveMarket(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := msgk.ResolveMarket(wctx, tt.args.msg)
+			got, err := msgk.Resolve(wctx, tt.args.msg)
 			require.ErrorIs(t, err, tt.wantErr)
 			require.EqualValues(t, got, tt.want)
 		})
@@ -76,9 +74,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -96,9 +94,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketNotFound)
 		assert.Nil(t, response)
@@ -116,9 +114,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrMarketResolutionNotAllowed)
 		assert.Nil(t, response)
@@ -136,9 +134,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -156,9 +154,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -176,9 +174,9 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInTicketPayloadValidation)
 		assert.Nil(t, response)
@@ -196,111 +194,11 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 		validEmptyTicket, err := createJwtTicket(validEmptyTicketClaims)
 		require.NoError(t, err)
 
-		response, err := msgk.ResolveMarket(
+		response, err := msgk.Resolve(
 			wctx,
-			types.NewMsgResolveMarket(sample.AccAddress(), validEmptyTicket),
+			types.NewMsgResolve(sample.AccAddress(), validEmptyTicket),
 		)
 		assert.ErrorIs(t, err, types.ErrInvalidWinnerOdds)
 		assert.Nil(t, response)
 	})
-}
-
-func TestValidateResolveMarket(t *testing.T) {
-	k, _, _, _ := setupMsgServerAndKeeper(t)
-	t1 := time.Now()
-
-	tests := []struct {
-		name string
-		msg  types.MarketResolutionTicketPayload
-		err  error
-	}{
-		{
-			name: "valid request",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-		},
-		{
-			name: "invalid resolution ts",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   0,
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid uid",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            "invalid uid",
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "empty winner odds",
-			msg: types.MarketResolutionTicketPayload{
-				UID:          uuid.NewString(),
-				ResolutionTS: uint64(t1.Unix()),
-				Status:       types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "invalid winner odds",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{"invalid winner odds"},
-				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg status inactive",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_INACTIVE,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg invalid enum status",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         6,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-		{
-			name: "msg invalid enum status, active",
-			msg: types.MarketResolutionTicketPayload{
-				UID:            uuid.NewString(),
-				ResolutionTS:   uint64(t1.Unix()),
-				WinnerOddsUIDs: []string{uuid.NewString()},
-				Status:         types.MarketStatus_MARKET_STATUS_ACTIVE,
-			},
-			err: sdkerrors.ErrInvalidRequest,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			err := k.ValidateMarketResolution(tt.msg)
-			if tt.err != nil {
-				require.ErrorIs(t, err, tt.err)
-				return
-			}
-			require.NoError(t, err)
-		})
-	}
 }

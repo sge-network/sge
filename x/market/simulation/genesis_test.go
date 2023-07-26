@@ -10,7 +10,6 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/sge-network/sge/x/market/simulation"
@@ -41,10 +40,6 @@ func TestRandomizedGenState(t *testing.T) {
 
 	var marketGenesis types.GenesisState
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &marketGenesis)
-
-	require.Equal(t, sdk.NewInt(1000000), marketGenesis.Params.MinBetAmount)
-	require.Equal(t, sdk.NewInt(0), marketGenesis.Params.MinBetFee)
-	require.Equal(t, sdk.NewInt(100), marketGenesis.Params.MaxBetFee)
 }
 
 // TestRandomizedGenState tests abnormal scenarios of applying RandomizedGenState.
