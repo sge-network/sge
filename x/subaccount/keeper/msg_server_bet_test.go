@@ -85,6 +85,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	// check subaccount balance
 	balance, exists := k.GetBalance(ctx, subAccAddr)
 	require.True(t, exists)
+	betFees := sdk.NewInt(100)
 
 	require.Equal(t, balance.SpentAmount, betAmt)
 
@@ -103,7 +104,7 @@ func TestMsgServer_Bet(t *testing.T) {
 		// now we check the subaccount balance
 		balance, exists := k.GetBalance(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, balance.SpentAmount.String(), sdk.ZeroInt().String())
+		require.Equal(t, sdk.ZeroInt().Add(betFees).String(), balance.SpentAmount.String())
 
 		// now we want the user to have some balance which is the payout
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
@@ -111,7 +112,7 @@ func TestMsgServer_Bet(t *testing.T) {
 			sdk.NewCoins(
 				sdk.NewCoin(
 					k.GetParams(ctx).LockedBalanceDenom,
-					betAmt.ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
+					betAmt.Sub(betFees).ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
 				)),
 			ownerBalance,
 		)
@@ -132,8 +133,8 @@ func TestMsgServer_Bet(t *testing.T) {
 		// now we check the subaccount balance
 		balance, exists := k.GetBalance(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
-		require.Equal(t, balance.LostAmount, betAmt)
+		require.Equal(t, sdk.ZeroInt().Add(betFees).String(), balance.SpentAmount.String())
+		require.Equal(t, betAmt.Sub(betFees), balance.LostAmount)
 		// the owner has no balances
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t, sdk.NewCoins(), ownerBalance)

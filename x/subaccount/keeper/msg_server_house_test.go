@@ -77,6 +77,7 @@ func TestMsgServer(t *testing.T) {
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(deposit.ToDec()).TruncateInt()
+	bettorFee := sdk.NewInt(100)
 
 	t.Run("house wins", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
@@ -98,7 +99,9 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.SpentAmount.String(), sdk.ZeroInt().Add(participateFee).String())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom).String(), sdk.NewInt(10).Mul(micro).String())
+		require.Equal(t,
+			ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom).String(),
+			sdk.NewInt(10).Mul(micro).Sub(bettorFee).String())
 	})
 
 	t.Run("house loses", func(t *testing.T) {
@@ -119,7 +122,7 @@ func TestMsgServer(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, subBalance.SpentAmount.String(), sdk.ZeroInt().Add(participateFee).String())
-		require.Equal(t, subBalance.LostAmount, bettor1Funds.ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
+		require.Equal(t, subBalance.LostAmount, bettor1Funds.Sub(bettorFee).ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
@@ -159,7 +162,7 @@ func TestMsgServer(t *testing.T) {
 		subBalance, exists := k.GetBalance(ctx, subAccAddr)
 		require.True(t, exists)
 
-		require.Equal(t, subBalance.SpentAmount.String(), sdk.NewInt(132000000).String()) // NOTE: there was a match in the bet + participate fee
+		require.Equal(t, subBalance.SpentAmount.String(), sdk.NewInt(131999680).String()) // NOTE: there was a match in the bet + participate fee
 		require.Equal(t, subBalance.LostAmount.String(), sdk.ZeroInt().String())
 	})
 }
