@@ -162,7 +162,7 @@ Verify genesis hash sum
 sha256sum ~/.sge/config/genesis.json
 ```
 
-Correct sha256 sum for sge-network-3 is - (waiting fo the genesis file)
+Correct sha256 sum for sge-network-3 is - (waiting for the genesis file)
 Genesis file sha sum is published in according repository.
 
 - Add `persistent_peers` or `seeds` in `${HOME}/.sge/config/config.toml`
