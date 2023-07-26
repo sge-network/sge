@@ -19,7 +19,7 @@ service Msg {
   rpc WithdrawUnlockedBalances(MsgWithdrawUnlockedBalances) returns (MsgWithdrawUnlockedBalancesResponse);
 
   // PlaceBet defines a method for placing a bet using a subaccount.
-  rpc PlaceBet(MsgPlaceBet) returns (MsgPlaceBetResponse);
+  rpc Wager(MsgWager) returns (MsgWagerResponse);
 
   // HouseDeposit defines a method for depositing funds to provide liquidity to a market.
   rpc HouseDeposit(MsgHouseDeposit) returns (MsgHouseDepositResponse);
@@ -68,13 +68,13 @@ message MsgWithdrawUnlockedBalances {
 message MsgWithdrawUnlockedBalancesResponse {}
 
 // MsgPlaceBet wraps the MsgPlaceBet message. We need it in order not to have double interface registration conflicts.
-message MsgPlaceBet {
-  sgenetwork.sge.bet.MsgPlaceBet msg = 1;
+message MsgWager {
+  sgenetwork.sge.bet.MsgWager msg = 1;
 }
 
 // MsgBetResponse wraps the MsgPlaceBetResponse message. We need it in order not to have double interface registration conflicts.
-message MsgPlaceBetResponse {
-  sgenetwork.sge.bet.MsgPlaceBetResponse response = 1;
+message MsgWagerResponse {
+  sgenetwork.sge.bet.MsgWagerResponse response = 1;
 }
 
 // MsgHouseDeposit wraps the MsgHouseDeposit message. We need it in order not to have double interface registration conflicts.

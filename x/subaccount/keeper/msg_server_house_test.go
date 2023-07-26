@@ -73,14 +73,14 @@ func TestMsgServer(t *testing.T) {
 
 	// place bet
 	betMsgServer := betmodulekeeper.NewMsgServerImpl(*app.BetKeeper)
-	_, err = betMsgServer.PlaceBet(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds))
+	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds))
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(deposit.ToDec()).TruncateInt()
 
 	t.Run("house wins", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
-		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID2},
@@ -103,7 +103,7 @@ func TestMsgServer(t *testing.T) {
 
 	t.Run("house loses", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
-		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID1},
@@ -126,7 +126,7 @@ func TestMsgServer(t *testing.T) {
 	})
 	t.Run("house refund", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
-		app.MarketKeeper.ResolveMarket(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
 			WinnerOddsUIDs: []string{testOddsUID1},

@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (m msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*types.MsgPlaceBetResponse, error) {
+func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// find subaccount
@@ -23,13 +23,13 @@ func (m msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	// TODO: duplicate code from x/bet/keeper/msg_server_bet.go
 
 	// Check if the value already exists
-	_, isFound := m.keeper.betKeeper.GetBetID(ctx, msg.Msg.Bet.UID)
+	_, isFound := m.keeper.betKeeper.GetBetID(ctx, msg.Msg.Props.UID)
 	if isFound {
-		return nil, sdkerrors.Wrapf(bettypes.ErrDuplicateUID, "%s", msg.Msg.Bet.UID)
+		return nil, sdkerrors.Wrapf(bettypes.ErrDuplicateUID, "%s", msg.Msg.Props.UID)
 	}
 
-	payload := &bettypes.BetPlacementTicketPayload{}
-	err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Msg.Bet.Ticket, &payload)
+	payload := &bettypes.WagerTicketPayload{}
+	err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Msg.Props.Ticket, &payload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketVerification, "%s", err)
 	}
@@ -43,7 +43,7 @@ func (m msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 	// duplication end
 
 	// here we swap the original sender with the subaccount address
-	bet := bettypes.NewBet(subAccountAddress.String(), msg.Msg.Bet, payload.OddsType, payload.SelectedOdds)
+	bet := bettypes.NewBet(subAccountAddress.String(), msg.Msg.Props, payload.OddsType, payload.SelectedOdds)
 
 	// make subaccount balance adjustments
 	balance, exists := m.keeper.GetBalance(ctx, subAccountAddress)
@@ -56,16 +56,16 @@ func (m msgServer) PlaceBet(goCtx context.Context, msg *types.MsgPlaceBet) (*typ
 		return nil, err
 	}
 
-	if err := m.keeper.betKeeper.PlaceBet(ctx, bet); err != nil {
-		return nil, sdkerrors.Wrapf(bettypes.ErrInBetPlacement, "%s", err)
+	if err := m.keeper.betKeeper.Wager(ctx, bet); err != nil {
+		return nil, sdkerrors.Wrapf(bettypes.ErrInWager, "%s", err)
 	}
 
 	m.keeper.SetBalance(ctx, subAccountAddress, balance)
 
 	msg.Msg.EmitEvent(&ctx)
 
-	return &types.MsgPlaceBetResponse{
-		Response: &bettypes.MsgPlaceBetResponse{Bet: msg.Msg.Bet},
+	return &types.MsgWagerResponse{
+		Response: &bettypes.MsgWagerResponse{Props: msg.Msg.Props},
 	}, nil
 
 }

@@ -12,7 +12,7 @@ import (
 
 type BetKeeper interface {
 	GetBetID(ctx sdk.Context, uid string) (bettypes.UID2ID, bool)
-	PlaceBet(ctx sdk.Context, bet *bettypes.Bet) error
+	Wager(ctx sdk.Context, bet *bettypes.Bet) error
 }
 
 type BankKeeper interface {

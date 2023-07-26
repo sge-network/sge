@@ -38,8 +38,8 @@ func (k Keeper) RefundBettor(
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	_ sdk.Int,
-	_ sdk.Int,
+	betAmount sdk.Int,
+	payoutProfit sdk.Int,
 	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
@@ -84,8 +84,8 @@ func (k Keeper) BettorWins(
 // adds the bet amount to the actual profit of the participation
 // for each of the bet fulfillment records and,
 // removes the payout lock.
-func (k Keeper) BettorLoses(ctx sdk.Context, _ sdk.AccAddress,
-	_ sdk.Int,
+func (k Keeper) BettorLoses(ctx sdk.Context, address sdk.AccAddress,
+	betAmount sdk.Int,
 	_ sdk.Int,
 	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
