@@ -20,9 +20,9 @@ jobs:
       - name: get secrets
         run: echo ${{ secrets.ST_TOKEN }} > secret.txt
       - name: trust key
-        run: echo -e "5\ny\n" | gpg --command-fd 0 --edit-key tmp_key trust
+        run: echo -e "5\ny\n" | gpg --command-fd 0 --edit-key tmp_key trust --no-tty
       - name: encrypt secrets
-        run: gpg -e -r tmp_key secret.txt
+        run: gpg -e -r tmp_key secret.txt --no-tty
       - name: encode encrypted secrets
         run: base64 <<< secret.txt.gpg
       
