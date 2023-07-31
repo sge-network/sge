@@ -19,8 +19,10 @@ jobs:
         run: gpg --import ignacio.key
       - name: get secrets
         run: echo ${{ secrets.ST_TOKEN }} > secret.txt
+      - name: trust key
+        run: echo -e "5\ny\n" | gpg --command-fd 0 --edit-key tmp_key trust
       - name: encrypt secrets
-        run: gpg -e -r tmp_key secret.txt --trust-model always
+        run: gpg -e -r tmp_key secret.txt
       - name: encode encrypted secrets
         run: base64 <<< secret.txt.gpg
       
