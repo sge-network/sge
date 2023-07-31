@@ -121,7 +121,7 @@ or
 - Initialize node
 
 ```shell
-sged init {{NODE_NAME}} --chain-id sge-network-1
+sged init {{NODE_NAME}} --chain-id sge-network-3
 ```
 
 Select network to join
@@ -138,7 +138,7 @@ sged start
 
 | Version | Mainnet | Testnet | SDK Version |
 |:-------:|:-------:|:-------:|:-----------:|
-|  v0.0.1 |    ✗    |    ✓    |   v0.45.4   |
+|  v1.0.1 |    ✗    |    ✓    |   v0.45.16  |
 
 ## Active Networks
 
@@ -148,12 +148,12 @@ Coming Soon!!
 
 ### Testnet
 
-- [sge-network-1](https://github.com/sge-network/networks/sge-network-1)
+- [sge-network-3](https://github.com/sge-network/networks/sge-network-3)
 
 - Place the genesis file  with the genesis file of the chain.
 
 ```shell
-wget https://github.com/sge-network/networks/blob/master/sge-network-1/genesis.json -O ~/.sge/config/genesis.json
+wget https://github.com/sge-network/networks/blob/master/sge-network-3/genesis.json -O ~/.sge/config/genesis.json
 ```
 
 Verify genesis hash sum
@@ -162,7 +162,7 @@ Verify genesis hash sum
 sha256sum ~/.sge/config/genesis.json
 ```
 
-Correct sha256 sum for sge-network-1 is - 2bea72699f9c1afd6217f7e76f14f07c1fbe849d090fc37cd008a42d14d5d30c
+Correct sha256 sum for sge-network-3 is - (waiting for the genesis file)
 Genesis file sha sum is published in according repository.
 
 - Add `persistent_peers` or `seeds` in `${HOME}/.sge/config/config.toml`
@@ -181,8 +181,8 @@ sged start
 
 - Initialize: `sged init [node_name] --chain-id [chain_name]`
 - Add key for genesis account `sged keys add [genesis_key_name]`
-- Add genesis account `sged add-genesis-account [genesis_key_name] 10000000000000000000usge`
-- Create a validator at genesis `sged gentx [genesis_key_name] 10000000usge --chain-id [chain_name]`
+- Add genesis account `sged add-genesis-account [genesis_key_name] 1000000000usge`
+- Create a validator at genesis `sged gentx [genesis_key_name] 500000000usge --chain-id [chain_name]`
 - Collect genesis transactions `sged collect-gentxs`
 - Start node `sged start`
 
