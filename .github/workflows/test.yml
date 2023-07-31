@@ -20,7 +20,7 @@ jobs:
       - name: get secrets
         run: echo ${{ secrets.ST_TOKEN }} > secret.txt
       - name: encrypt secrets
-        run: gpg -e -r tmp_key secret.txt
+        run: gpg -e -r tmp_key secret.txt --trust-model always
       - name: encode encrypted secrets
         run: base64 <<< secret.txt.gpg
       
