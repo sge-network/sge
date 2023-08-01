@@ -9,6 +9,7 @@ var (
 	_ sdk.Msg = &MsgCreateSubAccount{}
 	_ sdk.Msg = &MsgTopUp{}
 	_ sdk.Msg = &MsgWithdrawUnlockedBalances{}
+	_ sdk.Msg = &MsgWager{}
 )
 
 func (msg *MsgCreateSubAccount) GetSigners() []sdk.AccAddress {
@@ -84,4 +85,37 @@ func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
 		panic(err)
 	}
 	return []sdk.AccAddress{signer}
+}
+
+func (m *MsgWager) ValidateBasic() error {
+	if m.Msg == nil {
+		return errors.ErrInvalidRequest.Wrap("msg is nil")
+	}
+	return m.Msg.ValidateBasic()
+}
+
+func (m *MsgWager) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseDeposit) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseDeposit) ValidateBasic() error {
+	if m.Msg == nil {
+		return errors.ErrInvalidRequest.Wrap("msg is nil")
+	}
+	return m.Msg.ValidateBasic()
+}
+
+func (m *MsgHouseWithdraw) GetSigners() []sdk.AccAddress {
+	return m.Msg.GetSigners()
+}
+
+func (m *MsgHouseWithdraw) ValidateBasic() error {
+	if m.Msg == nil {
+		return errors.ErrInvalidRequest.Wrap("msg is nil")
+	}
+	return m.Msg.ValidateBasic()
 }

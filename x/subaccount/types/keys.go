@@ -3,7 +3,8 @@ package types
 import (
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/address"
 )
 
 // module constants
@@ -38,22 +39,22 @@ var (
 	BalancePrefix = []byte{0x04}
 )
 
-func SubAccountOwnerKey(address types.AccAddress) []byte {
+func SubAccountOwnerKey(address sdk.AccAddress) []byte {
 	return append(SubAccountOwnerPrefix, address...)
 }
 
-func SubAccountKey(id uint64) []byte {
-	return append(SubAccountOwnerReversePrefix, types.Uint64ToBigEndian(id)...)
+func SubAccountKey(subAccountAddress sdk.AccAddress) []byte {
+	return append(SubAccountOwnerReversePrefix, subAccountAddress...)
 }
 
-func LockedBalanceKey(address types.AccAddress, unlockTime time.Time) []byte {
-	return append(LockedBalancePrefix, append(address.Bytes(), types.FormatTimeBytes(unlockTime)...)...)
+func LockedBalanceKey(subAccountAddress sdk.AccAddress, unlockTime time.Time) []byte {
+	return append(LockedBalancePrefix, append(address.MustLengthPrefix(subAccountAddress), sdk.FormatTimeBytes(unlockTime)...)...)
 }
 
-func LockedBalancePrefixKey(address types.AccAddress) []byte {
-	return append(LockedBalancePrefix, address.Bytes()...)
+func LockedBalancePrefixKey(subAccountAddress sdk.AccAddress) []byte {
+	return append(LockedBalancePrefix, address.MustLengthPrefix(subAccountAddress)...)
 }
 
-func BalanceKey(address types.AccAddress) []byte {
+func BalanceKey(address sdk.AccAddress) []byte {
 	return append(BalancePrefix, address.Bytes()...)
 }

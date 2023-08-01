@@ -22,6 +22,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("fund sender account")
 	err := simapp.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
+	require.NoError(t, err)
 
 	t.Log("Create sub account")
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
@@ -74,9 +75,11 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	t.Log("expire second locked balance, also force money to be spent")
 	// we force some money to be spent on the subaccount to correctly test
 	// that if the amount is unlocked but spent, it will not be withdrawable.
-	subaccountBalance := app.SubaccountKeeper.GetBalance(ctx, 1)
+	subAccountAddress := types.NewAddressFromSubaccount(1)
+	subaccountBalance, exists := app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	require.True(t, exists)
 	require.NoError(t, subaccountBalance.Spend(sdk.NewInt(100)))
-	app.SubaccountKeeper.SetBalance(ctx, 1, subaccountBalance)
+	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 2 expires")
@@ -94,9 +97,10 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	require.Equal(t, sdk.NewInt(100), balance.Amount)
 
 	t.Log("after unspending the money of the subaccount, the owner will be able to get the money back when withdrawing")
-	subaccountBalance = app.SubaccountKeeper.GetBalance(ctx, 1)
+	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	require.True(t, exists)
 	require.NoError(t, subaccountBalance.Unspend(sdk.NewInt(100)))
-	app.SubaccountKeeper.SetBalance(ctx, 1, subaccountBalance)
+	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
 		Sender: subaccountOwner.String(),
 	})
@@ -105,7 +109,8 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	// check balances
 	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
 	require.Equal(t, sdk.NewInt(0), balance.Amount)
-	subaccountBalance = app.SubaccountKeeper.GetBalance(ctx, 1)
+	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	require.True(t, exists)
 	require.Equal(t, sdk.NewInt(300), subaccountBalance.WithdrawmAmount)
 
 	// check that the owner has received the last money

@@ -2,6 +2,8 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "sge/subaccount/subaccount.proto";
+import "sge/bet/tx.proto";
+import "sge/house/tx.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
@@ -13,7 +15,17 @@ service Msg {
   // TopUp defines a method for topping up a subaccount.
   rpc TopUp(MsgTopUp) returns (MsgTopUpResponse);
 
+  // WithdrawUnlockedBalances defines a method for withdrawing unlocked balances.
   rpc WithdrawUnlockedBalances(MsgWithdrawUnlockedBalances) returns (MsgWithdrawUnlockedBalancesResponse);
+
+  // PlaceBet defines a method for placing a bet using a subaccount.
+  rpc Wager(MsgWager) returns (MsgWagerResponse);
+
+  // HouseDeposit defines a method for depositing funds to provide liquidity to a market.
+  rpc HouseDeposit(MsgHouseDeposit) returns (MsgHouseDepositResponse);
+
+  // HouseWithdraw defines a method for withdrawing funds from a market.
+  rpc HouseWithdraw(MsgHouseWithdraw) returns (MsgHouseWithdrawResponse);
 }
 
 // MsgCreateSubAccount defines the Msg/CreateSubAccount request type.
@@ -54,3 +66,33 @@ message MsgWithdrawUnlockedBalances {
 
 // MsgWithdrawUnlockedBalancesResponse defines the Msg/WithdrawUnlockedBalances response type.
 message MsgWithdrawUnlockedBalancesResponse {}
+
+// MsgPlaceBet wraps the MsgPlaceBet message. We need it in order not to have double interface registration conflicts.
+message MsgWager {
+  sgenetwork.sge.bet.MsgWager msg = 1;
+}
+
+// MsgBetResponse wraps the MsgPlaceBetResponse message. We need it in order not to have double interface registration conflicts.
+message MsgWagerResponse {
+  sgenetwork.sge.bet.MsgWagerResponse response = 1;
+}
+
+// MsgHouseDeposit wraps the MsgHouseDeposit message. We need it in order not to have double interface registration conflicts.
+message MsgHouseDeposit {
+  sge.house.MsgDeposit msg = 1;
+}
+
+// MsgHouseDepositResponse wraps the MsgHouseDepositResponse message. We need it in order not to have double interface registration conflicts.
+message MsgHouseDepositResponse {
+  sge.house.MsgDepositResponse response = 1;
+}
+
+// MsgHouseWithdraw wraps the MsgHouseWithdraw message. We need it in order not to have double interface registration conflicts.
+message MsgHouseWithdraw {
+  sge.house.MsgWithdraw msg = 1;
+}
+
+// MsgHouseWithdrawResponse wraps the MsgHouseWithdrawResponse message. We need it in order not to have double interface registration conflicts.
+message MsgHouseWithdrawResponse {
+  sge.house.MsgWithdrawResponse response = 1;
+}

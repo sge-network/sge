@@ -30,35 +30,30 @@ func (k Keeper) SetID(ctx sdk.Context, id uint64) {
 	ctx.KVStore(k.storeKey).Set(subaccounttypes.SubaccountIDPrefix, sdk.Uint64ToBigEndian(id))
 }
 
-// HasSubAccount returns true if the account has a subaccount.
-func (k Keeper) HasSubAccount(ctx sdk.Context, address sdk.AccAddress) bool {
-	store := ctx.KVStore(k.storeKey)
-	return store.Has(subaccounttypes.SubAccountOwnerKey(address))
-}
-
 // SetSubAccountOwner sets the owner of a subaccount.
-func (k Keeper) SetSubAccountOwner(ctx sdk.Context, id uint64, address sdk.AccAddress) {
+func (k Keeper) SetSubAccountOwner(ctx sdk.Context, subAccountAddress, ownerAddress sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(subaccounttypes.SubAccountOwnerKey(address), sdk.Uint64ToBigEndian(id))
+	store.Set(subaccounttypes.SubAccountOwnerKey(ownerAddress), subAccountAddress)
 	// and reverse mapping
-	store.Set(subaccounttypes.SubAccountKey(id), address.Bytes())
+	store.Set(subaccounttypes.SubAccountKey(subAccountAddress), ownerAddress)
 }
 
 // GetSubAccountByOwner returns the subaccount ID of an owner.
-func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) uint64 {
+func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	return sdk.BigEndianToUint64(store.Get(subaccounttypes.SubAccountOwnerKey(address)))
+	addr := store.Get(subaccounttypes.SubAccountOwnerKey(address))
+	return addr, addr != nil
 }
 
 // GetSubAccountOwner returns the owner of a subaccount.
-func (k Keeper) GetSubAccountOwner(ctx sdk.Context, id uint64) sdk.AccAddress {
+func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subAccountOwner sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	return store.Get(subaccounttypes.SubAccountKey(id))
+	addr := store.Get(subaccounttypes.SubAccountKey(subAccountOwner))
+	return addr, addr != nil
 }
 
 // SetLockedBalances saves the locked balances of an account.
-func (k Keeper) SetLockedBalances(ctx sdk.Context, id uint64, lockedBalances []*subaccounttypes.LockedBalance) {
-	account := subaccounttypes.NewAddressFromSubaccount(id)
+func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, lockedBalances []*subaccounttypes.LockedBalance) {
 	store := ctx.KVStore(k.storeKey)
 
 	for _, lockedBalance := range lockedBalances {
@@ -67,16 +62,15 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, id uint64, lockedBalances []*
 			panic(err)
 		}
 		store.Set(
-			subaccounttypes.LockedBalanceKey(account, lockedBalance.UnlockTime),
+			subaccounttypes.LockedBalanceKey(subAccountAddress, lockedBalance.UnlockTime),
 			amountBytes,
 		)
 	}
 }
 
 // GetLockedBalances returns the locked balances of an account.
-func (k Keeper) GetLockedBalances(ctx sdk.Context, id uint64) []subaccounttypes.LockedBalance {
-	account := subaccounttypes.NewAddressFromSubaccount(id)
-	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).Iterator(nil, nil)
+func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress) []subaccounttypes.LockedBalance {
+	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(subAccountAddress)).Iterator(nil, nil)
 	defer iterator.Close()
 
 	var lockedBalances []subaccounttypes.LockedBalance
@@ -101,9 +95,8 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, id uint64) []subaccounttypes.
 }
 
 // GetUnlockedBalance returns the unlocked balance of an account.
-func (k Keeper) GetUnlockedBalance(ctx sdk.Context, id uint64) sdk.Int {
-	account := subaccounttypes.NewAddressFromSubaccount(id)
-	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(account)).
+func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) sdk.Int {
+	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), subaccounttypes.LockedBalancePrefixKey(subAccountAddress)).
 		Iterator(nil, sdk.FormatTimeBytes(ctx.BlockTime()))
 
 	unlockedBalance := sdk.ZeroInt()
@@ -122,22 +115,23 @@ func (k Keeper) GetUnlockedBalance(ctx sdk.Context, id uint64) sdk.Int {
 }
 
 // SetBalance saves the balance of an account.
-func (k Keeper) SetBalance(ctx sdk.Context, subaccountID uint64, balance subaccounttypes.Balance) {
-	account := subaccounttypes.NewAddressFromSubaccount(subaccountID)
+func (k Keeper) SetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress, balance subaccounttypes.Balance) {
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&balance)
-	store.Set(subaccounttypes.BalanceKey(account), bz)
+	store.Set(subaccounttypes.BalanceKey(subAccountAddress), bz)
 }
 
 // GetBalance returns the balance of an account.
-func (k Keeper) GetBalance(ctx sdk.Context, subaccountID uint64) subaccounttypes.Balance {
-	account := subaccounttypes.NewAddressFromSubaccount(subaccountID)
+func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (subaccounttypes.Balance, bool) {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(subaccounttypes.BalanceKey(account))
+	bz := store.Get(subaccounttypes.BalanceKey(subAccountAddress))
+	if bz == nil {
+		return subaccounttypes.Balance{}, false
+	}
 
 	balance := subaccounttypes.Balance{}
 	k.cdc.MustUnmarshal(bz, &balance)
 
-	return balance
+	return balance, true
 }

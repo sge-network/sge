@@ -418,13 +418,13 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "market", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "market", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Market_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "market", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Market_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "market", "uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Markets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "market", "markets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Markets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "market", "markets"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_MarketsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "market", "markets_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_MarketsByUIDs_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "market", "markets_by_uids", "uids"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

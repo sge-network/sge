@@ -104,7 +104,7 @@ type AppKeepers struct {
 	AuthzKeeper         authzkeeper.Keeper
 	SubaccountKeeper    subaccountkeeper.Keeper
 
-	//// SGE keepers \\\\
+	// // SGE keepers \\\\
 	BetKeeper        *betmodulekeeper.Keeper
 	MarketKeeper     *marketmodulekeeper.Keeper
 	MintKeeper       mintkeeper.Keeper
@@ -113,7 +113,7 @@ type AppKeepers struct {
 	OVMKeeper        *ovmmodulekeeper.Keeper
 	SubaccountModule subaccount.AppModule
 
-	//// SGE modules \\\\
+	// // SGE modules \\\\
 	BetModule       betmodule.AppModule
 	MarketModule    marketmodule.AppModule
 	HouseModule     housemodule.AppModule
@@ -344,7 +344,7 @@ func NewAppKeeper(
 		appKeepers.SlashingKeeper,
 	)
 
-	//// SGE keepers \\\\
+	// // SGE keepers \\\\
 
 	appKeepers.OrderbookKeeper = orderbookmodulekeeper.NewKeeper(
 		appCodec,
@@ -399,7 +399,7 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
-	//// SGE modules \\\\
+	// // SGE modules \\\\
 
 	appKeepers.BetModule = betmodule.NewAppModule(
 		appCodec,
@@ -435,6 +435,11 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.keys[subaccounttypes.StoreKey],
 		appKeepers.GetSubspace(subaccounttypes.ModuleName),
+		appKeepers.BankKeeper,
+		appKeepers.OVMKeeper,
+		appKeepers.BetKeeper,
+		appKeepers.OrderbookKeeper,
+		appKeepers.HouseKeeper,
 	)
 	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
 

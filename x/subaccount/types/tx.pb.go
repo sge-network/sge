@@ -8,6 +8,8 @@ import (
 	fmt "fmt"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/sge-network/sge/x/bet/types"
+	types1 "github.com/sge-network/sge/x/house/types"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -312,6 +314,276 @@ func (m *MsgWithdrawUnlockedBalancesResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgWithdrawUnlockedBalancesResponse proto.InternalMessageInfo
 
+// MsgPlaceBet wraps the MsgPlaceBet message. We need it in order not to have double interface registration conflicts.
+type MsgWager struct {
+	Msg *types.MsgWager `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (m *MsgWager) Reset()         { *m = MsgWager{} }
+func (m *MsgWager) String() string { return proto.CompactTextString(m) }
+func (*MsgWager) ProtoMessage()    {}
+func (*MsgWager) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{6}
+}
+func (m *MsgWager) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgWager) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgWager.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgWager) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWager.Merge(m, src)
+}
+func (m *MsgWager) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgWager) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWager.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgWager proto.InternalMessageInfo
+
+func (m *MsgWager) GetMsg() *types.MsgWager {
+	if m != nil {
+		return m.Msg
+	}
+	return nil
+}
+
+// MsgBetResponse wraps the MsgPlaceBetResponse message. We need it in order not to have double interface registration conflicts.
+type MsgWagerResponse struct {
+	Response *types.MsgWagerResponse `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+}
+
+func (m *MsgWagerResponse) Reset()         { *m = MsgWagerResponse{} }
+func (m *MsgWagerResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgWagerResponse) ProtoMessage()    {}
+func (*MsgWagerResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{7}
+}
+func (m *MsgWagerResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgWagerResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgWagerResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgWagerResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgWagerResponse.Merge(m, src)
+}
+func (m *MsgWagerResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgWagerResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgWagerResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgWagerResponse proto.InternalMessageInfo
+
+func (m *MsgWagerResponse) GetResponse() *types.MsgWagerResponse {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+// MsgHouseDeposit wraps the MsgHouseDeposit message. We need it in order not to have double interface registration conflicts.
+type MsgHouseDeposit struct {
+	Msg *types1.MsgDeposit `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (m *MsgHouseDeposit) Reset()         { *m = MsgHouseDeposit{} }
+func (m *MsgHouseDeposit) String() string { return proto.CompactTextString(m) }
+func (*MsgHouseDeposit) ProtoMessage()    {}
+func (*MsgHouseDeposit) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{8}
+}
+func (m *MsgHouseDeposit) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgHouseDeposit) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgHouseDeposit.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgHouseDeposit) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgHouseDeposit.Merge(m, src)
+}
+func (m *MsgHouseDeposit) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgHouseDeposit) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgHouseDeposit.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgHouseDeposit proto.InternalMessageInfo
+
+func (m *MsgHouseDeposit) GetMsg() *types1.MsgDeposit {
+	if m != nil {
+		return m.Msg
+	}
+	return nil
+}
+
+// MsgHouseDepositResponse wraps the MsgHouseDepositResponse message. We need it in order not to have double interface registration conflicts.
+type MsgHouseDepositResponse struct {
+	Response *types1.MsgDepositResponse `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+}
+
+func (m *MsgHouseDepositResponse) Reset()         { *m = MsgHouseDepositResponse{} }
+func (m *MsgHouseDepositResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgHouseDepositResponse) ProtoMessage()    {}
+func (*MsgHouseDepositResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{9}
+}
+func (m *MsgHouseDepositResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgHouseDepositResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgHouseDepositResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgHouseDepositResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgHouseDepositResponse.Merge(m, src)
+}
+func (m *MsgHouseDepositResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgHouseDepositResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgHouseDepositResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgHouseDepositResponse proto.InternalMessageInfo
+
+func (m *MsgHouseDepositResponse) GetResponse() *types1.MsgDepositResponse {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+// MsgHouseWithdraw wraps the MsgHouseWithdraw message. We need it in order not to have double interface registration conflicts.
+type MsgHouseWithdraw struct {
+	Msg *types1.MsgWithdraw `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (m *MsgHouseWithdraw) Reset()         { *m = MsgHouseWithdraw{} }
+func (m *MsgHouseWithdraw) String() string { return proto.CompactTextString(m) }
+func (*MsgHouseWithdraw) ProtoMessage()    {}
+func (*MsgHouseWithdraw) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{10}
+}
+func (m *MsgHouseWithdraw) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgHouseWithdraw) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgHouseWithdraw.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgHouseWithdraw) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgHouseWithdraw.Merge(m, src)
+}
+func (m *MsgHouseWithdraw) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgHouseWithdraw) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgHouseWithdraw.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgHouseWithdraw proto.InternalMessageInfo
+
+func (m *MsgHouseWithdraw) GetMsg() *types1.MsgWithdraw {
+	if m != nil {
+		return m.Msg
+	}
+	return nil
+}
+
+// MsgHouseWithdrawResponse wraps the MsgHouseWithdrawResponse message. We need it in order not to have double interface registration conflicts.
+type MsgHouseWithdrawResponse struct {
+	Response *types1.MsgWithdrawResponse `protobuf:"bytes,1,opt,name=response,proto3" json:"response,omitempty"`
+}
+
+func (m *MsgHouseWithdrawResponse) Reset()         { *m = MsgHouseWithdrawResponse{} }
+func (m *MsgHouseWithdrawResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgHouseWithdrawResponse) ProtoMessage()    {}
+func (*MsgHouseWithdrawResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_e042e836d366badb, []int{11}
+}
+func (m *MsgHouseWithdrawResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgHouseWithdrawResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgHouseWithdrawResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgHouseWithdrawResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgHouseWithdrawResponse.Merge(m, src)
+}
+func (m *MsgHouseWithdrawResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgHouseWithdrawResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgHouseWithdrawResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgHouseWithdrawResponse proto.InternalMessageInfo
+
+func (m *MsgHouseWithdrawResponse) GetResponse() *types1.MsgWithdrawResponse {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*MsgCreateSubAccount)(nil), "sgenetwork.sge.subaccount.MsgCreateSubAccount")
 	proto.RegisterType((*MsgCreateSubAccountResponse)(nil), "sgenetwork.sge.subaccount.MsgCreateSubAccountResponse")
@@ -319,37 +591,55 @@ func init() {
 	proto.RegisterType((*MsgTopUpResponse)(nil), "sgenetwork.sge.subaccount.MsgTopUpResponse")
 	proto.RegisterType((*MsgWithdrawUnlockedBalances)(nil), "sgenetwork.sge.subaccount.MsgWithdrawUnlockedBalances")
 	proto.RegisterType((*MsgWithdrawUnlockedBalancesResponse)(nil), "sgenetwork.sge.subaccount.MsgWithdrawUnlockedBalancesResponse")
+	proto.RegisterType((*MsgWager)(nil), "sgenetwork.sge.subaccount.MsgWager")
+	proto.RegisterType((*MsgWagerResponse)(nil), "sgenetwork.sge.subaccount.MsgWagerResponse")
+	proto.RegisterType((*MsgHouseDeposit)(nil), "sgenetwork.sge.subaccount.MsgHouseDeposit")
+	proto.RegisterType((*MsgHouseDepositResponse)(nil), "sgenetwork.sge.subaccount.MsgHouseDepositResponse")
+	proto.RegisterType((*MsgHouseWithdraw)(nil), "sgenetwork.sge.subaccount.MsgHouseWithdraw")
+	proto.RegisterType((*MsgHouseWithdrawResponse)(nil), "sgenetwork.sge.subaccount.MsgHouseWithdrawResponse")
 }
 
 func init() { proto.RegisterFile("sge/subaccount/tx.proto", fileDescriptor_e042e836d366badb) }
 
 var fileDescriptor_e042e836d366badb = []byte{
-	// 389 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2f, 0x4e, 0x4f, 0xd5,
-	0x2f, 0x2e, 0x4d, 0x4a, 0x4c, 0x4e, 0xce, 0x2f, 0xcd, 0x2b, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28,
-	0xca, 0x2f, 0xc9, 0x17, 0x92, 0x2c, 0x4e, 0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6,
-	0x2b, 0x4e, 0x4f, 0xd5, 0x43, 0xa8, 0x91, 0x92, 0x47, 0xd3, 0x83, 0x60, 0x42, 0xf4, 0x2a, 0xad,
-	0x61, 0xe4, 0x12, 0xf6, 0x2d, 0x4e, 0x77, 0x2e, 0x4a, 0x4d, 0x2c, 0x49, 0x0d, 0x2e, 0x4d, 0x72,
-	0x84, 0xc8, 0x0a, 0x89, 0x71, 0xb1, 0x15, 0xa7, 0xe6, 0xa5, 0xa4, 0x16, 0x49, 0x30, 0x2a, 0x30,
-	0x6a, 0x70, 0x06, 0x41, 0x79, 0x42, 0x5a, 0x5c, 0x82, 0xc5, 0xa5, 0x49, 0xf1, 0x50, 0x43, 0xe2,
-	0xf3, 0xcb, 0xf3, 0x52, 0x8b, 0x24, 0x98, 0xc0, 0x4a, 0xf8, 0x8b, 0xe1, 0xda, 0xfd, 0x41, 0xc2,
-	0x42, 0x81, 0x5c, 0xfc, 0x39, 0xf9, 0xc9, 0xd9, 0xa9, 0x29, 0xf1, 0x49, 0x89, 0x39, 0x89, 0x79,
-	0xc9, 0xa9, 0xc5, 0x12, 0xcc, 0x0a, 0xcc, 0x1a, 0xdc, 0x46, 0x1a, 0x7a, 0x38, 0x5d, 0xac, 0xe7,
-	0x03, 0xd6, 0xe1, 0x04, 0xd1, 0x10, 0xc4, 0x97, 0x83, 0xcc, 0x2d, 0x56, 0x92, 0xe5, 0x92, 0xc6,
-	0xe2, 0xda, 0xa0, 0xd4, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0xa5, 0x69, 0x8c, 0x5c, 0x1c, 0xbe,
-	0xc5, 0xe9, 0x21, 0xf9, 0x05, 0xa1, 0x05, 0x38, 0xbd, 0x20, 0xcf, 0xc5, 0x8d, 0xe4, 0x05, 0xa8,
-	0xe3, 0xb9, 0x10, 0x8e, 0xa7, 0x85, 0xbb, 0x85, 0xb8, 0x04, 0x60, 0xee, 0x82, 0x3b, 0xd6, 0x14,
-	0xec, 0x97, 0xf0, 0xcc, 0x92, 0x8c, 0x94, 0xa2, 0xc4, 0xf2, 0xd0, 0x3c, 0x54, 0x2d, 0xb8, 0x9c,
-	0xaf, 0xa4, 0xca, 0xa5, 0x8c, 0x47, 0x1b, 0xcc, 0x74, 0xa3, 0x8f, 0x4c, 0x5c, 0xcc, 0xbe, 0xc5,
-	0xe9, 0x42, 0x55, 0x5c, 0x02, 0x18, 0x91, 0xab, 0x87, 0xc7, 0x1f, 0x58, 0x82, 0x57, 0xca, 0x8c,
-	0x34, 0xf5, 0x30, 0x37, 0x08, 0x45, 0x72, 0xb1, 0x42, 0xa2, 0x42, 0x19, 0xbf, 0x01, 0x60, 0x45,
-	0x52, 0xda, 0x44, 0x28, 0x82, 0x1b, 0x3d, 0x89, 0x91, 0x4b, 0x02, 0x67, 0xd0, 0x11, 0x70, 0x2f,
-	0x2e, 0x7d, 0x52, 0x76, 0xe4, 0xe9, 0x83, 0x39, 0xca, 0xc9, 0xfd, 0xc4, 0x23, 0x39, 0xc6, 0x0b,
-	0x8f, 0xe4, 0x18, 0x1f, 0x3c, 0x92, 0x63, 0x9c, 0xf0, 0x58, 0x8e, 0xe1, 0xc2, 0x63, 0x39, 0x86,
-	0x1b, 0x8f, 0xe5, 0x18, 0xa2, 0x74, 0xd3, 0x33, 0x4b, 0x32, 0x4a, 0x93, 0xf4, 0x92, 0xf3, 0x73,
-	0xf5, 0x8b, 0xd3, 0x53, 0x75, 0xa1, 0x96, 0x80, 0xd8, 0xfa, 0x15, 0x28, 0x99, 0xba, 0xb2, 0x20,
-	0xb5, 0x38, 0x89, 0x0d, 0x9c, 0x39, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0xd0, 0xc5, 0x07,
-	0xfe, 0xf3, 0x03, 0x00, 0x00,
+	// 579 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x95, 0x41, 0x6e, 0xd3, 0x40,
+	0x18, 0x85, 0x63, 0xa2, 0x56, 0xe5, 0x0f, 0x90, 0x30, 0x48, 0x34, 0x18, 0x70, 0x83, 0x0b, 0x52,
+	0x68, 0x55, 0x47, 0x4a, 0x04, 0x0b, 0x16, 0x08, 0x4a, 0xab, 0xb2, 0x20, 0x42, 0x84, 0x56, 0x15,
+	0x6c, 0x22, 0x3b, 0x19, 0x4d, 0xa2, 0xa6, 0x1e, 0xe3, 0xdf, 0x56, 0x0a, 0xa7, 0x40, 0x2c, 0x38,
+	0x05, 0x12, 0xd7, 0x60, 0xd9, 0x25, 0x4b, 0x94, 0x5c, 0x04, 0x79, 0x6c, 0x4f, 0x9c, 0xa4, 0x8e,
+	0x53, 0x24, 0x76, 0xe3, 0xd1, 0x7b, 0x6f, 0xbe, 0x67, 0xcd, 0xaf, 0x81, 0x75, 0x64, 0xb4, 0x86,
+	0xbe, 0x65, 0x76, 0x3a, 0xdc, 0xb7, 0xbd, 0x9a, 0x77, 0x66, 0x38, 0x2e, 0xf7, 0x38, 0xb9, 0x83,
+	0x8c, 0xda, 0xd4, 0x1b, 0x72, 0xf7, 0xc4, 0x40, 0x46, 0x8d, 0x89, 0x46, 0xdd, 0x98, 0xf1, 0x4c,
+	0x96, 0xa1, 0x57, 0x2d, 0x05, 0x02, 0x8b, 0x4e, 0xd2, 0x54, 0x12, 0xec, 0xf4, 0xb8, 0x8f, 0x54,
+	0xee, 0xe9, 0x3f, 0x14, 0xb8, 0xd5, 0x44, 0xf6, 0xca, 0xa5, 0xa6, 0x47, 0xdf, 0xfb, 0xd6, 0xcb,
+	0x30, 0x83, 0xdc, 0x86, 0x55, 0xa4, 0x76, 0x97, 0xba, 0x65, 0xa5, 0xa2, 0x54, 0xaf, 0xb6, 0xa2,
+	0x2f, 0xb2, 0x05, 0x37, 0xd1, 0xb7, 0xda, 0xd1, 0x51, 0x6d, 0x3e, 0xb4, 0xa9, 0x5b, 0xbe, 0x22,
+	0x24, 0x45, 0x94, 0xf6, 0xb7, 0xc1, 0x36, 0x79, 0x07, 0xc5, 0x01, 0xef, 0x9c, 0xd0, 0x6e, 0xdb,
+	0x32, 0x07, 0xa6, 0xdd, 0xa1, 0x58, 0xce, 0x57, 0xf2, 0xd5, 0x42, 0xbd, 0x6a, 0xa4, 0xf6, 0x32,
+	0xde, 0x08, 0xc7, 0x6e, 0x68, 0x68, 0xdd, 0x18, 0x24, 0x3f, 0x51, 0xbf, 0x0f, 0x77, 0x2f, 0xa0,
+	0x6d, 0x51, 0x74, 0xb8, 0x8d, 0x54, 0xff, 0xae, 0xc0, 0x5a, 0x13, 0xd9, 0x21, 0x77, 0x8e, 0x9c,
+	0xd4, 0x0a, 0x1b, 0x50, 0x48, 0x54, 0x88, 0xe0, 0x61, 0x02, 0xff, 0x3f, 0xb8, 0x09, 0x94, 0x62,
+	0x2e, 0x09, 0xfb, 0x44, 0x74, 0x39, 0xee, 0x7b, 0xbd, 0xae, 0x6b, 0x0e, 0x8f, 0xec, 0x69, 0x4b,
+	0x1a, 0xbe, 0xfe, 0x08, 0x36, 0x17, 0xd8, 0x64, 0xfa, 0x33, 0xf1, 0x27, 0x8e, 0x4d, 0x46, 0x5d,
+	0x62, 0x40, 0xfe, 0x14, 0x99, 0xc8, 0x29, 0xd4, 0xef, 0xcd, 0x96, 0xb0, 0xa8, 0x67, 0xc4, 0xd2,
+	0x56, 0x20, 0xd4, 0x0f, 0x05, 0x6d, 0xb8, 0x11, 0xe5, 0x91, 0x17, 0xb0, 0xe6, 0x46, 0xeb, 0x28,
+	0xe8, 0xe1, 0xc2, 0xa0, 0x48, 0xdb, 0x92, 0x2e, 0x7d, 0x1f, 0x8a, 0x4d, 0x64, 0xaf, 0x83, 0xfb,
+	0xb7, 0x47, 0x1d, 0x8e, 0x7d, 0x8f, 0xd4, 0x93, 0x60, 0x95, 0xd9, 0x3c, 0x71, 0x55, 0x83, 0xc4,
+	0x48, 0x1e, 0xc2, 0xb5, 0x61, 0x7d, 0x26, 0x46, 0x32, 0xee, 0xcd, 0x31, 0x56, 0x33, 0x33, 0xe7,
+	0x39, 0x0f, 0x44, 0x7b, 0x71, 0x40, 0xfc, 0x97, 0x49, 0x23, 0x09, 0xfa, 0x20, 0x35, 0x34, 0xd6,
+	0x87, 0xa4, 0x26, 0x94, 0x67, 0x83, 0x24, 0xea, 0xfe, 0x1c, 0xea, 0xe3, 0xec, 0xd4, 0x39, 0xd6,
+	0xfa, 0xcf, 0x15, 0xc8, 0x37, 0x91, 0x91, 0x2f, 0x50, 0x9a, 0x1b, 0x61, 0x63, 0xc1, 0x6d, 0xbd,
+	0x60, 0x88, 0xd4, 0xa7, 0x97, 0xd3, 0xcb, 0x2a, 0x1f, 0x60, 0x25, 0x1c, 0xb8, 0xcd, 0xc5, 0x01,
+	0x42, 0xa4, 0x6e, 0x2f, 0x21, 0x92, 0xd1, 0xdf, 0x14, 0x28, 0xa7, 0x0e, 0x48, 0x06, 0x6f, 0x9a,
+	0x4f, 0x7d, 0xfe, 0x6f, 0xbe, 0x64, 0xdf, 0x70, 0xac, 0x32, 0xfa, 0x0a, 0x51, 0x56, 0xdf, 0xe9,
+	0x21, 0xb3, 0xe1, 0xda, 0xd4, 0x7c, 0x6c, 0x2d, 0x36, 0x27, 0xb5, 0x6a, 0x7d, 0x79, 0xad, 0x3c,
+	0xef, 0x13, 0x5c, 0x9f, 0xbe, 0xe7, 0xdb, 0x4b, 0x84, 0xc4, 0x62, 0xb5, 0x71, 0x09, 0x71, 0x7c,
+	0xe4, 0xee, 0xc1, 0xaf, 0x91, 0xa6, 0x9c, 0x8f, 0x34, 0xe5, 0xcf, 0x48, 0x53, 0xbe, 0x8e, 0xb5,
+	0xdc, 0xf9, 0x58, 0xcb, 0xfd, 0x1e, 0x6b, 0xb9, 0x8f, 0x3b, 0xac, 0xef, 0xf5, 0x7c, 0xcb, 0xe8,
+	0xf0, 0xd3, 0x1a, 0x32, 0xba, 0x13, 0x25, 0x07, 0xeb, 0xda, 0xd9, 0xd4, 0xf3, 0xf8, 0xd9, 0xa1,
+	0x68, 0xad, 0x8a, 0x07, 0xac, 0xf1, 0x37, 0x00, 0x00, 0xff, 0xff, 0x1f, 0xf0, 0x28, 0xa5, 0x3d,
+	0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -368,7 +658,14 @@ type MsgClient interface {
 	CreateSubAccount(ctx context.Context, in *MsgCreateSubAccount, opts ...grpc.CallOption) (*MsgCreateSubAccountResponse, error)
 	// TopUp defines a method for topping up a subaccount.
 	TopUp(ctx context.Context, in *MsgTopUp, opts ...grpc.CallOption) (*MsgTopUpResponse, error)
+	// WithdrawUnlockedBalances defines a method for withdrawing unlocked balances.
 	WithdrawUnlockedBalances(ctx context.Context, in *MsgWithdrawUnlockedBalances, opts ...grpc.CallOption) (*MsgWithdrawUnlockedBalancesResponse, error)
+	// PlaceBet defines a method for placing a bet using a subaccount.
+	Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOption) (*MsgWagerResponse, error)
+	// HouseDeposit defines a method for depositing funds to provide liquidity to a market.
+	HouseDeposit(ctx context.Context, in *MsgHouseDeposit, opts ...grpc.CallOption) (*MsgHouseDepositResponse, error)
+	// HouseWithdraw defines a method for withdrawing funds from a market.
+	HouseWithdraw(ctx context.Context, in *MsgHouseWithdraw, opts ...grpc.CallOption) (*MsgHouseWithdrawResponse, error)
 }
 
 type msgClient struct {
@@ -406,13 +703,47 @@ func (c *msgClient) WithdrawUnlockedBalances(ctx context.Context, in *MsgWithdra
 	return out, nil
 }
 
+func (c *msgClient) Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOption) (*MsgWagerResponse, error) {
+	out := new(MsgWagerResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.subaccount.Msg/Wager", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) HouseDeposit(ctx context.Context, in *MsgHouseDeposit, opts ...grpc.CallOption) (*MsgHouseDepositResponse, error) {
+	out := new(MsgHouseDepositResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.subaccount.Msg/HouseDeposit", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) HouseWithdraw(ctx context.Context, in *MsgHouseWithdraw, opts ...grpc.CallOption) (*MsgHouseWithdrawResponse, error) {
+	out := new(MsgHouseWithdrawResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.subaccount.Msg/HouseWithdraw", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// CreateSubAccount defines a method for creating a subaccount.
 	CreateSubAccount(context.Context, *MsgCreateSubAccount) (*MsgCreateSubAccountResponse, error)
 	// TopUp defines a method for topping up a subaccount.
 	TopUp(context.Context, *MsgTopUp) (*MsgTopUpResponse, error)
+	// WithdrawUnlockedBalances defines a method for withdrawing unlocked balances.
 	WithdrawUnlockedBalances(context.Context, *MsgWithdrawUnlockedBalances) (*MsgWithdrawUnlockedBalancesResponse, error)
+	// PlaceBet defines a method for placing a bet using a subaccount.
+	Wager(context.Context, *MsgWager) (*MsgWagerResponse, error)
+	// HouseDeposit defines a method for depositing funds to provide liquidity to a market.
+	HouseDeposit(context.Context, *MsgHouseDeposit) (*MsgHouseDepositResponse, error)
+	// HouseWithdraw defines a method for withdrawing funds from a market.
+	HouseWithdraw(context.Context, *MsgHouseWithdraw) (*MsgHouseWithdrawResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -427,6 +758,15 @@ func (*UnimplementedMsgServer) TopUp(ctx context.Context, req *MsgTopUp) (*MsgTo
 }
 func (*UnimplementedMsgServer) WithdrawUnlockedBalances(ctx context.Context, req *MsgWithdrawUnlockedBalances) (*MsgWithdrawUnlockedBalancesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WithdrawUnlockedBalances not implemented")
+}
+func (*UnimplementedMsgServer) Wager(ctx context.Context, req *MsgWager) (*MsgWagerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Wager not implemented")
+}
+func (*UnimplementedMsgServer) HouseDeposit(ctx context.Context, req *MsgHouseDeposit) (*MsgHouseDepositResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HouseDeposit not implemented")
+}
+func (*UnimplementedMsgServer) HouseWithdraw(ctx context.Context, req *MsgHouseWithdraw) (*MsgHouseWithdrawResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method HouseWithdraw not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -487,6 +827,60 @@ func _Msg_WithdrawUnlockedBalances_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_Wager_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgWager)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).Wager(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.subaccount.Msg/Wager",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).Wager(ctx, req.(*MsgWager))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_HouseDeposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgHouseDeposit)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).HouseDeposit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.subaccount.Msg/HouseDeposit",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).HouseDeposit(ctx, req.(*MsgHouseDeposit))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_HouseWithdraw_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgHouseWithdraw)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).HouseWithdraw(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.subaccount.Msg/HouseWithdraw",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).HouseWithdraw(ctx, req.(*MsgHouseWithdraw))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "sgenetwork.sge.subaccount.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -502,6 +896,18 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "WithdrawUnlockedBalances",
 			Handler:    _Msg_WithdrawUnlockedBalances_Handler,
+		},
+		{
+			MethodName: "Wager",
+			Handler:    _Msg_Wager_Handler,
+		},
+		{
+			MethodName: "HouseDeposit",
+			Handler:    _Msg_HouseDeposit_Handler,
+		},
+		{
+			MethodName: "HouseWithdraw",
+			Handler:    _Msg_HouseWithdraw_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -709,6 +1115,216 @@ func (m *MsgWithdrawUnlockedBalancesResponse) MarshalToSizedBuffer(dAtA []byte) 
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgWager) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgWager) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgWager) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Msg != nil {
+		{
+			size, err := m.Msg.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgWagerResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgWagerResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgWagerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Response != nil {
+		{
+			size, err := m.Response.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgHouseDeposit) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgHouseDeposit) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgHouseDeposit) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Msg != nil {
+		{
+			size, err := m.Msg.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgHouseDepositResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgHouseDepositResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgHouseDepositResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Response != nil {
+		{
+			size, err := m.Response.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgHouseWithdraw) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgHouseWithdraw) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgHouseWithdraw) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Msg != nil {
+		{
+			size, err := m.Msg.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgHouseWithdrawResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgHouseWithdrawResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgHouseWithdrawResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Response != nil {
+		{
+			size, err := m.Response.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -803,6 +1419,84 @@ func (m *MsgWithdrawUnlockedBalancesResponse) Size() (n int) {
 	}
 	var l int
 	_ = l
+	return n
+}
+
+func (m *MsgWager) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Msg != nil {
+		l = m.Msg.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgWagerResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Response != nil {
+		l = m.Response.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgHouseDeposit) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Msg != nil {
+		l = m.Msg.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgHouseDepositResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Response != nil {
+		l = m.Response.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgHouseWithdraw) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Msg != nil {
+		l = m.Msg.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgHouseWithdrawResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Response != nil {
+		l = m.Response.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
 	return n
 }
 
@@ -1319,6 +2013,522 @@ func (m *MsgWithdrawUnlockedBalancesResponse) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: MsgWithdrawUnlockedBalancesResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgWager) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgWager: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgWager: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Msg", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Msg == nil {
+				m.Msg = &types.MsgWager{}
+			}
+			if err := m.Msg.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgWagerResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgWagerResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgWagerResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Response", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Response == nil {
+				m.Response = &types.MsgWagerResponse{}
+			}
+			if err := m.Response.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgHouseDeposit) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgHouseDeposit: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgHouseDeposit: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Msg", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Msg == nil {
+				m.Msg = &types1.MsgDeposit{}
+			}
+			if err := m.Msg.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgHouseDepositResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgHouseDepositResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgHouseDepositResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Response", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Response == nil {
+				m.Response = &types1.MsgDepositResponse{}
+			}
+			if err := m.Response.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgHouseWithdraw) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgHouseWithdraw: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgHouseWithdraw: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Msg", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Msg == nil {
+				m.Msg = &types1.MsgWithdraw{}
+			}
+			if err := m.Msg.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgHouseWithdrawResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgHouseWithdrawResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgHouseWithdrawResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Response", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Response == nil {
+				m.Response = &types1.MsgWithdrawResponse{}
+			}
+			if err := m.Response.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
