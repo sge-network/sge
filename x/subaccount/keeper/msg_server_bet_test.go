@@ -62,7 +62,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
 		Sender:          subAccFunder.String(),
 		SubAccountOwner: subAccOwner.String(),
-		LockedBalances: []*types.LockedBalance{
+		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTime: time.Now().Add(24 * time.Hour),
 				Amount:     subAccFunds,

@@ -27,7 +27,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
 		Sender:          sender.String(),
 		SubAccountOwner: subaccountOwner.String(),
-		LockedBalances: []*types.LockedBalance{
+		LockedBalances: []types.LockedBalance{
 			{
 				Amount:     sdk.NewInt(100),
 				UnlockTime: lockedTime,
