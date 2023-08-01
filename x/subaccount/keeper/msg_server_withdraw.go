@@ -18,7 +18,7 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 
 	params := m.keeper.GetParams(sdkContext)
 
-	balance, unlockedBalance, bankBalance := m.getBalances(sdkContext, subAccountAddress, params)
+	balance, unlockedBalance, bankBalance := m.keeper.getBalances(sdkContext, subAccountAddress, params)
 
 	// calculate withdrawable balance, which is the minimum between the available balance, and
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
@@ -37,16 +37,4 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	}
 
 	return &types.MsgWithdrawUnlockedBalancesResponse{}, nil
-}
-
-// getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (m msgServer) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress, params types.Params) (types.Balance, sdk.Int, sdk.Coin) {
-	balance, exists := m.keeper.GetBalance(sdkContext, subaccountAddr)
-	if !exists {
-		panic("data corruption: subaccount exists but balance does not")
-	}
-	unlockedBalance := m.keeper.GetUnlockedBalance(sdkContext, subaccountAddr)
-	bankBalance := m.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.LockedBalanceDenom)
-
-	return balance, unlockedBalance, bankBalance
 }
