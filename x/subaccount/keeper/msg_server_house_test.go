@@ -151,7 +151,7 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
 	})
 
-	// TODO: not partecipated in bet fulfillment.
+	// TODO: not participated in bet fulfillment.
 
 	t.Run("withdrawal", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
