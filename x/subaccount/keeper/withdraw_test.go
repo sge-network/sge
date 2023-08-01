@@ -22,6 +22,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("fund sender account")
 	err := simapp.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
+	require.NoError(t, err)
 
 	t.Log("Create sub account")
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
