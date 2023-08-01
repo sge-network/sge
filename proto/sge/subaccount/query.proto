@@ -10,9 +10,11 @@ import "sge/subaccount/params.proto";
 
 // Query defines the gRPC querier service.
 service Query {
+  // Subaccount fetches a subaccount given the owner.
   rpc Subaccount(QuerySubaccountRequest) returns (QuerySubaccountResponse) {
     option (google.api.http).get = "/sge/subaccount/subaccount";
   };
+  // Params returns the subaccount module parameters.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sge/subaccount/params";
   };
