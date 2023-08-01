@@ -3,5 +3,38 @@ package sgenetwork.sge.subaccount;
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sge/subaccount/subaccount.proto";
+import "sge/subaccount/params.proto";
+
 // Query defines the gRPC querier service.
-service Query {}
+service Query {
+  rpc Subaccount(QuerySubaccountRequest) returns (QuerySubaccountResponse) {
+    option (google.api.http).get = "/sge/subaccount/subaccount";
+  };
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/subaccount/params";
+  };
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method
+message QueryParamsRequest {}
+// QueryParamsResponse is the response type for the Query/Params RPC method
+message QueryParamsResponse {
+  sge.subaccount.Params params = 1;
+}
+
+// QuerySubaccountRequest is the request type for the Query/Subaccount RPC
+message QuerySubaccountRequest {
+  string subaccount_owner = 1;
+}
+
+// QuerySubaccountResponse is the response type for the Query/Subaccount RPC
+message QuerySubaccountResponse {
+  string subaccount_address = 1;
+  sge.subaccount.Balance balance = 2 [(gogoproto.nullable) = false ];
+  repeated sge.subaccount.LockedBalance locked_balance = 3 [(gogoproto.nullable) = false ];
+}
+
+
