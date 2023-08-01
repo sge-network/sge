@@ -36,7 +36,7 @@ func (m msgServer) CreateSubAccount(
 	subaccountAccount := m.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
 	m.accountKeeper.SetAccount(sdkContext, subaccountAccount)
 
-	err = m.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountAddress, moneyToSend)
+	err = m.keeper.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountAddress, moneyToSend)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to send coins")
 	}

@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -165,6 +166,17 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 		return false
 	})
 	return subaccounts
+}
+
+// sendCoinsToSubaccount sends the coins to the subaccount.
+func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subAccountAddress sdk.AccAddress, moneyToSend sdk.Int) error {
+	denom := k.GetParams(ctx).LockedBalanceDenom
+	err := k.bankKeeper.SendCoins(ctx, senderAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+	if err != nil {
+		return errors.Wrap(err, "unable to send coins")
+	}
+
+	return nil
 }
 
 // sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
