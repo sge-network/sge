@@ -28,7 +28,7 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          "someInvalidAddress",
 				SubAccountOwner: owner.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -42,7 +42,7 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: "someInvalidAddress",
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -56,7 +56,7 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: owner.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: time.Time{},
 						Amount:     sdk.NewInt(123),
@@ -90,7 +90,7 @@ func TestMsgTopUp_Validate(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     "someInvalidAddress",
 				SubAccount: owner.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -104,7 +104,7 @@ func TestMsgTopUp_Validate(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     sender.String(),
 				SubAccount: "someInvalidAddress",
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
 						Amount:     sdk.NewInt(123),
@@ -118,7 +118,7 @@ func TestMsgTopUp_Validate(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     sender.String(),
 				SubAccount: owner.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: time.Time{},
 						Amount:     sdk.NewInt(123),

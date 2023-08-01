@@ -29,7 +29,7 @@ var _ types.MsgServer = msgServer{}
 
 // sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
 // returns an error if any of the unlock times is expired.
-func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []*types.LockedBalance) (sdk.Int, error) {
+func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdk.Int, error) {
 	moneyToSend := sdk.NewInt(0)
 
 	for _, balanceUnlock := range balanceUnlocks {

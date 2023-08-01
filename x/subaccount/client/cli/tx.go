@@ -70,7 +70,7 @@ func TxCreateSubaccount() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreateSubAccount{
 				Sender:          clientCtx.From,
 				SubAccountOwner: subaccountOwner.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: time.Now().Add(unlocksAfter),
 						Amount:     funds,
@@ -121,7 +121,7 @@ func TxTopupSubaccount() *cobra.Command {
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgTopUp{
 				Sender:     clientCtx.From,
 				SubAccount: subaccountAddress.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: time.Now().Add(unlocksAfter),
 						Amount:     funds,

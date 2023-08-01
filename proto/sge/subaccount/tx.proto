@@ -4,6 +4,7 @@ package sgenetwork.sge.subaccount;
 import "sge/subaccount/subaccount.proto";
 import "sge/bet/tx.proto";
 import "sge/house/tx.proto";
+import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
@@ -37,7 +38,7 @@ message MsgCreateSubAccount {
   string sub_account_owner = 2;
 
   // locked_balances is the list of balance locks.
-  repeated LockedBalance locked_balances = 3;
+  repeated LockedBalance locked_balances = 3 [(gogoproto.nullable) = false];
 }
 
 // MsgCreateAccountResponse defines the Msg/CreateAccount response type.
@@ -52,7 +53,7 @@ message MsgTopUp {
   string sub_account = 2;
 
   // locked_balances is the list of balance locks.
-  repeated LockedBalance locked_balances = 3;
+  repeated LockedBalance locked_balances = 3 [(gogoproto.nullable) = false];
 }
 
 // MsgTopUpResponse defines the Msg/TopUp response type.

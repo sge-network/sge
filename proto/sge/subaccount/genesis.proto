@@ -3,6 +3,7 @@ package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
 import "sge/subaccount/params.proto";
+import "sge/subaccount/subaccount.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
@@ -10,4 +11,23 @@ option go_package = "github.com/sge-network/sge/x/subaccount/types";
 message GenesisState {
   // params contains the subaccount parameters.
   Params params = 1 [ (gogoproto.nullable) = false ];
+
+  uint64 subaccount_id = 2;
+
+  // subaccounts contains all the subaccounts.
+  repeated GenesisSubaccount subaccounts = 3 [ (gogoproto.nullable) = false ];
+}
+
+message GenesisSubaccount {
+  // address is the address of the subaccount.
+  string address = 1;
+
+  // owner is the owner of the subaccount.
+  string owner = 2;
+
+  // balance defines the balance status of a subaccount
+  Balance balance = 3 [ (gogoproto.nullable) = false ];
+
+  // locked_balances defines the lockup of balances history of a subaccount
+  repeated LockedBalance locked_balances = 4 [ (gogoproto.nullable) = false ];
 }

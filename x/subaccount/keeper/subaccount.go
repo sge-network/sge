@@ -45,15 +45,15 @@ func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (s
 	return addr, addr != nil
 }
 
-// GetSubAccountOwner returns the owner of a subaccount.
-func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subAccountOwner sdk.AccAddress) (sdk.AccAddress, bool) {
+// GetSubAccountOwner returns the owner of a subaccount given the subaccount address.
+func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subaccountAddr sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	addr := store.Get(subaccounttypes.SubAccountKey(subAccountOwner))
+	addr := store.Get(subaccounttypes.SubAccountKey(subaccountAddr))
 	return addr, addr != nil
 }
 
 // SetLockedBalances saves the locked balances of an account.
-func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, lockedBalances []*subaccounttypes.LockedBalance) {
+func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, lockedBalances []subaccounttypes.LockedBalance) {
 	store := ctx.KVStore(k.storeKey)
 
 	for _, lockedBalance := range lockedBalances {
@@ -134,4 +134,16 @@ func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (s
 	k.cdc.MustUnmarshal(bz, &balance)
 
 	return balance, true
+}
+
+func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, subaccountOwner sdk.AccAddress) (stop bool)) {
+	store := ctx.KVStore(k.storeKey)
+	iterator := sdk.KVStorePrefixIterator(store, subaccounttypes.SubAccountOwnerReversePrefix)
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		if cb(iterator.Key(), iterator.Value()) {
+			break
+		}
+	}
 }
