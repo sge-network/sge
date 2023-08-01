@@ -63,7 +63,6 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 
 // TODO: This is a copy of the Deposit function from x/house/keeper/msg_server_deposit.go
 func (m msgServer) houseDeposit(ctx sdk.Context, msg *housetypes.MsgDeposit) error {
-
 	params := m.keeper.houseKeeper.GetParams(ctx)
 	if err := msg.ValidateSanity(ctx, &params); err != nil {
 		return sdkerrors.Wrap(err, "invalid deposit")
@@ -115,7 +114,6 @@ func (m msgServer) HouseWithdraw(goCtx context.Context, withdraw *types.MsgHouse
 	return &types.MsgHouseWithdrawResponse{
 		Response: resp,
 	}, nil
-
 }
 
 func (m msgServer) houseWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, subAccAddr sdk.AccAddress) (sdk.Int, *housetypes.MsgWithdrawResponse, error) {

@@ -67,5 +67,4 @@ func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 	return &types.MsgWagerResponse{
 		Response: &bettypes.MsgWagerResponse{Props: msg.Msg.Props},
 	}, nil
-
 }
