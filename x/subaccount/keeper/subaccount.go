@@ -142,8 +142,27 @@ func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, s
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		if cb(iterator.Key(), iterator.Value()) {
+		if cb(iterator.Key()[len(subaccounttypes.SubAccountOwnerReversePrefix):], iterator.Value()) {
 			break
 		}
 	}
+}
+
+func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []subaccounttypes.GenesisSubaccount {
+	var subaccounts []subaccounttypes.GenesisSubaccount
+	k.IterateSubaccounts(ctx, func(subAccountAddress sdk.AccAddress, ownerAddress sdk.AccAddress) (stop bool) {
+		balance, exists := k.GetBalance(ctx, subAccountAddress)
+		if !exists {
+			panic("subaccount balance does not exist")
+		}
+		lockedBalances := k.GetLockedBalances(ctx, subAccountAddress)
+		subaccounts = append(subaccounts, subaccounttypes.GenesisSubaccount{
+			Address:        subAccountAddress.String(),
+			Owner:          ownerAddress.String(),
+			Balance:        balance,
+			LockedBalances: lockedBalances,
+		})
+		return false
+	})
+	return subaccounts
 }

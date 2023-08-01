@@ -24,26 +24,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 // ExportGenesis returns the module's exported genesis.
 func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
-	genesis := new(types.GenesisState)
-
-	genesis.Params = k.GetParams(ctx)
-	genesis.SubaccountId = k.Peek(ctx)
-
-	k.IterateSubaccounts(ctx, func(subAccountAddress sdk.AccAddress, ownerAddress sdk.AccAddress) (stop bool) {
-		balance, exists := k.GetBalance(ctx, subAccountAddress)
-		if !exists {
-			panic("subaccount balance does not exist")
-		}
-		lockedBalances := k.GetLockedBalances(ctx, subAccountAddress)
-		genesis.Subaccounts = append(genesis.Subaccounts, types.GenesisSubaccount{
-			Address:        subAccountAddress.String(),
-			Owner:          ownerAddress.String(),
-			Balance:        balance,
-			LockedBalances: lockedBalances,
-		})
-		return false
-	})
-
-	return genesis
+	return &types.GenesisState{
+		Params:       k.GetParams(ctx),
+		SubaccountId: k.Peek(ctx),
+		Subaccounts:  k.GetAllSubaccounts(ctx),
+	}
 
 }
