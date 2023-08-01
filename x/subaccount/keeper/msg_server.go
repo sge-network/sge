@@ -27,22 +27,6 @@ func NewMsgServerImpl(keeper Keeper, accountKeeper keeper.AccountKeeper, bankKee
 
 var _ types.MsgServer = msgServer{}
 
-// sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
-// returns an error if any of the unlock times is expired.
-func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdk.Int, error) {
-	moneyToSend := sdk.NewInt(0)
-
-	for _, balanceUnlock := range balanceUnlocks {
-		if balanceUnlock.UnlockTime.Unix() < ctx.BlockTime().Unix() {
-			return sdk.Int{}, types.ErrUnlockTokenTimeExpired
-		}
-
-		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)
-	}
-
-	return moneyToSend, nil
-}
-
 // sendCoinsToSubaccount sends the coins to the subaccount.
 func (m msgServer) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subAccountAddress sdk.AccAddress, moneyToSend sdk.Int) error {
 	denom := m.keeper.GetParams(ctx).LockedBalanceDenom
