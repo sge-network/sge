@@ -29,5 +29,4 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 		SubaccountId: k.Peek(ctx),
 		Subaccounts:  k.GetAllSubaccounts(ctx),
 	}
-
 }
