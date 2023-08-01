@@ -10,7 +10,9 @@ import (
 // state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	k.SetParams(ctx, genState.Params)
-	k.SetID(ctx, genState.SubaccountId)
+	if genState.SubaccountId != 0 {
+		k.SetID(ctx, genState.SubaccountId)
+	}
 	for _, acc := range genState.Subaccounts {
 		owner := sdk.MustAccAddressFromBech32(acc.Owner)
 		addr := sdk.MustAccAddressFromBech32(acc.Address)
