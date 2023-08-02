@@ -31,7 +31,7 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
 	m.keeper.SetBalance(sdkContext, subAccountAddress, balance)
 
-	err := m.bankKeeper.SendCoins(sdkContext, subAccountAddress, sender, sdk.NewCoins(sdk.NewCoin(params.LockedBalanceDenom, withdrawableBalance)))
+	err := m.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, sender, sdk.NewCoins(sdk.NewCoin(params.LockedBalanceDenom, withdrawableBalance)))
 	if err != nil {
 		return nil, err
 	}

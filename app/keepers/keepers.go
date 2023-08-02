@@ -435,6 +435,7 @@ func NewAppKeeper(
 		appCodec,
 		appKeepers.keys[subaccounttypes.StoreKey],
 		appKeepers.GetSubspace(subaccounttypes.ModuleName),
+		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 		appKeepers.OVMKeeper,
 		appKeepers.BetKeeper,

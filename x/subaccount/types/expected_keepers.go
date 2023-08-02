@@ -2,6 +2,7 @@ package types
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
@@ -10,6 +11,11 @@ import (
 type BetKeeper interface {
 	GetBetID(ctx sdk.Context, uid string) (bettypes.UID2ID, bool)
 	Wager(ctx sdk.Context, bet *bettypes.Bet) error
+}
+
+type AccountKeeper interface {
+	NewAccountWithAddress(ctx sdk.Context, addr sdk.AccAddress) authtypes.AccountI
+	SetAccount(ctx sdk.Context, acc authtypes.AccountI)
 }
 
 type BankKeeper interface {

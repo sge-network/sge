@@ -12,18 +12,20 @@ type Keeper struct {
 	cdc        codec.Codec
 	storeKey   sdk.StoreKey
 	paramstore paramtypes.Subspace
-	bankKeeper types.BankKeeper
 
-	ovmKeeper   bettypes.OVMKeeper
-	betKeeper   types.BetKeeper
-	houseKeeper types.HouseKeeper
-	obKeeper    types.OrderBookKeeper
+	accountKeeper types.AccountKeeper
+	bankKeeper    types.BankKeeper
+	ovmKeeper     bettypes.OVMKeeper
+	betKeeper     types.BetKeeper
+	houseKeeper   types.HouseKeeper
+	obKeeper      types.OrderBookKeeper
 }
 
 func NewKeeper(
 	cdc codec.Codec,
 	storeKey sdk.StoreKey,
 	ps paramtypes.Subspace,
+	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,
 	ovmKeeper bettypes.OVMKeeper,
 	betKeeper types.BetKeeper,
@@ -36,14 +38,15 @@ func NewKeeper(
 	}
 
 	k := Keeper{
-		cdc:         cdc,
-		storeKey:    storeKey,
-		paramstore:  ps,
-		bankKeeper:  bankKeeper,
-		ovmKeeper:   ovmKeeper,
-		betKeeper:   betKeeper,
-		houseKeeper: hk,
-		obKeeper:    obKeeper,
+		cdc:           cdc,
+		storeKey:      storeKey,
+		paramstore:    ps,
+		accountKeeper: accountKeeper,
+		bankKeeper:    bankKeeper,
+		ovmKeeper:     ovmKeeper,
+		betKeeper:     betKeeper,
+		houseKeeper:   hk,
+		obKeeper:      obKeeper,
 	}
 	obKeeper.RegisterHook(k)
 	return k
