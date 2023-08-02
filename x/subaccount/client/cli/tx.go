@@ -98,7 +98,7 @@ func TxTopupSubaccount() *cobra.Command {
 		flagLockDuration = "lock-duration"
 	)
 	cmd := &cobra.Command{
-		Use:     "topup-subaccount [subaccount-address]",
+		Use:     "topup-subaccount [subaccount-owner]",
 		Short:   "Topup a subaccount",
 		Long:    `Topup a subaccount.`,
 		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`, version.AppName),
