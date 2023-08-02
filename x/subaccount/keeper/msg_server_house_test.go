@@ -166,7 +166,7 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.LostAmount.String(), sdk.ZeroInt().String())
 	})
 
-	t.Run("withdrawal and market refund", func(t *testing.T) {
+	t.Run("withdrawal and market refund with bet fulfillment", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
 
 		_, err := msgServer.HouseWithdraw(sdk.WrapSDKContext(ctx), &types.MsgHouseWithdraw{Msg: houseWithdrawMsg(t, subAccOwner, deposit, depResp.Response.ParticipationIndex)})

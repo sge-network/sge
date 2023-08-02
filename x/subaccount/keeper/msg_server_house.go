@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"log"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -16,8 +15,6 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check if subaccount exists
-	creator := sdk.MustAccAddressFromBech32(msg.Msg.Creator)
-	log.Printf("HOUSE DEPOSIT MSG CREATOR IS: %s", creator.String())
 	subAccountAddr, exists := m.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
