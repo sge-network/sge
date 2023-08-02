@@ -165,6 +165,121 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.SpentAmount.String(), sdk.NewInt(131999680).String()) // NOTE: there was a match in the bet + participate fee
 		require.Equal(t, subBalance.LostAmount.String(), sdk.ZeroInt().String())
 	})
+
+	t.Run("withdrawal and market refund", func(t *testing.T) {
+		ctx, _ := ctx.CacheContext()
+
+		_, err := msgServer.HouseWithdraw(sdk.WrapSDKContext(ctx), &types.MsgHouseWithdraw{Msg: houseWithdrawMsg(t, subAccOwner, deposit, depResp.Response.ParticipationIndex)})
+		require.NoError(t, err)
+
+		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+			UID:            market.UID,
+			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+			WinnerOddsUIDs: []string{testOddsUID1},
+			Status:         markettypes.MarketStatus_MARKET_STATUS_CANCELED,
+		})
+		err = app.BetKeeper.BatchMarketSettlements(ctx)
+		require.NoError(t, err)
+		err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
+		require.NoError(t, err)
+
+		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		require.True(t, exists)
+		require.NoError(t, err)
+
+		require.Equal(t, subBalance.SpentAmount, sdk.ZeroInt())
+		require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
+		// check profits were forwarded to subacc owner
+		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
+		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
+	})
+}
+
+func TestHouseWithdrawal_MarketRefund(t *testing.T) {
+	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	// do subaccount creation
+	require.NoError(
+		t,
+		simapp.FundAccount(
+			app.BankKeeper,
+			ctx,
+			subAccFunder,
+			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+		),
+	)
+
+	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
+		Sender:          subAccFunder.String(),
+		SubAccountOwner: subAccOwner.String(),
+		LockedBalances: []types.LockedBalance{
+			{
+				UnlockTime: time.Now().Add(24 * time.Hour),
+				Amount:     subAccFunds,
+			},
+		},
+	})
+	require.NoError(t, err)
+
+	// fund a bettor
+	require.NoError(
+		t,
+		simapp.FundAccount(
+			app.BankKeeper,
+			ctx,
+			bettor1,
+			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+		),
+	)
+
+	// add market
+	market := addTestMarket(t, app, ctx, false)
+
+	// do house deposit
+	deposit := sdk.NewInt(1000).Mul(micro)
+	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
+	require.NoError(t, err)
+	// check spend
+	subBalance, exists := k.GetBalance(ctx, subAccAddr)
+	require.True(t, exists)
+	require.Equal(t, subBalance.SpentAmount, deposit)
+
+	// do house withdrawal
+	_, err = msgServer.HouseWithdraw(sdk.WrapSDKContext(ctx), &types.MsgHouseWithdraw{Msg: houseWithdrawMsg(t, subAccOwner, deposit, depResp.Response.ParticipationIndex)})
+	require.NoError(t, err)
+
+	// we expect the balance to be the original one minus participation fee
+	subBalance, exists = k.GetBalance(ctx, subAccAddr)
+	require.True(t, exists)
+	require.Equal(t, subBalance.SpentAmount, sdk.NewInt(100).Mul(micro)) // all minus participation fee
+	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
+	require.Equal(t, subBalance.DepositedAmount, subAccFunds)
+	subBankBalance := app.BankKeeper.GetAllBalances(ctx, subAccAddr)
+	require.Equal(t, subBankBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), subAccFunds.Sub(sdk.NewInt(100).Mul(micro))) // original funds - fee
+
+	// resolve market with refund
+	app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
+		UID:            market.UID,
+		ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
+		WinnerOddsUIDs: []string{testOddsUID1},
+		Status:         markettypes.MarketStatus_MARKET_STATUS_CANCELED,
+	})
+	err = app.BetKeeper.BatchMarketSettlements(ctx)
+	require.NoError(t, err)
+	err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
+	require.NoError(t, err)
+
+	subBalance, exists = k.GetBalance(ctx, subAccAddr)
+	require.True(t, exists)
+	require.NoError(t, err)
+
+	require.Equal(t, subBalance.SpentAmount, sdk.ZeroInt())
+	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
+	subBankBalance = app.BankKeeper.GetAllBalances(ctx, subAccAddr)
+	require.Equal(t, subBankBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), subAccFunds) // original funds - fee was refunded
+	// check profits were not forwarded to subacc owner
+	ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
+	require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
 }
 
 func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdk.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
