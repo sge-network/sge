@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -83,9 +80,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd() }
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper authkeeper.AccountKeeper
-	bankKeeper    bankkeeper.Keeper
+	keeper keeper.Keeper
 }
 
 // NewAppModule creates new app module object
