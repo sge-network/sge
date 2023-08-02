@@ -49,7 +49,7 @@ func TxCreateSubaccount() *cobra.Command {
 		Use:     "create-subaccount [subaccount-owner]",
 		Short:   "Create a new subaccount",
 		Long:    `Create a new subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from subaccount-funder-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			subaccountOwner, err := sdk.AccAddressFromBech32(args[0])
@@ -101,7 +101,7 @@ func TxTopupSubaccount() *cobra.Command {
 		Use:     "topup-subaccount [subaccount-owner]",
 		Short:   "Topup a subaccount",
 		Long:    `Topup a subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from funder-address-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -146,10 +146,10 @@ func TxTopupSubaccount() *cobra.Command {
 
 func TxWithdraw() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "withdraw --from my-key",
+		Use:     "withdraw --from subaccount-owner-key",
 		Short:   "Withdraw unlocked funds from a subaccount",
 		Long:    `Withdraw unlocked funds from a subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount withdraw --from my-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount withdraw --from subaccount-owner-key`, version.AppName),
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -168,7 +168,7 @@ func TxWithdraw() *cobra.Command {
 // TxWager implements a command to place and store a single bet
 func TxWager() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "wager [uid] [amount] [ticket] --from my-key",
+		Use:   "wager [uid] [amount] [ticket] --from subaccount-owner-key",
 		Short: "Wager on an odds",
 		Long:  "Wager on an odds. the uuid, amount and ticket required.",
 		Args:  cobra.ExactArgs(3),
@@ -210,7 +210,7 @@ func TxWager() *cobra.Command {
 
 func TxHouseDeposit() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "house-deposit [market_uid] [amount] [ticket] --from my-key",
+		Use:   "house-deposit [market_uid] [amount] [ticket] --from subaccount-owner-key",
 		Args:  cobra.ExactArgs(3),
 		Short: "Deposit tokens in a market order book to be the house",
 		Long: strings.TrimSpace(
