@@ -27,7 +27,14 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
-	cmd.AddCommand(TxCreateSubaccount(), TxTopupSubaccount(), TxWager(), TxDeposit(), TxHouseWithdraw(), TxWithdraw())
+	cmd.AddCommand(
+		TxCreateSubaccount(),
+		TxTopupSubaccount(),
+		TxWager(),
+		TxHouseDeposit(),
+		TxHouseWithdraw(),
+		TxWithdraw(),
+	)
 
 	return cmd
 }
@@ -42,7 +49,7 @@ func TxCreateSubaccount() *cobra.Command {
 		Use:     "create-subaccount [subaccount-owner]",
 		Short:   "Create a new subaccount",
 		Long:    `Create a new subaccount.`,
-		Example: `create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key `,
+		Example: fmt.Sprintf(`$ %s tx subaccount create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			subaccountOwner, err := sdk.AccAddressFromBech32(args[0])
@@ -94,7 +101,7 @@ func TxTopupSubaccount() *cobra.Command {
 		Use:     "topup-subaccount [subaccount-address]",
 		Short:   "Topup a subaccount",
 		Long:    `Topup a subaccount.`,
-		Example: `topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`,
+		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from my-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -142,7 +149,7 @@ func TxWithdraw() *cobra.Command {
 		Use:     "withdraw --from my-key",
 		Short:   "Withdraw unlocked funds from a subaccount",
 		Long:    `Withdraw unlocked funds from a subaccount.`,
-		Example: `withdraw --from my-key`,
+		Example: fmt.Sprintf(`$ %s tx subaccount withdraw --from my-key`, version.AppName),
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -201,7 +208,7 @@ func TxWager() *cobra.Command {
 	return cmd
 }
 
-func TxDeposit() *cobra.Command {
+func TxHouseDeposit() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "deposit [market_uid] [amount] [ticket] --from my-key",
 		Args:  cobra.ExactArgs(3),
@@ -210,7 +217,7 @@ func TxDeposit() *cobra.Command {
 			fmt.Sprintf(`Deposit tokens in a market order book to be the house.
 
 				Example:
-				$ %s tx house deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge {ticket string} --from mykey
+				$ %s tx subaccount deposit bc79a72c-ad7e-4cf5-91a2-98af2751e812 1000usge {ticket string} --from mykey
 				`,
 				version.AppName,
 			),
@@ -252,7 +259,7 @@ func TxHouseWithdraw() *cobra.Command {
 			fmt.Sprintf(`Withdraw coins of unused amount corresponding to a deposit.
 
 				Example:
-				$ %s tx house withdraw bc79a72c-ad7e-4cf5-91a2-98af2751e812 1 {ticket string} 1 1000 --from mykey
+				$ %s tx subaccount withdraw bc79a72c-ad7e-4cf5-91a2-98af2751e812 1 {ticket string} 1 1000 --from mykey
 				`,
 				version.AppName,
 			),
