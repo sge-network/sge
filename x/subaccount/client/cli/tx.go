@@ -210,7 +210,7 @@ func TxWager() *cobra.Command {
 
 func TxHouseDeposit() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "deposit [market_uid] [amount] [ticket] --from my-key",
+		Use:   "house-deposit [market_uid] [amount] [ticket] --from my-key",
 		Args:  cobra.ExactArgs(3),
 		Short: "Deposit tokens in a market order book to be the house",
 		Long: strings.TrimSpace(
@@ -252,7 +252,7 @@ func TxHouseDeposit() *cobra.Command {
 
 func TxHouseWithdraw() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw [market_uid] [participation_index] [ticket] [mode] [amount]",
+		Use:   "house-withdraw [market_uid] [participation_index] [ticket] [mode] [amount]",
 		Args:  cobra.RangeArgs(4, 5),
 		Short: "Withdraw tokens from a deposit",
 		Long: strings.TrimSpace(
