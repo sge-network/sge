@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -239,9 +240,11 @@ func TxHouseDeposit() *cobra.Command {
 
 			depAddr := clientCtx.GetFromAddress()
 
-			msg := housetypes.NewMsgDeposit(depAddr.String(), argMarketUID, argAmountCosmosInt, argTicket)
+			msg := &types.MsgHouseDeposit{Msg: housetypes.NewMsgDeposit(depAddr.String(), argMarketUID, argAmountCosmosInt, argTicket)}
 
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgHouseDeposit{Msg: msg})
+			log.Printf("msg: %s", msg.String())
+
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
 
