@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"log"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
@@ -85,6 +87,11 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	if err != nil {
 		panic(err)
 	}
+
+	log.Printf("AfterHouseWin: HOUSE ADDR %s – originalAmount: %s, profit: %s", house.String(), originalAmount.String(), profit.String())
+	if fee != nil {
+		log.Printf("AfterHouseWin: fee refund: %s", fee.String())
+	}
 }
 
 func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int, lostAmt sdk.Int, fee *sdk.Int) {
@@ -109,6 +116,11 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 	}
 
 	k.SetBalance(ctx, house, balance)
+
+	log.Printf("AfterHouseLoss: HOUSE ADDR %s – originalAmount: %s, lostAmt: %s", house.String(), originalAmount.String(), lostAmt.String())
+	if fee != nil {
+		log.Printf("AfterHouseLoss: fee refund: %s", fee.String())
+	}
 }
 
 func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount, fee sdk.Int) {
@@ -127,4 +139,6 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 	}
 
 	k.SetBalance(ctx, house, balance)
+
+	log.Printf("AfterHouseRefund: HOUSE ADDR %s – originalAmount: %s, fee: %s", house.String(), originalAmount.String(), fee.String())
 }
