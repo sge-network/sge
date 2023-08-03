@@ -108,13 +108,6 @@ func (k Keeper) settleParticipation(
 
 	refundHouseDepositFeeToDepositor := false
 
-	var (
-		profit         sdk.Int
-		originalAmount sdk.Int
-		feeRefund      *sdk.Int
-		cancelled      bool
-	)
-
 	switch market.Status {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
@@ -125,9 +118,15 @@ func (k Keeper) settleParticipation(
 		if bp.NotParticipatedInBetFulfillment() {
 			refundHouseDepositFeeToDepositor = true
 		}
-		// prepare hook variables.
-		profit = bp.ActualProfit
-		originalAmount = bp.Liquidity
+		if bp.ActualProfit.IsNegative() {
+			for _, h := range k.hooks {
+				h.AfterHouseLoss(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit.Abs())
+			}
+		} else {
+			for _, h := range k.hooks {
+				h.AfterHouseWin(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit)
+			}
+		}
 
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
@@ -136,9 +135,9 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
-		profit = sdk.ZeroInt()
-		originalAmount = bp.Liquidity
-		cancelled = true
+		for _, h := range k.hooks {
+			h.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
+		}
 	default:
 		return sdkerrors.Wrapf(
 			types.ErrUnknownMarketStatus,
@@ -153,7 +152,9 @@ func (k Keeper) settleParticipation(
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, bp.Fee); err != nil {
 			return err
 		}
-		feeRefund = &bp.Fee
+		for _, h := range k.hooks {
+			h.AfterHouseFeeRefund(ctx, depositorAddress, bp.Fee)
+		}
 	} else {
 		// refund participant's account from house fee collector.
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), bp.Fee); err != nil {
@@ -164,20 +165,5 @@ func (k Keeper) settleParticipation(
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 
-	// call hooks
-	switch {
-	case cancelled:
-		for _, h := range k.hooks {
-			h.AfterHouseRefund(ctx, depositorAddress, originalAmount, *feeRefund)
-		}
-	case profit.IsNegative():
-		for _, h := range k.hooks {
-			h.AfterHouseLoss(ctx, depositorAddress, originalAmount, profit.Abs(), feeRefund)
-		}
-	case profit.IsPositive(), profit.IsZero():
-		for _, h := range k.hooks {
-			h.AfterHouseWin(ctx, depositorAddress, originalAmount, profit, feeRefund)
-		}
-	}
 	return nil
 }

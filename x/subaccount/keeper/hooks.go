@@ -59,7 +59,7 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 	k.SetBalance(ctx, bettor, balance)
 }
 
-func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdk.Int, fee *sdk.Int) {
+func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdk.Int) {
 	// update balance
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
@@ -69,12 +69,6 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	err := balance.Unspend(originalAmount)
 	if err != nil {
 		panic(err)
-	}
-	if fee != nil {
-		err = balance.Unspend(*fee)
-		if err != nil {
-			panic(err)
-		}
 	}
 	k.SetBalance(ctx, house, balance)
 
@@ -89,12 +83,9 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	}
 
 	log.Printf("AfterHouseWin: HOUSE ADDR %s – originalAmount: %s, profit: %s", house.String(), originalAmount.String(), profit.String())
-	if fee != nil {
-		log.Printf("AfterHouseWin: fee refund: %s", fee.String())
-	}
 }
 
-func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int, lostAmt sdk.Int, fee *sdk.Int) {
+func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int, lostAmt sdk.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return
@@ -108,22 +99,13 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 	if err != nil {
 		panic(err)
 	}
-	if fee != nil {
-		err = balance.Unspend(*fee)
-		if err != nil {
-			panic(err)
-		}
-	}
 
 	k.SetBalance(ctx, house, balance)
 
 	log.Printf("AfterHouseLoss: HOUSE ADDR %s – originalAmount: %s, lostAmt: %s", house.String(), originalAmount.String(), lostAmt.String())
-	if fee != nil {
-		log.Printf("AfterHouseLoss: fee refund: %s", fee.String())
-	}
 }
 
-func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount, fee sdk.Int) {
+func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return
@@ -133,12 +115,24 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 	if err != nil {
 		panic(err)
 	}
-	err = balance.Unspend(fee)
+
+	k.SetBalance(ctx, house, balance)
+
+	log.Printf("AfterHouseRefund: HOUSE ADDR %s – originalAmount: %s", house.String(), originalAmount.String())
+}
+
+func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee sdk.Int) {
+	balance, exists := k.GetBalance(ctx, house)
+	if !exists {
+		return
+	}
+
+	err := balance.Unspend(fee)
 	if err != nil {
 		panic(err)
 	}
 
 	k.SetBalance(ctx, house, balance)
 
-	log.Printf("AfterHouseRefund: HOUSE ADDR %s – originalAmount: %s, fee: %s", house.String(), originalAmount.String(), fee.String())
+	log.Printf("AfterHouseFeeRefund: HOUSE ADDR %s – fee: %s", house.String(), fee.String())
 }
