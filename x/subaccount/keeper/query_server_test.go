@@ -13,7 +13,7 @@ import (
 
 func TestQueryServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
-	queryServer := keeper.NewQueryServer(k)
+	queryServer := keeper.NewQueryServer(*k)
 
 	// setup
 	wantParams := types.DefaultParams()

@@ -76,7 +76,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 	tests := []struct {
 		name        string
 		msg         types.MsgCreateSubAccount
-		prepare     func(ctx sdk.Context, keeper keeper.Keeper)
+		prepare     func(ctx sdk.Context, keeper *keeper.Keeper)
 		expectedErr string
 	}{
 		{
@@ -91,7 +91,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
 			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
@@ -106,7 +106,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare: func(ctx sdk.Context, k keeper.Keeper) {
+			prepare: func(ctx sdk.Context, k *keeper.Keeper) {
 				k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1), account)
 			},
 			expectedErr: types.ErrSubaccountAlreadyExist.Error(),
@@ -123,7 +123,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
 			expectedErr: "invalid request",
 		},
 	}

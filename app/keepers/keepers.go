@@ -102,7 +102,6 @@ type AppKeepers struct {
 	TransferKeeper      ibctransferkeeper.Keeper
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	AuthzKeeper         authzkeeper.Keeper
-	SubaccountKeeper    subaccountkeeper.Keeper
 
 	// // SGE keepers \\\\
 	BetKeeper        *betmodulekeeper.Keeper
@@ -111,14 +110,15 @@ type AppKeepers struct {
 	HouseKeeper      *housemodulekeeper.Keeper
 	OrderbookKeeper  *orderbookmodulekeeper.Keeper
 	OVMKeeper        *ovmmodulekeeper.Keeper
-	SubaccountModule subaccount.AppModule
+	SubaccountKeeper *subaccountkeeper.Keeper
 
 	// // SGE modules \\\\
-	BetModule       betmodule.AppModule
-	MarketModule    marketmodule.AppModule
-	HouseModule     housemodule.AppModule
-	OrderbookModule orderbookmodule.AppModule
-	OVMModule       ovmmodule.AppModule
+	BetModule        betmodule.AppModule
+	MarketModule     marketmodule.AppModule
+	HouseModule      housemodule.AppModule
+	OrderbookModule  orderbookmodule.AppModule
+	OVMModule        ovmmodule.AppModule
+	SubaccountModule subaccount.AppModule
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -442,7 +442,7 @@ func NewAppKeeper(
 		appKeepers.OrderbookKeeper,
 		appKeepers.HouseKeeper,
 	)
-	appKeepers.SubaccountModule = subaccount.NewAppModule(appKeepers.SubaccountKeeper)
+	appKeepers.SubaccountModule = subaccount.NewAppModule(*appKeepers.SubaccountKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()

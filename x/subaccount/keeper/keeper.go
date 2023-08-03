@@ -31,13 +31,13 @@ func NewKeeper(
 	betKeeper types.BetKeeper,
 	obKeeper types.OrderBookKeeper,
 	hk types.HouseKeeper,
-) Keeper {
+) *Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
 		ps = ps.WithKeyTable(types.ParamKeyTable())
 	}
 
-	k := Keeper{
+	k := &Keeper{
 		cdc:           cdc,
 		storeKey:      storeKey,
 		paramstore:    ps,

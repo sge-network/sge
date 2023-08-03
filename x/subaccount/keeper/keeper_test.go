@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, keeper.Keeper, sdk.Context) {
+func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.Keeper, sdk.Context) {
 	tApp, ctx, err := simappUtil.GetTestObjects()
 	require.NoError(t, err)
 

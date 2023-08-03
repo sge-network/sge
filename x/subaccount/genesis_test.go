@@ -48,13 +48,13 @@ func TestGenesis(t *testing.T) {
 		SubaccountId: 2, // next subaccount id
 	}
 
-	subaccount.InitGenesis(ctx, k, wantGenesis)
+	subaccount.InitGenesis(ctx, *k, wantGenesis)
 
 	require.Equal(t, wantGenesis.SubaccountId, k.Peek(ctx))
 	require.Equal(t, wantGenesis.Params, k.GetParams(ctx))
 	require.Len(t, wantGenesis.Subaccounts, 1)
 	require.Equal(t, wantGenesis.Subaccounts[0], k.GetAllSubaccounts(ctx)[0])
 
-	exportedGenesis := subaccount.ExportGenesis(ctx, k)
+	exportedGenesis := subaccount.ExportGenesis(ctx, *k)
 	require.Equal(t, wantGenesis, *exportedGenesis)
 }
