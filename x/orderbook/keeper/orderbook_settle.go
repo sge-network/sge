@@ -141,7 +141,7 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
-		log.Printf("orderbook_settle.goL139: market cancelled")
+		log.Printf("orderbook_settle.goL139: market cancelled, hooks to execute: %d", len(k.hooks))
 		for _, h := range k.hooks {
 			log.Printf("orderbook_settle.goL141: market cancelled hook call")
 			h.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
