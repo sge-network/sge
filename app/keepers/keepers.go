@@ -399,6 +399,18 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
+	appKeepers.SubaccountKeeper = subaccountkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[subaccounttypes.StoreKey],
+		appKeepers.GetSubspace(subaccounttypes.ModuleName),
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.OVMKeeper,
+		appKeepers.BetKeeper,
+		appKeepers.OrderbookKeeper,
+		appKeepers.HouseKeeper,
+	)
+
 	// // SGE modules \\\\
 
 	appKeepers.BetModule = betmodule.NewAppModule(
@@ -431,17 +443,7 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 	)
-	appKeepers.SubaccountKeeper = subaccountkeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[subaccounttypes.StoreKey],
-		appKeepers.GetSubspace(subaccounttypes.ModuleName),
-		appKeepers.AccountKeeper,
-		appKeepers.BankKeeper,
-		appKeepers.OVMKeeper,
-		appKeepers.BetKeeper,
-		appKeepers.OrderbookKeeper,
-		appKeepers.HouseKeeper,
-	)
+
 	appKeepers.SubaccountModule = subaccount.NewAppModule(*appKeepers.SubaccountKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
