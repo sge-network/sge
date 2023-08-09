@@ -64,7 +64,7 @@ func TestSetLockedBalances(t *testing.T) {
 	someUnlockTime := time.Now().Add(time.Hour * 24 * 365)
 	otherUnlockTime := time.Now().Add(time.Hour * 24 * 365 * 2)
 
-	balanceUnlocks := []*types.LockedBalance{
+	balanceUnlocks := []types.LockedBalance{
 		{
 			Amount:     sdk.NewInt(10000),
 			UnlockTime: someUnlockTime,
@@ -116,7 +116,7 @@ func TestKeeper_GetLockedBalances(t *testing.T) {
 	afterUnlockTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
 
 	// I added them unordered to make sure they are sorted
-	balanceUnlocks := []*types.LockedBalance{
+	balanceUnlocks := []types.LockedBalance{
 		{
 			Amount:     sdk.NewInt(10000),
 			UnlockTime: beforeUnlockTime1,

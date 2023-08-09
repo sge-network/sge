@@ -28,7 +28,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
 		Sender:          sender.String(),
 		SubAccountOwner: subaccountOwner.String(),
-		LockedBalances: []*types.LockedBalance{
+		LockedBalances: []types.LockedBalance{
 			{
 				Amount:     sdk.NewInt(100),
 				UnlockTime: lockedTime,
@@ -147,7 +147,7 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			_, k, msgServer, ctx := setupMsgServerAndApp(t)
 
-			tt.prepare(ctx, k)
+			tt.prepare(ctx, *k)
 
 			_, err := msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &tt.msg)
 			require.ErrorContains(t, err, tt.expectedErr)

@@ -32,7 +32,7 @@ func (m *Balance) Available() sdk.Int {
 }
 
 func (m *Balance) Spend(amt sdk.Int) error {
-	if !amt.IsPositive() {
+	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
 	if amt.GT(m.Available()) {
@@ -43,7 +43,7 @@ func (m *Balance) Spend(amt sdk.Int) error {
 }
 
 func (m *Balance) Unspend(amt sdk.Int) error {
-	if !amt.IsPositive() {
+	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
 	if amt.GT(m.SpentAmount) {
@@ -54,7 +54,7 @@ func (m *Balance) Unspend(amt sdk.Int) error {
 }
 
 func (m *Balance) AddLoss(amt sdk.Int) error {
-	if !amt.IsPositive() {
+	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
 	m.LostAmount = m.LostAmount.Add(amt)

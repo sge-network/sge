@@ -27,7 +27,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	msg := &types.MsgCreateSubAccount{
 		Sender:          sender.String(),
 		SubAccountOwner: subaccount,
-		LockedBalances:  []*types.LockedBalance{},
+		LockedBalances:  []types.LockedBalance{},
 	}
 	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
@@ -43,7 +43,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	msgTopUp := &types.MsgTopUp{
 		Sender:     sender.String(),
 		SubAccount: subaccount,
-		LockedBalances: []*types.LockedBalance{
+		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTime: afterTime,
 				Amount:     sdk.NewInt(123),
@@ -81,7 +81,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     sender,
 				SubAccount: subaccount,
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: beforeTime,
 						Amount:     sdk.NewInt(123),
@@ -96,7 +96,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     sender,
 				SubAccount: subaccount,
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: afterTime,
 						Amount:     sdk.NewInt(123),
@@ -111,7 +111,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			msg: types.MsgTopUp{
 				Sender:     sender,
 				SubAccount: subaccount,
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: afterTime,
 						Amount:     sdk.NewInt(123),
@@ -123,7 +123,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				msg := &types.MsgCreateSubAccount{
 					Sender:          sender,
 					SubAccountOwner: subaccount,
-					LockedBalances:  []*types.LockedBalance{},
+					LockedBalances:  []types.LockedBalance{},
 				}
 				_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
 				require.NoError(t, err)

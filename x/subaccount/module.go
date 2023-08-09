@@ -4,9 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
-	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
-
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
@@ -83,9 +80,7 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command { return cli.GetQueryCmd() }
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        keeper.Keeper
-	accountKeeper authkeeper.AccountKeeper
-	bankKeeper    bankkeeper.Keeper
+	keeper keeper.Keeper
 }
 
 // NewAppModule creates new app module object
@@ -101,7 +96,7 @@ func (am AppModule) Name() string { return am.AppModuleBasic.Name() }
 
 // Route returns the module's message routing key.
 func (am AppModule) Route() sdk.Route {
-	return sdk.NewRoute(types.RouterKey, NewHandler(am.keeper, am.accountKeeper, am.bankKeeper))
+	return sdk.NewRoute(types.RouterKey, NewHandler())
 }
 
 // QuerierRoute returns the module's query routing key.
@@ -113,8 +108,8 @@ func (AppModule) LegacyQuerierHandler(*codec.LegacyAmino) sdk.Querier { return n
 // RegisterServices registers a GRPC query service to respond to the
 // module-specific GRPC queries.
 func (am AppModule) RegisterServices(cfg module.Configurator) {
-	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(am.keeper, am.accountKeeper, am.bankKeeper))
-	types.RegisterQueryServer(cfg.QueryServer(), am.keeper)
+	types.RegisterMsgServer(cfg.MsgServer(), keeper.NewMsgServerImpl(&am.keeper))
+	types.RegisterQueryServer(cfg.QueryServer(), keeper.NewQueryServer(am.keeper))
 }
 
 // RegisterInvariants registers the module's invariants.

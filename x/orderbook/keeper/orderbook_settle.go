@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	"log"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -108,16 +109,10 @@ func (k Keeper) settleParticipation(
 
 	refundHouseDepositFeeToDepositor := false
 
-	var (
-		profit         sdk.Int
-		originalAmount sdk.Int
-		feeRefund      *sdk.Int
-		cancelled      bool
-	)
-
 	switch market.Status {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+		log.Printf("orderbook_settle.goL115: market status declared")
 		// refund participant's account from orderbook liquidity pool.
 		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, depositPlusProfit); err != nil {
 			return err
@@ -125,9 +120,19 @@ func (k Keeper) settleParticipation(
 		if bp.NotParticipatedInBetFulfillment() {
 			refundHouseDepositFeeToDepositor = true
 		}
-		// prepare hook variables.
-		profit = bp.ActualProfit
-		originalAmount = bp.Liquidity
+		if bp.ActualProfit.IsNegative() {
+			log.Printf("orderbook_settle.goL123: market declared loss")
+			for _, h := range k.hooks {
+				log.Printf("orderbook_settle.goL125: market declared loss hook call")
+				h.AfterHouseLoss(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit.Abs())
+			}
+		} else {
+			log.Printf("orderbook_settle.goL129: market declared win")
+			for _, h := range k.hooks {
+				log.Printf("orderbook_settle.goL130: market declared win hook call")
+				h.AfterHouseWin(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit)
+			}
+		}
 
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
@@ -136,9 +141,11 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
-		profit = sdk.ZeroInt()
-		originalAmount = bp.Liquidity
-		cancelled = true
+		log.Printf("orderbook_settle.goL139: market cancelled, hooks to execute: %d", len(k.hooks))
+		for _, h := range k.hooks {
+			log.Printf("orderbook_settle.goL141: market cancelled hook call")
+			h.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
+		}
 	default:
 		return sdkerrors.Wrapf(
 			types.ErrUnknownMarketStatus,
@@ -153,7 +160,9 @@ func (k Keeper) settleParticipation(
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, bp.Fee); err != nil {
 			return err
 		}
-		feeRefund = &bp.Fee
+		for _, h := range k.hooks {
+			h.AfterHouseFeeRefund(ctx, depositorAddress, bp.Fee)
+		}
 	} else {
 		// refund participant's account from house fee collector.
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), bp.Fee); err != nil {
@@ -164,20 +173,5 @@ func (k Keeper) settleParticipation(
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 
-	// call hooks
-	switch {
-	case cancelled:
-		for _, h := range k.hooks {
-			h.AfterHouseRefund(ctx, depositorAddress, originalAmount, *feeRefund)
-		}
-	case profit.IsNegative():
-		for _, h := range k.hooks {
-			h.AfterHouseLoss(ctx, depositorAddress, originalAmount, profit.Abs(), feeRefund)
-		}
-	case profit.IsPositive(), profit.IsZero():
-		for _, h := range k.hooks {
-			h.AfterHouseWin(ctx, depositorAddress, originalAmount, profit, feeRefund)
-		}
-	}
 	return nil
 }

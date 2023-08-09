@@ -32,7 +32,7 @@ func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 	m.keeper.SetBalance(sdkContext, subAccAddress, balance)
 	m.keeper.SetLockedBalances(sdkContext, subAccAddress, msg.LockedBalances)
 
-	err = m.sendCoinsToSubaccount(sdkContext, sender, subAccAddress, moneyToAdd)
+	err = m.keeper.sendCoinsToSubaccount(sdkContext, sender, subAccAddress, moneyToAdd)
 	if err != nil {
 		return nil, fmt.Errorf("unable to send coins: %w", err)
 	}

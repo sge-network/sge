@@ -29,7 +29,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	msg := &types.MsgCreateSubAccount{
 		Sender:          sender.String(),
 		SubAccountOwner: account.String(),
-		LockedBalances: []*types.LockedBalance{
+		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTime: someTime,
 				Amount:     sdk.NewInt(123),
@@ -76,7 +76,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 	tests := []struct {
 		name        string
 		msg         types.MsgCreateSubAccount
-		prepare     func(ctx sdk.Context, keeper keeper.Keeper)
+		prepare     func(ctx sdk.Context, keeper *keeper.Keeper)
 		expectedErr string
 	}{
 		{
@@ -84,14 +84,14 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: beforeTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
 			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
@@ -99,14 +99,14 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: afterTime,
 						Amount:     sdk.NewInt(123),
 					},
 				},
 			},
-			prepare: func(ctx sdk.Context, k keeper.Keeper) {
+			prepare: func(ctx sdk.Context, k *keeper.Keeper) {
 				k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1), account)
 			},
 			expectedErr: types.ErrSubaccountAlreadyExist.Error(),
@@ -116,14 +116,14 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 			msg: types.MsgCreateSubAccount{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
-				LockedBalances: []*types.LockedBalance{
+				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: afterTime,
 						Amount:     sdk.Int{},
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k keeper.Keeper) {},
+			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
 			expectedErr: "invalid request",
 		},
 	}
