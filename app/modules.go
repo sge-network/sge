@@ -33,12 +33,14 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
-	icatypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/types"
-	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
-	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	ica "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts"
+	icatypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/types"
+	ibcfee "github.com/cosmos/ibc-go/v5/modules/apps/29-fee"
+	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
+	"github.com/cosmos/ibc-go/v5/modules/apps/transfer"
+	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v5/modules/core"
+	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint"
 	minttypes "github.com/sge-network/sge/x/mint/types"
@@ -66,6 +68,7 @@ import (
 var mAccPerms = map[string][]string{
 	authtypes.FeeCollectorName: nil,
 	distrtypes.ModuleName:      nil,
+	ibcfeetypes.ModuleName:     nil,
 	icatypes.ModuleName:        nil,
 	minttypes.ModuleName: {
 		authtypes.Minter,
@@ -101,7 +104,7 @@ var ModuleBasics = module.NewBasicManager(
 	staking.AppModuleBasic{},
 	mint.AppModuleBasic{},
 	distr.AppModuleBasic{},
-	gov.NewAppModuleBasic(getGovProposalHandlers()...),
+	gov.NewAppModuleBasic(getGovProposalHandlers()),
 	params.AppModuleBasic{},
 	crisis.AppModuleBasic{},
 	slashing.AppModuleBasic{},
@@ -113,6 +116,7 @@ var ModuleBasics = module.NewBasicManager(
 	transfer.AppModuleBasic{},
 	vesting.AppModuleBasic{},
 	ica.AppModuleBasic{},
+	ibcfee.AppModuleBasic{},
 	betmodule.AppModuleBasic{},
 	marketmodule.AppModuleBasic{},
 	orderbookmodule.AppModuleBasic{},
@@ -175,6 +179,7 @@ func appModules(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		app.TransferModule,
+		app.IBCFeeModule,
 		app.ICAModule,
 
 		app.BetModule,
@@ -260,6 +265,7 @@ func orderBeginBlockers() []string {
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		genutiltypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
@@ -281,6 +287,7 @@ func orderEndBlockers() []string {
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -315,6 +322,7 @@ func orderInitBlockers() []string {
 		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
 		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		evidencetypes.ModuleName,
 		feegrant.ModuleName,
 		authz.ModuleName,

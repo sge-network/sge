@@ -111,12 +111,12 @@ func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec,
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
 	// this helps not to lost precision in the division and calculate the payout
 
-	profit := amount.ToDec().
+	profit := sdk.NewDecFromInt(amount).
 		// the coefficient
-		Mul(firstPart.ToDec()).
-		Quo(secondPart.ToDec())
+		Mul(sdk.NewDecFromInt(firstPart)).
+		Quo(sdk.NewDecFromInt(secondPart))
 
-	payout := amount.ToDec().Add(profit)
+	payout := sdk.NewDecFromInt(amount).Add(profit)
 
 	// get the integer part of the payout
 	return payout, nil
@@ -155,8 +155,8 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 	// this helps not to lost precision in the division and calculate the bet amount
 	betAmount := payoutProfit.
 		// the coefficient
-		Mul(secondPart.ToDec()).
-		Quo(firstPart.ToDec())
+		Mul(sdk.NewDecFromInt(secondPart)).
+		Quo(sdk.NewDecFromInt(firstPart))
 
 	// get the integer part of the bet amount
 	return betAmount, nil
@@ -185,17 +185,17 @@ func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, 
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
 	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
-		profit = amount.ToDec().
-			Mul(oddsValue.ToDec()).
+		profit = sdk.NewDecFromInt(amount).
+			Mul(sdk.NewDecFromInt(oddsValue)).
 			Quo(sdk.NewDec(100)).Abs()
 	} else {
-		profit = amount.ToDec().
+		profit = sdk.NewDecFromInt(amount).
 			Mul(sdk.NewDec(100)).
 			QuoInt(oddsValue).Abs()
 	}
 
 	// bet amount should be multiplied by the coefficient
-	payout = amount.ToDec().Add(profit)
+	payout = sdk.NewDecFromInt(amount).Add(profit)
 
 	// get the integer part of the payout
 	return payout, nil
@@ -222,11 +222,11 @@ func (*moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (
 	if oddsValue.IsPositive() {
 		betAmount = payoutProfit.
 			Mul(sdk.NewDec(100)).
-			Quo(oddsValue.ToDec()).
+			Quo(sdk.NewDecFromInt(oddsValue)).
 			Abs()
 	} else {
 		betAmount = payoutProfit.
-			Mul(oddsValue.ToDec()).
+			Mul(sdk.NewDecFromInt(oddsValue)).
 			Quo(sdk.NewDec(100)).
 			Abs()
 	}

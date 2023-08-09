@@ -10,7 +10,7 @@ func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdk.Int) (s
 	}
 
 	// bettor profit is the subtracted amount of payout from bet amount
-	profit := payout.Sub(amount.ToDec())
+	profit := payout.Sub(sdk.NewDecFromInt(amount))
 
 	return profit, nil
 }
@@ -73,7 +73,7 @@ func CalculateBetAmountInt(
 	betAmount := expectedBetAmountDec.TruncateInt()
 
 	// save the truncated amount in the calculations for the next loop
-	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(betAmount.ToDec()))
+	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(sdk.NewDecFromInt(betAmount)))
 
 	return betAmount, truncatedBetAmount, nil
 }

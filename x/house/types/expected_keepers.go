@@ -29,16 +29,17 @@ type OVMKeeper interface {
 
 // AuthzKeeper defines the expected authz keeper.
 type AuthzKeeper interface {
-	GetCleanAuthorization(
+	GetAuthorization(
 		ctx sdk.Context,
-		grantee, granter sdk.AccAddress,
+		grantee sdk.AccAddress,
+		granter sdk.AccAddress,
 		msgType string,
-	) (cap authz.Authorization, expiration time.Time)
+	) (authz.Authorization, *time.Time)
 	SaveGrant(
 		ctx sdk.Context,
 		grantee, granter sdk.AccAddress,
 		authorization authz.Authorization,
-		expiration time.Time,
+		expiration *time.Time,
 	) error
 	DeleteGrant(
 		ctx sdk.Context,

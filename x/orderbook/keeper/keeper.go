@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"fmt"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -13,7 +14,7 @@ import (
 
 // Keeper of the orderbook store
 type Keeper struct {
-	storeKey       sdk.StoreKey
+	storeKey       storetypes.StoreKey
 	cdc            codec.BinaryCodec
 	paramstore     paramtypes.Subspace
 	bankKeeper     types.BankKeeper
@@ -35,7 +36,7 @@ type SdkExpectedKeepers struct {
 // NewKeeper creates a new orderbook Keeper instance
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	key sdk.StoreKey,
+	key storetypes.StoreKey,
 	ps paramtypes.Subspace,
 	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {

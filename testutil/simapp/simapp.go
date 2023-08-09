@@ -318,7 +318,7 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk0,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower1,
-		DelegatorShares: valPower1.ToDec(),
+		DelegatorShares: sdk.NewDecFromInt(valPower1),
 		Description:     stakingtypes.NewDescription("hoop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
 			sdk.NewDecWithPrec(5, 1),
@@ -331,7 +331,7 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk1,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower2,
-		DelegatorShares: valPower2.ToDec(),
+		DelegatorShares: sdk.NewDecFromInt(valPower2),
 		Description:     stakingtypes.NewDescription("bloop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
 			sdk.NewDecWithPrec(5, 1),

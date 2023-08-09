@@ -123,7 +123,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
 				fInfo.oddsType,
 				fInfo.oddsVal,
-				fInfo.inProcessItem.availableLiquidity.ToDec(),
+				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
 			)
 			if err != nil {
@@ -310,7 +310,7 @@ func (k Keeper) fulfill(
 
 	// subtract the payout profit that is fulfilled from the initial payout profit
 	// to prevent being calculated multiple times
-	fInfo.payoutProfit = fInfo.payoutProfit.Sub(payoutProfitToFulfill.ToDec())
+	fInfo.payoutProfit = fInfo.payoutProfit.Sub(sdk.NewDecFromInt(payoutProfitToFulfill))
 
 	// store the bet pair in the state
 	participationBetPair := types.NewParticipationBetPair(
