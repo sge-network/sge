@@ -114,7 +114,7 @@ endif
 ###############################################################################
 
 check_version:
-ifneq ($(GO_MINOR_VERSION),20)
+ifneq ($(GO_MINOR_VERSION),19)
 	@echo "ERROR: Go version 1.19 is required for this version of SGE. Go 1.19 has changes that are believed to break consensus."
 	exit 1
 endif
