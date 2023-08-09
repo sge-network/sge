@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -53,7 +54,7 @@ func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error
 
 // Deposit performs a deposit transaction and stores a new deposit in store.
 func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
-	marketUID string, amount sdk.Int,
+	marketUID string, amount sdkmath.Int,
 ) (participationIndex uint64, err error) {
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdk.ZeroInt(), 0)

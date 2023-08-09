@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/authz"
@@ -9,7 +10,7 @@ import (
 var _ authz.Authorization = &WithdrawAuthorization{}
 
 // NewWithdrawAuthorization creates a new WithdrawAuthorization object.
-func NewWithdrawAuthorization(withdrawLimit sdk.Int) *WithdrawAuthorization {
+func NewWithdrawAuthorization(withdrawLimit sdkmath.Int) *WithdrawAuthorization {
 	return &WithdrawAuthorization{
 		WithdrawLimit: withdrawLimit,
 	}

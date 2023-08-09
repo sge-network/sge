@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authz "github.com/cosmos/cosmos-sdk/x/authz"
@@ -15,13 +16,13 @@ import (
 func TestDepositGrantValidateBasic(t *testing.T) {
 	tests := []struct {
 		name       string
-		spendLimit sdk.Int
+		spendLimit sdkmath.Int
 		expiration time.Time
 		err        error
 	}{
 		{
 			name:       "invalid coins",
-			spendLimit: sdk.Int{},
+			spendLimit: sdkmath.Int{},
 			expiration: time.Now().Add(5 * time.Minute),
 			err:        sdkerrors.ErrInvalidCoins,
 		},

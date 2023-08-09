@@ -3,6 +3,7 @@ package types
 import (
 	context "context"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -38,10 +39,10 @@ type OrderbookKeeper interface {
 		ctx sdk.Context,
 		betUID, bookUID, oddsUID string,
 		maxLossMultiplier sdk.Dec,
-		betAmount sdk.Int,
+		betAmount sdkmath.Int,
 		payoutProfit sdk.Dec,
 		bettorAddress sdk.AccAddress,
-		betFee sdk.Int,
+		betFee sdkmath.Int,
 		oddsType OddsType,
 		oddsVal string,
 		betID uint64,
@@ -49,13 +50,13 @@ type OrderbookKeeper interface {
 	RefundBettor(
 		ctx sdk.Context,
 		bettorAddress sdk.AccAddress,
-		betAmount, betFee, payout sdk.Int,
+		betAmount, betFee, payout sdkmath.Int,
 		uniqueLock string,
 	) error
 	BettorWins(
 		ctx sdk.Context,
 		bettorAddress sdk.AccAddress,
-		betAmount, payout sdk.Int,
+		betAmount, payout sdkmath.Int,
 		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
@@ -63,12 +64,12 @@ type OrderbookKeeper interface {
 	BettorLoses(
 		ctx sdk.Context,
 		bettorAddress sdk.AccAddress,
-		betAmount, payout sdk.Int,
+		betAmount, payout sdkmath.Int,
 		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
-	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdk.Int) error
+	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
 	PublishOrderBookEvent(ctx sdk.Context, orderBookUID string)
 }

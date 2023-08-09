@@ -4,6 +4,7 @@ import (
 	context "context"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
@@ -11,13 +12,13 @@ import (
 // OrderbookKeeper defines the expected orderbook keeper.
 type OrderbookKeeper interface {
 	InitiateOrderBookParticipation(ctx sdk.Context, addr sdk.AccAddress, bookUID string,
-		liquidity, fee sdk.Int,
+		liquidity, fee sdkmath.Int,
 	) (uint64, error)
 	CalcWithdrawalAmount(ctx sdk.Context, depositorAddress string, marketUID string,
-		participationIndex uint64, mode WithdrawalMode, totalWithdrawnAmount, amount sdk.Int,
-	) (sdk.Int, error)
+		participationIndex uint64, mode WithdrawalMode, totalWithdrawnAmount, amount sdkmath.Int,
+	) (sdkmath.Int, error)
 	WithdrawOrderBookParticipation(ctx sdk.Context, marketUID string,
-		participationIndex uint64, amount sdk.Int,
+		participationIndex uint64, amount sdkmath.Int,
 	) error
 	PublishOrderBookEvent(ctx sdk.Context, orderBookUID string)
 }

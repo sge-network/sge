@@ -1,9 +1,12 @@
 package types
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
 
 // CalculatePayoutProfit calculates the amount of payout profit portion according to bet odds value and amount
-func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	payout, err := calculatePayout(oddsType, oddsVal, amount)
 	if err != nil {
 		return sdk.ZeroDec(), err
@@ -16,7 +19,7 @@ func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdk.Int) (s
 }
 
 // calculatePayout calculates the amount of payout according to bet odds value and amount
-func calculatePayout(oddsType OddsType, oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func calculatePayout(oddsType OddsType, oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	var oType OddsTypeI
 
 	// assign corresponding type to the interface instance
@@ -60,15 +63,15 @@ func CalculateBetAmountInt(
 	oddsVal string,
 	payoutProfit sdk.Dec,
 	truncatedBetAmount sdk.Dec,
-) (sdk.Int, sdk.Dec, error) {
+) (sdkmath.Int, sdk.Dec, error) {
 	expectedBetAmountDec, err := CalculateBetAmount(oddsType, oddsVal, payoutProfit)
 	if err != nil {
-		return sdk.Int{}, sdk.Dec{}, err
+		return sdkmath.Int{}, sdk.Dec{}, err
 	}
 	// add previous loop truncated value to the calculated bet amount
 	expectedBetAmountDec = expectedBetAmountDec.Add(truncatedBetAmount)
 
-	// we need for the bet amount to be of type sdk.Int
+	// we need for the bet amount to be of type sdkmath.Int
 	// so the truncation in inevitable
 	betAmount := expectedBetAmountDec.TruncateInt()
 

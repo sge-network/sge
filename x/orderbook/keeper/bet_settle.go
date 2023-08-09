@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -13,7 +14,7 @@ import (
 func (k Keeper) RefundBettor(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount, betFee, _ sdk.Int,
+	betAmount, betFee, _ sdkmath.Int,
 	_ string,
 ) error {
 	// refund bettor's account from orderbook liquidity pool.
@@ -31,8 +32,8 @@ func (k Keeper) RefundBettor(
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	_ sdk.Int,
-	_ sdk.Int,
+	_ sdkmath.Int,
+	_ sdkmath.Int,
 	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
@@ -74,8 +75,8 @@ func (k Keeper) BettorWins(
 // for each of the bet fulfillment records and,
 // removes the payout lock.
 func (k Keeper) BettorLoses(ctx sdk.Context, _ sdk.AccAddress,
-	_ sdk.Int,
-	_ sdk.Int,
+	_ sdkmath.Int,
+	_ sdkmath.Int,
 	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,

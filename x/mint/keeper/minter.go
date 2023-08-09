@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/mint/types"
 )
@@ -26,13 +27,13 @@ func (k Keeper) SetMinter(ctx sdk.Context, minter types.Minter) {
 
 // StakingTokenSupply implements an alias call to the underlying staking keeper's
 // to be used in BeginBlocker.
-func (k Keeper) StakingTokenSupply(ctx sdk.Context) sdk.Int {
+func (k Keeper) StakingTokenSupply(ctx sdk.Context) sdkmath.Int {
 	return k.stakingKeeper.StakingTokenSupply(ctx)
 }
 
 // TokenSupply implements an alias call to the underlying bank keeper's
 // to be used in BeginBlocker.
-func (k Keeper) TokenSupply(ctx sdk.Context, denom string) sdk.Int {
+func (k Keeper) TokenSupply(ctx sdk.Context, denom string) sdkmath.Int {
 	return k.bankKeeper.GetSupply(ctx, denom).Amount
 }
 

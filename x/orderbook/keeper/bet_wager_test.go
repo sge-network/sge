@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/app/params"
@@ -27,7 +28,7 @@ type testBetSuite struct {
 	k              *keeper.KeeperTest
 	ctx            sdk.Context
 	tApp           simappUtil.TestApp
-	betFee         sdk.Int
+	betFee         sdkmath.Int
 	market         markettypes.Market
 	deposits       []housetypes.Deposit
 	participations []types.OrderBookParticipation
@@ -286,8 +287,8 @@ func (ts *testBetSuite) placeTestBet(
 	bettorAddr sdk.AccAddress,
 	marketUID, oddsUID string,
 	betID uint64,
-	amount sdk.Int,
-	fee sdk.Int,
+	amount sdkmath.Int,
+	fee sdkmath.Int,
 	expErr error,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{

@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -82,7 +83,7 @@ func (k Keeper) GetAllOrderBookParticipations(
 
 // InitiateOrderBookParticipation starts a participation on a book for a certain account.
 func (k Keeper) InitiateOrderBookParticipation(
-	ctx sdk.Context, addr sdk.AccAddress, bookUID string, depositAmount, feeAmount sdk.Int,
+	ctx sdk.Context, addr sdk.AccAddress, bookUID string, depositAmount, feeAmount sdkmath.Int,
 ) (index uint64, err error) {
 	market, found := k.marketKeeper.GetMarket(ctx, bookUID)
 	if !found {
@@ -129,7 +130,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 		index, book.UID, addr.String(),
 		book.OddsCount,                  // all odds need to be filled in the next steps
 		liquidity, feeAmount, liquidity, // int the start, liquidity and current round liquidity are the same
-		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdk.Int{}, "", sdk.ZeroInt(),
+		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdkmath.Int{}, "", sdk.ZeroInt(),
 	)
 
 	// fund order book liquidity pool from participant's account.
@@ -162,12 +163,12 @@ func (k Keeper) CalcWithdrawalAmount(
 	marketUID string,
 	participationIndex uint64,
 	mode housetypes.WithdrawalMode,
-	totalWithdrawnAmount sdk.Int,
-	amount sdk.Int,
-) (sdk.Int, error) {
+	totalWithdrawnAmount sdkmath.Int,
+	amount sdkmath.Int,
+) (sdkmath.Int, error) {
 	bp, found := k.GetOrderBookParticipation(ctx, marketUID, participationIndex)
 	if !found {
-		return sdk.Int{}, sdkerrors.Wrapf(
+		return sdkmath.Int{}, sdkerrors.Wrapf(
 			types.ErrOrderBookParticipationNotFound,
 			"%s, %d",
 			marketUID,
@@ -176,7 +177,7 @@ func (k Keeper) CalcWithdrawalAmount(
 	}
 
 	if bp.IsSettled {
-		return sdk.Int{}, sdkerrors.Wrapf(
+		return sdkmath.Int{}, sdkerrors.Wrapf(
 			types.ErrBookParticipationAlreadySettled,
 			"%s, %d",
 			bp.OrderBookUID,
@@ -185,18 +186,18 @@ func (k Keeper) CalcWithdrawalAmount(
 	}
 
 	if bp.ParticipantAddress != depositorAddress {
-		return sdk.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
+		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
 	}
 
 	if mode == housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if bp.Liquidity.Sub(totalWithdrawnAmount).LT(amount) {
-			return sdk.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", amount.Int64())
+			return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", amount.Int64())
 		}
 	}
 
 	withdrawAmount, err := bp.WithdrawableAmount(mode, amount)
 	if err != nil {
-		return sdk.Int{}, err
+		return sdkmath.Int{}, err
 	}
 
 	return withdrawAmount, nil
@@ -206,7 +207,7 @@ func (k Keeper) CalcWithdrawalAmount(
 func (k Keeper) WithdrawOrderBookParticipation(
 	ctx sdk.Context, marketUID string,
 	participationIndex uint64,
-	amount sdk.Int,
+	amount sdkmath.Int,
 ) error {
 	bp, found := k.GetOrderBookParticipation(ctx, marketUID, participationIndex)
 	if !found {

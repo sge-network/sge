@@ -3,13 +3,14 @@ package types
 import (
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 type OddsTypeI interface {
 	// CalculatePayout calculates total payout of a certain bet amount
-	CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error)
+	CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error)
 
 	// CalculateBetAmount calculates bet amount
 	CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error)
@@ -20,7 +21,7 @@ type OddsTypeI interface {
 type decimalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by decimal odds calculations
-func (*decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*decimalOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
@@ -80,7 +81,7 @@ func (*decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sd
 type fractionalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by fractional odds calculations
-func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (first part)/secondary)
@@ -167,7 +168,7 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 type moneylineOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
-func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {

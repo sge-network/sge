@@ -7,6 +7,7 @@ import (
 	//#nosec
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/sge-network/sge/x/house/types"
@@ -25,7 +26,7 @@ func GenHouseParticipationFee(r *rand.Rand) sdk.Dec {
 }
 
 // GenMinDeposit randomized house by uid query count
-func GenMinDeposit(r *rand.Rand) sdk.Int {
+func GenMinDeposit(r *rand.Rand) sdkmath.Int {
 	return sdk.NewInt(cast.ToInt64(r.Intn(99)))
 }
 
@@ -37,7 +38,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 		func(r *rand.Rand) { houseParticipationFee = GenHouseParticipationFee(r) },
 	)
 
-	var minDeposit sdk.Int
+	var minDeposit sdkmath.Int
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, MinDeposit, &minDeposit, simState.Rand,
 		func(r *rand.Rand) { minDeposit = GenMinDeposit(r) },

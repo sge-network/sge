@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -83,7 +84,7 @@ func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
 // NextPhaseProvisions returns the phase provisions based on current total
 // supply and inflation rate.
-func (m Minter) NextPhaseProvisions(totalSupply sdk.Int, excludeAmount sdk.Int, phase Phase) sdk.Dec {
+func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkmath.Int, phase Phase) sdk.Dec {
 	// calculate annual provisions as normal
 	annualProvisions := m.Inflation.MulInt(totalSupply.Sub(excludeAmount))
 
@@ -105,7 +106,7 @@ func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec
 	provisionAmt := m.PhaseProvisions.Quo(blocksPerPhase).Add(m.TruncatedTokens)
 
 	// extract the integer and decimal part of provisions
-	// the decimal part is the truncated value because of conversion to sdk.Int
+	// the decimal part is the truncated value because of conversion to sdkmath.Int
 	// so the decimal part is truncated and needs to be added in next block
 	intPart := provisionAmt.TruncateDec()
 	decPart := provisionAmt.Sub(intPart)
