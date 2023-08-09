@@ -62,29 +62,6 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 	return &TestApp{SgeApp: *appInstance}, app.GenesisState{}
 }
 
-// Setup initializes genesis the same as simapp
-func Setup(isCheckTx bool) *TestApp {
-	app, genesisState := setup(!isCheckTx, 5)
-	if !isCheckTx {
-		// init chain must be called to stop deliverState from being nil
-		stateBytes, err := json.MarshalIndent(genesisState, "", " ")
-		if err != nil {
-			panic(err)
-		}
-
-		// Initialize the chain
-		app.InitChain(
-			abci.RequestInitChain{
-				Validators:      []abci.ValidatorUpdate{},
-				ConsensusParams: DefaultConsensusParams,
-				AppStateBytes:   stateBytes,
-			},
-		)
-	}
-
-	return app
-}
-
 // SetupWithGenesisAccounts sets up the genesis accounts for testing
 func SetupWithGenesisAccounts(
 	genAccs []authtypes.GenesisAccount,
