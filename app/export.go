@@ -137,7 +137,6 @@ func (app *SgeApp) reInitializeAllDelegators(ctx sdk.Context, dels stakingtypes.
 		if err := app.DistrKeeper.Hooks().AfterDelegationModified(ctx, delAddr, valAddr); err != nil {
 			panic(err)
 		}
-
 	}
 }
 
