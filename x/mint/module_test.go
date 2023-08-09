@@ -12,7 +12,7 @@ import (
 )
 
 func TestItCreatesModuleAccountOnInitBlock(t *testing.T) {
-	app := sdksimapp.Setup(false)
+	app := sdksimapp.Setup(t, false)
 	ctx := app.BaseApp.NewContext(false, tmproto.Header{})
 
 	app.InitChain(

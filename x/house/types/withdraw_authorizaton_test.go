@@ -40,7 +40,7 @@ func TestWithdrawGrantValidateBasic(t *testing.T) {
 				&types.WithdrawAuthorization{
 					WithdrawLimit: tt.withdrawLimit,
 				},
-				tt.expiration)
+				&tt.expiration)
 			require.NoError(t, err)
 
 			err = msgGrant.ValidateBasic()

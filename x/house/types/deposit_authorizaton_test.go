@@ -40,7 +40,7 @@ func TestDepositGrantValidateBasic(t *testing.T) {
 				&types.DepositAuthorization{
 					SpendLimit: tt.spendLimit,
 				},
-				tt.expiration)
+				&tt.expiration)
 			require.NoError(t, err)
 
 			err = msgGrant.ValidateBasic()

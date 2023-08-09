@@ -1,6 +1,8 @@
 package cmd
 
 const (
+	EnvPrefix = "SGE"
+
 	argAppHome              = "The application home directory"
 	argKeyringBackend       = "Select keyring backend (os|file|kwallet|pass|test)"
 	argVestingAccountCoins  = "amount of coins for vesting accounts"
