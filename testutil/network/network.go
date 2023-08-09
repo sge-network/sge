@@ -39,7 +39,7 @@ func New(t *testing.T, configs ...network.Config) *network.Network {
 		cfg = configs[0]
 	}
 
-	net, err := network.New(t, "", cfg)
+	net, err := network.New(t, t.TempDir(), cfg)
 	if err != nil {
 		panic(err)
 	}

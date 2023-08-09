@@ -123,7 +123,10 @@ func SetupWithGenesisAccounts(
 
 	appInstance.Commit()
 	appInstance.BeginBlock(
-		abci.RequestBeginBlock{Header: tmproto.Header{Height: appInstance.LastBlockHeight() + 1}},
+		abci.RequestBeginBlock{Header: tmproto.Header{
+			Height:  appInstance.LastBlockHeight() + 1,
+			AppHash: appInstance.LastCommitID().Hash,
+		}},
 	)
 
 	return appInstance
