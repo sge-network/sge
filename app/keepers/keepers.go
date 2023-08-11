@@ -26,6 +26,8 @@ import (
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	"github.com/cosmos/cosmos-sdk/x/group"
+	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramskeeper "github.com/cosmos/cosmos-sdk/x/params/keeper"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
@@ -57,7 +59,6 @@ import (
 	ibcclient "github.com/cosmos/ibc-go/v5/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
 	ibcporttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
-	porttypes "github.com/cosmos/ibc-go/v5/modules/core/05-port/types"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	ibckeeper "github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
@@ -110,6 +111,7 @@ type AppKeepers struct {
 	TransferKeeper   ibctransferkeeper.Keeper
 	FeeGrantKeeper   feegrantkeeper.Keeper
 	AuthzKeeper      authzkeeper.Keeper
+	GroupKeeper      groupkeeper.Keeper
 
 	//// SGE keepers \\\\
 	BetKeeper       *betmodulekeeper.Keeper
@@ -223,6 +225,14 @@ func NewAppKeeper(
 		appCodec,
 		bApp.MsgServiceRouter(),
 		appKeepers.AccountKeeper,
+	)
+
+	groupConfig := group.DefaultConfig()
+	appKeepers.GroupKeeper = groupkeeper.NewKeeper(
+		appKeepers.keys[group.StoreKey],
+		appCodec,
+		bApp.MsgServiceRouter(),
+		appKeepers.AccountKeeper, groupConfig,
 	)
 
 	appKeepers.FeeGrantKeeper = feegrantkeeper.NewKeeper(
@@ -466,15 +476,15 @@ func NewAppKeeper(
 	appKeepers.ICAModule = ica.NewAppModule(&appKeepers.ICAControllerKeeper, &appKeepers.ICAHostKeeper)
 
 	// IBC stacks \\\
-	var transferStack porttypes.IBCModule
+	var transferStack ibcporttypes.IBCModule
 	transferStack = transfer.NewIBCModule(appKeepers.TransferKeeper)
 	transferStack = ibcfee.NewIBCMiddleware(transferStack, appKeepers.IBCFeeKeeper)
 
-	var icaControllerStack porttypes.IBCModule
+	var icaControllerStack ibcporttypes.IBCModule
 	icaControllerStack = icacontroller.NewIBCMiddleware(icaControllerStack, appKeepers.ICAControllerKeeper)
 	icaControllerStack = ibcfee.NewIBCMiddleware(icaControllerStack, appKeepers.IBCFeeKeeper)
 
-	var icaHostStack porttypes.IBCModule
+	var icaHostStack ibcporttypes.IBCModule
 	icaHostStack = icahost.NewIBCModule(appKeepers.ICAHostKeeper)
 	icaHostStack = ibcfee.NewIBCMiddleware(icaHostStack, appKeepers.IBCFeeKeeper)
 

@@ -25,6 +25,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/cosmos/cosmos-sdk/x/group"
+	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
@@ -101,6 +103,7 @@ var ModuleBasics = module.NewBasicManager(
 	slashing.AppModuleBasic{},
 	feegrantmodule.AppModuleBasic{},
 	authzmodule.AppModuleBasic{},
+	groupmodule.AppModuleBasic{},
 	ibc.AppModuleBasic{},
 	upgrade.AppModuleBasic{},
 	evidence.AppModuleBasic{},
@@ -169,6 +172,12 @@ func appModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
+		groupmodule.NewAppModule(appCodec,
+			app.GroupKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.interfaceRegistry,
+		),
 		app.IBCModule,
 		params.NewAppModule(app.ParamsKeeper),
 		app.TransferModule,
@@ -230,6 +239,12 @@ func simulationModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
+		groupmodule.NewAppModule(appCodec,
+			app.GroupKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.interfaceRegistry,
+		),
 		app.IBCModule,
 		app.TransferModule,
 
@@ -260,6 +275,7 @@ func orderBeginBlockers() []string {
 		genutiltypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
+		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		icatypes.ModuleName,
@@ -289,6 +305,7 @@ func orderEndBlockers() []string {
 		evidencetypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
+		group.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
@@ -317,6 +334,7 @@ func orderInitBlockers() []string {
 		evidencetypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
+		group.ModuleName,
 		crisistypes.ModuleName,
 		ibctransfertypes.ModuleName,
 		icatypes.ModuleName,

@@ -11,6 +11,7 @@ import (
 	evidencetypes "github.com/cosmos/cosmos-sdk/x/evidence/types"
 	"github.com/cosmos/cosmos-sdk/x/feegrant"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/cosmos/cosmos-sdk/x/group"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
@@ -41,7 +42,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey,
-		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey,
+		capabilitytypes.StoreKey, feegrant.StoreKey, authzkeeper.StoreKey, group.StoreKey,
 		ibcfeetypes.StoreKey, icacontrollertypes.StoreKey, icahosttypes.StoreKey,
 		orderbookmoduletypes.StoreKey,
 		betmoduletypes.StoreKey,
