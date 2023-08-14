@@ -17,7 +17,7 @@ const (
 	DefaultTimeWeight = 1
 
 	// MinPubKeysCount is the minimum allowed public keys in the key vault
-	MinPubKeysCount = 3
+	MinPubKeysCount = 4
 
 	// MaxPubKeysCount is the maximum allowed public keys in the key vault
 	MaxPubKeysCount = 5

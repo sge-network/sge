@@ -53,6 +53,7 @@ func (msg *MsgWager) ValidateBasic() error {
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
+
 	return WagerValidation(msg.Props)
 }
 
