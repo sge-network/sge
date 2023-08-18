@@ -1,0 +1,12 @@
+{
+    "title": "Modify Max Gas",
+    "description": "Update max gaas to 100000000",
+    "changes": [
+        {
+            "subspace": "baseapp",
+            "key": "BlockParams",
+            "value": {"max_bytes": "22020096","max_gas": "100000000","time_iota_ms": "1000"}
+        }
+    ],
+    "deposit": "512000001usge"
+}

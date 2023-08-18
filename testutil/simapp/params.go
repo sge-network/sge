@@ -3,6 +3,7 @@ package simapp
 import (
 	"crypto/ed25519"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
@@ -24,7 +25,7 @@ type TestValidator struct {
 	PubKey      types.PubKey
 	Address     sdk.ValAddress
 	ConsAddress sdk.ConsAddress
-	Power       sdk.Int
+	Power       sdkmath.Int
 }
 
 var (

@@ -3,11 +3,13 @@ package keeper
 import (
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
 )
 
 // ProcessWager processes bet placement
@@ -15,10 +17,10 @@ func (k Keeper) ProcessWager(
 	ctx sdk.Context,
 	betUID, bookUID, oddsUID string,
 	maxLossMultiplier sdk.Dec,
-	betAmount sdk.Int,
+	betAmount sdkmath.Int,
 	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
-	betFee sdk.Int,
+	betFee sdkmath.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 ) ([]*bettypes.BetFulfillment, error) {
@@ -119,11 +121,11 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		case fInfo.inProcessItem.noLiquidityAvailable():
 			setFulfilled = true
 		case fInfo.notEnoughLiquidityAvailable():
-			var betAmountToFulfill sdk.Int
+			var betAmountToFulfill sdkmath.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
 				fInfo.oddsType,
 				fInfo.oddsVal,
-				fInfo.inProcessItem.availableLiquidity.ToDec(),
+				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
 			)
 			if err != nil {
@@ -174,7 +176,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 // initFulfillmentInfo initializes the fulfillment info for the queue iteration process.
 func (k Keeper) initFulfillmentInfo(
 	ctx sdk.Context,
-	betAmount sdk.Int,
+	betAmount sdkmath.Int,
 	payoutProfit sdk.Dec,
 	betUID string,
 	betID uint64,
@@ -286,7 +288,7 @@ func (k Keeper) fulfill(
 	ctx sdk.Context,
 	fInfo *fulfillmentInfo,
 	betAmountToFulfill,
-	payoutProfitToFulfill sdk.Int,
+	payoutProfitToFulfill sdkmath.Int,
 ) {
 	fInfo.inProcessItem.participationExposure.SetCurrentRound(betAmountToFulfill, payoutProfitToFulfill)
 	fInfo.inProcessItem.participation.SetCurrentRound(
@@ -310,7 +312,7 @@ func (k Keeper) fulfill(
 
 	// subtract the payout profit that is fulfilled from the initial payout profit
 	// to prevent being calculated multiple times
-	fInfo.payoutProfit = fInfo.payoutProfit.Sub(payoutProfitToFulfill.ToDec())
+	fInfo.payoutProfit = fInfo.payoutProfit.Sub(sdk.NewDecFromInt(payoutProfitToFulfill))
 
 	// store the bet pair in the state
 	participationBetPair := types.NewParticipationBetPair(
@@ -421,10 +423,10 @@ type fulfillmentInfo struct {
 	oddsType                bettypes.OddsType
 	oddsVal                 string
 	maxLossMultiplier       sdk.Dec
-	betAmount               sdk.Int
+	betAmount               sdkmath.Int
 	payoutProfit            sdk.Dec
-	fulfilledBetAmount      sdk.Int
-	totalAvailableLiquidity sdk.Int
+	fulfilledBetAmount      sdkmath.Int
+	totalAvailableLiquidity sdkmath.Int
 
 	fulfillmentQueue []uint64
 	fulfillmentMap   fulfillmentMap
@@ -459,13 +461,13 @@ func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
 	return fInfo.inProcessItem.availableLiquidity.LTE(fInfo.payoutProfit.TruncateInt())
 }
 
-func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdk.Int) bool {
+func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdkmath.Int) bool {
 	diff := fInfo.inProcessItem.availableLiquidity.Sub(fInfo.payoutProfit.TruncateInt())
 	return diff.LTE(threshold)
 }
 
 type fulfillmentItem struct {
-	availableLiquidity    sdk.Int
+	availableLiquidity    sdkmath.Int
 	participation         types.OrderBookParticipation
 	participationExposure types.ParticipationExposure
 }
@@ -483,7 +485,7 @@ func (fItem *fulfillmentItem) setAvailableLiquidity(maxLossMultiplier sdk.Dec) {
 	fItem.availableLiquidity = fItem.calcAvailableLiquidity(maxLossMultiplier)
 }
 
-func (fItem *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdk.Dec) sdk.Int {
+func (fItem *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdk.Dec) sdkmath.Int {
 	return maxLossMultiplier.
 		MulInt(fItem.participation.CurrentRoundLiquidity).
 		Sub(sdk.NewDecFromInt(fItem.participationExposure.Exposure)).TruncateInt()

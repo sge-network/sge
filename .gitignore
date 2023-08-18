@@ -7,9 +7,13 @@
 
 # IDE Config files
 .idea/
+.vscode
 
 # Test binary, built with `go test -c`
 *.test
+*gentxs
+*node*
+
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
@@ -19,9 +23,6 @@
 
 # ignore auto-generated files for code quality assurance
 .audit
-
-# ignore visual studio code local config
-.vscode
 
 # ignore visual studio code dev container config
 .devcontainer

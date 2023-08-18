@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authz "github.com/cosmos/cosmos-sdk/x/authz"
@@ -15,7 +16,7 @@ import (
 func TestWithdrawGrantValidateBasic(t *testing.T) {
 	tests := []struct {
 		name          string
-		withdrawLimit sdk.Int
+		withdrawLimit sdkmath.Int
 		expiration    time.Time
 		err           error
 	}{
@@ -39,7 +40,7 @@ func TestWithdrawGrantValidateBasic(t *testing.T) {
 				&types.WithdrawAuthorization{
 					WithdrawLimit: tt.withdrawLimit,
 				},
-				tt.expiration)
+				&tt.expiration)
 			require.NoError(t, err)
 
 			err = msgGrant.ValidateBasic()

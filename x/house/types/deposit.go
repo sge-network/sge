@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -8,7 +9,7 @@ import (
 // NewDeposit creates a new deposit object
 func NewDeposit(
 	creator, depositorAddress, marketUID string,
-	amount, totalAmount sdk.Int,
+	amount, totalAmount sdkmath.Int,
 	withdrawalCount uint64,
 ) Deposit {
 	return Deposit{
@@ -31,6 +32,6 @@ func (d *Deposit) String() string {
 }
 
 // CalcHouseParticipationFeeAmount sets participation fee amount for house
-func (d *Deposit) CalcHouseParticipationFeeAmount(feePercentage sdk.Dec) sdk.Int {
+func (d *Deposit) CalcHouseParticipationFeeAmount(feePercentage sdk.Dec) sdkmath.Int {
 	return feePercentage.MulInt(d.Amount).RoundInt()
 }

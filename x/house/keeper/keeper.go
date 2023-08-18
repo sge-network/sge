@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
 	"github.com/sge-network/sge/x/house/types"
@@ -10,7 +10,7 @@ import (
 
 // Keeper of the house store
 type Keeper struct {
-	storeKey        sdk.StoreKey
+	storeKey        storetypes.StoreKey
 	cdc             codec.BinaryCodec
 	paramstore      paramtypes.Subspace
 	authzKeeper     types.AuthzKeeper
@@ -26,7 +26,7 @@ type SdkExpectedKeepers struct {
 // NewKeeper returns an instance of the housekeeper
 func NewKeeper(
 	cdc codec.BinaryCodec,
-	key sdk.StoreKey,
+	key storetypes.StoreKey,
 	orderbookKeeper types.OrderbookKeeper,
 	ovmKeeper types.OVMKeeper,
 	ps paramtypes.Subspace,

@@ -44,7 +44,10 @@ func TestSampleCMD(t *testing.T) {
 	require.NoError(t, err)
 	defaultNodeHome := filepath.Join(userHomeDir, ".sge")
 
-	fields := []string{keyInfo.GetAddress().String(), "10000000usge"}
+	accAddr, err := keyInfo.GetAddress()
+	require.NoError(t, err)
+
+	fields := []string{accAddr.String(), "10000000usge"}
 	for _, tc := range []struct {
 		desc string
 		args []string

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -48,7 +49,7 @@ func CmdWithdraw() *cobra.Command {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
-			var argAmountCosmosInt sdk.Int
+			var argAmountCosmosInt sdkmath.Int
 			if mode == int64(types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")

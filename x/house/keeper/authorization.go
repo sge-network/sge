@@ -16,7 +16,7 @@ func (k Keeper) ValidateMsgAuthorization(
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid depositor address (%s)", err)
 	}
-	authorization, expiration := k.authzKeeper.GetCleanAuthorization(
+	authorization, expiration := k.authzKeeper.GetAuthorization(
 		ctx,
 		granteeAddr,
 		granterAddr,

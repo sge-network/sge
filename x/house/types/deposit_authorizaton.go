@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/authz"
@@ -9,7 +10,7 @@ import (
 var _ authz.Authorization = &DepositAuthorization{}
 
 // NewDepositAuthorization creates a new DepositAuthorization object.
-func NewDepositAuthorization(spendLimit sdk.Int) *DepositAuthorization {
+func NewDepositAuthorization(spendLimit sdkmath.Int) *DepositAuthorization {
 	return &DepositAuthorization{
 		SpendLimit: spendLimit,
 	}

@@ -3,13 +3,14 @@ package types
 import (
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 type OddsTypeI interface {
 	// CalculatePayout calculates total payout of a certain bet amount
-	CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error)
+	CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error)
 
 	// CalculateBetAmount calculates bet amount
 	CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error)
@@ -20,7 +21,7 @@ type OddsTypeI interface {
 type decimalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by decimal odds calculations
-func (*decimalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*decimalOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// decimal odds value should be sdk.Dec, so convert it directly
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
@@ -80,7 +81,7 @@ func (*decimalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sd
 type fractionalOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by fractional odds calculations
-func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	fraction := strings.Split(oddsVal, "/")
 
 	// the fraction should contain two parts such as (first part)/secondary)
@@ -111,12 +112,12 @@ func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec,
 	// calculate the coefficient by dividing sdk.Dec values of fraction parts
 	// this helps not to lost precision in the division and calculate the payout
 
-	profit := amount.ToDec().
+	profit := sdk.NewDecFromInt(amount).
 		// the coefficient
-		Mul(firstPart.ToDec()).
-		Quo(secondPart.ToDec())
+		Mul(sdk.NewDecFromInt(firstPart)).
+		Quo(sdk.NewDecFromInt(secondPart))
 
-	payout := amount.ToDec().Add(profit)
+	payout := sdk.NewDecFromInt(amount).Add(profit)
 
 	// get the integer part of the payout
 	return payout, nil
@@ -155,8 +156,8 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 	// this helps not to lost precision in the division and calculate the bet amount
 	betAmount := payoutProfit.
 		// the coefficient
-		Mul(secondPart.ToDec()).
-		Quo(firstPart.ToDec())
+		Mul(sdk.NewDecFromInt(secondPart)).
+		Quo(sdk.NewDecFromInt(firstPart))
 
 	// get the integer part of the bet amount
 	return betAmount, nil
@@ -167,7 +168,7 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 type moneylineOdds struct{}
 
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
-func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, error) {
+func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// moneyline odds value could be integer
 	oddsValue, ok := sdk.NewIntFromString(oddsVal)
 	if !ok {
@@ -185,17 +186,17 @@ func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdk.Int) (sdk.Dec, 
 	// calculate coefficient of the payout calculations by using sdk.Dec values of odds value
 	// we should extract absolute number to prevent negative payout
 	if oddsValue.IsPositive() {
-		profit = amount.ToDec().
-			Mul(oddsValue.ToDec()).
+		profit = sdk.NewDecFromInt(amount).
+			Mul(sdk.NewDecFromInt(oddsValue)).
 			Quo(sdk.NewDec(100)).Abs()
 	} else {
-		profit = amount.ToDec().
+		profit = sdk.NewDecFromInt(amount).
 			Mul(sdk.NewDec(100)).
 			QuoInt(oddsValue).Abs()
 	}
 
 	// bet amount should be multiplied by the coefficient
-	payout = amount.ToDec().Add(profit)
+	payout = sdk.NewDecFromInt(amount).Add(profit)
 
 	// get the integer part of the payout
 	return payout, nil
@@ -222,11 +223,11 @@ func (*moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (
 	if oddsValue.IsPositive() {
 		betAmount = payoutProfit.
 			Mul(sdk.NewDec(100)).
-			Quo(oddsValue.ToDec()).
+			Quo(sdk.NewDecFromInt(oddsValue)).
 			Abs()
 	} else {
 		betAmount = payoutProfit.
-			Mul(oddsValue.ToDec()).
+			Mul(sdk.NewDecFromInt(oddsValue)).
 			Quo(sdk.NewDec(100)).
 			Abs()
 	}

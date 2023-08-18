@@ -7,6 +7,7 @@ import (
 	//#nosec
 	"math/rand"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/sge-network/sge/x/bet/types"
@@ -32,12 +33,12 @@ func GenMaxBetByUIDQueryCount(r *rand.Rand) uint32 {
 }
 
 // GenMinAmount randomized min bet amount
-func GenMinAmount(r *rand.Rand) sdk.Int {
+func GenMinAmount(r *rand.Rand) sdkmath.Int {
 	return sdk.NewInt(int64(r.Intn(99)))
 }
 
 // GenFee randomized min bet fee
-func GenFee(r *rand.Rand) sdk.Int {
+func GenFee(r *rand.Rand) sdkmath.Int {
 	return sdk.NewInt(int64(r.Intn(99)))
 }
 
@@ -55,13 +56,13 @@ func RandomizedGenState(simState *module.SimulationState) {
 		func(r *rand.Rand) { maxBetByUIDQueryCount = GenMaxBetByUIDQueryCount(r) },
 	)
 
-	var minAmount sdk.Int
+	var minAmount sdkmath.Int
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, MinAmount, &minAmount, simState.Rand,
 		func(r *rand.Rand) { minAmount = GenMinAmount(r) },
 	)
 
-	var minBetFee sdk.Int
+	var minBetFee sdkmath.Int
 	simState.AppParams.GetOrGenerate(
 		simState.Cdc, BetFee, &minBetFee, simState.Rand,
 		func(r *rand.Rand) { minBetFee = GenFee(r) },
