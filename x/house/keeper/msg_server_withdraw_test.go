@@ -38,11 +38,12 @@ func TestMsgServerWithdraw(t *testing.T) {
 	err := tApp.OrderbookKeeper.InitiateOrderBook(ctx, marketItem.UID, oddsUIDs)
 	require.NoError(t, err)
 
+	expTime := time.Now().Add(5 * time.Minute)
 	err = tApp.AuthzKeeper.SaveGrant(ctx,
 		creator.Address,
 		depositor.Address,
 		types.NewDepositAuthorization(sdk.NewInt(1000)),
-		time.Now().Add(5*time.Minute),
+		&expTime,
 	)
 	require.NoError(t, err)
 
@@ -108,15 +109,16 @@ func TestMsgServerWithdraw(t *testing.T) {
 
 	t.Run("success", func(t *testing.T) {
 		grantAmount := sdk.NewInt(1000)
+		expTime := time.Now().Add(5 * time.Minute)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
 			creator.Address,
 			depositor.Address,
 			types.NewWithdrawAuthorization(grantAmount),
-			time.Now().Add(5*time.Minute),
+			&expTime,
 		)
 		require.NoError(t, err)
 
-		authzBefore, _ := tApp.AuthzKeeper.GetCleanAuthorization(
+		authzBefore, _ := tApp.AuthzKeeper.GetAuthorization(
 			ctx,
 			creator.Address,
 			depositor.Address,
@@ -154,7 +156,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, inputWithdraw.ParticipationIndex, rst[0].ParticipationIndex)
 
-		authzAfter, _ := tApp.AuthzKeeper.GetCleanAuthorization(ctx,
+		authzAfter, _ := tApp.AuthzKeeper.GetAuthorization(ctx,
 			creator.Address,
 			depositor.Address,
 			sdk.MsgTypeURL(&types.MsgWithdraw{}),

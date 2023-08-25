@@ -116,15 +116,17 @@ func TestMsgServerDeposit(t *testing.T) {
 
 	t.Run("success with authorization", func(t *testing.T) {
 		grantAmount := sdk.NewInt(1000)
+
+		expTime := time.Now().Add(5 * time.Minute)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
 			creator.Address,
 			depositor.Address,
 			types.NewDepositAuthorization(grantAmount),
-			time.Now().Add(5*time.Minute),
+			&expTime,
 		)
 		require.NoError(t, err)
 
-		authzBefore, _ := tApp.AuthzKeeper.GetCleanAuthorization(
+		authzBefore, _ := tApp.AuthzKeeper.GetAuthorization(
 			ctx,
 			creator.Address,
 			depositor.Address,
@@ -172,7 +174,7 @@ func TestMsgServerDeposit(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, inputDeposit.Amount, participation.Liquidity.Add(participation.Fee))
 
-		authzAfter, _ := tApp.AuthzKeeper.GetCleanAuthorization(ctx,
+		authzAfter, _ := tApp.AuthzKeeper.GetAuthorization(ctx,
 			creator.Address,
 			depositor.Address,
 			sdk.MsgTypeURL(&types.MsgDeposit{}),

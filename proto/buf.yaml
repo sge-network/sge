@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/osmosis-labs/osmosis
+name: buf.build/sge-network/sge
 deps:
   - buf.build/cosmos/cosmos-sdk
   - buf.build/cosmos/cosmos-proto

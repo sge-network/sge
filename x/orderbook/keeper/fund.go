@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -16,7 +17,7 @@ func (k *Keeper) fund(
 	mf iModuleFunder,
 	ctx sdk.Context,
 	senderAcc sdk.AccAddress,
-	amount sdk.Int,
+	amount sdkmath.Int,
 ) error {
 	mAcc := mf.GetModuleAcc()
 
@@ -47,7 +48,7 @@ func (k *Keeper) refund(
 	mf iModuleFunder,
 	ctx sdk.Context,
 	receiverAcc sdk.AccAddress,
-	amount sdk.Int,
+	amount sdkmath.Int,
 ) error {
 	mAcc := mf.GetModuleAcc()
 	// Get the balance of the sender module account

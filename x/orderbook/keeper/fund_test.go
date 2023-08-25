@@ -3,11 +3,13 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/app/params"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestFund(t *testing.T) {
@@ -19,7 +21,7 @@ func TestFund(t *testing.T) {
 
 	for _, tc := range []struct {
 		desc   string
-		amount sdk.Int
+		amount sdkmath.Int
 
 		err error
 	}{
@@ -69,7 +71,7 @@ func TestReFund(t *testing.T) {
 
 	for _, tc := range []struct {
 		desc   string
-		amount sdk.Int
+		amount sdkmath.Int
 
 		err error
 	}{

@@ -3,6 +3,7 @@ package types
 import (
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	yaml "gopkg.in/yaml.v2"
@@ -28,7 +29,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minDeposit sdk.Int, houseParticipationFee sdk.Dec) Params {
+func NewParams(minDeposit sdkmath.Int, houseParticipationFee sdk.Dec) Params {
 	return Params{
 		MinDeposit:            minDeposit,
 		HouseParticipationFee: houseParticipationFee,
@@ -79,7 +80,7 @@ func (p Params) Validate() error {
 
 // validateMinimumDeposit performs a minimum acceptable deposit validation
 func validateMinimumDeposit(i interface{}) error {
-	v, ok := i.(sdk.Int)
+	v, ok := i.(sdkmath.Int)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}

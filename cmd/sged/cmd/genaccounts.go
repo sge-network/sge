@@ -54,6 +54,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 				args[0],
 				args[1],
 				clientCtx.HomeDir,
+				clientCtx,
 			)
 			if err != nil {
 				return err
@@ -104,7 +105,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 	return cmd
 }
 
-func getAccountAddress(cmd *cobra.Command, address string, homeDir string) (sdk.AccAddress, error) {
+func getAccountAddress(cmd *cobra.Command, address string, homeDir string, clientCtx client.Context) (sdk.AccAddress, error) {
 	addr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
 		inBuf := bufio.NewReader(cmd.InOrStdin())
@@ -114,7 +115,7 @@ func getAccountAddress(cmd *cobra.Command, address string, homeDir string) (sdk.
 		}
 
 		// attempt to lookup address from Keybase if no address was provided
-		kb, err := keyring.New(sdk.KeyringServiceName(), keyringBackend, homeDir, inBuf)
+		kb, err := keyring.New(sdk.KeyringServiceName(), keyringBackend, homeDir, inBuf, clientCtx.Codec)
 		if err != nil {
 			return sdk.AccAddress{}, err
 		}
@@ -124,7 +125,10 @@ func getAccountAddress(cmd *cobra.Command, address string, homeDir string) (sdk.
 			return sdk.AccAddress{}, fmt.Errorf(errTextGettingAddressFromKeybaseFailed, err)
 		}
 
-		addr = info.GetAddress()
+		addr, err = info.GetAddress()
+		if err != nil {
+			return sdk.AccAddress{}, fmt.Errorf(errTextGettingAddressFromInfoFailed, err)
+		}
 	}
 	return addr, nil
 }
@@ -133,13 +137,14 @@ func getAccountAddressAndBalances(cmd *cobra.Command,
 	addressOrKeyName,
 	coins,
 	homeDir string,
+	clientCtx client.Context,
 ) (
 	sdk.AccAddress,
 	authtypes.GenesisAccount,
 	banktypes.Balance,
 	error,
 ) {
-	addr, err := getAccountAddress(cmd, addressOrKeyName, homeDir)
+	addr, err := getAccountAddress(cmd, addressOrKeyName, homeDir, clientCtx)
 	if err != nil {
 		return sdk.AccAddress{}, nil, banktypes.Balance{}, err
 	}

@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
@@ -60,7 +61,8 @@ func (app *SgeApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 	app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
 		_, err := app.DistrKeeper.WithdrawValidatorCommission(ctx, val.GetOperator())
 		if err != nil {
-			panic(err)
+			log := app.DistrKeeper.Logger(ctx)
+			log.Error(fmt.Sprintf("withdraw validator commission: %v", err))
 		}
 		return false
 	})
@@ -86,7 +88,9 @@ func (app *SgeApp) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []
 		feePool.CommunityPool = feePool.CommunityPool.Add(scraps...)
 		app.DistrKeeper.SetFeePool(ctx, feePool)
 
-		app.DistrKeeper.Hooks().AfterValidatorCreated(ctx, val.GetOperator())
+		if err := app.DistrKeeper.Hooks().AfterValidatorCreated(ctx, val.GetOperator()); err != nil {
+			panic(err)
+		}
 		return false
 	})
 
@@ -127,8 +131,12 @@ func (app *SgeApp) reInitializeAllDelegators(ctx sdk.Context, dels stakingtypes.
 		if err != nil {
 			panic(err)
 		}
-		app.DistrKeeper.Hooks().BeforeDelegationCreated(ctx, delAddr, valAddr)
-		app.DistrKeeper.Hooks().AfterDelegationModified(ctx, delAddr, valAddr)
+		if err := app.DistrKeeper.Hooks().BeforeDelegationCreated(ctx, delAddr, valAddr); err != nil {
+			panic(err)
+		}
+		if err := app.DistrKeeper.Hooks().AfterDelegationModified(ctx, delAddr, valAddr); err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -215,7 +223,7 @@ func (app *SgeApp) resetValidatorsBondHeights(
 	counter := int16(0)
 
 	for ; iter.Valid(); iter.Next() {
-		addr := sdk.ValAddress(iter.Key()[1:])
+		addr := sdk.ValAddress(stakingtypes.AddressFromValidatorsKey(iter.Key()))
 		validator, found := app.StakingKeeper.GetValidator(ctx, addr)
 		if !found {
 			panic("expected validator, not found")

@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/house/types"
@@ -18,7 +19,7 @@ func (k Keeper) SetParams(ctx sdk.Context, params types.Params) {
 }
 
 // GetMinAllowedDepositAmount returns minimum acceptable deposit amount.
-func (k Keeper) GetMinAllowedDepositAmount(ctx sdk.Context) (res sdk.Int) {
+func (k Keeper) GetMinAllowedDepositAmount(ctx sdk.Context) (res sdkmath.Int) {
 	return k.GetParams(ctx).MinDeposit
 }
 

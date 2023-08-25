@@ -25,6 +25,8 @@ import (
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
 	"github.com/cosmos/cosmos-sdk/x/gov"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	"github.com/cosmos/cosmos-sdk/x/group"
+	groupmodule "github.com/cosmos/cosmos-sdk/x/group/module"
 	"github.com/cosmos/cosmos-sdk/x/params"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/cosmos/cosmos-sdk/x/slashing"
@@ -33,12 +35,14 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
-	icatypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/types"
-	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
-	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	ibc "github.com/cosmos/ibc-go/v4/modules/core"
-	ibchost "github.com/cosmos/ibc-go/v4/modules/core/24-host"
+	ica "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts"
+	icatypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/types"
+	ibcfee "github.com/cosmos/ibc-go/v5/modules/apps/29-fee"
+	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
+	"github.com/cosmos/ibc-go/v5/modules/apps/transfer"
+	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v5/modules/core"
+	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint"
 	minttypes "github.com/sge-network/sge/x/mint/types"
@@ -66,27 +70,19 @@ import (
 
 // module account permissions
 var mAccPerms = map[string][]string{
-	authtypes.FeeCollectorName: nil,
-	distrtypes.ModuleName:      nil,
-	icatypes.ModuleName:        nil,
-	minttypes.ModuleName: {
-		authtypes.Minter,
-	},
-	stakingtypes.BondedPoolName: {
-		authtypes.Burner,
-		authtypes.Staking,
-	},
-	stakingtypes.NotBondedPoolName: {
-		authtypes.Burner,
-		authtypes.Staking,
-	},
-	govtypes.ModuleName: {
-		authtypes.Burner,
-	},
-	ibctransfertypes.ModuleName: {
-		authtypes.Minter,
-		authtypes.Burner,
-	},
+	authtypes.FeeCollectorName:     nil,
+	distrtypes.ModuleName:          nil,
+	minttypes.ModuleName:           {authtypes.Minter},
+	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
+	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
+	govtypes.ModuleName:            {authtypes.Burner},
+
+	// ibc
+	ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
+	ibcfeetypes.ModuleName:      nil,
+	icatypes.ModuleName:         nil,
+
+	// sge
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
 	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():      nil,
 	orderbookmoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
@@ -103,18 +99,22 @@ var ModuleBasics = module.NewBasicManager(
 	staking.AppModuleBasic{},
 	mint.AppModuleBasic{},
 	distr.AppModuleBasic{},
-	gov.NewAppModuleBasic(getGovProposalHandlers()...),
+	gov.NewAppModuleBasic(getGovProposalHandlers()),
 	params.AppModuleBasic{},
 	crisis.AppModuleBasic{},
 	slashing.AppModuleBasic{},
 	feegrantmodule.AppModuleBasic{},
 	authzmodule.AppModuleBasic{},
+	groupmodule.AppModuleBasic{},
 	ibc.AppModuleBasic{},
 	upgrade.AppModuleBasic{},
 	evidence.AppModuleBasic{},
 	transfer.AppModuleBasic{},
 	vesting.AppModuleBasic{},
 	ica.AppModuleBasic{},
+	ibcfee.AppModuleBasic{},
+
+	// sge
 	betmodule.AppModuleBasic{},
 	marketmodule.AppModuleBasic{},
 	orderbookmodule.AppModuleBasic{},
@@ -175,9 +175,16 @@ func appModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
-		ibc.NewAppModule(app.IBCKeeper),
+		groupmodule.NewAppModule(appCodec,
+			app.GroupKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.interfaceRegistry,
+		),
+		app.IBCModule,
 		params.NewAppModule(app.ParamsKeeper),
 		app.TransferModule,
+		app.IBCFeeModule,
 		app.ICAModule,
 
 		app.BetModule,
@@ -236,7 +243,13 @@ func simulationModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
-		ibc.NewAppModule(app.IBCKeeper),
+		groupmodule.NewAppModule(appCodec,
+			app.GroupKeeper,
+			app.AccountKeeper,
+			app.BankKeeper,
+			app.interfaceRegistry,
+		),
+		app.IBCModule,
 		app.TransferModule,
 
 		app.BetModule,
@@ -257,18 +270,20 @@ func orderBeginBlockers() []string {
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		ibchost.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		govtypes.ModuleName,
 		crisistypes.ModuleName,
-		ibctransfertypes.ModuleName,
-		ibchost.ModuleName,
-		icatypes.ModuleName,
 		genutiltypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
+		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -283,9 +298,8 @@ func orderEndBlockers() []string {
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
-		ibctransfertypes.ModuleName,
 		ibchost.ModuleName,
-		icatypes.ModuleName,
+		ibctransfertypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -296,9 +310,12 @@ func orderEndBlockers() []string {
 		evidencetypes.ModuleName,
 		authz.ModuleName,
 		feegrant.ModuleName,
+		group.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -311,21 +328,23 @@ func orderEndBlockers() []string {
 func orderInitBlockers() []string {
 	return []string{
 		capabilitytypes.ModuleName,
+		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
 		minttypes.ModuleName,
+		ibchost.ModuleName,
+		genutiltypes.ModuleName,
+		evidencetypes.ModuleName,
+		authz.ModuleName,
+		feegrant.ModuleName,
+		group.ModuleName,
 		crisistypes.ModuleName,
 		ibctransfertypes.ModuleName,
-		ibchost.ModuleName,
 		icatypes.ModuleName,
-		evidencetypes.ModuleName,
-		feegrant.ModuleName,
-		authz.ModuleName,
-		authtypes.ModuleName,
-		genutiltypes.ModuleName,
+		ibcfeetypes.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,

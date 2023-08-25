@@ -3,6 +3,8 @@ package keeper
 import (
 	"fmt"
 
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+
 	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
@@ -14,8 +16,8 @@ import (
 // Keeper is the type for module properties
 type Keeper struct {
 	cdc             codec.BinaryCodec
-	storeKey        sdk.StoreKey
-	memKey          sdk.StoreKey
+	storeKey        storetypes.StoreKey
+	memKey          storetypes.StoreKey
 	paramStore      paramtypes.Subspace
 	ovmKeeper       types.OVMKeeper
 	orderbookKeeper types.OrderbookKeeper
@@ -25,7 +27,7 @@ type Keeper struct {
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
-	memKey sdk.StoreKey,
+	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
 ) *Keeper {
 	// set KeyTable if it has not already been set

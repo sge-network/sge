@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -33,7 +34,7 @@ func (boe OrderBookOddsExposure) String() string {
 //nolint:interface
 func NewParticipationExposure(
 	orderBookUID, oddsUID string,
-	exposure, betAmount sdk.Int,
+	exposure, betAmount sdkmath.Int,
 	participationIndex, round uint64,
 	isFulfilled bool,
 ) ParticipationExposure {
@@ -72,12 +73,12 @@ func (pe ParticipationExposure) String() string {
 
 // CalculateMaxLoss calculates the maximum amount of loss for an exposure
 // according to the bet amount.
-func (pe ParticipationExposure) CalculateMaxLoss(totalBetAmount sdk.Int) sdk.Int {
+func (pe ParticipationExposure) CalculateMaxLoss(totalBetAmount sdkmath.Int) sdkmath.Int {
 	return pe.Exposure.Add(pe.BetAmount).Sub(totalBetAmount)
 }
 
 // SetCurrentRound sets the current round bet amount and payout profit.
-func (pe *ParticipationExposure) SetCurrentRound(betAmount, payoutProfit sdk.Int) {
+func (pe *ParticipationExposure) SetCurrentRound(betAmount, payoutProfit sdkmath.Int) {
 	// add the payout profit to the
 	pe.Exposure = pe.Exposure.Add(payoutProfit)
 

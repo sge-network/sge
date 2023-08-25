@@ -6,6 +6,7 @@ import (
 	"math/big"
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/sge-network/sge/app/params"
@@ -104,7 +105,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(mintDenom string, blocksPerYear int64, excludeAmount sdk.Int, phases []Phase) Params {
+func NewParams(mintDenom string, blocksPerYear int64, excludeAmount sdkmath.Int, phases []Phase) Params {
 	return Params{
 		MintDenom:     mintDenom,
 		BlocksPerYear: blocksPerYear,
@@ -237,7 +238,7 @@ func validateMintDenom(i interface{}) error {
 }
 
 func validateExcludeAmount(i interface{}) error {
-	v, ok := i.(sdk.Int)
+	v, ok := i.(sdkmath.Int)
 	if !ok {
 		return fmt.Errorf(ErrTextInvalidParamType, i)
 	}

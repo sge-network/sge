@@ -3,6 +3,7 @@ package types
 import (
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -14,7 +15,7 @@ const typeMsgWithdraw = "house_withdraw"
 var _ sdk.Msg = &MsgWithdraw{}
 
 // NewMsgWithdraw creates the new input for withdrawal of a deposit
-func NewMsgWithdraw(creator string, marketUID string, amount sdk.Int,
+func NewMsgWithdraw(creator string, marketUID string, amount sdkmath.Int,
 	participationIndex uint64, mode WithdrawalMode, ticket string,
 ) *MsgWithdraw {
 	return &MsgWithdraw{

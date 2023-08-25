@@ -62,29 +62,6 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 	return &TestApp{SgeApp: *appInstance}, app.GenesisState{}
 }
 
-// Setup initializes genesis the same as simapp
-func Setup(isCheckTx bool) *TestApp {
-	app, genesisState := setup(!isCheckTx, 5)
-	if !isCheckTx {
-		// init chain must be called to stop deliverState from being nil
-		stateBytes, err := json.MarshalIndent(genesisState, "", " ")
-		if err != nil {
-			panic(err)
-		}
-
-		// Initialize the chain
-		app.InitChain(
-			abci.RequestInitChain{
-				Validators:      []abci.ValidatorUpdate{},
-				ConsensusParams: DefaultConsensusParams,
-				AppStateBytes:   stateBytes,
-			},
-		)
-	}
-
-	return app
-}
-
 // SetupWithGenesisAccounts sets up the genesis accounts for testing
 func SetupWithGenesisAccounts(
 	genAccs []authtypes.GenesisAccount,
@@ -146,7 +123,10 @@ func SetupWithGenesisAccounts(
 
 	appInstance.Commit()
 	appInstance.BeginBlock(
-		abci.RequestBeginBlock{Header: tmproto.Header{Height: appInstance.LastBlockHeight() + 1}},
+		abci.RequestBeginBlock{Header: tmproto.Header{
+			Height:  appInstance.LastBlockHeight() + 1,
+			AppHash: appInstance.LastCommitID().Hash,
+		}},
 	)
 
 	return appInstance
@@ -318,7 +298,7 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk0,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower1,
-		DelegatorShares: valPower1.ToDec(),
+		DelegatorShares: sdk.NewDecFromInt(valPower1),
 		Description:     stakingtypes.NewDescription("hoop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
 			sdk.NewDecWithPrec(5, 1),
@@ -331,7 +311,7 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk1,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower2,
-		DelegatorShares: valPower2.ToDec(),
+		DelegatorShares: sdk.NewDecFromInt(valPower2),
 		Description:     stakingtypes.NewDescription("bloop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
 			sdk.NewDecWithPrec(5, 1),

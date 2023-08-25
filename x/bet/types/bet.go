@@ -1,7 +1,7 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -22,7 +22,7 @@ func NewSettledBet(uid, bettorAddress string) *SettledBet {
 func NewBetFulfillment(
 	participantAddress string,
 	participationIndex uint64,
-	betAmount, payoutProfit sdk.Int,
+	betAmount, payoutProfit sdkmath.Int,
 ) *BetFulfillment {
 	return &BetFulfillment{
 		ParticipantAddress: participantAddress,
@@ -74,7 +74,7 @@ func (bet *Bet) SetResult(market *markettypes.Market) error {
 }
 
 // SetFee calculates and sets the betting fee.
-func (bet *Bet) SetFee(fee sdk.Int) {
+func (bet *Bet) SetFee(fee sdkmath.Int) {
 	bet.Amount = bet.Amount.Sub(fee)
 	bet.Fee = fee
 }

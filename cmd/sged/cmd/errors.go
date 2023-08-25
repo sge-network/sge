@@ -7,6 +7,7 @@ const (
 	errTextBlankGenesisUnmarshalFailed     = "failed to marshal bank genesis state: %w"
 	errTextApplicationGenesisMarshalFailed = "failed to marshal application genesis state: %w"
 	errTextGettingAddressFromKeybaseFailed = "failed to get address from Keybase: %w"
+	errTextGettingAddressFromInfoFailed    = "failed to get address from info: %w"
 	errTextCoinsParsingFailed              = "failed to parse coins: %w"
 	errTextGetAccountFromAnyFailed         = "failed to get accounts from any: %w"
 	errTextCannotAddExistingAddress        = "cannot add account at existing address %s"

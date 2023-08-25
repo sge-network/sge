@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/nullify"
@@ -204,11 +205,11 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 	for _, tc := range []struct {
 		desc           string
 		depositorAddr  sdk.AccAddress
-		depositAmount  sdk.Int
+		depositAmount  sdkmath.Int
 		withdrawMode   housetypes.WithdrawalMode
-		withdrawAmount sdk.Int
+		withdrawAmount sdkmath.Int
 
-		expWithdrawnAmount sdk.Int
+		expWithdrawnAmount sdkmath.Int
 		err                error
 	}{
 		{

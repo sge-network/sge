@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	housetypes "github.com/sge-network/sge/x/house/types"
@@ -15,9 +16,9 @@ func NewOrderBookParticipation(
 	orderBookUID string,
 	participantAddress string,
 	exposuresNotFilled uint64,
-	liquidity, fee, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdk.Int,
+	liquidity, fee, currentRoundLiquidity, totalBetAmount, currentRoundTotalBetAmount, maxLoss, currentRoundMaxLoss sdkmath.Int,
 	currentRoundMaxLossOddsUID string,
-	actualProfit sdk.Int,
+	actualProfit sdkmath.Int,
 ) OrderBookParticipation {
 	return OrderBookParticipation{
 		Index:                      index,
@@ -47,7 +48,7 @@ func (p OrderBookParticipation) String() string {
 
 // CalculateMaxLoss calculates the maxixmum amount of the tokens expected to be the
 // loss of the participation according to the bet amount
-func (p OrderBookParticipation) CalculateMaxLoss(betAmount sdk.Int) sdk.Int {
+func (p OrderBookParticipation) CalculateMaxLoss(betAmount sdkmath.Int) sdkmath.Int {
 	return p.CurrentRoundMaxLoss.Sub(betAmount)
 }
 
@@ -74,7 +75,7 @@ func (p *OrderBookParticipation) ValidateWithdraw(
 }
 
 // maxWithdrawalAmount returns the max withdrawal amount of a participation.
-func (p *OrderBookParticipation) maxWithdrawalAmount() sdk.Int {
+func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
 	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
 }
 
@@ -87,16 +88,16 @@ func (p *OrderBookParticipation) IsWithdrawable() bool {
 // WithdrawableAmount returns the withdrawal amount according to the withdrawal mode and max withdrawable amount.
 func (p *OrderBookParticipation) WithdrawableAmount(
 	mode housetypes.WithdrawalMode,
-	amount sdk.Int,
-) (sdk.Int, error) {
+	amount sdkmath.Int,
+) (sdkmath.Int, error) {
 	// Calculate max amount that can be transferred
 	maxTransferableAmount := p.maxWithdrawalAmount()
 
-	var withdrawalAmt sdk.Int
+	var withdrawalAmt sdkmath.Int
 	switch mode {
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
 		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
-			return sdk.Int{}, sdkerrors.Wrapf(
+			return sdkmath.Int{}, sdkerrors.Wrapf(
 				ErrMaxWithdrawableAmountIsZero,
 				"%d, %d",
 				p.CurrentRoundLiquidity,
@@ -106,7 +107,7 @@ func (p *OrderBookParticipation) WithdrawableAmount(
 		withdrawalAmt = maxTransferableAmount
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL:
 		if maxTransferableAmount.LT(amount) {
-			return sdk.Int{}, sdkerrors.Wrapf(
+			return sdkmath.Int{}, sdkerrors.Wrapf(
 				ErrWithdrawalAmountIsTooLarge,
 				": got %s, max %s",
 				amount,
@@ -115,14 +116,14 @@ func (p *OrderBookParticipation) WithdrawableAmount(
 		}
 		withdrawalAmt = amount
 	default:
-		return sdk.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
+		return sdkmath.Int{}, sdkerrors.Wrapf(housetypes.ErrInvalidMode, "%s", mode.String())
 	}
 
 	return withdrawalAmt, nil
 }
 
 // SetLiquidityAfterWithdrawal sets the liquidity props after withdrawal.
-func (p *OrderBookParticipation) SetLiquidityAfterWithdrawal(withdrawalAmt sdk.Int) {
+func (p *OrderBookParticipation) SetLiquidityAfterWithdrawal(withdrawalAmt sdkmath.Int) {
 	p.CurrentRoundLiquidity = p.CurrentRoundLiquidity.Sub(withdrawalAmt)
 	p.Liquidity = p.Liquidity.Sub(withdrawalAmt)
 }
@@ -159,7 +160,7 @@ func (p *OrderBookParticipation) ResetForNextRound(notFilledExposures uint64) {
 func (p *OrderBookParticipation) SetCurrentRound(
 	pe *ParticipationExposure,
 	oddsUID string,
-	betAmount sdk.Int,
+	betAmount sdkmath.Int,
 ) {
 	p.TotalBetAmount = p.TotalBetAmount.Add(betAmount)
 	p.CurrentRoundTotalBetAmount = p.CurrentRoundTotalBetAmount.Add(betAmount)
@@ -170,7 +171,7 @@ func (p *OrderBookParticipation) SetCurrentRound(
 func (p *OrderBookParticipation) setMaxLoss(
 	pe *ParticipationExposure,
 	oddsUID string,
-	betAmount sdk.Int,
+	betAmount sdkmath.Int,
 ) {
 	// max loss is the maximum amount that an exposure may lose.
 	maxLoss := pe.CalculateMaxLoss(p.CurrentRoundTotalBetAmount)
