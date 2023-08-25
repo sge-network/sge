@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -28,7 +28,7 @@ func TestMsgServer(t *testing.T) {
 	// do subaccount creation
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
@@ -51,7 +51,7 @@ func TestMsgServer(t *testing.T) {
 	// fund a bettor
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			bettor1,
@@ -76,7 +76,7 @@ func TestMsgServer(t *testing.T) {
 	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds))
 	require.NoError(t, err)
 
-	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(deposit.ToDec()).TruncateInt()
+	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()
 	bettorFee := sdk.NewInt(100)
 
 	t.Run("house wins", func(t *testing.T) {
@@ -122,7 +122,7 @@ func TestMsgServer(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, subBalance.SpentAmount.String(), sdk.ZeroInt().Add(participateFee).String())
-		require.Equal(t, subBalance.LostAmount, bettor1Funds.Sub(bettorFee).ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
+		require.Equal(t, subBalance.LostAmount, sdk.NewDecFromInt(bettor1Funds.Sub(bettorFee)).Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
@@ -201,7 +201,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	// do subaccount creation
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
@@ -224,7 +224,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	// fund a bettor
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			bettor1,

@@ -4,8 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/sample"
@@ -51,7 +52,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	// do subaccount creation
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
@@ -112,7 +113,7 @@ func TestMsgServer_Bet(t *testing.T) {
 			sdk.NewCoins(
 				sdk.NewCoin(
 					k.GetParams(ctx).LockedBalanceDenom,
-					betAmt.Sub(betFees).ToDec().Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
+					math.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(math.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
 				)),
 			ownerBalance,
 		)
@@ -188,7 +189,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 
 	if prefund {
 		// add liquidity
-		err = simapp.FundAccount(
+		err = testutil.FundAccount(
 			tApp.BankKeeper,
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,

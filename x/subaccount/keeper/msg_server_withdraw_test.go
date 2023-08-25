@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -21,7 +21,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
 	t.Log("fund sender account")
-	err := simapp.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
+	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
 	require.NoError(t, err)
 
 	t.Log("Create sub account")

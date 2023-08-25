@@ -2,7 +2,7 @@ package keeper
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -10,7 +10,7 @@ import (
 
 type Keeper struct {
 	cdc        codec.Codec
-	storeKey   sdk.StoreKey
+	storeKey   storetypes.StoreKey
 	paramstore paramtypes.Subspace
 
 	accountKeeper types.AccountKeeper
@@ -23,7 +23,7 @@ type Keeper struct {
 
 func NewKeeper(
 	cdc codec.Codec,
-	storeKey sdk.StoreKey,
+	storeKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
 	accountKeeper types.AccountKeeper,
 	bankKeeper types.BankKeeper,

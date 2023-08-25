@@ -85,10 +85,12 @@ func (k Keeper) BettorWins(
 // adds the bet amount to the actual profit of the participation
 // for each of the bet fulfillment records and,
 // removes the payout lock.
-func (k Keeper) BettorLoses(ctx sdk.Context, _ sdk.AccAddress,
+func (k Keeper) BettorLoses(
+	ctx sdk.Context,
+	bettorAddress sdk.AccAddress,
 	betAmount sdkmath.Int,
 	_ sdkmath.Int,
-	address string,
+	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {
@@ -117,7 +119,7 @@ func (k Keeper) BettorLoses(ctx sdk.Context, _ sdk.AccAddress,
 	}
 
 	for _, h := range k.hooks {
-		h.AfterBettorLoss(ctx, address, betAmount)
+		h.AfterBettorLoss(ctx, bettorAddress, betAmount)
 	}
 
 	return nil

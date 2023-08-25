@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ func TestQueryServer(t *testing.T) {
 	// do subaccount creation
 	require.NoError(
 		t,
-		simapp.FundAccount(
+		testutil.FundAccount(
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
