@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -34,7 +35,7 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 			panic(err)
 		}
 
-		amount := new(sdk.Int)
+		amount := new(math.Int)
 		err = amount.Unmarshal(iterator.Value())
 		if err != nil {
 			panic(err)
@@ -49,7 +50,7 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 }
 
 // GetUnlockedBalance returns the unlocked balance of an account.
-func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) sdk.Int {
+func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) math.Int {
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).
 		Iterator(nil, sdk.FormatTimeBytes(ctx.BlockTime()))
 
@@ -57,7 +58,7 @@ func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAdd
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		amount := new(sdk.Int)
+		amount := new(math.Int)
 		err := amount.Unmarshal(iterator.Value())
 		if err != nil {
 			panic(err)
@@ -91,7 +92,7 @@ func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (t
 }
 
 // getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress, params types.Params) (types.Balance, sdk.Int, sdk.Coin) {
+func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress, params types.Params) (types.Balance, math.Int, sdk.Coin) {
 	balance, exists := k.GetBalance(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")

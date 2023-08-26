@@ -3,6 +3,7 @@ package keeper
 import (
 	"context"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	housetypes "github.com/sge-network/sge/x/house/types"
@@ -116,24 +117,24 @@ func (m msgServer) HouseWithdraw(goCtx context.Context, withdraw *types.MsgHouse
 	}, nil
 }
 
-func (m msgServer) houseWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, subAccAddr sdk.AccAddress) (sdk.Int, *housetypes.MsgWithdrawResponse, error) {
+func (m msgServer) houseWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, subAccAddr sdk.AccAddress) (math.Int, *housetypes.MsgWithdrawResponse, error) {
 	var payload housetypes.WithdrawTicketPayload
 	if err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload); err != nil {
-		return sdk.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
+		return math.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
 	}
 
 	if payload.DepositorAddress != "" {
-		return sdk.Int{}, nil, status.Errorf(codes.InvalidArgument, "in subaccount the depositor address must be empty")
+		return math.Int{}, nil, status.Errorf(codes.InvalidArgument, "in subaccount the depositor address must be empty")
 	}
 
 	if err := payload.Validate(msg.Creator); err != nil {
-		return sdk.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketPayloadValidation, "%s", err)
+		return math.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketPayloadValidation, "%s", err)
 	}
 
 	// Get the deposit object
 	deposit, found := m.keeper.houseKeeper.GetDeposit(ctx, subAccAddr.String(), msg.MarketUID, msg.ParticipationIndex)
 	if !found {
-		return sdk.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrDepositNotFound, ": %s, %d", msg.MarketUID, msg.ParticipationIndex)
+		return math.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrDepositNotFound, ": %s, %d", msg.MarketUID, msg.ParticipationIndex)
 	}
 
 	withdrawable, err := m.keeper.obKeeper.CalcWithdrawalAmount(ctx,
@@ -145,13 +146,13 @@ func (m msgServer) houseWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, s
 		msg.Amount,
 	)
 	if err != nil {
-		return sdk.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
+		return math.Int{}, nil, sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
 	}
 
 	id, err := m.keeper.houseKeeper.Withdraw(ctx, deposit, msg.Creator, subAccAddr.String(), msg.MarketUID,
 		msg.ParticipationIndex, msg.Mode, withdrawable)
 	if err != nil {
-		return sdk.Int{}, nil, sdkerrors.Wrap(err, "process withdrawal")
+		return math.Int{}, nil, sdkerrors.Wrap(err, "process withdrawal")
 	}
 
 	msg.EmitEvent(&ctx, subAccAddr.String(), id)

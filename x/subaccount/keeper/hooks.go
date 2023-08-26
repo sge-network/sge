@@ -1,13 +1,14 @@
 package keeper
 
 import (
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
 
 var _ orderbookmodulekeeper.Hook = Keeper{}
 
-func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount sdk.Int, profit sdk.Int) {
+func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int, profit math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
 		return
@@ -28,7 +29,7 @@ func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalA
 	k.SetBalance(ctx, bettor, balance)
 }
 
-func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount sdk.Int) {
+func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
 		return
@@ -44,7 +45,7 @@ func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, original
 	k.SetBalance(ctx, bettor, balance)
 }
 
-func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee sdk.Int) {
+func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
 		return
@@ -57,7 +58,7 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 	k.SetBalance(ctx, bettor, balance)
 }
 
-func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdk.Int) {
+func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit math.Int) {
 	// update balance
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
@@ -81,7 +82,7 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	}
 }
 
-func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int, lostAmt sdk.Int) {
+func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int, lostAmt math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return
@@ -99,7 +100,7 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 	k.SetBalance(ctx, house, balance)
 }
 
-func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int) {
+func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return
@@ -113,7 +114,7 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 	k.SetBalance(ctx, house, balance)
 }
 
-func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee sdk.Int) {
+func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return

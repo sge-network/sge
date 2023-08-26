@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/sge-network/sge/app/params"
@@ -119,7 +120,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: afterTime,
-						Amount:     sdk.Int{},
+						Amount:     math.Int{},
 					},
 				},
 			},

@@ -282,7 +282,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
 }
 
-func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdk.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
+func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt math.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
 	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       owner.String(),
@@ -306,7 +306,7 @@ func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdk.Int, partecipa
 	return inputWithdraw
 }
 
-func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdk.Int) *types.MsgHouseDeposit {
+func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt math.Int) *types.MsgHouseDeposit {
 	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       owner.String(),

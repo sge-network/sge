@@ -213,7 +213,7 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, better sdk.AccAddress, amount sdk.Int) *bettypes.MsgWager {
+func testBet(t testing.TB, better sdk.AccAddress, amount math.Int) *bettypes.MsgWager {
 	ticket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
