@@ -60,7 +60,7 @@ func (k Keeper) OrderBooks(
 	pageRes, err := query.FilteredPaginate(
 		bookStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			orderBook, err := types.UnmarshalOrderBook(k.cdc, value)
 			if err != nil {
 				return false, err

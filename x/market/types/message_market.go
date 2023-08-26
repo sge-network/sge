@@ -11,7 +11,7 @@ const typeMsgAdd = "market_add"
 var _ sdk.Msg = &MsgAdd{}
 
 // NewMsgAdd creates the new input for adding a market to blockchain
-func NewMsgAdd(creator string, ticket string) *MsgAdd {
+func NewMsgAdd(creator, ticket string) *MsgAdd {
 	return &MsgAdd{
 		Creator: creator,
 		Ticket:  ticket,

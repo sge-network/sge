@@ -70,7 +70,6 @@ import (
 	subaccountkeeper "github.com/sge-network/sge/x/subaccount/keeper"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
-
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"

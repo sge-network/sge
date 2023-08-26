@@ -105,7 +105,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 	return cmd
 }
 
-func getAccountAddress(cmd *cobra.Command, address string, homeDir string, clientCtx client.Context) (sdk.AccAddress, error) {
+func getAccountAddress(cmd *cobra.Command, address, homeDir string, clientCtx client.Context) (sdk.AccAddress, error) {
 	addr, err := sdk.AccAddressFromBech32(address)
 	if err != nil {
 		inBuf := bufio.NewReader(cmd.InOrStdin())

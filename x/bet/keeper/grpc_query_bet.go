@@ -30,7 +30,7 @@ func (k Keeper) Bets(c context.Context, req *types.QueryBetsRequest) (*types.Que
 
 	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListPrefix)
 
-	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(betStore, req.Pagination, func(key, value []byte) error {
 		var bet types.Bet
 		if err := k.cdc.Unmarshal(value, &bet); err != nil {
 			return err
@@ -60,7 +60,7 @@ func (k Keeper) BetsByCreator(
 
 	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorPrefix(req.Creator))
 
-	pageRes, err := query.Paginate(betStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(betStore, req.Pagination, func(key, value []byte) error {
 		var bet types.Bet
 		if err := k.cdc.Unmarshal(value, &bet); err != nil {
 			return err
@@ -151,7 +151,7 @@ func (k Keeper) PendingBets(
 	pageRes, err := query.Paginate(
 		pendingBetStore,
 		req.Pagination,
-		func(key []byte, value []byte) error {
+		func(key, value []byte) error {
 			var pendingBet types.PendingBet
 			if err := k.cdc.Unmarshal(value, &pendingBet); err != nil {
 				return err
@@ -195,7 +195,7 @@ func (k Keeper) SettledBetsOfHeight(
 	pageRes, err := query.Paginate(
 		settledBetStore,
 		req.Pagination,
-		func(key []byte, value []byte) error {
+		func(key, value []byte) error {
 			var settledBet types.SettledBet
 			if err := k.cdc.Unmarshal(value, &settledBet); err != nil {
 				return err

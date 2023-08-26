@@ -8,7 +8,7 @@ type Hook interface {
 	AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee sdk.Int)
 
 	AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdk.Int)
-	AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int, lostAmt sdk.Int)
+	AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt sdk.Int)
 	AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount sdk.Int)
 	AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee sdk.Int)
 }

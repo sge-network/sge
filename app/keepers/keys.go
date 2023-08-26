@@ -22,9 +22,9 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 
-	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"

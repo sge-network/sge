@@ -63,7 +63,7 @@ func (k Keeper) OrderBookExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var orderBookExposure types.OrderBookOddsExposure
 			if err := k.cdc.Unmarshal(value, &orderBookExposure); err != nil {
 				return false, err

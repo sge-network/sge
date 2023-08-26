@@ -25,7 +25,7 @@ func (k Keeper) Deposits(
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := k.getDepositStore(ctx)
-	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
 			return err
@@ -53,7 +53,7 @@ func (k Keeper) DepositsByAccount(c context.Context,
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(k.getDepositStore(ctx), types.GetDepositListPrefix(req.Address))
-	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
 			return err

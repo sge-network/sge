@@ -25,7 +25,7 @@ func (k Keeper) Markets(
 
 	marketStore := k.getMarketsStore(ctx)
 
-	pageRes, err := query.Paginate(marketStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(marketStore, req.Pagination, func(key, value []byte) error {
 		var market types.Market
 		if err := k.cdc.Unmarshal(value, &market); err != nil {
 			return err

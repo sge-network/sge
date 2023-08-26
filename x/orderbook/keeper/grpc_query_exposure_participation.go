@@ -35,7 +35,7 @@ func (k Keeper) OrderBookParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err
@@ -85,7 +85,7 @@ func (k Keeper) ParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err
@@ -129,7 +129,7 @@ func (k Keeper) HistoricalParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err

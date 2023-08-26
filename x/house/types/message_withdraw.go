@@ -15,7 +15,7 @@ const typeMsgWithdraw = "house_withdraw"
 var _ sdk.Msg = &MsgWithdraw{}
 
 // NewMsgWithdraw creates the new input for withdrawal of a deposit
-func NewMsgWithdraw(creator string, marketUID string, amount sdkmath.Int,
+func NewMsgWithdraw(creator, marketUID string, amount sdkmath.Int,
 	participationIndex uint64, mode WithdrawalMode, ticket string,
 ) *MsgWithdraw {
 	return &MsgWithdraw{

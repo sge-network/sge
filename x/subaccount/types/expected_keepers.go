@@ -19,7 +19,7 @@ type AccountKeeper interface {
 }
 
 type BankKeeper interface {
-	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
+	SendCoins(ctx sdk.Context, fromAddr, toAddr sdk.AccAddress, amt sdk.Coins) error
 	GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin
 }
 
@@ -27,7 +27,7 @@ type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
 	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdk.Int) (participationIndex uint64, err error)
 	GetDeposit(ctx sdk.Context, depositorAddr, marketUID string, participationIndex uint64) (housetypes.Deposit, bool)
-	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr string, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount sdk.Int) (uint64, error)
+	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount sdk.Int) (uint64, error)
 }
 
 type OrderBookKeeper interface {

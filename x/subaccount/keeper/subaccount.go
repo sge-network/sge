@@ -67,7 +67,7 @@ func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, s
 
 func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 	var subaccounts []types.GenesisSubaccount
-	k.IterateSubaccounts(ctx, func(subAccountAddress sdk.AccAddress, ownerAddress sdk.AccAddress) (stop bool) {
+	k.IterateSubaccounts(ctx, func(subAccountAddress, ownerAddress sdk.AccAddress) (stop bool) {
 		balance, exists := k.GetBalance(ctx, subAccountAddress)
 		if !exists {
 			panic("subaccount balance does not exist")
@@ -85,7 +85,7 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 }
 
 // sendCoinsToSubaccount sends the coins to the subaccount.
-func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount sdk.AccAddress, subAccountAddress sdk.AccAddress, moneyToSend math.Int) error {
+func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount, subAccountAddress sdk.AccAddress, moneyToSend math.Int) error {
 	denom := k.GetParams(ctx).LockedBalanceDenom
 	err := k.bankKeeper.SendCoins(ctx, senderAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
 	if err != nil {

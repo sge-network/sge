@@ -8,7 +8,7 @@ import (
 
 var _ orderbookmodulekeeper.Hook = Keeper{}
 
-func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int, profit math.Int) {
+func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
 		return
@@ -82,7 +82,7 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	}
 }
 
-func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int, lostAmt math.Int) {
+func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
 		return
