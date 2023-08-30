@@ -3,7 +3,7 @@ module github.com/sge-network/sge
 go 1.19
 
 require (
-	cosmossdk.io/math v1.0.0-rc.0
+	cosmossdk.io/math v1.1.2
 	github.com/cosmos/cosmos-sdk v0.46.14
 	github.com/cosmos/gogoproto v1.4.11
 	github.com/cosmos/ibc-go/v5 v5.3.1
