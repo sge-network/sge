@@ -9,9 +9,9 @@ are the most critical to review. -->
 
 Please check the options that are relevant. This PR introduces
 
-- [ ] Bug fix (non-breaking change which fixes an existing issue)
-- [ ] New feature (non-breaking change which adds new functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Patch: Bug fix (non-breaking change which fixes an existing issue)
+- [ ] Minor: New feature (non-breaking change which adds new functionality)
+- [ ] Major: Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] This change requires a documentation update
 
 
