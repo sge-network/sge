@@ -45,6 +45,7 @@ jobs:
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
         npm install --prefix sgejs
         git -C sgejs checkout .
+        git -C sgejs pull 
 
     - name: Delete src/codegen and types
       run: |
