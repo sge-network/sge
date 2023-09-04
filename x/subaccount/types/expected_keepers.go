@@ -1,6 +1,7 @@
 package types
 
 import (
+	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -25,9 +26,9 @@ type BankKeeper interface {
 
 type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
-	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdk.Int) (participationIndex uint64, err error)
+	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount math.Int) (participationIndex uint64, err error)
 	GetDeposit(ctx sdk.Context, depositorAddr, marketUID string, participationIndex uint64) (housetypes.Deposit, bool)
-	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount sdk.Int) (uint64, error)
+	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount math.Int) (uint64, error)
 }
 
 type OrderBookKeeper interface {
@@ -38,7 +39,7 @@ type OrderBookKeeper interface {
 		marketUID string,
 		participationIndex uint64,
 		mode housetypes.WithdrawalMode,
-		totalWithdrawnAmount sdk.Int,
-		amount sdk.Int,
-	) (sdk.Int, error)
+		totalWithdrawnAmount math.Int,
+		amount math.Int,
+	) (math.Int, error)
 }

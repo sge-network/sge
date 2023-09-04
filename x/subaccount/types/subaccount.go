@@ -3,7 +3,7 @@ package types
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	"cosmossdk.io/math"
 )
 
 // Validate performs a basic validation of the LockedBalance fields.
@@ -24,14 +24,14 @@ func (lb *LockedBalance) Validate() error {
 }
 
 // Available reports the coins that are available in the subaccount.
-func (m *Balance) Available() sdk.Int {
+func (m *Balance) Available() math.Int {
 	return m.DepositedAmount.
 		Sub(m.WithdrawmAmount).
 		Sub(m.SpentAmount).
 		Sub(m.LostAmount)
 }
 
-func (m *Balance) Spend(amt sdk.Int) error {
+func (m *Balance) Spend(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
@@ -42,7 +42,7 @@ func (m *Balance) Spend(amt sdk.Int) error {
 	return nil
 }
 
-func (m *Balance) Unspend(amt sdk.Int) error {
+func (m *Balance) Unspend(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
@@ -53,7 +53,7 @@ func (m *Balance) Unspend(amt sdk.Int) error {
 	return nil
 }
 
-func (m *Balance) AddLoss(amt sdk.Int) error {
+func (m *Balance) AddLoss(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}

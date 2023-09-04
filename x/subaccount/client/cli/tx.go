@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -284,7 +285,7 @@ func TxHouseWithdraw() *cobra.Command {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
-			var argAmountCosmosInt sdk.Int
+			var argAmountCosmosInt math.Int
 			if mode == int64(housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")
