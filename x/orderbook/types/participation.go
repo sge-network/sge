@@ -79,10 +79,9 @@ func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
 	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
 }
 
-// IsWithdrawable determines if the participation has enough funds in
-// current round to be able to withdraw.
-func (p *OrderBookParticipation) IsWithdrawable() bool {
-	return p.maxWithdrawalAmount().GT(sdk.ZeroInt())
+// IsLiquidityInCurrentRound determines if the participation has liquidity in current round.
+func (p *OrderBookParticipation) IsLiquidityInCurrentRound() bool {
+	return p.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 }
 
 // WithdrawableAmount returns the withdrawal amount according to the withdrawal mode and max withdrawable amount.
