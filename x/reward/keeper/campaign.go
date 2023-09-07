@@ -19,7 +19,6 @@ func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 func (k Keeper) GetCampaign(
 	ctx sdk.Context,
 	index string,
-
 ) (val types.Campaign, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
 
@@ -38,7 +37,6 @@ func (k Keeper) GetCampaign(
 func (k Keeper) RemoveCampaign(
 	ctx sdk.Context,
 	index string,
-
 ) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
 	store.Delete(types.GetCampaignKey(

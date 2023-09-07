@@ -11,9 +11,7 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
-var (
-	DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
-)
+var DefaultRelativePacketTimeoutTimestamp = uint64((time.Duration(10) * time.Minute).Nanoseconds())
 
 const (
 	flagPacketTimeoutTimestamp = "packet-timeout-timestamp"
@@ -33,7 +31,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdUpdateCampaign())
 	cmd.AddCommand(CmdDeleteCampaign())
-// this line is used by starport scaffolding # 1
+	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

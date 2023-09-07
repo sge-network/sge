@@ -22,8 +22,9 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := "A"
 	for i := 0; i < 5; i++ {
-		expected := &types.MsgCreateCampaign{Creator: creator,
-			Uid: uuid.NewString(),
+		expected := &types.MsgCreateCampaign{
+			Creator: creator,
+			Uid:     uuid.NewString(),
 		}
 		_, err := srv.CreateCampaign(wctx, expected)
 		require.NoError(t, err)
@@ -46,21 +47,24 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgUpdateCampaign{Creator: creator,
-				Uid: expectedUID,
+			request: &types.MsgUpdateCampaign{
+				Creator: creator,
+				Uid:     expectedUID,
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgUpdateCampaign{Creator: "B",
-				Uid: expectedUID,
+			request: &types.MsgUpdateCampaign{
+				Creator: "B",
+				Uid:     expectedUID,
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgUpdateCampaign{Creator: creator,
-				Uid: uuid.NewString(),
+			request: &types.MsgUpdateCampaign{
+				Creator: creator,
+				Uid:     uuid.NewString(),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -69,8 +73,9 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
-			expected := &types.MsgCreateCampaign{Creator: creator,
-				Uid: expectedUID,
+			expected := &types.MsgCreateCampaign{
+				Creator: creator,
+				Uid:     expectedUID,
 			}
 			_, err := srv.CreateCampaign(wctx, expected)
 			require.NoError(t, err)
@@ -101,21 +106,24 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 	}{
 		{
 			desc: "Completed",
-			request: &types.MsgDeleteCampaign{Creator: creator,
-				Uid: expectedUID,
+			request: &types.MsgDeleteCampaign{
+				Creator: creator,
+				Uid:     expectedUID,
 			},
 		},
 		{
 			desc: "Unauthorized",
-			request: &types.MsgDeleteCampaign{Creator: "B",
-				Uid: expectedUID,
+			request: &types.MsgDeleteCampaign{
+				Creator: "B",
+				Uid:     expectedUID,
 			},
 			err: sdkerrors.ErrUnauthorized,
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.MsgDeleteCampaign{Creator: creator,
-				Uid: uuid.NewString(),
+			request: &types.MsgDeleteCampaign{
+				Creator: creator,
+				Uid:     uuid.NewString(),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -125,8 +133,9 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			_, err := srv.CreateCampaign(wctx, &types.MsgCreateCampaign{Creator: creator,
-				Uid: expectedUID,
+			_, err := srv.CreateCampaign(wctx, &types.MsgCreateCampaign{
+				Creator: creator,
+				Uid:     expectedUID,
 			})
 			require.NoError(t, err)
 			_, err = srv.DeleteCampaign(wctx, tc.request)

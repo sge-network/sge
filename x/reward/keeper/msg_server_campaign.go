@@ -20,7 +20,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var campaign = types.Campaign{
+	campaign := types.Campaign{
 		Creator: msg.Creator,
 		UID:     msg.Uid,
 	}
@@ -49,7 +49,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	var campaign = types.Campaign{
+	campaign := types.Campaign{
 		Creator: msg.Creator,
 		UID:     msg.Uid,
 	}

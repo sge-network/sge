@@ -60,7 +60,6 @@ func NewMsgUpdateCampaign(
 	creator string,
 	uid string,
 	ticket string,
-
 ) *MsgUpdateCampaign {
 	return &MsgUpdateCampaign{
 		Creator: creator,
@@ -103,13 +102,13 @@ var _ sdk.Msg = &MsgDeleteCampaign{}
 func NewMsgDeleteCampaign(
 	creator string,
 	index string,
-
 ) *MsgDeleteCampaign {
 	return &MsgDeleteCampaign{
 		Creator: creator,
 		Uid:     index,
 	}
 }
+
 func (msg *MsgDeleteCampaign) Route() string {
 	return RouterKey
 }

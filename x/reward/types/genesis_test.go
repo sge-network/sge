@@ -23,7 +23,6 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
-
 				CampaignList: []types.Campaign{
 					{
 						UID: uuid.NewString(),

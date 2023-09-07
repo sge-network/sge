@@ -7,25 +7,37 @@ import "sge/type/kyc.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
-message SignupRewardPayload {
+message CreateCampaignPayload {
+  string funder_address = 1;
+  uint64 start_ts = 2;
+  uint64 end_ts = 3;
+  RewardType type = 4;
+  repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
+}
+
+message UpdateCampaignPayload {
+  uint64 end_time = 1;
+}
+
+message ApplySignupRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   Receiver receiver = 2 [ (gogoproto.nullable) = false ];
 }
 
-message RerferralRewardPayload {
+message ApplyRerferralRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   repeated Receiver receivers = 2 [ (gogoproto.nullable) = false ];
 }
 
-message AffiliationRewardPayload {
+message ApplyAffiliationRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   Receiver receiver = 2 [ (gogoproto.nullable) = false ];
 }
 
-message NoLossBetsRewardPayload {
+message ApplyNoLossBetsRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   Receiver receiver = 2 [ (gogoproto.nullable) = false ];

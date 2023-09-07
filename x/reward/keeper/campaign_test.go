@@ -40,6 +40,7 @@ func TestCampaignGet(t *testing.T) {
 		)
 	}
 }
+
 func TestCampaignRemove(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	items := createNCampaign(k, ctx, 10)

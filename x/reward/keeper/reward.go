@@ -20,5 +20,4 @@ func GetRewardsFactory(rewardType types.RewardType) (types.IRewardFactory, error
 	default:
 		return nil, errors.New("unknown reward")
 	}
-
 }

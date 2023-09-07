@@ -9,10 +9,10 @@ import (
 // InitGenesis initializes the module's state from a provided genesis state.
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the campaign
-for _, elem := range genState.CampaignList {
-	k.SetCampaign(ctx, elem)
-}
-// this line is used by starport scaffolding # genesis/module/init
+	for _, elem := range genState.CampaignList {
+		k.SetCampaign(ctx, elem)
+	}
+	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -22,7 +22,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.CampaignList = k.GetAllCampaign(ctx)
-// this line is used by starport scaffolding # genesis/module/export
+	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
 }
