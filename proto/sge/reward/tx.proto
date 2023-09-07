@@ -3,6 +3,7 @@ syntax = "proto3";
 package sgenetwork.sge.reward;
 
 import "sge/reward/campaign.proto";
+import "sge/reward/reward.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -11,6 +12,7 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
   rpc DeleteCampaign(MsgDeleteCampaign) returns (MsgDeleteCampaignResponse);
+  rpc ApplyReward(MsgApplyReward) returns (MsgApplyRewardResponse);
 }
 message MsgCreateCampaign {
   string creator = 1;
@@ -34,3 +36,12 @@ message MsgDeleteCampaign {
 }
 
 message MsgDeleteCampaignResponse {}
+
+message MsgApplyReward {
+  string creator = 1;
+  string campaign_uid = 2;
+  uint64 ts = 3;
+  string ticket = 4;
+}
+
+message MsgApplyRewardResponse {}

@@ -61,3 +61,11 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 
 	return
 }
+
+func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, distributions []types.Distribution) {
+	for _, d := range distributions {
+		campaign.Pool.Spent = campaign.Pool.Spent.Add(d.Allocation.Amount)
+	}
+
+	k.SetCampaign(ctx, campaign)
+}

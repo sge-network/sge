@@ -30,9 +30,9 @@ message Campaign {
   // reward_type is the type of defined reward.
   RewardType reward_type = 5;
   // reward_defs is the list of definitions of the campaign rewards.
-  repeated Definition reward_defs = 6;
+  repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
   // pool is the tracker of pool funds of the campaign.
-  Pool pool = 7;
+  Pool pool = 7 [ (gogoproto.nullable) = false ];
 }
 
 // Pool is the type for the campaign funding pool.

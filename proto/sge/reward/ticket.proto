@@ -1,0 +1,33 @@
+syntax = "proto3";
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+import "sge/reward/reward.proto";
+import "sge/type/kyc.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+message SignupRewardPayload {
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
+  Receiver receiver = 2 [ (gogoproto.nullable) = false ];
+}
+
+message RerferralRewardPayload {
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
+  repeated Receiver receivers = 2 [ (gogoproto.nullable) = false ];
+}
+
+message AffiliationRewardPayload {
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
+  Receiver receiver = 2 [ (gogoproto.nullable) = false ];
+}
+
+message NoLossBetsRewardPayload {
+  sgenetwork.sge.type.KycDataPayload kyc_data = 1
+      [ (gogoproto.nullable) = false ];
+  Receiver receiver = 2 [ (gogoproto.nullable) = false ];
+  repeated string bet_uids = 3;
+}

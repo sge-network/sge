@@ -5,6 +5,20 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
+message RewardCommon {
+  string creator = 1;
+  string campaign_uid = 2 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
+  ];
+  uint64 ts = 3 [
+    (gogoproto.customname) = "TS",
+    (gogoproto.jsontag) = "ts",
+    json_name = "ts"
+  ];
+}
+
 // Definition is the type for reward declaration for a campaign.
 message Definition {
   ReceiverType type = 1;
@@ -20,7 +34,7 @@ message Definition {
 // Distribution is the type for the distribution of a reward.
 message Distribution {
   string acc_addr = 1;
-  Allocation allocation = 2;
+  Allocation allocation = 2 [ (gogoproto.nullable) = false ];
 }
 
 // Allocation is the distribution allocation of the rewards.
@@ -30,7 +44,7 @@ message Allocation {
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
-  ReceiverAccType receiver_type = 2;
+  ReceiverAccType receiver_acc_type = 2;
   uint64 exp_ts = 3;
 }
 
