@@ -86,6 +86,10 @@ import (
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 
+	rewardmodule "github.com/sge-network/sge/x/reward"
+	rewardmodulekeeper "github.com/sge-network/sge/x/reward/keeper"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -120,6 +124,7 @@ type AppKeepers struct {
 	HouseKeeper     *housemodulekeeper.Keeper
 	OrderbookKeeper *orderbookmodulekeeper.Keeper
 	OVMKeeper       *ovmmodulekeeper.Keeper
+	RewardKeeper    *rewardmodulekeeper.Keeper
 
 	//// SGE modules \\\\
 	BetModule       betmodule.AppModule
@@ -127,6 +132,7 @@ type AppKeepers struct {
 	HouseModule     housemodule.AppModule
 	OrderbookModule orderbookmodule.AppModule
 	OVMModule       ovmmodule.AppModule
+	RewardModule    rewardmodule.AppModule
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -436,6 +442,13 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
+	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[rewardmoduletypes.StoreKey],
+		appKeepers.keys[rewardmoduletypes.MemStoreKey],
+		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
+	)
+
 	//// SGE modules \\\\
 
 	appKeepers.BetModule = betmodule.NewAppModule(
@@ -465,6 +478,12 @@ func NewAppKeeper(
 	appKeepers.OVMModule = ovmmodule.NewAppModule(
 		appCodec,
 		*appKeepers.OVMKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+	)
+	appKeepers.RewardModule = rewardmodule.NewAppModule(
+		appCodec,
+		*appKeepers.RewardKeeper,
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 	)
@@ -530,6 +549,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
 	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
+	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 
 	return paramsKeeper
 }

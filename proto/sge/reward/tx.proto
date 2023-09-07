@@ -1,7 +1,36 @@
 syntax = "proto3";
+
 package sgenetwork.sge.reward;
+
+import "sge/reward/campaign.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Msg defines the Msg service.
-service Msg {}
+service Msg {
+  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
+  rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
+  rpc DeleteCampaign(MsgDeleteCampaign) returns (MsgDeleteCampaignResponse);
+}
+message MsgCreateCampaign {
+  string creator = 1;
+  string uid = 2;
+  string ticket = 3;
+}
+
+message MsgCreateCampaignResponse {}
+
+message MsgUpdateCampaign {
+  string creator = 1;
+  string uid = 2;
+  string ticket = 3;
+}
+
+message MsgUpdateCampaignResponse {}
+
+message MsgDeleteCampaign {
+  string creator = 1;
+  string uid = 2;
+}
+
+message MsgDeleteCampaignResponse {}

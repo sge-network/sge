@@ -62,6 +62,9 @@ import (
 	housemodule "github.com/sge-network/sge/x/house"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 
+	rewardmodule "github.com/sge-network/sge/x/reward"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -118,6 +121,7 @@ var ModuleBasics = module.NewBasicManager(
 	orderbookmodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
+	rewardmodule.AppModuleBasic{},
 )
 
 func appModules(
@@ -189,6 +193,7 @@ func appModules(
 		app.OrderbookModule,
 		app.OVMModule,
 		app.HouseModule,
+		app.RewardModule,
 		// this line is u
 	}
 }
@@ -251,6 +256,7 @@ func simulationModules(
 		app.BetModule,
 		app.MarketModule,
 		app.OVMModule,
+		app.RewardModule,
 	}
 }
 
@@ -285,6 +291,7 @@ func orderBeginBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
 	}
 }
 
@@ -316,6 +323,7 @@ func orderEndBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
 	}
 }
 
@@ -347,5 +355,6 @@ func orderInitBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
 	}
 }

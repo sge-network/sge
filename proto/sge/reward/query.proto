@@ -1,26 +1,52 @@
 syntax = "proto3";
+
 package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/reward/params.proto";
+import "sge/reward/campaign.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Query defines the gRPC querier service.
 service Query {
+
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sge-network/sge/reward/params";
   }
-}
 
+  // Queries a list of Campaign items.
+  rpc Campaign(QueryGetCampaignRequest) returns (QueryGetCampaignResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/campaign/{index}";
+  }
+  rpc CampaignAll(QueryAllCampaignRequest) returns (QueryAllCampaignResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/campaign";
+  }
+}
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
+
   // params holds all the parameters of this module.
-  Params params = 1 [(gogoproto.nullable) = false];
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryGetCampaignRequest { string index = 1; }
+
+message QueryGetCampaignResponse {
+  Campaign campaign = 1 [ (gogoproto.nullable) = false ];
+}
+
+message QueryAllCampaignRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllCampaignResponse {
+  repeated Campaign campaign = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

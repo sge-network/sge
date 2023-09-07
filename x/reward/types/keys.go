@@ -13,7 +13,3 @@ const (
 	// MemStoreKey defines the in-memory store key
 	MemStoreKey = "mem_reward"
 )
-
-func KeyPrefix(p string) []byte {
-	return []byte(p)
-}

@@ -3,11 +3,13 @@ package types_test
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/sge-network/sge/x/reward/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
+	dupplicateCampaign := uuid.NewString()
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -19,12 +21,34 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid:    true,
 		},
 		{
-			desc:     "valid genesis state",
+			desc: "valid genesis state",
 			genState: &types.GenesisState{
 
+				CampaignList: []types.Campaign{
+					{
+						UID: uuid.NewString(),
+					},
+					{
+						UID: uuid.NewString(),
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "duplicated campaign",
+			genState: &types.GenesisState{
+				CampaignList: []types.Campaign{
+					{
+						UID: dupplicateCampaign,
+					},
+					{
+						UID: dupplicateCampaign,
+					},
+				},
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {

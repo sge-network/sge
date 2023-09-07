@@ -24,6 +24,7 @@ import (
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
 
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
@@ -49,6 +50,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		marketmoduletypes.StoreKey,
 		ovmmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
+		rewardmoduletypes.StoreKey,
 	)
 
 	// Define transient store keys
