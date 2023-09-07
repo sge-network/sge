@@ -112,7 +112,7 @@ func (k Keeper) removeNotWithdrawableFromFulfillmentQueue(
 	ctx sdk.Context,
 	bp types.OrderBookParticipation,
 ) error {
-	if !bp.IsWithdrawable() {
+	if !bp.IsLiquidityInCurrentRound() {
 		boes, err := k.GetOddsExposuresByOrderBook(ctx, bp.OrderBookUID)
 		if err != nil {
 			return err
