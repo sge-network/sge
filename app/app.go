@@ -37,6 +37,7 @@ import (
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
 	v110 "github.com/sge-network/sge/app/upgrades/v110"
+	v111 "github.com/sge-network/sge/app/upgrades/v111"
 	"github.com/spf13/cast"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
@@ -68,6 +69,7 @@ var (
 	DefaultNodeHome string
 	Upgrades        = []upgrades.Upgrade{
 		v110.Upgrade,
+		v111.Upgrade,
 	}
 )
 
