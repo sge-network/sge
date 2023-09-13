@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/house/types"
 )
 
@@ -50,7 +51,8 @@ func (k msgServer) Withdraw(goCtx context.Context,
 	}
 
 	if isOnBehalf {
-		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
+		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, payload.DepositorAddress, msg,
+			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
 			return nil, err
 		}
 	}
