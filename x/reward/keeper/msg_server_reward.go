@@ -3,8 +3,10 @@ package keeper
 import (
 	"context"
 
+	cosmerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -17,15 +19,19 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		msg.CampaignUid,
 	)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
+		return nil, cosmerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	rewardFactory, err := GetRewardsFactory(campaign.RewardType)
+	rewardFactory, err := campaign.GetRewardsFactory()
 	if err != nil {
 		return nil, err
 	}
 
 	if err := rewardFactory.ValidateBasic(campaign); err == nil {
+		return nil, err
+	}
+
+	if err := rewardFactory.VaidateDefinitions(campaign); err != nil {
 		return nil, err
 	}
 

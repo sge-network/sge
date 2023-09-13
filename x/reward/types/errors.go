@@ -3,10 +3,12 @@ package types
 // DONTCOVER
 
 import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrors "cosmossdk.io/errors"
 )
 
 // x/reward module sentinel errors
 var (
-	ErrSample = sdkerrors.Register(ModuleName, 1100, "sample error")
+	ErrExpiredCampaign     = sdkerrors.Register(ModuleName, 5100, "campaign is expired")
+	ErrCampaignPoolBalance = sdkerrors.Register(ModuleName, 5101, "not enough campaign pool balance")
+	ErrUnknownRewardType   = sdkerrors.Register(ModuleName, 5102, "unknown reward type")
 )

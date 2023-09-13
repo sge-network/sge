@@ -1,7 +1,14 @@
 package types
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import (
+	cosmerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
+)
 
-func (p *Pool) HasEnoughFund(toSpend sdk.Int) bool {
-	return p.Total.Sub(p.Spent).LTE(toSpend)
+func (p *Pool) CheckBalance(toSpend sdkmath.Int) error {
+	availablePool := p.Total.Sub(p.Spent)
+	if availablePool.LT(toSpend) {
+		return cosmerrors.Wrapf(ErrCampaignPoolBalance, "amount %s, available pool %s", toSpend, availablePool)
+	}
+	return nil
 }

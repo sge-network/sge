@@ -13,11 +13,14 @@ message CreateCampaignPayload {
   uint64 end_ts = 3;
   RewardType type = 4;
   repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
+  string pool_amount = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"pool_amount\""
+  ];
 }
 
-message UpdateCampaignPayload {
-  uint64 end_time = 1;
-}
+message UpdateCampaignPayload { uint64 end_ts = 1; }
 
 message ApplySignupRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1

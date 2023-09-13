@@ -5,6 +5,7 @@ import "errors"
 // IRewardFactory defines the methods that should be implemented for all of reward types.
 type IRewardFactory interface {
 	ValidateBasic(campaign Campaign) error
+	VaidateDefinitions(campaign Campaign) error
 	CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error)
 }
 
@@ -16,6 +17,11 @@ func NewSignUpReward() SignUpReward { return SignUpReward{} }
 
 // ValidateBasic validates basic and common campaign constraints.
 func (sur SignUpReward) ValidateBasic(campaign Campaign) error {
+	return errors.New("not implemented")
+}
+
+// VaidateDefinitions validates campaign definitions.
+func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 	return errors.New("not implemented")
 }
 
@@ -35,6 +41,11 @@ func (rfr ReferralReward) ValidateBasic(campaign Campaign) error {
 	return errors.New("not implemented")
 }
 
+// VaidateDefinitions validates campaign definitions.
+func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
+	return errors.New("not implemented")
+}
+
 // CalculateDistributions parses ticket payload and returns the distribution list of referal reward.
 func (rfr ReferralReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
@@ -51,6 +62,11 @@ func (afr AffiliationReward) ValidateBasic(campaign Campaign) error {
 	return errors.New("not implemented")
 }
 
+// VaidateDefinitions validates campaign definitions.
+func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
+	return errors.New("not implemented")
+}
+
 // CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
 func (afr AffiliationReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
@@ -64,6 +80,11 @@ func NewNoLossBetsReward() NoLossBetsReward { return NoLossBetsReward{} }
 
 // ValidateBasic validates basic and common campaign constraints.
 func (afr NoLossBetsReward) ValidateBasic(campaign Campaign) error {
+	return errors.New("not implemented")
+}
+
+// VaidateDefinitions validates campaign definitions.
+func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 	return errors.New("not implemented")
 }
 
