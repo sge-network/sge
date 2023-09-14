@@ -7,6 +7,7 @@ import "sge/type/kyc.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
+// CreateCampaignPayload is the type for campaign creation payload.
 message CreateCampaignPayload {
   string funder_address = 1;
   uint64 start_ts = 2;
@@ -20,26 +21,31 @@ message CreateCampaignPayload {
   ];
 }
 
+// UpdateCampaignPayload is the type for campaign update payload.
 message UpdateCampaignPayload { uint64 end_ts = 1; }
 
+// ApplySignupRewardPayload is the signup reward ticket payload type.
 message ApplySignupRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   Receiver receiver = 2 [ (gogoproto.nullable) = false ];
 }
 
+// ApplyRerferralRewardPayload is the referral reward ticket payload type.
 message ApplyRerferralRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   repeated Receiver receivers = 2 [ (gogoproto.nullable) = false ];
 }
 
+// ApplyAffiliationRewardPayload is the affiliation reward ticket payload type.
 message ApplyAffiliationRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];
   Receiver receiver = 2 [ (gogoproto.nullable) = false ];
 }
 
+// ApplyNoLossBetsRewardPayload is the noloss bets reward ticket payload type.
 message ApplyNoLossBetsRewardPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 1
       [ (gogoproto.nullable) = false ];

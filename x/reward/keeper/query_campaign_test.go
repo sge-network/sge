@@ -23,28 +23,28 @@ func TestCampaignQuerySingle(t *testing.T) {
 	msgs := createNCampaign(k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
-		request  *types.QueryGetCampaignRequest
-		response *types.QueryGetCampaignResponse
+		request  *types.QueryCampaignRequest
+		response *types.QueryCampaignResponse
 		err      error
 	}{
 		{
 			desc: "First",
-			request: &types.QueryGetCampaignRequest{
-				Index: msgs[0].UID,
+			request: &types.QueryCampaignRequest{
+				Uid: msgs[0].UID,
 			},
-			response: &types.QueryGetCampaignResponse{Campaign: msgs[0]},
+			response: &types.QueryCampaignResponse{Campaign: msgs[0]},
 		},
 		{
 			desc: "Second",
-			request: &types.QueryGetCampaignRequest{
-				Index: msgs[1].UID,
+			request: &types.QueryCampaignRequest{
+				Uid: msgs[1].UID,
 			},
-			response: &types.QueryGetCampaignResponse{Campaign: msgs[1]},
+			response: &types.QueryCampaignResponse{Campaign: msgs[1]},
 		},
 		{
 			desc: "KeyNotFound",
-			request: &types.QueryGetCampaignRequest{
-				Index: strconv.Itoa(100000),
+			request: &types.QueryCampaignRequest{
+				Uid: strconv.Itoa(100000),
 			},
 			err: status.Error(codes.NotFound, "not found"),
 		},
@@ -73,8 +73,8 @@ func TestCampaignQueryPaginated(t *testing.T) {
 	wctx := sdk.WrapSDKContext(ctx)
 	msgs := createNCampaign(k, ctx, 5)
 
-	request := func(next []byte, offset, limit uint64, total bool) *types.QueryAllCampaignRequest {
-		return &types.QueryAllCampaignRequest{
+	request := func(next []byte, offset, limit uint64, total bool) *types.QueryCampaignAllRequest {
+		return &types.QueryCampaignAllRequest{
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,

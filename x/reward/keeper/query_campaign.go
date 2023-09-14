@@ -11,7 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (k Keeper) CampaignAll(goCtx context.Context, req *types.QueryAllCampaignRequest) (*types.QueryAllCampaignResponse, error) {
+func (k Keeper) CampaignAll(goCtx context.Context, req *types.QueryCampaignAllRequest) (*types.QueryCampaignAllResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -35,10 +35,10 @@ func (k Keeper) CampaignAll(goCtx context.Context, req *types.QueryAllCampaignRe
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryAllCampaignResponse{Campaign: campaigns, Pagination: pageRes}, nil
+	return &types.QueryCampaignAllResponse{Campaign: campaigns, Pagination: pageRes}, nil
 }
 
-func (k Keeper) Campaign(goCtx context.Context, req *types.QueryGetCampaignRequest) (*types.QueryGetCampaignResponse, error) {
+func (k Keeper) Campaign(goCtx context.Context, req *types.QueryCampaignRequest) (*types.QueryCampaignResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -46,11 +46,11 @@ func (k Keeper) Campaign(goCtx context.Context, req *types.QueryGetCampaignReque
 
 	val, found := k.GetCampaign(
 		ctx,
-		req.Index,
+		req.Uid,
 	)
 	if !found {
 		return nil, status.Error(codes.NotFound, "not found")
 	}
 
-	return &types.QueryGetCampaignResponse{Campaign: val}, nil
+	return &types.QueryCampaignResponse{Campaign: val}, nil
 }

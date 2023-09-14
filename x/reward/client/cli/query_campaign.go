@@ -23,7 +23,7 @@ func CmdListCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllCampaignRequest{
+			params := &types.QueryCampaignAllRequest{
 				Pagination: pageReq,
 			}
 
@@ -52,10 +52,10 @@ func CmdShowCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argIndex := args[0]
+			argUID := args[0]
 
-			params := &types.QueryGetCampaignRequest{
-				Index: argIndex,
+			params := &types.QueryCampaignRequest{
+				Uid: argUID,
 			}
 
 			res, err := queryClient.Campaign(context.Background(), params)

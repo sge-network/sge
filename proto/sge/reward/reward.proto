@@ -5,6 +5,7 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
+// RewardCommon is the type for common data of a reward.
 message RewardCommon {
   string creator = 1;
   string campaign_uid = 2 [
@@ -58,9 +59,13 @@ message Receiver {
 enum RewardType {
   // the invalid or unknown
   REWARD_TYPE_UNSPECIFIED = 0;
+  // signup reward
   REWARD_TYPE_SIGNUP = 1;
+  // referral reward
   REWARD_TYPE_REFERRAL = 2;
+  // affiliation reward
   REWARD_TYPE_AFFILIATION = 3;
+  // noloss bets reward
   REWARD_TYPE_NOLOSS_BETS = 4;
 }
 
@@ -69,7 +74,9 @@ enum RewardType {
 enum ReceiverAccType {
   // the invalid or unknown
   RECEIVER_ACC_TYPE_UNSPECIFIED = 0;
+  // main account
   RECEIVER_ACC_TYPE_MAIN = 1;
+  // sub account
   RECEIVER_ACC_TYPE_SUB = 2;
 }
 
@@ -77,7 +84,10 @@ enum ReceiverAccType {
 enum ReceiverType {
   // the invalid or unknown
   RECEIVER_TYPE_UNSPECIFIED = 0;
+  // single receiver account
   RECEIVER_TYPE_SINGLE = 1;
+  // referrer
   RECEIVER_TYPE_REFERRER = 2;
+  // referee
   RECEIVER_TYPE_REFEREE = 3;
 }

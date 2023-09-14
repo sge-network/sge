@@ -83,7 +83,7 @@ func TestShowCampaign(t *testing.T) {
 				require.ErrorIs(t, stat.Err(), tc.err)
 			} else {
 				require.NoError(t, err)
-				var resp types.QueryGetCampaignResponse
+				var resp types.QueryCampaignResponse
 				require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.NotNil(t, resp.Campaign)
 				require.Equal(t,
@@ -120,7 +120,7 @@ func TestListCampaign(t *testing.T) {
 			args := request(nil, uint64(i), uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllCampaignResponse
+			var resp types.QueryCampaignAllResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Campaign), step)
 			require.Subset(t,
@@ -136,7 +136,7 @@ func TestListCampaign(t *testing.T) {
 			args := request(next, 0, uint64(step), false)
 			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 			require.NoError(t, err)
-			var resp types.QueryAllCampaignResponse
+			var resp types.QueryCampaignAllResponse
 			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 			require.LessOrEqual(t, len(resp.Campaign), step)
 			require.Subset(t,
@@ -150,7 +150,7 @@ func TestListCampaign(t *testing.T) {
 		args := request(nil, 0, uint64(len(objs)), true)
 		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListCampaign(), args)
 		require.NoError(t, err)
-		var resp types.QueryAllCampaignResponse
+		var resp types.QueryCampaignAllResponse
 		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
 		require.NoError(t, err)
 		require.Equal(t, len(objs), int(resp.Pagination.Total))

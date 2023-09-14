@@ -25,6 +25,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// CreateCampaignPayload is the type for campaign creation payload.
 type CreateCampaignPayload struct {
 	FunderAddress string                                 `protobuf:"bytes,1,opt,name=funder_address,json=funderAddress,proto3" json:"funder_address,omitempty"`
 	StartTs       uint64                                 `protobuf:"varint,2,opt,name=start_ts,json=startTs,proto3" json:"start_ts,omitempty"`
@@ -102,6 +103,7 @@ func (m *CreateCampaignPayload) GetRewardDefs() []Definition {
 	return nil
 }
 
+// UpdateCampaignPayload is the type for campaign update payload.
 type UpdateCampaignPayload struct {
 	EndTs uint64 `protobuf:"varint,1,opt,name=end_ts,json=endTs,proto3" json:"end_ts,omitempty"`
 }
@@ -146,6 +148,7 @@ func (m *UpdateCampaignPayload) GetEndTs() uint64 {
 	return 0
 }
 
+// ApplySignupRewardPayload is the signup reward ticket payload type.
 type ApplySignupRewardPayload struct {
 	KycData  types.KycDataPayload `protobuf:"bytes,1,opt,name=kyc_data,json=kycData,proto3" json:"kyc_data"`
 	Receiver Receiver             `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver"`
@@ -198,6 +201,7 @@ func (m *ApplySignupRewardPayload) GetReceiver() Receiver {
 	return Receiver{}
 }
 
+// ApplyRerferralRewardPayload is the referral reward ticket payload type.
 type ApplyRerferralRewardPayload struct {
 	KycData   types.KycDataPayload `protobuf:"bytes,1,opt,name=kyc_data,json=kycData,proto3" json:"kyc_data"`
 	Receivers []Receiver           `protobuf:"bytes,2,rep,name=receivers,proto3" json:"receivers"`
@@ -250,6 +254,7 @@ func (m *ApplyRerferralRewardPayload) GetReceivers() []Receiver {
 	return nil
 }
 
+// ApplyAffiliationRewardPayload is the affiliation reward ticket payload type.
 type ApplyAffiliationRewardPayload struct {
 	KycData  types.KycDataPayload `protobuf:"bytes,1,opt,name=kyc_data,json=kycData,proto3" json:"kyc_data"`
 	Receiver Receiver             `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver"`
@@ -302,6 +307,7 @@ func (m *ApplyAffiliationRewardPayload) GetReceiver() Receiver {
 	return Receiver{}
 }
 
+// ApplyNoLossBetsRewardPayload is the noloss bets reward ticket payload type.
 type ApplyNoLossBetsRewardPayload struct {
 	KycData  types.KycDataPayload `protobuf:"bytes,1,opt,name=kyc_data,json=kycData,proto3" json:"kyc_data"`
 	Receiver Receiver             `protobuf:"bytes,2,opt,name=receiver,proto3" json:"receiver"`

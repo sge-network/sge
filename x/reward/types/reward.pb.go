@@ -30,9 +30,13 @@ type RewardType int32
 const (
 	// the invalid or unknown
 	RewardType_REWARD_TYPE_UNSPECIFIED RewardType = 0
-	RewardType_REWARD_TYPE_SIGNUP      RewardType = 1
-	RewardType_REWARD_TYPE_REFERRAL    RewardType = 2
+	// signup reward
+	RewardType_REWARD_TYPE_SIGNUP RewardType = 1
+	// referral reward
+	RewardType_REWARD_TYPE_REFERRAL RewardType = 2
+	// affiliation reward
 	RewardType_REWARD_TYPE_AFFILIATION RewardType = 3
+	// noloss bets reward
 	RewardType_REWARD_TYPE_NOLOSS_BETS RewardType = 4
 )
 
@@ -67,8 +71,10 @@ type ReceiverAccType int32
 const (
 	// the invalid or unknown
 	ReceiverAccType_RECEIVER_ACC_TYPE_UNSPECIFIED ReceiverAccType = 0
-	ReceiverAccType_RECEIVER_ACC_TYPE_MAIN        ReceiverAccType = 1
-	ReceiverAccType_RECEIVER_ACC_TYPE_SUB         ReceiverAccType = 2
+	// main account
+	ReceiverAccType_RECEIVER_ACC_TYPE_MAIN ReceiverAccType = 1
+	// sub account
+	ReceiverAccType_RECEIVER_ACC_TYPE_SUB ReceiverAccType = 2
 )
 
 var ReceiverAccType_name = map[int32]string{
@@ -97,9 +103,12 @@ type ReceiverType int32
 const (
 	// the invalid or unknown
 	ReceiverType_RECEIVER_TYPE_UNSPECIFIED ReceiverType = 0
-	ReceiverType_RECEIVER_TYPE_SINGLE      ReceiverType = 1
-	ReceiverType_RECEIVER_TYPE_REFERRER    ReceiverType = 2
-	ReceiverType_RECEIVER_TYPE_REFEREE     ReceiverType = 3
+	// single receiver account
+	ReceiverType_RECEIVER_TYPE_SINGLE ReceiverType = 1
+	// referrer
+	ReceiverType_RECEIVER_TYPE_REFERRER ReceiverType = 2
+	// referee
+	ReceiverType_RECEIVER_TYPE_REFEREE ReceiverType = 3
 )
 
 var ReceiverType_name = map[int32]string{
@@ -124,6 +133,7 @@ func (ReceiverType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_3412add70a4f177f, []int{2}
 }
 
+// RewardCommon is the type for common data of a reward.
 type RewardCommon struct {
 	Creator     string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	CampaignUID string `protobuf:"bytes,2,opt,name=campaign_uid,proto3" json:"campaign_uid"`

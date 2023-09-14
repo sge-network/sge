@@ -113,22 +113,23 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-type QueryGetCampaignRequest struct {
-	Index string `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
+// QueryCampaignRequest is request body of the query campaign endpoint.
+type QueryCampaignRequest struct {
+	Uid string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid,omitempty"`
 }
 
-func (m *QueryGetCampaignRequest) Reset()         { *m = QueryGetCampaignRequest{} }
-func (m *QueryGetCampaignRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryGetCampaignRequest) ProtoMessage()    {}
-func (*QueryGetCampaignRequest) Descriptor() ([]byte, []int) {
+func (m *QueryCampaignRequest) Reset()         { *m = QueryCampaignRequest{} }
+func (m *QueryCampaignRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCampaignRequest) ProtoMessage()    {}
+func (*QueryCampaignRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_324afa5f2186a8c0, []int{2}
 }
-func (m *QueryGetCampaignRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryCampaignRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetCampaignRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCampaignRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetCampaignRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCampaignRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -138,41 +139,42 @@ func (m *QueryGetCampaignRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryGetCampaignRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetCampaignRequest.Merge(m, src)
+func (m *QueryCampaignRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCampaignRequest.Merge(m, src)
 }
-func (m *QueryGetCampaignRequest) XXX_Size() int {
+func (m *QueryCampaignRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetCampaignRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetCampaignRequest.DiscardUnknown(m)
+func (m *QueryCampaignRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCampaignRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetCampaignRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryCampaignRequest proto.InternalMessageInfo
 
-func (m *QueryGetCampaignRequest) GetIndex() string {
+func (m *QueryCampaignRequest) GetUid() string {
 	if m != nil {
-		return m.Index
+		return m.Uid
 	}
 	return ""
 }
 
-type QueryGetCampaignResponse struct {
+// QueryCampaignRequest is response body of the query campaign endpoint.
+type QueryCampaignResponse struct {
 	Campaign Campaign `protobuf:"bytes,1,opt,name=campaign,proto3" json:"campaign"`
 }
 
-func (m *QueryGetCampaignResponse) Reset()         { *m = QueryGetCampaignResponse{} }
-func (m *QueryGetCampaignResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryGetCampaignResponse) ProtoMessage()    {}
-func (*QueryGetCampaignResponse) Descriptor() ([]byte, []int) {
+func (m *QueryCampaignResponse) Reset()         { *m = QueryCampaignResponse{} }
+func (m *QueryCampaignResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCampaignResponse) ProtoMessage()    {}
+func (*QueryCampaignResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_324afa5f2186a8c0, []int{3}
 }
-func (m *QueryGetCampaignResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryCampaignResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryGetCampaignResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCampaignResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryGetCampaignResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCampaignResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -182,41 +184,42 @@ func (m *QueryGetCampaignResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryGetCampaignResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryGetCampaignResponse.Merge(m, src)
+func (m *QueryCampaignResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCampaignResponse.Merge(m, src)
 }
-func (m *QueryGetCampaignResponse) XXX_Size() int {
+func (m *QueryCampaignResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryGetCampaignResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryGetCampaignResponse.DiscardUnknown(m)
+func (m *QueryCampaignResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCampaignResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryGetCampaignResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryCampaignResponse proto.InternalMessageInfo
 
-func (m *QueryGetCampaignResponse) GetCampaign() Campaign {
+func (m *QueryCampaignResponse) GetCampaign() Campaign {
 	if m != nil {
 		return m.Campaign
 	}
 	return Campaign{}
 }
 
-type QueryAllCampaignRequest struct {
+// QueryCampaignAllRequest is request body of the query all campaigns endpoint.
+type QueryCampaignAllRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllCampaignRequest) Reset()         { *m = QueryAllCampaignRequest{} }
-func (m *QueryAllCampaignRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryAllCampaignRequest) ProtoMessage()    {}
-func (*QueryAllCampaignRequest) Descriptor() ([]byte, []int) {
+func (m *QueryCampaignAllRequest) Reset()         { *m = QueryCampaignAllRequest{} }
+func (m *QueryCampaignAllRequest) String() string { return proto.CompactTextString(m) }
+func (*QueryCampaignAllRequest) ProtoMessage()    {}
+func (*QueryCampaignAllRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_324afa5f2186a8c0, []int{4}
 }
-func (m *QueryAllCampaignRequest) XXX_Unmarshal(b []byte) error {
+func (m *QueryCampaignAllRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllCampaignRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCampaignAllRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllCampaignRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCampaignAllRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -226,42 +229,43 @@ func (m *QueryAllCampaignRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryAllCampaignRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllCampaignRequest.Merge(m, src)
+func (m *QueryCampaignAllRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCampaignAllRequest.Merge(m, src)
 }
-func (m *QueryAllCampaignRequest) XXX_Size() int {
+func (m *QueryCampaignAllRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllCampaignRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllCampaignRequest.DiscardUnknown(m)
+func (m *QueryCampaignAllRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCampaignAllRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllCampaignRequest proto.InternalMessageInfo
+var xxx_messageInfo_QueryCampaignAllRequest proto.InternalMessageInfo
 
-func (m *QueryAllCampaignRequest) GetPagination() *query.PageRequest {
+func (m *QueryCampaignAllRequest) GetPagination() *query.PageRequest {
 	if m != nil {
 		return m.Pagination
 	}
 	return nil
 }
 
-type QueryAllCampaignResponse struct {
+// QueryCampaignAllResponse is response body of the query all campaigns endpoint.
+type QueryCampaignAllResponse struct {
 	Campaign   []Campaign          `protobuf:"bytes,1,rep,name=campaign,proto3" json:"campaign"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
 }
 
-func (m *QueryAllCampaignResponse) Reset()         { *m = QueryAllCampaignResponse{} }
-func (m *QueryAllCampaignResponse) String() string { return proto.CompactTextString(m) }
-func (*QueryAllCampaignResponse) ProtoMessage()    {}
-func (*QueryAllCampaignResponse) Descriptor() ([]byte, []int) {
+func (m *QueryCampaignAllResponse) Reset()         { *m = QueryCampaignAllResponse{} }
+func (m *QueryCampaignAllResponse) String() string { return proto.CompactTextString(m) }
+func (*QueryCampaignAllResponse) ProtoMessage()    {}
+func (*QueryCampaignAllResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_324afa5f2186a8c0, []int{5}
 }
-func (m *QueryAllCampaignResponse) XXX_Unmarshal(b []byte) error {
+func (m *QueryCampaignAllResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryAllCampaignResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QueryCampaignAllResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryAllCampaignResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QueryCampaignAllResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -271,26 +275,26 @@ func (m *QueryAllCampaignResponse) XXX_Marshal(b []byte, deterministic bool) ([]
 		return b[:n], nil
 	}
 }
-func (m *QueryAllCampaignResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryAllCampaignResponse.Merge(m, src)
+func (m *QueryCampaignAllResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QueryCampaignAllResponse.Merge(m, src)
 }
-func (m *QueryAllCampaignResponse) XXX_Size() int {
+func (m *QueryCampaignAllResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryAllCampaignResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryAllCampaignResponse.DiscardUnknown(m)
+func (m *QueryCampaignAllResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QueryCampaignAllResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryAllCampaignResponse proto.InternalMessageInfo
+var xxx_messageInfo_QueryCampaignAllResponse proto.InternalMessageInfo
 
-func (m *QueryAllCampaignResponse) GetCampaign() []Campaign {
+func (m *QueryCampaignAllResponse) GetCampaign() []Campaign {
 	if m != nil {
 		return m.Campaign
 	}
 	return nil
 }
 
-func (m *QueryAllCampaignResponse) GetPagination() *query.PageResponse {
+func (m *QueryCampaignAllResponse) GetPagination() *query.PageResponse {
 	if m != nil {
 		return m.Pagination
 	}
@@ -300,48 +304,47 @@ func (m *QueryAllCampaignResponse) GetPagination() *query.PageResponse {
 func init() {
 	proto.RegisterType((*QueryParamsRequest)(nil), "sgenetwork.sge.reward.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "sgenetwork.sge.reward.QueryParamsResponse")
-	proto.RegisterType((*QueryGetCampaignRequest)(nil), "sgenetwork.sge.reward.QueryGetCampaignRequest")
-	proto.RegisterType((*QueryGetCampaignResponse)(nil), "sgenetwork.sge.reward.QueryGetCampaignResponse")
-	proto.RegisterType((*QueryAllCampaignRequest)(nil), "sgenetwork.sge.reward.QueryAllCampaignRequest")
-	proto.RegisterType((*QueryAllCampaignResponse)(nil), "sgenetwork.sge.reward.QueryAllCampaignResponse")
+	proto.RegisterType((*QueryCampaignRequest)(nil), "sgenetwork.sge.reward.QueryCampaignRequest")
+	proto.RegisterType((*QueryCampaignResponse)(nil), "sgenetwork.sge.reward.QueryCampaignResponse")
+	proto.RegisterType((*QueryCampaignAllRequest)(nil), "sgenetwork.sge.reward.QueryCampaignAllRequest")
+	proto.RegisterType((*QueryCampaignAllResponse)(nil), "sgenetwork.sge.reward.QueryCampaignAllResponse")
 }
 
 func init() { proto.RegisterFile("sge/reward/query.proto", fileDescriptor_324afa5f2186a8c0) }
 
 var fileDescriptor_324afa5f2186a8c0 = []byte{
-	// 497 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0xb1, 0x6f, 0xd3, 0x40,
-	0x14, 0xc6, 0x73, 0x2d, 0x8d, 0xca, 0x75, 0x3b, 0x02, 0x2d, 0x11, 0xb8, 0xd1, 0x0d, 0x25, 0x8d,
-	0xc4, 0x1d, 0x2d, 0x23, 0x53, 0x5a, 0x89, 0xae, 0xc5, 0x23, 0x12, 0xc3, 0x39, 0x7d, 0x3a, 0x2c,
-	0x6c, 0x9f, 0xeb, 0xbb, 0xd0, 0x56, 0x88, 0x85, 0x85, 0x15, 0x89, 0x85, 0x85, 0x95, 0xbf, 0xa5,
-	0x03, 0x43, 0x25, 0x16, 0x26, 0x84, 0x12, 0xfe, 0x10, 0x94, 0xbb, 0x33, 0x38, 0x38, 0x49, 0x23,
-	0x36, 0xdb, 0xf7, 0x7d, 0xdf, 0xfb, 0xbd, 0x7b, 0x4f, 0xc6, 0x77, 0xb4, 0x04, 0x5e, 0xc0, 0x99,
-	0x28, 0x4e, 0xf8, 0xe9, 0x10, 0x8a, 0x0b, 0x96, 0x17, 0xca, 0x28, 0x72, 0x5b, 0x4b, 0xc8, 0xc0,
-	0x9c, 0xa9, 0xe2, 0x15, 0xd3, 0x12, 0x98, 0x93, 0xb4, 0x5b, 0x52, 0x49, 0x65, 0x15, 0x7c, 0xf2,
-	0xe4, 0xc4, 0xed, 0x7b, 0x52, 0x29, 0x99, 0x00, 0x17, 0x79, 0xcc, 0x45, 0x96, 0x29, 0x23, 0x4c,
-	0xac, 0x32, 0xed, 0x4f, 0x7b, 0x03, 0xa5, 0x53, 0xa5, 0x79, 0x24, 0x34, 0xb8, 0x1a, 0xfc, 0xf5,
-	0x5e, 0x04, 0x46, 0xec, 0xf1, 0x5c, 0xc8, 0x38, 0xb3, 0x62, 0xaf, 0xdd, 0xac, 0xe0, 0xe4, 0xa2,
-	0x10, 0x69, 0x19, 0x72, 0xb7, 0x72, 0x30, 0x10, 0x69, 0x2e, 0x62, 0xe9, 0x3d, 0xb4, 0x85, 0xc9,
-	0xb3, 0x49, 0xea, 0xb1, 0xd5, 0x87, 0x70, 0x3a, 0x04, 0x6d, 0x68, 0x88, 0x6f, 0x4d, 0x7d, 0xd5,
-	0xb9, 0xca, 0x34, 0x90, 0x27, 0xb8, 0xe9, 0x72, 0xb7, 0x50, 0x07, 0x75, 0x37, 0xf6, 0xef, 0xb3,
-	0x99, 0x8d, 0x32, 0x67, 0x3b, 0xb8, 0x71, 0xf9, 0x63, 0xbb, 0x11, 0x7a, 0x0b, 0xe5, 0x78, 0xd3,
-	0x66, 0x1e, 0x81, 0x39, 0xf4, 0x0c, 0xbe, 0x1c, 0x69, 0xe1, 0xb5, 0x38, 0x3b, 0x81, 0x73, 0x1b,
-	0x7b, 0x33, 0x74, 0x2f, 0xf4, 0x05, 0xde, 0xaa, 0x1b, 0x3c, 0x49, 0x1f, 0xaf, 0x97, 0x8d, 0x78,
-	0x96, 0xed, 0x39, 0x2c, 0xa5, 0xd5, 0xd3, 0xfc, 0xb1, 0x51, 0xe1, 0x79, 0xfa, 0x49, 0xf2, 0x2f,
-	0xcf, 0x53, 0x8c, 0xff, 0x5e, 0xae, 0xcf, 0xdf, 0x61, 0x6e, 0x12, 0x6c, 0x32, 0x09, 0xe6, 0xa6,
-	0xed, 0x27, 0xc1, 0x8e, 0x85, 0x04, 0xef, 0x0d, 0x2b, 0x4e, 0xfa, 0x05, 0xf9, 0x16, 0xa6, 0x6a,
-	0xcc, 0x6c, 0x61, 0xf5, 0x3f, 0x5a, 0x20, 0x47, 0x53, 0x9c, 0x2b, 0x96, 0xf3, 0xc1, 0xb5, 0x9c,
-	0xae, 0x7e, 0x15, 0x74, 0xff, 0xeb, 0x2a, 0x5e, 0xb3, 0xa0, 0xe4, 0x3d, 0xc2, 0x4d, 0x37, 0x3e,
-	0xb2, 0x3b, 0x07, 0xa7, 0xbe, 0x2f, 0xed, 0xde, 0x32, 0x52, 0x57, 0x97, 0xee, 0xbc, 0xfb, 0xf6,
-	0xeb, 0xe3, 0x4a, 0x87, 0x04, 0x5c, 0x4b, 0x78, 0xe8, 0x4d, 0xbc, 0xb6, 0xba, 0xe4, 0x33, 0xc2,
-	0xeb, 0x65, 0xe7, 0x84, 0x2d, 0x2a, 0x50, 0xdf, 0xa8, 0x36, 0x5f, 0x5a, 0xef, 0xa9, 0x1e, 0x59,
-	0xaa, 0x1e, 0xe9, 0xce, 0xa3, 0x2a, 0x2f, 0x9d, 0xbf, 0xb1, 0xdb, 0xf9, 0x96, 0x7c, 0x42, 0x78,
-	0xa3, 0x8c, 0xe9, 0x27, 0xc9, 0x62, 0xc4, 0xfa, 0x92, 0x2d, 0x46, 0x9c, 0xb1, 0x30, 0xb4, 0x6b,
-	0x11, 0x29, 0xe9, 0x5c, 0x87, 0x78, 0x70, 0x78, 0x39, 0x0a, 0xd0, 0xd5, 0x28, 0x40, 0x3f, 0x47,
-	0x01, 0xfa, 0x30, 0x0e, 0x1a, 0x57, 0xe3, 0xa0, 0xf1, 0x7d, 0x1c, 0x34, 0x9e, 0xef, 0xca, 0xd8,
-	0xbc, 0x1c, 0x46, 0x6c, 0xa0, 0xd2, 0x5a, 0xca, 0x79, 0x99, 0x63, 0x2e, 0x72, 0xd0, 0x51, 0xd3,
-	0xfe, 0x20, 0x1e, 0xff, 0x0e, 0x00, 0x00, 0xff, 0xff, 0xa2, 0xd1, 0xdc, 0xac, 0xe5, 0x04, 0x00,
-	0x00,
+	// 494 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x94, 0x3d, 0x6f, 0x13, 0x31,
+	0x18, 0xc7, 0xe3, 0x06, 0xa2, 0xf2, 0x74, 0x41, 0x26, 0xa5, 0xe5, 0x04, 0xd7, 0xc8, 0x43, 0x48,
+	0x0b, 0xd8, 0x6a, 0x19, 0x99, 0xda, 0x4a, 0xb0, 0x96, 0x1b, 0xbb, 0x39, 0x89, 0x65, 0x4e, 0x24,
+	0xe7, 0xeb, 0xd9, 0x47, 0xa9, 0x10, 0x0b, 0x0b, 0x2b, 0x12, 0x42, 0xe2, 0x13, 0xf0, 0x49, 0x18,
+	0x3a, 0x56, 0x62, 0x61, 0x42, 0x28, 0xe1, 0x83, 0xa0, 0xd8, 0x3e, 0x7a, 0xe9, 0x35, 0xf4, 0xd4,
+	0xed, 0x14, 0xff, 0x5f, 0x7e, 0x7e, 0xfc, 0x28, 0x70, 0x57, 0x4b, 0xc1, 0x32, 0x71, 0xcc, 0xb3,
+	0x21, 0x3b, 0xca, 0x45, 0x76, 0x42, 0xd3, 0x4c, 0x19, 0x85, 0x57, 0xb5, 0x14, 0x89, 0x30, 0xc7,
+	0x2a, 0x7b, 0x4d, 0xb5, 0x14, 0xd4, 0x49, 0x82, 0xb6, 0x54, 0x52, 0x59, 0x05, 0x9b, 0x7d, 0x39,
+	0x71, 0x70, 0x5f, 0x2a, 0x25, 0x47, 0x82, 0xf1, 0x34, 0x66, 0x3c, 0x49, 0x94, 0xe1, 0x26, 0x56,
+	0x89, 0xf6, 0xa7, 0x5b, 0x03, 0xa5, 0xc7, 0x4a, 0xb3, 0x3e, 0xd7, 0xc2, 0x75, 0xb0, 0x37, 0xdb,
+	0x7d, 0x61, 0xf8, 0x36, 0x4b, 0xb9, 0x8c, 0x13, 0x2b, 0xf6, 0xda, 0xb5, 0x12, 0x4e, 0xca, 0x33,
+	0x3e, 0x2e, 0x42, 0xee, 0x95, 0x0e, 0x06, 0x7c, 0x9c, 0xf2, 0x58, 0x7a, 0x0f, 0x69, 0x03, 0x7e,
+	0x39, 0x4b, 0x3d, 0xb0, 0xfa, 0x48, 0x1c, 0xe5, 0x42, 0x1b, 0x12, 0xc1, 0x9d, 0xb9, 0x5f, 0x75,
+	0xaa, 0x12, 0x2d, 0xf0, 0x33, 0x68, 0xb9, 0xdc, 0x75, 0xd4, 0x41, 0xbd, 0x95, 0x9d, 0x07, 0xf4,
+	0xd2, 0x8b, 0x52, 0x67, 0xdb, 0xbb, 0x71, 0xfa, 0x6b, 0xa3, 0x11, 0x79, 0x0b, 0xe9, 0x41, 0xdb,
+	0x66, 0xee, 0x7b, 0x00, 0xdf, 0x85, 0x6f, 0x43, 0x33, 0x8f, 0x87, 0x36, 0xf1, 0x56, 0x34, 0xfb,
+	0x24, 0x87, 0xb0, 0x7a, 0x41, 0xe9, 0xfb, 0x77, 0x61, 0xb9, 0xc0, 0xf7, 0x04, 0x1b, 0x0b, 0x08,
+	0x0a, 0xab, 0x67, 0xf8, 0x67, 0x23, 0x1c, 0xd6, 0xe6, 0xb2, 0x77, 0x47, 0xa3, 0x02, 0xe4, 0x39,
+	0xc0, 0xf9, 0x48, 0x7d, 0x7e, 0x97, 0xba, 0xf9, 0xd3, 0xd9, 0xfc, 0xa9, 0x7b, 0x63, 0x3f, 0x7f,
+	0x7a, 0xc0, 0xa5, 0xf0, 0xde, 0xa8, 0xe4, 0x24, 0xdf, 0x10, 0xac, 0x57, 0x3b, 0x2e, 0xbd, 0x42,
+	0xf3, 0x1a, 0x57, 0xc0, 0x2f, 0xe6, 0x38, 0x97, 0x2c, 0xe7, 0xc3, 0x2b, 0x39, 0x5d, 0x7f, 0x19,
+	0x74, 0xe7, 0x7b, 0x13, 0x6e, 0x5a, 0x50, 0xfc, 0x11, 0x41, 0xcb, 0x3d, 0x1a, 0xde, 0x5c, 0x80,
+	0x53, 0xdd, 0x92, 0x60, 0xab, 0x8e, 0xd4, 0xf5, 0x92, 0xee, 0x87, 0x1f, 0x7f, 0x3e, 0x2f, 0x75,
+	0x70, 0xc8, 0xb4, 0x14, 0x4f, 0xbc, 0x89, 0x55, 0x16, 0x16, 0x7f, 0x41, 0xb0, 0x5c, 0xdc, 0x1c,
+	0x3f, 0xfa, 0x5f, 0xc1, 0x85, 0x3d, 0x0a, 0x1e, 0xd7, 0x13, 0x7b, 0x1e, 0x6a, 0x79, 0x7a, 0xb8,
+	0xbb, 0x88, 0xa7, 0x18, 0x37, 0x7b, 0x97, 0xc7, 0xc3, 0xf7, 0xf8, 0x2b, 0x82, 0x95, 0xd2, 0x7b,
+	0x62, 0x5a, 0xa7, 0xed, 0x7c, 0xb9, 0x02, 0x56, 0x5b, 0xef, 0x01, 0x7b, 0x16, 0x90, 0xe0, 0xce,
+	0x55, 0x80, 0x7b, 0xfb, 0xa7, 0x93, 0x10, 0x9d, 0x4d, 0x42, 0xf4, 0x7b, 0x12, 0xa2, 0x4f, 0xd3,
+	0xb0, 0x71, 0x36, 0x0d, 0x1b, 0x3f, 0xa7, 0x61, 0xe3, 0x70, 0x53, 0xc6, 0xe6, 0x55, 0xde, 0xa7,
+	0x03, 0x35, 0xae, 0xa4, 0xbc, 0x2d, 0x72, 0xcc, 0x49, 0x2a, 0x74, 0xbf, 0x65, 0xff, 0x0e, 0x9e,
+	0xfe, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x6b, 0x7c, 0xb8, 0x74, 0xd3, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -358,9 +361,10 @@ const _ = grpc.SupportPackageIsVersion4
 type QueryClient interface {
 	// Parameters queries the parameters of the module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
-	// Queries a list of Campaign items.
-	Campaign(ctx context.Context, in *QueryGetCampaignRequest, opts ...grpc.CallOption) (*QueryGetCampaignResponse, error)
-	CampaignAll(ctx context.Context, in *QueryAllCampaignRequest, opts ...grpc.CallOption) (*QueryAllCampaignResponse, error)
+	// Queries an specific Campaign item.
+	Campaign(ctx context.Context, in *QueryCampaignRequest, opts ...grpc.CallOption) (*QueryCampaignResponse, error)
+	// Queries list of all Campaign items.
+	CampaignAll(ctx context.Context, in *QueryCampaignAllRequest, opts ...grpc.CallOption) (*QueryCampaignAllResponse, error)
 }
 
 type queryClient struct {
@@ -380,8 +384,8 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
-func (c *queryClient) Campaign(ctx context.Context, in *QueryGetCampaignRequest, opts ...grpc.CallOption) (*QueryGetCampaignResponse, error) {
-	out := new(QueryGetCampaignResponse)
+func (c *queryClient) Campaign(ctx context.Context, in *QueryCampaignRequest, opts ...grpc.CallOption) (*QueryCampaignResponse, error) {
+	out := new(QueryCampaignResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Query/Campaign", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -389,8 +393,8 @@ func (c *queryClient) Campaign(ctx context.Context, in *QueryGetCampaignRequest,
 	return out, nil
 }
 
-func (c *queryClient) CampaignAll(ctx context.Context, in *QueryAllCampaignRequest, opts ...grpc.CallOption) (*QueryAllCampaignResponse, error) {
-	out := new(QueryAllCampaignResponse)
+func (c *queryClient) CampaignAll(ctx context.Context, in *QueryCampaignAllRequest, opts ...grpc.CallOption) (*QueryCampaignAllResponse, error) {
+	out := new(QueryCampaignAllResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Query/CampaignAll", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -402,9 +406,10 @@ func (c *queryClient) CampaignAll(ctx context.Context, in *QueryAllCampaignReque
 type QueryServer interface {
 	// Parameters queries the parameters of the module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
-	// Queries a list of Campaign items.
-	Campaign(context.Context, *QueryGetCampaignRequest) (*QueryGetCampaignResponse, error)
-	CampaignAll(context.Context, *QueryAllCampaignRequest) (*QueryAllCampaignResponse, error)
+	// Queries an specific Campaign item.
+	Campaign(context.Context, *QueryCampaignRequest) (*QueryCampaignResponse, error)
+	// Queries list of all Campaign items.
+	CampaignAll(context.Context, *QueryCampaignAllRequest) (*QueryCampaignAllResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -414,10 +419,10 @@ type UnimplementedQueryServer struct {
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
 }
-func (*UnimplementedQueryServer) Campaign(ctx context.Context, req *QueryGetCampaignRequest) (*QueryGetCampaignResponse, error) {
+func (*UnimplementedQueryServer) Campaign(ctx context.Context, req *QueryCampaignRequest) (*QueryCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Campaign not implemented")
 }
-func (*UnimplementedQueryServer) CampaignAll(ctx context.Context, req *QueryAllCampaignRequest) (*QueryAllCampaignResponse, error) {
+func (*UnimplementedQueryServer) CampaignAll(ctx context.Context, req *QueryCampaignAllRequest) (*QueryCampaignAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CampaignAll not implemented")
 }
 
@@ -444,7 +449,7 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Query_Campaign_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryGetCampaignRequest)
+	in := new(QueryCampaignRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -456,13 +461,13 @@ func _Query_Campaign_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/sgenetwork.sge.reward.Query/Campaign",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).Campaign(ctx, req.(*QueryGetCampaignRequest))
+		return srv.(QueryServer).Campaign(ctx, req.(*QueryCampaignRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Query_CampaignAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryAllCampaignRequest)
+	in := new(QueryCampaignAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -474,7 +479,7 @@ func _Query_CampaignAll_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/sgenetwork.sge.reward.Query/CampaignAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).CampaignAll(ctx, req.(*QueryAllCampaignRequest))
+		return srv.(QueryServer).CampaignAll(ctx, req.(*QueryCampaignAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -556,7 +561,7 @@ func (m *QueryParamsResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetCampaignRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryCampaignRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -566,27 +571,27 @@ func (m *QueryGetCampaignRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetCampaignRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCampaignRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetCampaignRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCampaignRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Index) > 0 {
-		i -= len(m.Index)
-		copy(dAtA[i:], m.Index)
-		i = encodeVarintQuery(dAtA, i, uint64(len(m.Index)))
+	if len(m.Uid) > 0 {
+		i -= len(m.Uid)
+		copy(dAtA[i:], m.Uid)
+		i = encodeVarintQuery(dAtA, i, uint64(len(m.Uid)))
 		i--
 		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryGetCampaignResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryCampaignResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -596,12 +601,12 @@ func (m *QueryGetCampaignResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryGetCampaignResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCampaignResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryGetCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -619,7 +624,7 @@ func (m *QueryGetCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllCampaignRequest) Marshal() (dAtA []byte, err error) {
+func (m *QueryCampaignAllRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -629,12 +634,12 @@ func (m *QueryAllCampaignRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllCampaignRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCampaignAllRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllCampaignRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCampaignAllRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -654,7 +659,7 @@ func (m *QueryAllCampaignRequest) MarshalToSizedBuffer(dAtA []byte) (int, error)
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryAllCampaignResponse) Marshal() (dAtA []byte, err error) {
+func (m *QueryCampaignAllResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -664,12 +669,12 @@ func (m *QueryAllCampaignResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryAllCampaignResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *QueryCampaignAllResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryAllCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QueryCampaignAllResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -734,20 +739,20 @@ func (m *QueryParamsResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryGetCampaignRequest) Size() (n int) {
+func (m *QueryCampaignRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Index)
+	l = len(m.Uid)
 	if l > 0 {
 		n += 1 + l + sovQuery(uint64(l))
 	}
 	return n
 }
 
-func (m *QueryGetCampaignResponse) Size() (n int) {
+func (m *QueryCampaignResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -758,7 +763,7 @@ func (m *QueryGetCampaignResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllCampaignRequest) Size() (n int) {
+func (m *QueryCampaignAllRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -771,7 +776,7 @@ func (m *QueryAllCampaignRequest) Size() (n int) {
 	return n
 }
 
-func (m *QueryAllCampaignResponse) Size() (n int) {
+func (m *QueryCampaignAllResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -929,7 +934,7 @@ func (m *QueryParamsResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetCampaignRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryCampaignRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -952,15 +957,15 @@ func (m *QueryGetCampaignRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetCampaignRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCampaignRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetCampaignRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCampaignRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Index", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Uid", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -988,7 +993,7 @@ func (m *QueryGetCampaignRequest) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Index = string(dAtA[iNdEx:postIndex])
+			m.Uid = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -1011,7 +1016,7 @@ func (m *QueryGetCampaignRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryGetCampaignResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryCampaignResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1034,10 +1039,10 @@ func (m *QueryGetCampaignResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryGetCampaignResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCampaignResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryGetCampaignResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCampaignResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1094,7 +1099,7 @@ func (m *QueryGetCampaignResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllCampaignRequest) Unmarshal(dAtA []byte) error {
+func (m *QueryCampaignAllRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1117,10 +1122,10 @@ func (m *QueryAllCampaignRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllCampaignRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCampaignAllRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllCampaignRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCampaignAllRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1180,7 +1185,7 @@ func (m *QueryAllCampaignRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryAllCampaignResponse) Unmarshal(dAtA []byte) error {
+func (m *QueryCampaignAllResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1203,10 +1208,10 @@ func (m *QueryAllCampaignResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryAllCampaignResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: QueryCampaignAllResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryAllCampaignResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QueryCampaignAllResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
