@@ -5,6 +5,12 @@ import (
 	sdkmath "cosmossdk.io/math"
 )
 
+func NewPool(total sdkmath.Int) Pool {
+	return Pool{
+		Total: total,
+	}
+}
+
 func (p *Pool) CheckBalance(toSpend sdkmath.Int) error {
 	availablePool := p.Total.Sub(p.Spent)
 	if availablePool.LT(toSpend) {

@@ -15,24 +15,25 @@ message Campaign {
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
+  string funder_address = 3;
   // start_ts is the start timestamp of a campaign.
-  uint64 start_ts = 3 [
+  uint64 start_ts = 4 [
     (gogoproto.customname) = "StartTS",
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
   // end_ts is the end timestamp of a campaign.
-  uint64 end_ts = 4 [
+  uint64 end_ts = 5 [
     (gogoproto.customname) = "EndTS",
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
   // reward_type is the type of defined reward.
-  RewardType reward_type = 5;
+  RewardType reward_type = 6;
   // reward_defs is the list of definitions of the campaign rewards.
-  repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
+  repeated Definition reward_defs = 7 [ (gogoproto.nullable) = false ];
   // pool is the tracker of pool funds of the campaign.
-  Pool pool = 7 [ (gogoproto.nullable) = false ];
+  Pool pool = 8 [ (gogoproto.nullable) = false ];
 }
 
 // Pool is the type for the campaign funding pool.

@@ -9,6 +9,11 @@ import (
 
 // Validate validates campaign creation ticket payload.
 func (payload *CreateCampaignPayload) Validate(ctx sdk.Context) error {
+	_, err := sdk.AccAddressFromBech32(payload.FunderAddress)
+	if err != nil {
+		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
 	if payload.StartTs >= payload.EndTs {
 		return cosmerrors.Wrapf(sdkerrors.ErrInvalidRequest, "start timestamp can not be after end time")
 	}

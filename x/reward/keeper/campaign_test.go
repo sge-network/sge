@@ -3,10 +3,12 @@ package keeper_test
 import (
 	"strconv"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/x/reward/keeper"
@@ -20,6 +22,13 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 	items := make([]types.Campaign, n)
 	for i := range items {
 		items[i].UID = uuid.NewString()
+		items[i].Creator = sample.AccAddress()
+		items[i].FunderAddress = sample.AccAddress()
+		items[i].StartTS = uint64(time.Now().Unix())
+		items[i].EndTS = uint64(time.Now().Add(5 * time.Minute).Unix())
+		items[i].RewardType = types.RewardType_REWARD_TYPE_REFERRAL
+		items[i].RewardDefs = []types.Definition{}
+		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdk.NewInt(100)}
 
 		keeper.SetCampaign(ctx, items[i])
 	}

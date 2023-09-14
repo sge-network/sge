@@ -3,10 +3,14 @@ package keeper_test
 import (
 	"strconv"
 	"testing"
+	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
+	"github.com/sge-network/sge/testutil/sample"
+	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/x/reward/keeper"
@@ -20,13 +24,34 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
-	creator := "A"
+	creator := sample.AccAddress()
 	for i := 0; i < 5; i++ {
+		ticketClaim := jwt.MapClaims{
+			"exp":            time.Now().Add(time.Minute * 5).Unix(),
+			"iat":            time.Now().Unix(),
+			"funder_address": creator,
+			"start_ts":       time.Now().Unix(),
+			"end_ts":         time.Now().Add(5 * time.Minute).Unix(),
+			"type":           types.RewardType_REWARD_TYPE_SIGNUP,
+			"reward_defs": []types.Definition{
+				{
+					ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+					Amount:       sdk.NewInt(100),
+					DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+					ExpDuration:  1000,
+				},
+			},
+			"pool_amount": sdk.NewInt(10000),
+		}
+		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		require.Nil(t, err)
+
 		expected := &types.MsgCreateCampaign{
 			Creator: creator,
 			Uid:     uuid.NewString(),
+			Ticket:  ticket,
 		}
-		_, err := srv.CreateCampaign(wctx, expected)
+		_, err = srv.CreateCampaign(wctx, expected)
 		require.NoError(t, err)
 		rst, found := k.GetCampaign(ctx,
 			expected.Uid,
@@ -37,7 +62,7 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 }
 
 func TestCampaignMsgServerUpdate(t *testing.T) {
-	creator := "A"
+	creator := sample.AccAddress()
 	expectedUID := uuid.NewString()
 
 	for _, tc := range []struct {
@@ -55,10 +80,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 		{
 			desc: "Unauthorized",
 			request: &types.MsgUpdateCampaign{
-				Creator: "B",
+				Creator: sample.AccAddress(),
 				Uid:     expectedUID,
 			},
-			err: sdkerrors.ErrUnauthorized,
+			err: types.ErrAuthorizationNotFound,
 		},
 		{
 			desc: "KeyNotFound",
@@ -73,12 +98,43 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
+
+			ticketClaim := jwt.MapClaims{
+				"exp":            time.Now().Add(time.Minute * 5).Unix(),
+				"iat":            time.Now().Unix(),
+				"funder_address": creator,
+				"start_ts":       time.Now().Unix(),
+				"end_ts":         time.Now().Add(5 * time.Minute).Unix(),
+				"type":           types.RewardType_REWARD_TYPE_SIGNUP,
+				"reward_defs": []types.Definition{
+					{
+						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						Amount:       sdk.NewInt(100),
+						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+						ExpDuration:  1000,
+					},
+				},
+				"pool_amount": sdk.NewInt(10000),
+			}
+			ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+			require.Nil(t, err)
+
 			expected := &types.MsgCreateCampaign{
 				Creator: creator,
 				Uid:     expectedUID,
+				Ticket:  ticket,
 			}
-			_, err := srv.CreateCampaign(wctx, expected)
+			_, err = srv.CreateCampaign(wctx, expected)
 			require.NoError(t, err)
+
+			ticketClaimUpdate := jwt.MapClaims{
+				"exp":    time.Now().Add(time.Minute * 5).Unix(),
+				"iat":    time.Now().Unix(),
+				"end_ts": time.Now().Add(5 * time.Minute).Unix(),
+			}
+			ticketUpdate, err := simappUtil.CreateJwtTicket(ticketClaimUpdate)
+			require.Nil(t, err)
+			tc.request.Ticket = ticketUpdate
 
 			_, err = srv.UpdateCampaign(wctx, tc.request)
 			if tc.err != nil {
@@ -96,7 +152,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 }
 
 func TestCampaignMsgServerDelete(t *testing.T) {
-	creator := "A"
+	creator := sample.AccAddress()
 	expectedUID := uuid.NewString()
 
 	for _, tc := range []struct {
@@ -114,10 +170,10 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 		{
 			desc: "Unauthorized",
 			request: &types.MsgDeleteCampaign{
-				Creator: "B",
+				Creator: sample.AccAddress(),
 				Uid:     expectedUID,
 			},
-			err: sdkerrors.ErrUnauthorized,
+			err: types.ErrAuthorizationNotFound,
 		},
 		{
 			desc: "KeyNotFound",
@@ -133,11 +189,33 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			_, err := srv.CreateCampaign(wctx, &types.MsgCreateCampaign{
+			ticketClaim := jwt.MapClaims{
+				"exp":            time.Now().Add(time.Minute * 5).Unix(),
+				"iat":            time.Now().Unix(),
+				"funder_address": creator,
+				"start_ts":       time.Now().Unix(),
+				"end_ts":         time.Now().Add(5 * time.Minute).Unix(),
+				"type":           types.RewardType_REWARD_TYPE_SIGNUP,
+				"reward_defs": []types.Definition{
+					{
+						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						Amount:       sdk.NewInt(100),
+						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+						ExpDuration:  1000,
+					},
+				},
+				"pool_amount": sdk.NewInt(10000),
+			}
+			ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+			require.Nil(t, err)
+
+			_, err = srv.CreateCampaign(wctx, &types.MsgCreateCampaign{
 				Creator: creator,
 				Uid:     expectedUID,
+				Ticket:  ticket,
 			})
 			require.NoError(t, err)
+
 			_, err = srv.DeleteCampaign(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)

@@ -447,6 +447,10 @@ func NewAppKeeper(
 		appKeepers.keys[rewardmoduletypes.StoreKey],
 		appKeepers.keys[rewardmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
+		appKeepers.OVMKeeper,
+		rewardmodulekeeper.SdkExpectedKeepers{
+			AuthzKeeper: appKeepers.AuthzKeeper,
+		},
 	)
 
 	//// SGE modules \\\\

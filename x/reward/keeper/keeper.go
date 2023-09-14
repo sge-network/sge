@@ -14,18 +14,27 @@ import (
 
 type (
 	Keeper struct {
-		cdc        codec.BinaryCodec
-		storeKey   storetypes.StoreKey
-		memKey     storetypes.StoreKey
-		paramstore paramtypes.Subspace
+		cdc         codec.BinaryCodec
+		storeKey    storetypes.StoreKey
+		memKey      storetypes.StoreKey
+		paramstore  paramtypes.Subspace
+		authzKeeper types.AuthzKeeper
+		ovmKeeper   types.OVMKeeper
 	}
 )
+
+// SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
+type SdkExpectedKeepers struct {
+	AuthzKeeper types.AuthzKeeper
+}
 
 func NewKeeper(
 	cdc codec.BinaryCodec,
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
+	ovmKeeper types.OVMKeeper,
+	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -33,10 +42,12 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:        cdc,
-		storeKey:   storeKey,
-		memKey:     memKey,
-		paramstore: ps,
+		cdc:         cdc,
+		storeKey:    storeKey,
+		memKey:      memKey,
+		paramstore:  ps,
+		ovmKeeper:   ovmKeeper,
+		authzKeeper: expectedKeepers.AuthzKeeper,
 	}
 }
 

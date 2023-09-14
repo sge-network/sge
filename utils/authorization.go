@@ -40,7 +40,7 @@ func ValidateMsgAuthorization(
 	granteeAddr := sdk.MustAccAddressFromBech32(creator)
 	granterAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
-		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid depositor address (%s)", err)
+		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid granter address (%s)", err)
 	}
 	authorization, expiration := authzKeeper.GetAuthorization(
 		ctx,
