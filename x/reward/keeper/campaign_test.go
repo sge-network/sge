@@ -27,7 +27,12 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 		items[i].StartTS = uint64(time.Now().Unix())
 		items[i].EndTS = uint64(time.Now().Add(5 * time.Minute).Unix())
 		items[i].RewardType = types.RewardType_REWARD_TYPE_REFERRAL
-		items[i].RewardDefs = []types.Definition{}
+		items[i].RewardDefs = []types.Definition{{
+			ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:       sdk.NewInt(100),
+			DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			ExpDuration:  100,
+		}}
 		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdk.NewInt(100)}
 
 		keeper.SetCampaign(ctx, items[i])
@@ -44,8 +49,8 @@ func TestCampaignGet(t *testing.T) {
 		)
 		require.True(t, found)
 		require.Equal(t,
-			nullify.Fill(&item),
-			nullify.Fill(&rst),
+			nullify.Fill(item),
+			nullify.Fill(rst),
 		)
 	}
 }

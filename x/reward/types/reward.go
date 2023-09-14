@@ -46,7 +46,7 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 	return errors.New("not implemented")
 }
 
-// CalculateDistributions parses ticket payload and returns the distribution list of referal reward.
+// CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
 func (rfr ReferralReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
 }

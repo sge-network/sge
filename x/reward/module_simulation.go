@@ -25,14 +25,18 @@ var (
 )
 
 const (
+	//#nosec
 	opWeightMsgCreateCampaign = "op_weight_msg_campaign"
 	// TODO: Determine the simulation weight value
+	//#nosec
 	defaultWeightMsgCreateCampaign int = 100
 
+	//#nosec
 	opWeightMsgUpdateCampaign = "op_weight_msg_campaign"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateCampaign int = 100
 
+	//#nosec
 	opWeightMsgDeleteCampaign = "op_weight_msg_campaign"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteCampaign int = 100

@@ -1,28 +1,29 @@
-package types
+package types_test
 
 import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/x/reward/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgCreateCampaign
+		msg  types.MsgCreateCampaign
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgCreateCampaign{
+			msg: types.MsgCreateCampaign{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgCreateCampaign{
+			msg: types.MsgCreateCampaign{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -42,18 +43,18 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 func TestMsgUpdateCampaign_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgUpdateCampaign
+		msg  types.MsgUpdateCampaign
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgUpdateCampaign{
+			msg: types.MsgUpdateCampaign{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgUpdateCampaign{
+			msg: types.MsgUpdateCampaign{
 				Creator: sample.AccAddress(),
 			},
 		},
@@ -73,18 +74,18 @@ func TestMsgUpdateCampaign_ValidateBasic(t *testing.T) {
 func TestMsgDeleteCampaign_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  MsgDeleteCampaign
+		msg  types.MsgDeleteCampaign
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: MsgDeleteCampaign{
+			msg: types.MsgDeleteCampaign{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		}, {
 			name: "valid address",
-			msg: MsgDeleteCampaign{
+			msg: types.MsgDeleteCampaign{
 				Creator: sample.AccAddress(),
 			},
 		},

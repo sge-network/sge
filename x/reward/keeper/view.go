@@ -6,8 +6,8 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
-// getMarketsStore gets the store containing all markets.
-func (k Keeper) getMarketsStore(ctx sdk.Context) prefix.Store {
+// getCampaignStore gets the store containing all campaigns.
+func (k Keeper) getCampaignStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.CampaignKeyPrefix)
 }

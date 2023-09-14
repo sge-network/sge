@@ -15,7 +15,7 @@ func CmdCreateCampaign() *cobra.Command {
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
-			argUid := args[0]
+			argUID := args[0]
 
 			// Get value arguments
 			argTicket := args[1]
@@ -27,7 +27,7 @@ func CmdCreateCampaign() *cobra.Command {
 
 			msg := types.NewMsgCreateCampaign(
 				clientCtx.GetFromAddress().String(),
-				argUid,
+				argUID,
 				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -49,7 +49,7 @@ func CmdUpdateCampaign() *cobra.Command {
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
-			argUid := args[0]
+			argUID := args[0]
 
 			// Get value arguments
 			argTicket := args[1]
@@ -61,7 +61,7 @@ func CmdUpdateCampaign() *cobra.Command {
 
 			msg := types.NewMsgUpdateCampaign(
 				clientCtx.GetFromAddress().String(),
-				argUid,
+				argUID,
 				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {

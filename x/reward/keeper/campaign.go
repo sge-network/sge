@@ -1,14 +1,13 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/x/reward/types"
 )
 
 // SetCampaign set a specific campaign in the store from its index
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
+	store := k.getCampaignStore(ctx)
 	b := k.cdc.MustMarshal(&campaign)
 	store.Set(types.GetCampaignKey(
 		campaign.UID,
@@ -20,7 +19,7 @@ func (k Keeper) GetCampaign(
 	ctx sdk.Context,
 	index string,
 ) (val types.Campaign, found bool) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
+	store := k.getCampaignStore(ctx)
 
 	b := store.Get(types.GetCampaignKey(
 		index,
@@ -38,7 +37,7 @@ func (k Keeper) RemoveCampaign(
 	ctx sdk.Context,
 	index string,
 ) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
+	store := k.getCampaignStore(ctx)
 	store.Delete(types.GetCampaignKey(
 		index,
 	))
@@ -46,7 +45,7 @@ func (k Keeper) RemoveCampaign(
 
 // GetAllCampaign returns all campaign
 func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.CampaignKeyPrefix)
+	store := k.getCampaignStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
 	defer iterator.Close()
