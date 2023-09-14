@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+	"time"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/google/uuid"
@@ -15,6 +17,7 @@ import (
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/reward/client/cli"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -30,8 +33,21 @@ func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.
 
 	for i := 0; i < n; i++ {
 		campaign := types.Campaign{
-			UID: uuid.NewString(),
+			UID:           uuid.NewString(),
+			Creator:       sample.AccAddress(),
+			FunderAddress: sample.AccAddress(),
+			StartTS:       uint64(time.Now().Unix()),
+			EndTS:         uint64(time.Now().Add(5 * time.Minute).Unix()),
+			RewardType:    types.RewardType_REWARD_TYPE_AFFILIATION,
+			RewardDefs: []types.Definition{{
+				ReceiverType: types.ReceiverType_RECEIVER_TYPE_REFEREE,
+				Amount:       sdkmath.NewInt(100),
+				DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+				ExpDuration:  1000,
+			}},
+			Pool: types.Pool{Spent: sdkmath.NewInt(100), Total: sdkmath.NewInt(1000)},
 		}
+
 		nullify.Fill(&campaign)
 		state.CampaignList = append(state.CampaignList, campaign)
 	}
