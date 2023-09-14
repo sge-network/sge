@@ -87,6 +87,7 @@ var mAccPerms = map[string][]string{
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
 	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():      nil,
 	orderbookmoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
+	rewardmoduletypes.RewardPoolFunder{}.GetModuleAcc():            nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,

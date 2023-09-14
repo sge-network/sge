@@ -248,7 +248,8 @@ func (m *QueryCampaignAllRequest) GetPagination() *query.PageRequest {
 	return nil
 }
 
-// QueryCampaignAllResponse is response body of the query all campaigns endpoint.
+// QueryCampaignAllResponse is response body of the query all campaigns
+// endpoint.
 type QueryCampaignAllResponse struct {
 	Campaign   []Campaign          `protobuf:"bytes,1,rep,name=campaign,proto3" json:"campaign"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
