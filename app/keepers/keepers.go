@@ -449,7 +449,9 @@ func NewAppKeeper(
 		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
 		appKeepers.OVMKeeper,
 		rewardmodulekeeper.SdkExpectedKeepers{
-			AuthzKeeper: appKeepers.AuthzKeeper,
+			AuthzKeeper:   appKeepers.AuthzKeeper,
+			BankKeeper:    appKeepers.BankKeeper,
+			AccountKeeper: appKeepers.AccountKeeper,
 		},
 	)
 

@@ -9,6 +9,7 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	"github.com/tendermint/tendermint/libs/log"
 
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -18,6 +19,7 @@ type (
 		storeKey    storetypes.StoreKey
 		memKey      storetypes.StoreKey
 		paramstore  paramtypes.Subspace
+		modFunder   *utils.ModuleAccFunder
 		authzKeeper types.AuthzKeeper
 		ovmKeeper   types.OVMKeeper
 	}
@@ -25,7 +27,9 @@ type (
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
 type SdkExpectedKeepers struct {
-	AuthzKeeper types.AuthzKeeper
+	AuthzKeeper   types.AuthzKeeper
+	BankKeeper    types.BankKeeper
+	AccountKeeper types.AccountKeeper
 }
 
 func NewKeeper(
@@ -42,10 +46,15 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		cdc:         cdc,
-		storeKey:    storeKey,
-		memKey:      memKey,
-		paramstore:  ps,
+		cdc:        cdc,
+		storeKey:   storeKey,
+		memKey:     memKey,
+		paramstore: ps,
+		modFunder: utils.NewModuleAccFunder(
+			expectedKeepers.BankKeeper,
+			expectedKeepers.AccountKeeper,
+			types.BankError,
+		),
 		ovmKeeper:   ovmKeeper,
 		authzKeeper: expectedKeepers.AuthzKeeper,
 	}

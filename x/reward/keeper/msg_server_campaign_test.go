@@ -24,7 +24,7 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
-	creator := sample.AccAddress()
+	creator := simappUtil.TestParamUsers["user1"].Address.String()
 	for i := 0; i < 5; i++ {
 		ticketClaim := jwt.MapClaims{
 			"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -62,7 +62,6 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 }
 
 func TestCampaignMsgServerUpdate(t *testing.T) {
-	creator := sample.AccAddress()
 	expectedUID := uuid.NewString()
 
 	for _, tc := range []struct {
@@ -73,8 +72,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 		{
 			desc: "Completed",
 			request: &types.MsgUpdateCampaign{
-				Creator: creator,
-				Uid:     expectedUID,
+				Uid: expectedUID,
 			},
 		},
 		{
@@ -88,8 +86,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.MsgUpdateCampaign{
-				Creator: creator,
-				Uid:     uuid.NewString(),
+				Uid: uuid.NewString(),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -98,6 +95,8 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
+
+			creator := simappUtil.TestParamUsers["user1"].Address.String()
 
 			ticketClaim := jwt.MapClaims{
 				"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -136,6 +135,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			require.Nil(t, err)
 			tc.request.Ticket = ticketUpdate
 
+			if tc.request.Creator == "" {
+				tc.request.Creator = creator
+			}
+
 			_, err = srv.UpdateCampaign(wctx, tc.request)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -152,7 +155,6 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 }
 
 func TestCampaignMsgServerDelete(t *testing.T) {
-	creator := sample.AccAddress()
 	expectedUID := uuid.NewString()
 
 	for _, tc := range []struct {
@@ -163,8 +165,7 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 		{
 			desc: "Completed",
 			request: &types.MsgDeleteCampaign{
-				Creator: creator,
-				Uid:     expectedUID,
+				Uid: expectedUID,
 			},
 		},
 		{
@@ -178,8 +179,7 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 		{
 			desc: "KeyNotFound",
 			request: &types.MsgDeleteCampaign{
-				Creator: creator,
-				Uid:     uuid.NewString(),
+				Uid: uuid.NewString(),
 			},
 			err: sdkerrors.ErrKeyNotFound,
 		},
@@ -188,6 +188,7 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
+			creator := simappUtil.TestParamUsers["user1"].Address.String()
 
 			ticketClaim := jwt.MapClaims{
 				"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -215,6 +216,10 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 				Ticket:  ticket,
 			})
 			require.NoError(t, err)
+
+			if tc.request.Creator == "" {
+				tc.request.Creator = creator
+			}
 
 			_, err = srv.DeleteCampaign(wctx, tc.request)
 			if tc.err != nil {

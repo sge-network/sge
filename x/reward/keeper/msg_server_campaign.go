@@ -34,6 +34,15 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		}
 	}
 
+	// transfer the pool amount to the reward pool module account
+	if err := k.modFunder.Fund(
+		types.RewardPoolFunder{}, ctx,
+		sdk.MustAccAddressFromBech32(payload.FunderAddress),
+		payload.PoolAmount,
+	); err != nil {
+		return nil, cosmerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
+	}
+
 	campaign := types.NewCampaign(
 		msg.Creator, payload.FunderAddress, msg.Uid,
 		payload.StartTs, payload.EndTs,
