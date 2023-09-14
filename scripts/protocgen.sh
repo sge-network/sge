@@ -3,7 +3,7 @@
 set -eo pipefail
 
 # get protoc executions
-go get github.com/cosmos/gogoproto@v1.4.10 2>/dev/null
+go get github.com/cosmos/gogoproto@v1.4.11 2>/dev/null
 
 # get cosmos sdk from github
 go get github.com/cosmos/cosmos-sdk@v0.46.14 2>/dev/null
