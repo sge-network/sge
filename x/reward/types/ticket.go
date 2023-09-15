@@ -30,7 +30,7 @@ func (payload *CreateCampaignPayload) Validate(ctx sdk.Context) error {
 		return cosmerrors.Wrapf(sdkerrors.ErrInvalidRequest, "at least one reward definition should be defined")
 	}
 
-	if payload.PoolAmount.GT(sdkmath.ZeroInt()) {
+	if !payload.PoolAmount.GT(sdkmath.ZeroInt()) {
 		return cosmerrors.Wrapf(sdkerrors.ErrInvalidRequest, "pool amount should be positive")
 	}
 

@@ -40,11 +40,11 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	}
 }
 
-// CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the reward.
-func (c *Campaign) CheckPoolBalance() error {
+// CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the rewards.
+func (c *Campaign) CheckPoolBalance(distributions []Distribution) error {
 	totalAmount := sdkmath.ZeroInt()
-	for _, d := range c.RewardDefs {
-		totalAmount.Add(d.Amount)
+	for _, d := range distributions {
+		totalAmount.Add(d.Allocation.Amount)
 	}
 	if err := c.Pool.CheckBalance(totalAmount); err != nil {
 		return err

@@ -1,6 +1,10 @@
 package types
 
-import "errors"
+import (
+	"errors"
+
+	cosmerrors "cosmossdk.io/errors"
+)
 
 // IRewardFactory defines the methods that should be implemented for all of reward types.
 type IRewardFactory interface {
@@ -22,7 +26,13 @@ func (sur SignUpReward) ValidateBasic(campaign Campaign) error {
 
 // VaidateDefinitions validates campaign definitions.
 func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
-	return errors.New("not implemented")
+	if len(campaign.RewardDefs) != 1 {
+		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "signup rewards can only have single definition")
+	}
+	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+		return cosmerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
+	}
+	return nil
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of signup reward.
@@ -43,7 +53,23 @@ func (rfr ReferralReward) ValidateBasic(campaign Campaign) error {
 
 // VaidateDefinitions validates campaign definitions.
 func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
-	return errors.New("not implemented")
+	hasReferrer := false
+	hasReferee := false
+	for _, d := range campaign.RewardDefs {
+		switch d.ReceiverType {
+		case ReceiverType_RECEIVER_TYPE_REFEREE:
+			hasReferee = true
+		case ReceiverType_RECEIVER_TYPE_REFERRER:
+			hasReferrer = true
+		default:
+			return cosmerrors.Wrapf(ErrInvalidReceiverType, "%s", d.ReceiverType)
+		}
+	}
+
+	if !hasReferee || !hasReferrer {
+		return cosmerrors.Wrapf(ErrMissingDefinition, "referral rewards should have the referrer and the referee")
+	}
+	return nil
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
@@ -64,7 +90,13 @@ func (afr AffiliationReward) ValidateBasic(campaign Campaign) error {
 
 // VaidateDefinitions validates campaign definitions.
 func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
-	return errors.New("not implemented")
+	if len(campaign.RewardDefs) != 1 {
+		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "affiliation rewards can only have single definition")
+	}
+	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+		return cosmerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
+	}
+	return nil
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
@@ -85,7 +117,13 @@ func (afr NoLossBetsReward) ValidateBasic(campaign Campaign) error {
 
 // VaidateDefinitions validates campaign definitions.
 func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
-	return errors.New("not implemented")
+	if len(campaign.RewardDefs) != 1 {
+		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "noloss bets rewards can only have single definition")
+	}
+	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+		return cosmerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
+	}
+	return nil
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.

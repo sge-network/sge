@@ -31,7 +31,6 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 			ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
 			Amount:       sdk.NewInt(100),
 			DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			ExpDuration:  100,
 		}}
 		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdk.NewInt(100)}
 

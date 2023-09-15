@@ -29,7 +29,6 @@ message Definition {
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
   ReceiverAccType dst_acc_type = 3;
-  uint64 exp_duration = 4;
 }
 
 // Distribution is the type for the distribution of a reward.

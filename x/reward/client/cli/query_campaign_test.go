@@ -43,7 +43,6 @@ func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.
 				ReceiverType: types.ReceiverType_RECEIVER_TYPE_REFEREE,
 				Amount:       sdkmath.NewInt(100),
 				DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-				ExpDuration:  1000,
 			}},
 			Pool: types.Pool{Spent: sdkmath.NewInt(100), Total: sdkmath.NewInt(1000)},
 		}

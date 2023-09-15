@@ -14,10 +14,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetCampaign(
-		ctx,
-		msg.Uid,
-	)
+	_, isFound := k.GetCampaign(ctx, msg.Uid)
 	if isFound {
 		return nil, cosmerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
@@ -34,13 +31,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		}
 	}
 
-	// transfer the pool amount to the reward pool module account
-	if err := k.modFunder.Fund(
-		types.RewardPoolFunder{}, ctx,
-		sdk.MustAccAddressFromBech32(payload.FunderAddress),
-		payload.PoolAmount,
-	); err != nil {
-		return nil, cosmerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
+	if err := payload.Validate(ctx); err != nil {
+		return nil, err
 	}
 
 	campaign := types.NewCampaign(
@@ -50,6 +42,26 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.RewardDefs,
 		types.NewPool(payload.PoolAmount),
 	)
+
+	rewardFactory, err := campaign.GetRewardsFactory()
+	if err != nil {
+		return nil, err
+	}
+
+	err = rewardFactory.VaidateDefinitions(campaign)
+	if err != nil {
+		return nil, err
+	}
+
+	// transfer the pool amount to the reward pool module account
+	if err := k.modFunder.Fund(
+		types.RewardPoolFunder{}, ctx,
+		sdk.MustAccAddressFromBech32(payload.FunderAddress),
+		payload.PoolAmount,
+	); err != nil {
+		return nil, cosmerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
+	}
+
 	k.SetCampaign(ctx, campaign)
 
 	return &types.MsgCreateCampaignResponse{}, nil

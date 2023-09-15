@@ -38,10 +38,9 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 					ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
 					Amount:       sdk.NewInt(100),
 					DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-					ExpDuration:  1000,
 				},
 			},
-			"pool_amount": sdk.NewInt(10000),
+			"pool_amount": sdk.NewInt(1000000),
 		}
 		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
@@ -110,7 +109,6 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
 						Amount:       sdk.NewInt(100),
 						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-						ExpDuration:  1000,
 					},
 				},
 				"pool_amount": sdk.NewInt(10000),
@@ -202,7 +200,6 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
 						Amount:       sdk.NewInt(100),
 						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-						ExpDuration:  1000,
 					},
 				},
 				"pool_amount": sdk.NewInt(10000),
