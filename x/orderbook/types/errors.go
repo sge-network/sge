@@ -31,7 +31,6 @@ var (
 	ErrMaxWithdrawableAmountIsZero        = sdkerrors.Register(ModuleName, 6021, "maximum withdrawal amount is zero")
 	ErrParticipationOnInactiveMarket      = sdkerrors.Register(ModuleName, 6022, "participation is allowed on an active market only")
 	ErrMarketNotFound                     = sdkerrors.Register(ModuleName, 6023, "market not found to initialize participation")
-	ErrInsufficientFundToCoverPayout      = sdkerrors.Register(ModuleName, 6024, "insufficient fund in the participations to cover the payout")
 	ErrUnknownMarketStatus                = sdkerrors.Register(ModuleName, 6025, "unknown market status of orderbook settlement")
 	ErrWithdrawalTooLarge                 = sdkerrors.Register(ModuleName, 6026, "withdrawal is more than unused amount")
 )

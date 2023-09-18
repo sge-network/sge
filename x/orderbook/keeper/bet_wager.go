@@ -191,15 +191,14 @@ func (k Keeper) initFulfillmentInfo(
 ) {
 	fInfo = fulfillmentInfo{
 		// bet specs
-		betAmount:               betAmount,
-		payoutProfit:            payoutProfit,
-		betUID:                  betUID,
-		betID:                   betID,
-		oddsUID:                 oddsUID,
-		oddsType:                oddsType,
-		oddsVal:                 oddsVal,
-		maxLossMultiplier:       maxLossMultiplier,
-		totalAvailableLiquidity: sdk.NewInt(0),
+		betAmount:         betAmount,
+		payoutProfit:      payoutProfit,
+		betUID:            betUID,
+		betID:             betID,
+		oddsUID:           oddsUID,
+		oddsType:          oddsType,
+		oddsVal:           oddsVal,
+		maxLossMultiplier: maxLossMultiplier,
 
 		//  in process maps
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
@@ -237,9 +236,6 @@ func (k Keeper) initFulfillmentInfo(
 		if found {
 			item.participationExposure = pe
 			fInfo.fulfillmentMap[pe.ParticipationIndex] = item
-
-			fInfo.totalAvailableLiquidity = fInfo.totalAvailableLiquidity.
-				Add(item.calcAvailableLiquidity(maxLossMultiplier))
 		}
 	}
 
@@ -269,15 +265,6 @@ func (fInfo *fulfillmentInfo) validate() error {
 				participationIndex,
 			)
 		}
-	}
-
-	if fInfo.totalAvailableLiquidity.LT(fInfo.payoutProfit.TruncateInt()) {
-		return sdkerrors.Wrapf(
-			types.ErrInsufficientFundToCoverPayout,
-			"total liquidity %s, payout %s",
-			fInfo.totalAvailableLiquidity,
-			fInfo.payoutProfit,
-		)
 	}
 
 	return nil
@@ -417,16 +404,15 @@ func (k Keeper) refreshQueueAndState(
 }
 
 type fulfillmentInfo struct {
-	betUID                  string
-	betID                   uint64
-	oddsUID                 string
-	oddsType                bettypes.OddsType
-	oddsVal                 string
-	maxLossMultiplier       sdk.Dec
-	betAmount               sdkmath.Int
-	payoutProfit            sdk.Dec
-	fulfilledBetAmount      sdkmath.Int
-	totalAvailableLiquidity sdkmath.Int
+	betUID             string
+	betID              uint64
+	oddsUID            string
+	oddsType           bettypes.OddsType
+	oddsVal            string
+	maxLossMultiplier  sdk.Dec
+	betAmount          sdkmath.Int
+	payoutProfit       sdk.Dec
+	fulfilledBetAmount sdkmath.Int
 
 	fulfillmentQueue []uint64
 	fulfillmentMap   fulfillmentMap
