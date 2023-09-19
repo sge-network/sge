@@ -13,21 +13,21 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreate_Validate(t *testing.T) {
+func TestMsgTopUp_Validate(t *testing.T) {
 	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
 	someTime := time.Now()
 	tests := []struct {
 		name string
-		msg  types.MsgCreate
+		msg  types.MsgTopUp
 		want error
 	}{
 		{
 			name: "invalid creator",
-			msg: types.MsgCreate{
-				Creator:         "someInvalidAddress",
-				SubAccountOwner: owner.String(),
+			msg: types.MsgTopUp{
+				Creator:    "someInvalidAddress",
+				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
@@ -39,9 +39,9 @@ func TestMsgCreate_Validate(t *testing.T) {
 		},
 		{
 			name: "invalid sub account owner",
-			msg: types.MsgCreate{
-				Creator:         creatorAddr.String(),
-				SubAccountOwner: "someInvalidAddress",
+			msg: types.MsgTopUp{
+				Creator:    creatorAddr.String(),
+				SubAccount: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: someTime,
@@ -53,9 +53,9 @@ func TestMsgCreate_Validate(t *testing.T) {
 		},
 		{
 			name: "unlock time zero",
-			msg: types.MsgCreate{
-				Creator:         creatorAddr.String(),
-				SubAccountOwner: owner.String(),
+			msg: types.MsgTopUp{
+				Creator:    creatorAddr.String(),
+				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTime: time.Time{},

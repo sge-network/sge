@@ -5,9 +5,18 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-var (
-	_ sdk.Msg = &MsgCreate{}
+const (
+	// typeMsgCreate is type of message MsgCreate
+	typeMsgCreate = "subaccount_create"
 )
+
+var _ sdk.Msg = &MsgCreate{}
+
+// Route returns the module's message router key.
+func (*MsgCreate) Route() string { return RouterKey }
+
+// Type returns type of its message
+func (*MsgCreate) Type() string { return typeMsgCreate }
 
 func (msg *MsgCreate) GetSigners() []sdk.AccAddress {
 	signer, err := sdk.AccAddressFromBech32(msg.Creator)
@@ -15,6 +24,12 @@ func (msg *MsgCreate) GetSigners() []sdk.AccAddress {
 		panic(err)
 	}
 	return []sdk.AccAddress{signer}
+}
+
+// GetSignBytes returns sortJson form of its message
+func (msg *MsgCreate) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
 }
 
 // ValidateBasic performs a basic validation of the MsgCreateRequest fields.
