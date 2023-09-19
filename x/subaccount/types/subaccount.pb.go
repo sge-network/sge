@@ -30,13 +30,17 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // Balance defines the balance of a subaccount.
 type Balance struct {
-	// deposited_amount keeps track of how much was deposited so far in the subaccount.
+	// deposited_amount keeps track of how much was deposited so far in the
+	// subaccount.
 	DepositedAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=deposited_amount,json=depositedAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"deposited_amount"`
-	// spent_amount keeps track of how much was spent in the account in betting, house, staking, etc.
+	// spent_amount keeps track of how much was spent in the account in betting,
+	// house, staking, etc.
 	SpentAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,2,opt,name=spent_amount,json=spentAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"spent_amount"`
-	// withdrawn_amount keeps track of how much was withdrawn in the account after locked coins become free.
+	// withdrawn_amount keeps track of how much was withdrawn in the account after
+	// locked coins become free.
 	WithdrawmAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,3,opt,name=withdrawm_amount,json=withdrawmAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"withdrawm_amount"`
-	// lost_amount keeps track of the amounts that were lost due to betting losses, slashing etc.
+	// lost_amount keeps track of the amounts that were lost due to betting
+	// losses, slashing etc.
 	LostAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=lost_amount,json=lostAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"lost_amount"`
 }
 

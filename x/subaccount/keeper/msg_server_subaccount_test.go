@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgServer_CreateSubAccount(t *testing.T) {
+func TestMsgServer_Create(t *testing.T) {
 	account := sample.NativeAccAddress()
 	sender := sample.NativeAccAddress()
 
@@ -27,7 +27,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
 	someTime := time.Now().Add(10 * time.Minute)
-	msg := &types.MsgCreateSubAccount{
+	msg := &types.MsgCreate{
 		Sender:          sender.String(),
 		SubAccountOwner: account.String(),
 		LockedBalances: []types.LockedBalance{
@@ -38,7 +38,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 		},
 	}
 
-	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
+	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
 
 	// Check that the account has been created
@@ -76,13 +76,13 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 
 	tests := []struct {
 		name        string
-		msg         types.MsgCreateSubAccount
+		msg         types.MsgCreate
 		prepare     func(ctx sdk.Context, keeper *keeper.Keeper)
 		expectedErr string
 	}{
 		{
 			name: "unlock time is expired",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
@@ -97,7 +97,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "account has already sub account",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
@@ -114,7 +114,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "invalid request",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          sender.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
@@ -136,7 +136,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 
 			tt.prepare(ctx, k)
 
-			_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &tt.msg)
+			_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &tt.msg)
 			require.ErrorContains(t, err, tt.expectedErr)
 		})
 	}

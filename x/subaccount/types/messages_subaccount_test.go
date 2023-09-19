@@ -13,19 +13,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreateSubAccount_Validate(t *testing.T) {
+func TestMsgCreate_Validate(t *testing.T) {
 	sender := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
 	someTime := time.Now()
 	tests := []struct {
 		name string
-		msg  types.MsgCreateSubAccount
+		msg  types.MsgCreate
 		want error
 	}{
 		{
 			name: "invalid sender",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          "someInvalidAddress",
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{
@@ -39,7 +39,7 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "invalid sub account owner",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          sender.String(),
 				SubAccountOwner: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
@@ -53,7 +53,7 @@ func TestMsgCreateSubAccount_Validate(t *testing.T) {
 		},
 		{
 			name: "unlock time zero",
-			msg: types.MsgCreateSubAccount{
+			msg: types.MsgCreate{
 				Sender:          sender.String(),
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{

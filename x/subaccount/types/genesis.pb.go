@@ -86,6 +86,8 @@ func (m *GenesisState) GetSubaccounts() []GenesisSubaccount {
 	return nil
 }
 
+// GenesisSubaccount defines the genesis subaccount containing owner, address
+// and balance information.
 type GenesisSubaccount struct {
 	// address is the address of the subaccount.
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`

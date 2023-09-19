@@ -13,9 +13,11 @@ func RegisterCodec(_ *codec.LegacyAmino) {}
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
-		&MsgCreateSubAccount{},
+		&MsgCreate{},
 		&MsgWithdrawUnlockedBalances{},
 		&MsgTopUp{},
+		&MsgHouseDeposit{},
+		&MsgHouseWithdraw{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

@@ -18,7 +18,8 @@ message GenesisState {
   repeated GenesisSubaccount subaccounts = 3 [ (gogoproto.nullable) = false ];
 }
 
-// GenesisSubaccount defines the genesis subaccount containing owner, address and balance information.
+// GenesisSubaccount defines the genesis subaccount containing owner, address
+// and balance information.
 message GenesisSubaccount {
   // address is the address of the subaccount.
   string address = 1;

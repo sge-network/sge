@@ -8,25 +8,29 @@ option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // Balance defines the balance of a subaccount.
 message Balance {
-  // deposited_amount keeps track of how much was deposited so far in the subaccount.
+  // deposited_amount keeps track of how much was deposited so far in the
+  // subaccount.
   string deposited_amount = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // spent_amount keeps track of how much was spent in the account in betting, house, staking, etc.
+  // spent_amount keeps track of how much was spent in the account in betting,
+  // house, staking, etc.
   string spent_amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // withdrawn_amount keeps track of how much was withdrawn in the account after locked coins become free.
+  // withdrawn_amount keeps track of how much was withdrawn in the account after
+  // locked coins become free.
   string withdrawm_amount = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
-  // lost_amount keeps track of the amounts that were lost due to betting losses, slashing etc.
+  // lost_amount keeps track of the amounts that were lost due to betting
+  // losses, slashing etc.
   string lost_amount = 4 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
@@ -35,7 +39,8 @@ message Balance {
 
 // LockedBalance defines a balance which is locked.
 message LockedBalance {
-  google.protobuf.Timestamp unlock_time = 1 [(gogoproto.stdtime) = true, (gogoproto.nullable) = false];
+  google.protobuf.Timestamp unlock_time = 1
+      [ (gogoproto.stdtime) = true, (gogoproto.nullable) = false ];
   string amount = 2 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false

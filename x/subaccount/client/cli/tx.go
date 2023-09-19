@@ -29,7 +29,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		TxCreateSubaccount(),
+		TxCreate(),
 		TxTopupSubaccount(),
 		TxWager(),
 		TxHouseDeposit(),
@@ -40,17 +40,17 @@ func GetTxCmd() *cobra.Command {
 	return cmd
 }
 
-func TxCreateSubaccount() *cobra.Command {
+func TxCreate() *cobra.Command {
 	const (
 		flagFunds        = "funds"
 		flagLockDuration = "lock-duration"
 	)
 
 	cmd := &cobra.Command{
-		Use:     "create-subaccount [subaccount-owner]",
+		Use:     "create [subaccount-owner]",
 		Short:   "Create a new subaccount",
 		Long:    `Create a new subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from subaccount-funder-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount create sge123456 --funds 1000000000 --lock-duration 8760h --from subaccount-funder-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			subaccountOwner, err := sdk.AccAddressFromBech32(args[0])
@@ -75,7 +75,7 @@ func TxCreateSubaccount() *cobra.Command {
 				return err
 			}
 
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreateSubAccount{
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreate{
 				Sender:          clientCtx.From,
 				SubAccountOwner: subaccountOwner.String(),
 				LockedBalances: []types.LockedBalance{
@@ -99,10 +99,10 @@ func TxTopupSubaccount() *cobra.Command {
 		flagLockDuration = "lock-duration"
 	)
 	cmd := &cobra.Command{
-		Use:     "topup-subaccount [subaccount-owner]",
+		Use:     "topup [subaccount-owner]",
 		Short:   "Topup a subaccount",
 		Long:    `Topup a subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from funder-address-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount topup sge123456 --funds 1000000000 --lock-duration 8760h --from funder-address-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)

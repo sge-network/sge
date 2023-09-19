@@ -8,10 +8,11 @@ import (
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
-func (m msgServer) CreateSubAccount(
+// Create creates a sub account according to the input message data.
+func (m msgServer) Create(
 	ctx context.Context,
-	request *types.MsgCreateSubAccount,
-) (*types.MsgCreateSubAccountResponse, error) {
+	request *types.MsgCreate,
+) (*types.MsgCreateResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	err := request.ValidateBasic()
 	if err != nil {
@@ -50,5 +51,5 @@ func (m msgServer) CreateSubAccount(
 		LostAmount:      sdk.ZeroInt(),
 	})
 
-	return &types.MsgCreateSubAccountResponse{}, nil
+	return &types.MsgCreateResponse{}, nil
 }
