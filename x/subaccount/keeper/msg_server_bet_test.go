@@ -9,6 +9,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
@@ -56,7 +57,7 @@ func TestMsgServer_Bet(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
@@ -112,7 +113,7 @@ func TestMsgServer_Bet(t *testing.T) {
 		require.Equal(t,
 			sdk.NewCoins(
 				sdk.NewCoin(
-					k.GetParams(ctx).LockedBalanceDenom,
+					params.DefaultBondDenom,
 					math.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(math.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
 				)),
 			ownerBalance,
@@ -193,7 +194,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 			tApp.BankKeeper,
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
-			sdk.NewCoins(sdk.NewCoin(tApp.SubaccountKeeper.GetParams(ctx).LockedBalanceDenom, sdk.NewInt(1_000_000).Mul(micro))),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1_000_000).Mul(micro))),
 		)
 		require.NoError(t, err)
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(

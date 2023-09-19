@@ -4,6 +4,7 @@ import (
 	"cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -92,13 +93,13 @@ func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (t
 }
 
 // getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress, params types.Params) (types.Balance, math.Int, sdk.Coin) {
+func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.Balance, math.Int, sdk.Coin) {
 	balance, exists := k.GetBalance(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
 	unlockedBalance := k.GetUnlockedBalance(sdkContext, subaccountAddr)
-	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.LockedBalanceDenom)
+	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.DefaultBondDenom)
 
 	return balance, unlockedBalance, bankBalance
 }

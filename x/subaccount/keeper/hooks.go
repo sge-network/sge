@@ -3,6 +3,7 @@ package keeper
 import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/params"
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
 
@@ -23,7 +24,7 @@ func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalA
 	if !exists {
 		panic("subaccount owner not found")
 	}
-	err = k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, profit)))
+	err = k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
 	if err != nil {
 		panic(err)
 	}
@@ -80,7 +81,7 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	if !exists {
 		panic("data corruption: subaccount owner not found")
 	}
-	err = k.bankKeeper.SendCoins(ctx, house, subAccountOwner, sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, profit)))
+	err = k.bankKeeper.SendCoins(ctx, house, subAccountOwner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
 	if err != nil {
 		panic(err)
 	}

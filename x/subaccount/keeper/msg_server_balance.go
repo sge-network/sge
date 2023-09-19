@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -51,9 +52,7 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	params := m.keeper.GetParams(sdkContext)
-
-	balance, unlockedBalance, bankBalance := m.keeper.getBalances(sdkContext, subAccountAddress, params)
+	balance, unlockedBalance, bankBalance := m.keeper.getBalances(sdkContext, subAccountAddress)
 
 	// calculate withdrawable balance, which is the minimum between the available balance, and
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
@@ -66,7 +65,7 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
 	m.keeper.SetBalance(sdkContext, subAccountAddress, balance)
 
-	err := m.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.LockedBalanceDenom, withdrawableBalance)))
+	err := m.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
 	if err != nil {
 		return nil, err
 	}

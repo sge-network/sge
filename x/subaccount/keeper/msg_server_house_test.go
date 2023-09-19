@@ -8,6 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
@@ -33,7 +34,7 @@ func TestMsgServer(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
@@ -56,7 +57,7 @@ func TestMsgServer(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			bettor1,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
@@ -101,7 +102,7 @@ func TestMsgServer(t *testing.T) {
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t,
-			ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom).String(),
+			ownerBalance.AmountOf(params.DefaultBondDenom).String(),
 			sdk.NewInt(10).Mul(micro).Sub(bettorFee).String())
 	})
 
@@ -126,7 +127,7 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.LostAmount, sdk.NewDecFromInt(bettor1Funds.Sub(bettorFee)).Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
+		require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())
 	})
 	t.Run("house refund", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
@@ -149,7 +150,7 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
+		require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())
 	})
 
 	// TODO: not participated in bet fulfillment.
@@ -192,7 +193,7 @@ func TestMsgServer(t *testing.T) {
 		require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-		require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
+		require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())
 	})
 }
 
@@ -206,7 +207,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
@@ -229,7 +230,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			bettor1,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
@@ -256,7 +257,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
 	require.Equal(t, subBalance.DepositedAmount, subAccFunds)
 	subBankBalance := app.BankKeeper.GetAllBalances(ctx, subAccAddr)
-	require.Equal(t, subBankBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), subAccFunds.Sub(sdk.NewInt(100).Mul(micro))) // original funds - fee
+	require.Equal(t, subBankBalance.AmountOf(params.DefaultBondDenom), subAccFunds.Sub(sdk.NewInt(100).Mul(micro))) // original funds - fee
 
 	// resolve market with refund
 	app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
@@ -277,10 +278,10 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	require.Equal(t, subBalance.SpentAmount, sdk.ZeroInt())
 	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
 	subBankBalance = app.BankKeeper.GetAllBalances(ctx, subAccAddr)
-	require.Equal(t, subBankBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), subAccFunds) // original funds - fee was refunded
+	require.Equal(t, subBankBalance.AmountOf(params.DefaultBondDenom), subAccFunds) // original funds - fee was refunded
 	// check profits were not forwarded to subacc owner
 	ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-	require.Equal(t, ownerBalance.AmountOf(k.GetParams(ctx).LockedBalanceDenom), sdk.ZeroInt())
+	require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())
 }
 
 func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt math.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
