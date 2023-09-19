@@ -32,7 +32,7 @@ func (msg *MsgCreate) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-// ValidateBasic performs a basic validation of the MsgCreateRequest fields.
+// ValidateBasic performs a basic validation of the MsgCreate fields.
 func (msg *MsgCreate) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {

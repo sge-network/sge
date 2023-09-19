@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgCreate_Validate(t *testing.T) {
+func TestMsgCreateValidateBasic(t *testing.T) {
 	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 

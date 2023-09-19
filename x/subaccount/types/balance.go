@@ -31,6 +31,7 @@ func (m *Balance) Available() math.Int {
 		Sub(m.LostAmount)
 }
 
+// Spend modifies the spent amount of subaccount balance according to the spent value.
 func (m *Balance) Spend(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
@@ -42,6 +43,7 @@ func (m *Balance) Spend(amt math.Int) error {
 	return nil
 }
 
+// Unspend modifies the spent amount of subaccount balance according to the undpent value.
 func (m *Balance) Unspend(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
@@ -53,6 +55,7 @@ func (m *Balance) Unspend(amt math.Int) error {
 	return nil
 }
 
+// AddLoss adds to the lost amout of subaccount balance after losing the bet.
 func (m *Balance) AddLoss(amt math.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")

@@ -8,6 +8,7 @@ import (
 
 var _ orderbookmodulekeeper.Hook = Keeper{}
 
+// AfterBettorWin is subaccount module hook for subaccount bettor winning.
 func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
@@ -29,6 +30,7 @@ func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalA
 	k.SetBalance(ctx, bettor, balance)
 }
 
+// AfterBettorLoss is subaccount module hook for subaccount bettor loss.
 func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
@@ -45,6 +47,7 @@ func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, original
 	k.SetBalance(ctx, bettor, balance)
 }
 
+// AfterBettorRefund is subaccount module hook for subaccount bettor refund.
 func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee math.Int) {
 	balance, exists := k.GetBalance(ctx, bettor)
 	if !exists {
@@ -58,6 +61,7 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 	k.SetBalance(ctx, bettor, balance)
 }
 
+// AfterHouseWin is subaccount module hook for house winning over subbacount.
 func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit math.Int) {
 	// update balance
 	balance, exists := k.GetBalance(ctx, house)
@@ -82,6 +86,7 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	}
 }
 
+// AfterHouseLoss is subaccount module hook for house loss for subbacount.
 func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
@@ -100,6 +105,7 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 	k.SetBalance(ctx, house, balance)
 }
 
+// AfterHouseRefund is subaccount module hook for house refund in subaccount deposit.
 func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {
@@ -114,6 +120,7 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 	k.SetBalance(ctx, house, balance)
 }
 
+// AfterHouseFeeRefund is subaccount module hook for house fee refund in subaccount deposit.
 func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee math.Int) {
 	balance, exists := k.GetBalance(ctx, house)
 	if !exists {

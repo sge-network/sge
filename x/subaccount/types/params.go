@@ -8,8 +8,6 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const DefaultBondDenom = params.DefaultBondDenom
-
 var KeyLockedBalanceDenom = []byte("LockedBalanceDenom")
 
 // NewParams creates a new Params instance
@@ -20,7 +18,7 @@ func NewParams(lockedBalanceDenom string) Params {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		DefaultBondDenom,
+		params.DefaultBondDenom,
 	)
 }
 
