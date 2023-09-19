@@ -1,7 +1,7 @@
 syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
-import "sge/subaccount/subaccount.proto";
+import "sge/subaccount/balance.proto";
 import "sge/bet/tx.proto";
 import "sge/house/tx.proto";
 import "gogoproto/gogo.proto";
@@ -34,8 +34,8 @@ service Msg {
 
 // MsgCreate defines the Msg/Create request type.
 message MsgCreate {
-  // sender is the msg signer.
-  string sender = 1;
+  // creator is the msg signer.
+  string creator = 1;
 
   // sub_account_owner is the owner of the subaccount.
   string sub_account_owner = 2;
@@ -49,8 +49,8 @@ message MsgCreateResponse {}
 
 // MsgTopUp defines the Msg/TopUp request type.
 message MsgTopUp {
-  // sender is the msg signer.
-  string sender = 1;
+  // creator is the msg signer.
+  string creator = 1;
 
   // sub_account is the subaccount address.
   string sub_account = 2;
@@ -65,8 +65,8 @@ message MsgTopUpResponse {}
 // MsgWithdrawUnlockedBalances defines the Msg/WithdrawUnlockedBalances request
 // type.
 message MsgWithdrawUnlockedBalances {
-  // sender is the subaccount owner.
-  string sender = 1;
+  // creator is the subaccount owner.
+  string creator = 1;
 }
 
 // MsgWithdrawUnlockedBalancesResponse defines the Msg/WithdrawUnlockedBalances

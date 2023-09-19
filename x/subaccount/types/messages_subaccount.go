@@ -10,7 +10,7 @@ var (
 )
 
 func (msg *MsgCreate) GetSigners() []sdk.AccAddress {
-	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	signer, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
@@ -19,7 +19,7 @@ func (msg *MsgCreate) GetSigners() []sdk.AccAddress {
 
 // ValidateBasic performs a basic validation of the MsgCreateRequest fields.
 func (msg *MsgCreate) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return errors.ErrInvalidAddress
 	}

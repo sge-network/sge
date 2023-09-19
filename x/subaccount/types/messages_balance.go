@@ -11,7 +11,7 @@ var (
 )
 
 func (msg *MsgTopUp) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return errors.ErrInvalidAddress
 	}
@@ -31,7 +31,7 @@ func (msg *MsgTopUp) ValidateBasic() error {
 }
 
 func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
-	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	signer, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +39,7 @@ func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
 }
 
 func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Sender)
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return errors.ErrInvalidAddress
 	}
@@ -48,7 +48,7 @@ func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
 }
 
 func (msg *MsgWithdrawUnlockedBalances) GetSigners() []sdk.AccAddress {
-	signer, err := sdk.AccAddressFromBech32(msg.Sender)
+	signer, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
 	}

@@ -16,11 +16,11 @@ import (
 
 func TestMsgServer_Create(t *testing.T) {
 	account := sample.NativeAccAddress()
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
 	require.NoError(t, err)
 
 	// Check that the account has been created
@@ -28,7 +28,7 @@ func TestMsgServer_Create(t *testing.T) {
 
 	someTime := time.Now().Add(10 * time.Minute)
 	msg := &types.MsgCreate{
-		Sender:          sender.String(),
+		Creator:         creatorAddr.String(),
 		SubAccountOwner: account.String(),
 		LockedBalances: []types.LockedBalance{
 			{
@@ -72,7 +72,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 	beforeTime := time.Now().Add(-10 * time.Minute)
 	afterTime := time.Now().Add(10 * time.Minute)
 	account := sample.NativeAccAddress()
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 
 	tests := []struct {
 		name        string
@@ -83,7 +83,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "unlock time is expired",
 			msg: types.MsgCreate{
-				Sender:          sender.String(),
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -98,7 +98,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "account has already sub account",
 			msg: types.MsgCreate{
-				Sender:          sender.String(),
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -115,7 +115,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "invalid request",
 			msg: types.MsgCreate{
-				Sender:          sender.String(),
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{

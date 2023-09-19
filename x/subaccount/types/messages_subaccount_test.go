@@ -14,7 +14,7 @@ import (
 )
 
 func TestMsgCreate_Validate(t *testing.T) {
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
 	someTime := time.Now()
@@ -24,9 +24,9 @@ func TestMsgCreate_Validate(t *testing.T) {
 		want error
 	}{
 		{
-			name: "invalid sender",
+			name: "invalid creator",
 			msg: types.MsgCreate{
-				Sender:          "someInvalidAddress",
+				Creator:         "someInvalidAddress",
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -40,7 +40,7 @@ func TestMsgCreate_Validate(t *testing.T) {
 		{
 			name: "invalid sub account owner",
 			msg: types.MsgCreate{
-				Sender:          sender.String(),
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
@@ -54,7 +54,7 @@ func TestMsgCreate_Validate(t *testing.T) {
 		{
 			name: "unlock time zero",
 			msg: types.MsgCreate{
-				Sender:          sender.String(),
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -76,7 +76,7 @@ func TestMsgCreate_Validate(t *testing.T) {
 }
 
 func TestMsgTopUp_Validate(t *testing.T) {
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
 	someTime := time.Now()
@@ -86,9 +86,9 @@ func TestMsgTopUp_Validate(t *testing.T) {
 		want error
 	}{
 		{
-			name: "invalid sender",
+			name: "invalid creator",
 			msg: types.MsgTopUp{
-				Sender:     "someInvalidAddress",
+				Creator:    "someInvalidAddress",
 				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -102,7 +102,7 @@ func TestMsgTopUp_Validate(t *testing.T) {
 		{
 			name: "invalid sub account owner",
 			msg: types.MsgTopUp{
-				Sender:     sender.String(),
+				Creator:    creatorAddr.String(),
 				SubAccount: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
@@ -116,7 +116,7 @@ func TestMsgTopUp_Validate(t *testing.T) {
 		{
 			name: "unlock time zero",
 			msg: types.MsgTopUp{
-				Sender:     sender.String(),
+				Creator:    creatorAddr.String(),
 				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{

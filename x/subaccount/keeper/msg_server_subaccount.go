@@ -24,7 +24,7 @@ func (m msgServer) Create(
 		return nil, err
 	}
 
-	senderAccount := sdk.MustAccAddressFromBech32(request.Sender)
+	creatorAddr := sdk.MustAccAddressFromBech32(request.Creator)
 	subaccountOwner := sdk.MustAccAddressFromBech32(request.SubAccountOwner)
 	if _, exists := m.keeper.GetSubAccountByOwner(sdkContext, subaccountOwner); exists {
 		return nil, types.ErrSubaccountAlreadyExist
@@ -37,7 +37,7 @@ func (m msgServer) Create(
 	subaccountAccount := m.keeper.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
 	m.keeper.accountKeeper.SetAccount(sdkContext, subaccountAccount)
 
-	err = m.keeper.sendCoinsToSubaccount(sdkContext, senderAccount, subaccountAddress, moneyToSend)
+	err = m.keeper.sendCoinsToSubaccount(sdkContext, creatorAddr, subaccountAddress, moneyToSend)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to send coins")
 	}

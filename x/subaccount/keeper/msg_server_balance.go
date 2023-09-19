@@ -8,7 +8,7 @@ import (
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
-// TopUp increases the balance of sub account according to the incomming data.
+// TopUp increases the balance of sub account according to the input data.
 func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTopUpResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 
@@ -17,7 +17,7 @@ func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 		return nil, err
 	}
 
-	sender := sdk.MustAccAddressFromBech32(msg.Sender)
+	creatorAddr := sdk.MustAccAddressFromBech32(msg.Creator)
 	subaccountOwner := sdk.MustAccAddressFromBech32(msg.SubAccount)
 
 	subAccAddress, exists := m.keeper.GetSubAccountByOwner(sdkContext, subaccountOwner)
@@ -33,7 +33,7 @@ func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 	m.keeper.SetBalance(sdkContext, subAccAddress, balance)
 	m.keeper.SetLockedBalances(sdkContext, subAccAddress, msg.LockedBalances)
 
-	err = m.keeper.sendCoinsToSubaccount(sdkContext, sender, subAccAddress, moneyToAdd)
+	err = m.keeper.sendCoinsToSubaccount(sdkContext, creatorAddr, subAccAddress, moneyToAdd)
 	if err != nil {
 		return nil, fmt.Errorf("unable to send coins: %w", err)
 	}
@@ -41,11 +41,12 @@ func (m msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 	return &types.MsgTopUpResponse{}, nil
 }
 
+// WithdrawUnlockedBalances withdraws the unlocked balance of sub account according to the input account.
 func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types.MsgWithdrawUnlockedBalances) (*types.MsgWithdrawUnlockedBalancesResponse, error) {
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 
-	sender := sdk.MustAccAddressFromBech32(balances.Sender)
-	subAccountAddress, exists := m.keeper.GetSubAccountByOwner(sdkContext, sender)
+	creatorAddr := sdk.MustAccAddressFromBech32(balances.Creator)
+	subAccountAddress, exists := m.keeper.GetSubAccountByOwner(sdkContext, creatorAddr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
@@ -65,7 +66,7 @@ func (m msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
 	m.keeper.SetBalance(sdkContext, subAccountAddress, balance)
 
-	err := m.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, sender, sdk.NewCoins(sdk.NewCoin(params.LockedBalanceDenom, withdrawableBalance)))
+	err := m.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.LockedBalanceDenom, withdrawableBalance)))
 	if err != nil {
 		return nil, err
 	}

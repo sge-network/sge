@@ -3,7 +3,7 @@ package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
 import "sge/subaccount/params.proto";
-import "sge/subaccount/subaccount.proto";
+import "sge/subaccount/balance.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 

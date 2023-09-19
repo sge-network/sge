@@ -5,7 +5,7 @@ option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "sge/subaccount/subaccount.proto";
+import "sge/subaccount/balance.proto";
 import "sge/subaccount/params.proto";
 
 // Query defines the gRPC querier service.

@@ -34,15 +34,15 @@ func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketVerification, "%s", err)
 	}
 
-	originalSender := msg.Msg.Creator
+	originalCreator := msg.Msg.Creator
 
-	if err = payload.Validate(originalSender); err != nil {
+	if err = payload.Validate(originalCreator); err != nil {
 		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketValidation, "%s", err)
 	}
 
 	// duplication end
 
-	// here we swap the original sender with the subaccount address
+	// here we swap the original creator with the subaccount address
 	bet := bettypes.NewBet(subAccountAddress.String(), msg.Msg.Props, payload.OddsType, payload.SelectedOdds)
 
 	// make subaccount balance adjustments

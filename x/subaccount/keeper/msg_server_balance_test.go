@@ -14,20 +14,20 @@ import (
 )
 
 func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 	subaccountOwner := sample.NativeAccAddress()
 	lockedTime := time.Now().Add(time.Hour * 24 * 365)
 	lockedTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-	t.Log("fund sender account")
-	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
+	t.Log("funder account")
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
 	require.NoError(t, err)
 
 	t.Log("Create sub account")
 	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
-		Sender:          sender.String(),
+		Creator:         creatorAddr.String(),
 		SubAccountOwner: subaccountOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
@@ -53,7 +53,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("Withdraw unlocked balances, with 0 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 
@@ -65,7 +65,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	ctx = ctx.WithBlockTime(lockedTime.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 1 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -85,7 +85,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 2 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -103,7 +103,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	require.NoError(t, subaccountBalance.Unspend(sdk.NewInt(100)))
 	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -120,13 +120,13 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	// check that the owner can't withdraw again
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 }
 
 func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
-	sender := sample.AccAddress()
+	creatorAddr := sample.AccAddress()
 	tests := []struct {
 		name        string
 		msg         types.MsgWithdrawUnlockedBalances
@@ -136,7 +136,7 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 		{
 			name: "sub account does not exist",
 			msg: types.MsgWithdrawUnlockedBalances{
-				Sender: sender,
+				Creator: creatorAddr,
 			},
 			prepare:     func(ctx sdk.Context, keeper keeper.Keeper) {},
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
@@ -158,18 +158,18 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 
 func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	afterTime := time.Now().Add(10 * time.Minute)
-	sender := sample.NativeAccAddress()
+	creatirAddr := sample.NativeAccAddress()
 	subaccount := sample.AccAddress()
 
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
-	// Fund sender
-	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	// Funder
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatirAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
 	require.NoError(t, err)
 
 	// Create subaccount
 	msg := &types.MsgCreate{
-		Sender:          sender.String(),
+		Creator:         creatirAddr.String(),
 		SubAccountOwner: subaccount,
 		LockedBalances:  []types.LockedBalance{},
 	}
@@ -185,7 +185,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	require.Len(t, balances, 0)
 
 	msgTopUp := &types.MsgTopUp{
-		Sender:     sender.String(),
+		Creator:    creatirAddr.String(),
 		SubAccount: subaccount,
 		LockedBalances: []types.LockedBalance{
 			{
@@ -211,7 +211,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 	beforeTime := time.Now().Add(-10 * time.Minute)
 	afterTime := time.Now().Add(10 * time.Minute)
 
-	sender := sample.AccAddress()
+	creatorAddr := sample.AccAddress()
 	subaccount := sample.AccAddress()
 
 	tests := []struct {
@@ -223,7 +223,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 		{
 			name: "unlock time is expired",
 			msg: types.MsgTopUp{
-				Sender:     sender,
+				Creator:    creatorAddr,
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
@@ -238,7 +238,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 		{
 			name: "sub account does not exist",
 			msg: types.MsgTopUp{
-				Sender:     sender,
+				Creator:    creatorAddr,
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
@@ -251,9 +251,9 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
 		},
 		{
-			name: "sender has not enough balance",
+			name: "creator has not enough balance",
 			msg: types.MsgTopUp{
-				Sender:     sender,
+				Creator:    creatorAddr,
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
@@ -265,7 +265,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			prepare: func(ctx sdk.Context, msgServer types.MsgServer) {
 				// Create subaccount
 				msg := &types.MsgCreate{
-					Sender:          sender,
+					Creator:         creatorAddr,
 					SubAccountOwner: subaccount,
 					LockedBalances:  []types.LockedBalance{},
 				}

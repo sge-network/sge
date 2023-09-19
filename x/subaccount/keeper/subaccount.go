@@ -85,9 +85,9 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 }
 
 // sendCoinsToSubaccount sends the coins to the subaccount.
-func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount, subAccountAddress sdk.AccAddress, moneyToSend math.Int) error {
+func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccountAddress sdk.AccAddress, moneyToSend math.Int) error {
 	denom := k.GetParams(ctx).LockedBalanceDenom
-	err := k.bankKeeper.SendCoins(ctx, senderAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+	err := k.bankKeeper.SendCoins(ctx, creatorAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
 	if err != nil {
 		return errors.Wrap(err, "unable to send coins")
 	}
