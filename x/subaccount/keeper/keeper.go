@@ -48,6 +48,5 @@ func NewKeeper(
 		houseKeeper:   hk,
 		obKeeper:      obKeeper,
 	}
-	obKeeper.RegisterHook(k)
 	return k
 }

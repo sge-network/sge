@@ -6,7 +6,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
-	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 )
 
 // BetKeeper defines the expected interface needed to retrieve or set bets.
@@ -37,7 +36,6 @@ type HouseKeeper interface {
 
 // OrderbookKeeper defines the expected interface needed to initiate an order book for a market
 type OrderBookKeeper interface {
-	RegisterHook(hooks orderbookmodulekeeper.Hook)
 	CalcWithdrawalAmount(
 		ctx sdk.Context,
 		depositorAddress string,

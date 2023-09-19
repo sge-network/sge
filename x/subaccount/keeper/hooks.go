@@ -4,14 +4,23 @@ import (
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
-	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
+	orderbooktypes "github.com/sge-network/sge/x/orderbook/types"
 )
 
-var _ orderbookmodulekeeper.Hook = Keeper{}
+// Hooks wrapper struct for slashing keeper
+type Hooks struct {
+	k Keeper
+}
+
+// subaccount module shoule implement the orderbook module hooks.
+var _ orderbooktypes.OrderBookHooks = Hooks{}
+
+// Create new distribution hooks
+func (k Keeper) Hooks() Hooks { return Hooks{k} }
 
 // AfterBettorWin is subaccount module hook for subaccount bettor winning.
-func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit math.Int) {
-	balance, exists := k.GetBalance(ctx, bettor)
+func (h Hooks) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit math.Int) {
+	balance, exists := h.k.GetBalance(ctx, bettor)
 	if !exists {
 		return
 	}
@@ -20,20 +29,20 @@ func (k Keeper) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalA
 		panic(err)
 	}
 	// send profits to subaccount owner
-	owner, exists := k.GetSubAccountOwner(ctx, bettor)
+	owner, exists := h.k.GetSubAccountOwner(ctx, bettor)
 	if !exists {
 		panic("subaccount owner not found")
 	}
-	err = k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
+	err = h.k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
 	if err != nil {
 		panic(err)
 	}
-	k.SetBalance(ctx, bettor, balance)
+	h.k.SetBalance(ctx, bettor, balance)
 }
 
 // AfterBettorLoss is subaccount module hook for subaccount bettor loss.
-func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int) {
-	balance, exists := k.GetBalance(ctx, bettor)
+func (h Hooks) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount math.Int) {
+	balance, exists := h.k.GetBalance(ctx, bettor)
 	if !exists {
 		return
 	}
@@ -45,12 +54,12 @@ func (k Keeper) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, original
 	if err != nil {
 		panic(err)
 	}
-	k.SetBalance(ctx, bettor, balance)
+	h.k.SetBalance(ctx, bettor, balance)
 }
 
 // AfterBettorRefund is subaccount module hook for subaccount bettor refund.
-func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee math.Int) {
-	balance, exists := k.GetBalance(ctx, bettor)
+func (h Hooks) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee math.Int) {
+	balance, exists := h.k.GetBalance(ctx, bettor)
 	if !exists {
 		return
 	}
@@ -59,13 +68,13 @@ func (k Keeper) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, origin
 	if err != nil {
 		panic(err)
 	}
-	k.SetBalance(ctx, bettor, balance)
+	h.k.SetBalance(ctx, bettor, balance)
 }
 
 // AfterHouseWin is subaccount module hook for house winning over subbacount.
-func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit math.Int) {
+func (h Hooks) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit math.Int) {
 	// update balance
-	balance, exists := k.GetBalance(ctx, house)
+	balance, exists := h.k.GetBalance(ctx, house)
 	if !exists {
 		return
 	}
@@ -74,22 +83,22 @@ func (k Keeper) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmo
 	if err != nil {
 		panic(err)
 	}
-	k.SetBalance(ctx, house, balance)
+	h.k.SetBalance(ctx, house, balance)
 
 	// send profits
-	subAccountOwner, exists := k.GetSubAccountOwner(ctx, house)
+	subAccountOwner, exists := h.k.GetSubAccountOwner(ctx, house)
 	if !exists {
 		panic("data corruption: subaccount owner not found")
 	}
-	err = k.bankKeeper.SendCoins(ctx, house, subAccountOwner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
+	err = h.k.bankKeeper.SendCoins(ctx, house, subAccountOwner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
 	if err != nil {
 		panic(err)
 	}
 }
 
 // AfterHouseLoss is subaccount module hook for house loss for subbacount.
-func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt math.Int) {
-	balance, exists := k.GetBalance(ctx, house)
+func (h Hooks) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt math.Int) {
+	balance, exists := h.k.GetBalance(ctx, house)
 	if !exists {
 		return
 	}
@@ -103,12 +112,12 @@ func (k Keeper) AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAm
 		panic(err)
 	}
 
-	k.SetBalance(ctx, house, balance)
+	h.k.SetBalance(ctx, house, balance)
 }
 
 // AfterHouseRefund is subaccount module hook for house refund in subaccount deposit.
-func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int) {
-	balance, exists := k.GetBalance(ctx, house)
+func (h Hooks) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount math.Int) {
+	balance, exists := h.k.GetBalance(ctx, house)
 	if !exists {
 		return
 	}
@@ -118,12 +127,12 @@ func (k Keeper) AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, original
 		panic(err)
 	}
 
-	k.SetBalance(ctx, house, balance)
+	h.k.SetBalance(ctx, house, balance)
 }
 
 // AfterHouseFeeRefund is subaccount module hook for house fee refund in subaccount deposit.
-func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee math.Int) {
-	balance, exists := k.GetBalance(ctx, house)
+func (h Hooks) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee math.Int) {
+	balance, exists := h.k.GetBalance(ctx, house)
 	if !exists {
 		return
 	}
@@ -133,5 +142,5 @@ func (k Keeper) AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee m
 		panic(err)
 	}
 
-	k.SetBalance(ctx, house, balance)
+	h.k.SetBalance(ctx, house, balance)
 }

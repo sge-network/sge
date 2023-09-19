@@ -454,6 +454,14 @@ func NewAppKeeper(
 		appKeepers.HouseKeeper,
 	)
 
+	// ** Hooks ** \\
+
+	appKeepers.OrderbookKeeper.SetHooks(
+		orderbookmoduletypes.NewMultiOrderBookHooks(
+			appKeepers.SubaccountKeeper.Hooks(),
+		),
+	)
+
 	// // SGE modules \\\\
 
 	appKeepers.BetModule = betmodule.NewAppModule(
