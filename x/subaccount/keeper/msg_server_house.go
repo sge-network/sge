@@ -22,7 +22,9 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	if err := m.houseDeposit(ctx, msg.Msg); err != nil {
+	// parse the ticket payload and create deposit, setting the authz allowed as false
+	_, err := m.keeper.houseKeeper.ParseTicketAndValidate(goCtx, ctx, msg.Msg, false)
+	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
 
@@ -32,15 +34,14 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 		panic("data corruption: subaccount balance not found")
 	}
 
-	err := balance.Spend(msg.Msg.Amount)
-	if err != nil {
+	if err := balance.Spend(msg.Msg.Amount); err != nil {
 		return nil, err
 	}
 
 	// send house deposit from subaccount on behalf of the owner
 	participationIndex, err := m.keeper.houseKeeper.Deposit(
 		ctx,
-		subAccountAddr.String(),
+		msg.Msg.Creator,
 		subAccountAddr.String(),
 		msg.Msg.MarketUID,
 		msg.Msg.Amount,
@@ -61,31 +62,6 @@ func (m msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 			ParticipationIndex: participationIndex,
 		},
 	}, nil
-}
-
-// TODO: This is a copy of the Deposit function from x/house/keeper/msg_server_deposit.go
-func (m msgServer) houseDeposit(ctx sdk.Context, msg *housetypes.MsgDeposit) error {
-	params := m.keeper.houseKeeper.GetParams(ctx)
-	if err := msg.ValidateSanity(ctx, &params); err != nil {
-		return sdkerrors.Wrap(err, "invalid deposit")
-	}
-
-	var payload housetypes.DepositTicketPayload
-	if err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload); err != nil {
-		return sdkerrors.Wrapf(housetypes.ErrInTicketVerification, "%s", err)
-	}
-
-	if payload.DepositorAddress != "" {
-		return sdkerrors.Wrapf(housetypes.ErrInTicketPayloadValidation, "in subaccount the depositor address must be empty")
-	}
-
-	depositorAddr := msg.Creator
-
-	if err := payload.Validate(depositorAddr); err != nil {
-		return sdkerrors.Wrapf(housetypes.ErrInTicketPayloadValidation, "%s", err)
-	}
-
-	return nil
 }
 
 func (m msgServer) HouseWithdraw(goCtx context.Context, withdraw *types.MsgHouseWithdraw) (*types.MsgHouseWithdrawResponse, error) {
