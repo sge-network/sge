@@ -14,7 +14,7 @@ func (k msgServer) Deposit(goCtx context.Context,
 ) (*types.MsgDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	depositorAddr, err := k.ParseTicketAndValidate(goCtx, ctx, msg, true)
+	depositorAddr, err := k.ParseDepositTicketAndValidate(goCtx, ctx, msg, true)
 	if err != nil {
 		return nil, err
 	}
@@ -38,8 +38,8 @@ func (k msgServer) Deposit(goCtx context.Context,
 	}, nil
 }
 
-// ParseTicketAndDeposit parses the deposit payload ticket and deposit.
-func (k Keeper) ParseTicketAndValidate(
+// ParseDepositTicketAndValidate parses the deposit payload ticket and validate.
+func (k Keeper) ParseDepositTicketAndValidate(
 	goCtx context.Context,
 	ctx sdk.Context,
 	msg *types.MsgDeposit,
