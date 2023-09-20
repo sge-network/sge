@@ -8,7 +8,6 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
-	"github.com/sge-network/sge/x/house/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 )
 
@@ -35,8 +34,8 @@ type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
 	ParseDepositTicketAndValidate(goCtx context.Context, ctx sdk.Context, msg *housetypes.MsgDeposit, authzAllowed bool) (string, error)
 	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdkmath.Int) (participationIndex uint64, err error)
-	ParseWithdrawTicketAndValidate(goCtx context.Context, ctx sdk.Context, msg *types.MsgWithdraw, authzAllowed bool) (string, bool, error)
-	CalcAndWithdraw(ctx sdk.Context, msg *types.MsgWithdraw, depositorAddr string, isOnBehalf bool) (uint64, error)
+	ParseWithdrawTicketAndValidate(goCtx context.Context, ctx sdk.Context, msg *housetypes.MsgWithdraw, authzAllowed bool) (string, bool, error)
+	CalcAndWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, depositorAddr string, isOnBehalf bool) (uint64, error)
 }
 
 // OrderbookKeeper defines the expected interface needed to initiate an order book for a market

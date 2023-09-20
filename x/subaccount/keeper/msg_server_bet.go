@@ -12,16 +12,16 @@ import (
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
-func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
+func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// find subaccount
-	subAccountAddress, exists := m.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccountAddress, exists := k.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
-	bet, err := m.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
+	bet, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 	bet.Creator = subAccountAddress.String()
 
 	// make subaccount balance adjustments
-	balance, exists := m.keeper.GetBalance(ctx, subAccountAddress)
+	balance, exists := k.keeper.GetBalance(ctx, subAccountAddress)
 	if !exists {
 		panic("state corruption: subaccount balance not found")
 	}
@@ -40,11 +40,11 @@ func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, err
 	}
 
-	if err := m.keeper.betKeeper.Wager(ctx, bet); err != nil {
+	if err := k.keeper.betKeeper.Wager(ctx, bet); err != nil {
 		return nil, sdkerrors.Wrapf(bettypes.ErrInWager, "%s", err)
 	}
 
-	m.keeper.SetBalance(ctx, subAccountAddress, balance)
+	k.keeper.SetBalance(ctx, subAccountAddress, balance)
 
 	msg.Msg.EmitEvent(&ctx)
 
