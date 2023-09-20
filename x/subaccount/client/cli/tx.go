@@ -5,17 +5,18 @@ import (
 	"strings"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -285,7 +286,7 @@ func TxHouseWithdraw() *cobra.Command {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
-			var argAmountCosmosInt math.Int
+			var argAmountCosmosInt sdkmath.Int
 			if mode == int64(housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")

@@ -1,6 +1,7 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -44,7 +45,7 @@ func (msg *MsgTopUp) ValidateBasic() error {
 
 	for _, balanceUnlock := range msg.LockedBalances {
 		if err = balanceUnlock.Validate(); err != nil {
-			return errors.Wrapf(err, "invalid locked balance")
+			return sdkerrors.Wrapf(err, "invalid locked balance")
 		}
 	}
 

@@ -3,12 +3,13 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	bettypes "github.com/sge-network/sge/x/bet/types"
-	"github.com/sge-network/sge/x/subaccount/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	bettypes "github.com/sge-network/sge/x/bet/types"
+	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {

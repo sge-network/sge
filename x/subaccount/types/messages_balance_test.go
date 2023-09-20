@@ -5,12 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sge-network/sge/x/subaccount/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 func TestMsgTopUpValidateBasic(t *testing.T) {

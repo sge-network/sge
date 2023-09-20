@@ -4,11 +4,13 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -17,7 +19,6 @@ import (
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -114,7 +115,7 @@ func TestMsgServer_Bet(t *testing.T) {
 			sdk.NewCoins(
 				sdk.NewCoin(
 					params.DefaultBondDenom,
-					math.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(math.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
+					sdkmath.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(sdkmath.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
 				)),
 			ownerBalance,
 		)
@@ -214,7 +215,7 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, better sdk.AccAddress, amount math.Int) *bettypes.MsgWager {
+func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
 	ticket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,

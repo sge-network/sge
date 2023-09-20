@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -16,7 +17,7 @@ func (m msgServer) Create(
 	sdkContext := sdk.UnwrapSDKContext(ctx)
 	err := request.ValidateBasic()
 	if err != nil {
-		return nil, errors.Wrap(err, "invalid request")
+		return nil, sdkerrors.Wrap(err, "invalid request")
 	}
 
 	moneyToSend, err := sumBalanceUnlocks(sdkContext, request.LockedBalances)
@@ -39,7 +40,7 @@ func (m msgServer) Create(
 
 	err = m.keeper.sendCoinsToSubaccount(sdkContext, creatorAddr, subaccountAddress, moneyToSend)
 	if err != nil {
-		return nil, errors.Wrap(err, "unable to send coins")
+		return nil, sdkerrors.Wrap(err, "unable to send coins")
 	}
 
 	m.keeper.SetSubAccountOwner(sdkContext, subaccountAddress, subaccountOwner)

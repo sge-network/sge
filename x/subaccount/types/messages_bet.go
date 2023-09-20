@@ -10,9 +10,7 @@ const (
 	typeMsgWager = "subaccount_wager"
 )
 
-var (
-	_ sdk.Msg = &MsgWager{}
-)
+var _ sdk.Msg = &MsgWager{}
 
 // Route returns the module's message router key.
 func (*MsgWager) Route() string { return RouterKey }

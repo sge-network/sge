@@ -3,8 +3,9 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/sge-network/sge/x/subaccount/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 func TestKeeper_GetParams(t *testing.T) {

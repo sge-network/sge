@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
-	"github.com/sge-network/sge/x/subaccount/types"
-
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 func TestLockedBalanceValidate(t *testing.T) {
@@ -22,7 +22,7 @@ func TestLockedBalanceValidate(t *testing.T) {
 			name: "unlock time zero",
 			lb: types.LockedBalance{
 				UnlockTS: 0,
-				Amount:   math.Int{},
+				Amount:   sdkmath.Int{},
 			},
 			want: fmt.Errorf("unlock time is zero 0"),
 		},
@@ -38,7 +38,7 @@ func TestLockedBalanceValidate(t *testing.T) {
 			name: "nil amount",
 			lb: types.LockedBalance{
 				UnlockTS: uint64(time.Now().Unix()),
-				Amount:   math.Int{},
+				Amount:   sdkmath.Int{},
 			},
 			want: fmt.Errorf("amount is nil"),
 		},

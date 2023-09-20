@@ -1,9 +1,10 @@
 package types
 
 import (
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 )
@@ -29,9 +30,9 @@ type BankKeeper interface {
 // HouseKeeper defines the expected interface needed to deposit or withdraw.
 type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
-	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount math.Int) (participationIndex uint64, err error)
+	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdkmath.Int) (participationIndex uint64, err error)
 	GetDeposit(ctx sdk.Context, depositorAddr, marketUID string, participationIndex uint64) (housetypes.Deposit, bool)
-	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount math.Int) (uint64, error)
+	Withdraw(ctx sdk.Context, deposit housetypes.Deposit, creator, depositorAddr, marketUID string, participationIndex uint64, mode housetypes.WithdrawalMode, withdrawableAmount sdkmath.Int) (uint64, error)
 }
 
 // OrderbookKeeper defines the expected interface needed to initiate an order book for a market
@@ -42,7 +43,7 @@ type OrderBookKeeper interface {
 		marketUID string,
 		participationIndex uint64,
 		mode housetypes.WithdrawalMode,
-		totalWithdrawnAmount math.Int,
-		amount math.Int,
-	) (math.Int, error)
+		totalWithdrawnAmount sdkmath.Int,
+		amount sdkmath.Int,
+	) (sdkmath.Int, error)
 }

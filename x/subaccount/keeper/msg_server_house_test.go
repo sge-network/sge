@@ -4,10 +4,12 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
@@ -16,7 +18,6 @@ import (
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -284,7 +285,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())
 }
 
-func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt math.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
+func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdkmath.Int, partecipationIndex uint64) *housetypes.MsgWithdraw {
 	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       owner.String(),
@@ -308,7 +309,7 @@ func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt math.Int, partecip
 	return inputWithdraw
 }
 
-func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt math.Int) *types.MsgHouseDeposit {
+func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdkmath.Int) *types.MsgHouseDeposit {
 	testKyc := &sgetypes.KycDataPayload{
 		Approved: true,
 		ID:       owner.String(),
