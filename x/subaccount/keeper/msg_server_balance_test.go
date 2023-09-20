@@ -16,8 +16,8 @@ import (
 func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	creatorAddr := sample.NativeAccAddress()
 	subaccountOwner := sample.NativeAccAddress()
-	lockedTime := time.Now().Add(time.Hour * 24 * 365)
-	lockedTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
+	lockedTime := time.Now().Add(time.Hour * 24 * 365).UTC()
+	lockedTime2 := time.Now().Add(time.Hour * 24 * 365 * 2).UTC()
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
@@ -31,12 +31,12 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 		SubAccountOwner: subaccountOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				Amount:     sdk.NewInt(100),
-				UnlockTime: lockedTime,
+				Amount:   sdk.NewInt(100),
+				UnlockTS: uint64(lockedTime.Unix()),
 			},
 			{
-				Amount:     sdk.NewInt(200),
-				UnlockTime: lockedTime2,
+				Amount:   sdk.NewInt(200),
+				UnlockTS: uint64(lockedTime2.Unix()),
 			},
 		},
 	})
@@ -157,7 +157,7 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 }
 
 func TestMsgServerTopUp_HappyPath(t *testing.T) {
-	afterTime := time.Now().Add(10 * time.Minute)
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	creatirAddr := sample.NativeAccAddress()
 	subaccount := sample.AccAddress()
 
@@ -189,8 +189,8 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 		SubAccount: subaccount,
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: afterTime,
-				Amount:     sdk.NewInt(123),
+				UnlockTS: afterTime,
+				Amount:   sdk.NewInt(123),
 			},
 		},
 	}
@@ -203,13 +203,13 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	require.Equal(t, sdk.NewInt(123), balance.DepositedAmount)
 	balances = k.GetLockedBalances(ctx, subAccountAddr)
 	require.Len(t, balances, 1)
-	require.True(t, afterTime.Equal(balances[0].UnlockTime))
+	require.True(t, afterTime == balances[0].UnlockTS)
 	require.Equal(t, sdk.NewInt(123), balances[0].Amount)
 }
 
 func TestNewMsgServerTopUp_Errors(t *testing.T) {
-	beforeTime := time.Now().Add(-10 * time.Minute)
-	afterTime := time.Now().Add(10 * time.Minute)
+	beforeTime := uint64(time.Now().Add(-10 * time.Minute).Unix())
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 
 	creatorAddr := sample.AccAddress()
 	subaccount := sample.AccAddress()
@@ -227,8 +227,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: beforeTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: beforeTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -242,8 +242,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -257,8 +257,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				SubAccount: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},

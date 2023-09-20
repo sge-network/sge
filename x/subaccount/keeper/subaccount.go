@@ -101,7 +101,7 @@ func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (m
 	moneyToSend := sdk.NewInt(0)
 
 	for _, balanceUnlock := range balanceUnlocks {
-		if balanceUnlock.UnlockTime.Unix() < ctx.BlockTime().Unix() {
+		if balanceUnlock.UnlockTS < uint64(ctx.BlockTime().Unix()) {
 			return math.Int{}, types.ErrUnlockTokenTimeExpired
 		}
 

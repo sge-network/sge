@@ -33,11 +33,11 @@ func (msg *MsgHouseDeposit) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-func (m *MsgHouseDeposit) ValidateBasic() error {
-	if m.Msg == nil {
+func (msg *MsgHouseDeposit) ValidateBasic() error {
+	if msg.Msg == nil {
 		return errors.ErrInvalidRequest.Wrap("msg is nil")
 	}
-	return m.Msg.ValidateBasic()
+	return msg.Msg.ValidateBasic()
 }
 
 // Route returns the module's message router key.
@@ -56,9 +56,9 @@ func (msg *MsgHouseWithdraw) GetSignBytes() []byte {
 	return sdk.MustSortJSON(bz)
 }
 
-func (m *MsgHouseWithdraw) ValidateBasic() error {
-	if m.Msg == nil {
+func (msg *MsgHouseWithdraw) ValidateBasic() error {
+	if msg.Msg == nil {
 		return errors.ErrInvalidRequest.Wrap("msg is nil")
 	}
-	return m.Msg.ValidateBasic()
+	return msg.Msg.ValidateBasic()
 }

@@ -61,17 +61,17 @@ func TestSubAccountOwner(t *testing.T) {
 func TestSetLockedBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	someUnlockTime := time.Now().Add(time.Hour * 24 * 365)
-	otherUnlockTime := time.Now().Add(time.Hour * 24 * 365 * 2)
+	someUnlockTime := uint64(time.Now().Add(time.Hour * 24 * 365).Unix())
+	otherUnlockTime := uint64(time.Now().Add(time.Hour * 24 * 365 * 2).Unix())
 
 	balanceUnlocks := []types.LockedBalance{
 		{
-			Amount:     sdk.NewInt(10000),
-			UnlockTime: someUnlockTime,
+			Amount:   sdk.NewInt(10000),
+			UnlockTS: someUnlockTime,
 		},
 		{
-			Amount:     sdk.NewInt(20000),
-			UnlockTime: otherUnlockTime,
+			Amount:   sdk.NewInt(20000),
+			UnlockTS: otherUnlockTime,
 		},
 	}
 
@@ -83,7 +83,7 @@ func TestSetLockedBalances(t *testing.T) {
 	lockedBalances := k.GetLockedBalances(ctx, addr)
 	for i, lockedBalance := range lockedBalances {
 		require.Equal(t, lockedBalance.Amount, balanceUnlocks[i].Amount)
-		require.True(t, lockedBalance.UnlockTime.Equal(balanceUnlocks[i].UnlockTime))
+		require.True(t, lockedBalance.UnlockTS == balanceUnlocks[i].UnlockTS)
 	}
 }
 
@@ -109,29 +109,29 @@ func TestSetBalances(t *testing.T) {
 func TestKeeper_GetLockedBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	beforeUnlockTime1 := time.Now().Add(-time.Hour * 24 * 365)
-	beforeUnlockTime2 := time.Now().Add(-time.Hour * 24 * 365 * 2)
+	beforeUnlockTime1 := uint64(time.Now().Add(-time.Hour * 24 * 365).Unix())
+	beforeUnlockTime2 := uint64(time.Now().Add(-time.Hour * 24 * 365 * 2).Unix())
 
-	afterUnlockTime1 := time.Now().Add(time.Hour * 24 * 365)
-	afterUnlockTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
+	afterUnlockTime1 := uint64(time.Now().Add(time.Hour * 24 * 365).Unix())
+	afterUnlockTime2 := uint64(time.Now().Add(time.Hour * 24 * 365 * 2).Unix())
 
 	// I added them unordered to make sure they are sorted
 	balanceUnlocks := []types.LockedBalance{
 		{
-			Amount:     sdk.NewInt(10000),
-			UnlockTime: beforeUnlockTime1,
+			Amount:   sdk.NewInt(10000),
+			UnlockTS: beforeUnlockTime1,
 		},
 		{
-			Amount:     sdk.NewInt(30000),
-			UnlockTime: afterUnlockTime1,
+			Amount:   sdk.NewInt(30000),
+			UnlockTS: afterUnlockTime1,
 		},
 		{
-			Amount:     sdk.NewInt(20000),
-			UnlockTime: beforeUnlockTime2,
+			Amount:   sdk.NewInt(20000),
+			UnlockTS: beforeUnlockTime2,
 		},
 		{
-			Amount:     sdk.NewInt(40000),
-			UnlockTime: afterUnlockTime2,
+			Amount:   sdk.NewInt(40000),
+			UnlockTS: afterUnlockTime2,
 		},
 	}
 

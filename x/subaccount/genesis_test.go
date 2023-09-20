@@ -39,8 +39,8 @@ func TestGenesis(t *testing.T) {
 				},
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Now().Add(24 * time.Hour).UTC(),
-						Amount:     subAccFunds,
+						UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
+						Amount:   subAccFunds,
 					},
 				},
 			},

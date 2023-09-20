@@ -17,7 +17,7 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
-	someTime := time.Now()
+	someTime := uint64(time.Now().Unix())
 	tests := []struct {
 		name string
 		msg  types.MsgTopUp
@@ -30,8 +30,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: someTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: someTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -44,8 +44,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				SubAccount: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: someTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: someTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -58,8 +58,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				SubAccount: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Time{},
-						Amount:     sdk.NewInt(123),
+						UnlockTS: 0,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},

@@ -26,14 +26,14 @@ func TestMsgServer_Create(t *testing.T) {
 	// Check that the account has been created
 	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
-	someTime := time.Now().Add(10 * time.Minute)
+	someTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	msg := &types.MsgCreate{
 		Creator:         creatorAddr.String(),
 		SubAccountOwner: account.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: someTime,
-				Amount:     sdk.NewInt(123),
+				UnlockTS: someTime,
+				Amount:   sdk.NewInt(123),
 			},
 		},
 	}
@@ -56,7 +56,7 @@ func TestMsgServer_Create(t *testing.T) {
 	// check that balance unlocks are set correctly
 	lockedBalances := app.SubaccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
 	require.Len(t, lockedBalances, 1)
-	require.True(t, someTime.Equal(lockedBalances[0].UnlockTime))
+	require.True(t, someTime == lockedBalances[0].UnlockTS)
 	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
 
 	// get the balance of the account
@@ -69,8 +69,8 @@ func TestMsgServer_Create(t *testing.T) {
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
-	beforeTime := time.Now().Add(-10 * time.Minute)
-	afterTime := time.Now().Add(10 * time.Minute)
+	beforeTime := uint64(time.Now().Add(-10 * time.Minute).Unix())
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	account := sample.NativeAccAddress()
 	creatorAddr := sample.NativeAccAddress()
 
@@ -87,8 +87,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: beforeTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: beforeTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -102,8 +102,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -119,8 +119,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     math.Int{},
+						UnlockTS: afterTime,
+						Amount:   math.Int{},
 					},
 				},
 			},

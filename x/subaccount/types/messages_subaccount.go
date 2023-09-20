@@ -1,8 +1,9 @@
 package types
 
 import (
+	cosmerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const (
@@ -36,18 +37,17 @@ func (msg *MsgCreate) GetSignBytes() []byte {
 func (msg *MsgCreate) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return errors.ErrInvalidAddress
+		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	_, err = sdk.AccAddressFromBech32(msg.SubAccountOwner)
-
 	if err != nil {
-		return errors.ErrInvalidAddress
+		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
 	for _, balanceUnlock := range msg.LockedBalances {
 		if err = balanceUnlock.Validate(); err != nil {
-			return errors.Wrapf(err, "invalid locked balance")
+			return cosmerrors.Wrapf(ErrInvalidLockedBalance, "%s", err)
 		}
 	}
 

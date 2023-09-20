@@ -8,8 +8,8 @@ import (
 
 // Validate performs a basic validation of the LockedBalance fields.
 func (lb *LockedBalance) Validate() error {
-	if lb.UnlockTime.IsZero() {
-		return fmt.Errorf("unlock time is zero")
+	if lb.UnlockTS == 0 {
+		return fmt.Errorf("unlock time is zero %d", lb.UnlockTS)
 	}
 
 	if lb.Amount.IsNil() {

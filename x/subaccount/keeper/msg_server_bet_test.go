@@ -66,8 +66,8 @@ func TestMsgServer_Bet(t *testing.T) {
 		SubAccountOwner: subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: time.Now().Add(24 * time.Hour),
-				Amount:     subAccFunds,
+				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
+				Amount:   subAccFunds,
 			},
 		},
 	})

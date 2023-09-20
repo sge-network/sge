@@ -1,7 +1,6 @@
 package types_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -17,7 +16,7 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 	creatorAddr := sample.NativeAccAddress()
 	owner := sample.NativeAccAddress()
 
-	someTime := time.Now()
+	someTime := uint64(time.Now().Unix())
 	tests := []struct {
 		name string
 		msg  types.MsgCreate
@@ -30,8 +29,8 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: someTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: someTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -44,8 +43,8 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				SubAccountOwner: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: someTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: someTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -58,12 +57,12 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				SubAccountOwner: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Time{},
-						Amount:     sdk.NewInt(123),
+						UnlockTS: 0,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
-			want: fmt.Errorf("invalid locked balance: unlock time is zero"),
+			want: types.ErrInvalidLockedBalance,
 		},
 	}
 

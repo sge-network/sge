@@ -5,6 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -18,7 +19,7 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 			panic(err)
 		}
 		store.Set(
-			types.LockedBalanceKey(subAccountAddress, lockedBalance.UnlockTime),
+			types.LockedBalanceKey(subAccountAddress, lockedBalance.UnlockTS),
 			amountBytes,
 		)
 	}
@@ -31,19 +32,16 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 
 	var lockedBalances []types.LockedBalance
 	for ; iterator.Valid(); iterator.Next() {
-		unlockTime, err := sdk.ParseTimeBytes(iterator.Key())
-		if err != nil {
-			panic(err)
-		}
+		unlockTime := utils.Uint64FromBytes(iterator.Key())
 
 		amount := new(math.Int)
-		err = amount.Unmarshal(iterator.Value())
+		err := amount.Unmarshal(iterator.Value())
 		if err != nil {
 			panic(err)
 		}
 		lockedBalances = append(lockedBalances, types.LockedBalance{
-			UnlockTime: unlockTime,
-			Amount:     *amount,
+			UnlockTS: unlockTime,
+			Amount:   *amount,
 		})
 	}
 
@@ -53,7 +51,7 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 // GetUnlockedBalance returns the unlocked balance of an account.
 func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) math.Int {
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).
-		Iterator(nil, sdk.FormatTimeBytes(ctx.BlockTime()))
+		Iterator(nil, utils.Int64ToBytes(ctx.BlockTime().Unix()))
 
 	unlockedBalance := sdk.ZeroInt()
 	defer iterator.Close()
