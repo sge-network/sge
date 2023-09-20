@@ -11,7 +11,7 @@ import (
 
 // BetKeeper defines the expected interface needed to retrieve or set bets.
 type BetKeeper interface {
-	GetBetID(ctx sdk.Context, uid string) (bettypes.UID2ID, bool)
+	PrepareBetObject(ctx sdk.Context, creator string, props *bettypes.WagerProps) (*bettypes.Bet, error)
 	Wager(ctx sdk.Context, bet *bettypes.Bet) error
 }
 

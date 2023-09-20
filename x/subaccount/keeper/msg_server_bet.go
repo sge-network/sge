@@ -21,30 +21,13 @@ func (m msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
-	// TODO: duplicate code from x/bet/keeper/msg_server_bet.go
-
-	// Check if the value already exists
-	_, isFound := m.keeper.betKeeper.GetBetID(ctx, msg.Msg.Props.UID)
-	if isFound {
-		return nil, sdkerrors.Wrapf(bettypes.ErrDuplicateUID, "%s", msg.Msg.Props.UID)
-	}
-
-	payload := &bettypes.WagerTicketPayload{}
-	err := m.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Msg.Props.Ticket, &payload)
+	bet, err := m.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketVerification, "%s", err)
+		return nil, err
 	}
-
-	originalCreator := msg.Msg.Creator
-
-	if err = payload.Validate(originalCreator); err != nil {
-		return nil, sdkerrors.Wrapf(bettypes.ErrInTicketValidation, "%s", err)
-	}
-
-	// duplication end
 
 	// here we swap the original creator with the subaccount address
-	bet := bettypes.NewBet(subAccountAddress.String(), msg.Msg.Props, payload.OddsType, payload.SelectedOdds)
+	bet.Creator = subAccountAddress.String()
 
 	// make subaccount balance adjustments
 	balance, exists := m.keeper.GetBalance(ctx, subAccountAddress)

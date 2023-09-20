@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"fmt"
-	"log"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -112,7 +111,6 @@ func (k Keeper) settleParticipation(
 	switch market.Status {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
-		log.Printf("orderbook_settle.goL115: market status declared")
 		// refund participant's account from orderbook liquidity pool.
 		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, depositPlusProfit); err != nil {
 			return err
