@@ -3,13 +3,13 @@ package types
 import (
 	"fmt"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 )
 
 // Validate performs a basic validation of the LockedBalance fields.
 func (lb *LockedBalance) Validate() error {
-	if lb.UnlockTime.IsZero() {
-		return fmt.Errorf("unlock time is zero")
+	if lb.UnlockTS == 0 {
+		return fmt.Errorf("unlock time is zero %d", lb.UnlockTS)
 	}
 
 	if lb.Amount.IsNil() {
@@ -24,14 +24,15 @@ func (lb *LockedBalance) Validate() error {
 }
 
 // Available reports the coins that are available in the subaccount.
-func (m *Balance) Available() math.Int {
+func (m *Balance) Available() sdkmath.Int {
 	return m.DepositedAmount.
 		Sub(m.WithdrawmAmount).
 		Sub(m.SpentAmount).
 		Sub(m.LostAmount)
 }
 
-func (m *Balance) Spend(amt math.Int) error {
+// Spend modifies the spent amount of subaccount balance according to the spent value.
+func (m *Balance) Spend(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
@@ -42,7 +43,8 @@ func (m *Balance) Spend(amt math.Int) error {
 	return nil
 }
 
-func (m *Balance) Unspend(amt math.Int) error {
+// Unspend modifies the spent amount of subaccount balance according to the undpent value.
+func (m *Balance) Unspend(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
@@ -53,7 +55,8 @@ func (m *Balance) Unspend(amt math.Int) error {
 	return nil
 }
 
-func (m *Balance) AddLoss(amt math.Int) error {
+// AddLoss adds to the lost amout of subaccount balance after losing the bet.
+func (m *Balance) AddLoss(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}

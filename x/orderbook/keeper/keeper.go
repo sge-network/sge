@@ -25,7 +25,7 @@ type Keeper struct {
 	houseKeeper    types.HouseKeeper
 	ovmKeeper      types.OVMKeeper
 	feeGrantKeeper types.FeeGrantKeeper
-	hooks          []Hook
+	hooks          types.OrderBookHooks
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -75,6 +75,17 @@ func (k *Keeper) SetHouseKeeper(houseKeeper types.HouseKeeper) {
 // SetOVMKeeper sets the ovm module keeper to the market keeper.
 func (k *Keeper) SetOVMKeeper(ovmKeeper types.OVMKeeper) {
 	k.ovmKeeper = ovmKeeper
+}
+
+// SetHooks sets the hooks for governance
+func (k *Keeper) SetHooks(gh types.OrderBookHooks) *Keeper {
+	if k.hooks != nil {
+		panic("cannot set orderbook hooks twice")
+	}
+
+	k.hooks = gh
+
+	return k
 }
 
 // Logger returns the logger of the keeper

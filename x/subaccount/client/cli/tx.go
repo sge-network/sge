@@ -5,17 +5,18 @@ import (
 	"strings"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
 )
 
 // GetTxCmd returns the transaction commands for this module
@@ -29,7 +30,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(
-		TxCreateSubaccount(),
+		TxCreate(),
 		TxTopupSubaccount(),
 		TxWager(),
 		TxHouseDeposit(),
@@ -40,17 +41,17 @@ func GetTxCmd() *cobra.Command {
 	return cmd
 }
 
-func TxCreateSubaccount() *cobra.Command {
+func TxCreate() *cobra.Command {
 	const (
 		flagFunds        = "funds"
 		flagLockDuration = "lock-duration"
 	)
 
 	cmd := &cobra.Command{
-		Use:     "create-subaccount [subaccount-owner]",
+		Use:     "create [subaccount-owner]",
 		Short:   "Create a new subaccount",
 		Long:    `Create a new subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount create-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from subaccount-funder-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount create sge123456 --funds 1000000000 --lock-duration 8760h --from subaccount-funder-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			subaccountOwner, err := sdk.AccAddressFromBech32(args[0])
@@ -75,13 +76,13 @@ func TxCreateSubaccount() *cobra.Command {
 				return err
 			}
 
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreateSubAccount{
-				Sender:          clientCtx.From,
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreate{
+				Creator:         clientCtx.From,
 				SubAccountOwner: subaccountOwner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Now().Add(unlocksAfter),
-						Amount:     funds,
+						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),
+						Amount:   funds,
 					},
 				},
 			})
@@ -99,10 +100,10 @@ func TxTopupSubaccount() *cobra.Command {
 		flagLockDuration = "lock-duration"
 	)
 	cmd := &cobra.Command{
-		Use:     "topup-subaccount [subaccount-owner]",
+		Use:     "topup [subaccount-owner]",
 		Short:   "Topup a subaccount",
 		Long:    `Topup a subaccount.`,
-		Example: fmt.Sprintf(`$ %s tx subaccount topup-subaccount sge123456 --funds 1000000000 --lock-duration 8760h --from funder-address-key`, version.AppName),
+		Example: fmt.Sprintf(`$ %s tx subaccount topup sge123456 --funds 1000000000 --lock-duration 8760h --from funder-address-key`, version.AppName),
 		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
@@ -127,12 +128,12 @@ func TxTopupSubaccount() *cobra.Command {
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgTopUp{
-				Sender:     clientCtx.From,
+				Creator:    clientCtx.From,
 				SubAccount: subaccountAddress.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Now().Add(unlocksAfter),
-						Amount:     funds,
+						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),
+						Amount:   funds,
 					},
 				},
 			})
@@ -158,7 +159,7 @@ func TxWithdraw() *cobra.Command {
 				return err
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgWithdrawUnlockedBalances{
-				Sender: clientCtx.From,
+				Creator: clientCtx.From,
 			})
 		},
 	}
@@ -285,7 +286,7 @@ func TxHouseWithdraw() *cobra.Command {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
-			var argAmountCosmosInt math.Int
+			var argAmountCosmosInt sdkmath.Int
 			if mode == int64(housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")

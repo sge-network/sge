@@ -6,10 +6,11 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/sample"
+	"github.com/stretchr/testify/require"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/subaccount"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -39,8 +40,8 @@ func TestGenesis(t *testing.T) {
 				},
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: time.Now().Add(24 * time.Hour).UTC(),
-						Amount:     subAccFunds,
+						UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
+						Amount:   subAccFunds,
 					},
 				},
 			},

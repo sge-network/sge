@@ -1,9 +1,11 @@
 package keeper
 
 import (
-	"cosmossdk.io/math"
+	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -85,11 +87,10 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 }
 
 // sendCoinsToSubaccount sends the coins to the subaccount.
-func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount, subAccountAddress sdk.AccAddress, moneyToSend math.Int) error {
-	denom := k.GetParams(ctx).LockedBalanceDenom
-	err := k.bankKeeper.SendCoins(ctx, senderAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(denom, moneyToSend)))
+func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccountAddress sdk.AccAddress, moneyToSend sdkmath.Int) error {
+	err := k.bankKeeper.SendCoins(ctx, creatorAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, moneyToSend)))
 	if err != nil {
-		return errors.Wrap(err, "unable to send coins")
+		return sdkerrors.Wrap(err, "unable to send coins")
 	}
 
 	return nil
@@ -97,12 +98,12 @@ func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, senderAccount, subAccount
 
 // sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
 // returns an error if any of the unlock times is expired.
-func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (math.Int, error) {
+func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdkmath.Int, error) {
 	moneyToSend := sdk.NewInt(0)
 
 	for _, balanceUnlock := range balanceUnlocks {
-		if balanceUnlock.UnlockTime.Unix() < ctx.BlockTime().Unix() {
-			return math.Int{}, types.ErrUnlockTokenTimeExpired
+		if balanceUnlock.UnlockTS < uint64(ctx.BlockTime().Unix()) {
+			return sdkmath.Int{}, types.ErrUnlockTokenTimeExpired
 		}
 
 		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)

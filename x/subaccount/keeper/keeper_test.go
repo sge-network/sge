@@ -4,11 +4,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/sge-network/sge/x/subaccount/keeper"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/subaccount/keeper"
 )
 
 func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.Keeper, sdk.Context) {

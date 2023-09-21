@@ -1,9 +1,12 @@
 package keeper
 
 import (
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -17,7 +20,7 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 			panic(err)
 		}
 		store.Set(
-			types.LockedBalanceKey(subAccountAddress, lockedBalance.UnlockTime),
+			types.LockedBalanceKey(subAccountAddress, lockedBalance.UnlockTS),
 			amountBytes,
 		)
 	}
@@ -30,19 +33,16 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 
 	var lockedBalances []types.LockedBalance
 	for ; iterator.Valid(); iterator.Next() {
-		unlockTime, err := sdk.ParseTimeBytes(iterator.Key())
-		if err != nil {
-			panic(err)
-		}
+		unlockTime := utils.Uint64FromBytes(iterator.Key())
 
-		amount := new(math.Int)
-		err = amount.Unmarshal(iterator.Value())
+		amount := new(sdkmath.Int)
+		err := amount.Unmarshal(iterator.Value())
 		if err != nil {
 			panic(err)
 		}
 		lockedBalances = append(lockedBalances, types.LockedBalance{
-			UnlockTime: unlockTime,
-			Amount:     *amount,
+			UnlockTS: unlockTime,
+			Amount:   *amount,
 		})
 	}
 
@@ -50,15 +50,15 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 }
 
 // GetUnlockedBalance returns the unlocked balance of an account.
-func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) math.Int {
+func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) sdkmath.Int {
 	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).
-		Iterator(nil, sdk.FormatTimeBytes(ctx.BlockTime()))
+		Iterator(nil, utils.Int64ToBytes(ctx.BlockTime().Unix()))
 
 	unlockedBalance := sdk.ZeroInt()
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		amount := new(math.Int)
+		amount := new(sdkmath.Int)
 		err := amount.Unmarshal(iterator.Value())
 		if err != nil {
 			panic(err)
@@ -92,13 +92,13 @@ func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (t
 }
 
 // getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress, params types.Params) (types.Balance, math.Int, sdk.Coin) {
+func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.Balance, sdkmath.Int, sdk.Coin) {
 	balance, exists := k.GetBalance(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
 	unlockedBalance := k.GetUnlockedBalance(sdkContext, subaccountAddr)
-	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.LockedBalanceDenom)
+	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.DefaultBondDenom)
 
 	return balance, unlockedBalance, bankBalance
 }

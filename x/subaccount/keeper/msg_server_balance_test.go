@@ -6,36 +6,38 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
+	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 	subaccountOwner := sample.NativeAccAddress()
-	lockedTime := time.Now().Add(time.Hour * 24 * 365)
-	lockedTime2 := time.Now().Add(time.Hour * 24 * 365 * 2)
+	lockedTime := time.Now().Add(time.Hour * 24 * 365).UTC()
+	lockedTime2 := time.Now().Add(time.Hour * 24 * 365 * 2).UTC()
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-	t.Log("fund sender account")
-	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
+	t.Log("funder account")
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewInt64Coin("usge", 1000)))
 	require.NoError(t, err)
 
 	t.Log("Create sub account")
-	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
-		Sender:          sender.String(),
+	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
+		Creator:         creatorAddr.String(),
 		SubAccountOwner: subaccountOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				Amount:     sdk.NewInt(100),
-				UnlockTime: lockedTime,
+				Amount:   sdk.NewInt(100),
+				UnlockTS: uint64(lockedTime.Unix()),
 			},
 			{
-				Amount:     sdk.NewInt(200),
-				UnlockTime: lockedTime2,
+				Amount:   sdk.NewInt(200),
+				UnlockTS: uint64(lockedTime2.Unix()),
 			},
 		},
 	})
@@ -52,7 +54,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("Withdraw unlocked balances, with 0 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 
@@ -64,7 +66,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	ctx = ctx.WithBlockTime(lockedTime.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 1 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -84,7 +86,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 2 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -102,7 +104,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	require.NoError(t, subaccountBalance.Unspend(sdk.NewInt(100)))
 	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.NoError(t, err)
 
@@ -119,13 +121,13 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	// check that the owner can't withdraw again
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
-		Sender: subaccountOwner.String(),
+		Creator: subaccountOwner.String(),
 	})
 	require.ErrorContains(t, err, types.ErrNothingToWithdraw.Error())
 }
 
 func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
-	sender := sample.AccAddress()
+	creatorAddr := sample.AccAddress()
 	tests := []struct {
 		name        string
 		msg         types.MsgWithdrawUnlockedBalances
@@ -135,7 +137,7 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 		{
 			name: "sub account does not exist",
 			msg: types.MsgWithdrawUnlockedBalances{
-				Sender: sender,
+				Creator: creatorAddr,
 			},
 			prepare:     func(ctx sdk.Context, keeper keeper.Keeper) {},
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
@@ -150,6 +152,139 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 			tt.prepare(ctx, *k)
 
 			_, err := msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &tt.msg)
+			require.ErrorContains(t, err, tt.expectedErr)
+		})
+	}
+}
+
+func TestMsgServerTopUp_HappyPath(t *testing.T) {
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
+	creatirAddr := sample.NativeAccAddress()
+	subaccount := sample.AccAddress()
+
+	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	// Funder
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatirAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	require.NoError(t, err)
+
+	// Create subaccount
+	msg := &types.MsgCreate{
+		Creator:         creatirAddr.String(),
+		SubAccountOwner: subaccount,
+		LockedBalances:  []types.LockedBalance{},
+	}
+	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), msg)
+	require.NoError(t, err)
+
+	subAccountAddr := types.NewAddressFromSubaccount(1)
+
+	balance, exists := k.GetBalance(ctx, subAccountAddr)
+	require.True(t, exists)
+	require.Equal(t, sdk.NewInt(0), balance.DepositedAmount)
+	balances := k.GetLockedBalances(ctx, subAccountAddr)
+	require.Len(t, balances, 0)
+
+	msgTopUp := &types.MsgTopUp{
+		Creator:    creatirAddr.String(),
+		SubAccount: subaccount,
+		LockedBalances: []types.LockedBalance{
+			{
+				UnlockTS: afterTime,
+				Amount:   sdk.NewInt(123),
+			},
+		},
+	}
+	_, err = msgServer.TopUp(sdk.WrapSDKContext(ctx), msgTopUp)
+	require.NoError(t, err)
+
+	// Check balance
+	balance, exists = k.GetBalance(ctx, subAccountAddr)
+	require.True(t, exists)
+	require.Equal(t, sdk.NewInt(123), balance.DepositedAmount)
+	balances = k.GetLockedBalances(ctx, subAccountAddr)
+	require.Len(t, balances, 1)
+	require.True(t, afterTime == balances[0].UnlockTS)
+	require.Equal(t, sdk.NewInt(123), balances[0].Amount)
+}
+
+func TestNewMsgServerTopUp_Errors(t *testing.T) {
+	beforeTime := uint64(time.Now().Add(-10 * time.Minute).Unix())
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
+
+	creatorAddr := sample.AccAddress()
+	subaccount := sample.AccAddress()
+
+	tests := []struct {
+		name        string
+		msg         types.MsgTopUp
+		prepare     func(ctx sdk.Context, msgServer types.MsgServer)
+		expectedErr string
+	}{
+		{
+			name: "unlock time is expired",
+			msg: types.MsgTopUp{
+				Creator:    creatorAddr,
+				SubAccount: subaccount,
+				LockedBalances: []types.LockedBalance{
+					{
+						UnlockTS: beforeTime,
+						Amount:   sdk.NewInt(123),
+					},
+				},
+			},
+			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
+			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
+		},
+		{
+			name: "sub account does not exist",
+			msg: types.MsgTopUp{
+				Creator:    creatorAddr,
+				SubAccount: subaccount,
+				LockedBalances: []types.LockedBalance{
+					{
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
+					},
+				},
+			},
+			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
+			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
+		},
+		{
+			name: "creator has not enough balance",
+			msg: types.MsgTopUp{
+				Creator:    creatorAddr,
+				SubAccount: subaccount,
+				LockedBalances: []types.LockedBalance{
+					{
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
+					},
+				},
+			},
+			prepare: func(ctx sdk.Context, msgServer types.MsgServer) {
+				// Create subaccount
+				msg := &types.MsgCreate{
+					Creator:         creatorAddr,
+					SubAccountOwner: subaccount,
+					LockedBalances:  []types.LockedBalance{},
+				}
+				_, err := msgServer.Create(sdk.WrapSDKContext(ctx), msg)
+				require.NoError(t, err)
+			},
+			expectedErr: "0usge is smaller than 123usge: insufficient funds",
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			_, _, msgServer, ctx := setupMsgServerAndApp(t)
+
+			tt.prepare(ctx, msgServer)
+
+			_, err := msgServer.TopUp(sdk.WrapSDKContext(ctx), &tt.msg)
 			require.ErrorContains(t, err, tt.expectedErr)
 		})
 	}

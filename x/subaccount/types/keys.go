@@ -1,10 +1,10 @@
 package types
 
 import (
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/address"
+
+	"github.com/sge-network/sge/utils"
 )
 
 // module constants
@@ -47,8 +47,8 @@ func SubAccountKey(subAccountAddress sdk.AccAddress) []byte {
 	return append(SubAccountOwnerReversePrefix, subAccountAddress...)
 }
 
-func LockedBalanceKey(subAccountAddress sdk.AccAddress, unlockTime time.Time) []byte {
-	return append(LockedBalancePrefix, append(address.MustLengthPrefix(subAccountAddress), sdk.FormatTimeBytes(unlockTime)...)...)
+func LockedBalanceKey(subAccountAddress sdk.AccAddress, unlockTime uint64) []byte {
+	return append(LockedBalancePrefix, append(address.MustLengthPrefix(subAccountAddress), utils.Uint64ToBytes(unlockTime)...)...)
 }
 
 func LockedBalancePrefixKey(subAccountAddress sdk.AccAddress) []byte {

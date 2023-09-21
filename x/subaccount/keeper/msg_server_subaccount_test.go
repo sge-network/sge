@@ -4,41 +4,42 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
-func TestMsgServer_CreateSubAccount(t *testing.T) {
+func TestMsgServer_Create(t *testing.T) {
 	account := sample.NativeAccAddress()
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-	err := testutil.FundAccount(app.BankKeeper, ctx, sender, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
 	require.NoError(t, err)
 
 	// Check that the account has been created
 	require.False(t, app.AccountKeeper.HasAccount(ctx, types.NewAddressFromSubaccount(1)))
 
-	someTime := time.Now().Add(10 * time.Minute)
-	msg := &types.MsgCreateSubAccount{
-		Sender:          sender.String(),
+	someTime := uint64(time.Now().Add(10 * time.Minute).Unix())
+	msg := &types.MsgCreate{
+		Creator:         creatorAddr.String(),
 		SubAccountOwner: account.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: someTime,
-				Amount:     sdk.NewInt(123),
+				UnlockTS: someTime,
+				Amount:   sdk.NewInt(123),
 			},
 		},
 	}
 
-	_, err = msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), msg)
+	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
 
 	// Check that the account has been created
@@ -56,7 +57,7 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 	// check that balance unlocks are set correctly
 	lockedBalances := app.SubaccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
 	require.Len(t, lockedBalances, 1)
-	require.True(t, someTime.Equal(lockedBalances[0].UnlockTime))
+	require.True(t, someTime == lockedBalances[0].UnlockTS)
 	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
 
 	// get the balance of the account
@@ -69,26 +70,26 @@ func TestMsgServer_CreateSubAccount(t *testing.T) {
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
-	beforeTime := time.Now().Add(-10 * time.Minute)
-	afterTime := time.Now().Add(10 * time.Minute)
+	beforeTime := uint64(time.Now().Add(-10 * time.Minute).Unix())
+	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	account := sample.NativeAccAddress()
-	sender := sample.NativeAccAddress()
+	creatorAddr := sample.NativeAccAddress()
 
 	tests := []struct {
 		name        string
-		msg         types.MsgCreateSubAccount
+		msg         types.MsgCreate
 		prepare     func(ctx sdk.Context, keeper *keeper.Keeper)
 		expectedErr string
 	}{
 		{
 			name: "unlock time is expired",
-			msg: types.MsgCreateSubAccount{
-				Sender:          sender.String(),
+			msg: types.MsgCreate{
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: beforeTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: beforeTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -97,13 +98,13 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "account has already sub account",
-			msg: types.MsgCreateSubAccount{
-				Sender:          sender.String(),
+			msg: types.MsgCreate{
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     sdk.NewInt(123),
+						UnlockTS: afterTime,
+						Amount:   sdk.NewInt(123),
 					},
 				},
 			},
@@ -114,13 +115,13 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		},
 		{
 			name: "invalid request",
-			msg: types.MsgCreateSubAccount{
-				Sender:          sender.String(),
+			msg: types.MsgCreate{
+				Creator:         creatorAddr.String(),
 				SubAccountOwner: account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTime: afterTime,
-						Amount:     math.Int{},
+						UnlockTS: afterTime,
+						Amount:   sdkmath.Int{},
 					},
 				},
 			},
@@ -136,7 +137,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 
 			tt.prepare(ctx, k)
 
-			_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &tt.msg)
+			_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &tt.msg)
 			require.ErrorContains(t, err, tt.expectedErr)
 		})
 	}

@@ -3,6 +3,7 @@ package keeper
 import (
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/bet/types"
 )
@@ -167,4 +168,25 @@ func (k Keeper) GetSettledBets(ctx sdk.Context) (list []types.SettledBet, err er
 	}
 
 	return
+}
+
+func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.WagerProps) (*types.Bet, error) {
+	// Check if the value already exists
+	_, isFound := k.GetBetID(ctx, props.UID)
+	if isFound {
+		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", props.UID)
+	}
+
+	payload := &types.WagerTicketPayload{}
+	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), props.Ticket, &payload)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	if err = payload.Validate(creator); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
+	}
+
+	bet := types.NewBet(creator, props, payload.OddsType, payload.SelectedOdds)
+	return bet, nil
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -48,6 +49,5 @@ func NewKeeper(
 		houseKeeper:   hk,
 		obKeeper:      obKeeper,
 	}
-	obKeeper.RegisterHook(k)
 	return k
 }

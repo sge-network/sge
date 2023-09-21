@@ -5,10 +5,12 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestQueryServer(t *testing.T) {
@@ -26,17 +28,17 @@ func TestQueryServer(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
-	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
-		Sender:          subAccFunder.String(),
+	_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
+		Creator:         subAccFunder.String(),
 		SubAccountOwner: subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: time.Now().Add(24 * time.Hour),
-				Amount:     subAccFunds,
+				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
+				Amount:   subAccFunds,
 			},
 		},
 	})

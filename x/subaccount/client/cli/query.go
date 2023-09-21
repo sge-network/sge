@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
-
-	"github.com/cosmos/cosmos-sdk/client"
 
 	"github.com/sge-network/sge/x/subaccount/types"
 )

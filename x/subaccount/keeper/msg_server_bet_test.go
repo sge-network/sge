@@ -4,11 +4,14 @@ import (
 	"testing"
 	"time"
 
-	"cosmossdk.io/math"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
@@ -16,7 +19,6 @@ import (
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/subaccount/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -56,17 +58,17 @@ func TestMsgServer_Bet(t *testing.T) {
 			app.BankKeeper,
 			ctx,
 			subAccFunder,
-			sdk.NewCoins(sdk.NewCoin(k.GetParams(ctx).LockedBalanceDenom, subAccFunds)),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccFunds)),
 		),
 	)
 
-	_, err := msgServer.CreateSubAccount(sdk.WrapSDKContext(ctx), &types.MsgCreateSubAccount{
-		Sender:          subAccFunder.String(),
+	_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
+		Creator:         subAccFunder.String(),
 		SubAccountOwner: subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				UnlockTime: time.Now().Add(24 * time.Hour),
-				Amount:     subAccFunds,
+				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
+				Amount:   subAccFunds,
 			},
 		},
 	})
@@ -112,8 +114,8 @@ func TestMsgServer_Bet(t *testing.T) {
 		require.Equal(t,
 			sdk.NewCoins(
 				sdk.NewCoin(
-					k.GetParams(ctx).LockedBalanceDenom,
-					math.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(math.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
+					params.DefaultBondDenom,
+					sdkmath.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(sdkmath.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
 				)),
 			ownerBalance,
 		)
@@ -193,7 +195,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 			tApp.BankKeeper,
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
-			sdk.NewCoins(sdk.NewCoin(tApp.SubaccountKeeper.GetParams(ctx).LockedBalanceDenom, sdk.NewInt(1_000_000).Mul(micro))),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1_000_000).Mul(micro))),
 		)
 		require.NoError(t, err)
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
@@ -213,7 +215,7 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, better sdk.AccAddress, amount math.Int) *bettypes.MsgWager {
+func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
 	ticket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
