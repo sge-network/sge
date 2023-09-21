@@ -22,7 +22,7 @@ import (
 
 var (
 	bettor1      = sample.NativeAccAddress()
-	bettor1Funds = sdk.NewInt(10).Mul(micro)
+	bettor1Funds = sdkmath.NewInt(10).Mul(micro)
 )
 
 func TestMsgServer(t *testing.T) {
@@ -66,7 +66,7 @@ func TestMsgServer(t *testing.T) {
 	market := addTestMarket(t, app, ctx, false)
 
 	// do house deposit
-	deposit := sdk.NewInt(1000).Mul(micro)
+	deposit := sdkmath.NewInt(1000).Mul(micro)
 	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
 	require.NoError(t, err)
 	// check spend
@@ -80,7 +80,7 @@ func TestMsgServer(t *testing.T) {
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()
-	bettorFee := sdk.NewInt(100)
+	bettorFee := sdkmath.NewInt(100)
 
 	t.Run("house wins", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
@@ -104,7 +104,7 @@ func TestMsgServer(t *testing.T) {
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t,
 			ownerBalance.AmountOf(params.DefaultBondDenom).String(),
-			sdk.NewInt(10).Mul(micro).Sub(bettorFee).String())
+			sdkmath.NewInt(10).Mul(micro).Sub(bettorFee).String())
 	})
 
 	t.Run("house loses", func(t *testing.T) {
@@ -165,7 +165,7 @@ func TestMsgServer(t *testing.T) {
 		subBalance, exists := k.GetBalance(ctx, subAccAddr)
 		require.True(t, exists)
 
-		require.Equal(t, subBalance.SpentAmount.String(), sdk.NewInt(131999680).String()) // NOTE: there was a match in the bet + participate fee
+		require.Equal(t, subBalance.SpentAmount.String(), sdkmath.NewInt(131999680).String()) // NOTE: there was a match in the bet + participate fee
 		require.Equal(t, subBalance.LostAmount.String(), sdk.ZeroInt().String())
 	})
 
@@ -239,7 +239,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	market := addTestMarket(t, app, ctx, false)
 
 	// do house deposit
-	deposit := sdk.NewInt(1000).Mul(micro)
+	deposit := sdkmath.NewInt(1000).Mul(micro)
 	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
 	require.NoError(t, err)
 	// check spend
@@ -254,11 +254,11 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	// we expect the balance to be the original one minus participation fee
 	subBalance, exists = k.GetBalance(ctx, subAccAddr)
 	require.True(t, exists)
-	require.Equal(t, subBalance.SpentAmount, sdk.NewInt(100).Mul(micro)) // all minus participation fee
+	require.Equal(t, subBalance.SpentAmount, sdkmath.NewInt(100).Mul(micro)) // all minus participation fee
 	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
 	require.Equal(t, subBalance.DepositedAmount, subAccFunds)
 	subBankBalance := app.BankKeeper.GetAllBalances(ctx, subAccAddr)
-	require.Equal(t, subBankBalance.AmountOf(params.DefaultBondDenom), subAccFunds.Sub(sdk.NewInt(100).Mul(micro))) // original funds - fee
+	require.Equal(t, subBankBalance.AmountOf(params.DefaultBondDenom), subAccFunds.Sub(sdkmath.NewInt(100).Mul(micro))) // original funds - fee
 
 	// resolve market with refund
 	app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{

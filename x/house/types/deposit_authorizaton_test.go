@@ -28,7 +28,7 @@ func TestDepositGrantValidateBasic(t *testing.T) {
 		},
 		{
 			name:       "valid",
-			spendLimit: sdk.NewInt(10000),
+			spendLimit: sdkmath.NewInt(10000),
 			expiration: time.Now().Add(5 * time.Minute),
 		},
 	}

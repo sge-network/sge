@@ -8,14 +8,16 @@ import (
 	"github.com/google/uuid"
 	"github.com/spf13/cast"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/stretchr/testify/require"
+
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -157,7 +159,7 @@ func placeTestBet(
 		Creator: testCreator,
 		Props: &types.WagerProps{
 			UID:    betUID,
-			Amount: sdk.NewInt(1000000),
+			Amount: sdkmath.NewInt(1000000),
 			Ticket: testWagerTicket,
 		},
 	}

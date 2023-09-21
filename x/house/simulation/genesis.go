@@ -27,7 +27,7 @@ func GenHouseParticipationFee(r *rand.Rand) sdk.Dec {
 
 // GenMinDeposit randomized house by uid query count
 func GenMinDeposit(r *rand.Rand) sdkmath.Int {
-	return sdk.NewInt(cast.ToInt64(r.Intn(99)))
+	return sdkmath.NewInt(cast.ToInt64(r.Intn(99)))
 }
 
 // RandomizedGenState generates a random GenesisState for house

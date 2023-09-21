@@ -43,8 +43,8 @@ var (
 var (
 	subAccOwner  = sample.NativeAccAddress()
 	subAccFunder = sample.NativeAccAddress()
-	micro        = sdk.NewInt(1_000_000)
-	subAccFunds  = sdk.NewInt(10_000).Mul(micro)
+	micro        = sdkmath.NewInt(1_000_000)
+	subAccFunds  = sdkmath.NewInt(10_000).Mul(micro)
 	subAccAddr   = types.NewAddressFromSubaccount(1)
 )
 
@@ -78,7 +78,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	market := addTestMarket(t, app, ctx, true)
 
 	// start betting using the subaccount
-	betAmt := sdk.NewInt(1000).Mul(micro)
+	betAmt := sdkmath.NewInt(1000).Mul(micro)
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
 		&types.MsgWager{Msg: testBet(t, subAccOwner, betAmt)},
@@ -88,7 +88,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	// check subaccount balance
 	balance, exists := k.GetBalance(ctx, subAccAddr)
 	require.True(t, exists)
-	betFees := sdk.NewInt(100)
+	betFees := sdkmath.NewInt(100)
 
 	require.Equal(t, balance.SpentAmount, betAmt)
 
@@ -195,15 +195,15 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 			tApp.BankKeeper,
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1_000_000).Mul(micro))),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1_000_000).Mul(micro))),
 		)
 		require.NoError(t, err)
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
 			resAddMarket.Data.UID,
-			sdk.NewInt(1_000_000).Mul(micro),
-			sdk.NewInt(1),
+			sdkmath.NewInt(1_000_000).Mul(micro),
+			sdkmath.NewInt(1),
 		)
 		require.NoError(t, err)
 	}

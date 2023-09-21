@@ -3,12 +3,14 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgDepositValidateBasic(t *testing.T) {
@@ -29,7 +31,7 @@ func TestMsgDepositValidateBasic(t *testing.T) {
 			msg: types.MsgDeposit{
 				Creator:   sample.AccAddress(),
 				MarketUID: uuid.NewString(),
-				Amount:    sdk.NewInt(100),
+				Amount:    sdkmath.NewInt(100),
 				Ticket:    "Ticket",
 			},
 		},
@@ -70,7 +72,7 @@ func TestNewDeposit(t *testing.T) {
 			Creator:               uuid.NewString(),
 			DepositorAddress:      uuid.NewString(),
 			MarketUID:             uuid.NewString(),
-			Amount:                sdk.NewInt(100),
+			Amount:                sdkmath.NewInt(100),
 			ParticipationIndex:    0,
 			WithdrawalCount:       0,
 			TotalWithdrawalAmount: sdk.ZeroInt(),

@@ -37,7 +37,7 @@ type testBetSuite struct {
 func newTestBetSuite(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	betFee := sdk.NewInt(10)
+	betFee := sdkmath.NewInt(10)
 
 	marketUID := uuid.NewString()
 	market := markettypes.Market{
@@ -58,15 +58,15 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 	deposits := []housetypes.Deposit{
 		{
 			DepositorAddress: simappUtil.TestParamUsers["user2"].Address.String(),
-			Amount:           sdk.NewInt(8000),
+			Amount:           sdkmath.NewInt(8000),
 		},
 		{
 			DepositorAddress: simappUtil.TestParamUsers["user3"].Address.String(),
-			Amount:           sdk.NewInt(10000),
+			Amount:           sdkmath.NewInt(10000),
 		},
 		{
 			DepositorAddress: simappUtil.TestParamUsers["user4"].Address.String(),
-			Amount:           sdk.NewInt(10000),
+			Amount:           sdkmath.NewInt(10000),
 		},
 	}
 
@@ -160,7 +160,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	require.True(ts.t, found)
 	require.Equal(ts.t, []uint64{1, 2, 3}, oddsExposures.FulfillmentQueue)
 
-	defaultBetAmount := sdk.NewInt(400)
+	defaultBetAmount := sdkmath.NewInt(400)
 
 	///// winner1 bet placement
 	//
@@ -246,7 +246,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		ts.market.UID,
 		ts.market.Odds[0].UID,
 		failedWinnerBetID,
-		sdk.NewInt(100000000000),
+		sdkmath.NewInt(100000000000),
 		ts.betFee,
 		types.ErrInsufficientFundToCoverPayout,
 	)

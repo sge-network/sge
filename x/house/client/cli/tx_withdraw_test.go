@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/testutil/network"
-	"github.com/sge-network/sge/x/house/client/cli"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/testutil/network"
+	"github.com/sge-network/sge/x/house/client/cli"
 )
 
 func TestTXWithdrawCLI(t *testing.T) {
@@ -25,7 +27,7 @@ func TestTXWithdrawCLI(t *testing.T) {
 		fmt.Sprintf(
 			"--%s=%s",
 			flags.FlagFees,
-			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdk.NewInt(10))).String(),
+			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdkmath.NewInt(10))).String(),
 		),
 	}
 

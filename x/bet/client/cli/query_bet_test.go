@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -63,8 +64,8 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			UID:               uuid.NewString(),
 			MarketUID:         market.UID,
 			OddsValue:         "10",
-			Amount:            sdk.NewInt(10),
-			Fee:               sdk.NewInt(1),
+			Amount:            sdkmath.NewInt(10),
+			Fee:               sdkmath.NewInt(1),
 			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)

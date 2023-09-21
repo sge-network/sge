@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
@@ -23,7 +24,7 @@ func TestDecodeStore(t *testing.T) {
 		sample.AccAddress(),
 		&types.WagerProps{
 			UID:    uuid.NewString(),
-			Amount: sdk.NewInt(10),
+			Amount: sdkmath.NewInt(10),
 			Ticket: "",
 		},
 		types.OddsType_ODDS_TYPE_DECIMAL,

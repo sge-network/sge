@@ -4,12 +4,14 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/require"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestWager(t *testing.T) {
@@ -98,7 +100,7 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_oddsNotexist",
 				OddsUID:   "notExistOdds",
-				Amount:    sdk.NewInt(1000),
+				Amount:    sdkmath.NewInt(1000),
 				OddsValue: "5",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
@@ -124,7 +126,7 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_lowBetAmount",
 				OddsUID:   "odds1",
-				Amount:    sdk.NewInt(100),
+				Amount:    sdkmath.NewInt(100),
 				OddsValue: "5",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
@@ -160,7 +162,7 @@ func TestWager(t *testing.T) {
 				UID:               "betUID",
 				MarketUID:         "uid_success",
 				OddsUID:           "odds1",
-				Amount:            sdk.NewInt(1000000),
+				Amount:            sdkmath.NewInt(1000000),
 				OddsValue:         "5",
 				OddsType:          types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
@@ -186,8 +188,8 @@ func TestWager(t *testing.T) {
 						ctx,
 						simappUtil.TestParamUsers["user1"].Address,
 						tc.market.UID,
-						sdk.NewInt(100000000),
-						sdk.NewInt(1),
+						sdkmath.NewInt(100000000),
+						sdkmath.NewInt(1),
 					)
 					require.NoError(t, err)
 				}

@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
@@ -15,8 +16,8 @@ import (
 
 var (
 	subAccOwner = sample.NativeAccAddress()
-	micro       = sdk.NewInt(1_000_000)
-	subAccFunds = sdk.NewInt(10_000).Mul(micro)
+	micro       = sdkmath.NewInt(1_000_000)
+	subAccFunds = sdkmath.NewInt(10_000).Mul(micro)
 	subAccAddr  = types.NewAddressFromSubaccount(1)
 )
 

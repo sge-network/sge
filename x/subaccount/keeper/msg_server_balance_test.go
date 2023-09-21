@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/stretchr/testify/require"
@@ -32,11 +33,11 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 		SubAccountOwner: subaccountOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
-				Amount:   sdk.NewInt(100),
+				Amount:   sdkmath.NewInt(100),
 				UnlockTS: uint64(lockedTime.Unix()),
 			},
 			{
-				Amount:   sdk.NewInt(200),
+				Amount:   sdkmath.NewInt(200),
 				UnlockTS: uint64(lockedTime2.Unix()),
 			},
 		},
@@ -46,11 +47,11 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	t.Log("check balance of sub account")
 	subAccountAddr := types.NewAddressFromSubaccount(1)
 	balance := app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
-	require.Equal(t, sdk.NewInt(300), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(300), balance.Amount)
 
 	t.Log("check balance of subaccount owner")
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
-	require.Equal(t, sdk.NewInt(0), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(0), balance.Amount)
 
 	t.Log("Withdraw unlocked balances, with 0 expires")
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
@@ -72,7 +73,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("balance of subaccount owner should be the same as first locked balance")
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
-	require.True(t, balance.Amount.Equal(sdk.NewInt(100)), balance.Amount.String())
+	require.True(t, balance.Amount.Equal(sdkmath.NewInt(100)), balance.Amount.String())
 
 	t.Log("expire second locked balance, also force money to be spent")
 	// we force some money to be spent on the subaccount to correctly test
@@ -80,7 +81,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	subAccountAddress := types.NewAddressFromSubaccount(1)
 	subaccountBalance, exists := app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
 	require.True(t, exists)
-	require.NoError(t, subaccountBalance.Spend(sdk.NewInt(100)))
+	require.NoError(t, subaccountBalance.Spend(sdkmath.NewInt(100)))
 	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
@@ -92,16 +93,16 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("balance of subaccount owner should be the same as both expired locked balances minus spent money")
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
-	require.Equal(t, sdk.NewInt(200), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(200), balance.Amount)
 
 	t.Log("check bank balance of sub account address")
 	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
-	require.Equal(t, sdk.NewInt(100), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(100), balance.Amount)
 
 	t.Log("after unspending the money of the subaccount, the owner will be able to get the money back when withdrawing")
 	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
 	require.True(t, exists)
-	require.NoError(t, subaccountBalance.Unspend(sdk.NewInt(100)))
+	require.NoError(t, subaccountBalance.Unspend(sdkmath.NewInt(100)))
 	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
 		Creator: subaccountOwner.String(),
@@ -110,14 +111,14 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	// check balances
 	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
-	require.Equal(t, sdk.NewInt(0), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(0), balance.Amount)
 	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
 	require.True(t, exists)
-	require.Equal(t, sdk.NewInt(300), subaccountBalance.WithdrawmAmount)
+	require.Equal(t, sdkmath.NewInt(300), subaccountBalance.WithdrawmAmount)
 
 	// check that the owner has received the last money
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
-	require.Equal(t, sdk.NewInt(300), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(300), balance.Amount)
 
 	// check that the owner can't withdraw again
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
@@ -165,7 +166,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
 	// Funder
-	err := testutil.FundAccount(app.BankKeeper, ctx, creatirAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatirAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(100000000))))
 	require.NoError(t, err)
 
 	// Create subaccount
@@ -181,7 +182,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 
 	balance, exists := k.GetBalance(ctx, subAccountAddr)
 	require.True(t, exists)
-	require.Equal(t, sdk.NewInt(0), balance.DepositedAmount)
+	require.Equal(t, sdkmath.NewInt(0), balance.DepositedAmount)
 	balances := k.GetLockedBalances(ctx, subAccountAddr)
 	require.Len(t, balances, 0)
 
@@ -191,7 +192,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: afterTime,
-				Amount:   sdk.NewInt(123),
+				Amount:   sdkmath.NewInt(123),
 			},
 		},
 	}
@@ -201,11 +202,11 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	// Check balance
 	balance, exists = k.GetBalance(ctx, subAccountAddr)
 	require.True(t, exists)
-	require.Equal(t, sdk.NewInt(123), balance.DepositedAmount)
+	require.Equal(t, sdkmath.NewInt(123), balance.DepositedAmount)
 	balances = k.GetLockedBalances(ctx, subAccountAddr)
 	require.Len(t, balances, 1)
 	require.True(t, afterTime == balances[0].UnlockTS)
-	require.Equal(t, sdk.NewInt(123), balances[0].Amount)
+	require.Equal(t, sdkmath.NewInt(123), balances[0].Amount)
 }
 
 func TestNewMsgServerTopUp_Errors(t *testing.T) {
@@ -229,7 +230,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: beforeTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -244,7 +245,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -259,7 +260,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},

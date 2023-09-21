@@ -99,7 +99,7 @@ func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccoun
 // sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
 // returns an error if any of the unlock times is expired.
 func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdkmath.Int, error) {
-	moneyToSend := sdk.NewInt(0)
+	moneyToSend := sdkmath.NewInt(0)
 
 	for _, balanceUnlock := range balanceUnlocks {
 		if balanceUnlock.UnlockTS < uint64(ctx.BlockTime().Unix()) {

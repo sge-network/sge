@@ -55,7 +55,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		sdk.NewInt(DefaultMinDeposit),
+		sdkmath.NewInt(DefaultMinDeposit),
 		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
 	)
 }

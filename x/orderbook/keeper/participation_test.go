@@ -30,14 +30,14 @@ func createNParticipation(
 		items[i].Index = cast.ToUint64(i + 1)
 		items[i].ParticipantAddress = simappUtil.TestParamUsers["user1"].Address.String()
 		items[i].OrderBookUID = testOrderBookUID
-		items[i].ActualProfit = sdk.NewInt(100)
-		items[i].CurrentRoundLiquidity = sdk.NewInt(100)
-		items[i].CurrentRoundMaxLoss = sdk.NewInt(100)
-		items[i].CurrentRoundTotalBetAmount = sdk.NewInt(100)
-		items[i].Liquidity = sdk.NewInt(100)
-		items[i].Fee = sdk.NewInt(10)
-		items[i].MaxLoss = sdk.NewInt(100)
-		items[i].TotalBetAmount = sdk.NewInt(100)
+		items[i].ActualProfit = sdkmath.NewInt(100)
+		items[i].CurrentRoundLiquidity = sdkmath.NewInt(100)
+		items[i].CurrentRoundMaxLoss = sdkmath.NewInt(100)
+		items[i].CurrentRoundTotalBetAmount = sdkmath.NewInt(100)
+		items[i].Liquidity = sdkmath.NewInt(100)
+		items[i].Fee = sdkmath.NewInt(10)
+		items[i].MaxLoss = sdkmath.NewInt(100)
+		items[i].TotalBetAmount = sdkmath.NewInt(100)
 
 		keeper.SetOrderBookParticipation(ctx, items[i])
 	}
@@ -138,8 +138,8 @@ func TestInitiateOrderBookParticipationNoMarket(t *testing.T) {
 	_, err := k.InitiateOrderBookParticipation(ctx,
 		simappUtil.TestParamUsers["user1"].Address,
 		testOrderBookUID,
-		sdk.NewInt(1000),
-		sdk.NewInt(100))
+		sdkmath.NewInt(1000),
+		sdkmath.NewInt(100))
 	require.ErrorIs(t, types.ErrMarketNotFound, err)
 }
 
@@ -183,8 +183,8 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 			participationIndex, err := k.InitiateOrderBookParticipation(ctx,
 				tc.depositorAddr,
 				marketUID,
-				sdk.NewInt(1000),
-				sdk.NewInt(100))
+				sdkmath.NewInt(1000),
+				sdkmath.NewInt(100))
 
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
@@ -200,7 +200,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	oddsUIDs := []string{uuid.NewString(), uuid.NewString()}
-	fee := sdk.NewInt(100)
+	fee := sdkmath.NewInt(100)
 
 	for _, tc := range []struct {
 		desc           string
@@ -222,24 +222,24 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 		{
 			desc:           "withdraw amount too large",
 			depositorAddr:  simappUtil.TestParamUsers["user1"].Address,
-			depositAmount:  sdk.NewInt(1000),
+			depositAmount:  sdkmath.NewInt(1000),
 			withdrawMode:   housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
-			withdrawAmount: sdk.NewInt(10000),
+			withdrawAmount: sdkmath.NewInt(10000),
 			err:            types.ErrWithdrawalTooLarge,
 		},
 		{
 			desc:               "success full",
 			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
-			depositAmount:      sdk.NewInt(1000),
+			depositAmount:      sdkmath.NewInt(1000),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-			expWithdrawnAmount: sdk.NewInt(1000).Sub(fee),
+			expWithdrawnAmount: sdkmath.NewInt(1000).Sub(fee),
 		},
 		{
 			desc:               "success partial",
 			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
-			depositAmount:      sdk.NewInt(500),
+			depositAmount:      sdkmath.NewInt(500),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-			expWithdrawnAmount: sdk.NewInt(500).Sub(fee),
+			expWithdrawnAmount: sdkmath.NewInt(500).Sub(fee),
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -255,7 +255,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 					tc.depositorAddr,
 					marketUID,
 					tc.depositAmount,
-					sdk.NewInt(100))
+					sdkmath.NewInt(100))
 				require.NoError(t, err)
 			}
 

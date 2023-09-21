@@ -61,14 +61,14 @@ message ParticipationExposure {
 
   // exposure is the total exposure taken on given odds.
   string exposure = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"exposure\""
   ];
 
   // bet_amount is the total bet amount corresponding to the exposure.
   string bet_amount = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"bet_amount\""
   ];

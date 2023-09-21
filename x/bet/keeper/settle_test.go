@@ -3,14 +3,16 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func TestSettleBet(t *testing.T) {
@@ -50,7 +52,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 				Status:    types.Bet_STATUS_SETTLED,
@@ -72,7 +74,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -92,7 +94,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -112,7 +114,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -133,7 +135,7 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: testMarketUID,
 				OddsValue: "10",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 
@@ -171,8 +173,8 @@ func TestSettleBet(t *testing.T) {
 						ctx,
 						simappUtil.TestParamUsers["user1"].Address,
 						resetMarket.UID,
-						sdk.NewInt(100000000),
-						sdk.NewInt(1),
+						sdkmath.NewInt(100000000),
+						sdkmath.NewInt(1),
 					)
 					require.NoError(t, err)
 				}
@@ -234,8 +236,8 @@ func TestBatchSettleBet(t *testing.T) {
 				ctx,
 				simappUtil.TestParamUsers["user"+cast.ToString(i)].Address,
 				market.UID,
-				sdk.NewInt(100000000),
-				sdk.NewInt(1),
+				sdkmath.NewInt(100000000),
+				sdkmath.NewInt(1),
 			)
 			require.NoError(t, err)
 		}

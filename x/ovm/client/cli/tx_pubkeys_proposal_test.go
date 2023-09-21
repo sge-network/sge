@@ -8,15 +8,17 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/require"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/client/cli"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestCmdChangePubkeysListProposal(t *testing.T) {
@@ -31,7 +33,7 @@ func TestCmdChangePubkeysListProposal(t *testing.T) {
 		fmt.Sprintf(
 			"--%s=%s",
 			flags.FlagFees,
-			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdk.NewInt(10))).String(),
+			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdkmath.NewInt(10))).String(),
 		),
 	}
 

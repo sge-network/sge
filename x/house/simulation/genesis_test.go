@@ -44,7 +44,7 @@ func TestRandomizedGenState(t *testing.T) {
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &houseGenesis)
 
 	require.Equal(t, sdk.NewDecWithPrec(1, 1), houseGenesis.Params.HouseParticipationFee)
-	require.Equal(t, sdk.NewInt(100), houseGenesis.Params.MinDeposit)
+	require.Equal(t, sdkmath.NewInt(100), houseGenesis.Params.MinDeposit)
 }
 
 // TestRandomizedGenState tests abnormal scenarios of applying RandomizedGenState.

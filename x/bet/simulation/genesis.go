@@ -8,7 +8,6 @@ import (
 	"math/rand"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/sge-network/sge/x/bet/types"
 	"github.com/spf13/cast"
@@ -34,12 +33,12 @@ func GenMaxBetByUIDQueryCount(r *rand.Rand) uint32 {
 
 // GenMinAmount randomized min bet amount
 func GenMinAmount(r *rand.Rand) sdkmath.Int {
-	return sdk.NewInt(int64(r.Intn(99)))
+	return sdkmath.NewInt(int64(r.Intn(99)))
 }
 
 // GenFee randomized min bet fee
 func GenFee(r *rand.Rand) sdkmath.Int {
-	return sdk.NewInt(int64(r.Intn(99)))
+	return sdkmath.NewInt(int64(r.Intn(99)))
 }
 
 // RandomizedGenState generates a random GenesisState for bet

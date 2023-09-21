@@ -52,7 +52,7 @@ var (
 
 var (
 	// DefaultExcludeAmount is the default value for exclude amount
-	DefaultExcludeAmount = sdk.NewInt(int64(0))
+	DefaultExcludeAmount = sdkmath.NewInt(int64(0))
 
 	// DefaultPhases is the default value for inflation phases
 	DefaultPhases = []Phase{

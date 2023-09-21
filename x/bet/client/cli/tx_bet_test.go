@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -25,7 +26,7 @@ func TestTXBetCLI(t *testing.T) {
 		fmt.Sprintf(
 			"--%s=%s",
 			flags.FlagFees,
-			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdk.NewInt(10))).String(),
+			sdk.NewCoins(sdk.NewCoin(net.Config.BondDenom, sdkmath.NewInt(10))).String(),
 		),
 	}
 

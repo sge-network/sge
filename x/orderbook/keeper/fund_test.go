@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/app/params"
@@ -17,7 +16,7 @@ func TestFund(t *testing.T) {
 
 	senderAddr := simappUtil.TestParamUsers["user1"].Address
 	initialBalance := tApp.BankKeeper.GetBalance(ctx, senderAddr, params.DefaultBondDenom)
-	successAmount := sdk.NewInt(1000)
+	successAmount := sdkmath.NewInt(1000)
 
 	for _, tc := range []struct {
 		desc   string
@@ -27,7 +26,7 @@ func TestFund(t *testing.T) {
 	}{
 		{
 			desc:   "not enough balance",
-			amount: sdk.NewInt(100000000000000),
+			amount: sdkmath.NewInt(100000000000000),
 			err:    types.ErrInsufficientAccountBalance,
 		},
 		{
@@ -57,7 +56,7 @@ func TestFund(t *testing.T) {
 func TestReFund(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	successAmount := sdk.NewInt(1000)
+	successAmount := sdkmath.NewInt(1000)
 	err := k.Fund(
 		types.OrderBookLiquidityFunder{},
 		ctx,
@@ -77,7 +76,7 @@ func TestReFund(t *testing.T) {
 	}{
 		{
 			desc:   "not enough balance",
-			amount: successAmount.Add(sdk.NewInt(1)),
+			amount: successAmount.Add(sdkmath.NewInt(1)),
 			err:    types.ErrInsufficientBalanceInModuleAccount,
 		},
 		{

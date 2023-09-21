@@ -3,14 +3,13 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/require"
 
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/types"
-
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -38,7 +37,7 @@ func TestBetMsgServerWager(t *testing.T) {
 			Creator: creator.Address.String(),
 			Props: &types.WagerProps{
 				UID:    "betUID_1",
-				Amount: sdk.NewInt(500),
+				Amount: sdkmath.NewInt(500),
 				Ticket: "wrongTicket",
 			},
 		}
@@ -69,7 +68,7 @@ func TestBetMsgServerWager(t *testing.T) {
 
 			Props: &types.WagerProps{
 				UID:    "betUID_1",
-				Amount: sdk.NewInt(500),
+				Amount: sdkmath.NewInt(500),
 				Ticket: wagerTicket,
 			},
 		}
@@ -98,7 +97,7 @@ func TestBetMsgServerWager(t *testing.T) {
 
 			Props: &types.WagerProps{
 				UID:    "betUID_1",
-				Amount: sdk.NewInt(500),
+				Amount: sdkmath.NewInt(500),
 				Ticket: wagerTicket,
 			},
 		}
@@ -126,7 +125,7 @@ func TestBetMsgServerWager(t *testing.T) {
 			Creator: creator.Address.String(),
 			Props: &types.WagerProps{
 				UID:    "BetUID_2",
-				Amount: sdk.NewInt(1000000),
+				Amount: sdkmath.NewInt(1000000),
 				Ticket: wagerTicket,
 			},
 		}
@@ -153,8 +152,8 @@ func TestBetMsgServerWager(t *testing.T) {
 			ctx,
 			simappUtil.TestParamUsers["user1"].Address,
 			marketItem.UID,
-			sdk.NewInt(100000000),
-			sdk.NewInt(1),
+			sdkmath.NewInt(100000000),
+			sdkmath.NewInt(1),
 		)
 		require.NoError(t, err)
 

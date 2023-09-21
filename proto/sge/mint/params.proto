@@ -25,7 +25,7 @@ message Params {
   // exclude_amount is the excluded amount form being calculated in inflation.
   string exclude_amount = 4 [
     (gogoproto.moretags) = "yaml:\"exclude_amount\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
 }

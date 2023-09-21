@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
@@ -31,7 +31,7 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -45,7 +45,7 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -59,7 +59,7 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: 0,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},

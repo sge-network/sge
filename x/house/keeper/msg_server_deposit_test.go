@@ -4,14 +4,16 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgServerDeposit(t *testing.T) {
@@ -41,7 +43,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	t.Run("min deposit", func(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator: creator.Address.String(),
-			Amount:  sdk.NewInt(1),
+			Amount:  sdkmath.NewInt(1),
 		}
 
 		_, err := msgk.Deposit(wctx, inputDeposit)
@@ -51,7 +53,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	t.Run("no ticket", func(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator: creator.Address.String(),
-			Amount:  sdk.NewInt(1000),
+			Amount:  sdkmath.NewInt(1000),
 		}
 
 		_, err := msgk.Deposit(wctx, inputDeposit)
@@ -75,7 +77,7 @@ func TestMsgServerDeposit(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator:   creator.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 
@@ -99,7 +101,7 @@ func TestMsgServerDeposit(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator:   depositor.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 
@@ -115,7 +117,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	})
 
 	t.Run("success with authorization", func(t *testing.T) {
-		grantAmount := sdk.NewInt(1000)
+		grantAmount := sdkmath.NewInt(1000)
 
 		expTime := time.Now().Add(5 * time.Minute)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
@@ -152,7 +154,7 @@ func TestMsgServerDeposit(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator:   creator.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 

@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 	"github.com/sge-network/sge/x/house/types"
 	"github.com/spf13/cast"
@@ -56,7 +55,7 @@ func CmdWithdraw() *cobra.Command {
 				}
 
 				var ok bool
-				argAmountCosmosInt, ok = sdk.NewIntFromString(args[4])
+				argAmountCosmosInt, ok = sdkmath.NewIntFromString(args[4])
 				if !ok {
 					return types.ErrInvalidAmount
 				}

@@ -3,9 +3,11 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/mint/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/mint/types"
 )
 
 func TestNewGenesisState(t *testing.T) {
@@ -140,7 +142,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					MintDenom:     types.DefaultParams().MintDenom,
 					BlocksPerYear: types.DefaultParams().BlocksPerYear,
 					Phases:        types.DefaultParams().Phases,
-					ExcludeAmount: sdk.NewInt(-1),
+					ExcludeAmount: sdkmath.NewInt(-1),
 				},
 			),
 			valid: false,

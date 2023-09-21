@@ -3,12 +3,14 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/keeper"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNWithdrawals(
@@ -25,7 +27,7 @@ func createNWithdrawals(
 		items[i].MarketUID = testMarketUID
 		items[i].ParticipationIndex = uint64(i + 1)
 		items[i].Mode = types.WithdrawalMode_WITHDRAWAL_MODE_FULL
-		items[i].Amount = sdk.NewInt(100)
+		items[i].Amount = sdkmath.NewInt(100)
 
 		keeper.SetWithdrawal(ctx, items[i])
 	}

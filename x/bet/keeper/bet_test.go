@@ -3,14 +3,15 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/spf13/cast"
-
 	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNBet(
@@ -28,8 +29,8 @@ func createNBet(
 		items[i].Creator = testCreator
 		items[i].OddsValue = "10"
 		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
-		items[i].Amount = sdk.NewInt(10)
-		items[i].Fee = sdk.NewInt(1)
+		items[i].Amount = sdkmath.NewInt(10)
+		items[i].Fee = sdkmath.NewInt(1)
 		items[i].MarketUID = testMarketUID
 		items[i].MaxLossMultiplier = sdk.NewDec(10)
 

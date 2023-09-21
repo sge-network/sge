@@ -22,13 +22,13 @@ func TestWithdrawGrantValidateBasic(t *testing.T) {
 	}{
 		{
 			name:          "invalid coins",
-			withdrawLimit: sdk.NewInt(10000),
+			withdrawLimit: sdkmath.NewInt(10000),
 			expiration:    time.Now().Add(5 * time.Minute),
 			err:           sdkerrors.ErrInvalidCoins,
 		},
 		{
 			name:          "valid",
-			withdrawLimit: sdk.NewInt(100),
+			withdrawLimit: sdkmath.NewInt(100),
 			expiration:    time.Now().Add(5 * time.Minute),
 		},
 	}

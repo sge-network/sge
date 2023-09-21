@@ -4,10 +4,12 @@ import (
 	"reflect"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestParamsYML(t *testing.T) {
@@ -17,7 +19,7 @@ func TestParamsYML(t *testing.T) {
 		Phases: []types.Phase{
 			{Inflation: sdk.NewDec(10), YearCoefficient: sdk.NewDec(1)},
 		},
-		ExcludeAmount: sdk.NewInt(100),
+		ExcludeAmount: sdkmath.NewInt(100),
 	}
 
 	ymlStr := param.String()
