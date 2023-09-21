@@ -4,11 +4,13 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestChangePubkeysVote(t *testing.T) {
@@ -110,7 +112,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			Ticket:        singedVote2Ticket,
 			VoterKeyIndex: 0,
 		})
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, respVote)
 	})
 }

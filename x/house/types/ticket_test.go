@@ -3,11 +3,13 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestDepositTicketPayloadValidation(t *testing.T) {
@@ -45,7 +47,7 @@ func TestDepositTicketPayloadValidation(t *testing.T) {
 					Ignore: true,
 				},
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid valid kyc",
@@ -107,7 +109,7 @@ func TestWithdrawTicketPayloadValidation(t *testing.T) {
 					Ignore: true,
 				},
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "invalid valid kyc",

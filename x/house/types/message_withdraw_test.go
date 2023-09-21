@@ -3,10 +3,11 @@ package types_test
 import (
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/types"
@@ -23,7 +24,7 @@ func TestMsgWithdrawValidateBasic(t *testing.T) {
 			msg: types.MsgWithdraw{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
@@ -75,7 +76,7 @@ func TestMsgWithdrawValidateBasic(t *testing.T) {
 				ParticipationIndex: 1,
 				Ticket:             "Ticket",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

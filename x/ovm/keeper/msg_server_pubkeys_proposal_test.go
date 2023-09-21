@@ -7,12 +7,14 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNTestPubKeys(n int) ([]string, error) {
@@ -85,7 +87,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 
@@ -112,7 +114,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 
@@ -139,7 +141,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 

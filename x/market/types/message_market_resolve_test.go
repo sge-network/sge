@@ -3,11 +3,13 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgResolveValidateBasic(t *testing.T) {
@@ -21,7 +23,7 @@ func TestMsgResolveValidateBasic(t *testing.T) {
 			msg: types.MsgResolve{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
@@ -35,7 +37,7 @@ func TestMsgResolveValidateBasic(t *testing.T) {
 			msg: types.MsgResolve{
 				Creator: sample.AccAddress(),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

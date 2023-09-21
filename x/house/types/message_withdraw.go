@@ -3,11 +3,13 @@ package types
 import (
 	"strings"
 
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
 	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const typeMsgWithdraw = "house_withdraw"
@@ -53,7 +55,7 @@ func (msg *MsgWithdraw) GetSignBytes() []byte {
 func (msg *MsgWithdraw) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if msg.Mode != WithdrawalMode_WITHDRAWAL_MODE_FULL &&
@@ -71,7 +73,7 @@ func (msg *MsgWithdraw) ValidateBasic() error {
 
 	if msg.Mode == WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if !msg.Amount.IsPositive() {
-			return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "invalid withdrawal amount")
+			return sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "invalid withdrawal amount")
 		}
 	}
 
