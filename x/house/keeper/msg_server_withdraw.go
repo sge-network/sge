@@ -50,7 +50,7 @@ func (k Keeper) ParseWithdrawTicketAndValidate(
 	depositorAddr := msg.Creator
 	if payload.DepositorAddress != "" {
 		if !authzAllowed {
-			return "", false, sdkerrors.Wrapf(types.ErrAuthorizationNotAllowed, "%s")
+			return "", false, types.ErrAuthorizationNotAllowed
 		}
 		depositorAddr = payload.DepositorAddress
 		isOnBehalf = true

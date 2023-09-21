@@ -60,7 +60,7 @@ func (k Keeper) ParseDepositTicketAndValidate(
 	if payload.DepositorAddress != "" &&
 		payload.DepositorAddress != msg.Creator {
 		if !authzAllowed {
-			return "", sdkerrors.Wrapf(types.ErrAuthorizationNotAllowed, "%s")
+			return "", types.ErrAuthorizationNotAllowed
 		}
 		if err := k.ValidateMsgAuthorization(ctx, msg.Creator, payload.DepositorAddress, msg); err != nil {
 			return "", err

@@ -2,11 +2,12 @@ package cli_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"testing"
 
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 
