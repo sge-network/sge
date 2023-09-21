@@ -4,13 +4,14 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const (
 	// typeMsgTopUp is type of message MsgTopUp
-	typeMsgTopUp = "subaccount_topup"
+	typeMsgTopUp = "subacc_topup"
 	// typeMsgWithdrawUnlockedBalances is type of message MsgWithdrawUnlockedBalances
-	typeMsgWithdrawUnlockedBalances = "subaccount_withdraw_unlocked"
+	typeMsgWithdrawUnlockedBalances = "subacc_withdraw_unlocked"
 )
 
 var (
@@ -30,6 +31,15 @@ func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
 		panic(err)
 	}
 	return []sdk.AccAddress{signer}
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgTopUp) EmitEvent(ctx *sdk.Context, subAccAddr string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgTopUp, msg.Creator,
+		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+	)
+	emitter.Emit()
 }
 
 func (msg *MsgTopUp) ValidateBasic() error {
@@ -73,4 +83,13 @@ func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgWithdrawUnlockedBalances) EmitEvent(ctx *sdk.Context, subAccAddr string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgWithdrawUnlockedBalances, msg.Creator,
+		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+	)
+	emitter.Emit()
 }

@@ -11,46 +11,48 @@ import (
 
 // Create creates a sub account according to the input message data.
 func (k msgServer) Create(
-	ctx context.Context,
-	request *types.MsgCreate,
+	goCtx context.Context,
+	msg *types.MsgCreate,
 ) (*types.MsgCreateResponse, error) {
-	sdkContext := sdk.UnwrapSDKContext(ctx)
-	err := request.ValidateBasic()
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	err := msg.ValidateBasic()
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "invalid request")
 	}
 
-	moneyToSend, err := sumBalanceUnlocks(sdkContext, request.LockedBalances)
+	moneyToSend, err := sumBalanceUnlocks(ctx, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
 
-	creatorAddr := sdk.MustAccAddressFromBech32(request.Creator)
-	subaccountOwner := sdk.MustAccAddressFromBech32(request.SubAccountOwner)
-	if _, exists := k.keeper.GetSubAccountByOwner(sdkContext, subaccountOwner); exists {
+	creatorAddr := sdk.MustAccAddressFromBech32(msg.Creator)
+	subAccAddr := sdk.MustAccAddressFromBech32(msg.SubAccountOwner)
+	if _, exists := k.keeper.GetSubAccountByOwner(ctx, subAccAddr); exists {
 		return nil, types.ErrSubaccountAlreadyExist
 	}
 
-	subaccountID := k.keeper.NextID(sdkContext)
+	subaccountID := k.keeper.NextID(ctx)
 
 	// ALERT: If someone frontruns the account creation, will be overwritten here
 	subaccountAddress := types.NewAddressFromSubaccount(subaccountID)
-	subaccountAccount := k.keeper.accountKeeper.NewAccountWithAddress(sdkContext, subaccountAddress)
-	k.keeper.accountKeeper.SetAccount(sdkContext, subaccountAccount)
+	subaccountAccount := k.keeper.accountKeeper.NewAccountWithAddress(ctx, subaccountAddress)
+	k.keeper.accountKeeper.SetAccount(ctx, subaccountAccount)
 
-	err = k.keeper.sendCoinsToSubaccount(sdkContext, creatorAddr, subaccountAddress, moneyToSend)
+	err = k.keeper.sendCoinsToSubaccount(ctx, creatorAddr, subaccountAddress, moneyToSend)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "unable to send coins")
 	}
 
-	k.keeper.SetSubAccountOwner(sdkContext, subaccountAddress, subaccountOwner)
-	k.keeper.SetLockedBalances(sdkContext, subaccountAddress, request.LockedBalances)
-	k.keeper.SetBalance(sdkContext, subaccountAddress, types.Balance{
+	k.keeper.SetSubAccountOwner(ctx, subaccountAddress, subAccAddr)
+	k.keeper.SetLockedBalances(ctx, subaccountAddress, msg.LockedBalances)
+	k.keeper.SetBalance(ctx, subaccountAddress, types.Balance{
 		DepositedAmount: moneyToSend,
 		SpentAmount:     sdk.ZeroInt(),
 		WithdrawmAmount: sdk.ZeroInt(),
 		LostAmount:      sdk.ZeroInt(),
 	})
+
+	msg.EmitEvent(&ctx, subaccountAddress.String())
 
 	return &types.MsgCreateResponse{}, nil
 }

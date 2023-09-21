@@ -1,15 +1,19 @@
 package types
 
 import (
+	"strings"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/spf13/cast"
 )
 
 const (
 	// typeMsgHouseDeposit is type of message MsgHouseDeposit
-	typeMsgHouseDeposit = "subaccount_house_deposit"
+	typeMsgHouseDeposit = "subacc_house_deposit"
 	// typeHouseWithdraw is type of message MsgHouseWithdraw
-	typeHouseWithdraw = "subaccount_house_withdraw"
+	typeHouseWithdraw = "subacc_house_withdraw"
 )
 
 var (
@@ -40,6 +44,19 @@ func (msg *MsgHouseDeposit) ValidateBasic() error {
 	return msg.Msg.ValidateBasic()
 }
 
+// EmitEvent emits the event for the message success.
+func (msg *MsgHouseDeposit) EmitEvent(ctx *sdk.Context, subAccAddr string, participationIndex uint64) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgHouseDeposit, msg.Msg.Creator,
+		sdk.NewAttribute(attributeKeyDepositCreator, msg.Msg.Creator),
+		sdk.NewAttribute(attributeKeySubAccDepositor, subAccAddr),
+		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
+			strings.Join([]string{msg.Msg.MarketUID, cast.ToString(participationIndex)}, "#"),
+		),
+	)
+	emitter.Emit()
+}
+
 // Route returns the module's message router key.
 func (*MsgHouseWithdraw) Route() string { return RouterKey }
 
@@ -61,4 +78,18 @@ func (msg *MsgHouseWithdraw) ValidateBasic() error {
 		return errors.ErrInvalidRequest.Wrap("msg is nil")
 	}
 	return msg.Msg.ValidateBasic()
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgHouseWithdraw) EmitEvent(ctx *sdk.Context, subAccAddr string, withdrawalID uint64) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeHouseWithdraw, msg.Msg.Creator,
+		sdk.NewAttribute(attributeKeyDepositCreator, msg.Msg.Creator),
+		sdk.NewAttribute(attributeKeySubAccDepositor, subAccAddr),
+		sdk.NewAttribute(attributeKeyWithdrawalID, cast.ToString(withdrawalID)),
+		sdk.NewAttribute(attributeKeyWithdrawMarketUIDParticipantIndex,
+			strings.Join([]string{msg.Msg.MarketUID, cast.ToString(msg.Msg.ParticipationIndex)}, "#"),
+		),
+	)
+	emitter.Emit()
 }

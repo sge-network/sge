@@ -11,10 +11,10 @@ import (
 )
 
 // TopUp increases the balance of sub account according to the input data.
-func (k msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTopUpResponse, error) {
-	sdkContext := sdk.UnwrapSDKContext(ctx)
+func (k msgServer) TopUp(goCtx context.Context, msg *types.MsgTopUp) (*types.MsgTopUpResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	moneyToAdd, err := sumBalanceUnlocks(sdkContext, msg.LockedBalances)
+	moneyToAdd, err := sumBalanceUnlocks(ctx, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
@@ -22,38 +22,40 @@ func (k msgServer) TopUp(ctx context.Context, msg *types.MsgTopUp) (*types.MsgTo
 	creatorAddr := sdk.MustAccAddressFromBech32(msg.Creator)
 	subaccountOwner := sdk.MustAccAddressFromBech32(msg.SubAccount)
 
-	subAccAddress, exists := k.keeper.GetSubAccountByOwner(sdkContext, subaccountOwner)
+	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, subaccountOwner)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
-	balance, exists := k.keeper.GetBalance(sdkContext, subAccAddress)
+	balance, exists := k.keeper.GetBalance(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
 
 	balance.DepositedAmount = balance.DepositedAmount.Add(moneyToAdd)
-	k.keeper.SetBalance(sdkContext, subAccAddress, balance)
-	k.keeper.SetLockedBalances(sdkContext, subAccAddress, msg.LockedBalances)
+	k.keeper.SetBalance(ctx, subAccAddr, balance)
+	k.keeper.SetLockedBalances(ctx, subAccAddr, msg.LockedBalances)
 
-	err = k.keeper.sendCoinsToSubaccount(sdkContext, creatorAddr, subAccAddress, moneyToAdd)
+	err = k.keeper.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, moneyToAdd)
 	if err != nil {
 		return nil, fmt.Errorf("unable to send coins: %w", err)
 	}
+
+	msg.EmitEvent(&ctx, subAccAddr.String())
 
 	return &types.MsgTopUpResponse{}, nil
 }
 
 // WithdrawUnlockedBalances withdraws the unlocked balance of sub account according to the input account.
-func (k msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types.MsgWithdrawUnlockedBalances) (*types.MsgWithdrawUnlockedBalancesResponse, error) {
-	sdkContext := sdk.UnwrapSDKContext(ctx)
+func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.MsgWithdrawUnlockedBalances) (*types.MsgWithdrawUnlockedBalancesResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	creatorAddr := sdk.MustAccAddressFromBech32(balances.Creator)
-	subAccountAddress, exists := k.keeper.GetSubAccountByOwner(sdkContext, creatorAddr)
+	creatorAddr := sdk.MustAccAddressFromBech32(msg.Creator)
+	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, creatorAddr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	balance, unlockedBalance, bankBalance := k.keeper.getBalances(sdkContext, subAccountAddress)
+	balance, unlockedBalance, bankBalance := k.keeper.getBalances(ctx, subAccAddr)
 
 	// calculate withdrawable balance, which is the minimum between the available balance, and
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
@@ -64,12 +66,14 @@ func (k msgServer) WithdrawUnlockedBalances(ctx context.Context, balances *types
 	}
 
 	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
-	k.keeper.SetBalance(sdkContext, subAccountAddress, balance)
+	k.keeper.SetBalance(ctx, subAccAddr, balance)
 
-	err := k.keeper.bankKeeper.SendCoins(sdkContext, subAccountAddress, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
+	err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
 	if err != nil {
 		return nil, err
 	}
+
+	msg.EmitEvent(&ctx, subAccAddr.String())
 
 	return &types.MsgWithdrawUnlockedBalancesResponse{}, nil
 }

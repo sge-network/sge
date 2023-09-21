@@ -15,8 +15,9 @@ import (
 func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	subAccOwner := sdk.MustAccAddressFromBech32(msg.Msg.Creator)
 	// find subaccount
-	subAccountAddress, exists := k.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, subAccOwner)
 	if !exists {
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
@@ -27,10 +28,10 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 	}
 
 	// here we swap the original creator with the subaccount address
-	bet.Creator = subAccountAddress.String()
+	bet.Creator = subAccAddr.String()
 
 	// make subaccount balance adjustments
-	balance, exists := k.keeper.GetBalance(ctx, subAccountAddress)
+	balance, exists := k.keeper.GetBalance(ctx, subAccAddr)
 	if !exists {
 		panic("state corruption: subaccount balance not found")
 	}
@@ -44,9 +45,9 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(bettypes.ErrInWager, "%s", err)
 	}
 
-	k.keeper.SetBalance(ctx, subAccountAddress, balance)
+	k.keeper.SetBalance(ctx, subAccAddr, balance)
 
-	msg.Msg.EmitEvent(&ctx)
+	msg.EmitEvent(&ctx, subAccOwner.String())
 
 	return &types.MsgWagerResponse{
 		Response: &bettypes.MsgWagerResponse{Props: msg.Msg.Props},

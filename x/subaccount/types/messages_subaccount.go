@@ -4,11 +4,12 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const (
 	// typeMsgCreate is type of message MsgCreate
-	typeMsgCreate = "subaccount_create"
+	typeMsgCreate = "subacc_create"
 )
 
 var _ sdk.Msg = &MsgCreate{}
@@ -52,4 +53,14 @@ func (msg *MsgCreate) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgCreate) EmitEvent(ctx *sdk.Context, subAccAddr string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(typeMsgCreate, msg.Creator,
+		sdk.NewAttribute(attributeKeySubAccOwner, msg.SubAccountOwner),
+		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+	)
+	emitter.Emit()
 }
