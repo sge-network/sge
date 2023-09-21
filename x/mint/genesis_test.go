@@ -3,11 +3,12 @@ package mint_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/mint"
 	"github.com/sge-network/sge/x/mint/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

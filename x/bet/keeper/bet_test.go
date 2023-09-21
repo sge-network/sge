@@ -3,12 +3,13 @@ package keeper_test
 import (
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"

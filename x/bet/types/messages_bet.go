@@ -3,11 +3,11 @@ package types
 import (
 	"strings"
 
-	"github.com/sge-network/sge/utils"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/utils"
 )
 
 const (

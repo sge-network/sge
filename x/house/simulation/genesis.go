@@ -7,11 +7,13 @@ import (
 	//#nosec
 	"math/rand"
 
+	"github.com/spf13/cast"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
+
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/spf13/cast"
 )
 
 // Simulation parameter constants

@@ -3,14 +3,16 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func createNOrderBook(

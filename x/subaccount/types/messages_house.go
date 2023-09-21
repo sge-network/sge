@@ -3,10 +3,12 @@ package types
 import (
 	"strings"
 
+	"github.com/spf13/cast"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
-	"github.com/spf13/cast"
 )
 
 const (

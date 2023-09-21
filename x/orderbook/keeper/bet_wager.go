@@ -3,10 +3,11 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/spf13/cast"
+
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"

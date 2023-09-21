@@ -3,11 +3,12 @@ package types_test
 import (
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
 
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 const (

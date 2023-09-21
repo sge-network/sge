@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/cosmos/cosmos-sdk/types/kv"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/orderbook/simulation"

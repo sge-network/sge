@@ -5,14 +5,16 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
+
 	"github.com/sge-network/sge/x/ovm/keeper"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func createNActiveProposal(

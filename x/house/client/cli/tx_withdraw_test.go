@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/x/house/client/cli"

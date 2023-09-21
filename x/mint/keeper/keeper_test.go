@@ -3,10 +3,12 @@ package keeper_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/mint/keeper"
-	"github.com/stretchr/testify/require"
 )
 
 func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {

@@ -6,11 +6,13 @@ import (
 	"math/big"
 	"strings"
 
+	yaml "gopkg.in/yaml.v2"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
+
 	"github.com/sge-network/sge/app/params"
-	"gopkg.in/yaml.v2"
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)

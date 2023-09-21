@@ -6,10 +6,12 @@ import (
 	"math/rand"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/x/mint/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestPhaseInflation(t *testing.T) {

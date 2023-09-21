@@ -4,10 +4,12 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/x/ovm/client/cli"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGetQueryCmd(t *testing.T) {

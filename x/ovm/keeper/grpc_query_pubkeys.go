@@ -3,10 +3,12 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/ovm/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 // PubKeys returns list of the public keys

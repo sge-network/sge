@@ -6,16 +6,19 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/ovm/client/cli"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // Prevent strconv unused error

@@ -5,13 +5,15 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/cmd/sged/cmd"
 	"github.com/sge-network/sge/testutil/network"
-	"github.com/stretchr/testify/require"
 )
 
 func TestAddGenesisAccountCmdPanic(t *testing.T) {

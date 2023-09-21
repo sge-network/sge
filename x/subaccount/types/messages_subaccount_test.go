@@ -4,11 +4,12 @@ import (
 	"testing"
 	"time"
 
-	sdkmath "cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 

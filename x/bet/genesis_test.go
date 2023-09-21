@@ -3,11 +3,13 @@ package bet_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
+
 	"github.com/sge-network/sge/x/bet"
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

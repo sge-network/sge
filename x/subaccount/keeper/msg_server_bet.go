@@ -3,10 +3,11 @@ package keeper
 import (
 	"context"
 
-	sdkerrors "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/subaccount/types"

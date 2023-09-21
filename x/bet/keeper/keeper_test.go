@@ -7,11 +7,11 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/simapp"
-	"github.com/stretchr/testify/require"
 
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/keeper"

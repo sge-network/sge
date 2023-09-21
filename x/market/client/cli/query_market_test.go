@@ -2,14 +2,15 @@ package cli_test
 
 import (
 	"fmt"
-	"testing"
-
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"testing"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"

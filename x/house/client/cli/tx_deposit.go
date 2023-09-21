@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/spf13/cobra"
 
 	"github.com/sge-network/sge/x/house/types"
 )

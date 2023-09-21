@@ -4,13 +4,15 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/house/keeper"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (

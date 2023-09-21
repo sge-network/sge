@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/client/flags"
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/google/uuid"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
+
 	tmcli "github.com/tendermint/tendermint/libs/cli"
+
+	sdkmath "cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"

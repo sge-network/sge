@@ -3,9 +3,10 @@ package types_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMajority(t *testing.T) {

@@ -4,9 +4,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/google/uuid"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
@@ -14,8 +18,6 @@ import (
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func createNParticipation(

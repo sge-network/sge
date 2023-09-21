@@ -4,13 +4,15 @@ import (
 	"strconv"
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 // Prevent strconv unused error

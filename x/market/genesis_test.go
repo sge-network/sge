@@ -3,11 +3,12 @@ package market_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/simapp"
 	market "github.com/sge-network/sge/x/market"
 	"github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {

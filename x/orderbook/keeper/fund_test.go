@@ -3,8 +3,9 @@ package keeper_test
 import (
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/simapp"

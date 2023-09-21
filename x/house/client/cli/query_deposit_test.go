@@ -5,15 +5,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/house/client/cli"
 	"github.com/sge-network/sge/x/house/types"

@@ -4,9 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/simapp"
-	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/x/subaccount/keeper"
 )

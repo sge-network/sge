@@ -35,6 +35,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	ica "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts"
 	icatypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/types"
 	ibcfee "github.com/cosmos/ibc-go/v5/modules/apps/29-fee"
@@ -43,26 +44,22 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v5/modules/core"
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
-	sgeappparams "github.com/sge-network/sge/app/params"
-	"github.com/sge-network/sge/x/mint"
-	minttypes "github.com/sge-network/sge/x/mint/types"
-	"github.com/sge-network/sge/x/subaccount"
-	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
+	sgeappparams "github.com/sge-network/sge/app/params"
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
-
-	marketmodule "github.com/sge-network/sge/x/market"
-	marketmoduletypes "github.com/sge-network/sge/x/market/types"
-
-	orderbookmodule "github.com/sge-network/sge/x/orderbook"
-	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
-
-	ovmmodule "github.com/sge-network/sge/x/ovm"
-	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
-
 	housemodule "github.com/sge-network/sge/x/house"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
+	marketmodule "github.com/sge-network/sge/x/market"
+	marketmoduletypes "github.com/sge-network/sge/x/market/types"
+	mintmodule "github.com/sge-network/sge/x/mint"
+	minttypes "github.com/sge-network/sge/x/mint/types"
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+	ovmmodule "github.com/sge-network/sge/x/ovm"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	subaccountmodule "github.com/sge-network/sge/x/subaccount"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -97,7 +94,7 @@ var ModuleBasics = module.NewBasicManager(
 	bank.AppModuleBasic{},
 	capability.AppModuleBasic{},
 	staking.AppModuleBasic{},
-	mint.AppModuleBasic{},
+	mintmodule.AppModuleBasic{},
 	distr.AppModuleBasic{},
 	gov.NewAppModuleBasic(getGovProposalHandlers()),
 	params.AppModuleBasic{},
@@ -120,7 +117,7 @@ var ModuleBasics = module.NewBasicManager(
 	orderbookmodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
-	subaccount.AppModuleBasic{},
+	subaccountmodule.AppModuleBasic{},
 )
 
 func appModules(
@@ -143,7 +140,7 @@ func appModules(
 		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper),
+		mintmodule.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper),
 		slashing.NewAppModule(
 			appCodec,
 			app.SlashingKeeper,
@@ -218,7 +215,7 @@ func simulationModules(
 			app.interfaceRegistry,
 		),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
-		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
+		mintmodule.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 		distr.NewAppModule(
 			appCodec,

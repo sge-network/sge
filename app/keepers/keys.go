@@ -16,6 +16,7 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
 	icacontrollertypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/host/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
@@ -23,13 +24,12 @@ import (
 	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
-	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
-	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
-
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"

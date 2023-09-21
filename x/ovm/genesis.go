@@ -2,6 +2,7 @@ package ovm
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/x/ovm/keeper"
 	"github.com/sge-network/sge/x/ovm/types"
 )

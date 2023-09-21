@@ -3,8 +3,9 @@ package app_test
 import (
 	"testing"
 
-	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/testutil/simapp"
 )
 
 func TestExport(t *testing.T) {

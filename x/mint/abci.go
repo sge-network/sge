@@ -3,12 +3,14 @@ package mint
 import (
 	"time"
 
+	"github.com/spf13/cast"
+
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
+
 	"github.com/sge-network/sge/x/mint/keeper"
 	sgeMintTypes "github.com/sge-network/sge/x/mint/types"
-	"github.com/spf13/cast"
 )
 
 var gaugeKeys = []string{"minted_tokens"}

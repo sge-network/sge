@@ -1,11 +1,13 @@
 package types
 
 import (
+	yaml "gopkg.in/yaml.v2"
+
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	housetypes "github.com/sge-network/sge/x/house/types"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // NewOrderBookParticipation creates a new book participation object

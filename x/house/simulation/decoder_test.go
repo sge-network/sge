@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/simulation"
