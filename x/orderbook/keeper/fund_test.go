@@ -7,14 +7,14 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/app/params"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestFund(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	senderAddr := simappUtil.TestParamUsers["user1"].Address
+	senderAddr := simapp.TestParamUsers["user1"].Address
 	initialBalance := tApp.BankKeeper.GetBalance(ctx, senderAddr, params.DefaultBondDenom)
 	successAmount := sdkmath.NewInt(1000)
 
@@ -60,12 +60,12 @@ func TestReFund(t *testing.T) {
 	err := k.Fund(
 		types.OrderBookLiquidityFunder{},
 		ctx,
-		simappUtil.TestParamUsers["user2"].Address,
+		simapp.TestParamUsers["user2"].Address,
 		successAmount,
 	)
 	require.NoError(t, err)
 
-	receiverAddr := simappUtil.TestParamUsers["user1"].Address
+	receiverAddr := simapp.TestParamUsers["user1"].Address
 	initialBalance := tApp.BankKeeper.GetBalance(ctx, receiverAddr, params.DefaultBondDenom)
 
 	for _, tc := range []struct {

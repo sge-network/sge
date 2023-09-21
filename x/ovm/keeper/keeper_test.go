@@ -4,13 +4,13 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/ovm/keeper"
 	"github.com/stretchr/testify/require"
 )
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp, tApp.OVMKeeper, ctx

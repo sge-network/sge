@@ -10,12 +10,12 @@ import (
 
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/market/types"
 )
 
 func TestAddMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())
@@ -109,7 +109,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
-				Meta:   simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1),
+				Meta:   simapp.RandomString(types.MaxAllowedCharactersForMeta + 1),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -135,7 +135,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1)},
+					{UID: uuid.NewString(), Meta: simapp.RandomString(types.MaxAllowedCharactersForMeta + 1)},
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "sample market",
@@ -186,7 +186,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())
@@ -238,7 +238,7 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestResolveMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())

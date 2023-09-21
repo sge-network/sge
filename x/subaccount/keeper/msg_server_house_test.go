@@ -12,7 +12,7 @@ import (
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
 	housetypes "github.com/sge-network/sge/x/house/types"
@@ -295,7 +295,7 @@ func houseWithdrawMsg(t testing.TB, owner sdk.AccAddress, amt sdkmath.Int, parte
 		"iat":      time.Now().Unix(),
 		"kyc_data": testKyc,
 	}
-	ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)
 
 	inputWithdraw := &housetypes.MsgWithdraw{
@@ -319,7 +319,7 @@ func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdkmath
 		"iat":      time.Now().Unix(),
 		"kyc_data": testKyc,
 	}
-	ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)
 
 	inputDeposit := &housetypes.MsgDeposit{

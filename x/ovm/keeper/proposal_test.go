@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/keeper"
 	"github.com/sge-network/sge/x/ovm/types"
@@ -29,7 +29,7 @@ func createNActiveProposal(
 
 	for i := range items {
 		items[i].Id = uint64(i)
-		items[i].Creator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
+		items[i].Creator = simapp.TestParamUsers["user"+cast.ToString(i)].Address.String()
 		items[i].Modifications = types.PubkeysChangeProposalPayload{PublicKeys: pubKeys, LeaderIndex: 0}
 		items[i].StartTS = ctx.BlockTime().Unix()
 		items[i].Status = types.ProposalStatus_PROPOSAL_STATUS_ACTIVE
@@ -104,7 +104,7 @@ func TestFinishProposals(t *testing.T) {
 	ctx = ctx.WithBlockTime(ctx.BlockTime().Add(types.MaxValidProposalMinutes / 2 * time.Minute))
 
 	for _, proposal := range items {
-		for _, p := range simappUtil.TestOVMPublicKeys {
+		for _, p := range simapp.TestOVMPublicKeys {
 			bs, err := x509.MarshalPKIXPublicKey(p)
 			if err != nil {
 				panic(err)
@@ -161,7 +161,7 @@ func TestFinishProposal(t *testing.T) {
 	proposals := createNActiveProposal(k, ctx, 3)
 
 	voteAll := func(proposal *types.PublicKeysChangeProposal, vote types.ProposalVote) {
-		for _, p := range simappUtil.TestOVMPublicKeys {
+		for _, p := range simapp.TestOVMPublicKeys {
 			bs, err := x509.MarshalPKIXPublicKey(p)
 			if err != nil {
 				panic(err)

@@ -8,7 +8,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/app/params"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -27,7 +27,7 @@ type testBetSuite struct {
 	t              *testing.T
 	k              *keeper.KeeperTest
 	ctx            sdk.Context
-	tApp           simappUtil.TestApp
+	tApp           simapp.TestApp
 	betFee         sdkmath.Int
 	market         markettypes.Market
 	deposits       []housetypes.Deposit
@@ -50,22 +50,22 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 			{UID: uuid.NewString(), Meta: "test odds3"},
 		},
 		Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		Meta:    "test market",
 		BookUID: marketUID,
 	}
 
 	deposits := []housetypes.Deposit{
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user2"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user2"].Address.String(),
 			Amount:           sdkmath.NewInt(8000),
 		},
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user3"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user3"].Address.String(),
 			Amount:           sdkmath.NewInt(10000),
 		},
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user4"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user4"].Address.String(),
 			Amount:           sdkmath.NewInt(10000),
 		},
 	}
@@ -165,7 +165,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// winner1 bet placement
 	//
 	//
-	winner1BettorAddr := simappUtil.TestParamUsers["user5"].Address
+	winner1BettorAddr := simapp.TestParamUsers["user5"].Address
 	winner1Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner1BettorAddr, params.DefaultBondDenom)
 	winner1BetID := uint64(1)
 	winner1Bet, winner1PayoutProfit, winner1BetFulfillment := ts.placeTestBet(
@@ -202,7 +202,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// winner2 bet placement
 	//
 	//
-	winner2BettorAddr := simappUtil.TestParamUsers["user6"].Address
+	winner2BettorAddr := simapp.TestParamUsers["user6"].Address
 	winner2Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner2BettorAddr, params.DefaultBondDenom)
 	winner2BetID := uint64(2)
 	winner2Bet, winner2PayoutProfit, winner2BetFulfillment := ts.placeTestBet(
@@ -239,7 +239,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// failed winner bet placement
 	// should fail because there is not participation to fulfill this bet.
 	//
-	failedWinnerBettorAddr := simappUtil.TestParamUsers["user7"].Address
+	failedWinnerBettorAddr := simapp.TestParamUsers["user7"].Address
 	failedWinnerBetID := uint64(3)
 	ts.placeTestBet(
 		failedWinnerBettorAddr,
@@ -254,7 +254,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// loser bet placement
 	//
 	//
-	loserBettorAddr := simappUtil.TestParamUsers["user8"].Address
+	loserBettorAddr := simapp.TestParamUsers["user8"].Address
 	loserBal := ts.tApp.BankKeeper.GetBalance(ts.ctx, loserBettorAddr, params.DefaultBondDenom)
 	loserBetID := uint64(4)
 	loserBet, _, loserBetFulfillment := ts.placeTestBet(

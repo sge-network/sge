@@ -9,7 +9,7 @@ import (
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/subaccount"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -22,7 +22,7 @@ var (
 )
 
 func TestGenesis(t *testing.T) {
-	app, ctx, err := simappUtil.GetTestObjects()
+	app, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	k := app.SubaccountKeeper

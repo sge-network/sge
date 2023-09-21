@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -15,7 +15,7 @@ import (
 
 func TestBetMsgServerWager(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
+	creator := simapp.TestParamUsers["user1"]
 	var err error
 
 	t.Run("Redundant UID", func(t *testing.T) {
@@ -150,7 +150,7 @@ func TestBetMsgServerWager(t *testing.T) {
 
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
+			simapp.TestParamUsers["user1"].Address,
 			marketItem.UID,
 			sdkmath.NewInt(100000000),
 			sdkmath.NewInt(1),

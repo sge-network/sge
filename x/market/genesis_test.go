@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	market "github.com/sge-network/sge/x/market"
 	"github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
@@ -24,7 +24,7 @@ func TestGenesis(t *testing.T) {
 		},
 	}
 
-	tApp, ctx, err := simappUtil.GetTestObjects()
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	market.InitGenesis(ctx, *tApp.MarketKeeper, genesisState)

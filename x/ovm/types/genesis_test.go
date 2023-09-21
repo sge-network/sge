@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
 )
@@ -14,7 +14,7 @@ const (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	pubkeys := simappUtil.GenerateOvmPublicKeys(types.MaxPubKeysCount)
+	pubkeys := simapp.GenerateOvmPublicKeys(types.MaxPubKeysCount)
 
 	var votes []*types.Vote
 	for _, v := range pubkeys {

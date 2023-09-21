@@ -13,7 +13,7 @@ import (
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
@@ -164,8 +164,8 @@ func TestMsgServer_Bet(t *testing.T) {
 	})
 }
 
-func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, prefund bool) *markettypes.Market {
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+func addTestMarket(t testing.TB, tApp *simapp.TestApp, ctx sdk.Context, prefund bool) *markettypes.Market {
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
 		"uid":      testMarketUID,
 		"start_ts": 1111111111,
@@ -194,13 +194,13 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 		err = testutil.FundAccount(
 			tApp.BankKeeper,
 			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
+			simapp.TestParamUsers["user1"].Address,
 			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1_000_000).Mul(micro))),
 		)
 		require.NoError(t, err)
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
+			simapp.TestParamUsers["user1"].Address,
 			resAddMarket.Data.UID,
 			sdkmath.NewInt(1_000_000).Mul(micro),
 			sdkmath.NewInt(1),
@@ -212,7 +212,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
 func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {

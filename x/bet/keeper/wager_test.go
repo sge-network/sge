@@ -10,7 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
@@ -38,7 +38,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "notExistMarketUID",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrNoMatchingMarket,
 		},
@@ -51,7 +51,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_inactive",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrInactiveMarket,
 		},
@@ -64,7 +64,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_declared",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrInactiveMarket,
 		},
@@ -78,7 +78,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_expired",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrEndTSIsPassed,
 		},
@@ -104,7 +104,7 @@ func TestWager(t *testing.T) {
 				Amount:    sdkmath.NewInt(1000),
 				OddsValue: "5",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrOddsUIDNotExist,
 		},
@@ -130,7 +130,7 @@ func TestWager(t *testing.T) {
 				Amount:    sdkmath.NewInt(100),
 				OddsValue: "5",
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			err: types.ErrBetAmountIsLow,
 		},
@@ -166,7 +166,7 @@ func TestWager(t *testing.T) {
 				Amount:            sdkmath.NewInt(1000000),
 				OddsValue:         "5",
 				OddsType:          types.OddsType_ODDS_TYPE_DECIMAL,
-				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:           simapp.TestParamUsers["user1"].Address.String(),
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 		},
@@ -187,7 +187,7 @@ func TestWager(t *testing.T) {
 				if tc.market.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
 					_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 						ctx,
-						simappUtil.TestParamUsers["user1"].Address,
+						simapp.TestParamUsers["user1"].Address,
 						tc.market.UID,
 						sdkmath.NewInt(100000000),
 						sdkmath.NewInt(1),

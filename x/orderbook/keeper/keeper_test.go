@@ -6,7 +6,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/stretchr/testify/require"
 )
@@ -22,8 +22,8 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	return k, ctx
 }
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp, tApp.OrderbookKeeper, ctx.WithBlockTime(time.Now())

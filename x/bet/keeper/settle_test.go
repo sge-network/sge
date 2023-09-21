@@ -11,14 +11,14 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	addTestMarket(t, tApp, ctx)
 
 	tcs := []struct {
@@ -172,7 +172,7 @@ func TestSettleBet(t *testing.T) {
 				if resetMarket.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
 					_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 						ctx,
-						simappUtil.TestParamUsers["user1"].Address,
+						simapp.TestParamUsers["user1"].Address,
 						resetMarket.UID,
 						sdkmath.NewInt(100000000),
 						sdkmath.NewInt(1),
@@ -235,7 +235,7 @@ func TestBatchSettleBet(t *testing.T) {
 		for i := depositorUser; i <= depositorUser+participationCount; i++ {
 			_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 				ctx,
-				simappUtil.TestParamUsers["user"+cast.ToString(i)].Address,
+				simapp.TestParamUsers["user"+cast.ToString(i)].Address,
 				market.UID,
 				sdkmath.NewInt(100000000),
 				sdkmath.NewInt(1),

@@ -4,14 +4,14 @@ import (
 	"testing"
 
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet"
 	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	genesisState := types.GenesisState{
@@ -20,11 +20,11 @@ func TestGenesis(t *testing.T) {
 		BetList: []types.Bet{
 			{
 				UID:     "0",
-				Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator: simapp.TestParamUsers["user1"].Address.String(),
 			},
 			{
 				UID:     "1",
-				Creator: simappUtil.TestParamUsers["user2"].Address.String(),
+				Creator: simapp.TestParamUsers["user2"].Address.String(),
 			},
 		},
 		Uid2IdList: []types.UID2ID{
@@ -40,13 +40,13 @@ func TestGenesis(t *testing.T) {
 		PendingBetList: []types.PendingBet{
 			{
 				UID:     "1",
-				Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator: simapp.TestParamUsers["user1"].Address.String(),
 			},
 		},
 		SettledBetList: []types.SettledBet{
 			{
 				UID:           "1",
-				BettorAddress: simappUtil.TestParamUsers["user1"].Address.String(),
+				BettorAddress: simapp.TestParamUsers["user1"].Address.String(),
 			},
 		},
 		Stats: types.BetStats{

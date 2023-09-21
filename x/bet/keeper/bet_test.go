@@ -9,19 +9,19 @@ import (
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 )
 
 func createNBet(
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
 ) []types.Bet {
 	items := make([]types.Bet, n)
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	tApp.MarketKeeper.SetMarket(ctx, testMarket)
 
 	for i := range items {
@@ -47,7 +47,7 @@ func createNBet(
 func TestBetGet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	items := createNBet(tApp, k, ctx, 10)
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 
 	rst, found := k.GetBet(ctx,
 		testCreator,

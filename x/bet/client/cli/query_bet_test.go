@@ -19,7 +19,7 @@ import (
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/client/cli"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -37,7 +37,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	market := markettypes.Market{
 		UID:     testMarketUID,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds: []*markettypes.Odds{

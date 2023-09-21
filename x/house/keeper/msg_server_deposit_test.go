@@ -7,7 +7,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
@@ -18,8 +18,8 @@ import (
 
 func TestMsgServerDeposit(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-	depositor := simappUtil.TestParamUsers["user2"]
+	creator := simapp.TestParamUsers["user1"]
+	depositor := simapp.TestParamUsers["user2"]
 	// var err error
 
 	marketItem := markettypes.Market{
@@ -71,7 +71,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"kyc_data":          testKyc,
 			"depositor_address": depositor.Address.String(),
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
@@ -95,7 +95,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"iat":      time.Now().Unix(),
 			"kyc_data": testKyc,
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
@@ -148,7 +148,7 @@ func TestMsgServerDeposit(t *testing.T) {
 			"depositor_address": depositor.Address.String(),
 			"kyc_data":          testKyc,
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{

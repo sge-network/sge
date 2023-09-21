@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/sample"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/keeper"
@@ -19,7 +19,7 @@ import (
 )
 
 func createNParticipation(
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -28,7 +28,7 @@ func createNParticipation(
 
 	for i := range items {
 		items[i].Index = cast.ToUint64(i + 1)
-		items[i].ParticipantAddress = simappUtil.TestParamUsers["user1"].Address.String()
+		items[i].ParticipantAddress = simapp.TestParamUsers["user1"].Address.String()
 		items[i].OrderBookUID = testOrderBookUID
 		items[i].ActualProfit = sdkmath.NewInt(100)
 		items[i].CurrentRoundLiquidity = sdkmath.NewInt(100)
@@ -45,7 +45,7 @@ func createNParticipation(
 }
 
 func createTestMarket(
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	marketUID string,
@@ -136,7 +136,7 @@ func TestInitiateOrderBookParticipationNoMarket(t *testing.T) {
 	k, ctx := setupKeeper(t)
 
 	_, err := k.InitiateOrderBookParticipation(ctx,
-		simappUtil.TestParamUsers["user1"].Address,
+		simapp.TestParamUsers["user1"].Address,
 		testOrderBookUID,
 		sdkmath.NewInt(1000),
 		sdkmath.NewInt(100))
@@ -157,7 +157,7 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 	}{
 		{
 			desc:          "not active market",
-			depositorAddr: simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr: simapp.TestParamUsers["user1"].Address,
 			marketStatus:  markettypes.MarketStatus_MARKET_STATUS_INACTIVE,
 			err:           types.ErrParticipationOnInactiveMarket,
 		},
@@ -169,7 +169,7 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 		},
 		{
 			desc:          "success",
-			depositorAddr: simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr: simapp.TestParamUsers["user1"].Address,
 			marketStatus:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
 		},
 	} {
@@ -214,14 +214,14 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 	}{
 		{
 			desc:          "no participation",
-			depositorAddr: simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr: simapp.TestParamUsers["user1"].Address,
 			depositAmount: sdk.ZeroInt(),
 			withdrawMode:  housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 			err:           types.ErrOrderBookParticipationNotFound,
 		},
 		{
 			desc:           "withdraw amount too large",
-			depositorAddr:  simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr:  simapp.TestParamUsers["user1"].Address,
 			depositAmount:  sdkmath.NewInt(1000),
 			withdrawMode:   housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
 			withdrawAmount: sdkmath.NewInt(10000),
@@ -229,14 +229,14 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 		},
 		{
 			desc:               "success full",
-			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr:      simapp.TestParamUsers["user1"].Address,
 			depositAmount:      sdkmath.NewInt(1000),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 			expWithdrawnAmount: sdkmath.NewInt(1000).Sub(fee),
 		},
 		{
 			desc:               "success partial",
-			depositorAddr:      simappUtil.TestParamUsers["user1"].Address,
+			depositorAddr:      simapp.TestParamUsers["user1"].Address,
 			depositAmount:      sdkmath.NewInt(500),
 			withdrawMode:       housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 			expWithdrawnAmount: sdkmath.NewInt(500).Sub(fee),

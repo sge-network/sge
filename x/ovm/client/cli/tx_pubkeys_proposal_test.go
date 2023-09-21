@@ -15,7 +15,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/client/cli"
 	"github.com/sge-network/sge/x/ovm/types"
@@ -51,7 +51,7 @@ func TestCmdChangePubkeysListProposal(t *testing.T) {
 		"leader_index": 0,
 		"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 	})
-	singedT1, err := t1.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	singedT1, err := t1.SignedString(simapp.TestOVMPrivateKeys[0])
 	require.NoError(t, err)
 
 	TestCases := []struct {

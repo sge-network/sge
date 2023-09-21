@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
@@ -17,7 +17,7 @@ import (
 func TestQueryPublicKeys(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
-	creator := simappUtil.TestParamUsers["user1"]
+	creator := simapp.TestParamUsers["user1"]
 	var pubs []string
 	for i := 0; i < types.MaxPubKeysCount; i++ {
 		pub, _, err := ed25519.GenerateKey(rand.Reader)
@@ -32,7 +32,7 @@ func TestQueryPublicKeys(t *testing.T) {
 		"leader_index": 0,
 		"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 	})
-	singedT1, err := T1.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	singedT1, err := T1.SignedString(simapp.TestOVMPrivateKeys[0])
 	require.NoError(t, err)
 
 	resp, err := msgk.SubmitPubkeysChangeProposal(wctx, &types.MsgSubmitPubkeysChangeProposalRequest{
