@@ -4,8 +4,10 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -66,11 +68,11 @@ func TestSetLockedBalances(t *testing.T) {
 
 	balanceUnlocks := []types.LockedBalance{
 		{
-			Amount:   sdk.NewInt(10000),
+			Amount:   sdkmath.NewInt(10000),
 			UnlockTS: someUnlockTime,
 		},
 		{
-			Amount:   sdk.NewInt(20000),
+			Amount:   sdkmath.NewInt(20000),
 			UnlockTS: otherUnlockTime,
 		},
 	}
@@ -118,19 +120,19 @@ func TestKeeper_GetLockedBalances(t *testing.T) {
 	// I added them unordered to make sure they are sorted
 	balanceUnlocks := []types.LockedBalance{
 		{
-			Amount:   sdk.NewInt(10000),
+			Amount:   sdkmath.NewInt(10000),
 			UnlockTS: beforeUnlockTime1,
 		},
 		{
-			Amount:   sdk.NewInt(30000),
+			Amount:   sdkmath.NewInt(30000),
 			UnlockTS: afterUnlockTime1,
 		},
 		{
-			Amount:   sdk.NewInt(20000),
+			Amount:   sdkmath.NewInt(20000),
 			UnlockTS: beforeUnlockTime2,
 		},
 		{
-			Amount:   sdk.NewInt(40000),
+			Amount:   sdkmath.NewInt(40000),
 			UnlockTS: afterUnlockTime2,
 		},
 	}
@@ -140,5 +142,5 @@ func TestKeeper_GetLockedBalances(t *testing.T) {
 
 	// get unlocked balance
 	unlockedBalance := k.GetUnlockedBalance(ctx, addr)
-	require.True(t, unlockedBalance.Equal(sdk.NewInt(10000+20000)))
+	require.True(t, unlockedBalance.Equal(sdkmath.NewInt(10000+20000)))
 }

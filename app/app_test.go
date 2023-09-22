@@ -3,11 +3,14 @@ package app_test
 import (
 	"testing"
 
-	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/sge-network/sge/app"
 	"github.com/stretchr/testify/require"
+
 	"github.com/tendermint/tendermint/libs/log"
 	tmdb "github.com/tendermint/tm-db"
+
+	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
+
+	"github.com/sge-network/sge/app"
 )
 
 func TestApp(t *testing.T) {

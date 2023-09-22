@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cobra"
+
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
+
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/spf13/cobra"
 )
 
 func CmdDeposit() *cobra.Command {
@@ -35,7 +37,7 @@ func CmdDeposit() *cobra.Command {
 
 			argMarketUID := args[0]
 
-			argAmountCosmosInt, ok := sdk.NewIntFromString(args[1])
+			argAmountCosmosInt, ok := sdkmath.NewIntFromString(args[1])
 			if !ok {
 				return types.ErrInvalidAmount
 			}

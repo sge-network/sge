@@ -4,24 +4,26 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/subaccount"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
 var (
 	subAccOwner = sample.NativeAccAddress()
-	micro       = sdk.NewInt(1_000_000)
-	subAccFunds = sdk.NewInt(10_000).Mul(micro)
+	micro       = sdkmath.NewInt(1_000_000)
+	subAccFunds = sdkmath.NewInt(10_000).Mul(micro)
 	subAccAddr  = types.NewAddressFromSubaccount(1)
 )
 
 func TestGenesis(t *testing.T) {
-	app, ctx, err := simappUtil.GetTestObjects()
+	app, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	k := app.SubaccountKeeper

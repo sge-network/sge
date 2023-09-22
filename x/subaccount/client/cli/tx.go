@@ -5,14 +5,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
@@ -62,7 +63,7 @@ func TxCreate() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			funds, ok := sdk.NewIntFromString(fundsStr)
+			funds, ok := sdkmath.NewIntFromString(fundsStr)
 			if !ok {
 				return fmt.Errorf("invalid funds amount: %s", fundsStr)
 			}
@@ -118,7 +119,7 @@ func TxTopupSubaccount() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			funds, ok := sdk.NewIntFromString(fundsStr)
+			funds, ok := sdkmath.NewIntFromString(fundsStr)
 			if !ok {
 				return fmt.Errorf("invalid funds amount: %s", fundsStr)
 			}
@@ -180,7 +181,7 @@ func TxWager() *cobra.Command {
 			argAmount := args[1]
 			argTicket := args[2]
 
-			argAmountCosmosInt, ok := sdk.NewIntFromString(argAmount)
+			argAmountCosmosInt, ok := sdkmath.NewIntFromString(argAmount)
 			if !ok {
 				return fmt.Errorf("invalid amount: %s", argAmount)
 			}
@@ -232,7 +233,7 @@ func TxHouseDeposit() *cobra.Command {
 
 			argMarketUID := args[0]
 
-			argAmountCosmosInt, ok := sdk.NewIntFromString(args[1])
+			argAmountCosmosInt, ok := sdkmath.NewIntFromString(args[1])
 			if !ok {
 				return fmt.Errorf("invalid amount: %s", args[1])
 			}
@@ -293,7 +294,7 @@ func TxHouseWithdraw() *cobra.Command {
 				}
 
 				var ok bool
-				argAmountCosmosInt, ok = sdk.NewIntFromString(args[4])
+				argAmountCosmosInt, ok = sdkmath.NewIntFromString(args[4])
 				if !ok {
 					return fmt.Errorf("invalid amount: %s", args[4])
 				}

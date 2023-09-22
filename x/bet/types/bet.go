@@ -2,6 +2,7 @@ package types
 
 import (
 	sdkmath "cosmossdk.io/math"
+
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 

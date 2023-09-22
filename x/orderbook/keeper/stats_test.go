@@ -5,8 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestStatsGet(t *testing.T) {

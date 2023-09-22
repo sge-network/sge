@@ -4,16 +4,17 @@ import (
 	"testing"
 	"time"
 
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
+
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
@@ -43,8 +44,8 @@ var (
 var (
 	subAccOwner  = sample.NativeAccAddress()
 	subAccFunder = sample.NativeAccAddress()
-	micro        = sdk.NewInt(1_000_000)
-	subAccFunds  = sdk.NewInt(10_000).Mul(micro)
+	micro        = sdkmath.NewInt(1_000_000)
+	subAccFunds  = sdkmath.NewInt(10_000).Mul(micro)
 	subAccAddr   = types.NewAddressFromSubaccount(1)
 )
 
@@ -78,7 +79,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	market := addTestMarket(t, app, ctx, true)
 
 	// start betting using the subaccount
-	betAmt := sdk.NewInt(1000).Mul(micro)
+	betAmt := sdkmath.NewInt(1000).Mul(micro)
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
 		&types.MsgWager{Msg: testBet(t, subAccOwner, betAmt)},
@@ -88,7 +89,7 @@ func TestMsgServer_Bet(t *testing.T) {
 	// check subaccount balance
 	balance, exists := k.GetBalance(ctx, subAccAddr)
 	require.True(t, exists)
-	betFees := sdk.NewInt(100)
+	betFees := sdkmath.NewInt(100)
 
 	require.Equal(t, balance.SpentAmount, betAmt)
 
@@ -164,8 +165,8 @@ func TestMsgServer_Bet(t *testing.T) {
 	})
 }
 
-func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, prefund bool) *markettypes.Market {
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+func addTestMarket(t testing.TB, tApp *simapp.TestApp, ctx sdk.Context, prefund bool) *markettypes.Market {
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
 		"uid":      testMarketUID,
 		"start_ts": 1111111111,
@@ -194,16 +195,16 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 		err = testutil.FundAccount(
 			tApp.BankKeeper,
 			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(1_000_000).Mul(micro))),
+			simapp.TestParamUsers["user1"].Address,
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1_000_000).Mul(micro))),
 		)
 		require.NoError(t, err)
 		_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 			ctx,
-			simappUtil.TestParamUsers["user1"].Address,
+			simapp.TestParamUsers["user1"].Address,
 			resAddMarket.Data.UID,
-			sdk.NewInt(1_000_000).Mul(micro),
-			sdk.NewInt(1),
+			sdkmath.NewInt(1_000_000).Mul(micro),
+			sdkmath.NewInt(1),
 		)
 		require.NoError(t, err)
 	}
@@ -212,7 +213,7 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context, pref
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
 func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {

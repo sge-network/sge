@@ -3,10 +3,13 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 // VotePubkeysChange is the main transaction of OVM to vote for a pubkeys list change proposal.
@@ -24,7 +27,7 @@ func (k msgServer) VotePubkeysChange(
 	// voter index is out of range of current public keys in the vault
 	if cast.ToUint32(len(keyVault.PublicKeys)) <= msg.VoterKeyIndex {
 		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidPubKey,
+			sdkerrtypes.ErrInvalidPubKey,
 			"index is not in the valid range of public keys indices",
 		)
 	}
@@ -39,7 +42,7 @@ func (k msgServer) VotePubkeysChange(
 	err := k.verifyTicketWithKeyUnmarshal(goCtx, msg.Ticket, &payload, voterPubKey)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidRequest,
+			sdkerrtypes.ErrInvalidRequest,
 			"ticket should be signed by the provided pub key: %s",
 			err,
 		)
@@ -47,7 +50,7 @@ func (k msgServer) VotePubkeysChange(
 
 	err = payload.Validate()
 	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
 
 	// get public key change proposal
@@ -58,7 +61,7 @@ func (k msgServer) VotePubkeysChange(
 	)
 	if !found {
 		return nil, sdkerrors.Wrapf(
-			sdkerrors.ErrInvalidRequest,
+			sdkerrtypes.ErrInvalidRequest,
 			"proposal not fount with id %d",
 			&payload.ProposalId,
 		)
@@ -69,7 +72,7 @@ func (k msgServer) VotePubkeysChange(
 	for _, voter := range proposal.Votes {
 		if voter.PublicKey == voterPubKey {
 			return nil, sdkerrors.Wrapf(
-				sdkerrors.ErrInvalidRequest,
+				sdkerrtypes.ErrInvalidRequest,
 				"vote already set for this pubkey %s",
 				msg.Creator,
 			)

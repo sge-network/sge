@@ -3,9 +3,11 @@ package keeper
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -103,7 +105,7 @@ func (k Keeper) settleParticipation(
 
 	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
 	}
 
 	refundHouseDepositFeeToDepositor := false

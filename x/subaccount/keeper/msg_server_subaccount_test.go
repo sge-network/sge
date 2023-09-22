@@ -4,10 +4,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
-	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/sample"
@@ -21,7 +22,7 @@ func TestMsgServer_Create(t *testing.T) {
 
 	app, _, msgServer, ctx := setupMsgServerAndApp(t)
 
-	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(100000000))))
+	err := testutil.FundAccount(app.BankKeeper, ctx, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(100000000))))
 	require.NoError(t, err)
 
 	// Check that the account has been created
@@ -34,7 +35,7 @@ func TestMsgServer_Create(t *testing.T) {
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: someTime,
-				Amount:   sdk.NewInt(123),
+				Amount:   sdkmath.NewInt(123),
 			},
 		},
 	}
@@ -47,7 +48,7 @@ func TestMsgServer_Create(t *testing.T) {
 
 	// Check that the account has the correct balance
 	balance := app.BankKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1), params.DefaultBondDenom)
-	require.Equal(t, sdk.NewInt(123), balance.Amount)
+	require.Equal(t, sdkmath.NewInt(123), balance.Amount)
 
 	// Check that we can get the account by owner
 	owner, exists := app.SubaccountKeeper.GetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1))
@@ -58,7 +59,7 @@ func TestMsgServer_Create(t *testing.T) {
 	lockedBalances := app.SubaccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
 	require.Len(t, lockedBalances, 1)
 	require.True(t, someTime == lockedBalances[0].UnlockTS)
-	require.Equal(t, sdk.NewInt(123), lockedBalances[0].Amount)
+	require.Equal(t, sdkmath.NewInt(123), lockedBalances[0].Amount)
 
 	// get the balance of the account
 	subaccountBalance, exists := app.SubaccountKeeper.GetBalance(ctx, types.NewAddressFromSubaccount(1))
@@ -66,7 +67,7 @@ func TestMsgServer_Create(t *testing.T) {
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.SpentAmount)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.LostAmount)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawmAmount)
-	require.Equal(t, sdk.NewInt(123), subaccountBalance.DepositedAmount)
+	require.Equal(t, sdkmath.NewInt(123), subaccountBalance.DepositedAmount)
 }
 
 func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
@@ -89,7 +90,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: beforeTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -104,7 +105,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},

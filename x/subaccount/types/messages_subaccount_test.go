@@ -4,11 +4,12 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -30,7 +31,7 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -44,7 +45,7 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},
@@ -58,7 +59,7 @@ func TestMsgCreateValidateBasic(t *testing.T) {
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: 0,
-						Amount:   sdk.NewInt(123),
+						Amount:   sdkmath.NewInt(123),
 					},
 				},
 			},

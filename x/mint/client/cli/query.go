@@ -3,9 +3,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/sge-network/sge/x/mint/types"
 	"github.com/spf13/cobra"
+
+	"github.com/cosmos/cosmos-sdk/client"
+
+	"github.com/sge-network/sge/x/mint/types"
 )
 
 // GetQueryCmd returns the cli query commands for this module

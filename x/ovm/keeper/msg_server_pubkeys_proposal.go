@@ -3,8 +3,10 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
 )
@@ -32,7 +34,7 @@ func (k msgServer) SubmitPubkeysChangeProposal(
 
 	err = payload.Validate(payload.LeaderIndex)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "ticket payload is not valid %s", err)
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "ticket payload is not valid %s", err)
 	}
 
 	stats := k.GetProposalStats(ctx)

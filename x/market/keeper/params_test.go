@@ -3,8 +3,9 @@ package keeper_test
 import (
 	"testing"
 
-	"github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/market/types"
 )
 
 func TestGetParams(t *testing.T) {

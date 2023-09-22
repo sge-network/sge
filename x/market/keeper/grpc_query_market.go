@@ -3,12 +3,14 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/x/market/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/x/market/types"
 )
 
 // Markets returns all the markets

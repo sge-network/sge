@@ -1,8 +1,9 @@
 package types
 
 import (
-	"github.com/cosmos/cosmos-sdk/codec"
 	yaml "gopkg.in/yaml.v2"
+
+	"github.com/cosmos/cosmos-sdk/codec"
 )
 
 // NewOrderBook creates a new orderbook object

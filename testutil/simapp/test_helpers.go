@@ -8,12 +8,13 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/golang-jwt/jwt"
+	"github.com/spf13/cast"
+
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/golang-jwt/jwt"
-	"github.com/spf13/cast"
 )
 
 // PKs is a slice of public keys for test

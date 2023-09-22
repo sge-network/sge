@@ -3,7 +3,7 @@ package types
 import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
@@ -25,12 +25,12 @@ func (WithdrawAuthorization) MsgTypeURL() string {
 func (a WithdrawAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mWithdraw, ok := msg.(*MsgWithdraw)
 	if !ok {
-		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInvalidType.Wrap("type mismatch")
 	}
 
 	limitLeft := a.WithdrawLimit.Sub(mWithdraw.Amount)
 	if limitLeft.IsNegative() {
-		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInsufficientFunds.Wrapf(
 			"requested amount is more than withdraw limit",
 		)
 	}
@@ -48,13 +48,13 @@ func (a WithdrawAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptR
 // ValidateBasic implements Authorization.ValidateBasic.
 func (a WithdrawAuthorization) ValidateBasic() error {
 	if a.WithdrawLimit.IsNil() {
-		return sdkerrors.ErrInvalidCoins.Wrap("withdraw limit cannot be nil")
+		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be nil")
 	}
 	if a.WithdrawLimit.LTE(sdk.ZeroInt()) {
-		return sdkerrors.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
+		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
 	}
 	if a.WithdrawLimit.GT(maxWithdrawGrant) {
-		return sdkerrors.ErrInvalidCoins.Wrapf(
+		return sdkerrtypes.ErrInvalidCoins.Wrapf(
 			"withdraw limit cannot be grated than %s",
 			maxWithdrawGrant,
 		)

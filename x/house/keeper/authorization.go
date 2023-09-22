@@ -1,8 +1,10 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/house/types"
 )
 
@@ -14,7 +16,7 @@ func (k Keeper) ValidateMsgAuthorization(
 	granteeAddr := sdk.MustAccAddressFromBech32(creator)
 	granterAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid depositor address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid depositor address (%s)", err)
 	}
 	authorization, expiration := k.authzKeeper.GetAuthorization(
 		ctx,

@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/house/types"
 )
 
@@ -49,7 +50,7 @@ func (k Keeper) ParseWithdrawTicketAndValidate(
 	depositorAddr := msg.Creator
 	if payload.DepositorAddress != "" {
 		if !authzAllowed {
-			return "", false, sdkerrors.Wrapf(types.ErrAuthorizationNotAllowed, "%s")
+			return "", false, types.ErrAuthorizationNotAllowed
 		}
 		depositorAddr = payload.DepositorAddress
 		isOnBehalf = true
