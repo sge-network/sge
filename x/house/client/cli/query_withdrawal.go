@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
+
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
 )
 
 // GetCmdQueryWithdrawal implements the command to query the withdrawal of a

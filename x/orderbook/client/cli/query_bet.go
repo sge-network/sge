@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/cast"
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/version"
+
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
 )
 
 // GetCmdQueryParticipationBets implements the command to query all the participation fulfilled bets to a specific orderbook.

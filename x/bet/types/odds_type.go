@@ -3,9 +3,9 @@ package types
 import (
 	"strings"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 type OddsTypeI interface {
@@ -91,14 +91,14 @@ func (*fractionalOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.
 	}
 
 	// the fraction part should be an integer, values such as 1.5/2 is not accepted
-	firstPart, ok := sdk.NewIntFromString(fraction[0])
+	firstPart, ok := sdkmath.NewIntFromString(fraction[0])
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[0])
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
-	secondPart, ok := sdk.NewIntFromString(fraction[1])
+	secondPart, ok := sdkmath.NewIntFromString(fraction[1])
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[1])
@@ -134,14 +134,14 @@ func (*fractionalOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) 
 	}
 
 	// the fraction part should be an integer, values such as 1.5/2 is not accepted
-	firstPart, ok := sdk.NewIntFromString(fraction[0])
+	firstPart, ok := sdkmath.NewIntFromString(fraction[0])
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[0])
 	}
 
 	// the fraction part should be an integer, values such as 1/2.5 is not accepted
-	secondPart, ok := sdk.NewIntFromString(fraction[1])
+	secondPart, ok := sdkmath.NewIntFromString(fraction[1])
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrFractionalOddsIncorrectFormat, "%s, invalid integer %s", oddsVal, fraction[1])
@@ -170,7 +170,7 @@ type moneylineOdds struct{}
 // CalculatePayout calculates total payout of a certain bet amount by moneyline odds calculations
 func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// moneyline odds value could be integer
-	oddsValue, ok := sdk.NewIntFromString(oddsVal)
+	oddsValue, ok := sdkmath.NewIntFromString(oddsVal)
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrMoneylineOddsIncorrectFormat, "%s", oddsVal)
@@ -205,7 +205,7 @@ func (*moneylineOdds) CalculatePayout(oddsVal string, amount sdkmath.Int) (sdk.D
 // CalculateBetAmount calculates bet amount
 func (*moneylineOdds) CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// moneyline odds value could be integer
-	oddsValue, ok := sdk.NewIntFromString(oddsVal)
+	oddsValue, ok := sdkmath.NewIntFromString(oddsVal)
 	if !ok {
 		return sdk.ZeroDec(),
 			sdkerrors.Wrapf(ErrMoneylineOddsIncorrectFormat, "%s", oddsVal)

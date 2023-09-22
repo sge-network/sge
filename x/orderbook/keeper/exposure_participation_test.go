@@ -3,17 +3,20 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNParticipationExposure(
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -26,8 +29,8 @@ func createNParticipationExposure(
 		items[i].OddsUID = uuid.NewString()
 		items[i].Round = 1
 		items[i].IsFulfilled = false
-		items[i].BetAmount = sdk.NewInt(100)
-		items[i].Exposure = sdk.NewInt(100)
+		items[i].BetAmount = sdkmath.NewInt(100)
+		items[i].Exposure = sdkmath.NewInt(100)
 
 		keeper.SetParticipationExposure(ctx, items[i])
 		keeper.SetParticipationExposureByIndex(ctx, items[i])

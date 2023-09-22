@@ -3,10 +3,12 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgChangePubkeysVoteValidateBasic(t *testing.T) {
@@ -21,7 +23,7 @@ func TestMsgChangePubkeysVoteValidateBasic(t *testing.T) {
 				Creator:       "invalid_address",
 				VoterKeyIndex: 0,
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid address",

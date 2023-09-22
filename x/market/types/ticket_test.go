@@ -4,16 +4,18 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/market/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/market/types"
 )
 
 func TestAddMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())
@@ -46,7 +48,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Unix()),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid status",
@@ -56,7 +58,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid uuid",
@@ -66,7 +68,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odds count",
@@ -79,7 +81,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "empty meta",
@@ -94,7 +96,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "large meta",
@@ -107,9 +109,9 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 					{UID: uuid.NewString(), Meta: "odds 2"},
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
-				Meta:   simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1),
+				Meta:   simapp.RandomString(types.MaxAllowedCharactersForMeta + 1),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odds meta",
@@ -124,7 +126,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "sample market",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odds long meta",
@@ -133,12 +135,12 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Odds: []*types.Odds{
-					{UID: uuid.NewString(), Meta: simappUtil.RandomString(types.MaxAllowedCharactersForMeta + 1)},
+					{UID: uuid.NewString(), Meta: simapp.RandomString(types.MaxAllowedCharactersForMeta + 1)},
 				},
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "sample market",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odds uuid",
@@ -153,7 +155,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "sample market",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "duplicate odds uuid",
@@ -168,7 +170,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 				Status: types.MarketStatus_MARKET_STATUS_ACTIVE,
 				Meta:   "sample market",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -184,7 +186,7 @@ func TestAddMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())
@@ -210,7 +212,7 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 				StartTS: cast.ToUint64(ctx.BlockTime().Unix()),
 				EndTS:   cast.ToUint64(ctx.BlockTime().Unix()),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid status",
@@ -220,7 +222,7 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 				EndTS:   cast.ToUint64(ctx.BlockTime().Add(5 * time.Minute).Unix()),
 				Status:  types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -236,7 +238,7 @@ func TestUpdateMarketTicketPayloadValidation(t *testing.T) {
 }
 
 func TestResolveMarketTicketPayloadValidation(t *testing.T) {
-	_, ctx, err := simappUtil.GetTestObjects()
+	_, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ctx = ctx.WithBlockTime(time.Now())
@@ -262,7 +264,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS: cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				Status:       types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "winner set when result not declared",
@@ -272,7 +274,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "excessive winner odds",
@@ -282,7 +284,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{uuid.NewString(), uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "no resolution time set",
@@ -291,7 +293,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid uuid",
@@ -301,7 +303,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "result declared no winner odds",
@@ -311,7 +313,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "invalid odds uuid",
@@ -321,7 +323,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				WinnerOddsUIDs: []string{"invalid uuid"},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

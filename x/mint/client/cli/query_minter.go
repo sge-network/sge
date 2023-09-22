@@ -3,10 +3,11 @@ package cli
 import (
 	"fmt"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/sge-network/sge/x/mint/types"
-	"github.com/spf13/cobra"
 )
 
 // GetCmdQueryInflation implements a command to return the current minting

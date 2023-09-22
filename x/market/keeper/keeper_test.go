@@ -4,22 +4,24 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/market/keeper"
 	"github.com/stretchr/testify/require"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/market/keeper"
 )
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp, tApp.MarketKeeper, ctx.WithBlockTime(time.Now())
 }
 
 func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp.MarketKeeper, ctx
@@ -27,5 +29,5 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }

@@ -4,11 +4,13 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/golang-jwt/jwt/v4"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 func TestChangePubkeysVote(t *testing.T) {
@@ -16,7 +18,7 @@ func TestChangePubkeysVote(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
@@ -25,7 +27,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			"leader_index": 0,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedProposalTicket, err := proposalTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -43,7 +45,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			"vote":        types.ProposalVote_PROPOSAL_VOTE_YES,
 			"exp":         jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedVoteTicket, err := voteTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedVoteTicket, err := voteTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		respVote, err := msgk.VotePubkeysChange(wctx, &types.MsgVotePubkeysChangeRequest{
@@ -59,7 +61,7 @@ func TestChangePubkeysVote(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
@@ -68,7 +70,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			"leader_index": 0,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedProposalTicket, err := proposalTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -86,7 +88,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			"vote":        types.ProposalVote_PROPOSAL_VOTE_YES,
 			"exp":         jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedVote1Ticket, err := vote1Ticket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedVote1Ticket, err := vote1Ticket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		respVote, err := msgk.VotePubkeysChange(wctx, &types.MsgVotePubkeysChangeRequest{
@@ -102,7 +104,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			"vote":        types.ProposalVote_PROPOSAL_VOTE_YES,
 			"exp":         jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedVote2Ticket, err := vote2Ticket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedVote2Ticket, err := vote2Ticket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		respVote, err = msgk.VotePubkeysChange(wctx, &types.MsgVotePubkeysChangeRequest{
@@ -110,7 +112,7 @@ func TestChangePubkeysVote(t *testing.T) {
 			Ticket:        singedVote2Ticket,
 			VoterKeyIndex: 0,
 		})
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, respVote)
 	})
 }

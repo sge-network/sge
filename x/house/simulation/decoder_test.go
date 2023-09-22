@@ -7,8 +7,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/simulation"
@@ -23,8 +24,8 @@ func TestDecodeStore(t *testing.T) {
 		sample.AccAddress(),
 		sample.AccAddress(),
 		uuid.NewString(),
-		sdk.NewInt(100),
-		sdk.NewInt(1000),
+		sdkmath.NewInt(100),
+		sdkmath.NewInt(1000),
 		1,
 	)
 
@@ -34,7 +35,7 @@ func TestDecodeStore(t *testing.T) {
 		MarketUID:          deposit.MarketUID,
 		ParticipationIndex: 1,
 		Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-		Amount:             sdk.NewInt(100),
+		Amount:             sdkmath.NewInt(100),
 	}
 
 	kvPairs := kv.Pairs{

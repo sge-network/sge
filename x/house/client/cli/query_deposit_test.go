@@ -5,18 +5,21 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/house/client/cli"
 	"github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 )
 
 const testMarketUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
@@ -31,7 +34,7 @@ func networkWithDepositObjects(t *testing.T, n int) (*network.Network, []types.D
 
 	market := markettypes.Market{
 		UID:     testMarketUID,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds: []*markettypes.Odds{
@@ -58,9 +61,9 @@ func networkWithDepositObjects(t *testing.T, n int) (*network.Network, []types.D
 			DepositorAddress:      testAddress,
 			MarketUID:             market.UID,
 			ParticipationIndex:    cast.ToUint64(i + 1),
-			Amount:                sdk.NewInt(10),
+			Amount:                sdkmath.NewInt(10),
 			WithdrawalCount:       0,
-			TotalWithdrawalAmount: sdk.NewInt(0),
+			TotalWithdrawalAmount: sdkmath.NewInt(0),
 		}
 		nullify.Fill(&deposit)
 

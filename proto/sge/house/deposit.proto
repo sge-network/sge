@@ -33,7 +33,7 @@ message Deposit {
 
   // amount is the amount being deposited on an order book to be a house
   string amount = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
@@ -44,7 +44,7 @@ message Deposit {
   // total_withdrawal_amount is the total amount withdrawn from the liquidity
   // provided
   string total_withdrawal_amount = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"total_withdrawal_amount\""
   ];

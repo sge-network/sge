@@ -7,6 +7,7 @@ import (
 	//#nosec
 
 	"github.com/cosmos/cosmos-sdk/types/module"
+
 	"github.com/sge-network/sge/x/market/types"
 )
 
