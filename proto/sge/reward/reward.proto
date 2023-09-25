@@ -50,7 +50,11 @@ message Allocation {
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
   ReceiverAccType receiver_acc_type = 2;
-  uint64 exp_ts = 3;
+  uint64 unlock_ts = 3 [
+    (gogoproto.customname) = "UnlockTS",
+    (gogoproto.jsontag) = "unlock_ts",
+    json_name = "unlock_ts"
+  ];
 }
 
 // Receiver is the type for reward receiver properties.

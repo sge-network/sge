@@ -1,16 +1,48 @@
 package types
 
 import (
+	context "context"
 	"errors"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/x/bet/types"
 )
+
+func NewDistribution(accAddr string, allocation Allocation) Distribution {
+	return Distribution{
+		AccAddr:    accAddr,
+		Allocation: allocation,
+	}
+}
+
+func NewAllocation(amount sdkmath.Int, receiverAccType ReceiverAccType, unlockTS uint64) Allocation {
+	return Allocation{
+		Amount:          amount,
+		ReceiverAccType: receiverAccType,
+		UnlockTS:        unlockTS,
+	}
+}
+
+// ValidateBasic validates the basic properties of a reward definition.
+func (d *Definition) ValidateBasic(blockTime uint64) error {
+	if d.DstAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+		if d.UnlockTS != 0 {
+			return sdkerrors.Wrapf(ErrUnlockTSIsSubAccOnly, "%d", d.UnlockTS)
+		}
+	} else if d.UnlockTS <= blockTime {
+		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", d.UnlockTS)
+	}
+	return nil
+}
 
 // IRewardFactory defines the methods that should be implemented for all of reward types.
 type IRewardFactory interface {
 	ValidateBasic(campaign Campaign) error
 	VaidateDefinitions(campaign Campaign) error
-	CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error)
+	CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+		definitions []Definition, ticket string) ([]Distribution, error)
 }
 
 // SignUpReward is the type for signup rewards calculations
@@ -36,8 +68,26 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of signup reward.
-func (sur SignUpReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
-	return []Distribution{}, errors.New("not implemented")
+func (sur SignUpReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+	definitions []Definition, ticket string,
+) ([]Distribution, error) {
+	var payload ApplySignupRewardPayload
+	if err := ovmKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	definition := definitions[0]
+
+	return []Distribution{
+		NewDistribution(
+			payload.Receiver.Addr,
+			NewAllocation(
+				definition.Amount,
+				definition.DstAccType,
+				definition.UnlockTS,
+			),
+		),
+	}, nil
 }
 
 // ReferralReward is the type for referral rewards calculations
@@ -73,7 +123,9 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
-func (rfr ReferralReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
+func (rfr ReferralReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+	definitions []Definition, ticket string,
+) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
 }
 
@@ -100,7 +152,9 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
-func (afr AffiliationReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
+func (afr AffiliationReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+	definitions []Definition, ticket string,
+) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
 }
 
@@ -127,6 +181,8 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.
-func (afr NoLossBetsReward) CalculateDistributions(definitions []Definition, ticket string) ([]Distribution, error) {
+func (afr NoLossBetsReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+	definitions []Definition, ticket string,
+) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
 }

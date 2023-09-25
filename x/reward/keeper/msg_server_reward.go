@@ -19,6 +19,10 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "campaign with the same uid is already set")
 	}
 
+	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err == nil {
+		return nil, err
+	}
+
 	rewardFactory, err := campaign.GetRewardsFactory()
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "failed to retrieve reward factory")
@@ -28,7 +32,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "basic validation failed")
 	}
 
-	distribution, err := rewardFactory.CalculateDistributions(campaign.RewardDefs, msg.Ticket)
+	distribution, err := rewardFactory.CalculateDistributions(k.ovmKeeper, goCtx, ctx, campaign.RewardDefs, msg.Ticket)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "failed to get destribution from the ticket")
 	}

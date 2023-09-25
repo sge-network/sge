@@ -18,7 +18,7 @@ var (
 	ErrUnknownRewardType          = sdkerrors.Register(ModuleName, 7107, "unknown reward type")
 	ErrInFundingCampaignPool      = sdkerrors.Register(ModuleName, 7108, "error in funding the campaign pool")
 	ErrUnknownAccType             = sdkerrors.Register(ModuleName, 7109, "unknown account type")
-	ErrAllocationExpired          = sdkerrors.Register(ModuleName, 7110, "allocation expired")
+	ErrCampaignEnded              = sdkerrors.Register(ModuleName, 7110, "campaign validity period is ended")
 	ErrInsufficientPoolBalance    = sdkerrors.Register(ModuleName, 7111, "insufficient campaign pool balance")
 	ErrInDistributionOfRewards    = sdkerrors.Register(ModuleName, 7112, "reward distribution failed")
 	ErrInvalidReceiverType        = sdkerrors.Register(ModuleName, 7113, "inappropriate receiver account type")

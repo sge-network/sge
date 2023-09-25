@@ -40,6 +40,13 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	}
 }
 
+func (c *Campaign) CheckExpiration(blockTime uint64) error {
+	if blockTime > c.EndTS {
+		return sdkerrors.Wrapf(ErrCampaignEnded, "end timestamp %d, block time %d", c.EndTS, blockTime)
+	}
+	return nil
+}
+
 // CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the rewards.
 func (c *Campaign) CheckPoolBalance(distributions []Distribution) error {
 	totalAmount := sdkmath.ZeroInt()
