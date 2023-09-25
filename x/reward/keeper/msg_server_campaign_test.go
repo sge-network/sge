@@ -40,6 +40,7 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 					ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
 					Amount:       sdkmath.NewInt(100),
 					DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+					UnlockTS:     0,
 				},
 			},
 			"pool_amount": sdkmath.NewInt(1000000),

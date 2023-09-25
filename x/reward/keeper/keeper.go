@@ -56,7 +56,7 @@ func NewKeeper(
 		modFunder: utils.NewModuleAccFunder(
 			expectedKeepers.BankKeeper,
 			expectedKeepers.AccountKeeper,
-			types.BankError,
+			types.ErrorBank,
 		),
 		ovmKeeper:        ovmKeeper,
 		subaccountKeeper: subaccountKeeper,

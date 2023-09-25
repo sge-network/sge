@@ -49,6 +49,12 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
+	for _, d := range campaign.RewardDefs {
+		if err := d.ValidateBasic(uint64(ctx.BlockTime().Unix())); err != nil {
+			return nil, err
+		}
+	}
+
 	err = rewardFactory.VaidateDefinitions(campaign)
 	if err != nil {
 		return nil, err
