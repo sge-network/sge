@@ -5,6 +5,7 @@ import (
 	"time"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
@@ -49,4 +50,9 @@ type AuthzKeeper interface {
 		grantee, granter sdk.AccAddress,
 		msgType string,
 	) error
+}
+
+// SubAccountKeeper defines the expected interface needed to ge/create/topup a subaccount.
+type SubAccountKeeper interface {
+	GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (sdk.AccAddress, bool)
 }

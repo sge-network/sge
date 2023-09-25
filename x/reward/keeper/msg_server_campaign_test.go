@@ -5,14 +5,16 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/sample"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/sample"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -24,7 +26,7 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	wctx := sdk.WrapSDKContext(ctx)
-	creator := simappUtil.TestParamUsers["user1"].Address.String()
+	creator := simapp.TestParamUsers["user1"].Address.String()
 	for i := 0; i < 5; i++ {
 		ticketClaim := jwt.MapClaims{
 			"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -36,13 +38,13 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 			"reward_defs": []types.Definition{
 				{
 					ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
-					Amount:       sdk.NewInt(100),
+					Amount:       sdkmath.NewInt(100),
 					DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
 				},
 			},
-			"pool_amount": sdk.NewInt(1000000),
+			"pool_amount": sdkmath.NewInt(1000000),
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		expected := &types.MsgCreateCampaign{
@@ -87,7 +89,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			request: &types.MsgUpdateCampaign{
 				Uid: uuid.NewString(),
 			},
-			err: sdkerrors.ErrKeyNotFound,
+			err: sdkerrortypes.ErrKeyNotFound,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -95,7 +97,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
 
-			creator := simappUtil.TestParamUsers["user1"].Address.String()
+			creator := simapp.TestParamUsers["user1"].Address.String()
 
 			ticketClaim := jwt.MapClaims{
 				"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -107,13 +109,13 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 				"reward_defs": []types.Definition{
 					{
 						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						Amount:       sdk.NewInt(100),
+						Amount:       sdkmath.NewInt(100),
 						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
 					},
 				},
-				"pool_amount": sdk.NewInt(10000),
+				"pool_amount": sdkmath.NewInt(10000),
 			}
-			ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)
 
 			expected := &types.MsgCreateCampaign{
@@ -129,7 +131,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 				"iat":    time.Now().Unix(),
 				"end_ts": time.Now().Add(5 * time.Minute).Unix(),
 			}
-			ticketUpdate, err := simappUtil.CreateJwtTicket(ticketClaimUpdate)
+			ticketUpdate, err := simapp.CreateJwtTicket(ticketClaimUpdate)
 			require.Nil(t, err)
 			tc.request.Ticket = ticketUpdate
 
@@ -179,14 +181,14 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 			request: &types.MsgDeleteCampaign{
 				Uid: uuid.NewString(),
 			},
-			err: sdkerrors.ErrKeyNotFound,
+			err: sdkerrortypes.ErrKeyNotFound,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
 			wctx := sdk.WrapSDKContext(ctx)
-			creator := simappUtil.TestParamUsers["user1"].Address.String()
+			creator := simapp.TestParamUsers["user1"].Address.String()
 
 			ticketClaim := jwt.MapClaims{
 				"exp":            time.Now().Add(time.Minute * 5).Unix(),
@@ -198,13 +200,13 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 				"reward_defs": []types.Definition{
 					{
 						ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						Amount:       sdk.NewInt(100),
+						Amount:       sdkmath.NewInt(100),
 						DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
 					},
 				},
-				"pool_amount": sdk.NewInt(10000),
+				"pool_amount": sdkmath.NewInt(10000),
 			}
-			ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)
 
 			_, err = srv.CreateCampaign(wctx, &types.MsgCreateCampaign{

@@ -1,7 +1,9 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -19,8 +21,11 @@ func (k Keeper) DistributeRewards(ctx sdk.Context, distributions []types.Distrib
 				d.Allocation.Amount,
 			)
 		case types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB:
-			// use subaccount module to create or topup
-			panic("subaccount distribution is not implemented")
+			_, found := k.subaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(d.AccAddr))
+			if !found {
+				return sdkerrors.Wrapf(types.ErrSubAccountNotfoundForTheOwner, "owner address %s", d.AccAddr)
+			}
+
 		default:
 			return types.ErrUnknownAccType
 		}

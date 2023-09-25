@@ -3,11 +3,12 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/tendermint/tendermint/libs/log"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
@@ -15,13 +16,14 @@ import (
 
 type (
 	Keeper struct {
-		cdc         codec.BinaryCodec
-		storeKey    storetypes.StoreKey
-		memKey      storetypes.StoreKey
-		paramstore  paramtypes.Subspace
-		modFunder   *utils.ModuleAccFunder
-		authzKeeper types.AuthzKeeper
-		ovmKeeper   types.OVMKeeper
+		cdc              codec.BinaryCodec
+		storeKey         storetypes.StoreKey
+		memKey           storetypes.StoreKey
+		paramstore       paramtypes.Subspace
+		modFunder        *utils.ModuleAccFunder
+		authzKeeper      types.AuthzKeeper
+		ovmKeeper        types.OVMKeeper
+		subaccountKeeper types.SubAccountKeeper
 	}
 )
 
@@ -38,6 +40,7 @@ func NewKeeper(
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
 	ovmKeeper types.OVMKeeper,
+	subaccountKeeper types.SubAccountKeeper,
 	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
@@ -55,8 +58,9 @@ func NewKeeper(
 			expectedKeepers.AccountKeeper,
 			types.BankError,
 		),
-		ovmKeeper:   ovmKeeper,
-		authzKeeper: expectedKeepers.AuthzKeeper,
+		ovmKeeper:        ovmKeeper,
+		subaccountKeeper: subaccountKeeper,
+		authzKeeper:      expectedKeepers.AuthzKeeper,
 	}
 }
 

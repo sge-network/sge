@@ -11,7 +11,6 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateCampaign{}, "reward/CreateCampaign", nil)
 	cdc.RegisterConcrete(&MsgUpdateCampaign{}, "reward/UpdateCampaign", nil)
 	cdc.RegisterConcrete(&MsgDeleteCampaign{}, "reward/DeleteCampaign", nil)
-	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -20,7 +19,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgUpdateCampaign{},
 		&MsgDeleteCampaign{},
 	)
-	// this line is used by starport scaffolding # 3
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

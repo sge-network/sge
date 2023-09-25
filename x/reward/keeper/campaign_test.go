@@ -5,12 +5,14 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -29,10 +31,10 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 		items[i].RewardType = types.RewardType_REWARD_TYPE_REFERRAL
 		items[i].RewardDefs = []types.Definition{{
 			ReceiverType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:       sdk.NewInt(100),
+			Amount:       sdkmath.NewInt(100),
 			DstAccType:   types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
 		}}
-		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdk.NewInt(100)}
+		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdkmath.NewInt(100)}
 
 		keeper.SetCampaign(ctx, items[i])
 	}

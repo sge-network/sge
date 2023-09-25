@@ -2,6 +2,7 @@ package reward
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -12,7 +13,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.CampaignList {
 		k.SetCampaign(ctx, elem)
 	}
-	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -22,7 +22,6 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.CampaignList = k.GetAllCampaign(ctx)
-	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis
 }

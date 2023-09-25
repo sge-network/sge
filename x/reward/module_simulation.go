@@ -3,13 +3,15 @@ package reward
 import (
 	"math/rand"
 
+	"github.com/google/uuid"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	simappparams "github.com/cosmos/cosmos-sdk/simapp/params"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
-	"github.com/google/uuid"
+
 	"github.com/sge-network/sge/testutil/sample"
 	rewardsimulation "github.com/sge-network/sge/x/reward/simulation"
 	"github.com/sge-network/sge/x/reward/types"
@@ -40,8 +42,6 @@ const (
 	opWeightMsgDeleteCampaign = "op_weight_msg_campaign"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgDeleteCampaign int = 100
-
-	// this line is used by starport scaffolding # simapp/module/const
 )
 
 // GenerateGenesisState creates a randomized GenState of the module
@@ -62,7 +62,6 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 				UID:     uuid.NewString(),
 			},
 		},
-		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&rewardGenesis)
 }
@@ -116,8 +115,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		weightMsgDeleteCampaign,
 		rewardsimulation.SimulateMsgDeleteCampaign(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
-
-	// this line is used by starport scaffolding # simapp/module/operation
 
 	return operations
 }

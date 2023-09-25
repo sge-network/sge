@@ -448,20 +448,6 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
-	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
-		appCodec,
-		appKeepers.keys[rewardmoduletypes.StoreKey],
-		appKeepers.keys[rewardmoduletypes.MemStoreKey],
-		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
-		appKeepers.OVMKeeper,
-		rewardmodulekeeper.SdkExpectedKeepers{
-			AuthzKeeper:   appKeepers.AuthzKeeper,
-			BankKeeper:    appKeepers.BankKeeper,
-			AccountKeeper: appKeepers.AccountKeeper,
-		},
-	)
-
-	//// SGE modules \\\\
 	appKeepers.SubaccountKeeper = subaccountmodulekeeper.NewKeeper(
 		appCodec,
 		appKeepers.keys[subaccountmoduletypes.StoreKey],
@@ -472,6 +458,20 @@ func NewAppKeeper(
 		appKeepers.BetKeeper,
 		appKeepers.OrderbookKeeper,
 		appKeepers.HouseKeeper,
+	)
+
+	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[rewardmoduletypes.StoreKey],
+		appKeepers.keys[rewardmoduletypes.MemStoreKey],
+		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
+		appKeepers.OVMKeeper,
+		appKeepers.SubaccountKeeper,
+		rewardmodulekeeper.SdkExpectedKeepers{
+			AuthzKeeper:   appKeepers.AuthzKeeper,
+			BankKeeper:    appKeepers.BankKeeper,
+			AccountKeeper: appKeepers.AccountKeeper,
+		},
 	)
 
 	// ** Hooks ** \\

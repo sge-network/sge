@@ -3,15 +3,16 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/reward/keeper"
 )
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp, tApp.RewardKeeper, ctx

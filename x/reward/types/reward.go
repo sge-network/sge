@@ -3,7 +3,7 @@ package types
 import (
 	"errors"
 
-	cosmerrors "cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 )
 
 // IRewardFactory defines the methods that should be implemented for all of reward types.
@@ -27,10 +27,10 @@ func (sur SignUpReward) ValidateBasic(campaign Campaign) error {
 // VaidateDefinitions validates campaign definitions.
 func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
-		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "signup rewards can only have single definition")
+		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "signup rewards can only have single definition")
 	}
 	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return cosmerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
 	}
 	return nil
 }
@@ -62,12 +62,12 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 		case ReceiverType_RECEIVER_TYPE_REFERRER:
 			hasReferrer = true
 		default:
-			return cosmerrors.Wrapf(ErrInvalidReceiverType, "%s", d.ReceiverType)
+			return sdkerrors.Wrapf(ErrInvalidReceiverType, "%s", d.ReceiverType)
 		}
 	}
 
 	if !hasReferee || !hasReferrer {
-		return cosmerrors.Wrapf(ErrMissingDefinition, "referral rewards should have the referrer and the referee")
+		return sdkerrors.Wrapf(ErrMissingDefinition, "referral rewards should have the referrer and the referee")
 	}
 	return nil
 }
@@ -91,10 +91,10 @@ func (afr AffiliationReward) ValidateBasic(campaign Campaign) error {
 // VaidateDefinitions validates campaign definitions.
 func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
-		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "affiliation rewards can only have single definition")
+		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "affiliation rewards can only have single definition")
 	}
 	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return cosmerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
 	}
 	return nil
 }
@@ -118,10 +118,10 @@ func (afr NoLossBetsReward) ValidateBasic(campaign Campaign) error {
 // VaidateDefinitions validates campaign definitions.
 func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
-		return cosmerrors.Wrapf(ErrWrongDefinitionsCount, "noloss bets rewards can only have single definition")
+		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "noloss bets rewards can only have single definition")
 	}
 	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return cosmerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
 	}
 	return nil
 }

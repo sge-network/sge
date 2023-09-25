@@ -1,7 +1,7 @@
 package types
 
 import (
-	cosmerrors "cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 )
 
@@ -36,7 +36,7 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	case RewardType_REWARD_TYPE_NOLOSS_BETS:
 		return NewNoLossBetsReward(), nil
 	default:
-		return nil, cosmerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
+		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}
 }
 

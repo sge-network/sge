@@ -4,10 +4,10 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/stretchr/testify/require"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/reward"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -24,10 +24,9 @@ func TestGenesis(t *testing.T) {
 				UID: uuid.NewString(),
 			},
 		},
-		// this line is used by starport scaffolding # genesis/test/state
 	}
 
-	tApp, ctx, err := simappUtil.GetTestObjects()
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 	reward.InitGenesis(ctx, *tApp.RewardKeeper, genesisState)
 	got := reward.ExportGenesis(ctx, *tApp.RewardKeeper)
@@ -37,5 +36,4 @@ func TestGenesis(t *testing.T) {
 	nullify.Fill(got)
 
 	require.ElementsMatch(t, genesisState.CampaignList, got.CampaignList)
-	// this line is used by starport scaffolding # genesis/test/assert
 }

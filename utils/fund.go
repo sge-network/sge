@@ -1,7 +1,7 @@
 package utils
 
 import (
-	cosmerrors "cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -47,7 +47,7 @@ func (f *ModuleAccFunder) Fund(
 	// Transfer funds
 	err := f.bk.SendCoinsFromAccountToModule(ctx, senderAcc, mf.GetModuleAcc(), amt)
 	if err != nil {
-		return cosmerrors.Wrapf(f.bankError, ": %s", err)
+		return sdkerrors.Wrapf(f.bankError, ": %s", err)
 	}
 
 	return nil
@@ -67,7 +67,7 @@ func (f *ModuleAccFunder) Refund(
 	// Transfer funds
 	err := f.bk.SendCoinsFromModuleToAccount(ctx, mAcc, receiverAcc, amt)
 	if err != nil {
-		return cosmerrors.Wrapf(f.bankError, err.Error())
+		return sdkerrors.Wrapf(f.bankError, err.Error())
 	}
 
 	return nil

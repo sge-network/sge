@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	// "github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -26,7 +26,6 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdUpdateCampaign())
 	cmd.AddCommand(CmdDeleteCampaign())
-	// this line is used by starport scaffolding # 1
 
 	return cmd
 }

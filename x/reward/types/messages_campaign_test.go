@@ -3,10 +3,12 @@ package types_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/testutil/sample"
+
 	"github.com/sge-network/sge/x/reward/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {

@@ -4,8 +4,9 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/x/reward/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/reward/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {
@@ -31,7 +32,6 @@ func TestGenesisState_Validate(t *testing.T) {
 						UID: uuid.NewString(),
 					},
 				},
-				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
 		},
@@ -49,7 +49,6 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
-		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			err := tc.genState.Validate()

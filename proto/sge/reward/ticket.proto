@@ -15,7 +15,7 @@ message CreateCampaignPayload {
   RewardType type = 4;
   repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
   string pool_amount = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"pool_amount\""
   ];

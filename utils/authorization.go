@@ -3,9 +3,10 @@ package utils
 import (
 	"time"
 
-	cosmerrors "cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
@@ -40,7 +41,7 @@ func ValidateMsgAuthorization(
 	granteeAddr := sdk.MustAccAddressFromBech32(creator)
 	granterAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
-		return cosmerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid granter address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid granter address (%s)", err)
 	}
 	authorization, expiration := authzKeeper.GetAuthorization(
 		ctx,
@@ -49,7 +50,7 @@ func ValidateMsgAuthorization(
 		sdk.MsgTypeURL(msg),
 	)
 	if authorization == nil {
-		return cosmerrors.Wrapf(
+		return sdkerrors.Wrapf(
 			errAuthorizationNotFound,
 			"grantee: %s, granter: %s",
 			creator,
@@ -58,7 +59,7 @@ func ValidateMsgAuthorization(
 	}
 	authRes, err := authorization.Accept(ctx, msg)
 	if err != nil {
-		return cosmerrors.Wrapf(errAuthorizationNotAccepted, "%s", err)
+		return sdkerrors.Wrapf(errAuthorizationNotAccepted, "%s", err)
 	}
 
 	if authRes.Delete {

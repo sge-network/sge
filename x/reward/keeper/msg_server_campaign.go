@@ -3,9 +3,10 @@ package keeper
 import (
 	"context"
 
-	cosmerrors "cosmossdk.io/errors"
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -16,12 +17,12 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// Check if the value already exists
 	_, isFound := k.GetCampaign(ctx, msg.Uid)
 	if isFound {
-		return nil, cosmerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "index already set")
 	}
 
 	var payload types.CreateCampaignPayload
 	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
-		return nil, cosmerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	if msg.Creator != payload.FunderAddress {
@@ -59,7 +60,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		sdk.MustAccAddressFromBech32(payload.FunderAddress),
 		payload.PoolAmount,
 	); err != nil {
-		return nil, cosmerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
 	}
 
 	k.SetCampaign(ctx, campaign)
@@ -72,13 +73,13 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 
 	var payload types.UpdateCampaignPayload
 	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
-		return nil, cosmerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	// Check if the value exists
 	valFound, isFound := k.GetCampaign(ctx, msg.Uid)
 	if !isFound {
-		return nil, cosmerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
 	}
 
 	// Checks if the the msg creator is the same as the current owner
@@ -105,7 +106,7 @@ func (k msgServer) DeleteCampaign(goCtx context.Context, msg *types.MsgDeleteCam
 		msg.Uid,
 	)
 	if !isFound {
-		return nil, cosmerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
 	}
 
 	// Checks if the the msg creator is the same as the current owner

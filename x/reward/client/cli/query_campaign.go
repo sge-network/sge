@@ -3,10 +3,12 @@ package cli
 import (
 	"context"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/sge-network/sge/x/reward/types"
-	"github.com/spf13/cobra"
 )
 
 func CmdListCampaign() *cobra.Command {
