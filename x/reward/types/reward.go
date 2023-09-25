@@ -180,7 +180,23 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
-	return []Distribution{}, errors.New("not implemented")
+	var payload ApplyAffiliationRewardPayload
+	if err := ovmKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
+		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+	}
+
+	definition := definitions[0]
+
+	return []Distribution{
+		NewDistribution(
+			payload.Receiver.Addr,
+			NewAllocation(
+				definition.Amount,
+				definition.DstAccType,
+				definition.UnlockTS,
+			),
+		),
+	}, nil
 }
 
 // NoLossBetsReward is the type for no loss bets rewards calculations
