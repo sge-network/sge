@@ -465,6 +465,7 @@ func NewAppKeeper(
 		appKeepers.keys[rewardmoduletypes.StoreKey],
 		appKeepers.keys[rewardmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
+		appKeepers.BetKeeper,
 		appKeepers.OVMKeeper,
 		appKeepers.SubaccountKeeper,
 		rewardmodulekeeper.SdkExpectedKeepers{

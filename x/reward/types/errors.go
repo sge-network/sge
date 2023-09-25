@@ -28,4 +28,5 @@ var (
 	ErrUnlockTSIsSubAccOnly       = sdkerrors.Register(ModuleName, 7117, "unlock timestamp is allowed for subaccount only")
 	ErrUnlockTSDefBeforeBlockTime = sdkerrors.Register(ModuleName, 7118, "unlock timestamp should not be before the current block time")
 	ErrAccReceiverTypeNotFound    = sdkerrors.Register(ModuleName, 7119, "receiver type not found in the receivers")
+	ErrInvalidNoLossBetUID        = sdkerrors.Register(ModuleName, 7120, "invalid no loss bet uid")
 )

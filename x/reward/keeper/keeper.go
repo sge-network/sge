@@ -22,6 +22,7 @@ type (
 		paramstore       paramtypes.Subspace
 		modFunder        *utils.ModuleAccFunder
 		authzKeeper      types.AuthzKeeper
+		betKeeper        types.BetKeeper
 		ovmKeeper        types.OVMKeeper
 		subaccountKeeper types.SubAccountKeeper
 	}
@@ -39,6 +40,7 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
+	betKeeper types.BetKeeper,
 	ovmKeeper types.OVMKeeper,
 	subaccountKeeper types.SubAccountKeeper,
 	expectedKeepers SdkExpectedKeepers,
@@ -58,6 +60,7 @@ func NewKeeper(
 			expectedKeepers.AccountKeeper,
 			types.ErrorBank,
 		),
+		betKeeper:        betKeeper,
 		ovmKeeper:        ovmKeeper,
 		subaccountKeeper: subaccountKeeper,
 		authzKeeper:      expectedKeepers.AuthzKeeper,
