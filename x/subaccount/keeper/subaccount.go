@@ -86,6 +86,42 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 	return subaccounts
 }
 
+func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
+	lockedBalances []types.LockedBalance) (string, error) {
+	moneyToSend, err := sumBalanceUnlocks(ctx, lockedBalances)
+	if err != nil {
+		return "", err
+	}
+
+	creatorAddr := sdk.MustAccAddressFromBech32(creator)
+	subAccOwnerAddr := sdk.MustAccAddressFromBech32(owner)
+	if _, exists := k.GetSubAccountByOwner(ctx, subAccOwnerAddr); exists {
+		return "", types.ErrSubaccountAlreadyExist
+	}
+
+	subaccountID := k.NextID(ctx)
+
+	// ALERT: If someone frontruns the account creation, will be overwritten here
+	subAccAddr := types.NewAddressFromSubaccount(subaccountID)
+	subaccountAccount := k.accountKeeper.NewAccountWithAddress(ctx, subAccAddr)
+	k.accountKeeper.SetAccount(ctx, subaccountAccount)
+
+	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, moneyToSend)
+	if err != nil {
+		return "", sdkerrors.Wrap(err, "unable to send coins")
+	}
+
+	k.SetSubAccountOwner(ctx, subAccAddr, subAccOwnerAddr)
+	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
+	k.SetBalance(ctx, subAccAddr, types.Balance{
+		DepositedAmount: moneyToSend,
+		SpentAmount:     sdk.ZeroInt(),
+		WithdrawmAmount: sdk.ZeroInt(),
+		LostAmount:      sdk.ZeroInt(),
+	})
+	return subAccAddr.String(), nil
+}
+
 // sendCoinsToSubaccount sends the coins to the subaccount.
 func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccountAddress sdk.AccAddress, moneyToSend sdkmath.Int) error {
 	err := k.bankKeeper.SendCoins(ctx, creatorAccount, subAccountAddress, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, moneyToSend)))
