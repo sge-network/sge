@@ -40,7 +40,7 @@ func (d *Definition) ValidateBasic(blockTime uint64) error {
 type IRewardFactory interface {
 	ValidateBasic(campaign Campaign) error
 	VaidateDefinitions(campaign Campaign) error
-	CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+	CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 		definitions []Definition, ticket string) ([]Distribution, error)
 }
 
@@ -67,7 +67,7 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of signup reward.
-func (sur SignUpReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
 	var payload ApplySignupRewardPayload
@@ -122,7 +122,7 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
-func (rfr ReferralReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+func (rfr ReferralReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
 	var payload ApplyRerferralRewardPayload
@@ -177,7 +177,7 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
-func (afr AffiliationReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")
@@ -206,7 +206,7 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.
-func (afr NoLossBetsReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
+func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, ovmKeeper OVMKeeper,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
 	return []Distribution{}, errors.New("not implemented")

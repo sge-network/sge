@@ -32,7 +32,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "basic validation failed")
 	}
 
-	distribution, err := rewardFactory.CalculateDistributions(k.ovmKeeper, goCtx, ctx, campaign.RewardDefs, msg.Ticket)
+	distribution, err := rewardFactory.CalculateDistributions(goCtx, ctx, k.ovmKeeper, campaign.RewardDefs, msg.Ticket)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "failed to get destribution from the ticket")
 	}
