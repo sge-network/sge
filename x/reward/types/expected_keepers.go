@@ -8,6 +8,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/authz"
+
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
@@ -54,5 +56,5 @@ type AuthzKeeper interface {
 
 // SubAccountKeeper defines the expected interface needed to ge/create/topup a subaccount.
 type SubAccountKeeper interface {
-	GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (sdk.AccAddress, bool)
+	TopUp(ctx sdk.Context, creator, subAccOwnerAddr string, lockedBalance []subaccounttypes.LockedBalance) (string, error)
 }

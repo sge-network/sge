@@ -1,13 +1,17 @@
 package keeper
 
 import (
+	"time"
+
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/reward/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
-func (k Keeper) DistributeRewards(ctx sdk.Context, distributions []types.Distribution) error {
+// DistributeRewards distributes the rewards according to the input distribution list.
+func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, distributions []types.Distribution) error {
 	for _, d := range distributions {
 		if err := d.Allocation.CheckExpiration(uint64(ctx.BlockTime().Unix())); err != nil {
 			return err
@@ -21,11 +25,15 @@ func (k Keeper) DistributeRewards(ctx sdk.Context, distributions []types.Distrib
 				d.Allocation.Amount,
 			)
 		case types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB:
-			_, found := k.subaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(d.AccAddr))
-			if !found {
-				return sdkerrors.Wrapf(types.ErrSubAccountNotfoundForTheOwner, "owner address %s", d.AccAddr)
+			if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, d.AccAddr,
+				[]subaccounttypes.LockedBalance{
+					{
+						UnlockTS: uint64(ctx.BlockTime().Add(24 * 365 * time.Hour).Unix()),
+						Amount:   d.Allocation.Amount,
+					},
+				}); err != nil {
+				return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "owner address %s", d.AccAddr)
 			}
-
 		default:
 			return types.ErrUnknownAccType
 		}

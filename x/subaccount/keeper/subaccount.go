@@ -87,7 +87,8 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 }
 
 func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
-	lockedBalances []types.LockedBalance) (string, error) {
+	lockedBalances []types.LockedBalance,
+) (string, error) {
 	moneyToSend, err := sumBalanceUnlocks(ctx, lockedBalances)
 	if err != nil {
 		return "", err

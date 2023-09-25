@@ -37,7 +37,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, distribution); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.FunderAddress, distribution); err != nil {
 		return nil, types.ErrInDistributionOfRewards
 	}
 

@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -89,6 +91,38 @@ func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (t
 	k.cdc.MustUnmarshal(bz, &balance)
 
 	return balance, true
+}
+
+// TopUp tops up the subbacount balance.
+func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
+	lockedBalance []types.LockedBalance,
+) (string, error) {
+	moneyToAdd, err := sumBalanceUnlocks(ctx, lockedBalance)
+	if err != nil {
+		return "", err
+	}
+
+	creatorAddr := sdk.MustAccAddressFromBech32(creator)
+	subaccountOwner := sdk.MustAccAddressFromBech32(subAccOwnerAddr)
+
+	subAccAddr, exists := k.GetSubAccountByOwner(ctx, subaccountOwner)
+	if !exists {
+		return "", types.ErrSubaccountDoesNotExist
+	}
+	balance, exists := k.GetBalance(ctx, subAccAddr)
+	if !exists {
+		panic("data corruption: subaccount exists but balance does not")
+	}
+
+	balance.DepositedAmount = balance.DepositedAmount.Add(moneyToAdd)
+	k.SetBalance(ctx, subAccAddr, balance)
+	k.SetLockedBalances(ctx, subAccAddr, lockedBalance)
+
+	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, moneyToAdd)
+	if err != nil {
+		return "", fmt.Errorf("unable to send coins: %w", err)
+	}
+	return subAccAddr.String(), nil
 }
 
 // getBalances returns the balance, unlocked balance and bank balance of a subaccount
