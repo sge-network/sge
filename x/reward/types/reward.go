@@ -7,7 +7,6 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/bet/types"
 )
 
 func NewDistribution(accAddr string, allocation Allocation) Distribution {
@@ -61,7 +60,7 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
 		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "signup rewards can only have single definition")
 	}
-	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
 	}
 	return nil
@@ -73,7 +72,7 @@ func (sur SignUpReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx contex
 ) ([]Distribution, error) {
 	var payload ApplySignupRewardPayload
 	if err := ovmKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
 	definition := definitions[0]
@@ -106,13 +105,13 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 	hasReferrer := false
 	hasReferee := false
 	for _, d := range campaign.RewardDefs {
-		switch d.ReceiverType {
+		switch d.RecType {
 		case ReceiverType_RECEIVER_TYPE_REFEREE:
 			hasReferee = true
 		case ReceiverType_RECEIVER_TYPE_REFERRER:
 			hasReferrer = true
 		default:
-			return sdkerrors.Wrapf(ErrInvalidReceiverType, "%s", d.ReceiverType)
+			return sdkerrors.Wrapf(ErrInvalidReceiverType, "%s", d.RecType)
 		}
 	}
 
@@ -126,7 +125,33 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 func (rfr ReferralReward) CalculateDistributions(ovmKeeper OVMKeeper, goCtx context.Context, ctx sdk.Context,
 	definitions []Definition, ticket string,
 ) ([]Distribution, error) {
-	return []Distribution{}, errors.New("not implemented")
+	var payload ApplyRerferralRewardPayload
+	if err := ovmKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
+		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+	}
+
+	distributions := []Distribution{}
+	for _, d := range definitions {
+		found := false
+		for _, r := range payload.Receivers {
+			if d.RecType == r.RecType {
+				found = true
+				distributions = append(distributions, NewDistribution(
+					r.Addr,
+					NewAllocation(
+						d.Amount,
+						d.DstAccType,
+						d.UnlockTS,
+					),
+				))
+			}
+		}
+		if !found {
+			return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", d.RecType)
+		}
+	}
+
+	return distributions, nil
 }
 
 // AffiliationReward is the type for affiliation rewards calculations
@@ -145,7 +170,7 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
 		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "affiliation rewards can only have single definition")
 	}
-	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
 	}
 	return nil
@@ -174,7 +199,7 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 	if len(campaign.RewardDefs) != 1 {
 		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "noloss bets rewards can only have single definition")
 	}
-	if campaign.RewardDefs[0].ReceiverType != ReceiverType_RECEIVER_TYPE_SINGLE {
+	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
 	}
 	return nil
