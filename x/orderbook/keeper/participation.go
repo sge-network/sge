@@ -189,6 +189,17 @@ func (k Keeper) CalcWithdrawalAmount(
 		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrMismatchInDepositorAddress, "%s", bp.ParticipantAddress)
 	}
 
+	bpE, err := k.GetExposureByOrderBookAndParticipationIndex(ctx, marketUID, participationIndex)
+	if err != nil {
+		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%d", participationIndex)
+	}
+	if len(bpE) == 0 {
+		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%d", participationIndex)
+	}
+	if bpE[0].Round != 1 {
+		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalNotAllowedPostRequeing, "%d", bpE[0].Round)
+	}
+
 	if mode == housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL {
 		if bp.Liquidity.Sub(totalWithdrawnAmount).LT(amount) {
 			return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrWithdrawalTooLarge, "%d", amount.Int64())

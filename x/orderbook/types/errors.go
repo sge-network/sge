@@ -34,6 +34,7 @@ var (
 	ErrInsufficientFundToCoverPayout      = sdkerrors.Register(ModuleName, 6024, "insufficient fund in the participations to cover the payout")
 	ErrUnknownMarketStatus                = sdkerrors.Register(ModuleName, 6025, "unknown market status of orderbook settlement")
 	ErrWithdrawalTooLarge                 = sdkerrors.Register(ModuleName, 6026, "withdrawal is more than unused amount")
+	ErrWithdrawalNotAllowedPostRequeing   = sdkerrors.Register(ModuleName, 6027, "withdrawal is not allowed post requeing")
 )
 
 // ErrTextInvalidDepositor x/orderbook module sentinel error text
