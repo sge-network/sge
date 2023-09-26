@@ -261,6 +261,7 @@ func (k Keeper) initFulfillmentInfo(
 		exposures, found := peMap[bp.Index]
 		if !found {
 			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %d", book.UID, bp.Index)
+			return
 		}
 		fInfo.fulfillmentMap[bp.Index] = fulfillmentItem{
 			participation: bp,
@@ -482,7 +483,7 @@ func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkma
 		return
 	}
 
-	// check if other exposures are fullfilled according to new max loss multipliers
+	// check if other exposures are fulfilled according to new max loss multipliers
 	for _, oddUID := range fInfo.oddUIDS {
 		exposure, ok := fInfo.inProcessItem.allExposures[oddUID]
 		if !ok {
@@ -510,7 +511,7 @@ func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkma
 		}
 
 	}
-	return
+	return eUpdate, err
 }
 
 func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
