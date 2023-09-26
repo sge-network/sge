@@ -250,12 +250,6 @@ func (k Keeper) initFulfillmentInfo(
 		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
-	for pIndex, poMap := range peMap {
-		if book.OddsCount != cast.ToUint64(len(poMap)) {
-			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %d", book.UID, pIndex)
-			return
-		}
-	}
 
 	for _, bp := range bps {
 		exposures, found := peMap[bp.Index]
