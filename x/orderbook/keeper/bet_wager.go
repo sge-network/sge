@@ -503,7 +503,6 @@ func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkma
 			fInfo.inProcessItem.setFulfilledSecondary(&fInfo.secondaryProcessItem)
 			eUpdate = append(eUpdate, fInfo.secondaryProcessItem.participationExposure)
 		}
-
 	}
 	return eUpdate, err
 }
