@@ -56,3 +56,13 @@ func (m *Market) HasOdds(oddsUID string) bool {
 	}
 	return false
 }
+
+// OddsUIDS get list of odd uids
+// This ensures that we loop over the odds in a non random order
+func (m *Market) OddsUIDS() []string {
+	var odds []string
+	for _, odd := range m.Odds {
+		odds = append(odds, odd.UID)
+	}
+	return odds
+}

@@ -46,6 +46,8 @@ type OrderbookKeeper interface {
 		oddsType OddsType,
 		oddsVal string,
 		betID uint64,
+		odds map[string]*BetOdds,
+		oddUIDS []string,
 	) ([]*BetFulfillment, error)
 	RefundBettor(
 		ctx sdk.Context,

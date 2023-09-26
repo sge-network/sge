@@ -162,6 +162,13 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 
 	defaultBetAmount := sdk.NewInt(400)
 
+	betOdds := make(map[string]*bettypes.BetOdds)
+	var oddUIDS []string
+	for _, odd := range ts.market.Odds {
+		betOdds[odd.UID] = &bettypes.BetOdds{UID: odd.UID, MarketUID: ts.market.UID, Value: ts.market.Odds[0].UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")}
+		oddUIDS = append(oddUIDS, odd.UID)
+	}
+
 	///// winner1 bet placement
 	//
 	//
@@ -176,6 +183,8 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		defaultBetAmount,
 		ts.betFee,
 		nil,
+		betOdds,
+		oddUIDS,
 	)
 	winner1Bet.BetFulfillment = winner1BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner1Bet, winner1BetID)
@@ -213,6 +222,8 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		defaultBetAmount,
 		ts.betFee,
 		nil,
+		betOdds,
+		oddUIDS,
 	)
 
 	winner2Bet.BetFulfillment = winner2BetFulfillment
@@ -249,6 +260,8 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		sdk.NewInt(100000000000),
 		ts.betFee,
 		types.ErrInsufficientFundToCoverPayout,
+		betOdds,
+		oddUIDS,
 	)
 
 	///// loser bet placement
@@ -265,6 +278,8 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		defaultBetAmount,
 		ts.betFee,
 		nil,
+		betOdds,
+		oddUIDS,
 	)
 	loserBet.BetFulfillment = loserBetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, loserBet, loserBetID)
@@ -290,6 +305,8 @@ func (ts *testBetSuite) placeTestBet(
 	amount sdkmath.Int,
 	fee sdkmath.Int,
 	expErr error,
+	odds map[string]*bettypes.BetOdds,
+	oddUIDS []string,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
@@ -321,7 +338,7 @@ func (ts *testBetSuite) placeTestBet(
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1,
+		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1, odds, oddUIDS,
 	)
 	if expErr != nil {
 		require.ErrorIs(ts.t, expErr, err)
