@@ -250,8 +250,8 @@ func (k Keeper) initFulfillmentInfo(
 		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
-	for oddUID, poMap := range peMap {
-		if book.OddsCount != cast.ToUint64(len(poMap)) {
+	for oddUID := range peMap {
+		if book.OddsCount != cast.ToUint64(len(peMap[oddUID])) {
 			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddUID)
 			return
 		}
