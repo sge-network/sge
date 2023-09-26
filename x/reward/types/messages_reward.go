@@ -4,6 +4,9 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/utils"
 )
 
 const (
@@ -50,5 +53,14 @@ func (msg *MsgApplyReward) ValidateBasic() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if !utils.IsValidUID(msg.CampaignUid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid campaign uid")
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
 	return nil
 }

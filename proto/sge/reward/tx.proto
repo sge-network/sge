@@ -49,8 +49,7 @@ message MsgDeleteCampaignResponse {}
 message MsgApplyReward {
   string creator = 1;
   string campaign_uid = 2;
-  uint64 ts = 3;
-  string ticket = 4;
+  string ticket = 3;
 }
 
 // MsgApplyRewardResponse apply reward message response type.
