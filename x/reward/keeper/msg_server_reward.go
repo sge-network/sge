@@ -13,13 +13,12 @@ import (
 func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward) (*types.MsgApplyRewardResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Check if the value already exists
 	campaign, isFound := k.GetCampaign(ctx, msg.CampaignUid)
-	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the same uid is already set")
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the uid not found")
 	}
 
-	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err == nil {
+	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
 
@@ -35,7 +34,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		},
 		campaign.RewardDefs, msg.Ticket)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to get destribution from the ticket")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
 	if err := campaign.CheckPoolBalance(distribution); err != nil {

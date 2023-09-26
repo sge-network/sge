@@ -28,29 +28,33 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 
 // CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.
 func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	definitions []Definition, ticket string,
+	definitions Definitions, ticket string,
 ) ([]Distribution, error) {
 	var payload ApplyNoLossBetsRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
+	definition := definitions[0]
+
+	if payload.Receiver.RecType != definition.RecType {
+		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
+	}
+
 	bettorAddr := payload.Receiver.Addr
 	for _, betUID := range payload.BetUids {
-		betID, found := keepers.BetKeeper.GetBetID(ctx, betUID)
+		uID2ID, found := keepers.BetKeeper.GetBetID(ctx, betUID)
 		if !found {
 			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet id not found %s", betUID)
 		}
-		bet, found := keepers.BetKeeper.GetBet(ctx, bettorAddr, betID.ID)
+		bet, found := keepers.BetKeeper.GetBet(ctx, bettorAddr, uID2ID.ID)
 		if !found {
-			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet not founs %s", betUID)
+			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet not found %s", betUID)
 		}
 		if bet.Result != bettypes.Bet_RESULT_LOST {
 			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "the bet result is not loss %s", betUID)
 		}
 	}
-
-	definition := definitions[0]
 
 	return []Distribution{
 		NewDistribution(

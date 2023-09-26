@@ -19,14 +19,14 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "signup rewards can only have single definition")
 	}
 	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for single receiver only")
 	}
 	return nil
 }
 
 // CalculateDistributions parses ticket payload and returns the distribution list of signup reward.
 func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	definitions []Definition, ticket string,
+	definitions Definitions, ticket string,
 ) ([]Distribution, error) {
 	var payload ApplySignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
@@ -34,6 +34,10 @@ func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Co
 	}
 
 	definition := definitions[0]
+
+	if payload.Receiver.RecType != definition.RecType {
+		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
+	}
 
 	return []Distribution{
 		NewDistribution(
