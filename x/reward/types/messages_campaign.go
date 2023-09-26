@@ -3,7 +3,8 @@ package types
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
 )
 
 const (
@@ -50,8 +51,17 @@ func (msg *MsgCreateCampaign) GetSignBytes() []byte {
 func (msg *MsgCreateCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if !utils.IsValidUID(msg.Uid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid uid")
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
 	return nil
 }
 
@@ -93,8 +103,17 @@ func (msg *MsgUpdateCampaign) GetSignBytes() []byte {
 func (msg *MsgUpdateCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if !utils.IsValidUID(msg.Uid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid uid")
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
 	return nil
 }
 
@@ -134,7 +153,12 @@ func (msg *MsgDeleteCampaign) GetSignBytes() []byte {
 func (msg *MsgDeleteCampaign) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrortypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
+
+	if !utils.IsValidUID(msg.Uid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid uid")
+	}
+
 	return nil
 }

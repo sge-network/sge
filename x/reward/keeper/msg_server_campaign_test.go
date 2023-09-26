@@ -11,7 +11,7 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
@@ -90,7 +90,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			request: &types.MsgUpdateCampaign{
 				Uid: uuid.NewString(),
 			},
-			err: sdkerrortypes.ErrKeyNotFound,
+			err: sdkerrtypes.ErrKeyNotFound,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
@@ -182,7 +182,7 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 			request: &types.MsgDeleteCampaign{
 				Uid: uuid.NewString(),
 			},
-			err: sdkerrortypes.ErrKeyNotFound,
+			err: sdkerrtypes.ErrKeyNotFound,
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

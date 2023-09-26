@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -21,12 +22,35 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: types.MsgCreateCampaign{
 				Creator: "invalid_address",
+				Uid:     uuid.NewString(),
+				Ticket:  "ticket",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
+			name: "invalid uid",
+			msg: types.MsgCreateCampaign{
+				Creator: sample.AccAddress(),
+				Uid:     "invalid uid",
+				Ticket:  "ticket",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid ticket",
+			msg: types.MsgCreateCampaign{
+				Creator: sample.AccAddress(),
+				Uid:     uuid.NewString(),
+				Ticket:  "",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
 			name: "valid address",
 			msg: types.MsgCreateCampaign{
 				Creator: sample.AccAddress(),
+				Uid:     uuid.NewString(),
+				Ticket:  "ticket",
 			},
 		},
 	}
@@ -52,12 +76,35 @@ func TestMsgUpdateCampaign_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: types.MsgUpdateCampaign{
 				Creator: "invalid_address",
+				Uid:     uuid.NewString(),
+				Ticket:  "ticket",
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
+			name: "invalid uid",
+			msg: types.MsgUpdateCampaign{
+				Creator: sample.AccAddress(),
+				Uid:     "invalid uid",
+				Ticket:  "ticket",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid ticket",
+			msg: types.MsgUpdateCampaign{
+				Creator: sample.AccAddress(),
+				Uid:     uuid.NewString(),
+				Ticket:  "",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
 			name: "valid address",
 			msg: types.MsgUpdateCampaign{
 				Creator: sample.AccAddress(),
+				Uid:     uuid.NewString(),
+				Ticket:  "ticket",
 			},
 		},
 	}
@@ -83,12 +130,23 @@ func TestMsgDeleteCampaign_ValidateBasic(t *testing.T) {
 			name: "invalid address",
 			msg: types.MsgDeleteCampaign{
 				Creator: "invalid_address",
+				Uid:     uuid.NewString(),
 			},
 			err: sdkerrors.ErrInvalidAddress,
-		}, {
+		},
+		{
+			name: "invalid uid",
+			msg: types.MsgDeleteCampaign{
+				Creator: sample.AccAddress(),
+				Uid:     "invalid uid",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
 			name: "valid address",
 			msg: types.MsgDeleteCampaign{
 				Creator: sample.AccAddress(),
+				Uid:     uuid.NewString(),
 			},
 		},
 	}

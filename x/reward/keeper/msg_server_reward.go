@@ -5,7 +5,7 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrortypes "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -16,7 +16,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 	// Check if the value already exists
 	campaign, isFound := k.GetCampaign(ctx, msg.CampaignUid)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "campaign with the same uid is already set")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the same uid is already set")
 	}
 
 	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err == nil {
@@ -25,7 +25,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 
 	rewardFactory, err := campaign.GetRewardsFactory()
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "failed to retrieve reward factory")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
 	distribution, err := rewardFactory.CalculateDistributions(goCtx, ctx,
@@ -35,7 +35,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		},
 		campaign.RewardDefs, msg.Ticket)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrortypes.ErrInvalidRequest, "failed to get destribution from the ticket")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to get destribution from the ticket")
 	}
 
 	if err := campaign.CheckPoolBalance(distribution); err != nil {
