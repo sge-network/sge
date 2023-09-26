@@ -8,6 +8,7 @@ import (
 func NewPool(total sdkmath.Int) Pool {
 	return Pool{
 		Total: total,
+		Spent: sdkmath.ZeroInt(),
 	}
 }
 
