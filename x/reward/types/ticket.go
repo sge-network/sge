@@ -18,7 +18,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "start timestamp can not be after end time")
 	}
 
-	if payload.EndTs <= uint64(blockTime) {
+	if payload.EndTs <= blockTime {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 
@@ -35,7 +35,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 
 // Validate validates campaign update ticket payload.
 func (payload *UpdateCampaignPayload) Validate(blockTime uint64) error {
-	if payload.EndTs < uint64(blockTime) {
+	if payload.EndTs < blockTime {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 
