@@ -8,7 +8,7 @@ import (
 )
 
 // Validate validates campaign creation ticket payload.
-func (payload *CreateCampaignPayload) Validate(ctx sdk.Context) error {
+func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	_, err := sdk.AccAddressFromBech32(payload.FunderAddress)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -18,19 +18,15 @@ func (payload *CreateCampaignPayload) Validate(ctx sdk.Context) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "start timestamp can not be after end time")
 	}
 
-	if payload.EndTs > uint64(ctx.BlockTime().Unix()) {
+	if payload.EndTs <= uint64(blockTime) {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
-	}
-
-	if payload.StartTs >= payload.EndTs {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "start timestamp can not be after end time")
 	}
 
 	if len(payload.RewardDefs) == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "at least one reward definition should be defined")
 	}
 
-	if !payload.PoolAmount.GT(sdkmath.ZeroInt()) {
+	if payload.PoolAmount.IsNil() || !payload.PoolAmount.GT(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
 	}
 
@@ -38,8 +34,8 @@ func (payload *CreateCampaignPayload) Validate(ctx sdk.Context) error {
 }
 
 // Validate validates campaign update ticket payload.
-func (payload *UpdateCampaignPayload) Validate(ctx sdk.Context) error {
-	if payload.EndTs > uint64(ctx.BlockTime().Unix()) {
+func (payload *UpdateCampaignPayload) Validate(blockTime uint64) error {
+	if payload.EndTs < uint64(blockTime) {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 

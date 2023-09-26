@@ -25,6 +25,7 @@ var _ = strconv.IntSize
 func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := simapp.TestParamUsers["user1"].Address.String()
 	for i := 0; i < 5; i++ {
@@ -96,6 +97,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
+			ctx = ctx.WithBlockTime(time.Now())
 			wctx := sdk.WrapSDKContext(ctx)
 
 			creator := simapp.TestParamUsers["user1"].Address.String()
@@ -188,6 +190,7 @@ func TestCampaignMsgServerDelete(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			k, ctx := setupKeeper(t)
 			srv := keeper.NewMsgServerImpl(*k)
+			ctx = ctx.WithBlockTime(time.Now())
 			wctx := sdk.WrapSDKContext(ctx)
 			creator := simapp.TestParamUsers["user1"].Address.String()
 

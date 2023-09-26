@@ -32,7 +32,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		}
 	}
 
-	if err := payload.Validate(ctx); err != nil {
+	if err := payload.Validate(uint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
 
@@ -80,6 +80,10 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	var payload types.UpdateCampaignPayload
 	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	if err := payload.Validate(uint64(ctx.BlockTime().Unix())); err != nil {
+		return nil, err
 	}
 
 	// Check if the value exists
