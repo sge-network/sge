@@ -11,10 +11,12 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
 func getDefaultClaim(creator string) jwt.MapClaims {
@@ -29,7 +31,8 @@ func getDefaultClaim(creator string) jwt.MapClaims {
 }
 
 func createCampaign(t *testing.T, k *keeper.Keeper, srv types.MsgServer, ctx sdk.Context,
-	funder string, claims jwt.MapClaims) string {
+	funder string, claims jwt.MapClaims,
+) string {
 	ticket, err := simapp.CreateJwtTicket(claims)
 	require.Nil(t, err)
 
@@ -391,4 +394,163 @@ func TestMsgApplyNoLossBetsReward(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestMsgApplySignupRewardSubAcc(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+
+	funder := simapp.TestParamUsers["user1"].Address.String()
+	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
+
+	campClaims := getDefaultClaim(funder)
+	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
+	campClaims["reward_defs"] = []types.Definition{
+		{
+			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:     sdkmath.NewInt(100),
+			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+		},
+	}
+
+	campUID := createCampaign(t, k, srv, ctx, funder, campClaims)
+
+	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
+	for _, tc := range []struct {
+		desc   string
+		claims jwt.MapClaims
+		err    error
+	}{
+		{
+			desc: "invalid ticket",
+			claims: jwt.MapClaims{
+				"exp":      time.Now().Add(time.Minute * 5).Unix(),
+				"iat":      time.Now().Unix(),
+				"receiver": "invalid",
+			},
+			err: types.ErrInTicketVerification,
+		},
+		{
+			desc: "invalid receiver type",
+			claims: jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"receiver": types.Receiver{
+					RecType: types.ReceiverType_RECEIVER_TYPE_REFEREE,
+					Addr:    receiverAddr,
+				},
+			},
+			err: types.ErrAccReceiverTypeNotFound,
+		},
+		{
+			desc: "subaccount not exists",
+			claims: jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"receiver": types.Receiver{
+					RecType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+					Addr:    sample.AccAddress(),
+				},
+			},
+			err: types.ErrSubAccRewardTopUp,
+		},
+		{
+			desc: "valid",
+			claims: jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"receiver": types.Receiver{
+					RecType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+					Addr:    receiverAddr,
+				},
+			},
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			ticket, err := simapp.CreateJwtTicket(tc.claims)
+			require.Nil(t, err)
+			reward := &types.MsgApplyReward{
+				Creator:     funder,
+				CampaignUid: campUID,
+				Ticket:      ticket,
+			}
+			_, err = srv.ApplyReward(wctx, reward)
+			if tc.err != nil {
+				require.ErrorContains(t, err, tc.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestMsgApplySubAccFunds(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+
+	funder := simapp.TestParamUsers["user1"].Address.String()
+	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
+
+	rewardAmount := int64(100)
+
+	campClaims := getDefaultClaim(funder)
+	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
+	campClaims["reward_defs"] = []types.Definition{
+		{
+			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:     sdkmath.NewInt(rewardAmount),
+			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+		},
+	}
+
+	campUID := createCampaign(t, k, srv, ctx, funder, campClaims)
+
+	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
+	claims := jwt.MapClaims{
+		"exp": time.Now().Add(time.Minute * 5).Unix(),
+		"iat": time.Now().Unix(),
+		"receiver": types.Receiver{
+			RecType: types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Addr:    receiverAddr,
+		},
+	}
+
+	ticket, err := simapp.CreateJwtTicket(claims)
+	require.Nil(t, err)
+
+	reward := &types.MsgApplyReward{
+		Creator:     funder,
+		CampaignUid: campUID,
+		Ticket:      ticket,
+	}
+	_, err = srv.ApplyReward(wctx, reward)
+	require.NoError(t, err)
+
+	subAccAddr, found := tApp.SubaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiverAddr))
+	require.True(t, found)
+
+	balance, found := tApp.SubaccountKeeper.GetBalance(ctx, subAccAddr)
+	require.True(t, found)
+
+	require.Equal(t, rewardAmount, balance.DepositedAmount.Int64())
 }

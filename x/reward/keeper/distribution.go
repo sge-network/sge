@@ -26,7 +26,7 @@ func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, distributi
 						Amount:   d.Allocation.Amount,
 					},
 				}); err != nil {
-				return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "owner address %s", d.AccAddr)
+				return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "owner address %s, %s", d.AccAddr, err)
 			}
 		default:
 			return types.ErrUnknownAccType

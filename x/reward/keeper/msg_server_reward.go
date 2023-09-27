@@ -42,7 +42,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 	}
 
 	if err := k.DistributeRewards(ctx, campaign.FunderAddress, distribution); err != nil {
-		return nil, types.ErrInDistributionOfRewards
+		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
 	k.UpdateCampaignPool(ctx, campaign, distribution)
