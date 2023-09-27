@@ -10,7 +10,6 @@ import (
 const (
 	TypeMsgCreateCampaign = "create_campaign"
 	TypeMsgUpdateCampaign = "update_campaign"
-	TypeMsgDeleteCampaign = "delete_campaign"
 )
 
 var _ sdk.Msg = &MsgCreateCampaign{}
@@ -112,52 +111,6 @@ func (msg *MsgUpdateCampaign) ValidateBasic() error {
 
 	if msg.Ticket == "" {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
-	}
-
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteCampaign{}
-
-func NewMsgDeleteCampaign(
-	creator string,
-	index string,
-) *MsgDeleteCampaign {
-	return &MsgDeleteCampaign{
-		Creator: creator,
-		Uid:     index,
-	}
-}
-
-func (msg *MsgDeleteCampaign) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteCampaign) Type() string {
-	return TypeMsgDeleteCampaign
-}
-
-func (msg *MsgDeleteCampaign) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteCampaign) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteCampaign) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-
-	if !utils.IsValidUID(msg.Uid) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid uid")
 	}
 
 	return nil

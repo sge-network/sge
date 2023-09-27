@@ -106,28 +106,3 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 
 	return &types.MsgUpdateCampaignResponse{}, nil
 }
-
-func (k msgServer) DeleteCampaign(goCtx context.Context, msg *types.MsgDeleteCampaign) (*types.MsgDeleteCampaignResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetCampaign(
-		ctx,
-		msg.Uid,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.FunderAddress {
-		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.FunderAddress, msg,
-			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
-			return nil, err
-		}
-	}
-
-	k.RemoveCampaign(ctx, msg.Uid)
-
-	return &types.MsgDeleteCampaignResponse{}, nil
-}

@@ -77,32 +77,3 @@ func CmdUpdateCampaign() *cobra.Command {
 
 	return cmd
 }
-
-func CmdDeleteCampaign() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "delete-campaign [index]",
-		Short: "Delete a campaign",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			indexIndex := args[0]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgDeleteCampaign(
-				clientCtx.GetFromAddress().String(),
-				indexIndex,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}

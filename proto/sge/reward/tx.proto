@@ -10,8 +10,6 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // UpdateCampaign is campaign update message endpoint.
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
-  // DeleteCampaign is campaign delete message endpoint.
-  rpc DeleteCampaign(MsgDeleteCampaign) returns (MsgDeleteCampaignResponse);
   // ApplyReward is reward application message endpoint.
   rpc ApplyReward(MsgApplyReward) returns (MsgApplyRewardResponse);
 }
@@ -35,15 +33,6 @@ message MsgUpdateCampaign {
 
 // MsgUpdateCampaignResponse campaign update message response type.
 message MsgUpdateCampaignResponse {}
-
-// MsgDeleteCampaign is campaign delete message type.
-message MsgDeleteCampaign {
-  string creator = 1;
-  string uid = 2;
-}
-
-// MsgDeleteCampaignResponse campaign delete message response type.
-message MsgDeleteCampaignResponse {}
 
 // MsgApplyReward is apply reward message type.
 message MsgApplyReward {

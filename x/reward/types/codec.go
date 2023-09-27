@@ -10,14 +10,12 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateCampaign{}, "reward/CreateCampaign", nil)
 	cdc.RegisterConcrete(&MsgUpdateCampaign{}, "reward/UpdateCampaign", nil)
-	cdc.RegisterConcrete(&MsgDeleteCampaign{}, "reward/DeleteCampaign", nil)
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateCampaign{},
 		&MsgUpdateCampaign{},
-		&MsgDeleteCampaign{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
