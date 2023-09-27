@@ -25,6 +25,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdUpdateCampaign())
+	cmd.AddCommand(CmdApplyReward())
 
 	return cmd
 }
