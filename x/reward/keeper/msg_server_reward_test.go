@@ -52,7 +52,7 @@ func createCampaign(t *testing.T, k *keeper.Keeper, srv types.MsgServer, ctx sdk
 }
 
 func TestMsgApplySignupReward(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
 	wctx := sdk.WrapSDKContext(ctx)
@@ -60,14 +60,22 @@ func TestMsgApplySignupReward(t *testing.T) {
 	funder := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
+	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
 	campClaims := getDefaultClaim(funder)
 	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
 	campClaims["reward_defs"] = []types.Definition{
 		{
 			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
 			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-			UnlockTS:   0,
+			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 
@@ -208,7 +216,7 @@ func TestMsgApplyAffiliationReward(t *testing.T) {
 }
 
 func TestMsgApplyReferralReward(t *testing.T) {
-	k, ctx := setupKeeper(t)
+	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
 	wctx := sdk.WrapSDKContext(ctx)
@@ -217,20 +225,36 @@ func TestMsgApplyReferralReward(t *testing.T) {
 	referrerAddr := simapp.TestParamUsers["user2"].Address.String()
 	referreeAddr := simapp.TestParamUsers["user3"].Address.String()
 
+	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, referrerAddr, referrerAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
+	_, err = tApp.SubaccountKeeper.CreateSubAccount(ctx, referreeAddr, referreeAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
 	campClaims := getDefaultClaim(funder)
 	campClaims["type"] = types.RewardType_REWARD_TYPE_REFERRAL
 	campClaims["reward_defs"] = []types.Definition{
 		{
 			RecType:    types.ReceiverType_RECEIVER_TYPE_REFEREE,
 			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-			UnlockTS:   0,
+			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 		{
 			RecType:    types.ReceiverType_RECEIVER_TYPE_REFERRER,
 			Amount:     sdkmath.NewInt(150),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-			UnlockTS:   0,
+			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 

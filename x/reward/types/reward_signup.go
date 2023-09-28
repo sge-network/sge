@@ -21,6 +21,9 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for single receiver only")
 	}
+	if campaign.RewardDefs[0].DstAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
+	}
 	return nil
 }
 

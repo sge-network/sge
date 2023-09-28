@@ -18,6 +18,9 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 	hasReferrer := false
 	hasReferee := false
 	for _, d := range campaign.RewardDefs {
+		if d.DstAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+			return sdkerrors.Wrapf(ErrInvalidReceiverType, "referral rewards can be defined for subaccount only")
+		}
 		switch d.RecType {
 		case ReceiverType_RECEIVER_TYPE_REFEREE:
 			hasReferee = true
