@@ -39,11 +39,10 @@ func NewAppModuleBasic(cdc codec.BinaryCodec) AppModuleBasic { return AppModuleB
 // Name returns the module's name.
 func (AppModuleBasic) Name() string { return types.ModuleName }
 
-// RegisterCodec registers the codec for the app module basic
-func (AppModuleBasic) RegisterCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
-
 // RegisterLegacyAminoCodec registers the lagacy amino codec for the app module basic
-func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) { types.RegisterCodec(cdc) }
+func (AppModuleBasic) RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	types.RegisterLegacyAminoCodec(cdc)
+}
 
 // RegisterInterfaces registers the module's interface types
 func (AppModuleBasic) RegisterInterfaces(reg cdctypes.InterfaceRegistry) {

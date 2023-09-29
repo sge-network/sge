@@ -3,11 +3,15 @@ package types
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// RegisterCodec registers module codec to the app codec
-func RegisterCodec(_ *codec.LegacyAmino) {}
+// RegisterLegacyAminoCodec registers the necessary x/orderbook interfaces and concrete types
+// on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
+func RegisterLegacyAminoCodec(_ *codec.LegacyAmino) {
+	// left empty because no message is available in this module
+}
 
 // RegisterInterfaces registers the module interface types
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -15,8 +19,14 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 var (
-	// Amino is the legacy amino codec
-	Amino = codec.NewLegacyAmino()
+	// amino is the legacy amino codec
+	amino = codec.NewLegacyAmino()
 	// ModuleCdc is the codec of the module
-	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
+	ModuleCdc = codec.NewAminoCodec(amino)
 )
+
+func init() {
+	RegisterLegacyAminoCodec(amino)
+	cryptocodec.RegisterCrypto(amino)
+	sdk.RegisterLegacyAminoCodec(amino)
+}
