@@ -23,6 +23,9 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
 	}
+	if campaign.RewardDefs[0].ReceiverAccType == ReceiverAccType_RECEIVER_ACC_TYPE_UNSPECIFIED {
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "bad account type for the receiver")
+	}
 	return nil
 }
 
@@ -61,7 +64,7 @@ func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sd
 			payload.Receiver.Addr,
 			NewAllocation(
 				definition.Amount,
-				definition.DstAccType,
+				definition.ReceiverAccType,
 				definition.UnlockTS,
 			),
 		),

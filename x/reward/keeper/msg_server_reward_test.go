@@ -72,10 +72,10 @@ func TestMsgApplySignupReward(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 
@@ -150,10 +150,10 @@ func TestMsgApplyAffiliationReward(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_AFFILIATION
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-			UnlockTS:   0,
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+			UnlockTS:        0,
 		},
 	}
 
@@ -245,16 +245,16 @@ func TestMsgApplyReferralReward(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_REFERRAL
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_REFEREE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+			RecType:         types.ReceiverType_RECEIVER_TYPE_REFEREE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_REFERRER,
-			Amount:     sdkmath.NewInt(150),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+			RecType:         types.ReceiverType_RECEIVER_TYPE_REFERRER,
+			Amount:          sdkmath.NewInt(150),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 
@@ -341,10 +341,10 @@ func TestMsgApplyNoLossBetsReward(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_NOLOSS_BETS
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-			UnlockTS:   0,
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+			UnlockTS:        0,
 		},
 	}
 
@@ -433,10 +433,10 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 
@@ -533,10 +533,10 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 	campClaims["type"] = types.RewardType_REWARD_TYPE_SIGNUP
 	campClaims["reward_defs"] = []types.Definition{
 		{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(rewardAmount),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-			UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(rewardAmount),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
 	}
 

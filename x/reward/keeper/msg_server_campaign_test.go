@@ -38,10 +38,10 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 			"type":           types.RewardType_REWARD_TYPE_SIGNUP,
 			"reward_defs": []types.Definition{
 				{
-					RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-					Amount:     sdkmath.NewInt(100),
-					DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-					UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+					RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+					Amount:          sdkmath.NewInt(100),
+					ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+					UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
 			},
 			"pool_amount": sdkmath.NewInt(1000000),
@@ -111,10 +111,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 				"type":           types.RewardType_REWARD_TYPE_SIGNUP,
 				"reward_defs": []types.Definition{
 					{
-						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						Amount:     sdkmath.NewInt(100),
-						DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-						UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+						RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						Amount:          sdkmath.NewInt(100),
+						ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+						UnlockTS:        uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 					},
 				},
 				"pool_amount": sdkmath.NewInt(10000),

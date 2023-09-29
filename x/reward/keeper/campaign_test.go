@@ -30,9 +30,9 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 		items[i].EndTS = uint64(time.Now().Add(5 * time.Minute).Unix())
 		items[i].RewardType = types.RewardType_REWARD_TYPE_REFERRAL
 		items[i].RewardDefs = []types.Definition{{
-			RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-			Amount:     sdkmath.NewInt(100),
-			DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
+			RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+			Amount:          sdkmath.NewInt(100),
+			ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
 		}}
 		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Total: sdkmath.NewInt(100)}
 

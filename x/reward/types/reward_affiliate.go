@@ -21,6 +21,9 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
 	}
+	if campaign.RewardDefs[0].ReceiverAccType == ReceiverAccType_RECEIVER_ACC_TYPE_UNSPECIFIED {
+		return sdkerrors.Wrapf(ErrInvalidReceiverType, "bad account type for the receiver")
+	}
 	return nil
 }
 
@@ -44,7 +47,7 @@ func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx s
 			payload.Receiver.Addr,
 			NewAllocation(
 				definition.Amount,
-				definition.DstAccType,
+				definition.ReceiverAccType,
 				definition.UnlockTS,
 			),
 		),

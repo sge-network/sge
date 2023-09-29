@@ -28,7 +28,7 @@ message Definition {
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"amount\""
   ];
-  ReceiverAccType dst_acc_type = 3;
+  ReceiverAccType receiver_acc_type = 3;
   uint64 unlock_ts = 4 [
     (gogoproto.customname) = "UnlockTS",
     (gogoproto.jsontag) = "unlock_ts",

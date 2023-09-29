@@ -16,8 +16,11 @@ service Msg {
 
 // MsgCreateCampaign is campaign create message type.
 message MsgCreateCampaign {
+  // creator is the address of creator account.
   string creator = 1;
+  // uid is the uinque identifier of the campaign.
   string uid = 2;
+  // ticket is the payload data.
   string ticket = 3;
 }
 
@@ -26,8 +29,11 @@ message MsgCreateCampaignResponse {}
 
 // MsgUpdateCampaign is campaign update message type.
 message MsgUpdateCampaign {
+  // creator is the address of creator account.
   string creator = 1;
+  // uid is the uinque identifier of the campaign.
   string uid = 2;
+  // ticket is the payload data.
   string ticket = 3;
 }
 
@@ -36,8 +42,11 @@ message MsgUpdateCampaignResponse {}
 
 // MsgApplyReward is apply reward message type.
 message MsgApplyReward {
+  // creator is the address of creator account.
   string creator = 1;
+  // campaign_uid is the uinque identifier of the campaign.
   string campaign_uid = 2;
+  // ticket is the payload data.
   string ticket = 3;
 }
 

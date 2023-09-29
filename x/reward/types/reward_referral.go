@@ -18,7 +18,7 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 	hasReferrer := false
 	hasReferee := false
 	for _, d := range campaign.RewardDefs {
-		if d.DstAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+		if d.ReceiverAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
 			return sdkerrors.Wrapf(ErrInvalidReceiverType, "referral rewards can be defined for subaccount only")
 		}
 		switch d.RecType {
@@ -56,7 +56,7 @@ func (rfr ReferralReward) CalculateDistributions(goCtx context.Context, ctx sdk.
 					r.Addr,
 					NewAllocation(
 						d.Amount,
-						d.DstAccType,
+						d.ReceiverAccType,
 						d.UnlockTS,
 					),
 				))

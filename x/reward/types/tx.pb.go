@@ -29,9 +29,12 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // MsgCreateCampaign is campaign create message type.
 type MsgCreateCampaign struct {
+	// creator is the address of creator account.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Uid     string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	Ticket  string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// uid is the uinque identifier of the campaign.
+	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	// ticket is the payload data.
+	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
 func (m *MsgCreateCampaign) Reset()         { *m = MsgCreateCampaign{} }
@@ -127,9 +130,12 @@ var xxx_messageInfo_MsgCreateCampaignResponse proto.InternalMessageInfo
 
 // MsgUpdateCampaign is campaign update message type.
 type MsgUpdateCampaign struct {
+	// creator is the address of creator account.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Uid     string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	Ticket  string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// uid is the uinque identifier of the campaign.
+	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
+	// ticket is the payload data.
+	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
 func (m *MsgUpdateCampaign) Reset()         { *m = MsgUpdateCampaign{} }
@@ -225,9 +231,12 @@ var xxx_messageInfo_MsgUpdateCampaignResponse proto.InternalMessageInfo
 
 // MsgApplyReward is apply reward message type.
 type MsgApplyReward struct {
-	Creator     string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// creator is the address of creator account.
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// campaign_uid is the uinque identifier of the campaign.
 	CampaignUid string `protobuf:"bytes,2,opt,name=campaign_uid,json=campaignUid,proto3" json:"campaign_uid,omitempty"`
-	Ticket      string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
+	// ticket is the payload data.
+	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
 func (m *MsgApplyReward) Reset()         { *m = MsgApplyReward{} }

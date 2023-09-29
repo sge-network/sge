@@ -57,10 +57,10 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				EndTs:         blockTime + 2,
 				RewardDefs: []types.Definition{
 					{
-						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-						Amount:     sdkmath.NewInt(1000),
-						UnlockTS:   0,
+						RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+						Amount:          sdkmath.NewInt(1000),
+						UnlockTS:        0,
 					},
 				},
 			},
@@ -74,10 +74,10 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				EndTs:         blockTime + 2,
 				RewardDefs: []types.Definition{
 					{
-						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-						Amount:     sdkmath.NewInt(1000),
-						UnlockTS:   0,
+						RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+						Amount:          sdkmath.NewInt(1000),
+						UnlockTS:        0,
 					},
 				},
 				PoolAmount: sdkmath.NewInt(0),
@@ -93,10 +93,10 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				Type:          types.RewardType_REWARD_TYPE_SIGNUP,
 				RewardDefs: []types.Definition{
 					{
-						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
-						Amount:     sdkmath.NewInt(1000),
-						UnlockTS:   0,
+						RecType:         types.ReceiverType_RECEIVER_TYPE_SINGLE,
+						ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+						Amount:          sdkmath.NewInt(1000),
+						UnlockTS:        0,
 					},
 				},
 				PoolAmount: poolBalance,

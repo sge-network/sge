@@ -42,9 +42,9 @@ func networkWithCampaignObjects(t *testing.T, n int) (*network.Network, []types.
 			EndTS:         uint64(time.Now().Add(5 * time.Minute).Unix()),
 			RewardType:    types.RewardType_REWARD_TYPE_AFFILIATION,
 			RewardDefs: []types.Definition{{
-				RecType:    types.ReceiverType_RECEIVER_TYPE_REFEREE,
-				Amount:     sdkmath.NewInt(100),
-				DstAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
+				RecType:         types.ReceiverType_RECEIVER_TYPE_REFEREE,
+				Amount:          sdkmath.NewInt(100),
+				ReceiverAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN,
 			}},
 			Pool: types.Pool{Spent: sdkmath.NewInt(100), Total: sdkmath.NewInt(1000)},
 		}
