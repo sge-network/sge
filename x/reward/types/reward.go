@@ -34,15 +34,15 @@ func NewDistribution(accAddr string, allocation Allocation) Distribution {
 // NewAllocation created allocation object.
 func NewAllocation(amount sdkmath.Int, receiverAccType ReceiverAccType, unlockTS uint64) Allocation {
 	return Allocation{
-		Amount:          amount,
-		ReceiverAccType: receiverAccType,
-		UnlockTS:        unlockTS,
+		Amount:     amount,
+		RecAccType: receiverAccType,
+		UnlockTS:   unlockTS,
 	}
 }
 
 // ValidateBasic validates the basic properties of a reward definition.
 func (d *Definition) ValidateBasic(blockTime uint64) error {
-	if d.ReceiverAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+	if d.RecAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
 		if d.UnlockTS != 0 {
 			return sdkerrors.Wrapf(ErrUnlockTSIsSubAccOnly, "%d", d.UnlockTS)
 		}

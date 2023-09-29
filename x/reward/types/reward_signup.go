@@ -21,7 +21,7 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for single receiver only")
 	}
-	if campaign.RewardDefs[0].ReceiverAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
+	if campaign.RewardDefs[0].RecAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
 		return sdkerrors.Wrapf(ErrInvalidReceiverType, "signup rewards can be defined for subaccount only")
 	}
 	return nil
@@ -47,7 +47,7 @@ func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Co
 			payload.Receiver.Addr,
 			NewAllocation(
 				definition.Amount,
-				definition.ReceiverAccType,
+				definition.RecAccType,
 				definition.UnlockTS,
 			),
 		),

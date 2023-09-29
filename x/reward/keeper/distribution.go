@@ -11,7 +11,7 @@ import (
 // DistributeRewards distributes the rewards according to the input distribution list.
 func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, distributions []types.Distribution) error {
 	for _, d := range distributions {
-		switch d.Allocation.ReceiverAccType {
+		switch d.Allocation.RecAccType {
 		case types.ReceiverAccType_RECEIVER_ACC_TYPE_MAIN:
 			return k.modFunder.Refund(
 				types.RewardPoolFunder{}, ctx,
