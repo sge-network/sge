@@ -76,6 +76,9 @@ func (p *OrderBookParticipation) ValidateWithdraw(
 
 // maxWithdrawalAmount returns the max withdrawal amount of a participation.
 func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
+	if p.CurrentRoundMaxLoss.LT(sdk.ZeroInt()) {
+		return p.CurrentRoundLiquidity
+	}
 	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
 }
 
