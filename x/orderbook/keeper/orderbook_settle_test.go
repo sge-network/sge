@@ -73,10 +73,16 @@ func TestOrderBookSettlement(t *testing.T) {
 			Sub(ts.participations[1].Fee),
 		participant2BalanceAfterSettlement)
 
+	// In this case, in the orderbook we have a long loop of requeue
+	// and the payout is a large value.
+	// in the real scenario when the bet placement transaction fails duo to
+	// orderbook failure, the hole transaction would fail and no state change will happen.
 	participant3BalanceAfterSettlement := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx, sdk.MustAccAddressFromBech32(ts.deposits[2].DepositorAddress),
 		params.DefaultBondDenom).Amount
 	require.Equal(t,
-		participant3BalanceBeforeDeposit.Int64(),
-		participant3BalanceAfterSettlement.Int64())
+		participant3BalanceBeforeDeposit.
+			// subtract participation fee
+			Sub(ts.participations[2].Fee),
+		participant3BalanceAfterSettlement)
 }
