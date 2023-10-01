@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package sgenetwork.sge.reward;
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // CreateCampaign is campaign create message endpoint.
+  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
+  // UpdateCampaign is campaign update message endpoint.
+  rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
+  // ApplyReward is reward application message endpoint.
+  rpc ApplyReward(MsgApplyReward) returns (MsgApplyRewardResponse);
+}
+
+// MsgCreateCampaign is campaign create message type.
+message MsgCreateCampaign {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the uinque identifier of the campaign.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgCreateCampaignResponse campaign create message response type.
+message MsgCreateCampaignResponse {}
+
+// MsgUpdateCampaign is campaign update message type.
+message MsgUpdateCampaign {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the uinque identifier of the campaign.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgUpdateCampaignResponse campaign update message response type.
+message MsgUpdateCampaignResponse {}
+
+// MsgApplyReward is apply reward message type.
+message MsgApplyReward {
+  // creator is the address of creator account.
+  string creator = 1;
+  // campaign_uid is the uinque identifier of the campaign.
+  string campaign_uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgApplyRewardResponse apply reward message response type.
+message MsgApplyRewardResponse {}

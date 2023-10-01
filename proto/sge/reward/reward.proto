@@ -1,0 +1,101 @@
+syntax = "proto3";
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// RewardCommon is the type for common data of a reward.
+message RewardCommon {
+  string creator = 1;
+  string campaign_uid = 2 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
+  ];
+  uint64 ts = 3 [
+    (gogoproto.customname) = "TS",
+    (gogoproto.jsontag) = "ts",
+    json_name = "ts"
+  ];
+}
+
+// Definition is the type for reward declaration for a campaign.
+message Definition {
+  ReceiverType rec_type = 1;
+  ReceiverAccType rec_acc_type = 2;
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\""
+  ];
+  uint64 unlock_ts = 4 [
+    (gogoproto.customname) = "UnlockTS",
+    (gogoproto.jsontag) = "unlock_ts",
+    json_name = "unlock_ts"
+  ];
+}
+
+// Distribution is the type for the distribution of a reward.
+message Distribution {
+  string acc_addr = 1;
+  Allocation allocation = 2 [ (gogoproto.nullable) = false ];
+}
+
+// Allocation is the distribution allocation of the rewards.
+message Allocation {
+  string amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\""
+  ];
+  ReceiverAccType rec_acc_type = 2;
+  uint64 unlock_ts = 3 [
+    (gogoproto.customname) = "UnlockTS",
+    (gogoproto.jsontag) = "unlock_ts",
+    json_name = "unlock_ts"
+  ];
+}
+
+// Receiver is the type for reward receiver properties.
+message Receiver {
+  ReceiverType rec_type = 1;
+  string addr = 2;
+}
+
+// RewardType defines supported types of rewards of reward module.
+enum RewardType {
+  // the invalid or unknown
+  REWARD_TYPE_UNSPECIFIED = 0;
+  // signup reward
+  REWARD_TYPE_SIGNUP = 1;
+  // referral reward
+  REWARD_TYPE_REFERRAL = 2;
+  // affiliation reward
+  REWARD_TYPE_AFFILIATION = 3;
+  // noloss bets reward
+  REWARD_TYPE_NOLOSS_BETS = 4;
+}
+
+// ReceiverAccType defines supported types account types for reward
+// distribution.
+enum ReceiverAccType {
+  // the invalid or unknown
+  RECEIVER_ACC_TYPE_UNSPECIFIED = 0;
+  // main account
+  RECEIVER_ACC_TYPE_MAIN = 1;
+  // sub account
+  RECEIVER_ACC_TYPE_SUB = 2;
+}
+
+// ReceiverType defines all of reward receiver types in the system.
+enum ReceiverType {
+  // the invalid or unknown
+  RECEIVER_TYPE_UNSPECIFIED = 0;
+  // single receiver account
+  RECEIVER_TYPE_SINGLE = 1;
+  // referrer
+  RECEIVER_TYPE_REFERRER = 2;
+  // referee
+  RECEIVER_TYPE_REFEREE = 3;
+}

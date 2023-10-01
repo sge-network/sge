@@ -3,10 +3,11 @@ package keeper
 import (
 	"fmt"
 
+	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -139,7 +140,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			// availableLiquidity is positive and more than remaining payout profit that
 			// need to be paid, so we can cover all payout profits with available liquidity.
 			// this case appends the last fulfillment
-			if fInfo.isLiquidityLessThanThreshold(sdk.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
+			if fInfo.isLiquidityLessThanThreshold(sdkmath.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
 				setFulfilled = true
 			}
 			k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt())
@@ -199,13 +200,13 @@ func (k Keeper) initFulfillmentInfo(
 		oddsType:                oddsType,
 		oddsVal:                 oddsVal,
 		maxLossMultiplier:       maxLossMultiplier,
-		totalAvailableLiquidity: sdk.NewInt(0),
+		totalAvailableLiquidity: sdkmath.NewInt(0),
 
 		//  in process maps
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
 
 		// initialize the fulfilled bet amount with 0
-		fulfilledBetAmount: sdk.NewInt(0),
+		fulfilledBetAmount: sdkmath.NewInt(0),
 	}
 
 	bps, err := k.GetParticipationsOfOrderBook(ctx, book.UID)

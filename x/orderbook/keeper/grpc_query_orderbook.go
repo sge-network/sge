@@ -4,13 +4,15 @@ import (
 	"context"
 	"strings"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // OrderBook queries orderbook info for given order book id
@@ -60,7 +62,7 @@ func (k Keeper) OrderBooks(
 	pageRes, err := query.FilteredPaginate(
 		bookStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			orderBook, err := types.UnmarshalOrderBook(k.cdc, value)
 			if err != nil {
 				return false, err

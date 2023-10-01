@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "sge/reward/params.proto";
+import "sge/reward/campaign.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// Query defines the gRPC querier service.
+service Query {
+
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/params";
+  }
+
+  // Queries an specific Campaign item.
+  rpc Campaign(QueryCampaignRequest) returns (QueryCampaignResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/campaign/{uid}";
+  }
+
+  // Queries list of all Campaign items.
+  rpc CampaignAll(QueryCampaignAllRequest) returns (QueryCampaignAllResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/campaign";
+  }
+}
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryCampaignRequest is request body of the query campaign endpoint.
+message QueryCampaignRequest { string uid = 1; }
+
+// QueryCampaignRequest is response body of the query campaign endpoint.
+message QueryCampaignResponse {
+  Campaign campaign = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryCampaignAllRequest is request body of the query all campaigns endpoint.
+message QueryCampaignAllRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryCampaignAllResponse is response body of the query all campaigns
+// endpoint.
+message QueryCampaignAllResponse {
+  repeated Campaign campaign = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

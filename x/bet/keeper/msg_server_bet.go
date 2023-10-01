@@ -3,8 +3,9 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/bet/types"
 )
 
@@ -14,23 +15,10 @@ func (k msgServer) Wager(
 ) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Check if the value already exists
-	_, isFound := k.GetBetID(ctx, msg.Props.UID)
-	if isFound {
-		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", msg.Props.UID)
-	}
-
-	payload := &types.WagerTicketPayload{}
-	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Props.Ticket, &payload)
+	bet, err := k.PrepareBetObject(ctx, msg.Creator, msg.Props)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, err
 	}
-
-	if err = payload.Validate(msg.Creator); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
-	}
-
-	bet := types.NewBet(msg.Creator, msg.Props, payload.OddsType, payload.SelectedOdds)
 
 	if err := k.Keeper.Wager(ctx, bet); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInWager, "%s", err)

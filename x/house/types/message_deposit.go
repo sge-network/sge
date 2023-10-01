@@ -3,11 +3,13 @@ package types
 import (
 	"strings"
 
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
 	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const typeMsgDeposit = "house_deposit"
@@ -49,7 +51,7 @@ func (msg *MsgDeposit) GetSignBytes() []byte {
 func (msg *MsgDeposit) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if !utils.IsValidUID(msg.MarketUID) {
@@ -58,7 +60,7 @@ func (msg *MsgDeposit) ValidateBasic() error {
 
 	if !msg.Amount.IsPositive() {
 		return sdkerrors.Wrap(
-			sdkerrors.ErrInvalidRequest,
+			sdkerrtypes.ErrInvalidRequest,
 			"invalid deposit amount",
 		)
 	}

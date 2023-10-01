@@ -3,8 +3,9 @@ package types_test
 import (
 	"testing"
 
-	"github.com/sge-network/sge/x/market/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/market/types"
 )
 
 func TestGenesisState_Validate(t *testing.T) {

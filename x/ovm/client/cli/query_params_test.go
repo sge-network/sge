@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/sge-network/sge/testutil/network"
+
 	"github.com/sge-network/sge/x/ovm/client/cli"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestQueryParams(t *testing.T) {

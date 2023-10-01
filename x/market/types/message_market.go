@@ -1,9 +1,11 @@
 package types
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 const typeMsgAdd = "market_add"
@@ -11,7 +13,7 @@ const typeMsgAdd = "market_add"
 var _ sdk.Msg = &MsgAdd{}
 
 // NewMsgAdd creates the new input for adding a market to blockchain
-func NewMsgAdd(creator string, ticket string) *MsgAdd {
+func NewMsgAdd(creator, ticket string) *MsgAdd {
 	return &MsgAdd{
 		Creator: creator,
 		Ticket:  ticket,
@@ -43,11 +45,11 @@ func (msg *MsgAdd) GetSignBytes() []byte {
 func (msg *MsgAdd) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if msg.Ticket == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ticket param")
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket param")
 	}
 	return nil
 }
@@ -100,11 +102,11 @@ func (msg *MsgUpdate) GetSignBytes() []byte {
 func (msg *MsgUpdate) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if msg.Ticket == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ticket param")
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket param")
 	}
 
 	return nil

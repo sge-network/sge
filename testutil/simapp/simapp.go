@@ -8,6 +8,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/spf13/cast"
+
+	sdkmath "cosmossdk.io/math"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -17,18 +20,19 @@ import (
 	stakingKeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	"github.com/sge-network/sge/app"
-	"github.com/sge-network/sge/app/params"
-	"github.com/sge-network/sge/utils"
-	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
-	ovmtypes "github.com/sge-network/sge/x/ovm/types"
-	"github.com/spf13/cast"
+
 	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 	"github.com/tendermint/tendermint/libs/log"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 	tmdb "github.com/tendermint/tm-db"
+
+	"github.com/sge-network/sge/app"
+	"github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/utils"
+	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
+	ovmtypes "github.com/sge-network/sge/x/ovm/types"
 )
 
 // TestApp is used as a container of the sge app
@@ -184,7 +188,7 @@ func generateSimappUsers() {
 func generateSimappUserBalances() (balances []banktypes.Balance) {
 	genTokens := sdk.TokensFromConsensusPower(1, sdk.DefaultPowerReduction)
 	genCoin := sdk.NewCoin(params.DefaultBondDenom, genTokens)
-	sdkgenCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))
+	sdkgenCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000000000))
 	for _, v := range TestParamUsers {
 		balances = append(balances, banktypes.Balance{
 			Address: v.Address.String(),
@@ -212,7 +216,7 @@ func generateSimappAccountCoins(ctx *sdk.Context, tApp *TestApp) error {
 
 // SetAccountCoins sets the balance of accounts for testing
 func SetAccountCoins(ctx *sdk.Context, k bankkeeper.Keeper, addr sdk.AccAddress, amount int64) error {
-	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(amount)))
+	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(amount)))
 	err := k.MintCoins(*ctx, mintmoduletypes.ModuleName, coin)
 	if err != nil {
 		return err
@@ -231,7 +235,7 @@ func SetModuleAccountCoins(
 	moduleName string,
 	amount int64,
 ) error {
-	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(amount)))
+	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(amount)))
 	err := k.MintCoins(*ctx, mintmoduletypes.ModuleName, coin)
 	if err != nil {
 		return err

@@ -4,20 +4,23 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgServerWithdraw(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-	depositor := simappUtil.TestParamUsers["user2"]
+	creator := simapp.TestParamUsers["user1"]
+	depositor := simapp.TestParamUsers["user2"]
 	// var err error
 
 	marketItem := markettypes.Market{
@@ -42,7 +45,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 	err = tApp.AuthzKeeper.SaveGrant(ctx,
 		creator.Address,
 		depositor.Address,
-		types.NewDepositAuthorization(sdk.NewInt(1000)),
+		types.NewDepositAuthorization(sdkmath.NewInt(1000)),
 		&expTime,
 	)
 	require.NoError(t, err)
@@ -57,13 +60,13 @@ func TestMsgServerWithdraw(t *testing.T) {
 		"depositor_address": depositor.Address.String(),
 		"kyc_data":          depositKyc,
 	}
-	ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)
 
 	inputDeposit := &types.MsgDeposit{
 		Creator:   creator.Address.String(),
 		MarketUID: testMarketUID,
-		Amount:    sdk.NewInt(1000),
+		Amount:    sdkmath.NewInt(1000),
 		Ticket:    ticket,
 	}
 
@@ -73,7 +76,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 	t.Run("no ticket", func(t *testing.T) {
 		inputWithdraw := &types.MsgWithdraw{
 			Creator: creator.Address.String(),
-			Amount:  sdk.NewInt(1),
+			Amount:  sdkmath.NewInt(1),
 		}
 
 		_, err := msgk.Withdraw(wctx, inputWithdraw)
@@ -91,7 +94,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 			"kyc_data":          testKyc,
 			"depositor_address": depositor.Address.String(),
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputWithdraw := &types.MsgWithdraw{
@@ -99,7 +102,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 			MarketUID:          testMarketUID,
 			ParticipationIndex: deposit.ParticipationIndex,
 			Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-			Amount:             sdk.NewInt(1000),
+			Amount:             sdkmath.NewInt(1000),
 			Ticket:             ticket,
 		}
 
@@ -108,7 +111,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 	})
 
 	t.Run("success", func(t *testing.T) {
-		grantAmount := sdk.NewInt(1000)
+		grantAmount := sdkmath.NewInt(1000)
 		expTime := time.Now().Add(5 * time.Minute)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
 			creator.Address,
@@ -138,13 +141,13 @@ func TestMsgServerWithdraw(t *testing.T) {
 			"depositor_address": depositor.Address.String(),
 			"kyc_data":          testKyc,
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputWithdraw := &types.MsgWithdraw{
 			Creator:            creator.Address.String(),
 			MarketUID:          testMarketUID,
-			Amount:             sdk.NewInt(1000),
+			Amount:             sdkmath.NewInt(1000),
 			ParticipationIndex: deposit.ParticipationIndex,
 			Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 			Ticket:             ticket,
@@ -163,7 +166,7 @@ func TestMsgServerWithdraw(t *testing.T) {
 		)
 		authzAfterW, ok := authzAfter.(*types.WithdrawAuthorization)
 		require.True(t, ok)
-		expectedAuthzGrant := grantAmount.Sub(sdk.NewInt(rst[0].Amount.Int64()))
+		expectedAuthzGrant := grantAmount.Sub(sdkmath.NewInt(rst[0].Amount.Int64()))
 		require.Equal(t, expectedAuthzGrant, authzAfterW.WithdrawLimit)
 	})
 }

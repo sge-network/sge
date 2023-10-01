@@ -1,10 +1,12 @@
 package cli
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/spf13/cobra"
 )
 
 // CmdPubKeysList returns a command object instance for querying the public keys

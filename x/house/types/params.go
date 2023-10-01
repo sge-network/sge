@@ -3,10 +3,11 @@ package types
 import (
 	"fmt"
 
+	yaml "gopkg.in/yaml.v2"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // House params default values
@@ -55,7 +56,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 // DefaultParams returns a default set of parameters.
 func DefaultParams() Params {
 	return NewParams(
-		sdk.NewInt(DefaultMinDeposit),
+		sdkmath.NewInt(DefaultMinDeposit),
 		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
 	)
 }

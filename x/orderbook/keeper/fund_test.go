@@ -3,21 +3,21 @@ package keeper_test
 import (
 	"testing"
 
-	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
+
 	"github.com/sge-network/sge/app/params"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestFund(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	senderAddr := simappUtil.TestParamUsers["user1"].Address
+	senderAddr := simapp.TestParamUsers["user1"].Address
 	initialBalance := tApp.BankKeeper.GetBalance(ctx, senderAddr, params.DefaultBondDenom)
-	successAmount := sdk.NewInt(1000)
+	successAmount := sdkmath.NewInt(1000)
 
 	for _, tc := range []struct {
 		desc   string
@@ -27,7 +27,7 @@ func TestFund(t *testing.T) {
 	}{
 		{
 			desc:   "not enough balance",
-			amount: sdk.NewInt(100000000000000),
+			amount: sdkmath.NewInt(100000000000000),
 			err:    types.ErrInsufficientAccountBalance,
 		},
 		{
@@ -57,16 +57,16 @@ func TestFund(t *testing.T) {
 func TestReFund(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	successAmount := sdk.NewInt(1000)
+	successAmount := sdkmath.NewInt(1000)
 	err := k.Fund(
 		types.OrderBookLiquidityFunder{},
 		ctx,
-		simappUtil.TestParamUsers["user2"].Address,
+		simapp.TestParamUsers["user2"].Address,
 		successAmount,
 	)
 	require.NoError(t, err)
 
-	receiverAddr := simappUtil.TestParamUsers["user1"].Address
+	receiverAddr := simapp.TestParamUsers["user1"].Address
 	initialBalance := tApp.BankKeeper.GetBalance(ctx, receiverAddr, params.DefaultBondDenom)
 
 	for _, tc := range []struct {
@@ -77,7 +77,7 @@ func TestReFund(t *testing.T) {
 	}{
 		{
 			desc:   "not enough balance",
-			amount: successAmount.Add(sdk.NewInt(1)),
+			amount: successAmount.Add(sdkmath.NewInt(1)),
 			err:    types.ErrInsufficientBalanceInModuleAccount,
 		},
 		{

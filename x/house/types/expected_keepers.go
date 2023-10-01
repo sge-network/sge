@@ -14,7 +14,7 @@ type OrderbookKeeper interface {
 	InitiateOrderBookParticipation(ctx sdk.Context, addr sdk.AccAddress, bookUID string,
 		liquidity, fee sdkmath.Int,
 	) (uint64, error)
-	CalcWithdrawalAmount(ctx sdk.Context, depositorAddress string, marketUID string,
+	CalcWithdrawalAmount(ctx sdk.Context, depositorAddress, marketUID string,
 		participationIndex uint64, mode WithdrawalMode, totalWithdrawnAmount, amount sdkmath.Int,
 	) (sdkmath.Int, error)
 	WithdrawOrderBookParticipation(ctx sdk.Context, marketUID string,

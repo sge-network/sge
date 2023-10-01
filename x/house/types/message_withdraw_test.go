@@ -3,12 +3,14 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgWithdrawValidateBasic(t *testing.T) {
@@ -22,14 +24,14 @@ func TestMsgWithdrawValidateBasic(t *testing.T) {
 			msg: types.MsgWithdraw{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
 			msg: types.MsgWithdraw{
 				Creator:            sample.AccAddress(),
 				MarketUID:          uuid.NewString(),
-				Amount:             sdk.NewInt(100),
+				Amount:             sdkmath.NewInt(100),
 				Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 				ParticipationIndex: 1,
 				Ticket:             "Ticket",
@@ -69,12 +71,12 @@ func TestMsgWithdrawValidateBasic(t *testing.T) {
 			msg: types.MsgWithdraw{
 				Creator:            sample.AccAddress(),
 				MarketUID:          uuid.NewString(),
-				Amount:             sdk.NewInt(-1),
+				Amount:             sdkmath.NewInt(-1),
 				Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
 				ParticipationIndex: 1,
 				Ticket:             "Ticket",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -95,7 +97,7 @@ func TestNewWithdraw(t *testing.T) {
 			ID:                 1,
 			Creator:            uuid.NewString(),
 			MarketUID:          uuid.NewString(),
-			Amount:             sdk.NewInt(100),
+			Amount:             sdkmath.NewInt(100),
 			ParticipationIndex: 0,
 			Address:            sample.AccAddress(),
 			Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,

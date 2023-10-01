@@ -9,15 +9,16 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 func TestVerifyTicket(t *testing.T) {
 	k, msgk, _, wctx := setupMsgServerAndKeeper(t)
 
-	creator := simappUtil.TestParamUsers["user1"]
+	creator := simapp.TestParamUsers["user1"]
 
 	t.Run("valid", func(t *testing.T) {
 		Token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, struct {
@@ -30,7 +31,7 @@ func TestVerifyTicket(t *testing.T) {
 				IssuedAt:  jwt.NewNumericDate(time.Now()),
 			},
 		})
-		tkn, err := Token.SignedString(&simappUtil.TestOVMPrivateKeys[0])
+		tkn, err := Token.SignedString(&simapp.TestOVMPrivateKeys[0])
 		require.Nil(t, err)
 
 		err = k.VerifyTicket(wctx, tkn)
@@ -66,7 +67,7 @@ func TestVerifyTicket(t *testing.T) {
 func TestVerifyTicketUnmarshal(t *testing.T) {
 	k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
-	creator := simappUtil.TestParamUsers["user1"]
+	creator := simapp.TestParamUsers["user1"]
 
 	Pub, Pri, err := ed25519.GenerateKey(rand.Reader)
 	require.Nil(t, err)

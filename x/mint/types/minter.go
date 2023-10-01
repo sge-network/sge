@@ -84,7 +84,7 @@ func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
 // NextPhaseProvisions returns the phase provisions based on current total
 // supply and inflation rate.
-func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkmath.Int, phase Phase) sdk.Dec {
+func (m Minter) NextPhaseProvisions(totalSupply, excludeAmount sdkmath.Int, phase Phase) sdk.Dec {
 	// calculate annual provisions as normal
 	annualProvisions := m.Inflation.MulInt(totalSupply.Sub(excludeAmount))
 

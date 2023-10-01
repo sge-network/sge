@@ -4,14 +4,17 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/status"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/sge-network/sge/testutil/network"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
+
 	"github.com/sge-network/sge/x/ovm/client/cli"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/status"
 )
 
 func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault) {
@@ -20,7 +23,7 @@ func networkWithPublicKeys(t *testing.T) (*network.Network, *types.KeyVault) {
 	state := types.GenesisState{}
 	require.NoError(t, cfg.Codec.UnmarshalJSON(cfg.GenesisState[types.ModuleName], &state))
 
-	pubkeys := simappUtil.GenerateOvmPublicKeys(types.MinPubKeysCount)
+	pubkeys := simapp.GenerateOvmPublicKeys(types.MinPubKeysCount)
 
 	state.KeyVault = types.KeyVault{
 		PublicKeys: pubkeys,

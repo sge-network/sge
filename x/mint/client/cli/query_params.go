@@ -3,10 +3,12 @@ package cli
 import (
 	"context"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/sge-network/sge/x/mint/types"
-	"github.com/spf13/cobra"
 )
 
 // GetCmdQueryParams returns the cmd function of params

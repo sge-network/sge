@@ -1,12 +1,14 @@
 package cli
 
 import (
+	"github.com/spf13/cobra"
+
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/spf13/cobra"
 )
 
 // CmdWager implements a command to place and store a single bet
@@ -22,7 +24,7 @@ func CmdWager() *cobra.Command {
 			argAmount := args[1]
 			argTicket := args[2]
 
-			argAmountCosmosInt, ok := sdk.NewIntFromString(argAmount)
+			argAmountCosmosInt, ok := sdkmath.NewIntFromString(argAmount)
 			if !ok {
 				return types.ErrInvalidAmount
 			}
