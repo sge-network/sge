@@ -32,7 +32,7 @@ func (k msgServer) Wager(
 
 	bet := types.NewBet(msg.Creator, msg.Props, payload.OddsType, payload.SelectedOdds)
 
-	if err := k.Keeper.Wager(ctx, bet); err != nil {
+	if err := k.Keeper.Wager(ctx, bet, payload.OddsMap()); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInWager, "%s", err)
 	}
 

@@ -19,4 +19,6 @@ message WagerTicketPayload {
   // odds_type is the type of odds that are going to be placed
   // such as decimal, fraction, moneyline.
   sgenetwork.sge.bet.OddsType odds_type = 3;
+  // all odds for the selected market.
+  repeated BetOddsCompact all_odds = 4;
 }

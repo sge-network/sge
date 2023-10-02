@@ -33,3 +33,23 @@ message BetOdds {
     (gogoproto.nullable) = false
   ];
 }
+
+// BetOddsCompact is the compact bet odd type for all odds.
+message BetOddsCompact {
+  // uid is universal unique identifier of odds.
+  // Required | Unique | uuid-v4 or code
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
+  // max_loss_multiplier is the factor for calculating max loss for given odds
+  string max_loss_multiplier = 2 [
+    (gogoproto.customname) = "MaxLossMultiplier",
+    (gogoproto.jsontag) = "max_loss_multiplier",
+    json_name = "max_loss_multiplier",
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+}

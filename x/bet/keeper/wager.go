@@ -9,7 +9,7 @@ import (
 )
 
 // Wager stores a new bet in KVStore
-func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet) error {
+func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types.BetOddsCompact) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
@@ -23,6 +23,16 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet) error {
 	// check if selected odds is valid
 	if !market.HasOdds(bet.OddsUID) {
 		return types.ErrOddsUIDNotExist
+	}
+
+	if len(market.Odds) != len(betOdds) {
+		return types.ErrInsufficientOdds
+	}
+
+	for _, odd := range market.Odds {
+		if _, ok := betOdds[odd.UID]; !ok {
+			return sdkerrors.Wrapf(types.ErrOddsUIDNotExist, "%s", odd.UID)
+		}
 	}
 
 	// check minimum bet amount allowed
@@ -47,7 +57,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet) error {
 
 	betFulfillment, err := k.orderbookKeeper.ProcessWager(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddress, bet.Fee, bet.OddsType, bet.OddsValue, betID,
+		bettorAddress, bet.Fee, bet.OddsType, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
 	)
 	if err != nil {
 		return sdkerrors.Wrapf(types.ErrInOBWagerProcessing, "%s", err)

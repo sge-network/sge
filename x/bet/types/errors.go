@@ -45,6 +45,7 @@ var (
 	ErrBettorAddressNotEqualToCreator       = sdkerrors.Register(ModuleName, 2035, "provided bettor address is not equal to bet owner")
 	ErrMaxLossMultiplierCanNotBeZero        = sdkerrors.Register(ModuleName, 2036, "max loss multiplier cannot be nil or zero")
 	ErrMaxLossMultiplierCanNotBeMoreThanOne = sdkerrors.Register(ModuleName, 2037, "max loss multiplier cannot be more than one")
+	ErrInsufficientOdds                     = sdkerrors.Register(ModuleName, 2038, "market odds length not same as odds sent in wager")
 )
 
 // x/bet module sentinel error text
