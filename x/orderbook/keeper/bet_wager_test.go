@@ -162,10 +162,10 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 
 	defaultBetAmount := sdk.NewInt(400)
 
-	betOdds := make(map[string]*bettypes.BetOdds)
+	betOdds := make(map[string]*bettypes.BetOddsCompact)
 	var oddUIDS []string
 	for _, odd := range ts.market.Odds {
-		betOdds[odd.UID] = &bettypes.BetOdds{UID: odd.UID, MarketUID: ts.market.UID, Value: ts.market.Odds[0].UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")}
+		betOdds[odd.UID] = &bettypes.BetOddsCompact{UID: odd.UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")}
 		oddUIDS = append(oddUIDS, odd.UID)
 	}
 
@@ -305,7 +305,7 @@ func (ts *testBetSuite) placeTestBet(
 	amount sdkmath.Int,
 	fee sdkmath.Int,
 	expErr error,
-	odds map[string]*bettypes.BetOdds,
+	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{

@@ -60,7 +60,7 @@ func TestBetMsgServerWager(t *testing.T) {
 			"iat":           1111111111,
 			"selected_odds": selectedBetOdds,
 			"kyc_data":      testKyc,
-			"odds":          testBetOdds,
+			"all_odds":      testBetOdds,
 		}
 		wagerTicket, err := createJwtTicket(wagerClaim)
 		require.Nil(t, err)
@@ -90,7 +90,7 @@ func TestBetMsgServerWager(t *testing.T) {
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
 			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
-			"odds":          testBetOdds,
+			"all_odds":      testBetOdds,
 		}
 		wagerTicket, err := createJwtTicket(wagerClaim)
 		require.Nil(t, err)
@@ -120,7 +120,7 @@ func TestBetMsgServerWager(t *testing.T) {
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
 			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
-			"odds":          testBetOdds,
+			"all_odds":      testBetOdds,
 		}
 		wagerTicket, err := createJwtTicket(wagerClaim)
 		require.Nil(t, err)

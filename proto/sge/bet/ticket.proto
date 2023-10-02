@@ -20,5 +20,5 @@ message WagerTicketPayload {
   // such as decimal, fraction, moneyline.
   sgenetwork.sge.bet.OddsType odds_type = 3;
   // all odds for the selected market.
-  repeated BetOdds odds = 4;
+  repeated BetOddsCompact all_odds = 4;
 }

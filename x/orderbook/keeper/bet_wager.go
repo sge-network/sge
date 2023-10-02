@@ -23,7 +23,7 @@ func (k Keeper) ProcessWager(
 	betFee sdkmath.Int,
 	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
-	odds map[string]*bettypes.BetOdds,
+	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
 ) ([]*bettypes.BetFulfillment, error) {
 	// get book data by its id
@@ -197,7 +197,7 @@ func (k Keeper) initFulfillmentInfo(
 	oddsVal string,
 	maxLossMultiplier sdk.Dec,
 	book *types.OrderBook,
-	odds map[string]*bettypes.BetOdds,
+	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
 ) (
 	fInfo fulfillmentInfo,
@@ -454,7 +454,7 @@ type fulfillmentInfo struct {
 	inProcessItem           fulfillmentItem
 	secondaryProcessItem    fulfillmentItem
 	fulfillments            []*bettypes.BetFulfillment
-	betOdds                 map[string]*bettypes.BetOdds
+	betOdds                 map[string]*bettypes.BetOddsCompact
 	oddUIDS                 []string
 }
 

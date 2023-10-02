@@ -190,10 +190,7 @@ func (k Keeper) CalcWithdrawalAmount(
 	}
 
 	bpE, err := k.GetExposureByOrderBookAndParticipationIndex(ctx, marketUID, participationIndex)
-	if err != nil {
-		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%d", participationIndex)
-	}
-	if len(bpE) == 0 {
+	if err != nil || len(bpE) == 0 {
 		return sdkmath.Int{}, sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%d", participationIndex)
 	}
 	if bpE[0].Round != 1 {

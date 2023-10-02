@@ -21,7 +21,7 @@ func TestWager(t *testing.T) {
 		err           error
 		market        *markettypes.Market
 		activeBetOdds []*types.BetOdds
-		betOdds       map[string]*types.BetOdds
+		betOdds       map[string]*types.BetOddsCompact
 	}{
 		{
 			desc: "invalid creator address",
@@ -29,9 +29,9 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "notExistMarketUID",
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
@@ -42,9 +42,9 @@ func TestWager(t *testing.T) {
 				MarketUID: "notExistMarketUID",
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrNoMatchingMarket,
 		},
@@ -59,9 +59,9 @@ func TestWager(t *testing.T) {
 				MarketUID: "uid_inactive",
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrInactiveMarket,
 		},
@@ -76,9 +76,9 @@ func TestWager(t *testing.T) {
 				MarketUID: "uid_declared",
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrInactiveMarket,
 		},
@@ -94,9 +94,9 @@ func TestWager(t *testing.T) {
 				MarketUID: "uid_expired",
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrEndTSIsPassed,
 		},
@@ -124,9 +124,9 @@ func TestWager(t *testing.T) {
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrOddsUIDNotExist,
 		},
@@ -154,9 +154,9 @@ func TestWager(t *testing.T) {
 				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrBetAmountIsLow,
 		},
@@ -195,9 +195,9 @@ func TestWager(t *testing.T) {
 				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			betOdds: map[string]*types.BetOdds{
-				"odds1": {UID: "odds1", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
-				"odds2": {UID: "odds2", MarketUID: "uid_success", Value: "5", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 		},
 	}

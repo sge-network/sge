@@ -14,12 +14,12 @@ func (payload *WagerTicketPayload) Validate(creator string) error {
 		return ErrOddsDataNotFound
 	}
 
-	if err := payload.ValidateOdds(*payload.SelectedOdds); err != nil {
+	if err := payload.ValidateOdds(); err != nil {
 		return sdkerrors.Wrapf(err, "%s", payload.SelectedOdds.UID)
 	}
 
-	for _, odd := range payload.Odds {
-		if err := payload.ValidateOdds(*odd); err != nil {
+	for _, odd := range payload.AllOdds {
+		if err := payload.ValidateCompactOdds(*odd); err != nil {
 			return sdkerrors.Wrapf(err, "%s", odd.UID)
 		}
 	}
@@ -36,17 +36,33 @@ func (payload *WagerTicketPayload) Validate(creator string) error {
 	return nil
 }
 
-func (payload *WagerTicketPayload) ValidateOdds(odds BetOdds) error {
-	if !utils.IsValidUID(odds.MarketUID) {
+func (payload *WagerTicketPayload) ValidateOdds() error {
+	if !utils.IsValidUID(payload.SelectedOdds.MarketUID) {
 		return ErrInvalidMarketUID
 	}
 
-	if !utils.IsValidUID(odds.UID) {
+	if !utils.IsValidUID(payload.SelectedOdds.UID) {
 		return ErrInvalidOddsUID
 	}
 
-	if len(strings.TrimSpace(odds.Value)) == 0 {
+	if len(strings.TrimSpace(payload.SelectedOdds.Value)) == 0 {
 		return ErrEmptyOddsValue
+	}
+
+	if payload.SelectedOdds.MaxLossMultiplier.IsNil() || payload.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+		return ErrMaxLossMultiplierCanNotBeZero
+	}
+
+	if payload.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+		return ErrMaxLossMultiplierCanNotBeMoreThanOne
+	}
+
+	return nil
+}
+
+func (payload *WagerTicketPayload) ValidateCompactOdds(odds BetOddsCompact) error {
+	if !utils.IsValidUID(odds.UID) {
+		return ErrInvalidOddsUID
 	}
 
 	if odds.MaxLossMultiplier.IsNil() || odds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
@@ -60,9 +76,9 @@ func (payload *WagerTicketPayload) ValidateOdds(odds BetOdds) error {
 	return nil
 }
 
-func (payload *WagerTicketPayload) OddsMap() map[string]*BetOdds {
-	oddMap := make(map[string]*BetOdds)
-	for _, odd := range payload.Odds {
+func (payload *WagerTicketPayload) OddsMap() map[string]*BetOddsCompact {
+	oddMap := make(map[string]*BetOddsCompact)
+	for _, odd := range payload.AllOdds {
 		oddMap[odd.UID] = odd
 	}
 	return oddMap

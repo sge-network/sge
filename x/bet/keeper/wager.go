@@ -9,7 +9,7 @@ import (
 )
 
 // Wager stores a new bet in KVStore
-func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types.BetOdds) error {
+func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types.BetOddsCompact) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)

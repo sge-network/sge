@@ -46,7 +46,7 @@ type OrderbookKeeper interface {
 		oddsType OddsType,
 		oddsVal string,
 		betID uint64,
-		odds map[string]*BetOdds,
+		odds map[string]*BetOddsCompact,
 		oddUIDS []string,
 	) ([]*BetFulfillment, error)
 	RefundBettor(
