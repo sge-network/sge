@@ -93,6 +93,7 @@ func (m *BetOdds) GetValue() string {
 	return ""
 }
 
+// BetOddsCompact is the compact bet odd type for all odds.
 type BetOddsCompact struct {
 	// uid is universal unique identifier of odds.
 	// Required | Unique | uuid-v4 or code
