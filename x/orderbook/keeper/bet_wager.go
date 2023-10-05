@@ -167,7 +167,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		k.SetOrderBookParticipation(ctx, fInfo.inProcessItem.participation)
 
 		// if there are no more exposures to be filled
-		if fInfo.inProcessItem.allExposureFulfilled() {
+		if fInfo.inProcessItem.allExposureFulfilled() && fInfo.inProcessItem.participation.IsEligibleForNextRoundPreLiquidityReduction() {
 			err := k.refreshQueueAndState(ctx, fInfo, book)
 			if err != nil {
 				return err
