@@ -152,12 +152,14 @@ func (k Keeper) fulfillBetByParticipationQueue(
 
 		if setFulfilled {
 			fInfo.setItemFulfilledAndRemove()
-			eUpdate, err := fInfo.checkFullfillmentForOtherOdds(requeThreshold)
-			if err != nil {
-				return err
-			}
-			for _, exposure := range eUpdate {
-				k.SetParticipationExposure(ctx, exposure)
+			if fInfo.inProcessItem.participation.IsEligibleForNextRoundPreLiquidityReduction() {
+				eUpdate, err := fInfo.checkFullfillmentForOtherOdds(requeThreshold)
+				if err != nil {
+					return err
+				}
+				for _, exposure := range eUpdate {
+					k.SetParticipationExposure(ctx, exposure)
+				}
 			}
 		}
 
@@ -465,6 +467,9 @@ func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkma
 
 	// check if other exposures are fulfilled according to new max loss multipliers
 	for _, oddUID := range fInfo.oddUIDS {
+		if oddUID == fInfo.oddsUID {
+			continue
+		}
 		exposure, ok := fInfo.inProcessItem.allExposures[oddUID]
 		if !ok {
 			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s %d", oddUID, fInfo.inProcessItem.participation.Index)
