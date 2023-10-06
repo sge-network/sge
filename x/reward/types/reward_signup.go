@@ -30,7 +30,7 @@ func (sur SignUpReward) VaidateDefinitions(campaign Campaign) error {
 // CalculateDistributions parses ticket payload and returns the distribution list of signup reward.
 func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	definitions Definitions, ticket string,
-) ([]Distribution, error) {
+) (Distributions, error) {
 	var payload ApplySignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
@@ -42,7 +42,7 @@ func (sur SignUpReward) CalculateDistributions(goCtx context.Context, ctx sdk.Co
 		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
 	}
 
-	return []Distribution{
+	return Distributions{
 		NewDistribution(
 			payload.Receiver.Addr,
 			NewAllocation(

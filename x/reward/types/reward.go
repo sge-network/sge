@@ -6,9 +6,13 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	yaml "gopkg.in/yaml.v2"
 )
 
-type Definitions []Definition
+type (
+	Definitions   []Definition
+	Distributions []Distribution
+)
 
 // RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
 type RewardFactoryKeepers struct {
@@ -20,7 +24,7 @@ type RewardFactoryKeepers struct {
 type IRewardFactory interface {
 	VaidateDefinitions(campaign Campaign) error
 	CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-		definitions Definitions, ticket string) ([]Distribution, error)
+		definitions Definitions, ticket string) (Distributions, error)
 }
 
 // NewDistribution created new distribution object.
@@ -50,4 +54,12 @@ func (d *Definition) ValidateBasic(blockTime uint64) error {
 		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", d.UnlockTS)
 	}
 	return nil
+}
+
+func (ds Distributions) String() string {
+	out, err := yaml.Marshal(ds)
+	if err != nil {
+		panic(err)
+	}
+	return string(out)
 }

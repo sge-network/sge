@@ -64,6 +64,15 @@ func (msg *MsgCreateCampaign) ValidateBasic() error {
 	return nil
 }
 
+// EmitEvent emits the event for the message success.
+func (msg *MsgCreateCampaign) EmitEvent(ctx *sdk.Context, uid string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(TypeMsgCreateCampaign, msg.Creator,
+		sdk.NewAttribute(attributeKeyUID, uid),
+	)
+	emitter.Emit()
+}
+
 var _ sdk.Msg = &MsgUpdateCampaign{}
 
 func NewMsgUpdateCampaign(
@@ -114,4 +123,13 @@ func (msg *MsgUpdateCampaign) ValidateBasic() error {
 	}
 
 	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgUpdateCampaign) EmitEvent(ctx *sdk.Context, uid string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(TypeMsgUpdateCampaign, msg.Creator,
+		sdk.NewAttribute(attributeKeyUID, uid),
+	)
+	emitter.Emit()
 }

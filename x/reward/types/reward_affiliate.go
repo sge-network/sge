@@ -30,7 +30,7 @@ func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
 // CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
 func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	definitions Definitions, ticket string,
-) ([]Distribution, error) {
+) (Distributions, error) {
 	var payload ApplyAffiliationRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
@@ -42,7 +42,7 @@ func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx s
 		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
 	}
 
-	return []Distribution{
+	return Distributions{
 		NewDistribution(
 			payload.Receiver.Addr,
 			NewAllocation(

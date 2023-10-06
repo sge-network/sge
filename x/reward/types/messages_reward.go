@@ -63,3 +63,13 @@ func (msg *MsgApplyReward) ValidateBasic() error {
 
 	return nil
 }
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgApplyReward) EmitEvent(ctx *sdk.Context, campaignUID string, distributions Distributions) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(TypeMsgApplyReward, msg.Creator,
+		sdk.NewAttribute(attributeKeyCampaignUID, campaignUID),
+		sdk.NewAttribute(attributeKeyDistributions, distributions.String()),
+	)
+	emitter.Emit()
+}

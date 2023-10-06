@@ -47,5 +47,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 
 	k.UpdateCampaignPool(ctx, campaign, distribution)
 
+	msg.EmitEvent(&ctx, msg.CampaignUid, distribution)
+
 	return &types.MsgApplyRewardResponse{}, nil
 }

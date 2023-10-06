@@ -32,7 +32,7 @@ func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
 // CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.
 func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	definitions Definitions, ticket string,
-) ([]Distribution, error) {
+) (Distributions, error) {
 	var payload ApplyNoLossBetsRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
@@ -59,7 +59,7 @@ func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sd
 		}
 	}
 
-	return []Distribution{
+	return Distributions{
 		NewDistribution(
 			payload.Receiver.Addr,
 			NewAllocation(

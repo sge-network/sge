@@ -71,6 +71,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 
 	k.SetCampaign(ctx, campaign)
 
+	msg.EmitEvent(&ctx, msg.Uid)
+
 	return &types.MsgCreateCampaignResponse{}, nil
 }
 
@@ -103,6 +105,8 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	valFound.EndTS = payload.EndTs
 
 	k.SetCampaign(ctx, valFound)
+
+	msg.EmitEvent(&ctx, msg.Uid)
 
 	return &types.MsgUpdateCampaignResponse{}, nil
 }

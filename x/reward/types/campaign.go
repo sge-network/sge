@@ -9,7 +9,7 @@ func NewCampaign(
 	creator, funderAddres, uID string,
 	startTS, endTS uint64,
 	rewardType RewardType,
-	rewardDefs []Definition,
+	rewardDefs Definitions,
 	pool Pool,
 ) Campaign {
 	return Campaign{
@@ -48,7 +48,7 @@ func (c *Campaign) CheckExpiration(blockTime uint64) error {
 }
 
 // CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the rewards.
-func (c *Campaign) CheckPoolBalance(distributions []Distribution) error {
+func (c *Campaign) CheckPoolBalance(distributions Distributions) error {
 	totalAmount := sdkmath.ZeroInt()
 	for _, d := range distributions {
 		totalAmount.Add(d.Allocation.Amount)
