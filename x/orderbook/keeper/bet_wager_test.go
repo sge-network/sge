@@ -165,7 +165,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	betOdds := make(map[string]*bettypes.BetOddsCompact)
 	var oddUIDS []string
 	for _, odd := range ts.market.Odds {
-		betOdds[odd.UID] = &bettypes.BetOddsCompact{UID: odd.UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")}
+		betOdds[odd.UID] = &bettypes.BetOddsCompact{UID: odd.UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.3")}
 		oddUIDS = append(oddUIDS, odd.UID)
 	}
 

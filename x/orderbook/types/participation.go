@@ -142,6 +142,13 @@ func (p *OrderBookParticipation) IsEligibleForNextRound() bool {
 	return p.CurrentRoundLiquidity.GT(sdk.ZeroInt())
 }
 
+// IsEligibleForNextRound determines if the participation has enough
+// liquidity to be used in the next round or not
+func (p *OrderBookParticipation) IsEligibleForNextRoundPreLiquidityReduction() bool {
+	maxLoss := sdk.MaxInt(sdk.ZeroInt(), p.CurrentRoundMaxLoss)
+	return p.CurrentRoundLiquidity.Sub(maxLoss).GT(sdk.ZeroInt())
+}
+
 // TrimCurrentRoundLiquidity subtracts the max loss from the current round liquidity.
 func (p *OrderBookParticipation) TrimCurrentRoundLiquidity() {
 	maxLoss := sdk.MaxInt(sdk.ZeroInt(), p.CurrentRoundMaxLoss)
