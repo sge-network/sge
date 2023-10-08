@@ -369,6 +369,10 @@ func newTestBetSuite2(t *testing.T) testBetSuite {
 
 	betFee := sdk.NewInt(10)
 
+	params := tApp.HouseKeeper.GetParams(ctx)
+	params.HouseParticipationFee = sdk.NewDec(0)
+	tApp.HouseKeeper.SetParams(ctx, params)
+
 	marketUID := uuid.NewString()
 	market := markettypes.Market{
 		UID:     marketUID,
@@ -475,24 +479,23 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 	)
 	require.NoError(ts.t, err)
 
-	// to print pretty objects
+	// // to print pretty objects
 	// for _, v := range betFulfillment {
 	// 	fmt.Println(v)
 	// }
 	require.Equal(ts.t,
 		[]*bettypes.BetFulfillment{
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 1, BetAmount: sdkmath.NewInt(2281908), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 2, BetAmount: sdkmath.NewInt(2281909), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 3, BetAmount: sdkmath.NewInt(2281909), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 4, BetAmount: sdkmath.NewInt(2281910), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 5, BetAmount: sdkmath.NewInt(2281910), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 6, BetAmount: sdkmath.NewInt(2281910), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 7, BetAmount: sdkmath.NewInt(2281910), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 8, BetAmount: sdkmath.NewInt(2281911), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 9, BetAmount: sdkmath.NewInt(2281912), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 10, BetAmount: sdkmath.NewInt(2281912), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 11, BetAmount: sdkmath.NewInt(2281913), PayoutProfit: sdkmath.NewInt(7792718)},
-			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 12, BetAmount: sdkmath.NewInt(253534), PayoutProfit: sdkmath.NewInt(865883)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 1, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 2, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 3, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 4, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 5, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 6, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 7, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 8, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 9, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 10, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 11, BetAmount: sdkmath.NewInt(13), PayoutProfit: sdkmath.NewInt(31)},
 		},
 		betFulfillment)
 }
