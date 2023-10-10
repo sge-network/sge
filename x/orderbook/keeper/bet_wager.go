@@ -136,6 +136,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			if err != nil {
 				return err
 			}
+
 			// if the available liquidity is less than remaining payout profit that
 			// need to be paid, we should use all of available liquidity pull for the calculations.
 			k.fulfill(ctx, fInfo, betAmountToFulfill, fInfo.inProcessItem.availableLiquidity)
@@ -147,6 +148,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			if fInfo.inProcessItem.isLiquidityLessThanThreshold(requeThreshold, fInfo.payoutProfit.TruncateInt()) {
 				setFulfilled = true
 			}
+
 			k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt())
 		}
 

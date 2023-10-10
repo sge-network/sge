@@ -73,7 +73,7 @@ func CalculateBetAmountInt(
 
 	// we need for the bet amount to be of type sdkmath.Int
 	// so the truncation in inevitable
-	betAmount := expectedBetAmountDec.TruncateInt()
+	betAmount := expectedBetAmountDec.RoundInt()
 
 	// save the truncated amount in the calculations for the next loop
 	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(sdk.NewDecFromInt(betAmount)))
