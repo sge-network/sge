@@ -479,10 +479,6 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 	)
 	require.NoError(ts.t, err)
 
-	// // to print pretty objects
-	// for _, v := range betFulfillment {
-	// 	fmt.Println(v)
-	// }
 	require.Equal(ts.t,
 		[]*bettypes.BetFulfillment{
 			{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 1, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
