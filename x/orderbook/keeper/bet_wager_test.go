@@ -359,12 +359,12 @@ func (ts *testBetSuite) placeTestBet(
 
 // 100 Deposits case
 
-func TestWager2(t *testing.T) {
-	ts := newTestBetSuite2(t)
+func TestWagerLargeNumbers(t *testing.T) {
+	ts := newTestBetSuiteForLargeNumbers(t)
 	ts.bulkDepositPlaceBetsAndTest()
 }
 
-func newTestBetSuite2(t *testing.T) testBetSuite {
+func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	betFee := sdk.NewInt(10)
