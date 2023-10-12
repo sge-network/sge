@@ -1,5 +1,6 @@
 <!-- docs/_sidebar.md -->
 
+* [Home](/)
 * [About SGE Network](../../README.md)
 * [Modules](../README.md)
   * [Bet](../Bet/01_Overview.md)
