@@ -1,6 +1,6 @@
 <!-- docs/_sidebar.md -->
 
-* [About Sge Network](README.md)
+* [About Sge Network](../README.md)
 * [Modules](specs/README.md)
   * [Bet](specs/Bet/01_Overview.md)
   * [OVM](specs/OVM/01_Overview.md)

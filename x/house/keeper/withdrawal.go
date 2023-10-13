@@ -95,7 +95,5 @@ func (k Keeper) Withdraw(
 	deposit.TotalWithdrawalAmount = deposit.TotalWithdrawalAmount.Add(withdrawableAmount)
 	k.SetDeposit(ctx, deposit)
 
-	k.orderbookKeeper.PublishOrderBookEvent(ctx, marketUID)
-
 	return withdrawalID, nil
 }
