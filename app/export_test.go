@@ -31,7 +31,7 @@ func TestExport(t *testing.T) {
 			require.NoError(t, err)
 
 			tApp.Commit()
-			_, err = tApp.ExportAppStateAndValidators(tc.forZeroHeight, []string{})
+			_, err = tApp.ExportAppStateAndValidators(tc.forZeroHeight, []string{}, []string{})
 			require.NoError(t, err, "ExportAppStateAndValidators should not have an error")
 		})
 	}

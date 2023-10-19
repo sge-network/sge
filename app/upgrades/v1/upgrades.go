@@ -39,7 +39,7 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		setCommissionRate(&keepers.StakingKeeper, ctx)
+		setCommissionRate(keepers.StakingKeeper, ctx)
 
 		return mm.RunMigrations(ctx, configurator, fromVM)
 	}

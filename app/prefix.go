@@ -2,31 +2,27 @@ package app
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/params"
-)
-
-const (
-	// AccountAddressPrefix prefix used for generating account address
-	AccountAddressPrefix = "sge"
 )
 
 var (
 	// AccountPubKeyPrefix used for generating public key
-	AccountPubKeyPrefix = AccountAddressPrefix + "pub"
+	AccountPubKeyPrefix = keepers.AccountAddressPrefix + "pub"
 	// ValidatorAddressPrefix used for generating validator address
-	ValidatorAddressPrefix = AccountAddressPrefix + "valoper"
+	ValidatorAddressPrefix = keepers.AccountAddressPrefix + "valoper"
 	// ValidatorPubKeyPrefix used for generating validator public key
-	ValidatorPubKeyPrefix = AccountAddressPrefix + "valoperpub"
+	ValidatorPubKeyPrefix = keepers.AccountAddressPrefix + "valoperpub"
 	// ConsNodeAddressPrefix used for generating consensus node address
-	ConsNodeAddressPrefix = AccountAddressPrefix + "valcons"
+	ConsNodeAddressPrefix = keepers.AccountAddressPrefix + "valcons"
 	// ConsNodePubKeyPrefix used for generating consensus node public key
-	ConsNodePubKeyPrefix = AccountAddressPrefix + "valconspub"
+	ConsNodePubKeyPrefix = keepers.AccountAddressPrefix + "valconspub"
 )
 
 // SetConfig sets prefixes configuration
 func SetConfig() {
 	config := sdk.GetConfig()
-	config.SetBech32PrefixForAccount(AccountAddressPrefix, AccountPubKeyPrefix)
+	config.SetBech32PrefixForAccount(keepers.AccountAddressPrefix, AccountPubKeyPrefix)
 	config.SetBech32PrefixForValidator(ValidatorAddressPrefix, ValidatorPubKeyPrefix)
 	config.SetBech32PrefixForConsensusNode(ConsNodeAddressPrefix, ConsNodePubKeyPrefix)
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/google/uuid"
@@ -15,7 +16,6 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 )
 
 func networkWithParticipationBetObjects(t *testing.T, n int) (*network.Network, []types.ParticipationBetPair) {

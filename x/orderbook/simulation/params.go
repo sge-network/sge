@@ -21,19 +21,19 @@ const (
 
 // ParamChanges defines the parameters that can be modified by param change proposals
 // on the simulation
-func ParamChanges(_ *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{
-		simulation.NewSimParamChange(types.ModuleName, keyBatchSettlementCount,
+func ParamChanges(_ *rand.Rand) []simtypes.LegacyParamChange {
+	return []simtypes.LegacyParamChange{
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyBatchSettlementCount,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%d\"", GenBatchSettlementCount(r))
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyMaxOrderBookParticipations,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyMaxOrderBookParticipations,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%d\"", GenMaxOrderBookParticipations(r))
 			},
 		),
-		simulation.NewSimParamChange(types.ModuleName, keyRequeueThreshold,
+		simulation.NewSimLegacyParamChange(types.ModuleName, keyRequeueThreshold,
 			func(r *rand.Rand) string {
 				return fmt.Sprintf("\"%d\"", GenRequeueThreshold(r))
 			},

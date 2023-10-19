@@ -2,29 +2,14 @@
 
 set -eo pipefail
 
-# get protoc executions
-go get github.com/cosmos/gogoproto@v1.4.11 2>/dev/null
-
-# get cosmos sdk from github
-go get github.com/cosmos/cosmos-sdk@v0.46.14 2>/dev/null
-
 echo "Generating gogo proto code"
 cd proto
-proto_dirs=$(find ./sge -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
-for dir in $proto_dirs; do
-  for file in $(find "${dir}" -maxdepth 1 -name '*.proto'); do
-    if grep go_package $file &>/dev/null; then
-      buf generate --template buf.gen.gogo.yaml $file
-    fi
-  done
-done
-
+buf mod update
 cd ..
+buf generate
 
 # move proto files to the right places
-#
-# Note: Proto files are suffixed with the current binary version.
-cp -r github.com/sge-network/sge/* ./
-rm -rf github.com
+cp -r ./github.com/sge-network/sge/x/* x/
+cp -r ./github.com/sge-network/sge/types/* types/
 
-go mod tidy -compat=1.19
+rm -rf ./github.com

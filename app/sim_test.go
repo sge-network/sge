@@ -6,17 +6,18 @@ import (
 	"os"
 	"testing"
 
+	sdksimapp "cosmossdk.io/simapp"
+	dbm "github.com/cometbft/cometbft-db"
+	"github.com/cometbft/cometbft/libs/log"
+	"github.com/cometbft/cometbft/libs/rand"
 	"github.com/cosmos/cosmos-sdk/baseapp"
-	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
-	"github.com/cosmos/cosmos-sdk/simapp/helpers"
 	"github.com/cosmos/cosmos-sdk/store"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	simulation2 "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	simcli "github.com/cosmos/cosmos-sdk/x/simulation/client/cli"
 	"github.com/sge-network/sge/app"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/libs/rand"
-	dbm "github.com/tendermint/tm-db"
 )
 
 // SimAppChainID hardcoded chainID for simulation
@@ -25,13 +26,13 @@ const (
 )
 
 func init() {
-	sdksimapp.GetSimulatorFlags()
+	simcli.GetSimulatorFlags()
 }
 
 // Profile with:
 // /usr/local/go/bin/go test -benchmem -run=^$ github.com/cosmos/cosmos-sdk/SgeApp -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
 func BenchmarkFullAppSimulation(b *testing.B) {
-	config, db, dir, logger, _, err := sdksimapp.SetupSimulation("goleveldb-app-sim", "Simulation")
+	config, db, dir, logger, _, err := simtestutil.SetupSimulation("goleveldb-app-sim", "Simulation")
 	if err != nil {
 		b.Fatalf("simulation setup failed: %s", err.Error())
 	}
@@ -51,9 +52,9 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 		true,
 		map[int64]bool{},
 		app.DefaultNodeHome,
-		sdksimapp.FlagPeriodValue,
+		simcli.FlagPeriodValue,
 		app.MakeEncodingConfig(),
-		sdksimapp.EmptyAppOptions{},
+		simtestutil.EmptyAppOptions{},
 		interBlockCacheOpt(),
 	)
 
@@ -62,16 +63,16 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 		b,
 		os.Stdout,
 		app.BaseApp,
-		sdksimapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+		simtestutil.AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simulation2.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
-		sdksimapp.SimulationOperations(app, app.AppCodec(), config),
+		simtestutil.SimulationOperations(app, app.AppCodec(), config),
 		app.ModuleAccountAddrs(),
 		config,
 		app.AppCodec(),
 	)
 
 	// export state and simParams before the simulation error is checked
-	if err = sdksimapp.CheckExportSimulation(app, config, simParams); err != nil {
+	if err = simtestutil.CheckExportSimulation(app, config, simParams); err != nil {
 		b.Fatal(err)
 	}
 
@@ -80,7 +81,7 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 	}
 
 	if config.Commit {
-		sdksimapp.PrintStats(db)
+		simtestutil.PrintStats(db)
 	}
 }
 
@@ -91,7 +92,7 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 }
 
 func TestAppStateDeterminism(t *testing.T) {
-	if !sdksimapp.FlagEnabledValue {
+	if !simcli.FlagEnabledValue {
 		t.Skip("skipping application simulation")
 	}
 
@@ -100,7 +101,7 @@ func TestAppStateDeterminism(t *testing.T) {
 	config.ExportParamsPath = ""
 	config.OnOperation = false
 	config.AllInvariants = false
-	config.ChainID = helpers.SimAppChainID
+	config.ChainID = sdksimapp.SimAppChainID
 
 	numSeeds := 3
 	numTimesToRunPerSeed := 5
@@ -111,7 +112,7 @@ func TestAppStateDeterminism(t *testing.T) {
 
 		for j := 0; j < numTimesToRunPerSeed; j++ {
 			var logger log.Logger
-			if sdksimapp.FlagVerboseValue {
+			if simcli.FlagVerboseValue {
 				logger = log.TestingLogger()
 			} else {
 				logger = log.NewNopLogger()
@@ -125,9 +126,9 @@ func TestAppStateDeterminism(t *testing.T) {
 				true,
 				map[int64]bool{},
 				app.DefaultNodeHome,
-				sdksimapp.FlagPeriodValue,
+				simcli.FlagPeriodValue,
 				app.MakeEncodingConfig(),
-				sdksimapp.EmptyAppOptions{},
+				simtestutil.EmptyAppOptions{},
 				interBlockCacheOpt(),
 			)
 
@@ -140,9 +141,9 @@ func TestAppStateDeterminism(t *testing.T) {
 				t,
 				os.Stdout,
 				app.BaseApp,
-				sdksimapp.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				simtestutil.AppStateFn(app.AppCodec(), app.SimulationManager()),
 				simulation2.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
-				sdksimapp.SimulationOperations(app, app.AppCodec(), config),
+				simtestutil.SimulationOperations(app, app.AppCodec(), config),
 				app.ModuleAccountAddrs(),
 				config,
 				app.AppCodec(),
@@ -150,7 +151,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			require.NoError(t, err)
 
 			if config.Commit {
-				sdksimapp.PrintStats(db)
+				simtestutil.PrintStats(db)
 			}
 
 			appHash := app.LastCommitID().Hash

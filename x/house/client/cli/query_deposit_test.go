@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,7 +17,6 @@ import (
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 )
 
 const testMarketUID = "5db09053-2901-4110-8fb5-c14e21f8d555"
