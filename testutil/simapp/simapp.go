@@ -116,7 +116,6 @@ func SetupWithGenesisAccounts(
 
 	appInstance.InitChain(
 		abci.RequestInitChain{
-			ChainId:         "test-sge",
 			Validators:      validatorUpdates,
 			ConsensusParams: DefaultConsensusParams,
 			AppStateBytes:   stateBytes,
