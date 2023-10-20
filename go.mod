@@ -3,6 +3,7 @@ module github.com/sge-network/sge
 go 1.20
 
 require (
+	cosmossdk.io/api v0.3.1
 	cosmossdk.io/math v1.1.2
 	cosmossdk.io/simapp v0.0.0-20230831152633-2e9e5d6eea24
 	github.com/cometbft/cometbft v0.37.2
@@ -46,7 +47,7 @@ require (
 	github.com/sashamelentyev/interfacebloat v1.1.0 // indirect
 	github.com/sashamelentyev/usestdlibvars v1.20.0 // indirect
 	github.com/sivchari/nosnakecase v1.7.0 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.16.0 // indirect
 	github.com/timonwong/loggercheck v0.9.3 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
@@ -62,7 +63,6 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/iam v1.1.1 // indirect
 	cloud.google.com/go/storage v1.30.1 // indirect
-	cosmossdk.io/api v0.3.1 // indirect
 	cosmossdk.io/core v0.5.1 // indirect
 	cosmossdk.io/depinject v1.0.0-alpha.4 // indirect
 	cosmossdk.io/errors v1.0.0 // indirect

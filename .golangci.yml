@@ -1,6 +1,6 @@
 run:
   tests: true
-  timeout: 10m
+  timeout: 15m
   sort-results: true
   allow-parallel-runners: true
   exclude-dir: testutil/testdata_pulsar

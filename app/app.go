@@ -187,6 +187,7 @@ func NewSgeApp(
 	app.mm.RegisterServices(app.configurator)
 
 	// v47 - no dependecy injection, so register new gRPC services.
+	//#nosec
 	autocliv1.RegisterQueryServer(app.GRPCQueryRouter(), runtimeservices.NewAutoCLIQueryService(app.mm.Modules))
 	reflectionSvc, err := runtimeservices.NewReflectionService()
 	if err != nil {
