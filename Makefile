@@ -115,7 +115,7 @@ endif
 
 check_version:
 ifneq ($(GO_MINOR_VERSION),20)
-	@echo "ERROR: Go version 1.20 is required for this version of SGE. Go 1.20 has changes that are believed to break consensus."
+	@echo "ERROR: Go version 1.20 is required for this version of SGE. Go 1.21 has changes that are believed to break consensus."
 	exit 1
 endif
 
@@ -125,7 +125,7 @@ BUILD_TARGETS := build install
 
 build: BUILD_ARGS=-o $(BUILDDIR)/
 
-$(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
+$(BUILD_TARGETS): go.sum $(BUILDDIR)/
 	GOWORK=off go $@ -mod=readonly $(BUILD_FLAGS) $(BUILD_ARGS) ./...
 
 $(BUILDDIR)/:
