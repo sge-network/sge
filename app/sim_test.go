@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	sdksimapp "cosmossdk.io/simapp"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cometbft/cometbft/libs/rand"
@@ -32,7 +31,14 @@ func init() {
 // Profile with:
 // /usr/local/go/bin/go test -benchmem -run=^$ github.com/cosmos/cosmos-sdk/SgeApp -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
 func BenchmarkFullAppSimulation(b *testing.B) {
-	config, db, dir, logger, _, err := simtestutil.SetupSimulation("goleveldb-app-sim", "Simulation")
+	config := simcli.NewConfigFromFlags()
+	db, dir, logger, _, err := simtestutil.SetupSimulation(
+		config,
+		"goleveldb-app-sim",
+		"Simulation",
+		simcli.FlagVerboseValue,
+		simcli.FlagEnabledValue,
+	)
 	if err != nil {
 		b.Fatalf("simulation setup failed: %s", err.Error())
 	}
@@ -45,7 +51,7 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 		}
 	}()
 
-	app := app.NewSgeApp(
+	sApp := app.NewSgeApp(
 		logger,
 		db,
 		nil,
@@ -62,17 +68,21 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 	_, simParams, simErr := simulation.SimulateFromSeed(
 		b,
 		os.Stdout,
-		app.BaseApp,
-		simtestutil.AppStateFn(app.AppCodec(), app.SimulationManager()),
+		sApp.BaseApp,
+		simtestutil.AppStateFn(
+			sApp.AppCodec(),
+			sApp.SimulationManager(),
+			app.NewDefaultGenesisState(),
+		),
 		simulation2.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
-		simtestutil.SimulationOperations(app, app.AppCodec(), config),
-		app.ModuleAccountAddrs(),
+		simtestutil.SimulationOperations(sApp, sApp.AppCodec(), config),
+		sApp.ModuleAccountAddrs(),
 		config,
-		app.AppCodec(),
+		sApp.AppCodec(),
 	)
 
 	// export state and simParams before the simulation error is checked
-	if err = simtestutil.CheckExportSimulation(app, config, simParams); err != nil {
+	if err = simtestutil.CheckExportSimulation(sApp, config, simParams); err != nil {
 		b.Fatal(err)
 	}
 
@@ -96,12 +106,12 @@ func TestAppStateDeterminism(t *testing.T) {
 		t.Skip("skipping application simulation")
 	}
 
-	config := sdksimapp.NewConfigFromFlags()
+	config := simcli.NewConfigFromFlags()
 	config.InitialBlockHeight = 1
 	config.ExportParamsPath = ""
 	config.OnOperation = false
 	config.AllInvariants = false
-	config.ChainID = sdksimapp.SimAppChainID
+	config.ChainID = SimAppChainID
 
 	numSeeds := 3
 	numTimesToRunPerSeed := 5
@@ -119,7 +129,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			}
 
 			db := dbm.NewMemDB()
-			app := app.NewSgeApp(
+			sApp := app.NewSgeApp(
 				logger,
 				db,
 				nil,
@@ -140,13 +150,17 @@ func TestAppStateDeterminism(t *testing.T) {
 			_, _, err := simulation.SimulateFromSeed(
 				t,
 				os.Stdout,
-				app.BaseApp,
-				simtestutil.AppStateFn(app.AppCodec(), app.SimulationManager()),
+				sApp.BaseApp,
+				simtestutil.AppStateFn(
+					sApp.AppCodec(),
+					sApp.SimulationManager(),
+					app.NewDefaultGenesisState(),
+				),
 				simulation2.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
-				simtestutil.SimulationOperations(app, app.AppCodec(), config),
-				app.ModuleAccountAddrs(),
+				simtestutil.SimulationOperations(sApp, sApp.AppCodec(), config),
+				sApp.ModuleAccountAddrs(),
 				config,
-				app.AppCodec(),
+				sApp.AppCodec(),
 			)
 			require.NoError(t, err)
 
@@ -154,7 +168,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				simtestutil.PrintStats(db)
 			}
 
-			appHash := app.LastCommitID().Hash
+			appHash := sApp.LastCommitID().Hash
 			appHashList[j] = appHash
 
 			if j != 0 {
