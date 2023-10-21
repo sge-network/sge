@@ -40,13 +40,13 @@ func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
 // CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
 func (rfr ReferralReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	definitions Definitions, ticket string,
-) ([]Distribution, error) {
+) (Distributions, error) {
 	var payload ApplyRerferralRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
-	distributions := []Distribution{}
+	distributions := Distributions{}
 	for _, d := range definitions {
 		found := false
 		for _, r := range payload.Receivers {
