@@ -178,7 +178,10 @@ message BetFulfillment {
   ];
 }
 
+// metadata for bet
 message MetaData {
+  // selected_odds_type is metadata for bet
   sgenetwork.sge.bet.OddsType selected_odds_type = 1;
+  // selected_odds_value is metadata for bet
   string selected_odds_value = 2;
 }

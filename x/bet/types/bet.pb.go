@@ -495,9 +495,12 @@ func (m *BetFulfillment) GetParticipationIndex() uint64 {
 	return 0
 }
 
+// metadata for bet
 type MetaData struct {
-	SelectedOddsType  OddsType `protobuf:"varint,1,opt,name=selected_odds_type,json=selectedOddsType,proto3,enum=sgenetwork.sge.bet.OddsType" json:"selected_odds_type,omitempty"`
-	SelectedOddsValue string   `protobuf:"bytes,2,opt,name=selected_odds_value,json=selectedOddsValue,proto3" json:"selected_odds_value,omitempty"`
+	// selected_odds_type is metadata for bet
+	SelectedOddsType OddsType `protobuf:"varint,1,opt,name=selected_odds_type,json=selectedOddsType,proto3,enum=sgenetwork.sge.bet.OddsType" json:"selected_odds_type,omitempty"`
+	// selected_odds_value is metadata for bet
+	SelectedOddsValue string `protobuf:"bytes,2,opt,name=selected_odds_value,json=selectedOddsValue,proto3" json:"selected_odds_value,omitempty"`
 }
 
 func (m *MetaData) Reset()         { *m = MetaData{} }
