@@ -5,6 +5,7 @@ package sgenetwork.sge.bet;
 import "gogoproto/gogo.proto";
 import "sge/type/kyc.proto";
 import "sge/bet/bet_odds.proto";
+import "sge/bet/bet.proto";
 import "sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
@@ -21,4 +22,6 @@ message WagerTicketPayload {
   sgenetwork.sge.bet.OddsType odds_type = 3;
   // all odds for the selected market.
   repeated BetOddsCompact all_odds = 4;
+  // meta is metadata for bet placement
+  MetaData meta = 5;
 }
