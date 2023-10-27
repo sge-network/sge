@@ -32,7 +32,12 @@ func TestDecodeStore(t *testing.T) {
 			MarketUID:         uuid.NewString(),
 			Value:             "100",
 			MaxLossMultiplier: sdk.NewDec(1),
-		})
+		},
+		&types.MetaData{
+			SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+			SelectedOddsValue: "1.5",
+		},
+	)
 
 	betUID := types.UID2ID{
 		UID: bet.UID,
