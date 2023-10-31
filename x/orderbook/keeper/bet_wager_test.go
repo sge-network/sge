@@ -259,7 +259,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		failedWinnerBetID,
 		sdkmath.NewInt(100000000000),
 		ts.betFee,
-		types.ErrInternalProcessingBet,
+		types.ErrInsufficientLiquidityInOrderBook,
 		betOdds,
 		oddUIDS,
 	)

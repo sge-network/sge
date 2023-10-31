@@ -155,7 +155,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	}
 
 	if fInfo.NoMoreLiquidityAvailable() {
-		return sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+		return types.ErrInsufficientLiquidityInOrderBook
 	}
 
 	return nil

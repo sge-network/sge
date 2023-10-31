@@ -24,7 +24,7 @@ var (
 	ErrOrderBookParticipationNotFound     = sdkerrors.Register(ModuleName, 6014, "book participation not found")
 	ErrParticipationExposureNotFound      = sdkerrors.Register(ModuleName, 6015, "participation exposure not found")
 	ErrParticipationExposureAlreadyFilled = sdkerrors.Register(ModuleName, 6016, "participation exposure already filled")
-	ErrInternalProcessingBet              = sdkerrors.Register(ModuleName, 6017, "internal error in processing bet")
+	ErrInsufficientLiquidityInOrderBook   = sdkerrors.Register(ModuleName, 6017, "insufficient liquidity in orderbook")
 	ErrBookParticipationAlreadySettled    = sdkerrors.Register(ModuleName, 6018, "book participation already settled")
 	ErrMismatchInDepositorAddress         = sdkerrors.Register(ModuleName, 6019, "mismatch in depositor address")
 	ErrWithdrawalAmountIsTooLarge         = sdkerrors.Register(ModuleName, 6020, "withdrawal amount more than available amount for withdrawal")
