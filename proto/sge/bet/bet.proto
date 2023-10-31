@@ -71,7 +71,7 @@ message Bet {
   repeated BetFulfillment bet_fulfillment = 13;
 
   // meta is metadata for bet
-  MetaData meta = 14;
+  MetaData meta = 14 [ (gogoproto.nullable) = false ];
 
   // Status of the Bet.
   enum Status {

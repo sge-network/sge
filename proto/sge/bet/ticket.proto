@@ -19,5 +19,5 @@ message WagerTicketPayload {
   // all odds for the selected market.
   repeated BetOddsCompact all_odds = 3;
   // meta is metadata for bet placement
-  MetaData meta = 4;
+  MetaData meta = 4 [ (gogoproto.nullable) = false ];
 }

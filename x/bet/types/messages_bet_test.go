@@ -78,7 +78,7 @@ func TestNewBet(t *testing.T) {
 			OddsUID:   inputBetOdds.UID,
 			OddsValue: inputBetOdds.Value,
 			Amount:    inputBet.Amount,
-			Meta: &types.MetaData{
+			Meta: types.MetaData{
 				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				SelectedOddsValue: "1.5",
 			},
@@ -86,7 +86,7 @@ func TestNewBet(t *testing.T) {
 		res := types.NewBet(creator,
 			inputBet,
 			inputBetOdds,
-			&types.MetaData{
+			types.MetaData{
 				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				SelectedOddsValue: "1.5",
 			},

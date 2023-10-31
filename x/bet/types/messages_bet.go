@@ -68,7 +68,7 @@ func (msg *MsgWager) EmitEvent(ctx *sdk.Context) {
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, props *WagerProps, odds *BetOdds, meta *MetaData) *Bet {
+func NewBet(creator string, props *WagerProps, odds *BetOdds, meta MetaData) *Bet {
 	return &Bet{
 		Creator:           creator,
 		UID:               props.UID,
