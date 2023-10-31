@@ -312,7 +312,6 @@ func (ts *testBetSuite) placeTestBet(
 		UID:               uuid.NewString(),
 		MarketUID:         marketUID,
 		OddsUID:           oddsUID,
-		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "1.1",
 		Amount:            amount,
 		Fee:               fee,
@@ -322,7 +321,7 @@ func (ts *testBetSuite) placeTestBet(
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 
-	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
 	betFeeCollectorBalanceBeforeWager := ts.tApp.BankKeeper.GetBalance(
@@ -338,7 +337,7 @@ func (ts *testBetSuite) placeTestBet(
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1, odds, oddUIDS,
+		bettorAddr, bet.Fee, bet.OddsValue, 1, odds, oddUIDS,
 	)
 	if expErr != nil {
 		require.ErrorIs(ts.t, expErr, err)
@@ -462,7 +461,6 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		UID:               uuid.NewString(),
 		MarketUID:         ts.market.UID,
 		OddsUID:           ts.market.Odds[1].UID,
-		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "4.415",
 		Amount:            betAmount,
 		Fee:               sdk.ZeroInt(),
@@ -472,12 +470,12 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		MaxLossMultiplier: betOdds[ts.market.Odds[1].UID].MaxLossMultiplier,
 	}
 
-	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1, betOdds, oddUIDS,
+		bettorAddr, bet.Fee, bet.OddsValue, 1, betOdds, oddUIDS,
 	)
 	require.NoError(ts.t, err)
 

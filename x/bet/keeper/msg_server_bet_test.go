@@ -89,7 +89,6 @@ func TestBetMsgServerWager(t *testing.T) {
 			"iat":           1111111111,
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
-			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
 			"all_odds":      testBetOdds,
 		}
 		wagerTicket, err := createJwtTicket(wagerClaim)
@@ -119,7 +118,6 @@ func TestBetMsgServerWager(t *testing.T) {
 			"iat":           1111111111,
 			"selected_odds": testSelectedBetOdds,
 			"kyc_data":      testKyc,
-			"odds_type":     types.OddsType_ODDS_TYPE_DECIMAL,
 			"all_odds":      testBetOdds,
 		}
 		wagerTicket, err := createJwtTicket(wagerClaim)

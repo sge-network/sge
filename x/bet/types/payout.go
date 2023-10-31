@@ -6,8 +6,8 @@ import (
 )
 
 // CalculatePayoutProfit calculates the amount of payout profit portion according to bet odds value and amount
-func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
-	payout, err := calculatePayout(oddsType, oddsVal, amount)
+func CalculatePayoutProfit(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
+	payout, err := calculatePayout(oddsVal, amount)
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
@@ -19,26 +19,9 @@ func CalculatePayoutProfit(oddsType OddsType, oddsVal string, amount sdkmath.Int
 }
 
 // calculatePayout calculates the amount of payout according to bet odds value and amount
-func calculatePayout(oddsType OddsType, oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
-	var oType OddsTypeI
-
-	// assign corresponding type to the interface instance
-	switch oddsType {
-	case OddsType_ODDS_TYPE_DECIMAL:
-		oType = new(decimalOdds)
-
-	case OddsType_ODDS_TYPE_FRACTIONAL:
-		oType = new(fractionalOdds)
-
-	case OddsType_ODDS_TYPE_MONEYLINE:
-		oType = new(moneylineOdds)
-
-	default:
-		return sdk.ZeroDec(), ErrInvalidOddsType
-	}
-
+func calculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
 	// total payout should be paid to bettor
-	payout, err := oType.CalculatePayout(oddsVal, amount)
+	payout, err := CalculateDecimalPayout(oddsVal, amount)
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
@@ -47,8 +30,8 @@ func calculatePayout(oddsType OddsType, oddsVal string, amount sdkmath.Int) (sdk
 }
 
 // CalculateBetAmount calculates the amount of bet according to bet odds value and payout profit
-func CalculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
-	betAmount, err := calculateBetAmount(oddsType, oddsVal, payoutProfit)
+func CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+	betAmount, err := calculateBetAmount(oddsVal, payoutProfit)
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}
@@ -59,12 +42,11 @@ func CalculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec)
 // CalculateBetAmountInt calculates the amount of bet according to bet odds value and payout profit
 // and returns the int and the truncated decimal part.
 func CalculateBetAmountInt(
-	oddsType OddsType,
 	oddsVal string,
 	payoutProfit sdk.Dec,
 	truncatedBetAmount sdk.Dec,
 ) (sdkmath.Int, sdk.Dec, error) {
-	expectedBetAmountDec, err := CalculateBetAmount(oddsType, oddsVal, payoutProfit)
+	expectedBetAmountDec, err := CalculateBetAmount(oddsVal, payoutProfit)
 	if err != nil {
 		return sdkmath.Int{}, sdk.Dec{}, err
 	}
@@ -82,26 +64,9 @@ func CalculateBetAmountInt(
 }
 
 // calculateBetAmount calculates the amount of bet according to bet odds value and payoutProfit
-func calculateBetAmount(oddsType OddsType, oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
-	var oType OddsTypeI
-
-	// assign corresponding type to the interface instance
-	switch oddsType {
-	case OddsType_ODDS_TYPE_DECIMAL:
-		oType = new(decimalOdds)
-
-	case OddsType_ODDS_TYPE_FRACTIONAL:
-		oType = new(fractionalOdds)
-
-	case OddsType_ODDS_TYPE_MONEYLINE:
-		oType = new(moneylineOdds)
-
-	default:
-		return sdk.ZeroDec(), ErrInvalidOddsType
-	}
-
+func calculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 	// total payout should be paid to bettor
-	betAmount, err := oType.CalculateBetAmount(oddsVal, payoutProfit)
+	betAmount, err := CalculateDecimalBetAmount(oddsVal, payoutProfit)
 	if err != nil {
 		return sdk.ZeroDec(), err
 	}

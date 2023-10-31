@@ -26,7 +26,6 @@ func TestDecodeStore(t *testing.T) {
 			Amount: sdk.NewInt(10),
 			Ticket: "",
 		},
-		types.OddsType_ODDS_TYPE_DECIMAL,
 		&types.BetOdds{
 			UID:               uuid.NewString(),
 			MarketUID:         uuid.NewString(),

@@ -28,11 +28,6 @@ func (payload *WagerTicketPayload) Validate(creator string) error {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
 	}
 
-	if payload.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
-		payload.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
-		return ErrInvalidOddsType
-	}
-
 	return nil
 }
 

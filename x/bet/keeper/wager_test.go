@@ -121,7 +121,6 @@ func TestWager(t *testing.T) {
 				OddsUID:   "notExistOdds",
 				Amount:    sdk.NewInt(1000),
 				OddsValue: "5",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
@@ -151,7 +150,6 @@ func TestWager(t *testing.T) {
 				OddsUID:   "odds1",
 				Amount:    sdk.NewInt(100),
 				OddsValue: "5",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
@@ -191,7 +189,6 @@ func TestWager(t *testing.T) {
 				OddsUID:           "odds1",
 				Amount:            sdk.NewInt(1000000),
 				OddsValue:         "5",
-				OddsType:          types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},

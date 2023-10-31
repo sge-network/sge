@@ -51,7 +51,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 
 	if market.Status == markettypes.MarketStatus_MARKET_STATUS_ABORTED ||
 		market.Status == markettypes.MarketStatus_MARKET_STATUS_CANCELED {
-		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 		if err != nil {
 			return err
 		}
@@ -109,7 +109,7 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
 	}
 
-	payout, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payout, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	if err != nil {
 		return err
 	}
