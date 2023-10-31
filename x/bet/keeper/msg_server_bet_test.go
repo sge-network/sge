@@ -105,7 +105,7 @@ func TestBetMsgServerWager(t *testing.T) {
 		}
 
 		_, err = msgk.Wager(wctx, inputBet)
-		require.ErrorIs(t, types.ErrInWager, err)
+		require.ErrorIs(t, types.ErrNoMatchingMarket, err)
 	})
 
 	t.Run("Success", func(t *testing.T) {
