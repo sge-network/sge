@@ -60,7 +60,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 		bettorAddress, bet.Fee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
 	)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrInOBWagerProcessing, "%s", err)
+		return err
 	}
 
 	// set bet as placed
