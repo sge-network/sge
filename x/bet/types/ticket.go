@@ -14,6 +14,11 @@ func (payload *WagerTicketPayload) Validate(creator string) error {
 		return ErrOddsDataNotFound
 	}
 
+	if OddsType_ODDS_TYPE_UNSPECIFIED > payload.Meta.SelectedOddsType ||
+		OddsType_ODDS_TYPE_MONEYLINE < payload.Meta.SelectedOddsType {
+		return sdkerrors.Wrapf(ErrMetaOddsType, "%s", payload.Meta.SelectedOddsType)
+	}
+
 	if err := payload.ValidateOdds(); err != nil {
 		return sdkerrors.Wrapf(err, "%s", payload.SelectedOdds.UID)
 	}

@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/mrz1836/go-sanitize"
 	"github.com/sge-network/sge/utils"
 )
 
@@ -69,6 +70,8 @@ func (msg *MsgWager) EmitEvent(ctx *sdk.Context) {
 
 // NewBet creates and returns a new bet from given message
 func NewBet(creator string, props *WagerProps, odds *BetOdds, meta MetaData) *Bet {
+	meta.SelectedOddsValue = sanitize.XSS(meta.SelectedOddsValue)
+
 	return &Bet{
 		Creator:           creator,
 		UID:               props.UID,

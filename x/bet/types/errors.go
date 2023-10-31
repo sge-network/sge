@@ -43,6 +43,7 @@ var (
 	ErrMaxLossMultiplierCanNotBeZero        = sdkerrors.Register(ModuleName, 2034, "max loss multiplier cannot be nil or zero")
 	ErrMaxLossMultiplierCanNotBeMoreThanOne = sdkerrors.Register(ModuleName, 2035, "max loss multiplier cannot be more than one")
 	ErrInsufficientOdds                     = sdkerrors.Register(ModuleName, 2036, "market odds length not same as odds sent in wager")
+	ErrMetaOddsType                         = sdkerrors.Register(ModuleName, 2037, "invalid odds type in meta")
 )
 
 // x/bet module sentinel error text
