@@ -18,14 +18,14 @@ service Query {
     option (google.api.http).get = "/sge-network/sge/reward/params";
   }
 
-  // Queries an specific Campaign item.
+  // Queries a specific Campaign item.
   rpc Campaign(QueryCampaignRequest) returns (QueryCampaignResponse) {
     option (google.api.http).get = "/sge-network/sge/reward/campaign/{uid}";
   }
 
   // Queries list of all Campaign items.
-  rpc CampaignAll(QueryCampaignAllRequest) returns (QueryCampaignAllResponse) {
-    option (google.api.http).get = "/sge-network/sge/reward/campaign";
+  rpc Campaigns(QueryCampaignsRequest) returns (QueryCampaignsResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/campaigns";
   }
 }
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -46,14 +46,14 @@ message QueryCampaignResponse {
   Campaign campaign = 1 [ (gogoproto.nullable) = false ];
 }
 
-// QueryCampaignAllRequest is request body of the query all campaigns endpoint.
-message QueryCampaignAllRequest {
+// QueryCampaignsRequest is request body for the query all campaigns endpoint.
+message QueryCampaignsRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
-// QueryCampaignAllResponse is response body of the query all campaigns
+// QueryCampaignsResponse is response body of the query all campaigns
 // endpoint.
-message QueryCampaignAllResponse {
+message QueryCampaignsResponse {
   repeated Campaign campaign = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

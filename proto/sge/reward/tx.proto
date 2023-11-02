@@ -6,19 +6,19 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Msg defines the Msg service.
 service Msg {
-  // CreateCampaign is campaign create message endpoint.
+  // CreateCampaign is a method to create a campaign
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  // UpdateCampaign is campaign update message endpoint.
+  // UpdateCampaign is a method to update campaign
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
-  // ApplyReward is reward application message endpoint.
-  rpc ApplyReward(MsgApplyReward) returns (MsgApplyRewardResponse);
+  // GrantReward is method to allocate rewards
+  rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
 }
 
-// MsgCreateCampaign is campaign create message type.
+// MsgCreateCampaign is msg to create a reward campaign
 message MsgCreateCampaign {
-  // creator is the address of creator account.
+  // creator is the address of campaign creator account.
   string creator = 1;
-  // uid is the uinque identifier of the campaign.
+  // uid is the unique identifier of the campaign.
   string uid = 2;
   // ticket is the payload data.
   string ticket = 3;
@@ -31,7 +31,7 @@ message MsgCreateCampaignResponse {}
 message MsgUpdateCampaign {
   // creator is the address of creator account.
   string creator = 1;
-  // uid is the uinque identifier of the campaign.
+  // uid is the unique identifier of the campaign.
   string uid = 2;
   // ticket is the payload data.
   string ticket = 3;
@@ -40,15 +40,15 @@ message MsgUpdateCampaign {
 // MsgUpdateCampaignResponse campaign update message response type.
 message MsgUpdateCampaignResponse {}
 
-// MsgApplyReward is apply reward message type.
-message MsgApplyReward {
+// MsgAllocateReward is apply reward message type.
+message MsgGrantReward {
   // creator is the address of creator account.
   string creator = 1;
-  // campaign_uid is the uinque identifier of the campaign.
+  // campaign_uid is the unique identifier of the campaign.
   string campaign_uid = 2;
   // ticket is the payload data.
   string ticket = 3;
 }
 
 // MsgApplyRewardResponse apply reward message response type.
-message MsgApplyRewardResponse {}
+message MsgGrantRewardResponse {}

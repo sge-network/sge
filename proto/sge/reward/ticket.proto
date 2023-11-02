@@ -8,11 +8,11 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // CreateCampaignPayload is the type for campaign creation payload.
 message CreateCampaignPayload {
-  string funder_address = 1;
+  string funder_address = 1; //Fixme: Add description
   uint64 start_ts = 2;
   uint64 end_ts = 3;
   RewardType type = 4;
-  repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ];
+  repeated Definition reward_defs = 6 [ (gogoproto.nullable) = false ]; //Fixme: Why it needs to be repeated?
   string pool_amount = 7 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,

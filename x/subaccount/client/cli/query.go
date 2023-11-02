@@ -15,7 +15,7 @@ import (
 
 // GetQueryCmd returns the cli query commands for this module
 func GetQueryCmd() *cobra.Command {
-	// Group bet queries under a subcommand
+	// Group subaccount queries under a subcommand
 	cmd := &cobra.Command{
 		Use: types.ModuleName,
 		Short: fmt.Sprintf(

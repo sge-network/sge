@@ -5,8 +5,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
-// Balance defines the balance of a subaccount.
-message Balance {
+// AccountSummary defines the balance of a subaccount.
+message AccountSummary {
   // deposited_amount keeps track of how much was deposited so far in the
   // subaccount.
   string deposited_amount = 1 [
@@ -22,8 +22,8 @@ message Balance {
   ];
 
   // withdrawn_amount keeps track of how much was withdrawn in the account after
-  // locked coins become free.
-  string withdrawm_amount = 3 [
+  // locked coins become unlocked.
+  string withdrawn_amount = 3 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];

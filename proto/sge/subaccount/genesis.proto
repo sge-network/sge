@@ -28,7 +28,7 @@ message GenesisSubaccount {
   string owner = 2;
 
   // balance defines the balance status of a subaccount
-  Balance balance = 3 [ (gogoproto.nullable) = false ];
+  AccountSummary balance = 3 [ (gogoproto.nullable) = false ];
 
   // locked_balances defines the lockup of balances history of a subaccount
   repeated LockedBalance locked_balances = 4 [ (gogoproto.nullable) = false ];

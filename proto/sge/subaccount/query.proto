@@ -12,7 +12,7 @@ import "sge/subaccount/params.proto";
 service Query {
   // Subaccount fetches a subaccount given the owner.
   rpc Subaccount(QuerySubaccountRequest) returns (QuerySubaccountResponse) {
-    option (google.api.http).get = "/sge/subaccount/subaccount";
+    option (google.api.http).get = "/sge/subaccount/subaccount/{address}";
   };
   // Params returns the subaccount module parameters.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
@@ -31,7 +31,7 @@ message QuerySubaccountRequest { string subaccount_owner = 1; }
 // QuerySubaccountResponse is the response type for the Query/Subaccount RPC
 message QuerySubaccountResponse {
   string subaccount_address = 1;
-  sge.subaccount.Balance balance = 2 [ (gogoproto.nullable) = false ];
+  sge.subaccount.AccountSummary balance = 2 [ (gogoproto.nullable) = false ];
   repeated sge.subaccount.LockedBalance locked_balance = 3
       [ (gogoproto.nullable) = false ];
 }

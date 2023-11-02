@@ -32,7 +32,7 @@ func GetTxCmd() *cobra.Command {
 
 	cmd.AddCommand(
 		TxCreate(),
-		TxTopupSubaccount(),
+		TxTopup(),
 		TxWager(),
 		TxHouseDeposit(),
 		TxHouseWithdraw(),
@@ -95,7 +95,7 @@ func TxCreate() *cobra.Command {
 	return cmd
 }
 
-func TxTopupSubaccount() *cobra.Command {
+func TxTopup() *cobra.Command {
 	const (
 		flagFunds        = "funds"
 		flagLockDuration = "lock-duration"
