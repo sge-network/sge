@@ -20,4 +20,6 @@ message WagerTicketPayload {
   repeated BetOddsCompact all_odds = 3;
   // meta is metadata for bet placement
   MetaData meta = 4 [ (gogoproto.nullable) = false ];
+  // context contains the data from services and just for processing purpose.
+  string context = 5;
 }
