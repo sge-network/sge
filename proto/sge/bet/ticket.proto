@@ -17,9 +17,9 @@ message WagerTicketPayload {
   sgenetwork.sge.type.KycDataPayload kyc_data = 2
       [ (gogoproto.nullable) = false ];
   // all odds for the selected market.
-  repeated BetOddsCompact all_odds = 3;
+  repeated BetOddsCompact all_odds = 4;
   // meta is metadata for bet placement
-  MetaData meta = 4 [ (gogoproto.nullable) = false ];
+  MetaData meta = 5 [ (gogoproto.nullable) = false ];
   // context contains the data from services and just for processing purpose.
-  string context = 5;
+  string context = 6;
 }
