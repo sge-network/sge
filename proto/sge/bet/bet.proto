@@ -31,51 +31,47 @@ message Bet {
     json_name = "odds_uid"
   ];
 
-  // odds_type is the type of odds that
-  // user choose such as decimal, fractional, etc
-  sgenetwork.sge.bet.OddsType odds_type = 4;
-
   // odds_value is the odds on which the bet is placed.
-  string odds_value = 5;
+  string odds_value = 4;
 
   // amount is the wager amount.
-  string amount = 6 [
+  string amount = 5 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // fee is the betting fee user needs to pay for placing a bet
-  string fee = 7 [
+  string fee = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // status is the status of the bet, such as `unspecified` or `settled`.
-  Status status = 8;
+  Status status = 7;
 
   // result is the result of the bet, such as `won` or `lost`.
-  Result result = 9;
+  Result result = 8;
 
   // creator is the bettor address.
-  string creator = 10;
+  string creator = 9;
 
   // created_at is the bet placement timestamp.
-  int64 created_at = 11;
+  int64 created_at = 10;
 
   // settlement_height is the block height at which the bet is settled.
-  int64 settlement_height = 12;
+  int64 settlement_height = 11;
 
   // max_loss_multiplier is the multiplier coefficient of max loss.
-  string max_loss_multiplier = 13 [
+  string max_loss_multiplier = 12 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
 
   // bet_fulfillment is the fulfillment data.
-  repeated BetFulfillment bet_fulfillment = 14;
+  repeated BetFulfillment bet_fulfillment = 13;
 
   // meta is metadata for bet
-  MetaData meta = 15;
+  MetaData meta = 14 [ (gogoproto.nullable) = false ];
 
   // Status of the Bet.
   enum Status {

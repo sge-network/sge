@@ -26,14 +26,13 @@ func TestDecodeStore(t *testing.T) {
 			Amount: sdk.NewInt(10),
 			Ticket: "",
 		},
-		types.OddsType_ODDS_TYPE_DECIMAL,
 		&types.BetOdds{
 			UID:               uuid.NewString(),
 			MarketUID:         uuid.NewString(),
 			Value:             "100",
 			MaxLossMultiplier: sdk.NewDec(1),
 		},
-		&types.MetaData{
+		types.MetaData{
 			SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 			SelectedOddsValue: "1.5",
 		},

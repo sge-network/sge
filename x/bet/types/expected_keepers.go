@@ -43,7 +43,6 @@ type OrderbookKeeper interface {
 		payoutProfit sdk.Dec,
 		bettorAddress sdk.AccAddress,
 		betFee sdkmath.Int,
-		oddsType OddsType,
 		oddsVal string,
 		betID uint64,
 		odds map[string]*BetOddsCompact,

@@ -27,7 +27,6 @@ func createNBet(
 		items[i].UID = cast.ToString(i)
 		items[i].Creator = testCreator
 		items[i].OddsValue = "10"
-		items[i].OddsType = types.OddsType_ODDS_TYPE_DECIMAL
 		items[i].Amount = sdk.NewInt(10)
 		items[i].Fee = sdk.NewInt(1)
 		items[i].MarketUID = testMarketUID

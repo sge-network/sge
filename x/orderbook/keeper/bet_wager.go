@@ -19,7 +19,6 @@ func (k Keeper) ProcessWager(
 	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
 	betFee sdkmath.Int,
-	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
@@ -42,7 +41,6 @@ func (k Keeper) ProcessWager(
 		betUID,
 		betID,
 		oddsUID,
-		oddsType,
 		oddsVal,
 		maxLossMultiplier,
 		&book,
@@ -103,7 +101,6 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		case fInfo.notEnoughLiquidityAvailable():
 			var betAmountToFulfill sdkmath.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
-				fInfo.oddsType,
 				fInfo.oddsVal,
 				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
@@ -158,7 +155,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	}
 
 	if fInfo.NoMoreLiquidityAvailable() {
-		return sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+		return types.ErrInsufficientLiquidityInOrderBook
 	}
 
 	return nil
@@ -172,7 +169,6 @@ func (k Keeper) initFulfillmentInfo(
 	betUID string,
 	betID uint64,
 	oddsUID string,
-	oddsType bettypes.OddsType,
 	oddsVal string,
 	maxLossMultiplier sdk.Dec,
 	book *types.OrderBook,
@@ -189,7 +185,6 @@ func (k Keeper) initFulfillmentInfo(
 		betUID:            betUID,
 		betID:             betID,
 		oddsUID:           oddsUID,
-		oddsType:          oddsType,
 		oddsVal:           oddsVal,
 		maxLossMultiplier: maxLossMultiplier,
 
@@ -420,7 +415,6 @@ type fulfillmentInfo struct {
 	betUID             string
 	betID              uint64
 	oddsUID            string
-	oddsType           bettypes.OddsType
 	oddsVal            string
 	maxLossMultiplier  sdk.Dec
 	betAmount          sdkmath.Int
