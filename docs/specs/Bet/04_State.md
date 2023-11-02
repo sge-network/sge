@@ -90,46 +90,46 @@ message Bet {
   ];
 
   // odds_value is the odds on which the bet is placed.
-  string odds_value = 4;
+  string odds_value = 5;
 
   // amount is the wager amount.
-  string amount = 5 [
+  string amount = 6 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // fee is the betting fee user needs to pay for placing a bet
-  string fee = 6 [
+  string fee = 7 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
     (gogoproto.nullable) = false
   ];
 
   // status is the status of the bet, such as `unspecified` or `settled`.
-  Status status = 7;
+  Status status = 8;
 
   // result is the result of the bet, such as `won` or `lost`.
-  Result result = 8;
+  Result result = 9;
 
   // creator is the bettor address.
-  string creator = 9;
+  string creator = 10;
 
   // created_at is the bet placement timestamp.
-  int64 created_at = 10;
+  int64 created_at = 11;
 
   // settlement_height is the block height at which the bet is settled.
-  int64 settlement_height = 11;
+  int64 settlement_height = 12;
 
   // max_loss_multiplier is the multiplier coefficient of max loss.
-  string max_loss_multiplier = 12 [
+  string max_loss_multiplier = 13 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
 
   // bet_fulfillment is the fulfillment data.
-  repeated BetFulfillment bet_fulfillment = 13;
+  repeated BetFulfillment bet_fulfillment = 14;
 
   // meta is metadata for bet
-  MetaData meta = 14;
+  MetaData meta = 15;
 
   // Status of the Bet.
   enum Status {
