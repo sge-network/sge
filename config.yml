@@ -8,6 +8,7 @@ accounts:
   - name: admin
     mnemonic: patch donor arena plug burst silk cram day charge valve prize awake remind wolf resource silk oyster man tray police ritual immune foot beef
   - name: oracle
+    coins: ["100000000000000usge"]
     mnemonic: better ketchup radio relax scheme worth foam utility bamboo moon slab trade tackle hobby once pass daughter isolate nice cost level swim view final
 validators:
   - name: cold
@@ -33,7 +34,7 @@ genesis:
     ovm:
       key_vault:
         public_keys: [
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdUWfzVUf4BqsHvErsJoXIaIpO60CHXfaaef+xKU3bbY=\n-----END PUBLIC KEY-----",
+          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzoP3SVo1tUEhd+cF/zw+8XxtOScdJyD7T3QqKzpC9x0=\n-----END PUBLIC KEY-----",
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA58w+676YVp61kjXDrteK8hDxulq5zbF6sNHQt3Lt5Ng=\n-----END PUBLIC KEY-----",
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5iPKVbSvyF1A1HDFaWMGlhBp/xTU70i8lMgOml79WM=\n-----END PUBLIC KEY-----",
           "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAueEgZMdKn6Bp0mcG04HrNAt1a0o7+0eNliQCNmbxkOQ=\n-----END PUBLIC KEY-----",
@@ -64,3 +65,6 @@ genesis:
     orderbook:
       params:
         requeue_threshold: "1000"
+    house:
+      params:
+        max_withdrawal_count: 1
