@@ -78,8 +78,8 @@ func TxCreate() *cobra.Command {
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreate{
-				Creator:         clientCtx.From,
-				SubAccountOwner: subaccountOwner.String(),
+				Creator: clientCtx.From,
+				Owner:   subaccountOwner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),
@@ -129,8 +129,8 @@ func TxTopup() *cobra.Command {
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgTopUp{
-				Creator:    clientCtx.From,
-				SubAccount: subaccountAddress.String(),
+				Creator: clientCtx.From,
+				Address: subaccountAddress.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),

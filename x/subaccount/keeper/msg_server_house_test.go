@@ -41,8 +41,8 @@ func TestMsgServer(t *testing.T) {
 	)
 
 	_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
-		Creator:         subAccFunder.String(),
-		SubAccountOwner: subAccOwner.String(),
+		Creator: subAccFunder.String(),
+		Owner:   subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
@@ -214,8 +214,8 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	)
 
 	_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
-		Creator:         subAccFunder.String(),
-		SubAccountOwner: subAccOwner.String(),
+		Creator: subAccFunder.String(),
+		Owner:   subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),

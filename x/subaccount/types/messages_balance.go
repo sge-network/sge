@@ -49,7 +49,7 @@ func (msg *MsgTopUp) ValidateBasic() error {
 		return errors.ErrInvalidAddress
 	}
 
-	_, err = sdk.AccAddressFromBech32(msg.SubAccount)
+	_, err = sdk.AccAddressFromBech32(msg.Address)
 	if err != nil {
 		return errors.ErrInvalidAddress
 	}

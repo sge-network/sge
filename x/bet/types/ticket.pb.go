@@ -5,7 +5,7 @@ package types
 
 import (
 	fmt "fmt"
-	_ "github.com/cosmos/gogoproto/gogoproto"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	types "github.com/sge-network/sge/types"
 	io "io"

@@ -27,11 +27,11 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// MsgCreateCampaign is campaign create message type.
+// MsgCreateCampaign is msg to create a reward campaign
 type MsgCreateCampaign struct {
-	// creator is the address of creator account.
+	// creator is the address of campaign creator account.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// uid is the uinque identifier of the campaign.
+	// uid is the unique identifier of the campaign.
 	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	// ticket is the payload data.
 	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
@@ -132,7 +132,7 @@ var xxx_messageInfo_MsgCreateCampaignResponse proto.InternalMessageInfo
 type MsgUpdateCampaign struct {
 	// creator is the address of creator account.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// uid is the uinque identifier of the campaign.
+	// uid is the unique identifier of the campaign.
 	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
 	// ticket is the payload data.
 	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
@@ -229,28 +229,28 @@ func (m *MsgUpdateCampaignResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateCampaignResponse proto.InternalMessageInfo
 
-// MsgApplyReward is apply reward message type.
-type MsgApplyReward struct {
+// MsgAllocateReward is apply reward message type.
+type MsgGrantReward struct {
 	// creator is the address of creator account.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	// campaign_uid is the uinque identifier of the campaign.
+	// campaign_uid is the unique identifier of the campaign.
 	CampaignUid string `protobuf:"bytes,2,opt,name=campaign_uid,json=campaignUid,proto3" json:"campaign_uid,omitempty"`
 	// ticket is the payload data.
 	Ticket string `protobuf:"bytes,3,opt,name=ticket,proto3" json:"ticket,omitempty"`
 }
 
-func (m *MsgApplyReward) Reset()         { *m = MsgApplyReward{} }
-func (m *MsgApplyReward) String() string { return proto.CompactTextString(m) }
-func (*MsgApplyReward) ProtoMessage()    {}
-func (*MsgApplyReward) Descriptor() ([]byte, []int) {
+func (m *MsgGrantReward) Reset()         { *m = MsgGrantReward{} }
+func (m *MsgGrantReward) String() string { return proto.CompactTextString(m) }
+func (*MsgGrantReward) ProtoMessage()    {}
+func (*MsgGrantReward) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ad69e28332238e66, []int{4}
 }
-func (m *MsgApplyReward) XXX_Unmarshal(b []byte) error {
+func (m *MsgGrantReward) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgApplyReward) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgGrantReward) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgApplyReward.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgGrantReward.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -260,33 +260,33 @@ func (m *MsgApplyReward) XXX_Marshal(b []byte, deterministic bool) ([]byte, erro
 		return b[:n], nil
 	}
 }
-func (m *MsgApplyReward) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgApplyReward.Merge(m, src)
+func (m *MsgGrantReward) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgGrantReward.Merge(m, src)
 }
-func (m *MsgApplyReward) XXX_Size() int {
+func (m *MsgGrantReward) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgApplyReward) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgApplyReward.DiscardUnknown(m)
+func (m *MsgGrantReward) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgGrantReward.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgApplyReward proto.InternalMessageInfo
+var xxx_messageInfo_MsgGrantReward proto.InternalMessageInfo
 
-func (m *MsgApplyReward) GetCreator() string {
+func (m *MsgGrantReward) GetCreator() string {
 	if m != nil {
 		return m.Creator
 	}
 	return ""
 }
 
-func (m *MsgApplyReward) GetCampaignUid() string {
+func (m *MsgGrantReward) GetCampaignUid() string {
 	if m != nil {
 		return m.CampaignUid
 	}
 	return ""
 }
 
-func (m *MsgApplyReward) GetTicket() string {
+func (m *MsgGrantReward) GetTicket() string {
 	if m != nil {
 		return m.Ticket
 	}
@@ -294,21 +294,21 @@ func (m *MsgApplyReward) GetTicket() string {
 }
 
 // MsgApplyRewardResponse apply reward message response type.
-type MsgApplyRewardResponse struct {
+type MsgGrantRewardResponse struct {
 }
 
-func (m *MsgApplyRewardResponse) Reset()         { *m = MsgApplyRewardResponse{} }
-func (m *MsgApplyRewardResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgApplyRewardResponse) ProtoMessage()    {}
-func (*MsgApplyRewardResponse) Descriptor() ([]byte, []int) {
+func (m *MsgGrantRewardResponse) Reset()         { *m = MsgGrantRewardResponse{} }
+func (m *MsgGrantRewardResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgGrantRewardResponse) ProtoMessage()    {}
+func (*MsgGrantRewardResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ad69e28332238e66, []int{5}
 }
-func (m *MsgApplyRewardResponse) XXX_Unmarshal(b []byte) error {
+func (m *MsgGrantRewardResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgApplyRewardResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgGrantRewardResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgApplyRewardResponse.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgGrantRewardResponse.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -318,25 +318,25 @@ func (m *MsgApplyRewardResponse) XXX_Marshal(b []byte, deterministic bool) ([]by
 		return b[:n], nil
 	}
 }
-func (m *MsgApplyRewardResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgApplyRewardResponse.Merge(m, src)
+func (m *MsgGrantRewardResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgGrantRewardResponse.Merge(m, src)
 }
-func (m *MsgApplyRewardResponse) XXX_Size() int {
+func (m *MsgGrantRewardResponse) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgApplyRewardResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgApplyRewardResponse.DiscardUnknown(m)
+func (m *MsgGrantRewardResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgGrantRewardResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgApplyRewardResponse proto.InternalMessageInfo
+var xxx_messageInfo_MsgGrantRewardResponse proto.InternalMessageInfo
 
 func init() {
 	proto.RegisterType((*MsgCreateCampaign)(nil), "sgenetwork.sge.reward.MsgCreateCampaign")
 	proto.RegisterType((*MsgCreateCampaignResponse)(nil), "sgenetwork.sge.reward.MsgCreateCampaignResponse")
 	proto.RegisterType((*MsgUpdateCampaign)(nil), "sgenetwork.sge.reward.MsgUpdateCampaign")
 	proto.RegisterType((*MsgUpdateCampaignResponse)(nil), "sgenetwork.sge.reward.MsgUpdateCampaignResponse")
-	proto.RegisterType((*MsgApplyReward)(nil), "sgenetwork.sge.reward.MsgApplyReward")
-	proto.RegisterType((*MsgApplyRewardResponse)(nil), "sgenetwork.sge.reward.MsgApplyRewardResponse")
+	proto.RegisterType((*MsgGrantReward)(nil), "sgenetwork.sge.reward.MsgGrantReward")
+	proto.RegisterType((*MsgGrantRewardResponse)(nil), "sgenetwork.sge.reward.MsgGrantRewardResponse")
 }
 
 func init() { proto.RegisterFile("sge/reward/tx.proto", fileDescriptor_ad69e28332238e66) }
@@ -352,7 +352,7 @@ var fileDescriptor_ad69e28332238e66 = []byte{
 	0x09, 0x26, 0xb0, 0x28, 0x88, 0x29, 0x24, 0xc6, 0xc5, 0x56, 0x92, 0x99, 0x9c, 0x9d, 0x5a, 0x22,
 	0xc1, 0x0c, 0x16, 0x84, 0xf2, 0x94, 0xa4, 0xb9, 0x24, 0x31, 0x0c, 0x0e, 0x4a, 0x2d, 0x2e, 0xc8,
 	0xcf, 0x2b, 0x4e, 0x85, 0xda, 0x1a, 0x5a, 0x90, 0x42, 0x1b, 0x5b, 0x51, 0x0d, 0x86, 0xdb, 0x9a,
-	0xca, 0xc5, 0xe7, 0x5b, 0x9c, 0xee, 0x58, 0x50, 0x90, 0x53, 0x19, 0x04, 0xf6, 0x3d, 0x1e, 0x2b,
+	0xca, 0xc5, 0xe7, 0x5b, 0x9c, 0xee, 0x5e, 0x94, 0x98, 0x57, 0x12, 0x04, 0xf6, 0x3d, 0x1e, 0x2b,
 	0x15, 0xb9, 0x78, 0x92, 0xa1, 0xfa, 0xe3, 0x11, 0x76, 0x73, 0xc3, 0xc4, 0x42, 0xf1, 0xb8, 0x41,
 	0x82, 0x4b, 0x0c, 0xd5, 0x1a, 0x98, 0x03, 0x8c, 0x8e, 0x31, 0x71, 0x31, 0xfb, 0x16, 0xa7, 0x0b,
 	0xe5, 0x70, 0xf1, 0xa1, 0x85, 0xb8, 0x86, 0x1e, 0xd6, 0xe8, 0xd1, 0xc3, 0x08, 0x42, 0x29, 0x03,
@@ -362,7 +362,7 @@ var fileDescriptor_ad69e28332238e66 = []byte{
 	0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c, 0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7,
 	0x10, 0xa5, 0x99, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c, 0x9f, 0xab, 0x5f, 0x9c, 0x9e,
 	0xaa, 0x0b, 0x35, 0x13, 0xc4, 0xd6, 0xaf, 0x80, 0x67, 0x8a, 0xca, 0x82, 0xd4, 0xe2, 0x24, 0x36,
-	0x70, 0xc6, 0x30, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xdc, 0x4c, 0x61, 0xd3, 0x2f, 0x03, 0x00,
+	0x70, 0xc6, 0x30, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xe1, 0x83, 0xca, 0xea, 0x2f, 0x03, 0x00,
 	0x00,
 }
 
@@ -378,12 +378,12 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// CreateCampaign is campaign create message endpoint.
+	// CreateCampaign is a method to create a campaign
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
-	// UpdateCampaign is campaign update message endpoint.
+	// UpdateCampaign is a method to update campaign
 	UpdateCampaign(ctx context.Context, in *MsgUpdateCampaign, opts ...grpc.CallOption) (*MsgUpdateCampaignResponse, error)
-	// ApplyReward is reward application message endpoint.
-	ApplyReward(ctx context.Context, in *MsgApplyReward, opts ...grpc.CallOption) (*MsgApplyRewardResponse, error)
+	// GrantReward is method to allocate rewards
+	GrantReward(ctx context.Context, in *MsgGrantReward, opts ...grpc.CallOption) (*MsgGrantRewardResponse, error)
 }
 
 type msgClient struct {
@@ -412,9 +412,9 @@ func (c *msgClient) UpdateCampaign(ctx context.Context, in *MsgUpdateCampaign, o
 	return out, nil
 }
 
-func (c *msgClient) ApplyReward(ctx context.Context, in *MsgApplyReward, opts ...grpc.CallOption) (*MsgApplyRewardResponse, error) {
-	out := new(MsgApplyRewardResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Msg/ApplyReward", in, out, opts...)
+func (c *msgClient) GrantReward(ctx context.Context, in *MsgGrantReward, opts ...grpc.CallOption) (*MsgGrantRewardResponse, error) {
+	out := new(MsgGrantRewardResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Msg/GrantReward", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -423,12 +423,12 @@ func (c *msgClient) ApplyReward(ctx context.Context, in *MsgApplyReward, opts ..
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// CreateCampaign is campaign create message endpoint.
+	// CreateCampaign is a method to create a campaign
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
-	// UpdateCampaign is campaign update message endpoint.
+	// UpdateCampaign is a method to update campaign
 	UpdateCampaign(context.Context, *MsgUpdateCampaign) (*MsgUpdateCampaignResponse, error)
-	// ApplyReward is reward application message endpoint.
-	ApplyReward(context.Context, *MsgApplyReward) (*MsgApplyRewardResponse, error)
+	// GrantReward is method to allocate rewards
+	GrantReward(context.Context, *MsgGrantReward) (*MsgGrantRewardResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -441,8 +441,8 @@ func (*UnimplementedMsgServer) CreateCampaign(ctx context.Context, req *MsgCreat
 func (*UnimplementedMsgServer) UpdateCampaign(ctx context.Context, req *MsgUpdateCampaign) (*MsgUpdateCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCampaign not implemented")
 }
-func (*UnimplementedMsgServer) ApplyReward(ctx context.Context, req *MsgApplyReward) (*MsgApplyRewardResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ApplyReward not implemented")
+func (*UnimplementedMsgServer) GrantReward(ctx context.Context, req *MsgGrantReward) (*MsgGrantRewardResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GrantReward not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -485,20 +485,20 @@ func _Msg_UpdateCampaign_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_ApplyReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgApplyReward)
+func _Msg_GrantReward_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgGrantReward)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).ApplyReward(ctx, in)
+		return srv.(MsgServer).GrantReward(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.reward.Msg/ApplyReward",
+		FullMethod: "/sgenetwork.sge.reward.Msg/GrantReward",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).ApplyReward(ctx, req.(*MsgApplyReward))
+		return srv.(MsgServer).GrantReward(ctx, req.(*MsgGrantReward))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -516,8 +516,8 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_UpdateCampaign_Handler,
 		},
 		{
-			MethodName: "ApplyReward",
-			Handler:    _Msg_ApplyReward_Handler,
+			MethodName: "GrantReward",
+			Handler:    _Msg_GrantReward_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -658,7 +658,7 @@ func (m *MsgUpdateCampaignResponse) MarshalToSizedBuffer(dAtA []byte) (int, erro
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgApplyReward) Marshal() (dAtA []byte, err error) {
+func (m *MsgGrantReward) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -668,12 +668,12 @@ func (m *MsgApplyReward) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgApplyReward) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgGrantReward) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgApplyReward) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgGrantReward) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -702,7 +702,7 @@ func (m *MsgApplyReward) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgApplyRewardResponse) Marshal() (dAtA []byte, err error) {
+func (m *MsgGrantRewardResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -712,12 +712,12 @@ func (m *MsgApplyRewardResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgApplyRewardResponse) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgGrantRewardResponse) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgApplyRewardResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgGrantRewardResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -796,7 +796,7 @@ func (m *MsgUpdateCampaignResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgApplyReward) Size() (n int) {
+func (m *MsgGrantReward) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -817,7 +817,7 @@ func (m *MsgApplyReward) Size() (n int) {
 	return n
 }
 
-func (m *MsgApplyRewardResponse) Size() (n int) {
+func (m *MsgGrantRewardResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1224,7 +1224,7 @@ func (m *MsgUpdateCampaignResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgApplyReward) Unmarshal(dAtA []byte) error {
+func (m *MsgGrantReward) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1247,10 +1247,10 @@ func (m *MsgApplyReward) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgApplyReward: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgGrantReward: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgApplyReward: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgGrantReward: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1370,7 +1370,7 @@ func (m *MsgApplyReward) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgApplyRewardResponse) Unmarshal(dAtA []byte) error {
+func (m *MsgGrantRewardResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1393,10 +1393,10 @@ func (m *MsgApplyRewardResponse) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgApplyRewardResponse: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgGrantRewardResponse: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgApplyRewardResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgGrantRewardResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

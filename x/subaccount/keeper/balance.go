@@ -72,28 +72,28 @@ func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAdd
 }
 
 // SetBalance saves the balance of an account.
-func (k Keeper) SetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress, balance types.Balance) {
+func (k Keeper) SetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress, accountSummary types.AccountSummary) {
 	store := ctx.KVStore(k.storeKey)
 
-	bz := k.cdc.MustMarshal(&balance)
+	bz := k.cdc.MustMarshal(&accountSummary)
 	store.Set(types.BalanceKey(subAccountAddress), bz)
 }
 
 // GetBalance returns the balance of an account.
-func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (types.Balance, bool) {
+func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (types.AccountSummary, bool) {
 	store := ctx.KVStore(k.storeKey)
 	bz := store.Get(types.BalanceKey(subAccountAddress))
 	if bz == nil {
-		return types.Balance{}, false
+		return types.AccountSummary{}, false
 	}
 
-	balance := types.Balance{}
+	balance := types.AccountSummary{}
 	k.cdc.MustUnmarshal(bz, &balance)
 
 	return balance, true
 }
 
-// TopUp tops up the subbacount balance.
+// TopUp tops up the subaccount balance.
 func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	lockedBalance []types.LockedBalance,
 ) (string, error) {
@@ -126,7 +126,7 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 }
 
 // getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.Balance, sdkmath.Int, sdk.Coin) {
+func (k Keeper) getBalances(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.AccountSummary, sdkmath.Int, sdk.Coin) {
 	balance, exists := k.GetBalance(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")

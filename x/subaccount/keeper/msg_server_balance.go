@@ -13,7 +13,7 @@ import (
 func (k msgServer) TopUp(goCtx context.Context, msg *types.MsgTopUp) (*types.MsgTopUpResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	subAccAddr, err := k.keeper.TopUp(ctx, msg.Creator, msg.SubAccount, msg.LockedBalances)
+	subAccAddr, err := k.keeper.TopUp(ctx, msg.Creator, msg.Address, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.Ms
 		return nil, types.ErrNothingToWithdraw
 	}
 
-	balance.WithdrawmAmount = balance.WithdrawmAmount.Add(withdrawableBalance)
+	balance.WithdrawnAmount = balance.WithdrawnAmount.Add(withdrawableBalance)
 	k.keeper.SetBalance(ctx, subAccAddr, balance)
 
 	err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))

@@ -4,9 +4,8 @@
 package types
 
 import (
-	cosmossdk_io_math "cosmossdk.io/math"
 	fmt "fmt"
-	_ "github.com/cosmos/gogoproto/gogoproto"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -26,12 +25,27 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 // CreateCampaignPayload is the type for campaign creation payload.
 type CreateCampaignPayload struct {
-	FunderAddress string                `protobuf:"bytes,1,opt,name=funder_address,json=funderAddress,proto3" json:"funder_address,omitempty"`
-	StartTs       uint64                `protobuf:"varint,2,opt,name=start_ts,json=startTs,proto3" json:"start_ts,omitempty"`
-	EndTs         uint64                `protobuf:"varint,3,opt,name=end_ts,json=endTs,proto3" json:"end_ts,omitempty"`
-	Type          RewardType            `protobuf:"varint,4,opt,name=type,proto3,enum=sgenetwork.sge.reward.RewardType" json:"type,omitempty"`
-	RewardDefs    []Definition          `protobuf:"bytes,6,rep,name=reward_defs,json=rewardDefs,proto3" json:"reward_defs"`
-	PoolAmount    cosmossdk_io_math.Int `protobuf:"bytes,7,opt,name=pool_amount,json=poolAmount,proto3,customtype=cosmossdk.io/math.Int" json:"pool_amount" yaml:"pool_amount"`
+	// promoter is the address of campaign promoter.
+	// Funds for the campaign would be deducted from this account.
+	Promoter string `protobuf:"bytes,1,opt,name=promoter,proto3" json:"promoter,omitempty"`
+	// start_ts is the start timestamp of the campaign.
+	StartTs uint64 `protobuf:"varint,2,opt,name=start_ts,json=startTs,proto3" json:"start_ts,omitempty"`
+	// end_ts is the end timestamp of the campaign.
+	EndTs uint64 `protobuf:"varint,3,opt,name=end_ts,json=endTs,proto3" json:"end_ts,omitempty"`
+	// reward_type is the type of reward.
+	RewardType RewardType `protobuf:"varint,4,opt,name=reward_type,json=rewardType,proto3,enum=sgenetwork.sge.reward.RewardType" json:"reward_type,omitempty"`
+	// Reward amount
+	RewardAmountType RewardAmountType `protobuf:"varint,7,opt,name=reward_amount_type,json=rewardAmountType,proto3,enum=sgenetwork.sge.reward.RewardAmountType" json:"reward_amount_type,omitempty"`
+	// reward_amount is the amount of reward.
+	RewardAmount *RewardAmount `protobuf:"bytes,8,opt,name=reward_amount,json=rewardAmount,proto3" json:"reward_amount,omitempty"`
+	// pool is the tracker of pool funds of the campaign.
+	Pool Pool `protobuf:"bytes,9,opt,name=pool,proto3" json:"pool"`
+	// validations required on the campaign reward distribution.
+	// It is a stringified base64 encoded json.
+	Validations string `protobuf:"bytes,10,opt,name=validations,proto3" json:"validations,omitempty"`
+	// meta is the metadata of the campaign.
+	// It is a stringified base64 encoded json.
+	Meta string `protobuf:"bytes,11,opt,name=meta,proto3" json:"meta,omitempty"`
 }
 
 func (m *CreateCampaignPayload) Reset()         { *m = CreateCampaignPayload{} }
@@ -67,9 +81,9 @@ func (m *CreateCampaignPayload) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_CreateCampaignPayload proto.InternalMessageInfo
 
-func (m *CreateCampaignPayload) GetFunderAddress() string {
+func (m *CreateCampaignPayload) GetPromoter() string {
 	if m != nil {
-		return m.FunderAddress
+		return m.Promoter
 	}
 	return ""
 }
@@ -88,23 +102,54 @@ func (m *CreateCampaignPayload) GetEndTs() uint64 {
 	return 0
 }
 
-func (m *CreateCampaignPayload) GetType() RewardType {
+func (m *CreateCampaignPayload) GetRewardType() RewardType {
 	if m != nil {
-		return m.Type
+		return m.RewardType
 	}
 	return RewardType_REWARD_TYPE_UNSPECIFIED
 }
 
-func (m *CreateCampaignPayload) GetRewardDefs() []Definition {
+func (m *CreateCampaignPayload) GetRewardAmountType() RewardAmountType {
 	if m != nil {
-		return m.RewardDefs
+		return m.RewardAmountType
+	}
+	return RewardAmountType_REWARD_AMOUNT_TYPE_UNSPECIFIED
+}
+
+func (m *CreateCampaignPayload) GetRewardAmount() *RewardAmount {
+	if m != nil {
+		return m.RewardAmount
 	}
 	return nil
 }
 
+func (m *CreateCampaignPayload) GetPool() Pool {
+	if m != nil {
+		return m.Pool
+	}
+	return Pool{}
+}
+
+func (m *CreateCampaignPayload) GetValidations() string {
+	if m != nil {
+		return m.Validations
+	}
+	return ""
+}
+
+func (m *CreateCampaignPayload) GetMeta() string {
+	if m != nil {
+		return m.Meta
+	}
+	return ""
+}
+
 // UpdateCampaignPayload is the type for campaign update payload.
 type UpdateCampaignPayload struct {
-	EndTs uint64 `protobuf:"varint,1,opt,name=end_ts,json=endTs,proto3" json:"end_ts,omitempty"`
+	// end_ts is the end timestamp of the campaign.
+	EndTs uint64 `protobuf:"varint,3,opt,name=end_ts,json=endTs,proto3" json:"end_ts,omitempty"`
+	// funds is the additional amount added to the campaign.
+	Funds string `protobuf:"bytes,4,opt,name=funds,proto3" json:"funds,omitempty"`
 }
 
 func (m *UpdateCampaignPayload) Reset()         { *m = UpdateCampaignPayload{} }
@@ -147,239 +192,48 @@ func (m *UpdateCampaignPayload) GetEndTs() uint64 {
 	return 0
 }
 
-// ApplySignupRewardPayload is the signup reward ticket payload type.
-type ApplySignupRewardPayload struct {
-	Receiver Receiver `protobuf:"bytes,1,opt,name=receiver,proto3" json:"receiver"`
-}
-
-func (m *ApplySignupRewardPayload) Reset()         { *m = ApplySignupRewardPayload{} }
-func (m *ApplySignupRewardPayload) String() string { return proto.CompactTextString(m) }
-func (*ApplySignupRewardPayload) ProtoMessage()    {}
-func (*ApplySignupRewardPayload) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5d710bc1249ca8ae, []int{2}
-}
-func (m *ApplySignupRewardPayload) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ApplySignupRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ApplySignupRewardPayload.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ApplySignupRewardPayload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ApplySignupRewardPayload.Merge(m, src)
-}
-func (m *ApplySignupRewardPayload) XXX_Size() int {
-	return m.Size()
-}
-func (m *ApplySignupRewardPayload) XXX_DiscardUnknown() {
-	xxx_messageInfo_ApplySignupRewardPayload.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ApplySignupRewardPayload proto.InternalMessageInfo
-
-func (m *ApplySignupRewardPayload) GetReceiver() Receiver {
+func (m *UpdateCampaignPayload) GetFunds() string {
 	if m != nil {
-		return m.Receiver
+		return m.Funds
 	}
-	return Receiver{}
-}
-
-// ApplyRerferralRewardPayload is the referral reward ticket payload type.
-type ApplyRerferralRewardPayload struct {
-	Receivers []Receiver `protobuf:"bytes,1,rep,name=receivers,proto3" json:"receivers"`
-}
-
-func (m *ApplyRerferralRewardPayload) Reset()         { *m = ApplyRerferralRewardPayload{} }
-func (m *ApplyRerferralRewardPayload) String() string { return proto.CompactTextString(m) }
-func (*ApplyRerferralRewardPayload) ProtoMessage()    {}
-func (*ApplyRerferralRewardPayload) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5d710bc1249ca8ae, []int{3}
-}
-func (m *ApplyRerferralRewardPayload) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ApplyRerferralRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ApplyRerferralRewardPayload.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ApplyRerferralRewardPayload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ApplyRerferralRewardPayload.Merge(m, src)
-}
-func (m *ApplyRerferralRewardPayload) XXX_Size() int {
-	return m.Size()
-}
-func (m *ApplyRerferralRewardPayload) XXX_DiscardUnknown() {
-	xxx_messageInfo_ApplyRerferralRewardPayload.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ApplyRerferralRewardPayload proto.InternalMessageInfo
-
-func (m *ApplyRerferralRewardPayload) GetReceivers() []Receiver {
-	if m != nil {
-		return m.Receivers
-	}
-	return nil
-}
-
-// ApplyAffiliationRewardPayload is the affiliation reward ticket payload type.
-type ApplyAffiliationRewardPayload struct {
-	Receiver Receiver `protobuf:"bytes,1,opt,name=receiver,proto3" json:"receiver"`
-}
-
-func (m *ApplyAffiliationRewardPayload) Reset()         { *m = ApplyAffiliationRewardPayload{} }
-func (m *ApplyAffiliationRewardPayload) String() string { return proto.CompactTextString(m) }
-func (*ApplyAffiliationRewardPayload) ProtoMessage()    {}
-func (*ApplyAffiliationRewardPayload) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5d710bc1249ca8ae, []int{4}
-}
-func (m *ApplyAffiliationRewardPayload) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ApplyAffiliationRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ApplyAffiliationRewardPayload.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ApplyAffiliationRewardPayload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ApplyAffiliationRewardPayload.Merge(m, src)
-}
-func (m *ApplyAffiliationRewardPayload) XXX_Size() int {
-	return m.Size()
-}
-func (m *ApplyAffiliationRewardPayload) XXX_DiscardUnknown() {
-	xxx_messageInfo_ApplyAffiliationRewardPayload.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ApplyAffiliationRewardPayload proto.InternalMessageInfo
-
-func (m *ApplyAffiliationRewardPayload) GetReceiver() Receiver {
-	if m != nil {
-		return m.Receiver
-	}
-	return Receiver{}
-}
-
-// ApplyNoLossBetsRewardPayload is the noloss bets reward ticket payload type.
-type ApplyNoLossBetsRewardPayload struct {
-	Receiver Receiver `protobuf:"bytes,1,opt,name=receiver,proto3" json:"receiver"`
-	BetUids  []string `protobuf:"bytes,3,rep,name=bet_uids,json=betUids,proto3" json:"bet_uids,omitempty"`
-}
-
-func (m *ApplyNoLossBetsRewardPayload) Reset()         { *m = ApplyNoLossBetsRewardPayload{} }
-func (m *ApplyNoLossBetsRewardPayload) String() string { return proto.CompactTextString(m) }
-func (*ApplyNoLossBetsRewardPayload) ProtoMessage()    {}
-func (*ApplyNoLossBetsRewardPayload) Descriptor() ([]byte, []int) {
-	return fileDescriptor_5d710bc1249ca8ae, []int{5}
-}
-func (m *ApplyNoLossBetsRewardPayload) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *ApplyNoLossBetsRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_ApplyNoLossBetsRewardPayload.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *ApplyNoLossBetsRewardPayload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ApplyNoLossBetsRewardPayload.Merge(m, src)
-}
-func (m *ApplyNoLossBetsRewardPayload) XXX_Size() int {
-	return m.Size()
-}
-func (m *ApplyNoLossBetsRewardPayload) XXX_DiscardUnknown() {
-	xxx_messageInfo_ApplyNoLossBetsRewardPayload.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ApplyNoLossBetsRewardPayload proto.InternalMessageInfo
-
-func (m *ApplyNoLossBetsRewardPayload) GetReceiver() Receiver {
-	if m != nil {
-		return m.Receiver
-	}
-	return Receiver{}
-}
-
-func (m *ApplyNoLossBetsRewardPayload) GetBetUids() []string {
-	if m != nil {
-		return m.BetUids
-	}
-	return nil
+	return ""
 }
 
 func init() {
 	proto.RegisterType((*CreateCampaignPayload)(nil), "sgenetwork.sge.reward.CreateCampaignPayload")
 	proto.RegisterType((*UpdateCampaignPayload)(nil), "sgenetwork.sge.reward.UpdateCampaignPayload")
-	proto.RegisterType((*ApplySignupRewardPayload)(nil), "sgenetwork.sge.reward.ApplySignupRewardPayload")
-	proto.RegisterType((*ApplyRerferralRewardPayload)(nil), "sgenetwork.sge.reward.ApplyRerferralRewardPayload")
-	proto.RegisterType((*ApplyAffiliationRewardPayload)(nil), "sgenetwork.sge.reward.ApplyAffiliationRewardPayload")
-	proto.RegisterType((*ApplyNoLossBetsRewardPayload)(nil), "sgenetwork.sge.reward.ApplyNoLossBetsRewardPayload")
 }
 
 func init() { proto.RegisterFile("sge/reward/ticket.proto", fileDescriptor_5d710bc1249ca8ae) }
 
 var fileDescriptor_5d710bc1249ca8ae = []byte{
-	// 504 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x53, 0x4f, 0x8b, 0xd3, 0x40,
-	0x1c, 0x6d, 0xb6, 0xb5, 0xdd, 0x4e, 0x71, 0x0f, 0xc1, 0x62, 0x5c, 0x35, 0xad, 0x01, 0xa1, 0x1e,
-	0x4c, 0x60, 0x17, 0x2f, 0xde, 0xda, 0xee, 0x41, 0x41, 0x44, 0x62, 0xf7, 0x22, 0x48, 0x99, 0x74,
-	0x7e, 0xc9, 0x0e, 0x4d, 0x32, 0x61, 0x7e, 0x13, 0xd7, 0x80, 0x1f, 0xc2, 0x6f, 0xe5, 0x1e, 0xf7,
-	0x28, 0x1e, 0x8a, 0xb4, 0xdf, 0xc0, 0x4f, 0x20, 0x99, 0xd9, 0x3f, 0x15, 0x76, 0xc1, 0xc3, 0x9e,
-	0x32, 0xbf, 0x79, 0xef, 0xcd, 0xcb, 0x7b, 0xcc, 0x90, 0x87, 0x98, 0x40, 0x20, 0xe1, 0x94, 0x4a,
-	0x16, 0x28, 0xbe, 0x58, 0x82, 0xf2, 0x0b, 0x29, 0x94, 0xb0, 0xfb, 0x98, 0x40, 0x0e, 0xea, 0x54,
-	0xc8, 0xa5, 0x8f, 0x09, 0xf8, 0x86, 0xb3, 0xff, 0x20, 0x11, 0x89, 0xd0, 0x8c, 0xa0, 0x5e, 0x19,
-	0xf2, 0xfe, 0xf6, 0x29, 0xe6, 0x63, 0x00, 0xef, 0xc7, 0x0e, 0xe9, 0x4f, 0x25, 0x50, 0x05, 0x53,
-	0x9a, 0x15, 0x94, 0x27, 0xf9, 0x07, 0x5a, 0xa5, 0x82, 0x32, 0xfb, 0x39, 0xd9, 0x8b, 0xcb, 0x9c,
-	0x81, 0x9c, 0x53, 0xc6, 0x24, 0x20, 0x3a, 0xd6, 0xd0, 0x1a, 0x75, 0xc3, 0xfb, 0x66, 0x77, 0x6c,
-	0x36, 0xed, 0x47, 0x64, 0x17, 0x15, 0x95, 0x6a, 0xae, 0xd0, 0xd9, 0x19, 0x5a, 0xa3, 0x56, 0xd8,
-	0xd1, 0xf3, 0x0c, 0xed, 0x3e, 0x69, 0x43, 0xce, 0x6a, 0xa0, 0xa9, 0x81, 0x7b, 0x90, 0xb3, 0x19,
-	0xda, 0xaf, 0x48, 0x4b, 0x55, 0x05, 0x38, 0xad, 0xa1, 0x35, 0xda, 0x3b, 0x78, 0xe6, 0xdf, 0x98,
-	0xc3, 0x0f, 0xf5, 0x67, 0x56, 0x15, 0x10, 0x6a, 0xba, 0xfd, 0x86, 0xf4, 0x0c, 0x34, 0x67, 0x10,
-	0xa3, 0xd3, 0x1e, 0x36, 0x47, 0xbd, 0x5b, 0xd5, 0x47, 0x10, 0xf3, 0x9c, 0x2b, 0x2e, 0xf2, 0x49,
-	0xeb, 0x6c, 0x35, 0x68, 0x84, 0xc4, 0x00, 0x47, 0x10, 0xa3, 0x3d, 0x23, 0xbd, 0x42, 0x88, 0x74,
-	0x4e, 0x33, 0x51, 0xe6, 0xca, 0xe9, 0xd4, 0xb1, 0x26, 0x87, 0x35, 0xed, 0xd7, 0x6a, 0xd0, 0x5f,
-	0x08, 0xcc, 0x04, 0x22, 0x5b, 0xfa, 0x5c, 0x04, 0x19, 0x55, 0x27, 0xfe, 0xdb, 0x5c, 0xfd, 0x59,
-	0x0d, 0xec, 0x8a, 0x66, 0xe9, 0x6b, 0x6f, 0x4b, 0xe9, 0x85, 0xa4, 0x9e, 0xc6, 0x66, 0xf0, 0x49,
-	0xff, 0xb8, 0x60, 0x37, 0x14, 0x79, 0x5d, 0x83, 0xb5, 0x55, 0x83, 0xf7, 0x99, 0x38, 0xe3, 0xa2,
-	0x48, 0xab, 0x8f, 0x3c, 0xc9, 0xcb, 0xc2, 0xc4, 0xbd, 0x94, 0x8c, 0xc9, 0xae, 0x84, 0x05, 0xf0,
-	0x2f, 0x20, 0xb5, 0xa8, 0x77, 0x30, 0xb8, 0xb5, 0x26, 0x43, 0xbb, 0x88, 0x79, 0x25, 0xf3, 0x22,
-	0xf2, 0x58, 0x1f, 0x1f, 0x82, 0x8c, 0x41, 0x4a, 0x9a, 0xfe, 0xeb, 0x30, 0x25, 0xdd, 0x4b, 0x6a,
-	0xfd, 0x5f, 0xcd, 0xff, 0xb7, 0xb8, 0xd6, 0x79, 0x11, 0x79, 0xaa, 0x3d, 0xc6, 0x71, 0xcc, 0x53,
-	0x4e, 0xeb, 0xba, 0xef, 0x3c, 0xc7, 0x37, 0xf2, 0x44, 0x7b, 0xbc, 0x17, 0xef, 0x04, 0xe2, 0x04,
-	0x14, 0xde, 0xb5, 0x45, 0x7d, 0x85, 0x23, 0x50, 0xf3, 0x92, 0xb3, 0xfa, 0xa6, 0x36, 0x47, 0xdd,
-	0xb0, 0x13, 0x81, 0x3a, 0xe6, 0x0c, 0x27, 0xd3, 0xb3, 0xb5, 0x6b, 0x9d, 0xaf, 0x5d, 0xeb, 0xf7,
-	0xda, 0xb5, 0xbe, 0x6f, 0xdc, 0xc6, 0xf9, 0xc6, 0x6d, 0xfc, 0xdc, 0xb8, 0x8d, 0x4f, 0x2f, 0x12,
-	0xae, 0x4e, 0xca, 0xc8, 0x5f, 0x88, 0x2c, 0xc0, 0x04, 0x5e, 0x5e, 0x18, 0xd6, 0xeb, 0xe0, 0xeb,
-	0xd5, 0x83, 0xad, 0x0a, 0xc0, 0xa8, 0xad, 0x9f, 0xda, 0xe1, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff,
-	0xfb, 0x46, 0x13, 0x5d, 0xcb, 0x03, 0x00, 0x00,
+	// 403 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x41, 0x8e, 0xd3, 0x30,
+	0x14, 0x86, 0x63, 0x26, 0x33, 0xd3, 0x3a, 0x80, 0x90, 0x35, 0x11, 0x69, 0x91, 0x42, 0x28, 0x0b,
+	0xc2, 0x82, 0x44, 0x2a, 0xe2, 0x00, 0xb4, 0x2c, 0x58, 0x56, 0x51, 0xbb, 0x61, 0x53, 0xb9, 0xcd,
+	0xc3, 0x44, 0x4d, 0x62, 0xcb, 0x76, 0x29, 0xb9, 0x05, 0xb7, 0xe1, 0x0a, 0x5d, 0x76, 0xc9, 0x0a,
+	0xa1, 0xf6, 0x22, 0xa8, 0x4e, 0x54, 0x05, 0xd4, 0xa2, 0x59, 0xf9, 0x7f, 0xfe, 0x7f, 0x7d, 0xb2,
+	0xdf, 0x7b, 0xf8, 0xa9, 0x62, 0x10, 0x4b, 0xd8, 0x50, 0x99, 0xc6, 0x3a, 0x5b, 0xae, 0x40, 0x47,
+	0x42, 0x72, 0xcd, 0x89, 0xab, 0x18, 0x94, 0xa0, 0x37, 0x5c, 0xae, 0x22, 0xc5, 0x20, 0xaa, 0x33,
+	0xfd, 0x3b, 0xc6, 0x19, 0x37, 0x89, 0xf8, 0xa8, 0xea, 0x70, 0xbf, 0x4d, 0xa9, 0x8f, 0xc6, 0xe8,
+	0xb5, 0x8c, 0x25, 0x2d, 0x04, 0xcd, 0x58, 0x59, 0x5b, 0x83, 0x1f, 0x57, 0xd8, 0x1d, 0x4b, 0xa0,
+	0x1a, 0xc6, 0x8d, 0x31, 0xa1, 0x55, 0xce, 0x69, 0x4a, 0xfa, 0xb8, 0x23, 0x24, 0x2f, 0xb8, 0x06,
+	0xe9, 0xa1, 0x00, 0x85, 0xdd, 0xe4, 0x54, 0x93, 0x1e, 0xee, 0x28, 0x4d, 0xa5, 0x9e, 0x6b, 0xe5,
+	0x3d, 0x08, 0x50, 0x68, 0x27, 0xb7, 0xa6, 0x9e, 0x2a, 0xe2, 0xe2, 0x1b, 0x28, 0xd3, 0xa3, 0x71,
+	0x65, 0x8c, 0x6b, 0x28, 0xd3, 0xa9, 0x22, 0x23, 0xec, 0xd4, 0x0f, 0x98, 0xeb, 0x4a, 0x80, 0x67,
+	0x07, 0x28, 0x7c, 0x3c, 0x7c, 0x11, 0x9d, 0xfd, 0x5e, 0x94, 0x98, 0x63, 0x5a, 0x09, 0x48, 0xb0,
+	0x3c, 0x69, 0x32, 0xc3, 0xa4, 0x61, 0xd0, 0x82, 0xaf, 0x4b, 0x5d, 0xa3, 0x6e, 0x0d, 0xea, 0xd5,
+	0x7f, 0x51, 0xef, 0x4d, 0xde, 0x00, 0x9f, 0xc8, 0x7f, 0x6e, 0xc8, 0x47, 0xfc, 0xe8, 0x2f, 0xac,
+	0xd7, 0x09, 0x50, 0xe8, 0x0c, 0x5f, 0xde, 0x83, 0x98, 0x3c, 0x6c, 0xd3, 0xc8, 0x3b, 0x6c, 0x0b,
+	0xce, 0x73, 0xaf, 0x6b, 0x00, 0xcf, 0x2e, 0x00, 0x26, 0x9c, 0xe7, 0x23, 0x7b, 0xfb, 0xeb, 0xb9,
+	0x95, 0x98, 0x38, 0x09, 0xb0, 0xf3, 0x95, 0xe6, 0x59, 0x4a, 0x75, 0xc6, 0x4b, 0xe5, 0x61, 0xd3,
+	0xec, 0xf6, 0x15, 0x21, 0xd8, 0x2e, 0x40, 0x53, 0xcf, 0x31, 0x96, 0xd1, 0x83, 0x0f, 0xd8, 0x9d,
+	0x89, 0xf4, 0xcc, 0xe0, 0x2e, 0x4c, 0xe0, 0x0e, 0x5f, 0x7f, 0x5e, 0x97, 0xa9, 0x32, 0xbd, 0xef,
+	0x26, 0x75, 0x31, 0x1a, 0x6f, 0xf7, 0x3e, 0xda, 0xed, 0x7d, 0xf4, 0x7b, 0xef, 0xa3, 0xef, 0x07,
+	0xdf, 0xda, 0x1d, 0x7c, 0xeb, 0xe7, 0xc1, 0xb7, 0x3e, 0xbd, 0x66, 0x99, 0xfe, 0xb2, 0x5e, 0x44,
+	0x4b, 0x5e, 0xc4, 0x8a, 0xc1, 0x9b, 0xe6, 0x27, 0x47, 0x1d, 0x7f, 0x3b, 0x2d, 0x6b, 0x25, 0x40,
+	0x2d, 0x6e, 0xcc, 0x2e, 0xbd, 0xfd, 0x13, 0x00, 0x00, 0xff, 0xff, 0xed, 0xca, 0xef, 0xb5, 0xc7,
+	0x02, 0x00, 0x00,
 }
 
 func (m *CreateCampaignPayload) Marshal() (dAtA []byte, err error) {
@@ -402,32 +256,49 @@ func (m *CreateCampaignPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Meta) > 0 {
+		i -= len(m.Meta)
+		copy(dAtA[i:], m.Meta)
+		i = encodeVarintTicket(dAtA, i, uint64(len(m.Meta)))
+		i--
+		dAtA[i] = 0x5a
+	}
+	if len(m.Validations) > 0 {
+		i -= len(m.Validations)
+		copy(dAtA[i:], m.Validations)
+		i = encodeVarintTicket(dAtA, i, uint64(len(m.Validations)))
+		i--
+		dAtA[i] = 0x52
+	}
 	{
-		size := m.PoolAmount.Size()
-		i -= size
-		if _, err := m.PoolAmount.MarshalTo(dAtA[i:]); err != nil {
+		size, err := m.Pool.MarshalToSizedBuffer(dAtA[:i])
+		if err != nil {
 			return 0, err
 		}
+		i -= size
 		i = encodeVarintTicket(dAtA, i, uint64(size))
 	}
 	i--
-	dAtA[i] = 0x3a
-	if len(m.RewardDefs) > 0 {
-		for iNdEx := len(m.RewardDefs) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.RewardDefs[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTicket(dAtA, i, uint64(size))
+	dAtA[i] = 0x4a
+	if m.RewardAmount != nil {
+		{
+			size, err := m.RewardAmount.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
 			}
-			i--
-			dAtA[i] = 0x32
+			i -= size
+			i = encodeVarintTicket(dAtA, i, uint64(size))
 		}
+		i--
+		dAtA[i] = 0x42
 	}
-	if m.Type != 0 {
-		i = encodeVarintTicket(dAtA, i, uint64(m.Type))
+	if m.RewardAmountType != 0 {
+		i = encodeVarintTicket(dAtA, i, uint64(m.RewardAmountType))
+		i--
+		dAtA[i] = 0x38
+	}
+	if m.RewardType != 0 {
+		i = encodeVarintTicket(dAtA, i, uint64(m.RewardType))
 		i--
 		dAtA[i] = 0x20
 	}
@@ -441,10 +312,10 @@ func (m *CreateCampaignPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		i--
 		dAtA[i] = 0x10
 	}
-	if len(m.FunderAddress) > 0 {
-		i -= len(m.FunderAddress)
-		copy(dAtA[i:], m.FunderAddress)
-		i = encodeVarintTicket(dAtA, i, uint64(len(m.FunderAddress)))
+	if len(m.Promoter) > 0 {
+		i -= len(m.Promoter)
+		copy(dAtA[i:], m.Promoter)
+		i = encodeVarintTicket(dAtA, i, uint64(len(m.Promoter)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -471,156 +342,18 @@ func (m *UpdateCampaignPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Funds) > 0 {
+		i -= len(m.Funds)
+		copy(dAtA[i:], m.Funds)
+		i = encodeVarintTicket(dAtA, i, uint64(len(m.Funds)))
+		i--
+		dAtA[i] = 0x22
+	}
 	if m.EndTs != 0 {
 		i = encodeVarintTicket(dAtA, i, uint64(m.EndTs))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0x18
 	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ApplySignupRewardPayload) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ApplySignupRewardPayload) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ApplySignupRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.Receiver.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTicket(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *ApplyRerferralRewardPayload) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ApplyRerferralRewardPayload) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ApplyRerferralRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Receivers) > 0 {
-		for iNdEx := len(m.Receivers) - 1; iNdEx >= 0; iNdEx-- {
-			{
-				size, err := m.Receivers[iNdEx].MarshalToSizedBuffer(dAtA[:i])
-				if err != nil {
-					return 0, err
-				}
-				i -= size
-				i = encodeVarintTicket(dAtA, i, uint64(size))
-			}
-			i--
-			dAtA[i] = 0xa
-		}
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *ApplyAffiliationRewardPayload) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ApplyAffiliationRewardPayload) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ApplyAffiliationRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	{
-		size, err := m.Receiver.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTicket(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
-	return len(dAtA) - i, nil
-}
-
-func (m *ApplyNoLossBetsRewardPayload) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *ApplyNoLossBetsRewardPayload) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *ApplyNoLossBetsRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.BetUids) > 0 {
-		for iNdEx := len(m.BetUids) - 1; iNdEx >= 0; iNdEx-- {
-			i -= len(m.BetUids[iNdEx])
-			copy(dAtA[i:], m.BetUids[iNdEx])
-			i = encodeVarintTicket(dAtA, i, uint64(len(m.BetUids[iNdEx])))
-			i--
-			dAtA[i] = 0x1a
-		}
-	}
-	{
-		size, err := m.Receiver.MarshalToSizedBuffer(dAtA[:i])
-		if err != nil {
-			return 0, err
-		}
-		i -= size
-		i = encodeVarintTicket(dAtA, i, uint64(size))
-	}
-	i--
-	dAtA[i] = 0xa
 	return len(dAtA) - i, nil
 }
 
@@ -641,7 +374,7 @@ func (m *CreateCampaignPayload) Size() (n int) {
 	}
 	var l int
 	_ = l
-	l = len(m.FunderAddress)
+	l = len(m.Promoter)
 	if l > 0 {
 		n += 1 + l + sovTicket(uint64(l))
 	}
@@ -651,17 +384,26 @@ func (m *CreateCampaignPayload) Size() (n int) {
 	if m.EndTs != 0 {
 		n += 1 + sovTicket(uint64(m.EndTs))
 	}
-	if m.Type != 0 {
-		n += 1 + sovTicket(uint64(m.Type))
+	if m.RewardType != 0 {
+		n += 1 + sovTicket(uint64(m.RewardType))
 	}
-	if len(m.RewardDefs) > 0 {
-		for _, e := range m.RewardDefs {
-			l = e.Size()
-			n += 1 + l + sovTicket(uint64(l))
-		}
+	if m.RewardAmountType != 0 {
+		n += 1 + sovTicket(uint64(m.RewardAmountType))
 	}
-	l = m.PoolAmount.Size()
+	if m.RewardAmount != nil {
+		l = m.RewardAmount.Size()
+		n += 1 + l + sovTicket(uint64(l))
+	}
+	l = m.Pool.Size()
 	n += 1 + l + sovTicket(uint64(l))
+	l = len(m.Validations)
+	if l > 0 {
+		n += 1 + l + sovTicket(uint64(l))
+	}
+	l = len(m.Meta)
+	if l > 0 {
+		n += 1 + l + sovTicket(uint64(l))
+	}
 	return n
 }
 
@@ -674,59 +416,9 @@ func (m *UpdateCampaignPayload) Size() (n int) {
 	if m.EndTs != 0 {
 		n += 1 + sovTicket(uint64(m.EndTs))
 	}
-	return n
-}
-
-func (m *ApplySignupRewardPayload) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.Receiver.Size()
-	n += 1 + l + sovTicket(uint64(l))
-	return n
-}
-
-func (m *ApplyRerferralRewardPayload) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	if len(m.Receivers) > 0 {
-		for _, e := range m.Receivers {
-			l = e.Size()
-			n += 1 + l + sovTicket(uint64(l))
-		}
-	}
-	return n
-}
-
-func (m *ApplyAffiliationRewardPayload) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.Receiver.Size()
-	n += 1 + l + sovTicket(uint64(l))
-	return n
-}
-
-func (m *ApplyNoLossBetsRewardPayload) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = m.Receiver.Size()
-	n += 1 + l + sovTicket(uint64(l))
-	if len(m.BetUids) > 0 {
-		for _, s := range m.BetUids {
-			l = len(s)
-			n += 1 + l + sovTicket(uint64(l))
-		}
+	l = len(m.Funds)
+	if l > 0 {
+		n += 1 + l + sovTicket(uint64(l))
 	}
 	return n
 }
@@ -768,7 +460,7 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field FunderAddress", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Promoter", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -796,7 +488,7 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.FunderAddress = string(dAtA[iNdEx:postIndex])
+			m.Promoter = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
 			if wireType != 0 {
@@ -838,9 +530,9 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 			}
 		case 4:
 			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RewardType", wireType)
 			}
-			m.Type = 0
+			m.RewardType = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTicket
@@ -850,14 +542,33 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Type |= RewardType(b&0x7F) << shift
+				m.RewardType |= RewardType(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-		case 6:
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field RewardAmountType", wireType)
+			}
+			m.RewardAmountType = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTicket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.RewardAmountType |= RewardAmountType(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 8:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field RewardDefs", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field RewardAmount", wireType)
 			}
 			var msglen int
 			for shift := uint(0); ; shift += 7 {
@@ -884,14 +595,49 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.RewardDefs = append(m.RewardDefs, Definition{})
-			if err := m.RewardDefs[len(m.RewardDefs)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+			if m.RewardAmount == nil {
+				m.RewardAmount = &RewardAmount{}
+			}
+			if err := m.RewardAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 9:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PoolAmount", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Pool", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTicket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTicket
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTicket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Pool.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Validations", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -919,9 +665,39 @@ func (m *CreateCampaignPayload) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			if err := m.PoolAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
+			m.Validations = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 11:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Meta", wireType)
 			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTicket
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTicket
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTicket
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Meta = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
@@ -973,7 +749,7 @@ func (m *UpdateCampaignPayload) Unmarshal(dAtA []byte) error {
 			return fmt.Errorf("proto: UpdateCampaignPayload: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
-		case 1:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field EndTs", wireType)
 			}
@@ -992,342 +768,9 @@ func (m *UpdateCampaignPayload) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTicket(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ApplySignupRewardPayload) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTicket
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ApplySignupRewardPayload: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ApplySignupRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
+		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTicket
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Receiver.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTicket(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ApplyRerferralRewardPayload) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTicket
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ApplyRerferralRewardPayload: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ApplyRerferralRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Receivers", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTicket
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Receivers = append(m.Receivers, Receiver{})
-			if err := m.Receivers[len(m.Receivers)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTicket(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ApplyAffiliationRewardPayload) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTicket
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ApplyAffiliationRewardPayload: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ApplyAffiliationRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTicket
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Receiver.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTicket(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *ApplyNoLossBetsRewardPayload) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTicket
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: ApplyNoLossBetsRewardPayload: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: ApplyNoLossBetsRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Receiver", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTicket
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTicket
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTicket
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if err := m.Receiver.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field BetUids", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Funds", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1355,7 +798,7 @@ func (m *ApplyNoLossBetsRewardPayload) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.BetUids = append(m.BetUids, string(dAtA[iNdEx:postIndex]))
+			m.Funds = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

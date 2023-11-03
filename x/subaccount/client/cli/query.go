@@ -47,7 +47,7 @@ func QuerySubaccount() *cobra.Command {
 				return err
 			}
 
-			res, err := queryClient.Subaccount(context.Background(), &types.QuerySubaccountRequest{SubaccountOwner: args[0]})
+			res, err := queryClient.Subaccount(context.Background(), &types.QuerySubaccountRequest{Address: args[0]})
 			if err != nil {
 				return err
 			}

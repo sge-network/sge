@@ -114,10 +114,10 @@ func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
 
 	k.SetSubAccountOwner(ctx, subAccAddr, subAccOwnerAddr)
 	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
-	k.SetBalance(ctx, subAccAddr, types.Balance{
+	k.SetBalance(ctx, subAccAddr, types.AccountSummary{
 		DepositedAmount: moneyToSend,
 		SpentAmount:     sdk.ZeroInt(),
-		WithdrawmAmount: sdk.ZeroInt(),
+		WithdrawnAmount: sdk.ZeroInt(),
 		LostAmount:      sdk.ZeroInt(),
 	})
 	return subAccAddr.String(), nil
@@ -134,7 +134,7 @@ func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccoun
 }
 
 // sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
-// returns an error if any of the unlock times is expired.
+// returns an error if any of to unlock times is expired.
 func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdkmath.Int, error) {
 	moneyToSend := sdkmath.NewInt(0)
 

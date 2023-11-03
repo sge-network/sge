@@ -42,7 +42,7 @@ func (msg *MsgCreate) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	_, err = sdk.AccAddressFromBech32(msg.SubAccountOwner)
+	_, err = sdk.AccAddressFromBech32(msg.Owner)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
@@ -60,7 +60,7 @@ func (msg *MsgCreate) ValidateBasic() error {
 func (msg *MsgCreate) EmitEvent(ctx *sdk.Context, subAccAddr string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgCreate, msg.Creator,
-		sdk.NewAttribute(attributeKeySubAccOwner, msg.SubAccountOwner),
+		sdk.NewAttribute(attributeKeySubAccOwner, msg.Owner),
 		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
 	)
 	emitter.Emit()

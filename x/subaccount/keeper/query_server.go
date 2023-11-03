@@ -17,7 +17,7 @@ type queryServer struct {
 }
 
 func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubaccountRequest) (*types.QuerySubaccountResponse, error) {
-	addr, err := sdk.AccAddressFromBech32(request.SubaccountOwner)
+	addr, err := sdk.AccAddressFromBech32(request.Address)
 	if err != nil {
 		return nil, err
 	}
@@ -35,9 +35,9 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 
 	balanceLocks := q.keeper.GetLockedBalances(ctx, subaccountAddr)
 	return &types.QuerySubaccountResponse{
-		SubaccountAddress: subaccountAddr.String(),
-		Balance:           balance,
-		LockedBalance:     balanceLocks,
+		Address:       subaccountAddr.String(),
+		Balance:       balance,
+		LockedBalance: balanceLocks,
 	}, nil
 }
 

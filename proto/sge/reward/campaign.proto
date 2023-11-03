@@ -52,9 +52,12 @@ message Campaign {
   // It is a stringified base64 encoded json.
   string validations = 10;
 
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 11;
+
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
-  string meta = 11;
+  string meta = 12;
 }
 
 // Pool is the type for the campaign funding pool.

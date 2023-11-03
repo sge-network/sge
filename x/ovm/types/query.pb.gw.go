@@ -452,13 +452,13 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "ovm", "params"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "ovm", "params"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PubKeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "ovm", "pub_keys"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PubKeys_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "ovm", "pub_keys"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PublicKeysChangeProposal_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "ovm", "pubkeys_proposal", "status", "id"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PublicKeysChangeProposal_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "ovm", "pubkeys_proposal", "status", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_Query_PublicKeysChangeProposals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "ovm", "pubkeys_proposals", "status"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_PublicKeysChangeProposals_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge", "ovm", "pubkeys_proposals", "status"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (

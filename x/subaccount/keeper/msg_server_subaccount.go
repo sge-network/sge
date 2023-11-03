@@ -9,7 +9,7 @@ import (
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
-// Create creates a sub account according to the input message data.
+// Create creates a subaccount according to the input message data.
 func (k msgServer) Create(
 	goCtx context.Context,
 	msg *types.MsgCreate,
@@ -20,7 +20,7 @@ func (k msgServer) Create(
 		return nil, sdkerrors.Wrap(err, "invalid request")
 	}
 
-	subAccAddr, err := k.keeper.CreateSubAccount(ctx, msg.Creator, msg.SubAccountOwner, msg.LockedBalances)
+	subAccAddr, err := k.keeper.CreateSubAccount(ctx, msg.Creator, msg.Owner, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
