@@ -7,6 +7,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/reward/params.proto";
 import "sge/reward/campaign.proto";
+import "sge/reward/reward.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -26,6 +27,31 @@ service Query {
   // Queries list of all Campaign items.
   rpc Campaigns(QueryCampaignsRequest) returns (QueryCampaignsResponse) {
     option (google.api.http).get = "/sge-network/sge/reward/campaigns";
+  }
+
+  // Queries a specific Reward item
+  rpc Reward(QueryRewardRequest) returns (QueryRewardResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/reward/{uid}";
+  }
+
+  // Queries list of all Reward items.
+  rpc Rewards(QueryRewardsRequest) returns (QueryRewardsResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/rewards";
+  }
+
+  // Queries list of all Reward items by user address.
+  rpc RewardsByAddress(QueryRewardsByAddressRequest) returns (QueryRewardsByAddressResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/rewards/{address}";
+  }
+
+  // Queries list of all Reward items by user address and reward category endpoint.
+  rpc RewardsByAddressAndCategory(QueryRewardsByAddressAndCategoryRequest) returns (QueryRewardsByAddressAndCategoryResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/rewards/{address}/{category}";
+  }
+
+  // Queries list of all Reward items by campaign endpoint.
+  rpc RewardsByCampaign(QueryRewardsByCampaignRequest) returns (QueryRewardsByCampaignResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/rewards/campaign/{campaign}";
   }
 }
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -57,3 +83,60 @@ message QueryCampaignsResponse {
   repeated Campaign campaign = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
+
+// QueryRewardRequest is request body of the query reward endpoint.
+message QueryRewardRequest { string uid = 1; }
+
+// QueryRewardResponse is response body of the query reward endpoint.
+message QueryRewardResponse {
+  Reward reward = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryRewardsRequest is request body for the query all rewards endpoint.
+message QueryRewardsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryRewardsResponse is response body of the query all rewards endpoint.
+message QueryRewardsResponse {
+  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryRewardsByAddressRequest is request body for the query all rewards by address endpoint.
+message QueryRewardsByAddressRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string address = 2;
+}
+
+// QueryRewardsByAddressResponse is response body of the query all rewards by address endpoint.
+message QueryRewardsByAddressResponse {
+  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryRewardsByAddressAndCategoryRequest is request body for the query all rewards by address and category endpoint.
+message QueryRewardsByAddressAndCategoryRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string address = 2;
+  string category = 3;
+}
+
+// QueryRewardsByAddressAndCategoryResponse is response body of the query all rewards by address and category endpoint.
+message QueryRewardsByAddressAndCategoryResponse {
+  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryRewardsByCampaignRequest is request body for the query all rewards by campaign endpoint.
+message QueryRewardsByCampaignRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string campaign = 2;
+}
+
+// QueryRewardsByCampaignResponse is response body of the query all rewards by campaign endpoint.
+message QueryRewardsByCampaignResponse {
+  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

@@ -13,8 +13,8 @@ import (
 
 func CmdListCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "list-campaign",
-		Short: "list all campaign",
+		Use:   "campaigns",
+		Short: "list all campaigns",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
@@ -25,11 +25,11 @@ func CmdListCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryCampaignAllRequest{
+			params := &types.QueryCampaignsRequest{
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.CampaignAll(context.Background(), params)
+			res, err := queryClient.Campaigns(context.Background(), params)
 			if err != nil {
 				return err
 			}
@@ -44,9 +44,9 @@ func CmdListCampaign() *cobra.Command {
 	return cmd
 }
 
-func CmdShowCampaign() *cobra.Command {
+func CmdGetCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "show-campaign [index]",
+		Use:   "campaign [uid]",
 		Short: "shows a campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {

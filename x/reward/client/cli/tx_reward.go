@@ -10,7 +10,7 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
-func CmdApplyReward() *cobra.Command {
+func CmdGrantReward() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "apply [campaign uid] [ticket]",
 		Short: "Apply a new reward",

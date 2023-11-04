@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package sgenetwork.sge.reward;
 
+import "gogoproto/gogo.proto";
+
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Msg defines the Msg service.
@@ -10,7 +12,7 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // UpdateCampaign is a method to update campaign
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
-  // GrantReward is method to allocate rewards
+  // GrantSignupReward is method to allocate signup rewards
   rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
 }
 
@@ -40,15 +42,24 @@ message MsgUpdateCampaign {
 // MsgUpdateCampaignResponse campaign update message response type.
 message MsgUpdateCampaignResponse {}
 
-// MsgAllocateReward is apply reward message type.
+// MsgGrantReward is execute reward message type.
 message MsgGrantReward {
   // creator is the address of creator account.
   string creator = 1;
-  // campaign_uid is the unique identifier of the campaign.
-  string campaign_uid = 2;
+  // uid is the unique identifier of the reward.
+  string uid = 2;
+  // campaign_uid is the unique identifier of the reward campaign.
+  string campaign_uid = 3;
+
+  // created_at is the time when the reward is created.
+  uint64 created_at = 4 [
+    (gogoproto.customname) = "CreatedAt",
+    (gogoproto.jsontag) = "created_at",
+    json_name = "created_at"
+  ];
   // ticket is the payload data.
-  string ticket = 3;
+  string ticket = 5;
 }
 
-// MsgApplyRewardResponse apply reward message response type.
+// MsgGrantSignupRewardResponse execute signup reward message response type.
 message MsgGrantRewardResponse {}

@@ -23,7 +23,12 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 
 	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(CmdListCampaign())
-	cmd.AddCommand(CmdShowCampaign())
+	cmd.AddCommand(CmdGetCampaign())
+	cmd.AddCommand(CmdListReward())
+	cmd.AddCommand(CmdGetReward())
+	cmd.AddCommand(CmdGetRewardsByCampaign())
+	cmd.AddCommand(CmdGetRewardsByUser())
+	cmd.AddCommand(CmdGetRewardByUserAndCategory())
 
 	return cmd
 }

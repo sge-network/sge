@@ -36,21 +36,20 @@ message Campaign {
     json_name = "end_ts"
   ];
 
+  // reward_category is the category of reward.
+  RewardCategory reward_category = 6;
+
   // reward_type is the type of reward.
-  RewardType reward_type = 6;
+  RewardType reward_type = 7;
 
-  // Reward amount
-  RewardAmountType reward_amount_type = 7;
+  // amount_type is the type of reward amount.
+  RewardAmountType reward_amount_type = 8;
 
-  // reward_amount is the amount of reward.
-  RewardAmount reward_amount = 8;
+  // amount is the amount of reward.
+  RewardAmount reward_amount = 9;
 
   // pool is the tracker of pool funds of the campaign.
-  Pool pool = 9 [ (gogoproto.nullable) = false ];
-
-  // validations required on the campaign reward distribution.
-  // It is a stringified base64 encoded json.
-  string validations = 10;
+  Pool pool = 10 [ (gogoproto.nullable) = false ];
 
   // is_active is the flag to check if the campaign is active or not.
   bool is_active = 11;

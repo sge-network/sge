@@ -8,28 +8,42 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 // Reward is the transaction made to reward a user
 // for a specific action.
 message Reward {
+
+  // uid is the unique identifier for a reward.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
   // creator is the address of the account that invokes the reward transaction.
-  string creator = 1;
+  string creator = 2;
 
   // receiver is the address of the account that receives the reward.
-  string receiver = 2;
+  string receiver = 3;
 
   // campaign_uid is the unique identifier of the campaign.
-  string campaign_uid = 3 [
+  string campaign_uid = 4 [
     (gogoproto.customname) = "CampaignUID",
     (gogoproto.jsontag) = "campaign_uid",
     json_name = "campaign_uid"
   ];
 
   // reward_type is the type of the reward.
-  RewardType reward_type = 4 [
+  RewardType reward_type = 5 [
     (gogoproto.customname) = "RewardType",
     (gogoproto.jsontag) = "reward_type",
     json_name = "reward_type"
   ];
 
+  RewardCategory reward_category = 6 [
+    (gogoproto.customname) = "RewardCategory",
+    (gogoproto.jsontag) = "reward_category",
+    json_name = "reward_category"
+  ];
+
   // reward_amount is the amount of the reward.
-  RewardAmount reward_amount = 5 [
+  RewardAmount reward_amount = 7 [
     (gogoproto.customname) = "RewardAmount",
     (gogoproto.jsontag) = "reward_amount",
     json_name = "reward_amount"
@@ -38,7 +52,7 @@ message Reward {
   // source is the source of the reward.
   // It is used to identify the source of the reward.
   // For example, the source of a referral signup is Type - referral.
-  string source = 6 [
+  string source = 8 [
     (gogoproto.customname) = "Source",
     (gogoproto.jsontag) = "source",
     json_name = "source"
@@ -47,7 +61,7 @@ message Reward {
   // source_code is the source code of the reward.
   // It is used to identify the source of the reward.
   // For example, the source code of a referral signup is referral code of referer.
-  string source_code = 7 [
+  string source_code = 9 [
     (gogoproto.customname) = "SourceCode",
     (gogoproto.jsontag) = "source_code",
     json_name = "source_code"
@@ -56,14 +70,14 @@ message Reward {
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
   // For example, the source uid of a referral signup reward is the address of the referer.
-  string source_uid = 8 [
+  string source_uid = 10 [
     (gogoproto.customname) = "SourceUID",
     (gogoproto.jsontag) = "source_uid",
     json_name = "source_uid"
   ];
 
   // created_at is the time when the reward is created.
-  uint64 created_at = 9 [
+  uint64 created_at = 11 [
     (gogoproto.customname) = "CreatedAt",
     (gogoproto.jsontag) = "created_at",
     json_name = "created_at"
@@ -95,6 +109,33 @@ message RewardAmount {
 }
 
 // RewardType defines supported types of rewards of reward module.
+enum RewardCategory {
+  // the invalid or unknown
+  REWARD_CATEGORY_UNSPECIFIED = 0;
+
+  // signup reward
+  REWARD_CATEGORY_SIGNUP = 1;
+
+  // referral reward
+  REWARD_CATEGORY_REFERRAL = 2;
+
+  // affiliate reward
+  REWARD_CATEGORY_AFFILIATE = 3;
+
+  // bet refunds
+  REWARD_CATEGORY_BET_REFUND = 4;
+
+  // milestone reward
+  REWARD_CATEGORY_MILESTONE = 5;
+
+  // bet discounts
+  REWARD_CATEGORY_BET_DISCOUNT = 6;
+
+  // other rewards
+  REWARD_CATEGORY_OTHER = 7;
+}
+
+// RewardType defines supported types of rewards of reward module.
 enum RewardType {
   // the invalid or unknown
   REWARD_TYPE_UNSPECIFIED = 0;
@@ -102,23 +143,29 @@ enum RewardType {
   // signup reward
   REWARD_TYPE_SIGNUP = 1;
 
+  // referral signup reward
+  REWARD_TYPE_REFERRAL_SIGNUP = 2;
+
+  // affiliate signup reward
+  REWARD_TYPE_AFFILIATE_SIGNUP = 3;
+
   // referral reward
-  REWARD_TYPE_REFERRAL = 2;
+  REWARD_TYPE_REFERRAL = 4;
 
   // affiliate reward
-  REWARD_TYPE_AFFILIATE = 3;
+  REWARD_TYPE_AFFILIATE = 5;
 
   // bet refunds
-  REWARD_TYPE_BET_REFUND = 4;
+  REWARD_TYPE_BET_REFUND = 6;
 
   // milestone reward
-  REWARD_TYPE_MILESTONE = 5;
+  REWARD_TYPE_MILESTONE = 7;
 
   // bet discounts
-  REWARD_TYPE_BET_DISCOUNT = 6;
+  REWARD_TYPE_BET_DISCOUNT = 8;
 
   // other rewards
-  REWARD_TYPE_OTHER = 7;
+  REWARD_TYPE_OTHER = 9;
 }
 
 // RewardType defines supported types of rewards of reward module.
@@ -136,16 +183,16 @@ enum RewardAmountType {
   REWARD_AMOUNT_TYPE_PERCENTAGE = 3;
 }
 
-// ReceiverType defines all of reward receiver types in the system.
-enum ReceiverType {
-  // the invalid or unknown
-  RECEIVER_TYPE_UNSPECIFIED = 0;
-  // single receiver account
-  RECEIVER_TYPE_SINGLE = 1;
-  // referrer
-  RECEIVER_TYPE_REFERRER = 2;
-  // referee
-  RECEIVER_TYPE_REFEREE = 3;
-  // affiliate
-  RECEIVER_TYPE_AFFILIATE = 4;
-}
+//// ReceiverType defines all of reward receiver types in the system.
+//enum ReceiverType {
+//  // the invalid or unknown
+//  RECEIVER_TYPE_UNSPECIFIED = 0;
+//  // single receiver account
+//  RECEIVER_TYPE_SINGLE = 1;
+//  // referrer
+//  RECEIVER_TYPE_REFERRER = 2;
+//  // referee
+//  RECEIVER_TYPE_REFEREE = 3;
+//  // affiliate
+//  RECEIVER_TYPE_AFFILIATE = 4;
+//}

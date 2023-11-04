@@ -19,33 +19,85 @@ message CreateCampaignPayload {
   // end_ts is the end timestamp of the campaign.
   uint64 end_ts = 3;
 
+  // category is the category of the campaign.
+  RewardCategory category = 4;
+
   // reward_type is the type of reward.
-  RewardType reward_type = 4;
+  RewardType reward_type = 5;
 
   // Reward amount
-  RewardAmountType reward_amount_type = 7;
+  RewardAmountType reward_amount_type = 6;
 
   // reward_amount is the amount of reward.
-  RewardAmount reward_amount = 8;
+  RewardAmount reward_amount = 7;
 
   // pool is the tracker of pool funds of the campaign.
-  Pool pool = 9 [ (gogoproto.nullable) = false ];
+  Pool pool = 8 [ (gogoproto.nullable) = false ];
 
-  // validations required on the campaign reward distribution.
-  // It is a stringified base64 encoded json.
-  string validations = 10;
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 9;
 
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
-  string meta = 11;
+  string meta = 10;
 }
 
 // UpdateCampaignPayload is the type for campaign update payload.
 message UpdateCampaignPayload {
 
   // end_ts is the end timestamp of the campaign.
-  uint64 end_ts = 3;
+  uint64 end_ts = 1;
 
   // funds is the additional amount added to the campaign.
-  string funds = 4;
+  string funds = 2;
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 3;
+}
+
+// GrantRewardPayload is the type for reward grant payload.
+message GrantRewardPayload {
+  // receiver is the address of the account that receives the reward.
+  string receiver = 1;
+  // referal_code is the unique referral code of the user.
+  string referal_code = 2;
+  // reward_type is the type of the reward.
+  RewardType reward_type = 3 [
+    (gogoproto.customname) = "RewardType",
+    (gogoproto.jsontag) = "reward_type",
+    json_name = "reward_type"
+  ];
+  // reward_category is the category of the reward.
+  RewardCategory reward_category = 4 [
+    (gogoproto.customname) = "RewardCategory",
+    (gogoproto.jsontag) = "reward_category",
+    json_name = "reward_category"
+  ];
+
+  // source is the source of the reward.
+  // It is used to identify the source of the reward.
+  // For example, the source of a referral signup is Type - referral.
+  string source = 5 [
+    (gogoproto.customname) = "Source",
+    (gogoproto.jsontag) = "source",
+    json_name = "source"
+  ];
+
+  // source_code is the source code of the reward.
+  // It is used to identify the source of the reward.
+  // For example, the source code of a referral signup is referral code of referer.
+  string source_code = 6 [
+    (gogoproto.customname) = "SourceCode",
+    (gogoproto.jsontag) = "source_code",
+    json_name = "source_code"
+  ];
+
+  // source_uid is the address of the source.
+  // It is used to identify the source of the reward.
+  // For example, the source uid of a referral signup reward is the address of the referer.
+  string source_uid = 7 [
+    (gogoproto.customname) = "SourceUID",
+    (gogoproto.jsontag) = "source_uid",
+    json_name = "source_uid"
+  ];
 }
