@@ -1329,27 +1329,27 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "orderbook", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"sge", "orderbook", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBooks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbook", "status"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBooks_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbook", "status"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbook", "order_book_uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBook_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"sge", "orderbook", "order_book_uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBookParticipations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "participations"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBookParticipations_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "participations"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBookParticipation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "participations", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBookParticipation_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "participations", "participation_index"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBookExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBookExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "exposures"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "exposures", "odds_uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBookExposure_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "exposures", "odds_uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_OrderBookParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_OrderBookParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "participation-exposures"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "participation-exposures", "participation_index"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge", "orderbook", "order_book_uid", "participation-exposures", "participation_index"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_HistoricalParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "historical-participation-exposures"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_HistoricalParticipationExposures_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"sge", "orderbook", "order_book_uid", "historical-participation-exposures"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_ParticipationFulfilledBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"sge", "orderbook", "order_book_uid", "participations", "participation_index", "fulfilled_bets"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_ParticipationFulfilledBets_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4, 2, 5}, []string{"sge", "orderbook", "order_book_uid", "participations", "participation_index", "fulfilled_bets"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (
