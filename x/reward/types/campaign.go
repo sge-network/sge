@@ -6,21 +6,21 @@ import (
 )
 
 func NewCampaign(
-	creator, funderAddres, uID string,
+	creator, promoter, uID string,
 	startTS, endTS uint64,
 	rewardType RewardType,
 	rewardDefs Definitions,
 	pool Pool,
 ) Campaign {
 	return Campaign{
-		Creator:       creator,
-		FunderAddress: funderAddres,
-		UID:           uID,
-		StartTS:       startTS,
-		EndTS:         endTS,
-		RewardType:    rewardType,
-		RewardDefs:    rewardDefs,
-		Pool:          pool,
+		Creator:    creator,
+		Promoter:   promoter,
+		UID:        uID,
+		StartTS:    startTS,
+		EndTS:      endTS,
+		RewardType: rewardType,
+		RewardDefs: rewardDefs,
+		Pool:       pool,
 	}
 }
 

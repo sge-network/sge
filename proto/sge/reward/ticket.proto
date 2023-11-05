@@ -31,8 +31,12 @@ message CreateCampaignPayload {
   // reward_amount is the amount of reward.
   RewardAmount reward_amount = 7;
 
-  // pool is the tracker of pool funds of the campaign.
-  Pool pool = 8 [ (gogoproto.nullable) = false ];
+  // total_funds is the tracker of pool funds of the campaign.
+  string total_funds = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"total_funds\""
+  ];
 
   // is_active is the flag to check if the campaign is active or not.
   bool is_active = 9;

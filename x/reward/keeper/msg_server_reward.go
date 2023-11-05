@@ -10,7 +10,7 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
-func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward) (*types.MsgApplyRewardResponse, error) {
+func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward) (*types.MsgGrantRewardResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	campaign, isFound := k.GetCampaign(ctx, msg.CampaignUid)
@@ -41,7 +41,7 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, campaign.FunderAddress, distribution); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.Promoter, distribution); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
@@ -49,5 +49,5 @@ func (k msgServer) ApplyReward(goCtx context.Context, msg *types.MsgApplyReward)
 
 	msg.EmitEvent(&ctx, msg.CampaignUid, distribution)
 
-	return &types.MsgApplyRewardResponse{}, nil
+	return &types.MsgGrantRewardResponse{}, nil
 }

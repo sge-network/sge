@@ -34,8 +34,8 @@ func TestQueryServer(t *testing.T) {
 	)
 
 	_, err := msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
-		Creator:         subAccFunder.String(),
-		SubAccountOwner: subAccOwner.String(),
+		Creator: subAccFunder.String(),
+		Owner:   subAccOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: uint64(time.Now().Add(24 * time.Hour).Unix()),
@@ -53,14 +53,14 @@ func TestQueryServer(t *testing.T) {
 
 	t.Run("Subaccount", func(t *testing.T) {
 		gotSubaccount, err := queryServer.Subaccount(sdk.WrapSDKContext(ctx), &types.QuerySubaccountRequest{
-			SubaccountOwner: subAccOwner.String(),
+			Address: subAccOwner.String(),
 		})
 		require.NoError(t, err)
-		require.Equal(t, subAccAddr.String(), gotSubaccount.SubaccountAddress)
-		require.Equal(t, types.Balance{
+		require.Equal(t, subAccAddr.String(), gotSubaccount.Address)
+		require.Equal(t, types.AccountSummary{
 			DepositedAmount: subAccFunds,
 			SpentAmount:     sdk.ZeroInt(),
-			WithdrawmAmount: sdk.ZeroInt(),
+			WithdrawnAmount: sdk.ZeroInt(),
 			LostAmount:      sdk.ZeroInt(),
 		}, gotSubaccount.Balance)
 		require.Len(t, gotSubaccount.LockedBalance, 1)

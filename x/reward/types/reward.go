@@ -9,11 +9,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-type (
-	Definitions   []Definition
-	Distributions []Distribution
-)
-
 // RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
 type RewardFactoryKeepers struct {
 	OVMKeeper
