@@ -864,21 +864,21 @@ func RegisterQueryHandlerClient(ctx context.Context, mux *runtime.ServeMux, clie
 }
 
 var (
-	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "params"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Params_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "params"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Campaign_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "campaign", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Campaign_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "campaign", "uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Campaigns_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "campaigns"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Campaigns_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "campaigns"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Reward_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge-network", "sge", "reward", "uid"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Reward_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"sge-network", "sge", "reward", "uid"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_Rewards_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "rewards"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_Rewards_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "rewards"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RewardsByAddress_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "rewards", "address"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_RewardsByAddress_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "rewards", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RewardsByAddressAndCategory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"sge-network", "sge", "reward", "rewards", "address", "category"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_RewardsByAddressAndCategory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"sge-network", "sge", "reward", "rewards", "address", "category"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RewardsByCampaign_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "rewards", "campaign"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_Query_RewardsByCampaign_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "rewards", "campaign"}, "", runtime.AssumeColonVerbOpt(false)))
 )
 
 var (

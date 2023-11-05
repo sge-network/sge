@@ -25,8 +25,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	if msg.Creator != payload.FunderAddress {
-		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, payload.FunderAddress, msg,
+	if msg.Creator != payload.Promoter {
+		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, payload.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
 			return nil, err
 		}
@@ -37,11 +37,15 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	}
 
 	campaign := types.NewCampaign(
-		msg.Creator, payload.FunderAddress, msg.Uid,
+		msg.Creator, payload.Promoter, msg.Uid,
 		payload.StartTs, payload.EndTs,
-		payload.Type,
-		payload.RewardDefs,
-		types.NewPool(payload.PoolAmount),
+		payload.RewardType,
+		payload.Category,
+		payload.RewardAmountType,
+		payload.RewardAmount,
+		payload.IsActive,
+		payload.Meta,
+		types.NewPool(payload.TotalFunds),
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()
@@ -49,13 +53,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
-	for _, d := range campaign.RewardDefs {
-		if err := d.ValidateBasic(uint64(ctx.BlockTime().Unix())); err != nil {
-			return nil, err
-		}
-	}
-
-	err = rewardFactory.VaidateDefinitions(campaign)
+	err = rewardFactory.VaidateCampaign(campaign)
 	if err != nil {
 		return nil, err
 	}
@@ -63,8 +61,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// transfer the pool amount to the reward pool module account
 	if err := k.modFunder.Fund(
 		types.RewardPoolFunder{}, ctx,
-		sdk.MustAccAddressFromBech32(payload.FunderAddress),
-		payload.PoolAmount,
+		sdk.MustAccAddressFromBech32(payload.Promoter),
+		payload.TotalFunds,
 	); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
 	}
@@ -95,8 +93,8 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	}
 
 	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.FunderAddress {
-		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.FunderAddress, msg,
+	if msg.Creator != valFound.Promoter {
+		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
 			return nil, err
 		}

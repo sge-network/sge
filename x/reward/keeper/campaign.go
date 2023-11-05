@@ -18,13 +18,11 @@ func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 // GetCampaign returns a campaign from its index
 func (k Keeper) GetCampaign(
 	ctx sdk.Context,
-	index string,
+	uid string,
 ) (val types.Campaign, found bool) {
 	store := k.getCampaignStore(ctx)
 
-	b := store.Get(types.GetCampaignKey(
-		index,
-	))
+	b := store.Get(types.GetCampaignKey(uid))
 	if b == nil {
 		return val, false
 	}
@@ -36,12 +34,10 @@ func (k Keeper) GetCampaign(
 // RemoveCampaign removes a campaign from the store
 func (k Keeper) RemoveCampaign(
 	ctx sdk.Context,
-	index string,
+	uid string,
 ) {
 	store := k.getCampaignStore(ctx)
-	store.Delete(types.GetCampaignKey(
-		index,
-	))
+	store.Delete(types.GetCampaignKey(uid))
 }
 
 // GetAllCampaign returns all campaign
@@ -60,10 +56,9 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 	return
 }
 
-func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, distributions []types.Distribution) {
-	for _, d := range distributions {
-		campaign.Pool.Spent = campaign.Pool.Spent.Add(d.Allocation.Amount)
-	}
+func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, allocation types.Allocation) {
+	totalAmount := allocation.MainAcc.Amount.Add(allocation.SubAcc.Amount)
+	campaign.Pool.Spent = campaign.Pool.Spent.Add(totalAmount)
 
 	k.SetCampaign(ctx, campaign)
 }

@@ -4,52 +4,53 @@ import (
 	context "context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// AffiliationReward is the type for affiliation rewards calculations
-type AffiliationReward struct{}
+// AffiliateReward is the type for affiliation rewards calculations
+type AffiliateReward struct{}
 
-// NewAffiliationReward create new object of affiliation reward calculator type.
-func NewAffiliationReward() AffiliationReward { return AffiliationReward{} }
+// NewAffiliateReward create new object of affiliation reward calculator type.
+func NewAffiliateReward() AffiliateReward { return AffiliateReward{} }
 
-// VaidateDefinitions validates campaign definitions.
-func (afr AffiliationReward) VaidateDefinitions(campaign Campaign) error {
-	if len(campaign.RewardDefs) != 1 {
-		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "affiliation rewards can only have single definition")
+// VaidateCampaign validates campaign definitions.
+func (rfr AffiliateReward) VaidateCampaign(campaign Campaign) error {
+	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
+		return sdkerrors.Wrapf(ErrWrongRewardCategory, "affiliate rewards can only have single definition")
 	}
-	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return sdkerrors.Wrapf(ErrInvalidReceiverType, "affiliation rewards can be defined for subaccount only")
+	if campaign.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrInvalidGranteeType, "affiliate rewards can be defined for subaccount only")
 	}
-	if campaign.RewardDefs[0].RecAccType == ReceiverAccType_RECEIVER_ACC_TYPE_UNSPECIFIED {
-		return sdkerrors.Wrapf(ErrInvalidReceiverType, "bad account type for the receiver")
+	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "affiliate rewards for subaccount should be positive")
 	}
+
+	// TODO: validate duplicate signup affiliate reward
 	return nil
 }
 
-// CalculateDistributions parses ticket payload and returns the distribution list of affiliation reward.
-func (afr AffiliationReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	definitions Definitions, ticket string,
-) (Distributions, error) {
-	var payload ApplyAffiliationRewardPayload
+// Calculate parses ticket payload and returns the distribution list of referral reward.
+func (rfr AffiliateReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
+	campaign Campaign, ticket string,
+) (Allocation, error) {
+	var payload GrantSignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+		return Allocation{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
-	definition := definitions[0]
-
-	if payload.Receiver.RecType != definition.RecType {
-		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
+	_, found := keepers.SubAccountKeeper.GetSubAccountOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
+	if !found {
+		return Allocation{}, sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
 	}
 
-	return Distributions{
-		NewDistribution(
-			payload.Receiver.Addr,
-			NewAllocation(
-				definition.Amount,
-				definition.RecAccType,
-				definition.UnlockTS,
-			),
+	// TODO: validate reward grant for referral
+
+	return Allocation{
+		SubAcc: NewReceiver(
+			payload.Common.Receiver,
+			campaign.RewardAmount.SubaccountAmount,
+			0,
 		),
 	}, nil
 }

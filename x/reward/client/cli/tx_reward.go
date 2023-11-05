@@ -27,7 +27,7 @@ func CmdGrantReward() *cobra.Command {
 				return err
 			}
 
-			msg := types.NewMsgApplyReward(
+			msg := types.NewMsgGrantReward(
 				clientCtx.GetFromAddress().String(),
 				argCampaignUID,
 				argTicket,

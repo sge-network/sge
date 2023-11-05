@@ -27,8 +27,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 		{
 			name: "invalid creator",
 			msg: types.MsgTopUp{
-				Creator:    "someInvalidAddress",
-				SubAccount: owner.String(),
+				Creator: "someInvalidAddress",
+				Address: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
@@ -41,8 +41,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 		{
 			name: "invalid sub account owner",
 			msg: types.MsgTopUp{
-				Creator:    creatorAddr.String(),
-				SubAccount: "someInvalidAddress",
+				Creator: creatorAddr.String(),
+				Address: "someInvalidAddress",
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: someTime,
@@ -55,8 +55,8 @@ func TestMsgTopUpValidateBasic(t *testing.T) {
 		{
 			name: "unlock time zero",
 			msg: types.MsgTopUp{
-				Creator:    creatorAddr.String(),
-				SubAccount: owner.String(),
+				Creator: creatorAddr.String(),
+				Address: owner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: 0,

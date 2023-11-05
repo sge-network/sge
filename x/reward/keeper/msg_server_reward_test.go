@@ -122,12 +122,12 @@ func TestMsgApplySignupReward(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			ticket, err := simapp.CreateJwtTicket(tc.claims)
 			require.Nil(t, err)
-			reward := &types.MsgApplyReward{
+			reward := &types.MsgGrantReward{
 				Creator:     funder,
 				CampaignUid: campUID,
 				Ticket:      ticket,
 			}
-			_, err = srv.ApplyReward(wctx, reward)
+			_, err = srv.GrantReward(wctx, reward)
 			if tc.err != nil {
 				require.ErrorContains(t, err, tc.err.Error())
 			} else {
@@ -200,12 +200,12 @@ func TestMsgApplyAffiliationReward(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			ticket, err := simapp.CreateJwtTicket(tc.claims)
 			require.Nil(t, err)
-			reward := &types.MsgApplyReward{
+			reward := &types.MsgGrantReward{
 				Creator:     funder,
 				CampaignUid: campUID,
 				Ticket:      ticket,
 			}
-			_, err = srv.ApplyReward(wctx, reward)
+			_, err = srv.GrantReward(wctx, reward)
 			if tc.err != nil {
 				require.ErrorContains(t, err, tc.err.Error())
 			} else {
@@ -313,12 +313,12 @@ func TestMsgApplyReferralReward(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			ticket, err := simapp.CreateJwtTicket(tc.claims)
 			require.Nil(t, err)
-			reward := &types.MsgApplyReward{
+			reward := &types.MsgGrantReward{
 				Creator:     funder,
 				CampaignUid: campUID,
 				Ticket:      ticket,
 			}
-			_, err = srv.ApplyReward(wctx, reward)
+			_, err = srv.GrantReward(wctx, reward)
 			if tc.err != nil {
 				require.ErrorContains(t, err, tc.err.Error())
 			} else {
@@ -405,12 +405,12 @@ func TestMsgApplyNoLossBetsReward(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			ticket, err := simapp.CreateJwtTicket(tc.claims)
 			require.Nil(t, err)
-			reward := &types.MsgApplyReward{
+			reward := &types.MsgGrantReward{
 				Creator:     funder,
 				CampaignUid: campUID,
 				Ticket:      ticket,
 			}
-			_, err = srv.ApplyReward(wctx, reward)
+			_, err = srv.GrantReward(wctx, reward)
 			if tc.err != nil {
 				require.ErrorContains(t, err, tc.err.Error())
 			} else {
@@ -503,12 +503,12 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			ticket, err := simapp.CreateJwtTicket(tc.claims)
 			require.Nil(t, err)
-			reward := &types.MsgApplyReward{
+			reward := &types.MsgGrantReward{
 				Creator:     funder,
 				CampaignUid: campUID,
 				Ticket:      ticket,
 			}
-			_, err = srv.ApplyReward(wctx, reward)
+			_, err = srv.GrantReward(wctx, reward)
 			if tc.err != nil {
 				require.ErrorContains(t, err, tc.err.Error())
 			} else {
@@ -562,12 +562,12 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 	ticket, err := simapp.CreateJwtTicket(claims)
 	require.Nil(t, err)
 
-	reward := &types.MsgApplyReward{
+	reward := &types.MsgGrantReward{
 		Creator:     funder,
 		CampaignUid: campUID,
 		Ticket:      ticket,
 	}
-	_, err = srv.ApplyReward(wctx, reward)
+	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
 	subAccAddr, found := tApp.SubaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiverAddr))

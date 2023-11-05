@@ -30,8 +30,8 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 
 	t.Log("Create sub account")
 	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), &types.MsgCreate{
-		Creator:         creatorAddr.String(),
-		SubAccountOwner: subaccountOwner.String(),
+		Creator: creatorAddr.String(),
+		Owner:   subaccountOwner.String(),
 		LockedBalances: []types.LockedBalance{
 			{
 				Amount:   sdkmath.NewInt(100),
@@ -115,7 +115,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	require.Equal(t, sdkmath.NewInt(0), balance.Amount)
 	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
 	require.True(t, exists)
-	require.Equal(t, sdkmath.NewInt(300), subaccountBalance.WithdrawmAmount)
+	require.Equal(t, sdkmath.NewInt(300), subaccountBalance.WithdrawnAmount)
 
 	// check that the owner has received the last money
 	balance = app.BankKeeper.GetBalance(ctx, subaccountOwner, "usge")
@@ -172,9 +172,9 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 
 	// Create subaccount
 	msg := &types.MsgCreate{
-		Creator:         creatirAddr.String(),
-		SubAccountOwner: subaccount,
-		LockedBalances:  []types.LockedBalance{},
+		Creator:        creatirAddr.String(),
+		Owner:          subaccount,
+		LockedBalances: []types.LockedBalance{},
 	}
 	_, err = msgServer.Create(sdk.WrapSDKContext(ctx), msg)
 	require.NoError(t, err)
@@ -188,8 +188,8 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	require.Len(t, balances, 0)
 
 	msgTopUp := &types.MsgTopUp{
-		Creator:    creatirAddr.String(),
-		SubAccount: subaccount,
+		Creator: creatirAddr.String(),
+		Address: subaccount,
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: afterTime,
@@ -226,8 +226,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 		{
 			name: "unlock time is expired",
 			msg: types.MsgTopUp{
-				Creator:    creatorAddr,
-				SubAccount: subaccount,
+				Creator: creatorAddr,
+				Address: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: beforeTime,
@@ -241,8 +241,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 		{
 			name: "sub account does not exist",
 			msg: types.MsgTopUp{
-				Creator:    creatorAddr,
-				SubAccount: subaccount,
+				Creator: creatorAddr,
+				Address: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
@@ -256,8 +256,8 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 		{
 			name: "creator has not enough balance",
 			msg: types.MsgTopUp{
-				Creator:    creatorAddr,
-				SubAccount: subaccount,
+				Creator: creatorAddr,
+				Address: subaccount,
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
@@ -268,9 +268,9 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 			prepare: func(ctx sdk.Context, msgServer types.MsgServer) {
 				// Create subaccount
 				msg := &types.MsgCreate{
-					Creator:         creatorAddr,
-					SubAccountOwner: subaccount,
-					LockedBalances:  []types.LockedBalance{},
+					Creator:        creatorAddr,
+					Owner:          subaccount,
+					LockedBalances: []types.LockedBalance{},
 				}
 				_, err := msgServer.Create(sdk.WrapSDKContext(ctx), msg)
 				require.NoError(t, err)

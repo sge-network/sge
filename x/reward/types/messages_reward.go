@@ -9,32 +9,32 @@ import (
 )
 
 const (
-	TypeMsgApplyReward = "apply_reward"
+	TypeMsgGrantReward = "apply_reward"
 )
 
-var _ sdk.Msg = &MsgApplyReward{}
+var _ sdk.Msg = &MsgGrantReward{}
 
-func NewMsgApplyReward(
+func NewMsgGrantReward(
 	creator string,
 	campaignUID string,
 	ticket string,
-) *MsgApplyReward {
-	return &MsgApplyReward{
+) *MsgGrantReward {
+	return &MsgGrantReward{
 		Creator:     creator,
 		CampaignUid: campaignUID,
 		Ticket:      ticket,
 	}
 }
 
-func (msg *MsgApplyReward) Route() string {
+func (msg *MsgGrantReward) Route() string {
 	return RouterKey
 }
 
-func (msg *MsgApplyReward) Type() string {
-	return TypeMsgApplyReward
+func (msg *MsgGrantReward) Type() string {
+	return TypeMsgGrantReward
 }
 
-func (msg *MsgApplyReward) GetSigners() []sdk.AccAddress {
+func (msg *MsgGrantReward) GetSigners() []sdk.AccAddress {
 	creator, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		panic(err)
@@ -42,12 +42,12 @@ func (msg *MsgApplyReward) GetSigners() []sdk.AccAddress {
 	return []sdk.AccAddress{creator}
 }
 
-func (msg *MsgApplyReward) GetSignBytes() []byte {
+func (msg *MsgGrantReward) GetSignBytes() []byte {
 	bz := ModuleCdc.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
-func (msg *MsgApplyReward) ValidateBasic() error {
+func (msg *MsgGrantReward) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
@@ -65,11 +65,11 @@ func (msg *MsgApplyReward) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgApplyReward) EmitEvent(ctx *sdk.Context, campaignUID string, distributions Distributions) {
+func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string, allocation Allocation) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(TypeMsgApplyReward, msg.Creator,
+	emitter.AddMsg(TypeMsgGrantReward, msg.Creator,
 		sdk.NewAttribute(attributeKeyCampaignUID, campaignUID),
-		sdk.NewAttribute(attributeKeyDistributions, distributions.String()),
+		sdk.NewAttribute(attributeKeyDistributions, allocation.String()),
 	)
 	emitter.Emit()
 }

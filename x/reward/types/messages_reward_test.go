@@ -10,22 +10,22 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMsgApplyReward_ValidateBasic(t *testing.T) {
+func TestMsgGrantReward_ValidateBasic(t *testing.T) {
 	tests := []struct {
 		name string
-		msg  types.MsgApplyReward
+		msg  types.MsgGrantReward
 		err  error
 	}{
 		{
 			name: "invalid address",
-			msg: types.MsgApplyReward{
+			msg: types.MsgGrantReward{
 				Creator: "invalid_address",
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid uid",
-			msg: types.MsgApplyReward{
+			msg: types.MsgGrantReward{
 				Creator:     sample.AccAddress(),
 				CampaignUid: "bad uid",
 				Ticket:      "ticket",
@@ -34,7 +34,7 @@ func TestMsgApplyReward_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "invalid ticket",
-			msg: types.MsgApplyReward{
+			msg: types.MsgGrantReward{
 				Creator:     sample.AccAddress(),
 				CampaignUid: uuid.NewString(),
 			},
@@ -42,7 +42,7 @@ func TestMsgApplyReward_ValidateBasic(t *testing.T) {
 		},
 		{
 			name: "valid address",
-			msg: types.MsgApplyReward{
+			msg: types.MsgGrantReward{
 				Creator:     sample.AccAddress(),
 				CampaignUid: uuid.NewString(),
 				Ticket:      "ticket",

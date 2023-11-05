@@ -12,7 +12,7 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
-func (k Keeper) CampaignAll(goCtx context.Context, req *types.QueryCampaignAllRequest) (*types.QueryCampaignAllResponse, error) {
+func (k Keeper) Campaigns(goCtx context.Context, req *types.QueryCampaignsRequest) (*types.QueryCampaignsResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
@@ -36,7 +36,7 @@ func (k Keeper) CampaignAll(goCtx context.Context, req *types.QueryCampaignAllRe
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryCampaignAllResponse{Campaign: campaigns, Pagination: pageRes}, nil
+	return &types.QueryCampaignsResponse{Campaign: campaigns, Pagination: pageRes}, nil
 }
 
 func (k Keeper) Campaign(goCtx context.Context, req *types.QueryCampaignRequest) (*types.QueryCampaignResponse, error) {

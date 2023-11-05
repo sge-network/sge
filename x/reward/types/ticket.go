@@ -9,7 +9,7 @@ import (
 
 // Validate validates campaign creation ticket payload.
 func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
-	_, err := sdk.AccAddressFromBech32(payload.FunderAddress)
+	_, err := sdk.AccAddressFromBech32(payload.Promoter)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
@@ -22,11 +22,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 
-	if len(payload.RewardDefs) == 0 {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "at least one reward definition should be defined")
-	}
-
-	if payload.PoolAmount.IsNil() || !payload.PoolAmount.GT(sdkmath.ZeroInt()) {
+	if payload.TotalFunds.IsNil() || !payload.TotalFunds.GT(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
 	}
 

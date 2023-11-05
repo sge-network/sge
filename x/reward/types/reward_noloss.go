@@ -4,69 +4,68 @@ import (
 	context "context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
-// NoLossBetsReward is the type for no loss bets rewards calculations
-type NoLossBetsReward struct{}
+// BetDiscountReward is the type for no loss bets rewards calculations
+type BetDiscountReward struct{}
 
-// NewNoLossBetsReward create new object of no loss bets reward calculator type.
-func NewNoLossBetsReward() NoLossBetsReward { return NoLossBetsReward{} }
+// NewBetDiscountReward create new object of no loss bets reward calculator type.
+func NewBetDiscountReward() BetDiscountReward { return BetDiscountReward{} }
 
-// VaidateDefinitions validates campaign definitions.
-func (afr NoLossBetsReward) VaidateDefinitions(campaign Campaign) error {
-	if len(campaign.RewardDefs) != 1 {
-		return sdkerrors.Wrapf(ErrWrongDefinitionsCount, "noloss bets rewards can only have single definition")
+// VaidateCampaign validates campaign definitions.
+func (afr BetDiscountReward) VaidateCampaign(campaign Campaign) error {
+	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_BET_DISCOUNT {
+		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
-	if campaign.RewardDefs[0].RecType != ReceiverType_RECEIVER_TYPE_SINGLE {
-		return sdkerrors.Wrapf(ErrInvalidReceiverType, "noloss bets rewards can be defined for subaccount only")
+	if campaign.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrInvalidGranteeType, "signup rewards can be defined for subaccount only")
 	}
-	if campaign.RewardDefs[0].RecAccType == ReceiverAccType_RECEIVER_ACC_TYPE_UNSPECIFIED {
-		return sdkerrors.Wrapf(ErrInvalidReceiverType, "bad account type for the receiver")
+	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
 	}
+
+	// TODO: validate duplicate signup reward
 	return nil
 }
 
-// CalculateDistributions parses ticket payload and returns the distribution list of no loss bets reward.
-func (afr NoLossBetsReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	definitions Definitions, ticket string,
-) (Distributions, error) {
-	var payload ApplyNoLossBetsRewardPayload
+// Calculate parses ticket payload and returns the distribution list of no loss bets reward.
+func (afr BetDiscountReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
+	campaign Campaign, ticket string,
+) (Allocation, error) {
+	var payload GrantBetDiscountRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+		return Allocation{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
-	definition := definitions[0]
-
-	if payload.Receiver.RecType != definition.RecType {
-		return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", payload.Receiver.RecType)
+	_, found := keepers.SubAccountKeeper.GetSubAccountOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
+	if !found {
+		return Allocation{}, sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
 	}
 
-	bettorAddr := payload.Receiver.Addr
+	bettorAddr := payload.Common.Receiver
 	for _, betUID := range payload.BetUids {
 		uID2ID, found := keepers.BetKeeper.GetBetID(ctx, betUID)
 		if !found {
-			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet id not found %s", betUID)
+			return Allocation{}, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet id not found %s", betUID)
 		}
 		bet, found := keepers.BetKeeper.GetBet(ctx, bettorAddr, uID2ID.ID)
 		if !found {
-			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet not found %s", betUID)
+			return Allocation{}, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "bet not found %s", betUID)
 		}
 		if bet.Result != bettypes.Bet_RESULT_LOST {
-			return nil, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "the bet result is not loss %s", betUID)
+			return Allocation{}, sdkerrors.Wrapf(ErrInvalidNoLossBetUID, "the bet result is not loss %s", betUID)
 		}
 	}
 
-	return Distributions{
-		NewDistribution(
-			payload.Receiver.Addr,
-			NewAllocation(
-				definition.Amount,
-				definition.RecAccType,
-				definition.UnlockTS,
-			),
+	return Allocation{
+		SubAcc: NewReceiver(
+			payload.Common.Receiver,
+			campaign.RewardAmount.SubaccountAmount,
+			0,
 		),
 	}, nil
 }

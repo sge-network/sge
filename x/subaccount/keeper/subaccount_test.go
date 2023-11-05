@@ -92,10 +92,10 @@ func TestSetLockedBalances(t *testing.T) {
 func TestSetBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
-	balance := types.Balance{
+	balance := types.AccountSummary{
 		DepositedAmount: sdk.ZeroInt(),
 		SpentAmount:     sdk.ZeroInt(),
-		WithdrawmAmount: sdk.ZeroInt(),
+		WithdrawnAmount: sdk.ZeroInt(),
 		LostAmount:      sdk.OneInt(),
 	}
 

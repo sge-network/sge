@@ -25,7 +25,7 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 	for i := range items {
 		items[i].UID = uuid.NewString()
 		items[i].Creator = sample.AccAddress()
-		items[i].FunderAddress = sample.AccAddress()
+		items[i].Promoter = sample.AccAddress()
 		items[i].StartTS = uint64(time.Now().Unix())
 		items[i].EndTS = uint64(time.Now().Add(5 * time.Minute).Unix())
 		items[i].RewardType = types.RewardType_REWARD_TYPE_REFERRAL

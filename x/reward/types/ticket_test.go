@@ -25,36 +25,36 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 		{
 			name: "start after end",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime + 10,
-				EndTs:         blockTime + 5,
+				Promoter: funderAddr,
+				StartTs:  blockTime + 10,
+				EndTs:    blockTime + 5,
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "expired",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime - 1,
-				EndTs:         blockTime,
+				Promoter: funderAddr,
+				StartTs:  blockTime - 1,
+				EndTs:    blockTime,
 			},
 			err: types.ErrExpiredCampaign,
 		},
 		{
 			name: "not enough defs",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime + 1,
-				EndTs:         blockTime + 2,
+				Promoter: funderAddr,
+				StartTs:  blockTime + 1,
+				EndTs:    blockTime + 2,
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
 		{
 			name: "nil pool amount",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime + 1,
-				EndTs:         blockTime + 2,
+				Promoter: funderAddr,
+				StartTs:  blockTime + 1,
+				EndTs:    blockTime + 2,
 				RewardDefs: []types.Definition{
 					{
 						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
@@ -69,9 +69,9 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 		{
 			name: "invalid pool amount",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime + 1,
-				EndTs:         blockTime + 2,
+				Promoter: funderAddr,
+				StartTs:  blockTime + 1,
+				EndTs:    blockTime + 2,
 				RewardDefs: []types.Definition{
 					{
 						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
@@ -87,10 +87,10 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 		{
 			name: "valid",
 			payload: types.CreateCampaignPayload{
-				FunderAddress: funderAddr,
-				StartTs:       blockTime + 1,
-				EndTs:         blockTime + 2,
-				Type:          types.RewardType_REWARD_TYPE_SIGNUP,
+				Promoter: funderAddr,
+				StartTs:  blockTime + 1,
+				EndTs:    blockTime + 2,
+				Type:     types.RewardType_REWARD_TYPE_SIGNUP,
 				RewardDefs: []types.Definition{
 					{
 						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,

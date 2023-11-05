@@ -60,7 +60,8 @@ message Reward {
 
   // source_code is the source code of the reward.
   // It is used to identify the source of the reward.
-  // For example, the source code of a referral signup is referral code of referer.
+  // For example, the source code of a referral signup is referral code of
+  // referer.
   string source_code = 9 [
     (gogoproto.customname) = "SourceCode",
     (gogoproto.jsontag) = "source_code",
@@ -69,7 +70,8 @@ message Reward {
 
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
-  // For example, the source uid of a referral signup reward is the address of the referer.
+  // For example, the source uid of a referral signup reward is the address of
+  // the referer.
   string source_uid = 10 [
     (gogoproto.customname) = "SourceUID",
     (gogoproto.jsontag) = "source_uid",
@@ -85,15 +87,14 @@ message Reward {
 }
 
 message RewardAmount {
-
-  //main account reward amount
+  // main account reward amount
   string main_account_amount = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"main_account_amount\""
   ];
 
-  //sub account reward amount
+  // sub account reward amount
   string subaccount_amount = 2 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -101,10 +102,10 @@ message RewardAmount {
   ];
 
   // unlock timestamp
-  string unlock_ts = 3 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"unlock_ts\""
+  uint64 unlock_ts = 3 [
+    (gogoproto.customname) = "UnlockTS",
+    (gogoproto.jsontag) = "unlock_ts",
+    json_name = "unlock_ts"
   ];
 }
 
@@ -182,17 +183,3 @@ enum RewardAmountType {
   // Percentage of bet amount
   REWARD_AMOUNT_TYPE_PERCENTAGE = 3;
 }
-
-//// ReceiverType defines all of reward receiver types in the system.
-//enum ReceiverType {
-//  // the invalid or unknown
-//  RECEIVER_TYPE_UNSPECIFIED = 0;
-//  // single receiver account
-//  RECEIVER_TYPE_SINGLE = 1;
-//  // referrer
-//  RECEIVER_TYPE_REFERRER = 2;
-//  // referee
-//  RECEIVER_TYPE_REFEREE = 3;
-//  // affiliate
-//  RECEIVER_TYPE_AFFILIATE = 4;
-//}

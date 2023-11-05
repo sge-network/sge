@@ -34,10 +34,10 @@ func TestGenesis(t *testing.T) {
 			{
 				Address: subAccAddr.String(),
 				Owner:   subAccOwner.String(),
-				Balance: types.Balance{
+				Balance: types.AccountSummary{
 					DepositedAmount: subAccFunds,
 					SpentAmount:     sdk.ZeroInt(),
-					WithdrawmAmount: sdk.ZeroInt(),
+					WithdrawnAmount: sdk.ZeroInt(),
 					LostAmount:      sdk.ZeroInt(),
 				},
 				LockedBalances: []types.LockedBalance{

@@ -30,8 +30,8 @@ func TestMsgServer_Create(t *testing.T) {
 
 	someTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	msg := &types.MsgCreate{
-		Creator:         creatorAddr.String(),
-		SubAccountOwner: account.String(),
+		Creator: creatorAddr.String(),
+		Owner:   account.String(),
 		LockedBalances: []types.LockedBalance{
 			{
 				UnlockTS: someTime,
@@ -66,7 +66,7 @@ func TestMsgServer_Create(t *testing.T) {
 	require.True(t, exists)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.SpentAmount)
 	require.Equal(t, sdk.ZeroInt(), subaccountBalance.LostAmount)
-	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawmAmount)
+	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawnAmount)
 	require.Equal(t, sdkmath.NewInt(123), subaccountBalance.DepositedAmount)
 }
 
@@ -85,8 +85,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "unlock time is expired",
 			msg: types.MsgCreate{
-				Creator:         creatorAddr.String(),
-				SubAccountOwner: account.String(),
+				Creator: creatorAddr.String(),
+				Owner:   account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: beforeTime,
@@ -100,8 +100,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "account has already sub account",
 			msg: types.MsgCreate{
-				Creator:         creatorAddr.String(),
-				SubAccountOwner: account.String(),
+				Creator: creatorAddr.String(),
+				Owner:   account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,
@@ -117,8 +117,8 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 		{
 			name: "invalid request",
 			msg: types.MsgCreate{
-				Creator:         creatorAddr.String(),
-				SubAccountOwner: account.String(),
+				Creator: creatorAddr.String(),
+				Owner:   account.String(),
 				LockedBalances: []types.LockedBalance{
 					{
 						UnlockTS: afterTime,

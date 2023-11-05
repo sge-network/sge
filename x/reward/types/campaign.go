@@ -2,25 +2,32 @@ package types
 
 import (
 	sdkerrors "cosmossdk.io/errors"
-	sdkmath "cosmossdk.io/math"
 )
 
 func NewCampaign(
-	creator, funderAddres, uID string,
+	creator, promoter, uID string,
 	startTS, endTS uint64,
 	rewardType RewardType,
-	rewardDefs Definitions,
+	rewardCategory RewardCategory,
+	rewardAmountType RewardAmountType,
+	rewardAmount *RewardAmount,
+	isActive bool,
+	meta string,
 	pool Pool,
 ) Campaign {
 	return Campaign{
-		Creator:       creator,
-		FunderAddress: funderAddres,
-		UID:           uID,
-		StartTS:       startTS,
-		EndTS:         endTS,
-		RewardType:    rewardType,
-		RewardDefs:    rewardDefs,
-		Pool:          pool,
+		Creator:          creator,
+		Promoter:         promoter,
+		UID:              uID,
+		StartTS:          startTS,
+		EndTS:            endTS,
+		RewardCategory:   rewardCategory,
+		RewardType:       rewardType,
+		RewardAmountType: rewardAmountType,
+		RewardAmount:     rewardAmount,
+		IsActive:         isActive,
+		Meta:             meta,
+		Pool:             pool,
 	}
 }
 
@@ -31,10 +38,10 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 		return NewSignUpReward(), nil
 	case RewardType_REWARD_TYPE_REFERRAL:
 		return NewReferralReward(), nil
-	case RewardType_REWARD_TYPE_AFFILIATION:
-		return NewAffiliationReward(), nil
-	case RewardType_REWARD_TYPE_NOLOSS_BETS:
-		return NewNoLossBetsReward(), nil
+	case RewardType_REWARD_TYPE_AFFILIATE:
+		return NewAffiliateReward(), nil
+	case RewardType_REWARD_TYPE_BET_DISCOUNT:
+		return NewBetDiscountReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}
@@ -48,11 +55,8 @@ func (c *Campaign) CheckExpiration(blockTime uint64) error {
 }
 
 // CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the rewards.
-func (c *Campaign) CheckPoolBalance(distributions Distributions) error {
-	totalAmount := sdkmath.ZeroInt()
-	for _, d := range distributions {
-		totalAmount.Add(d.Allocation.Amount)
-	}
+func (c *Campaign) CheckPoolBalance(rewardAmount Allocation) error {
+	totalAmount := rewardAmount.MainAcc.Amount.Add(rewardAmount.SubAcc.Amount)
 	if err := c.Pool.CheckBalance(totalAmount); err != nil {
 		return err
 	}
