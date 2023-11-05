@@ -27,27 +27,27 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	distribution, err := rewardFactory.CalculateDistributions(goCtx, ctx,
+	allocation, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
-			OVMKeeper: k.ovmKeeper,
-			BetKeeper: k.betKeeper,
-		},
-		campaign.RewardDefs, msg.Ticket)
+			OVMKeeper:        k.ovmKeeper,
+			BetKeeper:        k.betKeeper,
+			SubAccountKeeper: k.subaccountKeeper,
+		}, campaign, msg.Ticket)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	if err := campaign.CheckPoolBalance(distribution); err != nil {
+	if err := campaign.CheckPoolBalance(allocation); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, campaign.Promoter, distribution); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.Promoter, allocation); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
-	k.UpdateCampaignPool(ctx, campaign, distribution)
+	k.UpdateCampaignPool(ctx, campaign, allocation)
 
-	msg.EmitEvent(&ctx, msg.CampaignUid, distribution)
+	msg.EmitEvent(&ctx, msg.CampaignUid, allocation)
 
 	return &types.MsgGrantRewardResponse{}, nil
 }

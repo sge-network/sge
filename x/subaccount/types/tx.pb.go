@@ -139,7 +139,8 @@ type MsgTopUp struct {
 	// address is the subaccount address.
 	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
 	// locked_balances is the list of balance locks.
-	// Fixme: Are we sending multiple balance update together? If not, then only locked balance should be enough
+	// Fixme: Are we sending multiple balance update together? If not, then only
+	// locked balance should be enough
 	LockedBalances []LockedBalance `protobuf:"bytes,3,rep,name=locked_balances,json=lockedBalances,proto3" json:"locked_balances"`
 }
 

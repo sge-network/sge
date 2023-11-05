@@ -4,6 +4,7 @@ import (
 	context "context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
@@ -13,59 +14,43 @@ type ReferralReward struct{}
 // NewReferralReward create new object of referral reward calculator type.
 func NewReferralReward() ReferralReward { return ReferralReward{} }
 
-// VaidateDefinitions validates campaign definitions.
-func (rfr ReferralReward) VaidateDefinitions(campaign Campaign) error {
-	hasReferrer := false
-	hasReferee := false
-	for _, d := range campaign.RewardDefs {
-		if d.RecAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
-			return sdkerrors.Wrapf(ErrInvalidReceiverType, "referral rewards can be defined for subaccount only")
-		}
-		switch d.RecType {
-		case ReceiverType_RECEIVER_TYPE_REFEREE:
-			hasReferee = true
-		case ReceiverType_RECEIVER_TYPE_REFERRER:
-			hasReferrer = true
-		default:
-			return sdkerrors.Wrapf(ErrInvalidReceiverType, "%s", d.RecType)
-		}
+// VaidateCampaign validates campaign definitions.
+func (rfr ReferralReward) VaidateCampaign(campaign Campaign) error {
+	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
+		return sdkerrors.Wrapf(ErrWrongRewardCategory, "referral rewards can only have single definition")
+	}
+	if campaign.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrInvalidGranteeType, "referral rewards can be defined for subaccount only")
+	}
+	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "referral rewards for subaccount should be positive")
 	}
 
-	if !hasReferee || !hasReferrer {
-		return sdkerrors.Wrapf(ErrMissingDefinition, "referral rewards should have the referrer and the referee")
-	}
+	// TODO: validate duplicate signup referral reward
 	return nil
 }
 
-// CalculateDistributions parses ticket payload and returns the distribution list of referral reward.
-func (rfr ReferralReward) CalculateDistributions(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	definitions Definitions, ticket string,
-) (Distributions, error) {
-	var payload ApplyRerferralRewardPayload
+// Calculate parses ticket payload and returns the distribution list of referral reward.
+func (rfr ReferralReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
+	campaign Campaign, ticket string,
+) (Allocation, error) {
+	var payload GrantSignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return nil, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+		return Allocation{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
-	distributions := Distributions{}
-	for _, d := range definitions {
-		found := false
-		for _, r := range payload.Receivers {
-			if d.RecType == r.RecType {
-				found = true
-				distributions = append(distributions, NewDistribution(
-					r.Addr,
-					NewAllocation(
-						d.Amount,
-						d.RecAccType,
-						d.UnlockTS,
-					),
-				))
-			}
-		}
-		if !found {
-			return nil, sdkerrors.Wrapf(ErrAccReceiverTypeNotFound, "%s", d.RecType)
-		}
+	_, found := keepers.SubAccountKeeper.GetSubAccountOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
+	if !found {
+		return Allocation{}, sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
 	}
 
-	return distributions, nil
+	// TODO: validate reward grant for referral
+
+	return Allocation{
+		SubAcc: NewReceiver(
+			payload.Common.Receiver,
+			campaign.RewardAmount.SubaccountAmount,
+			0,
+		),
+	}, nil
 }

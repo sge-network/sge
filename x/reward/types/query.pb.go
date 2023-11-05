@@ -490,7 +490,8 @@ func (m *QueryRewardsResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryRewardsByAddressRequest is request body for the query all rewards by address endpoint.
+// QueryRewardsByAddressRequest is request body for the query all rewards by
+// address endpoint.
 type QueryRewardsByAddressRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -543,7 +544,8 @@ func (m *QueryRewardsByAddressRequest) GetAddress() string {
 	return ""
 }
 
-// QueryRewardsByAddressResponse is response body of the query all rewards by address endpoint.
+// QueryRewardsByAddressResponse is response body of the query all rewards by
+// address endpoint.
 type QueryRewardsByAddressResponse struct {
 	Rewards    []Reward            `protobuf:"bytes,1,rep,name=rewards,proto3" json:"rewards"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -596,7 +598,8 @@ func (m *QueryRewardsByAddressResponse) GetPagination() *query.PageResponse {
 	return nil
 }
 
-// QueryRewardsByAddressAndCategoryRequest is request body for the query all rewards by address and category endpoint.
+// QueryRewardsByAddressAndCategoryRequest is request body for the query all
+// rewards by address and category endpoint.
 type QueryRewardsByAddressAndCategoryRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -659,7 +662,8 @@ func (m *QueryRewardsByAddressAndCategoryRequest) GetCategory() string {
 	return ""
 }
 
-// QueryRewardsByAddressAndCategoryResponse is response body of the query all rewards by address and category endpoint.
+// QueryRewardsByAddressAndCategoryResponse is response body of the query all
+// rewards by address and category endpoint.
 type QueryRewardsByAddressAndCategoryResponse struct {
 	Rewards    []Reward            `protobuf:"bytes,1,rep,name=rewards,proto3" json:"rewards"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -714,7 +718,8 @@ func (m *QueryRewardsByAddressAndCategoryResponse) GetPagination() *query.PageRe
 	return nil
 }
 
-// QueryRewardsByCampaignRequest is request body for the query all rewards by campaign endpoint.
+// QueryRewardsByCampaignRequest is request body for the query all rewards by
+// campaign endpoint.
 type QueryRewardsByCampaignRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Campaign   string             `protobuf:"bytes,2,opt,name=campaign,proto3" json:"campaign,omitempty"`
@@ -767,7 +772,8 @@ func (m *QueryRewardsByCampaignRequest) GetCampaign() string {
 	return ""
 }
 
-// QueryRewardsByCampaignResponse is response body of the query all rewards by campaign endpoint.
+// QueryRewardsByCampaignResponse is response body of the query all rewards by
+// campaign endpoint.
 type QueryRewardsByCampaignResponse struct {
 	Rewards    []Reward            `protobuf:"bytes,1,rep,name=rewards,proto3" json:"rewards"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -920,7 +926,8 @@ type QueryClient interface {
 	Rewards(ctx context.Context, in *QueryRewardsRequest, opts ...grpc.CallOption) (*QueryRewardsResponse, error)
 	// Queries list of all Reward items by user address.
 	RewardsByAddress(ctx context.Context, in *QueryRewardsByAddressRequest, opts ...grpc.CallOption) (*QueryRewardsByAddressResponse, error)
-	// Queries list of all Reward items by user address and reward category endpoint.
+	// Queries list of all Reward items by user address and reward category
+	// endpoint.
 	RewardsByAddressAndCategory(ctx context.Context, in *QueryRewardsByAddressAndCategoryRequest, opts ...grpc.CallOption) (*QueryRewardsByAddressAndCategoryResponse, error)
 	// Queries list of all Reward items by campaign endpoint.
 	RewardsByCampaign(ctx context.Context, in *QueryRewardsByCampaignRequest, opts ...grpc.CallOption) (*QueryRewardsByCampaignResponse, error)
@@ -1020,7 +1027,8 @@ type QueryServer interface {
 	Rewards(context.Context, *QueryRewardsRequest) (*QueryRewardsResponse, error)
 	// Queries list of all Reward items by user address.
 	RewardsByAddress(context.Context, *QueryRewardsByAddressRequest) (*QueryRewardsByAddressResponse, error)
-	// Queries list of all Reward items by user address and reward category endpoint.
+	// Queries list of all Reward items by user address and reward category
+	// endpoint.
 	RewardsByAddressAndCategory(context.Context, *QueryRewardsByAddressAndCategoryRequest) (*QueryRewardsByAddressAndCategoryResponse, error)
 	// Queries list of all Reward items by campaign endpoint.
 	RewardsByCampaign(context.Context, *QueryRewardsByCampaignRequest) (*QueryRewardsByCampaignResponse, error)

@@ -57,7 +57,8 @@ message MsgTopUp {
   string address = 2;
 
   // locked_balances is the list of balance locks.
-  // Fixme: Are we sending multiple balance update together? If not, then only locked balance should be enough
+  // Fixme: Are we sending multiple balance update together? If not, then only
+  // locked balance should be enough
   repeated LockedBalance locked_balances = 3 [ (gogoproto.nullable) = false ];
 }
 

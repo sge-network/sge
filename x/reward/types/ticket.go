@@ -22,10 +22,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 
-	if len(payload.RewardDefs) == 0 {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "at least one reward definition should be defined")
-	}
-
 	if payload.TotalFunds.IsNil() || !payload.TotalFunds.GT(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
 	}
