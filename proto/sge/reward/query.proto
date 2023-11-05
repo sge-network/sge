@@ -21,7 +21,7 @@ service Query {
 
   // Queries a specific Campaign item.
   rpc Campaign(QueryCampaignRequest) returns (QueryCampaignResponse) {
-    option (google.api.http).get = "/sge-network/sge/reward/campaign/{uid}";
+    option (google.api.http).get = "/sge-network/sge/reward/campaign/{house_uid}/{uid}";
   }
 
   // Queries list of all Campaign items.
@@ -71,7 +71,10 @@ message QueryParamsResponse {
 }
 
 // QueryCampaignRequest is request body of the query campaign endpoint.
-message QueryCampaignRequest { string uid = 1; }
+message QueryCampaignRequest { 
+  string uid = 1; 
+  string house_uid = 2; 
+}
 
 // QueryCampaignRequest is response body of the query campaign endpoint.
 message QueryCampaignResponse {

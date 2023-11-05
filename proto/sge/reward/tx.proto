@@ -22,8 +22,10 @@ message MsgCreateCampaign {
   string creator = 1;
   // uid is the unique identifier of the campaign.
   string uid = 2;
+  // house_uid is the unique identifier of the promoter house.
+  string house_uid = 3;
   // ticket is the payload data.
-  string ticket = 3;
+  string ticket = 4;
 }
 
 // MsgCreateCampaignResponse campaign create message response type.
@@ -35,8 +37,10 @@ message MsgUpdateCampaign {
   string creator = 1;
   // uid is the unique identifier of the campaign.
   string uid = 2;
+  // house_uid is the unique identifier of the promoter house.
+  string house_uid = 3;
   // ticket is the payload data.
-  string ticket = 3;
+  string ticket = 4;
 }
 
 // MsgUpdateCampaignResponse campaign update message response type.
@@ -50,15 +54,16 @@ message MsgGrantReward {
   string uid = 2;
   // campaign_uid is the unique identifier of the reward campaign.
   string campaign_uid = 3;
-
+  // house_uid is the unique identifier of the promoter house.
+  string house_uid = 4;
   // created_at is the time when the reward is created.
-  uint64 created_at = 4 [
+  uint64 created_at = 5 [
     (gogoproto.customname) = "CreatedAt",
     (gogoproto.jsontag) = "created_at",
     json_name = "created_at"
   ];
   // ticket is the payload data.
-  string ticket = 5;
+  string ticket = 6;
 }
 
 // MsgGrantSignupRewardResponse execute signup reward message response type.

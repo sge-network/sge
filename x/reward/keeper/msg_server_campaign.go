@@ -15,7 +15,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Check if the value already exists
-	_, isFound := k.GetCampaign(ctx, msg.Uid)
+	_, isFound := k.GetCampaign(ctx, msg.HouseUid, msg.Uid)
 	if isFound {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "index already set")
 	}
@@ -87,7 +87,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	}
 
 	// Check if the value exists
-	valFound, isFound := k.GetCampaign(ctx, msg.Uid)
+	valFound, isFound := k.GetCampaign(ctx, msg.HouseUid, msg.Uid)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
 	}

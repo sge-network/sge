@@ -47,6 +47,7 @@ func (k Keeper) Campaign(goCtx context.Context, req *types.QueryCampaignRequest)
 
 	val, found := k.GetCampaign(
 		ctx,
+		req.HouseUid,
 		req.Uid,
 	)
 	if !found {

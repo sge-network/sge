@@ -12,19 +12,18 @@ func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	b := k.cdc.MustMarshal(&campaign)
 	store.Set(types.GetCampaignKey(
 		campaign.UID,
+		campaign.HouseUID,
 	), b)
 }
 
 // GetCampaign returns a campaign from its index
 func (k Keeper) GetCampaign(
 	ctx sdk.Context,
-	index string,
+	houseUID, uid string,
 ) (val types.Campaign, found bool) {
 	store := k.getCampaignStore(ctx)
 
-	b := store.Get(types.GetCampaignKey(
-		index,
-	))
+	b := store.Get(types.GetCampaignKey(houseUID, uid))
 	if b == nil {
 		return val, false
 	}
@@ -36,12 +35,10 @@ func (k Keeper) GetCampaign(
 // RemoveCampaign removes a campaign from the store
 func (k Keeper) RemoveCampaign(
 	ctx sdk.Context,
-	index string,
+	houseUID, uid string,
 ) {
 	store := k.getCampaignStore(ctx)
-	store.Delete(types.GetCampaignKey(
-		index,
-	))
+	store.Delete(types.GetCampaignKey(houseUID, uid))
 }
 
 // GetAllCampaign returns all campaign
