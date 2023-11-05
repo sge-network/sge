@@ -22,7 +22,7 @@ func (gs GenesisState) Validate() error {
 	campaignIndexMap := make(map[string]struct{})
 
 	for _, elem := range gs.CampaignList {
-		index := string(GetCampaignKey(elem.HouseUID, elem.UID))
+		index := string(GetCampaignKey(elem.UID))
 		if _, ok := campaignIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for campaign")
 		}

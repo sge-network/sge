@@ -13,7 +13,7 @@ import (
 func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward) (*types.MsgGrantRewardResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	campaign, isFound := k.GetCampaign(ctx, msg.HouseUid, msg.CampaignUid)
+	campaign, isFound := k.GetCampaign(ctx, msg.CampaignUid)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the uid not found")
 	}
