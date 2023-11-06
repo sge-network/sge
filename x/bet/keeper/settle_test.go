@@ -49,7 +49,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -71,7 +70,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -91,7 +89,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -111,7 +108,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -132,7 +128,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,

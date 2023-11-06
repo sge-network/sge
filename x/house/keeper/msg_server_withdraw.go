@@ -36,6 +36,10 @@ func (k msgServer) Withdraw(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", msg.MarketUID, msg.ParticipationIndex)
 	}
 
+	if deposit.WithdrawalCount >= k.GetMaxWithdrawalCount(ctx) {
+		return nil, sdkerrors.Wrapf(types.ErrMaxWithdrawalCountReached, ": %d", deposit.WithdrawalCount)
+	}
+
 	var err error
 	msg.Amount, err = k.orderbookKeeper.CalcWithdrawalAmount(ctx,
 		depositorAddr,

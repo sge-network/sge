@@ -16,7 +16,6 @@ newBet := &types.Bet{
     UID:                msg.UID,
     MarketUID:          <msg.Ticket.MarketUID>,
     OddsUID:            <msg.Ticket.OddsUID>,
-    OddsType:           <msg.OddsType>,
     OddsValue:          <msg.Ticket.OddsValue>,
     Amount:             msg.Amount,
     BetFee:             <will be calculated>,

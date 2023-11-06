@@ -64,7 +64,6 @@ message MsgWagerResponse { WagerProps props = 1; }
    "approved": true,
    "id": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
  },
- "odds_type":1,
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
@@ -85,7 +84,6 @@ The transaction will fail if:
 - Provided bet UID is already set
 - Empty or invalid odds UID in ticket
 - Empty, negative or invalid odds value in ticket
-- Invalid bet value according to the selected `OddsType`
 - There is no any market with the given marketUID
 - The market is not active for accepting bet (it's not active or status in not `PENDING`)
 - The market has expired

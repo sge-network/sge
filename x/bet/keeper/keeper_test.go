@@ -162,7 +162,6 @@ func placeTestBet(
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
-		"odds_type":     1,
 		"all_odds":      testBetOdds,
 	}
 	testWagerTicket, err := createJwtTicket(testWagerClaim)
