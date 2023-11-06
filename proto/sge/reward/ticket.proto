@@ -31,7 +31,7 @@ message CreateCampaignPayload {
   // reward_amount is the amount of reward.
   RewardAmount reward_amount = 7;
 
-  // total_funds is the tracker of pool funds of the campaign.
+  // total_funds is the total funds allocated to the campaign.
   string total_funds = 8 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -97,35 +97,4 @@ message RewardPayloadCommon {
 message GrantSignupRewardPayload {
   // common is the common properties of a reward
   RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
-}
-
-// GrantSignupReferralRewardPayload is the type for signup reward grant payload.
-message GrantSignupReferralRewardPayload {
-  // referal_code is the unique referral code of the user.
-  // TODO: it can be referrer address
-  string referal_code = 1;
-
-  // common is the common properties of a reward
-  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
-}
-
-// GrantSignupAffiliateRewardPayload is the type for signup reward grant
-// payload.
-message GrantSignupAffiliateRewardPayload {
-  // affiliator_code is the unique affiliator code of the user.
-  // TODO: it can be affiliator address
-  string affiliator_code = 1;
-
-  // common is the common properties of a reward
-  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
-}
-
-// GrantBetDiscountRewardPayload is the type for bet discount reward grant
-// payload.
-message GrantBetDiscountRewardPayload {
-  // bet_uids is the list of consecutive bet uid list
-  repeated string bet_uids = 1;
-
-  // common is the common properties of a reward
-  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
 }
