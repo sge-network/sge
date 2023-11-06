@@ -29,19 +29,6 @@ message Reward {
     json_name = "campaign_uid"
   ];
 
-  // reward_type is the type of the reward.
-  RewardType reward_type = 5 [
-    (gogoproto.customname) = "RewardType",
-    (gogoproto.jsontag) = "reward_type",
-    json_name = "reward_type"
-  ];
-
-  RewardCategory reward_category = 6 [
-    (gogoproto.customname) = "RewardCategory",
-    (gogoproto.jsontag) = "reward_category",
-    json_name = "reward_category"
-  ];
-
   // reward_amount is the amount of the reward.
   RewardAmount reward_amount = 7 [
     (gogoproto.customname) = "RewardAmount",
@@ -106,6 +93,34 @@ message RewardAmount {
     (gogoproto.customname) = "UnlockTS",
     (gogoproto.jsontag) = "unlock_ts",
     json_name = "unlock_ts"
+  ];
+}
+
+message OneTimeReward {
+  string one_time_key = 1;
+  RewardType reward_type = 2;
+}
+
+message RewardByType {
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  string addr = 2;
+  RewardType reward_type = 3;
+}
+
+message RewardByCampaign {
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  string campaign_uid = 2 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
   ];
 }
 

@@ -10,26 +10,26 @@ import (
 )
 
 // DistributeRewards distributes the rewards according to the input distribution list.
-func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, allocation types.Allocation) error {
-	if allocation.MainAcc.Amount.GT(sdkmath.ZeroInt()) {
-		if err := k.modFunder.Refund(
-			types.RewardPoolFunder{}, ctx,
-			sdk.MustAccAddressFromBech32(allocation.MainAcc.Addr),
-			allocation.MainAcc.Amount,
-		); err != nil {
-			return err
-		}
-	}
-
-	if allocation.SubAcc.Amount.GT(sdkmath.ZeroInt()) {
-		if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, allocation.SubAcc.Addr,
+func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, isSubAccount bool, receiver types.Receiver) error {
+	if isSubAccount {
+		if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, receiver.Addr,
 			[]subaccounttypes.LockedBalance{
 				{
-					UnlockTS: allocation.SubAcc.UnlockTS,
-					Amount:   allocation.SubAcc.Amount,
+					UnlockTS: receiver.UnlockTS,
+					Amount:   receiver.Amount,
 				},
 			}); err != nil {
-			return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", allocation.SubAcc.Addr, err)
+			return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", receiver.Addr, err)
+		}
+	} else {
+		if receiver.Amount.GT(sdkmath.ZeroInt()) {
+			if err := k.modFunder.Refund(
+				types.RewardPoolFunder{}, ctx,
+				sdk.MustAccAddressFromBech32(receiver.Addr),
+				receiver.Amount,
+			); err != nil {
+				return err
+			}
 		}
 	}
 

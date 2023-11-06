@@ -56,8 +56,8 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 	return
 }
 
-func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, allocation types.Allocation) {
-	totalAmount := allocation.MainAcc.Amount.Add(allocation.SubAcc.Amount)
+func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, receiver types.Receiver) {
+	totalAmount := receiver.Amount.Add(receiver.Amount)
 	campaign.Pool.Spent = campaign.Pool.Spent.Add(totalAmount)
 
 	k.SetCampaign(ctx, campaign)
