@@ -33,24 +33,22 @@ func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
 // Calculate parses ticket payload and returns the distribution list of signup reward.
 func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	campaign Campaign, ticket string,
-) (Allocation, error) {
+) (Receiver, RewardPayloadCommon, bool, string, error) {
 	var payload GrantSignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return Allocation{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+		return Receiver{}, payload.Common, false, "", sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
 	_, found := keepers.SubAccountKeeper.GetSubAccountOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
 	if !found {
-		return Allocation{}, sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
+		return Receiver{}, payload.Common, false, "", sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
 	}
 
 	// TODO: validate reward grant for sighnup
 
-	return Allocation{
-		SubAcc: NewReceiver(
-			payload.Common.Receiver,
-			campaign.RewardAmount.SubaccountAmount,
-			0,
-		),
-	}, nil
+	return NewReceiver(
+		payload.Common.Receiver,
+		campaign.RewardAmount.SubaccountAmount,
+		0,
+	), payload.Common, true, payload.Common.Receiver, nil
 }

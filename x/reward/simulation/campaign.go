@@ -34,7 +34,7 @@ func SimulateMsgCreateCampaign(
 			Ticket:  "",
 		}
 
-		_, found := k.GetCampaign(ctx, msg.HouseUid, msg.Uid)
+		_, found := k.GetCampaign(ctx, msg.Uid)
 		if found {
 			return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "Campaign already exist"), nil, nil
 		}

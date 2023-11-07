@@ -2,6 +2,7 @@ package types
 
 import (
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 )
 
 func NewCampaign(
@@ -40,8 +41,6 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 		return NewReferralReward(), nil
 	case RewardType_REWARD_TYPE_AFFILIATE:
 		return NewAffiliateReward(), nil
-	case RewardType_REWARD_TYPE_BET_DISCOUNT:
-		return NewBetDiscountReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}
@@ -55,9 +54,8 @@ func (c *Campaign) CheckExpiration(blockTime uint64) error {
 }
 
 // CheckPoolBalance checks if a pool balance of a capaign has enough fund to pay the rewards.
-func (c *Campaign) CheckPoolBalance(rewardAmount Allocation) error {
-	totalAmount := rewardAmount.MainAcc.Amount.Add(rewardAmount.SubAcc.Amount)
-	if err := c.Pool.CheckBalance(totalAmount); err != nil {
+func (c *Campaign) CheckPoolBalance(rewardAmount sdkmath.Int) error {
+	if err := c.Pool.CheckBalance(rewardAmount); err != nil {
 		return err
 	}
 	return nil
