@@ -84,3 +84,12 @@ func (payload *UpdateCampaignPayload) Validate(blockTime uint64) error {
 
 	return nil
 }
+
+// Validate validates campaign withdraw funds ticket payload.
+func (payload *WithdrawFundsPayload) Validate() error {
+	_, err := sdk.AccAddressFromBech32(payload.Promoter)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid promoter address (%s)", err)
+	}
+
+}
