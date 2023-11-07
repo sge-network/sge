@@ -91,5 +91,5 @@ func (payload *WithdrawFundsPayload) Validate() error {
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid promoter address (%s)", err)
 	}
-
+	return nil
 }
