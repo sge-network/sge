@@ -26,8 +26,7 @@ func NewReward(
 	uid, creator, receiver string,
 	campaignUID string,
 	rewardAmount *RewardAmount,
-	source, sourceCode, sourceID string,
-	blockTime uint64,
+	sourceID, meta string,
 ) Reward {
 	return Reward{
 		UID:          uid,
@@ -35,37 +34,10 @@ func NewReward(
 		Receiver:     receiver,
 		CampaignUID:  campaignUID,
 		RewardAmount: rewardAmount,
-		// Source:       source,
-		// SourceCode:   sourceCode,
-		SourceUID: sourceID,
-		// CreatedAt:    blockTime,
+		SourceUID:    sourceID,
+		Meta:         meta,
 	}
 }
-
-// func NewOneTimeReward(
-// 	oneTimeKey string,
-// 	rewType RewardType,
-// ) OneTimeReward {
-// 	return OneTimeReward{
-// 		OneTimeKey: oneTimeKey,
-// 		RewardType: rewType,
-// 	}
-// }
-
-// func NewRewardByType(uid, addr string, rewType RewardType) RewardByType {
-// 	return RewardByType{
-// 		UID:        uid,
-// 		RewardType: rewType,
-// 		Addr:       addr,
-// 	}
-// }
-
-// func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
-// 	return RewardByCampaign{
-// 		UID:         uid,
-// 		CampaignUID: campaignUID,
-// 	}
-// }
 
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {

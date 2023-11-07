@@ -19,16 +19,10 @@ func (k Keeper) getRewardStore(ctx sdk.Context) prefix.Store {
 	return prefix.NewStore(store, types.RewardKeyPrefix)
 }
 
-// getRewardOneTimeStore gets the store containing all onetime rewards.
-func (k Keeper) getRewardOneTimeStore(ctx sdk.Context) prefix.Store {
-	store := ctx.KVStore(k.storeKey)
-	return prefix.NewStore(store, types.RewardOneTimeKeyPrefix)
-}
-
 // getRewardByReceiverAndTypeStore gets the store containing all rewards by receiver.
-func (k Keeper) getRewardByReceiverAndTypeStore(ctx sdk.Context) prefix.Store {
+func (k Keeper) getRewardByReceiverAndCategoryStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
-	return prefix.NewStore(store, types.RewardByReceiverAndTypeKeyPrefix)
+	return prefix.NewStore(store, types.RewardByReceiverAndCategoryKeyPrefix)
 }
 
 // getRewardsByCampaignStore gets the store containing all rewards by campaign uid.
