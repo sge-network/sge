@@ -19,9 +19,6 @@ func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
-	if campaign.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(ErrInvalidGranteeType, "signup rewards can be defined for subaccount only")
-	}
 	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
 	}

@@ -108,3 +108,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 
 	return &types.MsgUpdateCampaignResponse{}, nil
 }
+
+func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFunds) (*types.MsgWithdrawFundsResponse, error) {
+	return nil, nil
+}

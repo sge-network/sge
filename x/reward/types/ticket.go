@@ -32,9 +32,9 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
 	}
 
-	if payload.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) &&
-		payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for main account or subaccount not both")
+	if payload.RewardAmount.MainAccountAmount.Equal(sdkmath.ZeroInt()) &&
+		payload.RewardAmount.SubaccountAmount.Equal(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for atleast one of main account or subaccount")
 	}
 
 	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
