@@ -12,8 +12,12 @@ service Msg {
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // UpdateCampaign is a method to update campaign
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
-  // GrantSignupReward is method to allocate signup rewards
+  // WithdrawCampaignFunds is method to withdraw funds from the campaign
+  rpc WithdrawFunds(MsgWithdrawFunds) returns (MsgWithdrawFundsResponse);
+  // GrantReward is method to allocate rewards
   rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
+
+
 }
 
 // MsgCreateCampaign is msg to create a reward campaign
@@ -62,3 +66,17 @@ message MsgGrantReward {
 
 // MsgGrantSignupRewardResponse execute signup reward message response type.
 message MsgGrantRewardResponse {}
+
+// MsgWithdrawFunds is withdraw funds message type.
+message MsgWithdrawFunds {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the reward campaign.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgWithdrawFundsResponse withdraw funds message response type.
+message MsgWithdrawFundsResponse {}
+

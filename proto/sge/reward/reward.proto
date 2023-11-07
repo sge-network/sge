@@ -36,41 +36,19 @@ message Reward {
     json_name = "reward_amount"
   ];
 
-  // source is the source of the reward.
-  // It is used to identify the source of the reward.
-  // For example, the source of a referral signup is Type - referral.
-  string source = 8 [
-    (gogoproto.customname) = "Source",
-    (gogoproto.jsontag) = "source",
-    json_name = "source"
-  ];
-
-  // source_code is the source code of the reward.
-  // It is used to identify the source of the reward.
-  // For example, the source code of a referral signup is referral code of
-  // referer.
-  string source_code = 9 [
-    (gogoproto.customname) = "SourceCode",
-    (gogoproto.jsontag) = "source_code",
-    json_name = "source_code"
-  ];
-
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
   // For example, the source uid of a referral signup reward is the address of
   // the referer.
-  string source_uid = 10 [
+  string source_uid = 8 [
     (gogoproto.customname) = "SourceUID",
     (gogoproto.jsontag) = "source_uid",
     json_name = "source_uid"
   ];
 
-  // created_at is the time when the reward is created.
-  uint64 created_at = 11 [
-    (gogoproto.customname) = "CreatedAt",
-    (gogoproto.jsontag) = "created_at",
-    json_name = "created_at"
-  ];
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 12;
 }
 
 message RewardAmount {
@@ -93,34 +71,6 @@ message RewardAmount {
     (gogoproto.customname) = "UnlockTS",
     (gogoproto.jsontag) = "unlock_ts",
     json_name = "unlock_ts"
-  ];
-}
-
-message OneTimeReward {
-  string one_time_key = 1;
-  RewardType reward_type = 2;
-}
-
-message RewardByType {
-  string uid = 1 [
-    (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
-  ];
-  string addr = 2;
-  RewardType reward_type = 3;
-}
-
-message RewardByCampaign {
-  string uid = 1 [
-    (gogoproto.customname) = "UID",
-    (gogoproto.jsontag) = "uid",
-    json_name = "uid"
-  ];
-  string campaign_uid = 2 [
-    (gogoproto.customname) = "CampaignUID",
-    (gogoproto.jsontag) = "campaign_uid",
-    json_name = "campaign_uid"
   ];
 }
 

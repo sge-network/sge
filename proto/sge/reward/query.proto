@@ -47,10 +47,10 @@ service Query {
 
   // Queries list of all Reward items by user address and reward type
   // endpoint.
-  rpc RewardsByAddressAndType(QueryRewardsByAddressAndTypeRequest)
-      returns (QueryRewardsByAddressAndTypeResponse) {
+  rpc RewardsByAddressAndCategory(QueryRewardsByAddressAndCategoryRequest)
+      returns (QueryRewardsByAddressAndCategoryResponse) {
     option (google.api.http).get =
-        "/sge-network/sge/reward/rewards/{address}/{reward_type}";
+        "/sge-network/sge/reward/rewards/{address}/{category}";
   }
 
   // Queries list of all Reward items by campaign endpoint.
@@ -125,15 +125,15 @@ message QueryRewardsByAddressResponse {
 
 // QueryRewardsByAddressAndCategoryRequest is request body for the query all
 // rewards by address and type endpoint.
-message QueryRewardsByAddressAndTypeRequest {
+message QueryRewardsByAddressAndCategoryRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string address = 2;
-  RewardType reward_type = 3;
+  RewardCategory category = 3;
 }
 
 // QueryRewardsByAddressAndTypeResponse is response body of the query all
 // rewards by address and type endpoint.
-message QueryRewardsByAddressAndTypeResponse {
+message QueryRewardsByAddressAndCategoryResponse {
   repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }

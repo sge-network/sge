@@ -67,7 +67,7 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 	}
 }
 
-// IRewardFactory defines the methods that should be implemented for all of reward types.
+// IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
 	VaidateCampaign(campaign Campaign) error
 	Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket string,
