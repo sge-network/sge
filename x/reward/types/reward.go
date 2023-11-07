@@ -9,11 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-type Allocation struct {
-	MainAcc Receiver
-	SubAcc  Receiver
-}
-
 type Receiver struct {
 	Addr     string
 	Amount   sdkmath.Int
@@ -27,10 +22,56 @@ type RewardFactoryKeepers struct {
 	SubAccountKeeper
 }
 
-// IRewardFactory defines the methods that should be implemented for all of reward types.
+func NewReward(
+	uid, creator, receiver string,
+	campaignUID string,
+	rewardAmount *RewardAmount,
+	source, sourceCode, sourceID string,
+	blockTime uint64,
+) Reward {
+	return Reward{
+		UID:          uid,
+		Creator:      creator,
+		Receiver:     receiver,
+		CampaignUID:  campaignUID,
+		RewardAmount: rewardAmount,
+		Source:       source,
+		SourceCode:   sourceCode,
+		SourceUID:    sourceID,
+		CreatedAt:    blockTime,
+	}
+}
+
+func NewOneTimeReward(
+	oneTimeKey string,
+	rewType RewardType,
+) OneTimeReward {
+	return OneTimeReward{
+		OneTimeKey: oneTimeKey,
+		RewardType: rewType,
+	}
+}
+
+func NewRewardByType(uid, addr string, rewType RewardType) RewardByType {
+	return RewardByType{
+		UID:        uid,
+		RewardType: rewType,
+		Addr:       addr,
+	}
+}
+
+func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
+	return RewardByCampaign{
+		UID:         uid,
+		CampaignUID: campaignUID,
+	}
+}
+
+// IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
 	VaidateCampaign(campaign Campaign) error
-	Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket string) (Allocation, error)
+	Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket string,
+	) (Receiver, RewardPayloadCommon, bool, string, error)
 }
 
 // NewReceiver creates reveiver object.
@@ -55,7 +96,7 @@ func NewReceiver(addr string, amount sdkmath.Int, unlockTS uint64) Receiver {
 // 	return nil
 // }
 
-func (ds Allocation) String() string {
+func (ds Receiver) String() string {
 	out, err := yaml.Marshal(ds)
 	if err != nil {
 		panic(err)

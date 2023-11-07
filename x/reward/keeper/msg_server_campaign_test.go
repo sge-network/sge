@@ -30,21 +30,21 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	creator := simapp.TestParamUsers["user1"].Address.String()
 	for i := 0; i < 5; i++ {
 		ticketClaim := jwt.MapClaims{
-			"exp":            time.Now().Add(time.Minute * 5).Unix(),
-			"iat":            time.Now().Unix(),
-			"funder_address": creator,
-			"start_ts":       time.Now().Unix(),
-			"end_ts":         time.Now().Add(5 * time.Minute).Unix(),
-			"type":           types.RewardType_REWARD_TYPE_SIGNUP,
-			"reward_defs": []types.Definition{
-				{
-					RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-					RecAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-					Amount:     sdkmath.NewInt(100),
-					UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
-				},
+			"exp":                time.Now().Add(time.Minute * 5).Unix(),
+			"iat":                time.Now().Unix(),
+			"promoter":           creator,
+			"start_ts":           time.Now().Unix(),
+			"end_ts":             time.Now().Add(5 * time.Minute).Unix(),
+			"category":           types.RewardType_REWARD_TYPE_SIGNUP,
+			"reward_type":        types.RewardType_REWARD_TYPE_SIGNUP,
+			"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
+			"reward_amount": types.RewardAmount{
+				SubaccountAmount: sdkmath.NewInt(100),
+				UnlockTS:         uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
-			"pool_amount": sdkmath.NewInt(1000000),
+			"total_funds": sdkmath.NewInt(1000000),
+			"is_active":   true,
+			"meta":        "sample campaign",
 		}
 		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
@@ -103,21 +103,21 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			creator := simapp.TestParamUsers["user1"].Address.String()
 
 			ticketClaim := jwt.MapClaims{
-				"exp":            time.Now().Add(time.Minute * 5).Unix(),
-				"iat":            time.Now().Unix(),
-				"funder_address": creator,
-				"start_ts":       time.Now().Unix(),
-				"end_ts":         time.Now().Add(5 * time.Minute).Unix(),
-				"type":           types.RewardType_REWARD_TYPE_SIGNUP,
-				"reward_defs": []types.Definition{
-					{
-						RecType:    types.ReceiverType_RECEIVER_TYPE_SINGLE,
-						RecAccType: types.ReceiverAccType_RECEIVER_ACC_TYPE_SUB,
-						Amount:     sdkmath.NewInt(100),
-						UnlockTS:   uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
-					},
+				"exp":                time.Now().Add(time.Minute * 5).Unix(),
+				"iat":                time.Now().Unix(),
+				"promoter":           creator,
+				"start_ts":           time.Now().Unix(),
+				"end_ts":             time.Now().Add(5 * time.Minute).Unix(),
+				"category":           types.RewardType_REWARD_TYPE_SIGNUP,
+				"reward_type":        types.RewardType_REWARD_TYPE_SIGNUP,
+				"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
+				"reward_amount": types.RewardAmount{
+					SubaccountAmount: sdkmath.NewInt(100),
+					UnlockTS:         uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
-				"pool_amount": sdkmath.NewInt(10000),
+				"total_funds": sdkmath.NewInt(1000000),
+				"is_active":   true,
+				"meta":        "sample campaign",
 			}
 			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)

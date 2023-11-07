@@ -27,7 +27,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	allocation, err := rewardFactory.Calculate(goCtx, ctx,
+	recevier, rewardCommon, isSubAccount, oneTimeKey, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
@@ -37,17 +37,26 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	if err := campaign.CheckPoolBalance(allocation); err != nil {
+	if err := campaign.CheckPoolBalance(recevier.Amount); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, campaign.Promoter, allocation); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.Promoter, isSubAccount, recevier); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
-	k.UpdateCampaignPool(ctx, campaign, allocation)
+	k.UpdateCampaignPool(ctx, campaign, recevier)
+	k.SetReward(ctx, types.NewReward(
+		msg.Uid, msg.Creator, recevier.Addr,
+		msg.CampaignUid, campaign.RewardAmount,
+		rewardCommon.Source, rewardCommon.SourceCode, rewardCommon.SourceUID,
+		uint64(ctx.BlockTime().Unix()),
+	))
+	k.SetOneTimeReward(ctx, types.NewOneTimeReward(oneTimeKey, campaign.RewardType))
+	k.SetRewardByReceiver(ctx, types.NewRewardByType(msg.Uid, recevier.Addr, campaign.RewardType))
+	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
-	msg.EmitEvent(&ctx, msg.CampaignUid, allocation)
+	msg.EmitEvent(&ctx, msg.CampaignUid, recevier)
 
 	return &types.MsgGrantRewardResponse{}, nil
 }

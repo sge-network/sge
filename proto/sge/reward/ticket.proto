@@ -59,34 +59,32 @@ message UpdateCampaignPayload {
   bool is_active = 3;
 }
 
+// WithdrawFundsPayload is the type for campaign withdraw funds payload.
+message WithdrawFundsPayload {
+  // promoter is the address of campaign promoter.
+  // Funds would be transferred to this account.
+  string promoter = 1;
+
+  // amount is the funds that needs to be withdrawn.
+  string amount = 8 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"amount\""
+  ];
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 9;
+}
+
 message RewardPayloadCommon {
   // receiver is the address of the account that receives the reward.
   string receiver = 1;
-
-  // source is the source of the reward.
-  // It is used to identify the source of the reward.
-  // For example, the source of a referral signup is Type - referral.
-  string source = 2 [
-    (gogoproto.customname) = "Source",
-    (gogoproto.jsontag) = "source",
-    json_name = "source"
-  ];
-
-  // source_code is the source code of the reward.
-  // It is used to identify the source of the reward.
-  // For example, the source code of a referral signup is referral code of
-  // referer.
-  string source_code = 3 [
-    (gogoproto.customname) = "SourceCode",
-    (gogoproto.jsontag) = "source_code",
-    json_name = "source_code"
-  ];
 
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
   // For example, the source uid of a referral signup reward is the address of
   // the referer.
-  string source_uid = 4 [
+  string source_uid = 2 [
     (gogoproto.customname) = "SourceUID",
     (gogoproto.jsontag) = "source_uid",
     json_name = "source_uid"
@@ -96,5 +94,5 @@ message RewardPayloadCommon {
 // GrantSignupRewardPayload is the type for signup reward grant payload.
 message GrantSignupRewardPayload {
   // common is the common properties of a reward
-  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
 }

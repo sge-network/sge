@@ -45,7 +45,7 @@ service Query {
     option (google.api.http).get = "/sge-network/sge/reward/rewards/{address}";
   }
 
-  // Queries list of all Reward items by user address and reward category
+  // Queries list of all Reward items by user address and reward type
   // endpoint.
   rpc RewardsByAddressAndCategory(QueryRewardsByAddressAndCategoryRequest)
       returns (QueryRewardsByAddressAndCategoryResponse) {
@@ -57,7 +57,7 @@ service Query {
   rpc RewardsByCampaign(QueryRewardsByCampaignRequest)
       returns (QueryRewardsByCampaignResponse) {
     option (google.api.http).get =
-        "/sge-network/sge/reward/rewards/campaign/{campaign}";
+        "/sge-network/sge/reward/rewards/campaign/{campaign_uid}";
   }
 }
 // QueryParamsRequest is request type for the Query/Params RPC method.
@@ -71,9 +71,7 @@ message QueryParamsResponse {
 }
 
 // QueryCampaignRequest is request body of the query campaign endpoint.
-message QueryCampaignRequest { 
-  string uid = 1; 
-}
+message QueryCampaignRequest { string uid = 1; }
 
 // QueryCampaignRequest is response body of the query campaign endpoint.
 message QueryCampaignResponse {
@@ -126,15 +124,15 @@ message QueryRewardsByAddressResponse {
 }
 
 // QueryRewardsByAddressAndCategoryRequest is request body for the query all
-// rewards by address and category endpoint.
+// rewards by address and type endpoint.
 message QueryRewardsByAddressAndCategoryRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string address = 2;
-  string category = 3;
+  RewardCategory category = 3;
 }
 
-// QueryRewardsByAddressAndCategoryResponse is response body of the query all
-// rewards by address and category endpoint.
+// QueryRewardsByAddressAndTypeResponse is response body of the query all
+// rewards by address and type endpoint.
 message QueryRewardsByAddressAndCategoryResponse {
   repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
@@ -144,7 +142,7 @@ message QueryRewardsByAddressAndCategoryResponse {
 // campaign endpoint.
 message QueryRewardsByCampaignRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
-  string campaign = 2;
+  string campaign_uid = 2;
 }
 
 // QueryRewardsByCampaignResponse is response body of the query all rewards by
