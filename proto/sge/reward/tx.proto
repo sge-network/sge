@@ -54,14 +54,8 @@ message MsgGrantReward {
   string uid = 2;
   // campaign_uid is the unique identifier of the reward campaign.
   string campaign_uid = 3;
-  // created_at is the time when the reward is created.
-  uint64 created_at = 4 [
-    (gogoproto.customname) = "CreatedAt",
-    (gogoproto.jsontag) = "created_at",
-    json_name = "created_at"
-  ];
   // ticket is the payload data.
-  string ticket = 5;
+  string ticket = 4;
 }
 
 // MsgGrantSignupRewardResponse execute signup reward message response type.

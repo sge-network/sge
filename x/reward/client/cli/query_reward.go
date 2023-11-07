@@ -77,15 +77,15 @@ func CmdGetReward() *cobra.Command {
 
 func CmdGetRewardsByUser() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "rewards-by-user [address]",
-		Short: "shows a list of rewards by user",
+		Use:   "rewards-by-address [address]",
+		Short: "shows a list of rewards by address",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argUser := args[0]
+			argAddress := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -93,7 +93,7 @@ func CmdGetRewardsByUser() *cobra.Command {
 			}
 
 			params := &types.QueryRewardsByAddressRequest{
-				Address:    argUser,
+				Address:    argAddress,
 				Pagination: pageReq,
 			}
 
@@ -159,8 +159,8 @@ func CmdGetRewardByUserAndCategory() *cobra.Command {
 			queryClient := types.NewQueryClient(clientCtx)
 
 			argUser := args[0]
-			argRewType := args[1]
-			argRewTypeint32, err := cast.ToInt32E(argRewType)
+			argRewCategory := args[1]
+			argRewCategoryint32, err := cast.ToInt32E(argRewCategory)
 			if err != nil {
 				return err
 			}
@@ -170,13 +170,13 @@ func CmdGetRewardByUserAndCategory() *cobra.Command {
 				return err
 			}
 
-			params := &types.QueryRewardsByAddressAndTypeRequest{
+			params := &types.QueryRewardsByAddressAndCategoryRequest{
 				Address:    argUser,
-				RewardType: types.RewardType(argRewTypeint32),
+				Category:   types.RewardCategory(argRewCategoryint32),
 				Pagination: pageReq,
 			}
 
-			res, err := queryClient.RewardsByAddressAndType(context.Background(), params)
+			res, err := queryClient.RewardsByAddressAndCategory(context.Background(), params)
 			if err != nil {
 				return err
 			}

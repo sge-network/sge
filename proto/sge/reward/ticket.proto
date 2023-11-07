@@ -89,6 +89,10 @@ message RewardPayloadCommon {
     (gogoproto.jsontag) = "source_uid",
     json_name = "source_uid"
   ];
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 3;
 }
 
 // GrantSignupRewardPayload is the type for signup reward grant payload.

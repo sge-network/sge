@@ -10,6 +10,7 @@ import (
 const (
 	TypeMsgCreateCampaign = "create_campaign"
 	TypeMsgUpdateCampaign = "update_campaign"
+	TypeMsgWithdrawFunds  = "withdraw_funds"
 )
 
 var _ sdk.Msg = &MsgCreateCampaign{}
@@ -129,6 +130,67 @@ func (msg *MsgUpdateCampaign) ValidateBasic() error {
 func (msg *MsgUpdateCampaign) EmitEvent(ctx *sdk.Context, uid string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(TypeMsgUpdateCampaign, msg.Creator,
+		sdk.NewAttribute(attributeKeyUID, uid),
+	)
+	emitter.Emit()
+}
+
+var _ sdk.Msg = &MsgWithdrawFunds{}
+
+func NewMsgWithdrawFunds(
+	creator string,
+	uid string,
+	ticket string,
+) *MsgWithdrawFunds {
+	return &MsgWithdrawFunds{
+		Creator: creator,
+		Uid:     uid,
+		Ticket:  ticket,
+	}
+}
+
+func (msg *MsgWithdrawFunds) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgWithdrawFunds) Type() string {
+	return TypeMsgWithdrawFunds
+}
+
+func (msg *MsgWithdrawFunds) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgWithdrawFunds) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgWithdrawFunds) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if !utils.IsValidUID(msg.Uid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid uid")
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
+	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgWithdrawFunds) EmitEvent(ctx *sdk.Context, uid string) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(TypeMsgWithdrawFunds, msg.Creator,
 		sdk.NewAttribute(attributeKeyUID, uid),
 	)
 	emitter.Emit()
