@@ -17,6 +17,7 @@ var (
 	ErrCampaignPoolBalance        = sdkerrors.Register(ModuleName, 7106, "not enough campaign pool balance")
 	ErrUnknownRewardType          = sdkerrors.Register(ModuleName, 7107, "unknown reward type")
 	ErrInFundingCampaignPool      = sdkerrors.Register(ModuleName, 7108, "error in funding the campaign pool")
+	ErrWithdrawFromCampaignPool   = sdkerrors.Register(ModuleName, 7109, "error in withdrawing from the campaign pool")
 	ErrUnknownAccType             = sdkerrors.Register(ModuleName, 7109, "unknown account type")
 	ErrCampaignEnded              = sdkerrors.Register(ModuleName, 7110, "campaign validity period is ended")
 	ErrInsufficientPoolBalance    = sdkerrors.Register(ModuleName, 7111, "insufficient campaign pool balance")

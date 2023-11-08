@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	sdkmath "cosmossdk.io/math"
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -92,7 +93,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
 	}
 
-	// Checks if the the msg creator is the same as the current owner
+	// Checks if the msg creator is the same as the current owner
 	if msg.Creator != valFound.Promoter {
 		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
@@ -110,5 +111,53 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 }
 
 func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFunds) (*types.MsgWithdrawFundsResponse, error) {
-	return nil, nil
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	var payload types.WithdrawFundsPayload
+	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	// Validate ticket payload
+	if err := payload.Validate(); err != nil {
+		return nil, err
+	}
+
+	// Check if the campaign exists
+	valFound, isFound := k.GetCampaign(ctx, msg.Uid)
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "campaign not found")
+	}
+
+	// Checks if the msg creator is the same as the current owner
+	if msg.Creator != valFound.Promoter {
+		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.Promoter, msg,
+			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
+			return nil, err
+		}
+	}
+	// check if the pool amount is positive
+	if valFound.Pool.Total.IsNil() || !valFound.Pool.Total.GT(sdkmath.ZeroInt()) {
+		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "pool amount should be positive")
+	}
+
+	// transfer the funds present in campaign to the promoter
+	if err := k.modFunder.Refund(
+		types.RewardPoolFunder{}, ctx,
+		sdk.MustAccAddressFromBech32(payload.Promoter),
+		valFound.Pool.Total,
+	); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "%s", err)
+	}
+	// set the pool amount to zero
+	valFound.Pool.Total = sdkmath.ZeroInt()
+	// deactivate the campaign
+	valFound.IsActive = false
+
+	// store the campaign
+	k.SetCampaign(ctx, valFound)
+	// emit withdraw event
+	msg.EmitEvent(&ctx, msg.Uid)
+
+	return &types.MsgWithdrawFundsResponse{}, nil
 }
