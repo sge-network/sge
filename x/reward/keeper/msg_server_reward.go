@@ -18,6 +18,10 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the uid not found")
 	}
 
+	if !campaign.IsActive {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign is not active")
+	}
+
 	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}

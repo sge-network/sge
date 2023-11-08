@@ -67,16 +67,6 @@ message WithdrawFundsPayload {
   // promoter is the address of campaign promoter.
   // Funds would be transferred to this account.
   string promoter = 1;
-
-  // amount is the funds that needs to be withdrawn.
-  string amount = 8 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"amount\""
-  ];
-
-  // is_active is the flag to check if the campaign is active or not.
-  bool is_active = 9;
 }
 
 message RewardPayloadCommon {
