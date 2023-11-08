@@ -266,6 +266,7 @@ func (m *WithdrawFundsPayload) GetPromoter() string {
 	return ""
 }
 
+// RewardPayloadCommon
 type RewardPayloadCommon struct {
 	// receiver is the address of the account that receives the reward.
 	Receiver string `protobuf:"bytes,1,opt,name=receiver,proto3" json:"receiver,omitempty"`
