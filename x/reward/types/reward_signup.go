@@ -6,6 +6,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
 // SignUpReward is the type for signup rewards calculations
@@ -22,30 +23,42 @@ func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
 	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
 	}
-
-	// TODO: validate duplicate signup reward
+	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_FIXED {
+		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
+	}
 	return nil
 }
 
 // Calculate parses ticket payload and returns the distribution list of signup reward.
 func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
-	campaign Campaign, ticket string,
-) (Receiver, RewardPayloadCommon, bool, string, error) {
+	campaign Campaign, ticket, creator string,
+) (Receiver, RewardPayloadCommon, error) {
 	var payload GrantSignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
-		return Receiver{}, payload.Common, false, "", sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
+		return Receiver{}, payload.Common, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
-
-	_, found := keepers.SubAccountKeeper.GetSubAccountOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
+	// TODO check if receiver is not a sub account itself
+	var (
+		subAccountAddressString string
+		err                     error
+	)
+	subAccountAddress, found := keepers.SubAccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
 	if !found {
-		return Receiver{}, payload.Common, false, "", sdkerrors.Wrapf(ErrReceiverAddrNotSubAcc, "%s", &payload.Common.Receiver)
+		subAccountAddressString, err = keepers.SubAccountKeeper.CreateSubAccount(ctx, creator, payload.Common.Receiver, []subaccounttypes.LockedBalance{})
+		if err != nil {
+			return Receiver{}, payload.Common, sdkerrors.Wrapf(ErrSubAccountCreationFailed, "%s", payload.Common.Receiver)
+		}
+	} else {
+		subAccountAddressString = subAccountAddress.String()
 	}
 
 	// TODO: validate reward grant for sighnup
 
 	return NewReceiver(
+		subAccountAddressString,
 		payload.Common.Receiver,
 		campaign.RewardAmount.SubaccountAmount,
-		0,
-	), payload.Common, true, payload.Common.Receiver, nil
+		campaign.RewardAmount.MainAccountAmount,
+		campaign.RewardAmount.UnlockPeriod,
+	), payload.Common, nil
 }

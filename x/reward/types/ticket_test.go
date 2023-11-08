@@ -60,7 +60,7 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				RewardAmount: &types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(1000),
-					UnlockTS:         0,
+					UnlockPeriod:     0,
 				},
 				IsActive: true,
 				Meta:     "sample campaign",
@@ -78,7 +78,7 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				RewardAmount: &types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(1000),
-					UnlockTS:         0,
+					UnlockPeriod:     0,
 				},
 				TotalFunds: sdkmath.NewInt(0),
 				IsActive:   true,
@@ -97,7 +97,7 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				RewardAmount: &types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(1000),
-					UnlockTS:         0,
+					UnlockPeriod:     0,
 				},
 				TotalFunds: poolBalance,
 				IsActive:   true,

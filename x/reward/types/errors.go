@@ -30,5 +30,6 @@ var (
 	ErrAccReceiverTypeNotFound    = sdkerrors.Register(ModuleName, 7119, "receiver type not found in the receivers")
 	ErrInvalidNoLossBetUID        = sdkerrors.Register(ModuleName, 7120, "invalid no loss bet uid")
 	ErrWrongAmountForType         = sdkerrors.Register(ModuleName, 7121, "wrong amount for account type")
-	ErrReceiverAddrNotSubAcc      = sdkerrors.Register(ModuleName, 7122, "receiver address is not a subaccount address")
+	ErrSubAccountCreationFailed   = sdkerrors.Register(ModuleName, 7122, "suba ccount creation failed")
+	ErrWrongRewardAmountType      = sdkerrors.Register(ModuleName, 7114, "wrong reward amount type")
 )

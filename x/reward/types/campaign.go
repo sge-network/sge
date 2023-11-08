@@ -37,10 +37,6 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	switch c.RewardType {
 	case RewardType_REWARD_TYPE_SIGNUP:
 		return NewSignUpReward(), nil
-	case RewardType_REWARD_TYPE_REFERRAL:
-		return NewReferralReward(), nil
-	case RewardType_REWARD_TYPE_AFFILIATE:
-		return NewAffiliateReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}

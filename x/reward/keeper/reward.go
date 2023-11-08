@@ -53,10 +53,10 @@ func (k Keeper) GetAllReward(ctx sdk.Context) (list []types.Reward) {
 	return
 }
 
-func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rewardType types.RewardCategory, r types.Reward) {
+func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rByCategory types.RewardByCategory) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	b := k.cdc.MustMarshal(&r)
-	store.Set(types.GetRewardsByCategoryKey(r.Creator, rewardType, r.UID), b)
+	b := k.cdc.MustMarshal(&rByCategory)
+	store.Set(types.GetRewardsByCategoryKey(rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID), b)
 }
 
 // GetRewardsByAddressAndCategory returns all rewards by address and category.
@@ -81,8 +81,8 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 	return
 }
 
-func (k Keeper) SetRewardByCampaign(ctx sdk.Context, reward types.Reward) {
+func (k Keeper) SetRewardByCampaign(ctx sdk.Context, rewByCampaign types.RewardByCampaign) {
 	store := k.getRewardsByCampaignStore(ctx)
-	b := k.cdc.MustMarshal(&reward)
-	store.Set(types.GetRewardsByCampaignKey(reward.CampaignUID, reward.UID), b)
+	b := k.cdc.MustMarshal(&rewByCampaign)
+	store.Set(types.GetRewardsByCampaignKey(rewByCampaign.CampaignUID, rewByCampaign.UID), b)
 }

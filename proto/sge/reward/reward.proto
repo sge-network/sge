@@ -66,11 +66,34 @@ message RewardAmount {
     (gogoproto.moretags) = "yaml:\"subaccount_amount\""
   ];
 
-  // unlock timestamp
-  uint64 unlock_ts = 3 [
-    (gogoproto.customname) = "UnlockTS",
-    (gogoproto.jsontag) = "unlock_ts",
-    json_name = "unlock_ts"
+  // unlock period
+  uint64 unlock_period = 3 [
+    (gogoproto.customname) = "UnlockPeriod",
+    (gogoproto.jsontag) = "unlock_period",
+    json_name = "unlock_period"
+  ];
+}
+
+message RewardByCategory {
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  string addr = 2;
+  RewardCategory reward_category = 3;
+}
+
+message RewardByCampaign {
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  string campaign_uid = 2 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
   ];
 }
 

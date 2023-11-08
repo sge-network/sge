@@ -38,7 +38,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	}
 
 	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
-		payload.RewardAmount.UnlockTS == 0 {
+		payload.RewardAmount.UnlockPeriod == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock timestamp")
 	}
 

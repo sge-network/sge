@@ -10,9 +10,11 @@ import (
 )
 
 type Receiver struct {
-	Addr     string
-	Amount   sdkmath.Int
-	UnlockTS uint64
+	SubAccountAddr    string
+	SubAccountAmount  sdkmath.Int
+	UnlockTS          uint64
+	MainAccountAddr   string
+	MainAccountAmount sdkmath.Int
 }
 
 // RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
@@ -26,7 +28,7 @@ func NewReward(
 	uid, creator, receiver string,
 	campaignUID string,
 	rewardAmount *RewardAmount,
-	sourceID, meta string,
+	sourceUID, meta string,
 ) Reward {
 	return Reward{
 		UID:          uid,
@@ -34,24 +36,42 @@ func NewReward(
 		Receiver:     receiver,
 		CampaignUID:  campaignUID,
 		RewardAmount: rewardAmount,
-		SourceUID:    sourceID,
+		SourceUID:    sourceUID,
 		Meta:         meta,
+	}
+}
+
+func NewRewardByType(uid, addr string, rewardCategory RewardCategory) RewardByCategory {
+	return RewardByCategory{
+		UID:            uid,
+		RewardCategory: rewardCategory,
+		Addr:           addr,
+	}
+}
+
+func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
+	return RewardByCampaign{
+		UID:         uid,
+		CampaignUID: campaignUID,
 	}
 }
 
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
 	VaidateCampaign(campaign Campaign) error
-	Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket string,
-	) (Receiver, RewardPayloadCommon, bool, string, error)
+	Calculate(
+		goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket, creator string,
+	) (Receiver, RewardPayloadCommon, error)
 }
 
 // NewReceiver creates reveiver object.
-func NewReceiver(addr string, amount sdkmath.Int, unlockTS uint64) Receiver {
+func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockTS uint64) Receiver {
 	return Receiver{
-		Amount:   amount,
-		Addr:     addr,
-		UnlockTS: unlockTS,
+		SubAccountAddr:    saAddr,
+		SubAccountAmount:  saAmount,
+		UnlockTS:          unlockTS,
+		MainAccountAddr:   maAddr,
+		MainAccountAmount: maAmount,
 	}
 }
 
