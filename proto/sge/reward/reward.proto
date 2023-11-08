@@ -51,6 +51,7 @@ message Reward {
   string meta = 12;
 }
 
+// RewardAmount
 message RewardAmount {
   // main account reward amount
   string main_account_amount = 1 [
@@ -74,6 +75,7 @@ message RewardAmount {
   ];
 }
 
+// RewardByCategory
 message RewardByCategory {
   string uid = 1 [
     (gogoproto.customname) = "UID",
@@ -84,6 +86,7 @@ message RewardByCategory {
   RewardCategory reward_category = 3;
 }
 
+// RewardByCampaign
 message RewardByCampaign {
   string uid = 1 [
     (gogoproto.customname) = "UID",

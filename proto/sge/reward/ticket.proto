@@ -3,7 +3,6 @@ package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
 import "sge/reward/reward.proto";
-import "sge/reward/campaign.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
