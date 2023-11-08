@@ -102,7 +102,6 @@ func (k Keeper) RewardsByAddressAndCategory(goCtx context.Context, req *types.Qu
 		rewards = append(rewards, reward)
 		return nil
 	})
-
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

@@ -46,7 +46,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 }
 
 func (payload *CreateCampaignPayload) validateRewardCategory() error {
-	var err = errors.New("reward category is not compatible with reward type")
+	err := errors.New("reward category is not compatible with reward type")
 	switch payload.Category {
 	case RewardCategory_REWARD_CATEGORY_SIGNUP:
 		if payload.RewardType != RewardType_REWARD_TYPE_SIGNUP &&
