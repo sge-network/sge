@@ -122,7 +122,7 @@ func CmdGetRewardsByCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argCampaignId := args[0]
+			argCampaignID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -130,7 +130,7 @@ func CmdGetRewardsByCampaign() *cobra.Command {
 			}
 
 			params := &types.QueryRewardsByCampaignRequest{
-				CampaignUid: argCampaignId,
+				CampaignUid: argCampaignID,
 				Pagination:  pageReq,
 			}
 
