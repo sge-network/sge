@@ -31,14 +31,6 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	rewards, err := k.GetRewardsByAddressAndCategory(ctx, msg.Creator, campaign.RewardCategory)
-	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
-	}
-	if len(rewards) >= int(campaign.ClaimsPerCategory) {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
-	}
-
 	recevier, rewardCommon, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
@@ -49,11 +41,19 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
+	rewards, err := k.GetRewardsByAddressAndCategory(ctx, recevier.MainAccountAddr, campaign.RewardCategory)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
+	}
+	if len(rewards) >= int(campaign.ClaimsPerCategory) {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
+	}
+
 	if err := campaign.CheckPoolBalance(recevier.SubAccountAmount.Add(recevier.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, recevier); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.Promoter, recevier); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
@@ -64,7 +64,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		rewardCommon.SourceUID,
 		"",
 	))
-	k.SetRewardByReceiver(ctx, types.NewRewardByType(msg.Uid, recevier.MainAccountAddr, campaign.RewardCategory))
+	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, recevier.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
 	msg.EmitEvent(&ctx, msg.CampaignUid, recevier)

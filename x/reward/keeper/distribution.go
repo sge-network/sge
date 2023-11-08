@@ -9,12 +9,12 @@ import (
 )
 
 // DistributeRewards distributes the rewards according to the input distribution list.
-func (k Keeper) DistributeRewards(ctx sdk.Context, receiver types.Receiver) error {
+func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, receiver types.Receiver) error {
 	if receiver.SubAccountAmount.GT(sdk.ZeroInt()) {
-		if _, err := k.subaccountKeeper.TopUp(ctx, types.RewardPoolFunder{}.GetModuleAcc(), receiver.SubAccountAddr,
+		if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, receiver.MainAccountAddr,
 			[]subaccounttypes.LockedBalance{
 				{
-					UnlockTS: receiver.UnlockTS,
+					UnlockTS: uint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod,
 					Amount:   receiver.SubAccountAmount,
 				},
 			}); err != nil {

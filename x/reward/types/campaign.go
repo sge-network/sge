@@ -7,7 +7,7 @@ import (
 
 func NewCampaign(
 	creator, promoter, uID string,
-	startTS, endTS uint64,
+	startTS, endTS, claimsPerCategory uint64,
 	rewardType RewardType,
 	rewardCategory RewardCategory,
 	rewardAmountType RewardAmountType,
@@ -17,18 +17,19 @@ func NewCampaign(
 	pool Pool,
 ) Campaign {
 	return Campaign{
-		Creator:          creator,
-		Promoter:         promoter,
-		UID:              uID,
-		StartTS:          startTS,
-		EndTS:            endTS,
-		RewardCategory:   rewardCategory,
-		RewardType:       rewardType,
-		RewardAmountType: rewardAmountType,
-		RewardAmount:     rewardAmount,
-		IsActive:         isActive,
-		Meta:             meta,
-		Pool:             pool,
+		Creator:           creator,
+		Promoter:          promoter,
+		UID:               uID,
+		StartTS:           startTS,
+		EndTS:             endTS,
+		RewardCategory:    rewardCategory,
+		RewardType:        rewardType,
+		RewardAmountType:  rewardAmountType,
+		RewardAmount:      rewardAmount,
+		IsActive:          isActive,
+		Meta:              meta,
+		Pool:              pool,
+		ClaimsPerCategory: claimsPerCategory,
 	}
 }
 

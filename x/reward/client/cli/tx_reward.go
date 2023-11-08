@@ -12,15 +12,16 @@ import (
 
 func CmdGrantReward() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "apply [campaign uid] [ticket]",
+		Use:   "apply [uid] [campaign uid] [ticket]",
 		Short: "Apply a new reward",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
-			argCampaignUID := args[0]
+			argUID := args[0]
+			argCampaignUID := args[1]
 
 			// Get value arguments
-			argTicket := args[1]
+			argTicket := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -29,6 +30,7 @@ func CmdGrantReward() *cobra.Command {
 
 			msg := types.NewMsgGrantReward(
 				clientCtx.GetFromAddress().String(),
+				argUID,
 				argCampaignUID,
 				argTicket,
 			)

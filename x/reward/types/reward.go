@@ -12,7 +12,7 @@ import (
 type Receiver struct {
 	SubAccountAddr    string
 	SubAccountAmount  sdkmath.Int
-	UnlockTS          uint64
+	UnlockPeriod      uint64
 	MainAccountAddr   string
 	MainAccountAmount sdkmath.Int
 }
@@ -41,7 +41,7 @@ func NewReward(
 	}
 }
 
-func NewRewardByType(uid, addr string, rewardCategory RewardCategory) RewardByCategory {
+func NewRewardByCategory(uid, addr string, rewardCategory RewardCategory) RewardByCategory {
 	return RewardByCategory{
 		UID:            uid,
 		RewardCategory: rewardCategory,
@@ -65,11 +65,11 @@ type IRewardFactory interface {
 }
 
 // NewReceiver creates reveiver object.
-func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockTS uint64) Receiver {
+func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPeriod uint64) Receiver {
 	return Receiver{
 		SubAccountAddr:    saAddr,
 		SubAccountAmount:  saAmount,
-		UnlockTS:          unlockTS,
+		UnlockPeriod:      unlockPeriod,
 		MainAccountAddr:   maAddr,
 		MainAccountAmount: maAmount,
 	}

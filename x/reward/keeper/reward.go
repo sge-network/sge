@@ -64,7 +64,7 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 	ctx sdk.Context,
 	address string,
 	category types.RewardCategory,
-) (list []types.Reward, err error) {
+) (list []types.RewardByCategory, err error) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsByCategoryPrefix(address, category))
 
@@ -73,7 +73,7 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 	}()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Reward
+		var val types.RewardByCategory
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
