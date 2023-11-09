@@ -19,10 +19,6 @@ func NewSignUpReward() SignUpReward { return SignUpReward{} }
 
 // VaidateCampaign validates campaign definitions.
 func (sur SignUpReward) VaidateCampaign(campaign Campaign, blockTime uint64) error {
-	if campaign.RewardAmount.UnlockPeriod <= blockTime {
-		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", campaign.RewardAmount.UnlockPeriod)
-	}
-
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
