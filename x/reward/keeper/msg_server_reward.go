@@ -18,6 +18,10 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the uid not found")
 	}
 
+	if !campaign.IsActive {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign is not active")
+	}
+
 	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
@@ -27,33 +31,40 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	recevier, rewardCommon, isSubAccount, oneTimeKey, err := rewardFactory.Calculate(goCtx, ctx,
+	recevier, rewardCommon, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
 			SubAccountKeeper: k.subaccountKeeper,
-		}, campaign, msg.Ticket)
+		}, campaign, msg.Ticket, msg.Creator)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	if err := campaign.CheckPoolBalance(recevier.Amount); err != nil {
+	rewards, err := k.GetRewardsByAddressAndCategory(ctx, recevier.MainAccountAddr, campaign.RewardCategory)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
+	}
+	if len(rewards) >= int(campaign.ClaimsPerCategory) {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
+	}
+
+	if err := campaign.CheckPoolBalance(recevier.SubAccountAmount.Add(recevier.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, campaign.Promoter, isSubAccount, recevier); err != nil {
+	if err := k.DistributeRewards(ctx, campaign.Promoter, recevier); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
 	k.UpdateCampaignPool(ctx, campaign, recevier)
 	k.SetReward(ctx, types.NewReward(
-		msg.Uid, msg.Creator, recevier.Addr,
+		msg.Uid, msg.Creator, recevier.MainAccountAddr,
 		msg.CampaignUid, campaign.RewardAmount,
-		rewardCommon.Source, rewardCommon.SourceCode, rewardCommon.SourceUID,
-		uint64(ctx.BlockTime().Unix()),
+		rewardCommon.SourceUID,
+		"",
 	))
-	k.SetOneTimeReward(ctx, types.NewOneTimeReward(oneTimeKey, campaign.RewardType))
-	k.SetRewardByReceiver(ctx, types.NewRewardByType(msg.Uid, recevier.Addr, campaign.RewardType))
+	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, recevier.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
 	msg.EmitEvent(&ctx, msg.CampaignUid, recevier)

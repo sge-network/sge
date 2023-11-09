@@ -60,14 +60,14 @@ func (k Keeper) RewardsByAddress(goCtx context.Context, req *types.QueryRewardsB
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var rewards []types.Reward
+	var rewards []types.RewardByCategory
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	store := k.getRewardByReceiverAndTypeStore(ctx)
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	rewardStore := prefix.NewStore(store, types.GetRewardsByAccPrefix(req.Address))
 
 	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
-		var reward types.Reward
+		var reward types.RewardByCategory
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
 		}
@@ -82,19 +82,19 @@ func (k Keeper) RewardsByAddress(goCtx context.Context, req *types.QueryRewardsB
 	return &types.QueryRewardsByAddressResponse{Rewards: rewards, Pagination: pageRes}, nil
 }
 
-func (k Keeper) RewardsByAddressAndType(goCtx context.Context, req *types.QueryRewardsByAddressAndTypeRequest) (*types.QueryRewardsByAddressAndTypeResponse, error) {
+func (k Keeper) RewardsByAddressAndCategory(goCtx context.Context, req *types.QueryRewardsByAddressAndCategoryRequest) (*types.QueryRewardsByAddressAndCategoryResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var rewards []types.Reward
+	var rewards []types.RewardByCategory
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	store := k.getRewardByReceiverAndTypeStore(ctx)
-	rewardStore := prefix.NewStore(store, types.GetRewardsByTypePrefix(req.Address, req.RewardType))
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	rewardStore := prefix.NewStore(store, types.GetRewardsByCategoryPrefix(req.Address, req.Category))
 
 	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
-		var reward types.Reward
+		var reward types.RewardByCategory
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
 		}
@@ -106,7 +106,7 @@ func (k Keeper) RewardsByAddressAndType(goCtx context.Context, req *types.QueryR
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QueryRewardsByAddressAndTypeResponse{Rewards: rewards, Pagination: pageRes}, nil
+	return &types.QueryRewardsByAddressAndCategoryResponse{Rewards: rewards, Pagination: pageRes}, nil
 }
 
 func (k Keeper) RewardsByCampaign(goCtx context.Context, req *types.QueryRewardsByCampaignRequest) (*types.QueryRewardsByCampaignResponse, error) {
@@ -114,14 +114,14 @@ func (k Keeper) RewardsByCampaign(goCtx context.Context, req *types.QueryRewards
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
 
-	var rewards []types.Reward
+	var rewards []types.RewardByCampaign
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	store := k.getRewardsByCampaignStore(ctx)
 	rewardStore := prefix.NewStore(store, types.GetRewardsByCampaignPrefix(req.CampaignUid))
 
 	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
-		var reward types.Reward
+		var reward types.RewardByCampaign
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
 		}

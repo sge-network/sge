@@ -7,7 +7,7 @@ import (
 
 func NewCampaign(
 	creator, promoter, uID string,
-	startTS, endTS uint64,
+	startTS, endTS, claimsPerCategory uint64,
 	rewardType RewardType,
 	rewardCategory RewardCategory,
 	rewardAmountType RewardAmountType,
@@ -17,18 +17,19 @@ func NewCampaign(
 	pool Pool,
 ) Campaign {
 	return Campaign{
-		Creator:          creator,
-		Promoter:         promoter,
-		UID:              uID,
-		StartTS:          startTS,
-		EndTS:            endTS,
-		RewardCategory:   rewardCategory,
-		RewardType:       rewardType,
-		RewardAmountType: rewardAmountType,
-		RewardAmount:     rewardAmount,
-		IsActive:         isActive,
-		Meta:             meta,
-		Pool:             pool,
+		Creator:           creator,
+		Promoter:          promoter,
+		UID:               uID,
+		StartTS:           startTS,
+		EndTS:             endTS,
+		RewardCategory:    rewardCategory,
+		RewardType:        rewardType,
+		RewardAmountType:  rewardAmountType,
+		RewardAmount:      rewardAmount,
+		IsActive:          isActive,
+		Meta:              meta,
+		Pool:              pool,
+		ClaimsPerCategory: claimsPerCategory,
 	}
 }
 
@@ -37,10 +38,6 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	switch c.RewardType {
 	case RewardType_REWARD_TYPE_SIGNUP:
 		return NewSignUpReward(), nil
-	case RewardType_REWARD_TYPE_REFERRAL:
-		return NewReferralReward(), nil
-	case RewardType_REWARD_TYPE_AFFILIATE:
-		return NewAffiliateReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}

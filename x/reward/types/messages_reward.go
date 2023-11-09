@@ -16,11 +16,13 @@ var _ sdk.Msg = &MsgGrantReward{}
 
 func NewMsgGrantReward(
 	creator string,
+	uid string,
 	campaignUID string,
 	ticket string,
 ) *MsgGrantReward {
 	return &MsgGrantReward{
 		Creator:     creator,
+		Uid:         uid,
 		CampaignUid: campaignUID,
 		Ticket:      ticket,
 	}

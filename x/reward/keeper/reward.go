@@ -53,30 +53,34 @@ func (k Keeper) GetAllReward(ctx sdk.Context) (list []types.Reward) {
 	return
 }
 
-// SetOneTimeReward set a specific record to track if a reward is already given or not.
-func (k Keeper) SetOneTimeReward(ctx sdk.Context, oneTimeReward types.OneTimeReward) {
-	store := k.getRewardOneTimeStore(ctx)
-	b := k.cdc.MustMarshal(&oneTimeReward)
-	store.Set(types.GetOneTimeRewardsPrefix(oneTimeReward.RewardType, oneTimeReward.OneTimeKey), b)
+func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rByCategory types.RewardByCategory) {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	b := k.cdc.MustMarshal(&rByCategory)
+	store.Set(types.GetRewardsByCategoryKey(rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID), b)
 }
 
-// HasOneTimeReward returns if the reward for the reward type is already given.
-func (k Keeper) HasOneTimeReward(
+// GetRewardsByAddressAndCategory returns all rewards by address and category.
+func (k Keeper) GetRewardsByAddressAndCategory(
 	ctx sdk.Context,
-	oneTimeReward types.OneTimeReward,
-) bool {
-	store := k.getRewardOneTimeStore(ctx)
-	return store.Has(types.GetOneTimeRewardsPrefix(oneTimeReward.RewardType, oneTimeReward.OneTimeKey))
+	address string,
+	category types.RewardCategory,
+) (list []types.RewardByCategory, err error) {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsByCategoryPrefix(address, category))
+
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.RewardByCategory
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
 }
 
-// SetOneTimeReward set a specific record to track if a reward is already given or not.
-func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rewByType types.RewardByType) {
-	store := k.getRewardByReceiverAndTypeStore(ctx)
-	b := k.cdc.MustMarshal(&rewByType)
-	store.Set(types.GetRewardsByTypeKey(rewByType.Addr, rewByType.RewardType, rewByType.UID), b)
-}
-
-// SetOneTimeReward set a specific record to track if a reward is already given or not.
 func (k Keeper) SetRewardByCampaign(ctx sdk.Context, rewByCampaign types.RewardByCampaign) {
 	store := k.getRewardsByCampaignStore(ctx)
 	b := k.cdc.MustMarshal(&rewByCampaign)

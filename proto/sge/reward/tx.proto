@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
-
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Msg defines the Msg service.

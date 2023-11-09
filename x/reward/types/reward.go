@@ -10,9 +10,11 @@ import (
 )
 
 type Receiver struct {
-	Addr     string
-	Amount   sdkmath.Int
-	UnlockTS uint64
+	SubAccountAddr    string
+	SubAccountAmount  sdkmath.Int
+	UnlockPeriod      uint64
+	MainAccountAddr   string
+	MainAccountAmount sdkmath.Int
 }
 
 // RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
@@ -26,8 +28,7 @@ func NewReward(
 	uid, creator, receiver string,
 	campaignUID string,
 	rewardAmount *RewardAmount,
-	source, sourceCode, sourceID string,
-	blockTime uint64,
+	sourceUID, meta string,
 ) Reward {
 	return Reward{
 		UID:          uid,
@@ -35,28 +36,16 @@ func NewReward(
 		Receiver:     receiver,
 		CampaignUID:  campaignUID,
 		RewardAmount: rewardAmount,
-		Source:       source,
-		SourceCode:   sourceCode,
-		SourceUID:    sourceID,
-		CreatedAt:    blockTime,
+		SourceUID:    sourceUID,
+		Meta:         meta,
 	}
 }
 
-func NewOneTimeReward(
-	oneTimeKey string,
-	rewType RewardType,
-) OneTimeReward {
-	return OneTimeReward{
-		OneTimeKey: oneTimeKey,
-		RewardType: rewType,
-	}
-}
-
-func NewRewardByType(uid, addr string, rewType RewardType) RewardByType {
-	return RewardByType{
-		UID:        uid,
-		RewardType: rewType,
-		Addr:       addr,
+func NewRewardByCategory(uid, addr string, rewardCategory RewardCategory) RewardByCategory {
+	return RewardByCategory{
+		UID:            uid,
+		RewardCategory: rewardCategory,
+		Addr:           addr,
 	}
 }
 
@@ -70,16 +59,19 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
 	VaidateCampaign(campaign Campaign) error
-	Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket string,
-	) (Receiver, RewardPayloadCommon, bool, string, error)
+	Calculate(
+		goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket, creator string,
+	) (Receiver, RewardPayloadCommon, error)
 }
 
 // NewReceiver creates reveiver object.
-func NewReceiver(addr string, amount sdkmath.Int, unlockTS uint64) Receiver {
+func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPeriod uint64) Receiver {
 	return Receiver{
-		Amount:   amount,
-		Addr:     addr,
-		UnlockTS: unlockTS,
+		SubAccountAddr:    saAddr,
+		SubAccountAmount:  saAmount,
+		UnlockPeriod:      unlockPeriod,
+		MainAccountAddr:   maAddr,
+		MainAccountAmount: maAmount,
 	}
 }
 

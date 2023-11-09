@@ -40,7 +40,7 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 			"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 			"reward_amount": types.RewardAmount{
 				SubaccountAmount: sdkmath.NewInt(100),
-				UnlockTS:         uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+				UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
 			"total_funds": sdkmath.NewInt(1000000),
 			"is_active":   true,
@@ -113,7 +113,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 				"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				"reward_amount": types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(100),
-					UnlockTS:         uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+					UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
 				"total_funds": sdkmath.NewInt(1000000),
 				"is_active":   true,

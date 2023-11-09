@@ -67,7 +67,6 @@ message MsgTopUpResponse {}
 
 // MsgWithdrawUnlockedBalances defines the Msg/WithdrawUnlockedBalances request
 // type.
-
 message MsgWithdrawUnlockedBalances {
   // creator is the subaccount owner.
   string creator = 1;

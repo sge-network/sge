@@ -235,6 +235,8 @@ func (m *MsgTopUpResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgTopUpResponse proto.InternalMessageInfo
 
+// MsgWithdrawUnlockedBalances defines the Msg/WithdrawUnlockedBalances request
+// type.
 type MsgWithdrawUnlockedBalances struct {
 	// creator is the subaccount owner.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`

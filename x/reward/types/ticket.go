@@ -32,13 +32,13 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
 	}
 
-	if payload.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt()) &&
-		payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for main account or subaccount not both")
+	if payload.RewardAmount.MainAccountAmount.Equal(sdkmath.ZeroInt()) &&
+		payload.RewardAmount.SubaccountAmount.Equal(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for atleast one of main account or subaccount")
 	}
 
 	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
-		payload.RewardAmount.UnlockTS == 0 {
+		payload.RewardAmount.UnlockPeriod == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock timestamp")
 	}
 
@@ -46,7 +46,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 }
 
 func (payload *CreateCampaignPayload) validateRewardCategory() error {
-	var err = errors.New("reward category is not compatible with reward type")
+	err := errors.New("reward category is not compatible with reward type")
 	switch payload.Category {
 	case RewardCategory_REWARD_CATEGORY_SIGNUP:
 		if payload.RewardType != RewardType_REWARD_TYPE_SIGNUP &&
@@ -82,5 +82,14 @@ func (payload *UpdateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(ErrExpiredCampaign, "%d", payload.EndTs)
 	}
 
+	return nil
+}
+
+// Validate validates campaign withdraw funds ticket payload.
+func (payload *WithdrawFundsPayload) Validate() error {
+	_, err := sdk.AccAddressFromBech32(payload.Promoter)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid promoter address (%s)", err)
+	}
 	return nil
 }

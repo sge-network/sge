@@ -122,7 +122,7 @@ func CmdGetRewardsByCampaign() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argCampaignId := args[0]
+			argCampaignID := args[0]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -130,7 +130,7 @@ func CmdGetRewardsByCampaign() *cobra.Command {
 			}
 
 			params := &types.QueryRewardsByCampaignRequest{
-				CampaignUid: argCampaignId,
+				CampaignUid: argCampaignID,
 				Pagination:  pageReq,
 			}
 
@@ -152,7 +152,7 @@ func CmdGetRewardByUserAndCategory() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "rewards-by-user-category [address] [category]",
 		Short: "shows a list of rewards by user and category",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 

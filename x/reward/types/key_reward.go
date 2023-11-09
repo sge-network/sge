@@ -12,14 +12,11 @@ var (
 	// RewardKeyPrefix is the prefix to retrieve all applied rewards
 	RewardKeyPrefix = []byte{0x01}
 
-	// RewardOneTimeKeyPrefix is the prefix to retrieve all applied rewards that not allowed to be granted twice.
-	RewardOneTimeKeyPrefix = []byte{0x02}
-
-	// RewardByReceiverAndTypeKeyPrefix is the prefix to retrieve all applied rewards for a certain receiver account.
-	RewardByReceiverAndTypeKeyPrefix = []byte{0x03}
+	// RewardByReceiverAndCategoryKeyPrefix is the prefix to retrieve all applied rewards for a certain receiver account.
+	RewardByReceiverAndCategoryKeyPrefix = []byte{0x02}
 
 	// RewardByCampaignKeyPrefix is the prefix to retrieve all applied rewards for a certain campaign.
-	RewardByCampaignKeyPrefix = []byte{0x04}
+	RewardByCampaignKeyPrefix = []byte{0x03}
 )
 
 // GetRewardsByAccPrefix returns the store key to retrieve list of all applied rewards of a certain campaign
@@ -28,16 +25,14 @@ func GetRewardsByAccPrefix(receiverAcc string) []byte {
 	return utils.StrBytes(receiverAcc)
 }
 
-// GetRewardsByTypePrefix returns the store key to retrieve list of all applied rewards of certain address and type
-// this should be used with RewardOneTimeKeyPrefix
-func GetRewardsByTypePrefix(receiverAcc string, rewardType RewardType) []byte {
-	return append(GetRewardsByAccPrefix(receiverAcc), utils.Int32ToBytes(int32(rewardType))...)
+// GetRewardsByCategoryPrefix returns the store key to retrieve list of all applied rewards of certain address and category
+func GetRewardsByCategoryPrefix(receiverAcc string, rewardCategory RewardCategory) []byte {
+	return append(GetRewardsByAccPrefix(receiverAcc), utils.Int32ToBytes(int32(rewardCategory))...)
 }
 
-// GetRewardsByTypeKey returns the store key to retrieve list of applied reward of certain address and type and uid
-// this should be used with RewardOneTimeKeyPrefix
-func GetRewardsByTypeKey(receiverAcc string, rewardType RewardType, uid string) []byte {
-	return append(GetRewardsByTypePrefix(receiverAcc, rewardType), utils.StrBytes(uid)...)
+// GetRewardsByCategoryKey returns the store key to retrieve list of applied reward of certain address and category
+func GetRewardsByCategoryKey(receiverAcc string, rewardCategory RewardCategory, uid string) []byte {
+	return append(GetRewardsByCategoryPrefix(receiverAcc, rewardCategory), utils.StrBytes(uid)...)
 }
 
 // GetRewardKey returns the store key to retrieve a certain reward.
@@ -67,16 +62,4 @@ func GetRewardsByCampaignKey(campaignUID, uid string) []byte {
 // this should be used with RewardOneTimeKeyPrefix
 func GetOneTimeRewardsPrefix(rewardType RewardType, oneTimeKey string) []byte {
 	return append(utils.Int32ToBytes(int32(rewardType)), utils.StrBytes(oneTimeKey)...)
-}
-
-func getSignupRewardOneTimeKey(receiver string) string {
-	return receiver
-}
-
-func getSignupReferralRewardOneTimeKey(referrer, receiver string) string {
-	return referrer + receiver
-}
-
-func getSignupAffiliateRewardOneTimeKey(affiliator, receiver string) string {
-	return affiliator + receiver
 }

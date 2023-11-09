@@ -2,7 +2,6 @@ package keeper
 
 import (
 	sdkerrors "cosmossdk.io/errors"
-	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/reward/types"
@@ -10,26 +9,25 @@ import (
 )
 
 // DistributeRewards distributes the rewards according to the input distribution list.
-func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, isSubAccount bool, receiver types.Receiver) error {
-	if isSubAccount {
-		if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, receiver.Addr,
+func (k Keeper) DistributeRewards(ctx sdk.Context, funderAddr string, receiver types.Receiver) error {
+	if receiver.SubAccountAmount.GT(sdk.ZeroInt()) {
+		if _, err := k.subaccountKeeper.TopUp(ctx, funderAddr, receiver.MainAccountAddr,
 			[]subaccounttypes.LockedBalance{
 				{
-					UnlockTS: receiver.UnlockTS,
-					Amount:   receiver.Amount,
+					UnlockTS: uint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod,
+					Amount:   receiver.SubAccountAmount,
 				},
 			}); err != nil {
-			return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", receiver.Addr, err)
+			return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", receiver.SubAccountAddr, err)
 		}
-	} else {
-		if receiver.Amount.GT(sdkmath.ZeroInt()) {
-			if err := k.modFunder.Refund(
-				types.RewardPoolFunder{}, ctx,
-				sdk.MustAccAddressFromBech32(receiver.Addr),
-				receiver.Amount,
-			); err != nil {
-				return err
-			}
+	}
+	if receiver.MainAccountAmount.GT(sdk.ZeroInt()) {
+		if err := k.modFunder.Refund(
+			types.RewardPoolFunder{}, ctx,
+			sdk.MustAccAddressFromBech32(receiver.MainAccountAddr),
+			receiver.MainAccountAmount,
+		); err != nil {
+			return err
 		}
 	}
 
