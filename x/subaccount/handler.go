@@ -29,6 +29,9 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		case *types.MsgWithdrawUnlockedBalances:
 			res, err := msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
+		case *types.MsgWager:
+			res, err := msgServer.Wager(sdk.WrapSDKContext(ctx), msg)
+			return sdk.WrapServiceResult(ctx, res, err)
 		case *types.MsgHouseDeposit:
 			res, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
