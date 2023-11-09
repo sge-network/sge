@@ -76,13 +76,13 @@ func (k Keeper) SetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress, ac
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&accountSummary)
-	store.Set(types.BalanceKey(subAccountAddress), bz)
+	store.Set(types.AccountSummaryKey(subAccountAddress), bz)
 }
 
 // GetBalance returns the balance of an account.
 func (k Keeper) GetBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) (types.AccountSummary, bool) {
 	store := ctx.KVStore(k.storeKey)
-	bz := store.Get(types.BalanceKey(subAccountAddress))
+	bz := store.Get(types.AccountSummaryKey(subAccountAddress))
 	if bz == nil {
 		return types.AccountSummary{}, false
 	}
