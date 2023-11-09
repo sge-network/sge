@@ -277,6 +277,7 @@ func (m *Reward) GetMeta() string {
 	return ""
 }
 
+// RewardAmount
 type RewardAmount struct {
 	// main account reward amount
 	MainAccountAmount cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=main_account_amount,json=mainAccountAmount,proto3,customtype=cosmossdk.io/math.Int" json:"main_account_amount" yaml:"main_account_amount"`
@@ -326,6 +327,7 @@ func (m *RewardAmount) GetUnlockPeriod() uint64 {
 	return 0
 }
 
+// RewardByCategory
 type RewardByCategory struct {
 	UID            string         `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
 	Addr           string         `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
@@ -386,6 +388,7 @@ func (m *RewardByCategory) GetRewardCategory() RewardCategory {
 	return RewardCategory_REWARD_CATEGORY_UNSPECIFIED
 }
 
+// RewardByCampaign
 type RewardByCampaign struct {
 	UID         string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
 	CampaignUID string `protobuf:"bytes,2,opt,name=campaign_uid,proto3" json:"campaign_uid"`

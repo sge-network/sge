@@ -119,7 +119,7 @@ message QueryRewardsByAddressRequest {
 // QueryRewardsByAddressResponse is response body of the query all rewards by
 // address endpoint.
 message QueryRewardsByAddressResponse {
-  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  repeated RewardByCategory rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -134,7 +134,7 @@ message QueryRewardsByAddressAndCategoryRequest {
 // QueryRewardsByAddressAndTypeResponse is response body of the query all
 // rewards by address and type endpoint.
 message QueryRewardsByAddressAndCategoryResponse {
-  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  repeated RewardByCategory rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
@@ -148,6 +148,6 @@ message QueryRewardsByCampaignRequest {
 // QueryRewardsByCampaignResponse is response body of the query all rewards by
 // campaign endpoint.
 message QueryRewardsByCampaignResponse {
-  repeated Reward rewards = 1 [ (gogoproto.nullable) = false ];
+  repeated RewardByCampaign rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
