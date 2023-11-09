@@ -1,8 +1,7 @@
 package keeper
 
 import (
-	"fmt"
-
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -120,7 +119,7 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 
 	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, moneyToAdd)
 	if err != nil {
-		return "", fmt.Errorf("unable to send coins: %w", err)
+		return "", sdkerrors.Wrapf(types.ErrSendCoinError, "%s", err)
 	}
 	return subAccAddr.String(), nil
 }
