@@ -21,6 +21,7 @@ type (
 		memKey           storetypes.StoreKey
 		paramstore       paramtypes.Subspace
 		modFunder        *utils.ModuleAccFunder
+		accountKeeper    types.AccountKeeper
 		authzKeeper      types.AuthzKeeper
 		betKeeper        types.BetKeeper
 		ovmKeeper        types.OVMKeeper
@@ -60,6 +61,7 @@ func NewKeeper(
 			expectedKeepers.AccountKeeper,
 			types.ErrorBank,
 		),
+		accountKeeper:    expectedKeepers.AccountKeeper,
 		betKeeper:        betKeeper,
 		ovmKeeper:        ovmKeeper,
 		subaccountKeeper: subaccountKeeper,

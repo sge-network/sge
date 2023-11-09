@@ -3,6 +3,7 @@ package types
 import (
 	context "context"
 
+	"github.com/mrz1836/go-sanitize"
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
@@ -37,7 +38,7 @@ func NewReward(
 		CampaignUID:  campaignUID,
 		RewardAmount: rewardAmount,
 		SourceUID:    sourceUID,
-		Meta:         meta,
+		Meta:         sanitize.XSS(meta),
 	}
 }
 
@@ -58,7 +59,7 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
-	VaidateCampaign(campaign Campaign) error
+	VaidateCampaign(campaign Campaign, blockTime uint64) error
 	Calculate(
 		goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket, creator string,
 	) (Receiver, RewardPayloadCommon, error)
@@ -74,19 +75,6 @@ func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPe
 		MainAccountAmount: maAmount,
 	}
 }
-
-// // ValidateBasic validates the basic properties of a reward definition.
-// // TODO: move logic to the new design
-// func (d *Definition) ValidateBasic(blockTime uint64) error {
-// 	if d.RecAccType != ReceiverAccType_RECEIVER_ACC_TYPE_SUB {
-// 		if d.UnlockTS != 0 {
-// 			return sdkerrors.Wrapf(ErrUnlockTSIsSubAccOnly, "%d", d.UnlockTS)
-// 		}
-// 	} else if d.UnlockTS <= blockTime {
-// 		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", d.UnlockTS)
-// 	}
-// 	return nil
-// }
 
 func (ds Receiver) String() string {
 	out, err := yaml.Marshal(ds)

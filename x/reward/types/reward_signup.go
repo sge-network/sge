@@ -6,6 +6,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -16,7 +18,11 @@ type SignUpReward struct{}
 func NewSignUpReward() SignUpReward { return SignUpReward{} }
 
 // VaidateCampaign validates campaign definitions.
-func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
+func (sur SignUpReward) VaidateCampaign(campaign Campaign, blockTime uint64) error {
+	if campaign.RewardAmount.UnlockPeriod <= blockTime {
+		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", campaign.RewardAmount.UnlockPeriod)
+	}
+
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
@@ -26,6 +32,7 @@ func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_FIXED {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
 	}
+
 	return nil
 }
 
@@ -37,11 +44,21 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return Receiver{}, payload.Common, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
-	// TODO check if receiver is not a sub account itself
+
 	var (
 		subAccountAddressString string
 		err                     error
 	)
+
+	addr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
+	if err != nil {
+		return Receiver{}, payload.Common, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
+	}
+
+	if keepers.SubAccountKeeper.IsSubAccount(ctx, addr) {
+		return Receiver{}, payload.Common, ErrReceiverAddrCanNotBeSubAcc
+	}
+
 	subAccountAddress, found := keepers.SubAccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
 	if !found {
 		subAccountAddressString, err = keepers.SubAccountKeeper.CreateSubAccount(ctx, creator, payload.Common.Receiver, []subaccounttypes.LockedBalance{})
@@ -51,8 +68,6 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 	} else {
 		subAccountAddressString = subAccountAddress.String()
 	}
-
-	// TODO: validate reward grant for sighnup
 
 	return NewReceiver(
 		subAccountAddressString,
