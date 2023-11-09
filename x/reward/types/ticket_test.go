@@ -60,10 +60,11 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				RewardAmount: &types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(1000),
-					UnlockPeriod:     0,
+					UnlockPeriod:     uint64(time.Now().Add(10 * time.Minute).Unix()),
 				},
-				IsActive: true,
-				Meta:     "sample campaign",
+				IsActive:          true,
+				Meta:              "sample campaign",
+				ClaimsPerCategory: 1,
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -97,7 +98,7 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 				RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
 				RewardAmount: &types.RewardAmount{
 					SubaccountAmount: sdkmath.NewInt(1000),
-					UnlockPeriod:     0,
+					UnlockPeriod:     uint64(time.Now().Add(10 * time.Minute).Unix()),
 				},
 				TotalFunds: poolBalance,
 				IsActive:   true,

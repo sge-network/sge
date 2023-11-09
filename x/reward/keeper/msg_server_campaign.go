@@ -55,7 +55,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
-	err = rewardFactory.VaidateCampaign(campaign)
+	err = rewardFactory.VaidateCampaign(campaign, uint64(ctx.BlockTime().Unix()))
 	if err != nil {
 		return nil, err
 	}

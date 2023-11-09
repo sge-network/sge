@@ -18,7 +18,11 @@ type SignUpReward struct{}
 func NewSignUpReward() SignUpReward { return SignUpReward{} }
 
 // VaidateCampaign validates campaign definitions.
-func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
+func (sur SignUpReward) VaidateCampaign(campaign Campaign, blockTime uint64) error {
+	if campaign.RewardAmount.UnlockPeriod <= blockTime {
+		return sdkerrors.Wrapf(ErrUnlockTSDefBeforeBlockTime, "%d", campaign.RewardAmount.UnlockPeriod)
+	}
+
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
@@ -28,6 +32,7 @@ func (sur SignUpReward) VaidateCampaign(campaign Campaign) error {
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_FIXED {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
 	}
+
 	return nil
 }
 
@@ -63,8 +68,6 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 	} else {
 		subAccountAddressString = subAccountAddress.String()
 	}
-
-	// TODO: validate reward grant for sighnup
 
 	return NewReceiver(
 		subAccountAddressString,
