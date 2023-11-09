@@ -33,4 +33,5 @@ var (
 	ErrSubAccountCreationFailed   = sdkerrors.Register(ModuleName, 7122, "suba ccount creation failed")
 	ErrWrongRewardAmountType      = sdkerrors.Register(ModuleName, 7123, "wrong reward amount type")
 	ErrUnknownAccType             = sdkerrors.Register(ModuleName, 7124, "unknown account type")
+	ErrReceiverAddrCanNotBeSubAcc = sdkerrors.Register(ModuleName, 7125, "receiver account can not be sub account address")
 )

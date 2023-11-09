@@ -3,6 +3,7 @@ package types
 import (
 	context "context"
 
+	"github.com/mrz1836/go-sanitize"
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
@@ -37,7 +38,7 @@ func NewReward(
 		CampaignUID:  campaignUID,
 		RewardAmount: rewardAmount,
 		SourceUID:    sourceUID,
-		Meta:         meta,
+		Meta:         sanitize.XSS(meta),
 	}
 }
 

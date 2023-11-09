@@ -49,10 +49,16 @@ func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (s
 }
 
 // GetSubAccountOwner returns the owner of a subaccount given the subaccount address.
-func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subaccountAddr sdk.AccAddress) (sdk.AccAddress, bool) {
+func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subAccAddr sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	addr := store.Get(types.SubAccountKey(subaccountAddr))
+	addr := store.Get(types.SubAccountKey(subAccAddr))
 	return addr, addr != nil
+}
+
+// IsSubAccount returns true if the address blongs to a sub account.
+func (k Keeper) IsSubAccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.SubAccountKey(subAccAddr))
 }
 
 func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, subaccountOwner sdk.AccAddress) (stop bool)) {

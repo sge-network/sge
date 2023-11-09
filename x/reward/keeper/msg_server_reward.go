@@ -62,7 +62,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		msg.Uid, msg.Creator, recevier.MainAccountAddr,
 		msg.CampaignUid, campaign.RewardAmount,
 		rewardCommon.SourceUID,
-		"",
+		rewardCommon.Meta,
 	))
 	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, recevier.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))

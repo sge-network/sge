@@ -6,6 +6,8 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -37,11 +39,21 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return Receiver{}, payload.Common, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
-	// TODO check if receiver is not a sub account itself
+
 	var (
 		subAccountAddressString string
 		err                     error
 	)
+
+	addr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
+	if err != nil {
+		return Receiver{}, payload.Common, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
+	}
+
+	if keepers.SubAccountKeeper.IsSubAccount(ctx, addr) {
+		return Receiver{}, payload.Common, ErrReceiverAddrCanNotBeSubAcc
+	}
+
 	subAccountAddress, found := keepers.SubAccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(payload.Common.Receiver))
 	if !found {
 		subAccountAddressString, err = keepers.SubAccountKeeper.CreateSubAccount(ctx, creator, payload.Common.Receiver, []subaccounttypes.LockedBalance{})

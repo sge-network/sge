@@ -66,4 +66,5 @@ type SubAccountKeeper interface {
 	TopUp(ctx sdk.Context, creator, subAccOwnerAddr string, lockedBalance []subaccounttypes.LockedBalance) (string, error)
 	GetSubAccountByOwner(ctx sdk.Context, mainAccountAddress sdk.AccAddress) (sdk.AccAddress, bool)
 	CreateSubAccount(ctx sdk.Context, creator, owner string, lockedBalances []subaccounttypes.LockedBalance) (string, error)
+	IsSubAccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool
 }
