@@ -1,6 +1,7 @@
 package subaccount
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 
@@ -68,7 +69,11 @@ func (AppModuleBasic) ValidateGenesis(
 func (AppModuleBasic) RegisterRESTRoutes(_ client.Context, _ *mux.Router) {}
 
 // RegisterGRPCGatewayRoutes registers the gRPC Gateway routes for the module.
-func (AppModuleBasic) RegisterGRPCGatewayRoutes(_ client.Context, _ *runtime.ServeMux) {}
+func (AppModuleBasic) RegisterGRPCGatewayRoutes(clientCtx client.Context, mux *runtime.ServeMux) {
+	if err := types.RegisterQueryHandlerClient(context.Background(), mux, types.NewQueryClient(clientCtx)); err != nil {
+		panic(err)
+	}
+}
 
 // GetTxCmd returns the module's root tx command.
 func (AppModuleBasic) GetTxCmd() *cobra.Command { return cli.GetTxCmd() }
