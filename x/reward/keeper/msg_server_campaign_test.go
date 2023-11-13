@@ -42,9 +42,10 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 				SubaccountAmount: sdkmath.NewInt(100),
 				UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
-			"total_funds": sdkmath.NewInt(1000000),
-			"is_active":   true,
-			"meta":        "sample campaign",
+			"total_funds":         sdkmath.NewInt(1000000),
+			"is_active":           true,
+			"meta":                "sample campaign",
+			"claims_per_category": 1,
 		}
 		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
@@ -62,6 +63,29 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 		require.True(t, found)
 		require.Equal(t, expected.Creator, rst.Creator)
 	}
+}
+
+func TestCampaignMsgServerUnAuthorizedCreate(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+	creator := simapp.TestParamUsers["user1"].Address.String()
+	ticketClaim := jwt.MapClaims{
+		"exp":      time.Now().Add(time.Minute * 5).Unix(),
+		"iat":      time.Now().Unix(),
+		"promoter": sample.AccAddress(),
+	}
+	ticket, err := simapp.CreateJwtTicket(ticketClaim)
+	require.Nil(t, err)
+
+	expected := &types.MsgCreateCampaign{
+		Creator: creator,
+		Uid:     uuid.NewString(),
+		Ticket:  ticket,
+	}
+	_, err = srv.CreateCampaign(wctx, expected)
+	require.ErrorIs(t, types.ErrAuthorizationNotFound, err)
 }
 
 func TestCampaignMsgServerUpdate(t *testing.T) {
@@ -115,9 +139,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 					SubaccountAmount: sdkmath.NewInt(100),
 					UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
-				"total_funds": sdkmath.NewInt(1000000),
-				"is_active":   true,
-				"meta":        "sample campaign",
+				"total_funds":         sdkmath.NewInt(1000000),
+				"is_active":           true,
+				"meta":                "sample campaign",
+				"claims_per_category": 1,
 			}
 			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)

@@ -19,7 +19,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// Check if the value already exists
 	_, isFound := k.GetCampaign(ctx, msg.Uid)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "index already set")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the provided uid is already set")
 	}
 
 	var payload types.CreateCampaignPayload
@@ -128,6 +128,10 @@ func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFu
 	valFound, isFound := k.GetCampaign(ctx, msg.Uid)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "campaign not found")
+	}
+
+	if payload.Promoter != valFound.Promoter {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "promoter should be the same as stored campaign promoter")
 	}
 
 	// Checks if the msg creator is the same as the current owner

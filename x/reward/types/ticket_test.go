@@ -100,9 +100,10 @@ func TestCreateCampaignPayloadValidation(t *testing.T) {
 					SubaccountAmount: sdkmath.NewInt(1000),
 					UnlockPeriod:     uint64(time.Now().Add(10 * time.Minute).Unix()),
 				},
-				TotalFunds: poolBalance,
-				IsActive:   true,
-				Meta:       "sample campaign",
+				TotalFunds:        poolBalance,
+				ClaimsPerCategory: 1,
+				IsActive:          true,
+				Meta:              "sample campaign",
 			},
 		},
 	}
