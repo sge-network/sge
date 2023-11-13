@@ -42,9 +42,10 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 				SubaccountAmount: sdkmath.NewInt(100),
 				UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
-			"total_funds": sdkmath.NewInt(1000000),
-			"is_active":   true,
-			"meta":        "sample campaign",
+			"total_funds":         sdkmath.NewInt(1000000),
+			"is_active":           true,
+			"meta":                "sample campaign",
+			"claims_per_category": 1,
 		}
 		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
@@ -138,9 +139,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 					SubaccountAmount: sdkmath.NewInt(100),
 					UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
-				"total_funds": sdkmath.NewInt(1000000),
-				"is_active":   true,
-				"meta":        "sample campaign",
+				"total_funds":         sdkmath.NewInt(1000000),
+				"is_active":           true,
+				"meta":                "sample campaign",
+				"claims_per_category": 1,
 			}
 			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)
