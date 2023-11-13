@@ -53,7 +53,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	}
 
 	if payload.TotalFunds.LT(totalRewardAmount) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount is more than total funds %s", totalRewardAmount)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount %s is more than total funds %s", totalRewardAmount, payload.TotalFunds)
 	}
 
 	if payload.ClaimsPerCategory == 0 {
