@@ -44,8 +44,14 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
 	}
 
-	totalRewardAmount := payload.RewardAmount.MainAccountAmount.
-		Add(payload.RewardAmount.SubaccountAmount)
+	totalRewardAmount := sdkmath.ZeroInt()
+	if !payload.RewardAmount.MainAccountAmount.IsNil() {
+		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.MainAccountAmount)
+	}
+	if !payload.RewardAmount.SubaccountAmount.IsNil() {
+		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.SubaccountAmount)
+	}
+
 	if payload.TotalFunds.LT(totalRewardAmount) {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount is more than total funds %s", totalRewardAmount)
 	}
