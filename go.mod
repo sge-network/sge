@@ -303,6 +303,8 @@ require (
 replace (
 	// use cosmos fork of keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
+
+	github.com/cosmos/cosmos-sdk => ../cosmos-sdk-faulty
 	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.0
 	// use cosmos-compatible protobufs
