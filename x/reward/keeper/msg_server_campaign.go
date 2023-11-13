@@ -130,6 +130,10 @@ func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFu
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "campaign not found")
 	}
 
+	if payload.Promoter != valFound.Promoter {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "promoter should be the same as stored campaign promoter")
+	}
+
 	// Checks if the msg creator is the same as the current owner
 	if msg.Creator != valFound.Promoter {
 		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.Promoter, msg,
