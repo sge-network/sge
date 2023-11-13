@@ -89,10 +89,6 @@ message Bet {
     json_name = "odds_uid"
   ];
 
-  // odds_type is the type of odds that
-  // user choose such as decimal, fractional, etc
-  sgenetwork.sge.bet.OddsType odds_type = 4;
-
   // odds_value is the odds on which the bet is placed.
   string odds_value = 5;
 
@@ -131,6 +127,9 @@ message Bet {
 
   // bet_fulfillment is the fulfillment data.
   repeated BetFulfillment bet_fulfillment = 14;
+
+  // meta is metadata for bet
+  MetaData meta = 15;
 
   // Status of the Bet.
   enum Status {
