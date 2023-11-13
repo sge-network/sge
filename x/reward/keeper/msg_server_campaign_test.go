@@ -64,6 +64,29 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 	}
 }
 
+func TestCampaignMsgServerUnAuthorizedCreate(t *testing.T) {
+	k, ctx := setupKeeper(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+	creator := simapp.TestParamUsers["user1"].Address.String()
+	ticketClaim := jwt.MapClaims{
+		"exp":      time.Now().Add(time.Minute * 5).Unix(),
+		"iat":      time.Now().Unix(),
+		"promoter": sample.AccAddress(),
+	}
+	ticket, err := simapp.CreateJwtTicket(ticketClaim)
+	require.Nil(t, err)
+
+	expected := &types.MsgCreateCampaign{
+		Creator: creator,
+		Uid:     uuid.NewString(),
+		Ticket:  ticket,
+	}
+	_, err = srv.CreateCampaign(wctx, expected)
+	require.ErrorIs(t, types.ErrAuthorizationNotFound, err)
+}
+
 func TestCampaignMsgServerUpdate(t *testing.T) {
 	expectedUID := uuid.NewString()
 
