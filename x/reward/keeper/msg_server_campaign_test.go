@@ -42,7 +42,6 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 				SubaccountAmount: sdkmath.NewInt(100),
 				UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
-			"total_funds":         sdkmath.NewInt(1000000),
 			"is_active":           true,
 			"meta":                "sample campaign",
 			"claims_per_category": 1,
@@ -51,9 +50,10 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 		require.Nil(t, err)
 
 		expected := &types.MsgCreateCampaign{
-			Creator: creator,
-			Uid:     uuid.NewString(),
-			Ticket:  ticket,
+			Creator:    creator,
+			Uid:        uuid.NewString(),
+			Ticket:     ticket,
+			TotalFunds: sdkmath.NewInt(1000000),
 		}
 		_, err = srv.CreateCampaign(wctx, expected)
 		require.NoError(t, err)
@@ -80,9 +80,10 @@ func TestCampaignMsgServerUnAuthorizedCreate(t *testing.T) {
 	require.Nil(t, err)
 
 	expected := &types.MsgCreateCampaign{
-		Creator: creator,
-		Uid:     uuid.NewString(),
-		Ticket:  ticket,
+		Creator:    creator,
+		Uid:        uuid.NewString(),
+		Ticket:     ticket,
+		TotalFunds: sdkmath.NewInt(1000000),
 	}
 	_, err = srv.CreateCampaign(wctx, expected)
 	require.ErrorIs(t, types.ErrAuthorizationNotFound, err)
@@ -139,7 +140,6 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 					SubaccountAmount: sdkmath.NewInt(100),
 					UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
-				"total_funds":         sdkmath.NewInt(1000000),
 				"is_active":           true,
 				"meta":                "sample campaign",
 				"claims_per_category": 1,
@@ -148,9 +148,10 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			require.Nil(t, err)
 
 			expected := &types.MsgCreateCampaign{
-				Creator: creator,
-				Uid:     expectedUID,
-				Ticket:  ticket,
+				Creator:    creator,
+				Uid:        expectedUID,
+				Ticket:     ticket,
+				TotalFunds: sdkmath.NewInt(1000000),
 			}
 			_, err = srv.CreateCampaign(wctx, expected)
 			require.NoError(t, err)

@@ -30,22 +30,16 @@ message CreateCampaignPayload {
   // reward_amount is the amount of reward.
   RewardAmount reward_amount = 7;
 
-  // total_funds is the total funds allocated to the campaign.
-  string total_funds = 8 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"total_funds\""
-  ];
-
   // is_active is the flag to check if the campaign is active or not.
-  bool is_active = 9;
+  bool is_active = 8;
 
-  // claims_per_category is the number of times a user can claim a reward for category of this campaign.
-  uint64 claims_per_category = 10;
+  // claims_per_category is the number of times a user can claim a reward for
+  // category of this campaign.
+  uint64 claims_per_category = 9;
 
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
-  string meta = 11;
+  string meta = 10;
 }
 
 // UpdateCampaignPayload is the type for campaign update payload.
@@ -54,11 +48,8 @@ message UpdateCampaignPayload {
   // end_ts is the end timestamp of the campaign.
   uint64 end_ts = 1;
 
-  // funds is the additional amount added to the campaign.
-  string funds = 2;
-
   // is_active is the flag to check if the campaign is active or not.
-  bool is_active = 3;
+  bool is_active = 2;
 }
 
 // WithdrawFundsPayload is the type for campaign withdraw funds payload.

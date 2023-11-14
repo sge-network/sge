@@ -26,7 +26,6 @@ func getDefaultClaim(creator string) jwt.MapClaims {
 		"promoter":            creator,
 		"start_ts":            time.Now().Unix(),
 		"end_ts":              time.Now().Add(5 * time.Minute).Unix(),
-		"total_funds":         sdkmath.NewInt(1000000),
 		"category":            types.RewardType_REWARD_TYPE_SIGNUP,
 		"claims_per_category": 1,
 		"is_active":           true,
@@ -41,9 +40,10 @@ func createCampaign(t *testing.T, k *keeper.Keeper, srv types.MsgServer, ctx sdk
 	require.Nil(t, err)
 
 	expected := &types.MsgCreateCampaign{
-		Creator: funder,
-		Uid:     uuid.NewString(),
-		Ticket:  ticket,
+		Creator:    funder,
+		Uid:        uuid.NewString(),
+		Ticket:     ticket,
+		TotalFunds: sdkmath.NewInt(1000000),
 	}
 	_, err = srv.CreateCampaign(sdk.WrapSDKContext(ctx), expected)
 	require.NoError(t, err)

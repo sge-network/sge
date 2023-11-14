@@ -67,11 +67,14 @@ func (msg *MsgGrantReward) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string, recevier Receiver) {
+func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string,
+	rewardUID, promoterAddr string, recevier Receiver) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(TypeMsgGrantReward, msg.Creator,
 		sdk.NewAttribute(attributeKeyCampaignUID, campaignUID),
-		sdk.NewAttribute(attributeKeyDistributions, recevier.String()),
+		sdk.NewAttribute(attributeKeyRewardUID, rewardUID),
+		sdk.NewAttribute(attributeKeyRewardPromoter, promoterAddr),
+		sdk.NewAttribute(attributeKeyReceiver, recevier.String()),
 	)
 	emitter.Emit()
 }

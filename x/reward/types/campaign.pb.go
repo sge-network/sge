@@ -49,7 +49,8 @@ type Campaign struct {
 	Pool Pool `protobuf:"bytes,10,opt,name=pool,proto3" json:"pool"`
 	// is_active is the flag to check if the campaign is active or not.
 	IsActive bool `protobuf:"varint,11,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	// claims_per_category is the number of times a user can claim a reward for category of this campaign.
+	// claims_per_category is the number of times a user can claim a reward for
+	// category of this campaign.
 	ClaimsPerCategory uint64 `protobuf:"varint,12,opt,name=claims_per_category,json=claimsPerCategory,proto3" json:"claims_per_category,omitempty"`
 	// meta is the metadata of the campaign.
 	// It is a stringified base64 encoded json.
