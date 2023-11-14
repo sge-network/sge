@@ -7,8 +7,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
-var _ authz.Authorization = &CreateCampaignAuthorization{}
-var _ authz.Authorization = &UpdateCampaignAuthorization{}
+var (
+	_ authz.Authorization = &CreateCampaignAuthorization{}
+	_ authz.Authorization = &UpdateCampaignAuthorization{}
+)
 
 // NewCreateCampaignAuthorization creates a new CreateCampaignAuthorization object.
 func NewCreateCampaignAuthorization(spendLimit sdkmath.Int) *CreateCampaignAuthorization {
