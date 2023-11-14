@@ -171,23 +171,23 @@ func (k Keeper) GetSettledBets(ctx sdk.Context) (list []types.SettledBet, err er
 	return
 }
 
-func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.WagerProps) (*types.Bet, error) {
+func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.WagerProps) (*types.Bet, map[string]*types.BetOddsCompact, error) {
 	// Check if the value already exists
 	_, isFound := k.GetBetID(ctx, props.UID)
 	if isFound {
-		return nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", props.UID)
+		return nil, nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", props.UID)
 	}
 
 	payload := &types.WagerTicketPayload{}
 	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), props.Ticket, &payload)
 	if err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
 	if err = payload.Validate(creator); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
+		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
-	bet := types.NewBet(creator, props, payload.OddsType, payload.SelectedOdds)
-	return bet, nil
+	bet := types.NewBet(creator, props, payload.SelectedOdds, payload.Meta)
+	return bet, payload.OddsMap(), nil
 }

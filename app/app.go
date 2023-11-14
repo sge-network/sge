@@ -34,19 +34,17 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
+	ibcclientHandler "github.com/cosmos/ibc-go/v5/modules/core/02-client/client"
+	"github.com/sge-network/sge/app/keepers"
+	sgeappparams "github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/app/upgrades"
+	v1 "github.com/sge-network/sge/app/upgrades/v1"
+	v2 "github.com/sge-network/sge/app/upgrades/v2"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
-
-	ibcclientHandler "github.com/cosmos/ibc-go/v5/modules/core/02-client/client"
-
-	"github.com/sge-network/sge/app/keepers"
-	sgeappparams "github.com/sge-network/sge/app/params"
-	"github.com/sge-network/sge/app/upgrades"
-	v1 "github.com/sge-network/sge/app/upgrades/v1"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -70,7 +68,10 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
-	Upgrades        = []upgrades.Upgrade{v1.Upgrade}
+	Upgrades        = []upgrades.Upgrade{
+		v1.Upgrade,
+		v2.Upgrade,
+	}
 )
 
 var (

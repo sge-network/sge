@@ -13,11 +13,10 @@ import (
 
 func TestTicketFieldsValidation(t *testing.T) {
 	tcs := []struct {
-		desc     string
-		betOdds  *types.BetOdds
-		kyc      sgetypes.KycDataPayload
-		oddsType types.OddsType
-		err      error
+		desc    string
+		betOdds *types.BetOdds
+		kyc     sgetypes.KycDataPayload
+		err     error
 	}{
 		{
 			desc: "space in odds UID",
@@ -32,8 +31,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrInvalidOddsUID,
+			err: types.ErrInvalidOddsUID,
 		},
 		{
 			desc: "space in market UID",
@@ -47,8 +45,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrInvalidMarketUID,
+			err: types.ErrInvalidMarketUID,
 		},
 		{
 			desc: "empty odds value",
@@ -62,8 +59,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrEmptyOddsValue,
+			err: types.ErrEmptyOddsValue,
 		},
 		{
 			desc: "no kyc",
@@ -73,8 +69,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Value:             "10",
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrUserKycFailed,
+			err: types.ErrUserKycFailed,
 		},
 		{
 			desc: "no kyc ID field",
@@ -88,8 +83,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       "",
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
-			err:      types.ErrUserKycFailed,
+			err: types.ErrUserKycFailed,
 		},
 		{
 			desc: "valid message",
@@ -103,7 +97,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 				Approved: true,
 				ID:       testAddress,
 			},
-			oddsType: types.OddsType_ODDS_TYPE_DECIMAL,
 		},
 	}
 	for _, tc := range tcs {
@@ -111,7 +104,6 @@ func TestTicketFieldsValidation(t *testing.T) {
 			p := types.WagerTicketPayload{
 				SelectedOdds: tc.betOdds,
 				KycData:      tc.kyc,
-				OddsType:     tc.oddsType,
 			}
 			err := p.Validate(testAddress)
 			if tc.err != nil {

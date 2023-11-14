@@ -20,7 +20,6 @@ type OrderbookKeeper interface {
 	WithdrawOrderBookParticipation(ctx sdk.Context, marketUID string,
 		participationIndex uint64, amount sdkmath.Int,
 	) error
-	PublishOrderBookEvent(ctx sdk.Context, orderBookUID string)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it

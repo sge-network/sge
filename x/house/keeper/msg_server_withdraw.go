@@ -77,6 +77,10 @@ func (k Keeper) CalcAndWithdraw(
 		return 0, sdkerrors.Wrapf(types.ErrDepositNotFound, ": %s, %d", msg.MarketUID, msg.ParticipationIndex)
 	}
 
+	if deposit.WithdrawalCount >= k.GetMaxWithdrawalCount(ctx) {
+		return 0, sdkerrors.Wrapf(types.ErrMaxWithdrawalCountReached, ": %d", deposit.WithdrawalCount)
+	}
+
 	var err error
 	msg.Amount, err = k.orderbookKeeper.CalcWithdrawalAmount(ctx,
 		depositorAddr,

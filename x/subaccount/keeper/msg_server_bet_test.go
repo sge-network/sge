@@ -38,6 +38,20 @@ var (
 		Value:             "4.20",
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
+	testBetOdds = &[]bettypes.BetOdds{
+		{
+			UID:               testOddsUID1,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+		{
+			UID:               testOddsUID2,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+		{
+			UID:               testOddsUID3,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+	}
 	testCreator string
 )
 
@@ -225,7 +239,7 @@ func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.
 			Approved: true,
 			ID:       better.String(),
 		},
-		"odds_type": 1,
+		"all_odds": testBetOdds,
 	})
 	require.NoError(t, err)
 

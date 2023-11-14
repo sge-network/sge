@@ -36,6 +36,20 @@ var (
 		Value:             "4.20",
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
+	testBetOdds = &[]types.BetOdds{
+		{
+			UID:               testOddsUID1,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+		{
+			UID:               testOddsUID2,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+		{
+			UID:               testOddsUID3,
+			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		},
+	}
 	testCreator   string
 	testBet       *types.MsgWager
 	testAddMarket *markettypes.MsgAdd
@@ -150,7 +164,7 @@ func placeTestBet(
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
-		"odds_type":     1,
+		"all_odds":      testBetOdds,
 	}
 	testWagerTicket, err := createJwtTicket(testWagerClaim)
 	require.Nil(t, err)

@@ -22,4 +22,9 @@ message Params {
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
     (gogoproto.nullable) = false
   ];
+
+  // max_withdrawal_count is the maximum number of withdrawals allowed
+  // per participation index.
+  uint64 max_withdrawal_count = 3 
+    [ (gogoproto.moretags) = "yaml:\"max_withdrawal_count\""];
 }

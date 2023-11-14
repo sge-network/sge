@@ -80,7 +80,5 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 
 	k.SetDeposit(ctx, deposit)
 
-	k.orderbookKeeper.PublishOrderBookEvent(ctx, marketUID)
-
 	return participationIndex, err
 }

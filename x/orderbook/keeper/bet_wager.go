@@ -1,13 +1,11 @@
 package keeper
 
 import (
-	"fmt"
-
-	"github.com/spf13/cast"
-
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -22,8 +20,9 @@ func (k Keeper) ProcessWager(
 	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
 	betFee sdkmath.Int,
-	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
+	odds map[string]*bettypes.BetOddsCompact,
+	oddUIDS []string,
 ) ([]*bettypes.BetFulfillment, error) {
 	// get book data by its id
 	book, found := k.GetOrderBook(ctx, bookUID)
@@ -43,10 +42,11 @@ func (k Keeper) ProcessWager(
 		betUID,
 		betID,
 		oddsUID,
-		oddsType,
 		oddsVal,
 		maxLossMultiplier,
 		&book,
+		odds,
+		oddUIDS,
 	)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (k Keeper) ProcessWager(
 		return nil, err
 	}
 
-	bookExposure.FulfillmentQueue = fInfo.fulfillmentQueue
+	bookExposure.FulfillmentQueue = fInfo.updatedfulfillmentQueue
 	k.SetOrderBookOddsExposure(ctx, bookExposure)
 
 	// fund bet fee collector from bettor's account.
@@ -68,31 +68,8 @@ func (k Keeper) ProcessWager(
 	if err := k.fund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, fInfo.fulfilledBetAmount); err != nil {
 		return nil, err
 	}
-	k.PublishOrderBookEvent(ctx, bookUID)
+
 	return fInfo.fulfillments, nil
-}
-
-func (k Keeper) PublishOrderBookEvent(ctx sdk.Context, orderBookUID string) {
-	event := types.NewOrderBookEvent()
-	boes, err := k.GetOddsExposuresByOrderBook(ctx, orderBookUID)
-	if err != nil {
-		k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
-		return
-	}
-
-	for _, boe := range boes {
-		event.AddOrderBookOddsExposure(boe)
-		pes, err := k.GetExposureByOrderBookAndOdds(ctx, orderBookUID, boe.OddsUID)
-		if err != nil {
-			k.Logger(ctx).Error(fmt.Sprintf("Error in publishing order book event error: %s", err))
-			return
-		}
-		for _, pe := range pes {
-			event.AddParticipationExposure(pe)
-		}
-	}
-
-	event.Emit(ctx)
 }
 
 // fulfillBetByParticipationQueue fulfills the bet wagering payout using the participations
@@ -104,10 +81,11 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	fulfillmentQueue []uint64,
 ) error {
 	fInfo.fulfillmentQueue = fulfillmentQueue
+	fInfo.updatedfulfillmentQueue = fulfillmentQueue
 
 	// the decimal amount that is being lost in the bet amount calculation from payout profit
 	truncatedBetAmount := sdk.NewDec(0)
-
+	requeThreshold := sdk.NewIntFromUint64(k.GetRequeueThreshold(ctx))
 	// continue until updatedFulfillmentQueue gets empty
 	for fInfo.hasUnfulfilledQueueItem() {
 		var err error
@@ -124,7 +102,6 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		case fInfo.notEnoughLiquidityAvailable():
 			var betAmountToFulfill sdkmath.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
-				fInfo.oddsType,
 				fInfo.oddsVal,
 				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
@@ -132,6 +109,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			if err != nil {
 				return err
 			}
+
 			// if the available liquidity is less than remaining payout profit that
 			// need to be paid, we should use all of available liquidity pull for the calculations.
 			k.fulfill(ctx, fInfo, betAmountToFulfill, fInfo.inProcessItem.availableLiquidity)
@@ -140,21 +118,31 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			// availableLiquidity is positive and more than remaining payout profit that
 			// need to be paid, so we can cover all payout profits with available liquidity.
 			// this case appends the last fulfillment
-			if fInfo.isLiquidityLessThanThreshold(sdkmath.NewIntFromUint64(k.GetRequeueThreshold(ctx))) {
+			if fInfo.inProcessItem.isLiquidityLessThanThreshold(requeThreshold, fInfo.payoutProfit.TruncateInt()) {
 				setFulfilled = true
 			}
+
 			k.fulfill(ctx, fInfo, fInfo.betAmount, fInfo.payoutProfit.TruncateInt())
 		}
 
 		if setFulfilled {
 			fInfo.setItemFulfilledAndRemove()
+			if fInfo.inProcessItem.participation.IsEligibleForNextRoundPreLiquidityReduction() {
+				eUpdate, err := fInfo.checkFullfillmentForOtherOdds(requeThreshold)
+				if err != nil {
+					return err
+				}
+				for _, exposure := range eUpdate {
+					k.SetParticipationExposure(ctx, exposure)
+				}
+			}
 		}
 
 		k.SetParticipationExposure(ctx, fInfo.inProcessItem.participationExposure)
 		k.SetOrderBookParticipation(ctx, fInfo.inProcessItem.participation)
 
 		// if there are no more exposures to be filled
-		if fInfo.inProcessItem.allExposureFulfilled() {
+		if fInfo.inProcessItem.allExposureFulfilled() && fInfo.inProcessItem.participation.IsEligibleForNextRoundPreLiquidityReduction() {
 			err := k.refreshQueueAndState(ctx, fInfo, book)
 			if err != nil {
 				return err
@@ -168,7 +156,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	}
 
 	if fInfo.NoMoreLiquidityAvailable() {
-		return sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+		return types.ErrInsufficientLiquidityInOrderBook
 	}
 
 	return nil
@@ -182,31 +170,32 @@ func (k Keeper) initFulfillmentInfo(
 	betUID string,
 	betID uint64,
 	oddsUID string,
-	oddsType bettypes.OddsType,
 	oddsVal string,
 	maxLossMultiplier sdk.Dec,
 	book *types.OrderBook,
+	odds map[string]*bettypes.BetOddsCompact,
+	oddUIDS []string,
 ) (
 	fInfo fulfillmentInfo,
 	err error,
 ) {
 	fInfo = fulfillmentInfo{
 		// bet specs
-		betAmount:               betAmount,
-		payoutProfit:            payoutProfit,
-		betUID:                  betUID,
-		betID:                   betID,
-		oddsUID:                 oddsUID,
-		oddsType:                oddsType,
-		oddsVal:                 oddsVal,
-		maxLossMultiplier:       maxLossMultiplier,
-		totalAvailableLiquidity: sdkmath.NewInt(0),
+		betAmount:         betAmount,
+		payoutProfit:      payoutProfit,
+		betUID:            betUID,
+		betID:             betID,
+		oddsUID:           oddsUID,
+		oddsVal:           oddsVal,
+		maxLossMultiplier: maxLossMultiplier,
 
 		//  in process maps
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
 
 		// initialize the fulfilled bet amount with 0
 		fulfilledBetAmount: sdkmath.NewInt(0),
+		betOdds:            odds,
+		oddUIDS:            oddUIDS,
 	}
 
 	bps, err := k.GetParticipationsOfOrderBook(ctx, book.UID)
@@ -214,7 +203,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(bps)) {
-		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
+		err = sdkerrtypes.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
 		return
 	}
 
@@ -223,13 +212,28 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(pes)) {
+		err = sdkerrtypes.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
+		return
+	}
+
+	peMap, err := k.GetExposureByOrderBook(ctx, book.UID)
+	if err != nil {
+		return
+	}
+	if book.ParticipationCount != cast.ToUint64(len(peMap)) {
 		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
 
 	for _, bp := range bps {
+		exposures, found := peMap[bp.Index]
+		if !found {
+			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %d", book.UID, bp.Index)
+			return
+		}
 		fInfo.fulfillmentMap[bp.Index] = fulfillmentItem{
 			participation: bp,
+			allExposures:  exposures,
 		}
 	}
 
@@ -238,9 +242,6 @@ func (k Keeper) initFulfillmentInfo(
 		if found {
 			item.participationExposure = pe
 			fInfo.fulfillmentMap[pe.ParticipationIndex] = item
-
-			fInfo.totalAvailableLiquidity = fInfo.totalAvailableLiquidity.
-				Add(item.calcAvailableLiquidity(maxLossMultiplier))
 		}
 	}
 
@@ -270,15 +271,6 @@ func (fInfo *fulfillmentInfo) validate() error {
 				participationIndex,
 			)
 		}
-	}
-
-	if fInfo.totalAvailableLiquidity.LT(fInfo.payoutProfit.TruncateInt()) {
-		return sdkerrors.Wrapf(
-			types.ErrInsufficientFundToCoverPayout,
-			"total liquidity %s, payout %s",
-			fInfo.totalAvailableLiquidity,
-			fInfo.payoutProfit,
-		)
 	}
 
 	return nil
@@ -384,10 +376,13 @@ func (k Keeper) prepareOddsExposuresForNextRound(
 			return err
 		}
 		for _, boe := range boes {
+			if len(boe.FulfillmentQueue) != 0 && boe.FulfillmentQueue[0] == fInfo.inProcessItem.participation.Index {
+				boe.FulfillmentQueue = boe.FulfillmentQueue[1:]
+			}
 			boe.FulfillmentQueue = append(boe.FulfillmentQueue, fInfo.inProcessItem.participation.Index)
 			k.SetOrderBookOddsExposure(ctx, boe)
 		}
-		fInfo.fulfillmentQueue = append(fInfo.fulfillmentQueue, fInfo.inProcessItem.participation.Index)
+		fInfo.updatedfulfillmentQueue = append(fInfo.updatedfulfillmentQueue, fInfo.inProcessItem.participation.Index)
 	}
 
 	return nil
@@ -418,21 +413,61 @@ func (k Keeper) refreshQueueAndState(
 }
 
 type fulfillmentInfo struct {
-	betUID                  string
-	betID                   uint64
-	oddsUID                 string
-	oddsType                bettypes.OddsType
-	oddsVal                 string
-	maxLossMultiplier       sdk.Dec
-	betAmount               sdkmath.Int
-	payoutProfit            sdk.Dec
-	fulfilledBetAmount      sdkmath.Int
-	totalAvailableLiquidity sdkmath.Int
+	betUID             string
+	betID              uint64
+	oddsUID            string
+	oddsVal            string
+	maxLossMultiplier  sdk.Dec
+	betAmount          sdkmath.Int
+	payoutProfit       sdk.Dec
+	fulfilledBetAmount sdkmath.Int
 
-	fulfillmentQueue []uint64
-	fulfillmentMap   fulfillmentMap
-	inProcessItem    fulfillmentItem
-	fulfillments     []*bettypes.BetFulfillment
+	fulfillmentQueue        []uint64
+	updatedfulfillmentQueue []uint64
+	fulfillmentMap          fulfillmentMap
+	inProcessItem           fulfillmentItem
+	secondaryProcessItem    fulfillmentItem
+	fulfillments            []*bettypes.BetFulfillment
+	betOdds                 map[string]*bettypes.BetOddsCompact
+	oddUIDS                 []string
+}
+
+func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkmath.Int) (eUpdate []types.ParticipationExposure, err error) {
+	if fInfo.inProcessItem.participation.ExposuresNotFilled == 0 {
+		return
+	}
+
+	// check if other exposures are fulfilled according to new max loss multipliers
+	for _, oddUID := range fInfo.oddUIDS {
+		if oddUID == fInfo.oddsUID {
+			continue
+		}
+		exposure, ok := fInfo.inProcessItem.allExposures[oddUID]
+		if !ok {
+			err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s %d", oddUID, fInfo.inProcessItem.participation.Index)
+			return
+		}
+		if exposure.IsFulfilled {
+			continue
+		}
+		betOdd, ok := fInfo.betOdds[oddUID]
+		if !ok {
+			err = sdkerrors.Wrapf(bettypes.ErrOddsDataNotFound, "%s", oddUID)
+			return
+		}
+		fInfo.secondaryProcessItem = fulfillmentItem{
+			participation:         fInfo.inProcessItem.participation,
+			participationExposure: *fInfo.inProcessItem.allExposures[oddUID],
+		}
+
+		// availableLiquidity is the available amount of tokens to be used from the participation exposure
+		fInfo.secondaryProcessItem.setAvailableLiquidity(betOdd.MaxLossMultiplier)
+		if fInfo.secondaryProcessItem.isLiquidityLessThanThreshold(requeThreshold, sdk.ZeroInt()) {
+			fInfo.inProcessItem.setFulfilledSecondary(&fInfo.secondaryProcessItem)
+			eUpdate = append(eUpdate, fInfo.secondaryProcessItem.participationExposure)
+		}
+	}
+	return eUpdate, err
 }
 
 func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
@@ -442,6 +477,7 @@ func (fInfo *fulfillmentInfo) setItemFulfilledAndRemove() {
 
 func (fInfo *fulfillmentInfo) removeQueueItem() {
 	fInfo.fulfillmentQueue = fInfo.fulfillmentQueue[1:]
+	fInfo.updatedfulfillmentQueue = fInfo.updatedfulfillmentQueue[1:]
 }
 
 func (fInfo *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
@@ -462,15 +498,16 @@ func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
 	return fInfo.inProcessItem.availableLiquidity.LTE(fInfo.payoutProfit.TruncateInt())
 }
 
-func (fInfo *fulfillmentInfo) isLiquidityLessThanThreshold(threshold sdkmath.Int) bool {
-	diff := fInfo.inProcessItem.availableLiquidity.Sub(fInfo.payoutProfit.TruncateInt())
-	return diff.LTE(threshold)
-}
-
 type fulfillmentItem struct {
 	availableLiquidity    sdkmath.Int
 	participation         types.OrderBookParticipation
 	participationExposure types.ParticipationExposure
+	allExposures          map[string]*types.ParticipationExposure
+}
+
+func (fItem *fulfillmentItem) isLiquidityLessThanThreshold(threshold, adjAmount sdkmath.Int) bool {
+	diff := fItem.availableLiquidity.Sub(adjAmount)
+	return diff.LTE(threshold)
 }
 
 func (fItem *fulfillmentItem) noLiquidityAvailable() bool {
@@ -479,6 +516,11 @@ func (fItem *fulfillmentItem) noLiquidityAvailable() bool {
 
 func (fItem *fulfillmentItem) setFulfilled() {
 	fItem.participationExposure.IsFulfilled = true
+	fItem.participation.ExposuresNotFilled--
+}
+
+func (fItem *fulfillmentItem) setFulfilledSecondary(sItem *fulfillmentItem) {
+	sItem.participationExposure.IsFulfilled = true
 	fItem.participation.ExposuresNotFilled--
 }
 
