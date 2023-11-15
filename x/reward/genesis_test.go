@@ -24,6 +24,30 @@ func TestGenesis(t *testing.T) {
 				UID: uuid.NewString(),
 			},
 		},
+		RewardList: []types.Reward{
+			{
+				UID: uuid.NewString(),
+			},
+			{
+				UID: uuid.NewString(),
+			},
+		},
+		RewardByRecCatList: []types.RewardByCategory{
+			{
+				UID: uuid.NewString(),
+			},
+			{
+				UID: uuid.NewString(),
+			},
+		},
+		RewardByCampaignList: []types.RewardByCampaign{
+			{
+				UID: uuid.NewString(),
+			},
+			{
+				UID: uuid.NewString(),
+			},
+		},
 	}
 
 	tApp, ctx, err := simapp.GetTestObjects()
