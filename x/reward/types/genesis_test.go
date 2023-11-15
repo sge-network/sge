@@ -10,7 +10,7 @@ import (
 )
 
 func TestGenesisState_Validate(t *testing.T) {
-	dupplicateCampaign := uuid.NewString()
+	dupplicateUID := uuid.NewString()
 	for _, tc := range []struct {
 		desc     string
 		genState *types.GenesisState
@@ -32,6 +32,30 @@ func TestGenesisState_Validate(t *testing.T) {
 						UID: uuid.NewString(),
 					},
 				},
+				RewardList: []types.Reward{
+					{
+						UID: uuid.NewString(),
+					},
+					{
+						UID: uuid.NewString(),
+					},
+				},
+				RewardByRecCatList: []types.RewardByCategory{
+					{
+						UID: uuid.NewString(),
+					},
+					{
+						UID: uuid.NewString(),
+					},
+				},
+				RewardByCampaignList: []types.RewardByCampaign{
+					{
+						UID: uuid.NewString(),
+					},
+					{
+						UID: uuid.NewString(),
+					},
+				},
 			},
 			valid: true,
 		},
@@ -40,10 +64,52 @@ func TestGenesisState_Validate(t *testing.T) {
 			genState: &types.GenesisState{
 				CampaignList: []types.Campaign{
 					{
-						UID: dupplicateCampaign,
+						UID: dupplicateUID,
 					},
 					{
-						UID: dupplicateCampaign,
+						UID: dupplicateUID,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated reward",
+			genState: &types.GenesisState{
+				RewardList: []types.Reward{
+					{
+						UID: dupplicateUID,
+					},
+					{
+						UID: dupplicateUID,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated reward by category",
+			genState: &types.GenesisState{
+				RewardByRecCatList: []types.RewardByCategory{
+					{
+						UID: dupplicateUID,
+					},
+					{
+						UID: dupplicateUID,
+					},
+				},
+			},
+			valid: false,
+		},
+		{
+			desc: "duplicated reward by campaign",
+			genState: &types.GenesisState{
+				RewardByCampaignList: []types.RewardByCampaign{
+					{
+						UID: dupplicateUID,
+					},
+					{
+						UID: dupplicateUID,
 					},
 				},
 			},

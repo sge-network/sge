@@ -13,6 +13,15 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, elem := range genState.CampaignList {
 		k.SetCampaign(ctx, elem)
 	}
+	for _, elem := range genState.RewardList {
+		k.SetReward(ctx, elem)
+	}
+	for _, elem := range genState.RewardByRecCatList {
+		k.SetRewardByReceiver(ctx, elem)
+	}
+	for _, elem := range genState.RewardByCampaignList {
+		k.SetRewardByCampaign(ctx, elem)
+	}
 	k.SetParams(ctx, genState.Params)
 }
 
@@ -22,6 +31,9 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.CampaignList = k.GetAllCampaign(ctx)
+	genesis.RewardList = k.GetAllRewards(ctx)
+	genesis.RewardByRecCatList = k.GetAllRewardsByReceiverAndCategory(ctx)
+	genesis.RewardByCampaignList = k.GetAllRewardsByCampaign(ctx)
 
 	return genesis
 }

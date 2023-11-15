@@ -5,6 +5,7 @@ package sgenetwork.sge.reward;
 import "gogoproto/gogo.proto";
 import "sge/reward/params.proto";
 import "sge/reward/campaign.proto";
+import "sge/reward/reward.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -12,5 +13,8 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 message GenesisState {
   Params params = 1 [ (gogoproto.nullable) = false ];
   repeated Campaign campaign_list = 2 [ (gogoproto.nullable) = false ];
+  repeated Reward reward_list = 3 [ (gogoproto.nullable) = false ];
+  repeated RewardByCategory reward_by_rec_cat_list = 4 [ (gogoproto.nullable) = false ];
+  repeated RewardByCampaign reward_by_campaign_list = 5 [ (gogoproto.nullable) = false ];
   // Fixme: It would need another param for all the distributed rewards
 }

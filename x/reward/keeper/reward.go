@@ -37,8 +37,8 @@ func (k Keeper) RemoveReward(
 	store.Delete(types.GetRewardKey(uid))
 }
 
-// GetAllReward returns all reward
-func (k Keeper) GetAllReward(ctx sdk.Context) (list []types.Reward) {
+// GetAllRewards returns all reward
+func (k Keeper) GetAllRewards(ctx sdk.Context) (list []types.Reward) {
 	store := k.getRewardStore(ctx)
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
 
@@ -81,8 +81,40 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 	return
 }
 
+// GetAllRewardsByReceiverAndCategory returns all rewards by receiver and category
+func (k Keeper) GetAllRewardsByReceiverAndCategory(ctx sdk.Context) (list []types.RewardByCategory) {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.RewardByCategory
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
 func (k Keeper) SetRewardByCampaign(ctx sdk.Context, rewByCampaign types.RewardByCampaign) {
 	store := k.getRewardsByCampaignStore(ctx)
 	b := k.cdc.MustMarshal(&rewByCampaign)
 	store.Set(types.GetRewardsByCampaignKey(rewByCampaign.CampaignUID, rewByCampaign.UID), b)
+}
+
+// GetAllRewardsByCampaign returns all rewards by campaign
+func (k Keeper) GetAllRewardsByCampaign(ctx sdk.Context) (list []types.RewardByCampaign) {
+	store := k.getRewardsByCampaignStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.RewardByCampaign
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
 }

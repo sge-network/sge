@@ -29,5 +29,32 @@ func (gs GenesisState) Validate() error {
 		campaignIndexMap[index] = struct{}{}
 	}
 
+	rewardIndexMap := make(map[string]struct{})
+	for _, elem := range gs.RewardList {
+		index := string(GetRewardKey(elem.UID))
+		if _, ok := rewardIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for reward")
+		}
+		rewardIndexMap[index] = struct{}{}
+	}
+
+	rewardByRecCatIndexMap := make(map[string]struct{})
+	for _, elem := range gs.RewardByRecCatList {
+		index := string(GetRewardKey(elem.UID))
+		if _, ok := rewardByRecCatIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for reward by receiver and category")
+		}
+		rewardByRecCatIndexMap[index] = struct{}{}
+	}
+
+	rewardByCampaignIndexMap := make(map[string]struct{})
+	for _, elem := range gs.RewardByCampaignList {
+		index := string(GetRewardKey(elem.UID))
+		if _, ok := rewardByCampaignIndexMap[index]; ok {
+			return fmt.Errorf("duplicated index for reward by campaign")
+		}
+		rewardByCampaignIndexMap[index] = struct{}{}
+	}
+
 	return gs.Params.Validate()
 }
