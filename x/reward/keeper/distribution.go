@@ -3,6 +3,7 @@ package keeper
 import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/reward/types"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
@@ -15,7 +16,7 @@ func (k Keeper) DistributeRewards(ctx sdk.Context, receiver types.Receiver) erro
 		if _, err := k.subaccountKeeper.TopUp(ctx, k.accountKeeper.GetModuleAddress(moduleAccAddr).String(), receiver.MainAccountAddr,
 			[]subaccounttypes.LockedBalance{
 				{
-					UnlockTS: uint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod,
+					UnlockTS: cast.ToUint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod,
 					Amount:   receiver.SubAccountAmount,
 				},
 			}); err != nil {

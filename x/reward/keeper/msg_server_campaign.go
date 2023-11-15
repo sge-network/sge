@@ -8,6 +8,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
@@ -34,7 +35,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		}
 	}
 
-	if err := payload.Validate(uint64(ctx.BlockTime().Unix())); err != nil {
+	if err := payload.Validate(cast.ToUint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
 
@@ -67,7 +68,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
-	err = rewardFactory.VaidateCampaign(campaign, uint64(ctx.BlockTime().Unix()))
+	err = rewardFactory.VaidateCampaign(campaign, cast.ToUint64(ctx.BlockTime().Unix()))
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +97,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
-	if err := payload.Validate(uint64(ctx.BlockTime().Unix())); err != nil {
+	if err := payload.Validate(cast.ToUint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
 
