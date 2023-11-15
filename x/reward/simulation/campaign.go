@@ -1,6 +1,7 @@
 package simulation
 
 import (
+	//#nosec
 	"math/rand"
 	"strconv"
 

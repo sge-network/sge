@@ -82,7 +82,7 @@ func TxCreate() *cobra.Command {
 				Owner:   subaccountOwner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),
+						UnlockTS: cast.ToUint64(time.Now().Add(unlocksAfter).Unix()),
 						Amount:   funds,
 					},
 				},
@@ -133,7 +133,7 @@ func TxTopup() *cobra.Command {
 				Address: subaccountAddress.String(),
 				LockedBalances: []types.LockedBalance{
 					{
-						UnlockTS: uint64(time.Now().Add(unlocksAfter).Unix()),
+						UnlockTS: cast.ToUint64(time.Now().Add(unlocksAfter).Unix()),
 						Amount:   funds,
 					},
 				},

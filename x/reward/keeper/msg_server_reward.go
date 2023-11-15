@@ -6,6 +6,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/reward/types"
 )
@@ -26,7 +27,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign is not active")
 	}
 
-	if err := campaign.CheckExpiration(uint64(ctx.BlockTime().Unix())); err != nil {
+	if err := campaign.CheckExpiration(cast.ToUint64(ctx.BlockTime().Unix())); err != nil {
 		return nil, err
 	}
 
@@ -49,7 +50,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
 	}
-	if len(rewards) >= int(campaign.ClaimsPerCategory) {
+	if len(rewards) >= cast.ToInt(campaign.ClaimsPerCategory) {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
 	}
 

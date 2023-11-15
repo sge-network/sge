@@ -4,6 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -145,7 +146,7 @@ func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (s
 	moneyToSend := sdkmath.NewInt(0)
 
 	for _, balanceUnlock := range balanceUnlocks {
-		if balanceUnlock.UnlockTS < uint64(ctx.BlockTime().Unix()) {
+		if balanceUnlock.UnlockTS < cast.ToUint64(ctx.BlockTime().Unix()) {
 			return sdkmath.Int{}, types.ErrUnlockTokenTimeExpired
 		}
 
