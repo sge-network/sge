@@ -1,6 +1,7 @@
 package reward
 
 import (
+	//#nosec
 	"math/rand"
 
 	"github.com/google/uuid"
