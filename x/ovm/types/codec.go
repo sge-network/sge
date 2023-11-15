@@ -2,19 +2,18 @@ package types
 
 import (
 	"github.com/cosmos/cosmos-sdk/codec"
+	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	cdctypes "github.com/cosmos/cosmos-sdk/codec/types"
+	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
 )
 
-// RegisterCodec registers module codec to the app codec
-func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(
-		&MsgSubmitPubkeysChangeProposalRequest{},
-		"ovm/SubmitPubkeysChangeProposal",
-		nil,
-	)
-	cdc.RegisterConcrete(&MsgVotePubkeysChangeRequest{}, "ovm/VotePubkeysChange", nil)
+// RegisterLegacyAminoCodec registers the necessary x/ovm interfaces and concrete types
+// on the provided LegacyAmino codec. These types are used for Amino JSON serialization.
+func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
+	legacy.RegisterAminoMsg(cdc, &MsgSubmitPubkeysChangeProposalRequest{}, "ovm/SubmitPubkeysChangeProposal")
+	legacy.RegisterAminoMsg(cdc, &MsgVotePubkeysChangeRequest{}, "ovm/VotePubkeysChange")
 }
 
 // RegisterInterfaces registers the module interface types
@@ -27,8 +26,14 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 }
 
 var (
-	// Amino is the legacy amino codec
-	Amino = codec.NewLegacyAmino()
+	// amino is the legacy amino codec
+	amino = codec.NewLegacyAmino()
 	// ModuleCdc is the codec of the module
-	ModuleCdc = codec.NewProtoCodec(cdctypes.NewInterfaceRegistry())
+	ModuleCdc = codec.NewAminoCodec(amino)
 )
+
+func init() {
+	RegisterLegacyAminoCodec(amino)
+	cryptocodec.RegisterCrypto(amino)
+	sdk.RegisterLegacyAminoCodec(amino)
+}

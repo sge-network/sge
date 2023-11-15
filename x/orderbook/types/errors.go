@@ -24,16 +24,16 @@ var (
 	ErrOrderBookParticipationNotFound     = sdkerrors.Register(ModuleName, 6014, "book participation not found")
 	ErrParticipationExposureNotFound      = sdkerrors.Register(ModuleName, 6015, "participation exposure not found")
 	ErrParticipationExposureAlreadyFilled = sdkerrors.Register(ModuleName, 6016, "participation exposure already filled")
-	ErrInternalProcessingBet              = sdkerrors.Register(ModuleName, 6017, "internal error in processing bet")
+	ErrInsufficientLiquidityInOrderBook   = sdkerrors.Register(ModuleName, 6017, "insufficient liquidity in orderbook")
 	ErrBookParticipationAlreadySettled    = sdkerrors.Register(ModuleName, 6018, "book participation already settled")
 	ErrMismatchInDepositorAddress         = sdkerrors.Register(ModuleName, 6019, "mismatch in depositor address")
 	ErrWithdrawalAmountIsTooLarge         = sdkerrors.Register(ModuleName, 6020, "withdrawal amount more than available amount for withdrawal")
 	ErrMaxWithdrawableAmountIsZero        = sdkerrors.Register(ModuleName, 6021, "maximum withdrawal amount is zero")
 	ErrParticipationOnInactiveMarket      = sdkerrors.Register(ModuleName, 6022, "participation is allowed on an active market only")
 	ErrMarketNotFound                     = sdkerrors.Register(ModuleName, 6023, "market not found to initialize participation")
-	ErrInsufficientFundToCoverPayout      = sdkerrors.Register(ModuleName, 6024, "insufficient fund in the participations to cover the payout")
 	ErrUnknownMarketStatus                = sdkerrors.Register(ModuleName, 6025, "unknown market status of orderbook settlement")
 	ErrWithdrawalTooLarge                 = sdkerrors.Register(ModuleName, 6026, "withdrawal is more than unused amount")
+	ErrWithdrawalNotAllowedPostRequeing   = sdkerrors.Register(ModuleName, 6027, "withdrawal is not allowed post requeing")
 )
 
 // ErrTextInvalidDepositor x/orderbook module sentinel error text

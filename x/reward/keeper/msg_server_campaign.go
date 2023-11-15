@@ -38,6 +38,18 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
+	totalRewardAmount := sdkmath.ZeroInt()
+	if !payload.RewardAmount.MainAccountAmount.IsNil() {
+		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.MainAccountAmount)
+	}
+	if !payload.RewardAmount.SubaccountAmount.IsNil() {
+		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.SubaccountAmount)
+	}
+
+	if msg.TotalFunds.LT(totalRewardAmount) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount %s is more than total funds %s", totalRewardAmount, msg.TotalFunds)
+	}
+
 	campaign := types.NewCampaign(
 		msg.Creator, payload.Promoter, msg.Uid,
 		payload.StartTs, payload.EndTs, payload.ClaimsPerCategory,
@@ -47,7 +59,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.RewardAmount,
 		payload.IsActive,
 		payload.Meta,
-		types.NewPool(payload.TotalFunds),
+		types.NewPool(msg.TotalFunds),
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()
@@ -64,7 +76,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	if err := k.modFunder.Fund(
 		types.RewardPoolFunder{}, ctx,
 		sdk.MustAccAddressFromBech32(payload.Promoter),
-		payload.TotalFunds,
+		msg.TotalFunds,
 	); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
 	}
@@ -89,22 +101,33 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	}
 
 	// Check if the value exists
-	valFound, isFound := k.GetCampaign(ctx, msg.Uid)
+	campaign, isFound := k.GetCampaign(ctx, msg.Uid)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
 	}
 
 	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != valFound.Promoter {
-		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, valFound.Promoter, msg,
+	if msg.Creator != campaign.Promoter {
+		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, campaign.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
 			return nil, err
 		}
 	}
 
-	valFound.EndTS = payload.EndTs
+	if !msg.TopupFunds.IsNil() && msg.TopupFunds.GT(sdkmath.ZeroInt()) {
+		// transfer the pool amount to the reward pool module account
+		if err := k.modFunder.Fund(
+			types.RewardPoolFunder{}, ctx,
+			sdk.MustAccAddressFromBech32(campaign.Promoter),
+			msg.TopupFunds,
+		); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
+		}
+	}
 
-	k.SetCampaign(ctx, valFound)
+	campaign.EndTS = payload.EndTs
+
+	k.SetCampaign(ctx, campaign)
 
 	msg.EmitEvent(&ctx, msg.Uid)
 

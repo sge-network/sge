@@ -17,11 +17,15 @@ const (
 
 	// DefaultHouseParticipationFee is default house participation fee.
 	DefaultHouseParticipationFee string = "0.1"
+
+	// DefaultMaxWithdrawalCount is default maximum withdrawals allowed per participation.
+	DefaultMaxWithdrawalCount uint64 = 1
 )
 
 var (
 	keyMinDeposit            = []byte("MinDeposit")
 	keyHouseParticipationFee = []byte("HouseParticipationFee")
+	keyMaxWithdrawalCount    = []byte("MaxWithdrawalCount")
 )
 
 // ParamKeyTable for house module
@@ -30,10 +34,11 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minDeposit sdkmath.Int, houseParticipationFee sdk.Dec) Params {
+func NewParams(minDeposit sdkmath.Int, houseParticipationFee sdk.Dec, maxWithdrawalCount uint64) Params {
 	return Params{
 		MinDeposit:            minDeposit,
 		HouseParticipationFee: houseParticipationFee,
+		MaxWithdrawalCount:    maxWithdrawalCount,
 	}
 }
 
@@ -50,6 +55,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			&p.HouseParticipationFee,
 			validateHouseParticipationFee,
 		),
+		paramtypes.NewParamSetPair(
+			keyMaxWithdrawalCount,
+			&p.MaxWithdrawalCount,
+			validateMaxWithdrawalCount,
+		),
 	}
 }
 
@@ -58,6 +68,7 @@ func DefaultParams() Params {
 	return NewParams(
 		sdkmath.NewInt(DefaultMinDeposit),
 		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
+		DefaultMaxWithdrawalCount,
 	)
 }
 
@@ -102,6 +113,20 @@ func validateHouseParticipationFee(i interface{}) error {
 
 	if v.LT(sdk.ZeroDec()) {
 		return fmt.Errorf("house participation fee cannot be lower than 0: %d", v)
+	}
+
+	return nil
+}
+
+// validateMaxWithdrawalCount performs validation of max withdrawal count
+func validateMaxWithdrawalCount(i interface{}) error {
+	v, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v < 1 {
+		return fmt.Errorf("max withdrawal count cannot be lower than 1: %d", v)
 	}
 
 	return nil

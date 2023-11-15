@@ -3,6 +3,7 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
@@ -13,6 +14,7 @@ import (
 )
 
 func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
+	poolBalance := sdkmath.NewInt(100)
 	tests := []struct {
 		name string
 		msg  types.MsgCreateCampaign
@@ -21,36 +23,49 @@ func TestMsgCreateCampaign_ValidateBasic(t *testing.T) {
 		{
 			name: "invalid address",
 			msg: types.MsgCreateCampaign{
-				Creator: "invalid_address",
-				Uid:     uuid.NewString(),
-				Ticket:  "ticket",
+				Creator:    "invalid_address",
+				Uid:        uuid.NewString(),
+				Ticket:     "ticket",
+				TotalFunds: poolBalance,
 			},
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
 			name: "invalid uid",
 			msg: types.MsgCreateCampaign{
-				Creator: sample.AccAddress(),
-				Uid:     "invalid uid",
-				Ticket:  "ticket",
+				Creator:    sample.AccAddress(),
+				Uid:        "invalid uid",
+				Ticket:     "ticket",
+				TotalFunds: poolBalance,
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "invalid ticket",
 			msg: types.MsgCreateCampaign{
+				Creator:    sample.AccAddress(),
+				Uid:        uuid.NewString(),
+				Ticket:     "",
+				TotalFunds: poolBalance,
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "negative pool amount",
+			msg: types.MsgCreateCampaign{
 				Creator: sample.AccAddress(),
 				Uid:     uuid.NewString(),
-				Ticket:  "",
+				Ticket:  "ticket",
 			},
 			err: sdkerrors.ErrInvalidRequest,
 		},
 		{
 			name: "valid address",
 			msg: types.MsgCreateCampaign{
-				Creator: sample.AccAddress(),
-				Uid:     uuid.NewString(),
-				Ticket:  "ticket",
+				Creator:    sample.AccAddress(),
+				Uid:        uuid.NewString(),
+				Ticket:     "ticket",
+				TotalFunds: poolBalance,
 			},
 		},
 	}

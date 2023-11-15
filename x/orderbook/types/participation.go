@@ -78,6 +78,9 @@ func (p *OrderBookParticipation) ValidateWithdraw(
 
 // maxWithdrawalAmount returns the max withdrawal amount of a participation.
 func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
+	if p.CurrentRoundMaxLoss.LT(sdk.ZeroInt()) {
+		return p.CurrentRoundLiquidity
+	}
 	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
 }
 
@@ -139,6 +142,13 @@ func (p *OrderBookParticipation) NotParticipatedInBetFulfillment() bool {
 // liquidity to be used in the next round or not
 func (p *OrderBookParticipation) IsEligibleForNextRound() bool {
 	return p.CurrentRoundLiquidity.GT(sdk.ZeroInt())
+}
+
+// IsEligibleForNextRound determines if the participation has enough
+// liquidity to be used in the next round or not
+func (p *OrderBookParticipation) IsEligibleForNextRoundPreLiquidityReduction() bool {
+	maxLoss := sdk.MaxInt(sdk.ZeroInt(), p.CurrentRoundMaxLoss)
+	return p.CurrentRoundLiquidity.Sub(maxLoss).GT(sdk.ZeroInt())
 }
 
 // TrimCurrentRoundLiquidity subtracts the max loss from the current round liquidity.

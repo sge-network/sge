@@ -49,6 +49,9 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 	// we need to remove its uid from the list of unsettled resolved orderbooks.
 	if allSettled {
 		k.RemoveUnsettledResolvedOrderBook(ctx, orderBookUID)
+
+		book.Status = types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_SETTLED
+		k.SetOrderBook(ctx, book)
 	}
 
 	return nil

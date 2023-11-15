@@ -23,4 +23,5 @@ var (
 	ErrAuthorizationNotFound     = sdkerrors.Register(ModuleName, 5013, "no authorization found")
 	ErrAuthorizationNotAccepted  = sdkerrors.Register(ModuleName, 5014, "authorization not accepted")
 	ErrAuthorizationNotAllowed   = sdkerrors.Register(ModuleName, 5015, "authorization not allowed")
+	ErrMaxWithdrawalCountReached = sdkerrors.Register(ModuleName, 5016, "maximum withdrawals per deposit reached")
 )

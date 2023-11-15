@@ -24,12 +24,17 @@ func TestWager(t *testing.T) {
 		err           error
 		market        *markettypes.Market
 		activeBetOdds []*types.BetOdds
+		betOdds       map[string]*types.BetOddsCompact
 	}{
 		{
 			desc: "invalid creator address",
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "notExistMarketUID",
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: sdkerrtypes.ErrInvalidAddress,
 		},
@@ -39,6 +44,10 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "notExistMarketUID",
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrNoMatchingMarket,
 		},
@@ -53,6 +62,10 @@ func TestWager(t *testing.T) {
 				MarketUID: "uid_inactive",
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
+			},
 			err: types.ErrInactiveMarket,
 		},
 		{
@@ -65,6 +78,10 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_declared",
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrInactiveMarket,
 		},
@@ -79,6 +96,10 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_expired",
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrEndTSIsPassed,
 		},
@@ -103,8 +124,11 @@ func TestWager(t *testing.T) {
 				OddsUID:   "notExistOdds",
 				Amount:    sdkmath.NewInt(1000),
 				OddsValue: "5",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrOddsUIDNotExist,
 		},
@@ -129,8 +153,11 @@ func TestWager(t *testing.T) {
 				OddsUID:   "odds1",
 				Amount:    sdkmath.NewInt(100),
 				OddsValue: "5",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:   simapp.TestParamUsers["user1"].Address.String(),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 			err: types.ErrBetAmountIsLow,
 		},
@@ -165,9 +192,12 @@ func TestWager(t *testing.T) {
 				OddsUID:           "odds1",
 				Amount:            sdkmath.NewInt(1000000),
 				OddsValue:         "5",
-				OddsType:          types.OddsType_ODDS_TYPE_DECIMAL,
 				Creator:           simapp.TestParamUsers["user1"].Address.String(),
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			},
+			betOdds: map[string]*types.BetOddsCompact{
+				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
+				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
 		},
 	}
@@ -196,7 +226,7 @@ func TestWager(t *testing.T) {
 				}
 			}
 
-			err := k.Wager(ctx, tc.bet)
+			err := k.Wager(ctx, tc.bet, tc.betOdds)
 			if tc.err != nil {
 				require.ErrorIs(t, err, tc.err)
 				return

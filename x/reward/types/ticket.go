@@ -28,10 +28,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, err.Error())
 	}
 
-	if payload.TotalFunds.IsNil() || !payload.TotalFunds.GT(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "pool amount should be positive")
-	}
-
 	if (payload.RewardAmount.MainAccountAmount.IsNil() ||
 		payload.RewardAmount.MainAccountAmount.Equal(sdkmath.ZeroInt())) &&
 		(payload.RewardAmount.SubaccountAmount.IsNil() ||
@@ -42,18 +38,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
 		payload.RewardAmount.UnlockPeriod == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
-	}
-
-	totalRewardAmount := sdkmath.ZeroInt()
-	if !payload.RewardAmount.MainAccountAmount.IsNil() {
-		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.MainAccountAmount)
-	}
-	if !payload.RewardAmount.SubaccountAmount.IsNil() {
-		totalRewardAmount = totalRewardAmount.Add(payload.RewardAmount.SubaccountAmount)
-	}
-
-	if payload.TotalFunds.LT(totalRewardAmount) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount %s is more than total funds %s", totalRewardAmount, payload.TotalFunds)
 	}
 
 	if payload.ClaimsPerCategory == 0 {

@@ -2,6 +2,7 @@ package types
 
 import (
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/utils"
@@ -60,6 +61,10 @@ func (msg *MsgCreateCampaign) ValidateBasic() error {
 
 	if msg.Ticket == "" {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
+	if msg.TotalFunds.IsNil() || !msg.TotalFunds.GT(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "total funds should be positive")
 	}
 
 	return nil

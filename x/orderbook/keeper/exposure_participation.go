@@ -44,6 +44,32 @@ func (k Keeper) GetExposureByOrderBookAndOdds(
 	return
 }
 
+// GetExposureByOrderBook returns all exposures for an order book uid.
+func (k Keeper) GetExposureByOrderBook(
+	ctx sdk.Context,
+	bookUID string,
+) (peMap map[uint64]map[string]*types.ParticipationExposure, err error) {
+	peMap = make(map[uint64]map[string]*types.ParticipationExposure)
+	store := k.getParticipationExposureStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, types.GetParticipationExposuresByOrderBookKey(bookUID))
+
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.ParticipationExposure
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		if _, ok := peMap[val.ParticipationIndex]; !ok {
+			peMap[val.ParticipationIndex] = map[string]*types.ParticipationExposure{val.OddsUID: &val}
+		} else {
+			peMap[val.ParticipationIndex][val.OddsUID] = &val
+		}
+	}
+
+	return
+}
+
 // GetAllParticipationExposures returns all participation exposures used during genesis dump.
 func (k Keeper) GetAllParticipationExposures(
 	ctx sdk.Context,

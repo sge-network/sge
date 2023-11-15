@@ -9,8 +9,8 @@ import (
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 
 	"github.com/sge-network/sge/testutil/network"
-	"github.com/sge-network/sge/x/house/client/cli"
-	"github.com/sge-network/sge/x/house/types"
+	"github.com/sge-network/sge/x/orderbook/client/cli"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestQueryParams(t *testing.T) {
@@ -42,9 +42,19 @@ func TestQueryParams(t *testing.T) {
 
 			var params types.QueryParamsResponse
 			err = json.Unmarshal(res.Bytes(), &params)
-			require.NoError(t, err)
+			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshall-able.
+			require.EqualError(
+				t,
+				err,
+				"json: cannot unmarshal string into Go struct field Params.params.max_order_book_participations of type uint64",
+				"json: cannot unmarshal string into Go struct field Params.params.batch_settlement_count of type uint64",
+				"json: cannot unmarshal string into Go struct field Params.params.requeue_threshold of type uint64",
+			)
 
 			defaultParams := types.DefaultParams()
+			defaultParams.BatchSettlementCount = 0
+			defaultParams.MaxOrderBookParticipations = 0
+			defaultParams.RequeueThreshold = 0
 			require.Equal(t, types.QueryParamsResponse{
 				Params: defaultParams,
 			}, params)

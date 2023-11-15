@@ -6,7 +6,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -23,7 +22,7 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
-	bet, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
+	bet, oddsMap, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
 	if err != nil {
 		return nil, err
 	}
@@ -42,8 +41,8 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, err
 	}
 
-	if err := k.keeper.betKeeper.Wager(ctx, bet); err != nil {
-		return nil, sdkerrors.Wrapf(bettypes.ErrInWager, "%s", err)
+	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
+		return nil, err
 	}
 
 	k.keeper.SetBalance(ctx, subAccAddr, balance)
