@@ -2,6 +2,7 @@ package types
 
 import (
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
@@ -71,13 +72,22 @@ func (msg *MsgGrantReward) ValidateBasic() error {
 func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string,
 	rewardUID, promoterAddr string, rewardAmount RewardAmount, recevier Receiver,
 ) {
+	mainAmount := sdkmath.ZeroInt()
+	if !rewardAmount.MainAccountAmount.IsNil() {
+		mainAmount = rewardAmount.MainAccountAmount
+	}
+	subAmount := sdkmath.ZeroInt()
+	if !rewardAmount.SubaccountAmount.IsNil() {
+		subAmount = rewardAmount.SubaccountAmount
+	}
+
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(TypeMsgGrantReward, msg.Creator,
 		sdk.NewAttribute(attributeKeyCampaignUID, campaignUID),
 		sdk.NewAttribute(attributeKeyRewardUID, rewardUID),
 		sdk.NewAttribute(attributeKeyRewardPromoter, promoterAddr),
-		sdk.NewAttribute(attributeKeyMainAmount, rewardAmount.MainAccountAmount.String()),
-		sdk.NewAttribute(attributeKeySubAmount, rewardAmount.SubaccountAmount.String()),
+		sdk.NewAttribute(attributeKeyMainAmount, mainAmount.String()),
+		sdk.NewAttribute(attributeKeySubAmount, subAmount.String()),
 		sdk.NewAttribute(attributeKeyUnlockPeriod, cast.ToString(rewardAmount.UnlockPeriod)),
 		sdk.NewAttribute(attributeKeyReceiver, recevier.String()),
 	)
