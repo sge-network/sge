@@ -7,6 +7,7 @@ import (
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/msgservice"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
@@ -20,6 +21,12 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgCreateCampaign{},
 		&MsgUpdateCampaign{},
 		&MsgGrantReward{},
+	)
+
+	registry.RegisterImplementations(
+		(*authz.Authorization)(nil),
+		&CreateCampaignAuthorization{},
+		&UpdateCampaignAuthorization{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
