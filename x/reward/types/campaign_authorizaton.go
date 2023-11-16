@@ -81,7 +81,7 @@ func (a UpdateCampaignAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.A
 
 	limitLeft := a.SpendLimit
 	if msgUpdateCampaign.TopupFunds.GT(sdkmath.ZeroInt()) {
-		limitLeft := limitLeft.Sub(msgUpdateCampaign.TopupFunds)
+		limitLeft = limitLeft.Sub(msgUpdateCampaign.TopupFunds)
 		if limitLeft.IsNegative() {
 			return authz.AcceptResponse{}, sdkerrtypes.ErrInsufficientFunds.Wrapf(
 				"requested amount is more than spend limit",
