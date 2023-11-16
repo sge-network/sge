@@ -32,7 +32,7 @@ func TestGenesis(t *testing.T) {
 				UID: uuid.NewString(),
 			},
 		},
-		RewardByRecCatList: []types.RewardByCategory{
+		RewardByCategoryList: []types.RewardByCategory{
 			{
 				UID: uuid.NewString(),
 			},
