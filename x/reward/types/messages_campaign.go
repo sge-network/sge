@@ -19,12 +19,14 @@ var _ sdk.Msg = &MsgCreateCampaign{}
 func NewMsgCreateCampaign(
 	creator string,
 	uid string,
+	totalFunds sdkmath.Int,
 	ticket string,
 ) *MsgCreateCampaign {
 	return &MsgCreateCampaign{
-		Creator: creator,
-		Uid:     uid,
-		Ticket:  ticket,
+		Creator:    creator,
+		Uid:        uid,
+		Ticket:     ticket,
+		TotalFunds: totalFunds,
 	}
 }
 
@@ -84,12 +86,14 @@ var _ sdk.Msg = &MsgUpdateCampaign{}
 func NewMsgUpdateCampaign(
 	creator string,
 	uid string,
+	topopFunds sdkmath.Int,
 	ticket string,
 ) *MsgUpdateCampaign {
 	return &MsgUpdateCampaign{
-		Creator: creator,
-		Uid:     uid,
-		Ticket:  ticket,
+		Creator:    creator,
+		Uid:        uid,
+		TopupFunds: topopFunds,
+		Ticket:     ticket,
 	}
 }
 

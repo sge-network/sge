@@ -3,6 +3,7 @@ package cli
 import (
 	"github.com/spf13/cobra"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
@@ -12,15 +13,20 @@ import (
 
 func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-campaign [uid] [ticket]",
+		Use:   "create-campaign [uid] [totalfunds] [ticket]",
 		Short: "Create a new campaign",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			argUID := args[0]
 
 			// Get value arguments
 			argTicket := args[1]
+
+			argTotalFundsCosmosInt, ok := sdkmath.NewIntFromString(args[2])
+			if !ok {
+				return types.ErrInvalidFunds
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -30,6 +36,7 @@ func CmdCreateCampaign() *cobra.Command {
 			msg := types.NewMsgCreateCampaign(
 				clientCtx.GetFromAddress().String(),
 				argUID,
+				argTotalFundsCosmosInt,
 				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {
@@ -46,15 +53,20 @@ func CmdCreateCampaign() *cobra.Command {
 
 func CmdUpdateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-campaign [uid] [ticket]",
+		Use:   "update-campaign [uid] [topupfunds] [ticket]",
 		Short: "Update a campaign",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			argUID := args[0]
 
 			// Get value arguments
 			argTicket := args[1]
+
+			argTopupFundsCosmosInt, ok := sdkmath.NewIntFromString(args[2])
+			if !ok {
+				return types.ErrInvalidFunds
+			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -64,6 +76,7 @@ func CmdUpdateCampaign() *cobra.Command {
 			msg := types.NewMsgUpdateCampaign(
 				clientCtx.GetFromAddress().String(),
 				argUID,
+				argTopupFundsCosmosInt,
 				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {
