@@ -138,7 +138,7 @@ type MsgUpdateCampaign struct {
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	// uid is the unique identifier of the campaign.
 	Uid string `protobuf:"bytes,2,opt,name=uid,proto3" json:"uid,omitempty"`
-	// topup_funds is the topup funds to increase the pool balance to the
+	// topup_funds is the topup funds to increase the pool balance of the
 	// campaign.
 	TopupFunds cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=topup_funds,json=topupFunds,proto3,customtype=cosmossdk.io/math.Int" json:"topup_funds" yaml:"topup_funds"`
 	// ticket is the payload data.

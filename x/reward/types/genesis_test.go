@@ -40,7 +40,7 @@ func TestGenesisState_Validate(t *testing.T) {
 						UID: uuid.NewString(),
 					},
 				},
-				RewardByRecCatList: []types.RewardByCategory{
+				RewardByCategoryList: []types.RewardByCategory{
 					{
 						UID: uuid.NewString(),
 					},
@@ -90,7 +90,7 @@ func TestGenesisState_Validate(t *testing.T) {
 		{
 			desc: "duplicated reward by category",
 			genState: &types.GenesisState{
-				RewardByRecCatList: []types.RewardByCategory{
+				RewardByCategoryList: []types.RewardByCategory{
 					{
 						UID: dupplicateUID,
 					},

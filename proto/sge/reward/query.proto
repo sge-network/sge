@@ -124,15 +124,15 @@ message QueryRewardsByAddressResponse {
 }
 
 // QueryRewardsByAddressAndCategoryRequest is request body for the query all
-// rewards by address and type endpoint.
+// rewards by address and category endpoint.
 message QueryRewardsByAddressAndCategoryRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string address = 2;
   RewardCategory category = 3;
 }
 
-// QueryRewardsByAddressAndTypeResponse is response body of the query all
-// rewards by address and type endpoint.
+// QueryRewardsByAddressAndCategoryResponse is response body of the query all
+// rewards by address and category endpoint.
 message QueryRewardsByAddressAndCategoryResponse {
   repeated RewardByCategory rewards = 1 [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;

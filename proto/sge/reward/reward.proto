@@ -5,8 +5,8 @@ import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
-// Reward is the transaction made to reward a user
-// for a specific action.
+// Reward is the type for transaction made to reward a user
+// based on users eligibility.
 message Reward {
 
   // uid is the unique identifier for a reward.
@@ -38,8 +38,8 @@ message Reward {
 
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
-  // For example, the source uid of a referral signup reward is the address of
-  // the referer.
+  // For example, the source uid of a referral signup
+  // reward is the address of the referer.
   string source_uid = 8 [
     (gogoproto.customname) = "SourceUID",
     (gogoproto.jsontag) = "source_uid",
@@ -53,21 +53,21 @@ message Reward {
 
 // RewardAmount
 message RewardAmount {
-  // main account reward amount
+  // main_account_reward amount transferred to main account address
   string main_account_amount = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"main_account_amount\""
   ];
 
-  // sub account reward amount
+  // sub_account reward amount transferred to subaccount address
   string subaccount_amount = 2 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"subaccount_amount\""
   ];
 
-  // unlock period
+  // unlock_period is the period after which the reward is unlocked.
   uint64 unlock_period = 3 [
     (gogoproto.customname) = "UnlockPeriod",
     (gogoproto.jsontag) = "unlock_period",
@@ -77,22 +77,27 @@ message RewardAmount {
 
 // RewardByCategory
 message RewardByCategory {
+  // uid is the unique identifier for a reward.
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
+  // addr is the address of the reward receiver.
   string addr = 2;
+  // reward_category is the category of the reward.
   RewardCategory reward_category = 3;
 }
 
 // RewardByCampaign
 message RewardByCampaign {
+  // uid is the unique identifier for a reward.
   string uid = 1 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
+  // campaign_uid is the unique identifier of the campaign.
   string campaign_uid = 2 [
     (gogoproto.customname) = "CampaignUID",
     (gogoproto.jsontag) = "campaign_uid",
@@ -100,7 +105,7 @@ message RewardByCampaign {
   ];
 }
 
-// RewardType defines supported types of rewards of reward module.
+// RewardType defines supported types of rewards in reward module.
 enum RewardCategory {
   // the invalid or unknown
   REWARD_CATEGORY_UNSPECIFIED = 0;

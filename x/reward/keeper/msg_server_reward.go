@@ -15,16 +15,16 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if _, isFound := k.GetReward(ctx, msg.Uid); isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "reward grant with the provided uid exists")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward grant with uid: %s exists", msg.Uid)
 	}
 
 	campaign, isFound := k.GetCampaign(ctx, msg.CampaignUid)
 	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the uid not found")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "campaign with the uid: %s not found", msg.CampaignUid)
 	}
 
 	if !campaign.IsActive {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign is not active")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "campaign with uid: %s not active", msg.CampaignUid)
 	}
 
 	if err := campaign.CheckExpiration(cast.ToUint64(ctx.BlockTime().Unix())); err != nil {
@@ -36,7 +36,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	recevier, rewardCommon, err := rewardFactory.Calculate(goCtx, ctx,
+	receiver, rewardCommon, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
@@ -46,7 +46,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	rewards, err := k.GetRewardsByAddressAndCategory(ctx, recevier.MainAccountAddr, campaign.RewardCategory)
+	rewards, err := k.GetRewardsByAddressAndCategory(ctx, receiver.MainAccountAddr, campaign.RewardCategory)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
 	}
@@ -54,25 +54,25 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
 	}
 
-	if err := campaign.CheckPoolBalance(recevier.SubAccountAmount.Add(recevier.MainAccountAmount)); err != nil {
+	if err := campaign.CheckPoolBalance(receiver.SubAccountAmount.Add(receiver.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, recevier); err != nil {
+	if err := k.DistributeRewards(ctx, receiver); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
-	k.UpdateCampaignPool(ctx, campaign, recevier)
+	k.UpdateCampaignPool(ctx, campaign, receiver)
 	k.SetReward(ctx, types.NewReward(
-		msg.Uid, msg.Creator, recevier.MainAccountAddr,
+		msg.Uid, msg.Creator, receiver.MainAccountAddr,
 		msg.CampaignUid, campaign.RewardAmount,
 		rewardCommon.SourceUID,
 		rewardCommon.Meta,
 	))
-	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, recevier.MainAccountAddr, campaign.RewardCategory))
+	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, receiver.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
-	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, recevier)
+	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, receiver)
 
 	return &types.MsgGrantRewardResponse{}, nil
 }

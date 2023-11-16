@@ -20,7 +20,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 	// Check if the value already exists
 	_, isFound := k.GetCampaign(ctx, msg.Uid)
 	if isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "campaign with the provided uid is already set")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "campaign with the uid: %s already exists", msg.Uid)
 	}
 
 	var payload types.CreateCampaignPayload
@@ -68,7 +68,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
-	err = rewardFactory.VaidateCampaign(campaign, cast.ToUint64(ctx.BlockTime().Unix()))
+	err = rewardFactory.ValidateCampaign(campaign, cast.ToUint64(ctx.BlockTime().Unix()))
 	if err != nil {
 		return nil, err
 	}
@@ -104,7 +104,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	// Check if the value exists
 	campaign, isFound := k.GetCampaign(ctx, msg.Uid)
 	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "index not set")
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrKeyNotFound, "campaign with the id: %s does not exist", msg.Uid)
 	}
 
 	// Checks if the msg creator is the same as the current owner

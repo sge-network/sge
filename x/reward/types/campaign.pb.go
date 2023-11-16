@@ -43,14 +43,14 @@ type Campaign struct {
 	RewardType RewardType `protobuf:"varint,7,opt,name=reward_type,json=rewardType,proto3,enum=sgenetwork.sge.reward.RewardType" json:"reward_type,omitempty"`
 	// amount_type is the type of reward amount.
 	RewardAmountType RewardAmountType `protobuf:"varint,8,opt,name=reward_amount_type,json=rewardAmountType,proto3,enum=sgenetwork.sge.reward.RewardAmountType" json:"reward_amount_type,omitempty"`
-	// amount is the amount of reward.
+	// reward_amount is the amount defined for a reward.
 	RewardAmount *RewardAmount `protobuf:"bytes,9,opt,name=reward_amount,json=rewardAmount,proto3" json:"reward_amount,omitempty"`
-	// pool is the tracker of pool funds of the campaign.
+	// pool is the tracker of campaign funds.
 	Pool Pool `protobuf:"bytes,10,opt,name=pool,proto3" json:"pool"`
 	// is_active is the flag to check if the campaign is active or not.
 	IsActive bool `protobuf:"varint,11,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	// claims_per_category is the number of times a user can claim a reward for
-	// category of this campaign.
+	// claims_per_category is the number of times a user can claim a
+	// reward for category of this campaign.
 	ClaimsPerCategory uint64 `protobuf:"varint,12,opt,name=claims_per_category,json=claimsPerCategory,proto3" json:"claims_per_category,omitempty"`
 	// meta is the metadata of the campaign.
 	// It is a stringified base64 encoded json.
@@ -181,7 +181,7 @@ func (m *Campaign) GetMeta() string {
 	return ""
 }
 
-// Pool is the type for the campaign funding pool.
+// Pool tracks funds assigned and spent to/for a campaign.
 type Pool struct {
 	Total cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=total,proto3,customtype=cosmossdk.io/math.Int" json:"total" yaml:"total"`
 	Spent cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=spent,proto3,customtype=cosmossdk.io/math.Int" json:"spent" yaml:"spent"`

@@ -29,7 +29,7 @@ var (
 	ErrUnlockTSDefBeforeBlockTime = sdkerrors.Register(ModuleName, 7118, "unlock timestamp should not be before the current block time")
 	ErrInvalidNoLossBetUID        = sdkerrors.Register(ModuleName, 7120, "invalid no loss bet uid")
 	ErrWrongAmountForType         = sdkerrors.Register(ModuleName, 7121, "wrong amount for account type")
-	ErrSubAccountCreationFailed   = sdkerrors.Register(ModuleName, 7122, "suba ccount creation failed")
+	ErrSubAccountCreationFailed   = sdkerrors.Register(ModuleName, 7122, "subaccount creation failed")
 	ErrWrongRewardAmountType      = sdkerrors.Register(ModuleName, 7123, "wrong reward amount type")
 	ErrUnknownAccType             = sdkerrors.Register(ModuleName, 7124, "unknown account type")
 	ErrReceiverAddrCanNotBeSubAcc = sdkerrors.Register(ModuleName, 7125, "receiver account can not be sub account address")

@@ -24,7 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// RewardType defines supported types of rewards of reward module.
+// RewardType defines supported types of rewards in reward module.
 type RewardCategory int32
 
 const (
@@ -172,8 +172,8 @@ func (RewardAmountType) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_3412add70a4f177f, []int{2}
 }
 
-// Reward is the transaction made to reward a user
-// for a specific action.
+// Reward is the type for transaction made to reward a user
+// based on users eligibility.
 type Reward struct {
 	// uid is the unique identifier for a reward.
 	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
@@ -187,8 +187,8 @@ type Reward struct {
 	RewardAmount *RewardAmount `protobuf:"bytes,7,opt,name=reward_amount,proto3" json:"reward_amount"`
 	// source_uid is the address of the source.
 	// It is used to identify the source of the reward.
-	// For example, the source uid of a referral signup reward is the address of
-	// the referer.
+	// For example, the source uid of a referral signup
+	// reward is the address of the referer.
 	SourceUID string `protobuf:"bytes,8,opt,name=source_uid,proto3" json:"source_uid"`
 	// meta is the metadata of the campaign.
 	// It is a stringified base64 encoded json.
@@ -279,11 +279,11 @@ func (m *Reward) GetMeta() string {
 
 // RewardAmount
 type RewardAmount struct {
-	// main account reward amount
+	// main_account_reward amount transferred to main account address
 	MainAccountAmount cosmossdk_io_math.Int `protobuf:"bytes,1,opt,name=main_account_amount,json=mainAccountAmount,proto3,customtype=cosmossdk.io/math.Int" json:"main_account_amount" yaml:"main_account_amount"`
-	// sub account reward amount
+	// sub_account reward amount transferred to subaccount address
 	SubaccountAmount cosmossdk_io_math.Int `protobuf:"bytes,2,opt,name=subaccount_amount,json=subaccountAmount,proto3,customtype=cosmossdk.io/math.Int" json:"subaccount_amount" yaml:"subaccount_amount"`
-	// unlock period
+	// unlock_period is the period after which the reward is unlocked.
 	UnlockPeriod uint64 `protobuf:"varint,3,opt,name=unlock_period,proto3" json:"unlock_period"`
 }
 
@@ -329,8 +329,11 @@ func (m *RewardAmount) GetUnlockPeriod() uint64 {
 
 // RewardByCategory
 type RewardByCategory struct {
-	UID            string         `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
-	Addr           string         `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
+	// uid is the unique identifier for a reward.
+	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
+	// addr is the address of the reward receiver.
+	Addr string `protobuf:"bytes,2,opt,name=addr,proto3" json:"addr,omitempty"`
+	// reward_category is the category of the reward.
 	RewardCategory RewardCategory `protobuf:"varint,3,opt,name=reward_category,json=rewardCategory,proto3,enum=sgenetwork.sge.reward.RewardCategory" json:"reward_category,omitempty"`
 }
 
@@ -390,7 +393,9 @@ func (m *RewardByCategory) GetRewardCategory() RewardCategory {
 
 // RewardByCampaign
 type RewardByCampaign struct {
-	UID         string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
+	// uid is the unique identifier for a reward.
+	UID string `protobuf:"bytes,1,opt,name=uid,proto3" json:"uid"`
+	// campaign_uid is the unique identifier of the campaign.
 	CampaignUID string `protobuf:"bytes,2,opt,name=campaign_uid,proto3" json:"campaign_uid"`
 }
 

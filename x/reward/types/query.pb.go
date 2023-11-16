@@ -599,7 +599,7 @@ func (m *QueryRewardsByAddressResponse) GetPagination() *query.PageResponse {
 }
 
 // QueryRewardsByAddressAndCategoryRequest is request body for the query all
-// rewards by address and type endpoint.
+// rewards by address and category endpoint.
 type QueryRewardsByAddressAndCategoryRequest struct {
 	Pagination *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	Address    string             `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -662,8 +662,8 @@ func (m *QueryRewardsByAddressAndCategoryRequest) GetCategory() RewardCategory {
 	return RewardCategory_REWARD_CATEGORY_UNSPECIFIED
 }
 
-// QueryRewardsByAddressAndTypeResponse is response body of the query all
-// rewards by address and type endpoint.
+// QueryRewardsByAddressAndCategoryResponse is response body of the query all
+// rewards by address and category endpoint.
 type QueryRewardsByAddressAndCategoryResponse struct {
 	Rewards    []RewardByCategory  `protobuf:"bytes,1,rep,name=rewards,proto3" json:"rewards"`
 	Pagination *query.PageResponse `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`

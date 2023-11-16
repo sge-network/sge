@@ -39,7 +39,7 @@ func (gs GenesisState) Validate() error {
 	}
 
 	rewardByRecCatIndexMap := make(map[string]struct{})
-	for _, elem := range gs.RewardByRecCatList {
+	for _, elem := range gs.RewardByCategoryList {
 		index := string(GetRewardKey(elem.UID))
 		if _, ok := rewardByRecCatIndexMap[index]; ok {
 			return fmt.Errorf("duplicated index for reward by receiver and category")

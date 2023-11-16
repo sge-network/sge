@@ -59,7 +59,7 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
-	VaidateCampaign(campaign Campaign, blockTime uint64) error
+	ValidateCampaign(campaign Campaign, blockTime uint64) error
 	Calculate(
 		goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket, creator string,
 	) (Receiver, RewardPayloadCommon, error)
