@@ -4,6 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/utils"
 )
@@ -68,13 +69,16 @@ func (msg *MsgGrantReward) ValidateBasic() error {
 
 // EmitEvent emits the event for the message success.
 func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string,
-	rewardUID, promoterAddr string, recevier Receiver,
+	rewardUID, promoterAddr string, rewardAmount RewardAmount, recevier Receiver,
 ) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(TypeMsgGrantReward, msg.Creator,
 		sdk.NewAttribute(attributeKeyCampaignUID, campaignUID),
 		sdk.NewAttribute(attributeKeyRewardUID, rewardUID),
 		sdk.NewAttribute(attributeKeyRewardPromoter, promoterAddr),
+		sdk.NewAttribute(attributeKeyMainAmount, rewardAmount.MainAccountAmount.String()),
+		sdk.NewAttribute(attributeKeySubAmount, rewardAmount.SubaccountAmount.String()),
+		sdk.NewAttribute(attributeKeyUnlockPeriod, cast.ToString(rewardAmount.UnlockPeriod)),
 		sdk.NewAttribute(attributeKeyReceiver, recevier.String()),
 	)
 	emitter.Emit()
