@@ -1,6 +1,7 @@
 package types
 
 import (
+	"strconv"
 	"strings"
 
 	sdkmath "cosmossdk.io/math"
@@ -79,7 +80,7 @@ func (msg MsgDeposit) ValidateSanity(_ sdk.Context, p *Params) error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participationIndex uint64) {
+func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participationIndex uint64, feeAmount sdkmath.Int) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgDeposit, msg.Creator,
 		sdk.NewAttribute(attributeKeyCreator, msg.Creator),
@@ -87,6 +88,7 @@ func (msg *MsgDeposit) EmitEvent(ctx *sdk.Context, depositor string, participati
 		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
 			strings.Join([]string{msg.MarketUID, cast.ToString(participationIndex)}, "#"),
 		),
+		sdk.NewAttribute(attributeKeyDepositFee, strconv.Itoa(int(feeAmount.Int64()))),
 	)
 	emitter.Emit()
 }

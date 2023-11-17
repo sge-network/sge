@@ -37,7 +37,7 @@ func (k msgServer) Deposit(goCtx context.Context,
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
-	participationIndex, err := k.Keeper.Deposit(
+	participationIndex, feeAmount, err := k.Keeper.Deposit(
 		ctx,
 		msg.Creator,
 		depositorAddr,
@@ -48,7 +48,7 @@ func (k msgServer) Deposit(goCtx context.Context,
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
 
-	msg.EmitEvent(&ctx, depositorAddr, participationIndex)
+	msg.EmitEvent(&ctx, depositorAddr, participationIndex, feeAmount)
 
 	return &types.MsgDepositResponse{
 		MarketUID:          msg.MarketUID,
