@@ -3,6 +3,7 @@ package types
 import (
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/spf13/cast"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -47,11 +48,12 @@ func (msg *MsgHouseDeposit) ValidateBasic() error {
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgHouseDeposit) EmitEvent(ctx *sdk.Context, subAccAddr string, participationIndex uint64) {
+func (msg *MsgHouseDeposit) EmitEvent(ctx *sdk.Context, subAccAddr string, participationIndex uint64, feeAmount sdkmath.Int) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgHouseDeposit, msg.Msg.Creator,
 		sdk.NewAttribute(attributeKeyDepositCreator, msg.Msg.Creator),
 		sdk.NewAttribute(attributeKeySubAccDepositor, subAccAddr),
+		sdk.NewAttribute(attributeKeySubAccDepositFee, feeAmount.String()),
 		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
 			strings.Join([]string{msg.Msg.MarketUID, cast.ToString(participationIndex)}, "#"),
 		),

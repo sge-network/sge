@@ -36,7 +36,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// send house deposit from subaccount on behalf of the owner
-	participationIndex, _, err := k.keeper.houseKeeper.Deposit(
+	participationIndex, feeAmount, err := k.keeper.houseKeeper.Deposit(
 		ctx,
 		msg.Msg.Creator,
 		subAccAddr.String(),
@@ -51,7 +51,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	k.keeper.SetBalance(ctx, subAccAddr, balance)
 
 	// emit event
-	msg.EmitEvent(&ctx, subAccAddr.String(), participationIndex)
+	msg.EmitEvent(&ctx, subAccAddr.String(), participationIndex, feeAmount)
 
 	return &types.MsgHouseDepositResponse{
 		Response: &housetypes.MsgDepositResponse{
