@@ -33,7 +33,7 @@ type BankKeeper interface {
 type HouseKeeper interface {
 	GetParams(ctx sdk.Context) housetypes.Params
 	ParseDepositTicketAndValidate(goCtx context.Context, ctx sdk.Context, msg *housetypes.MsgDeposit, authzAllowed bool) (string, error)
-	Deposit(ctx sdk.Context, creator, depositor, marketUID string, amount sdkmath.Int) (participationIndex uint64, err error)
+	Deposit(ctx sdk.Context, creator, depositor string, marketUID string, amount sdkmath.Int) (participationIndex uint64, feeAmount sdkmath.Int, err error)
 	ParseWithdrawTicketAndValidate(goCtx context.Context, ctx sdk.Context, msg *housetypes.MsgWithdraw, authzAllowed bool) (string, bool, error)
 	CalcAndWithdraw(ctx sdk.Context, msg *housetypes.MsgWithdraw, depositorAddr string, isOnBehalf bool) (uint64, error)
 }

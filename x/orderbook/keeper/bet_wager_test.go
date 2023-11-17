@@ -88,7 +88,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	require.NoError(ts.t, err)
 
 	found := false
-	participationIndex, err := ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err := ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[0].DepositorAddress,
 		ts.deposits[0].DepositorAddress,
@@ -110,7 +110,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	require.True(ts.t, found)
 
-	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[1].DepositorAddress,
 		ts.deposits[1].DepositorAddress,
@@ -132,7 +132,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	require.True(ts.t, found)
 
-	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[2].DepositorAddress,
 		ts.deposits[2].DepositorAddress,
@@ -420,7 +420,7 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 
 	for i := 0; i < len(ts.deposits); i++ {
 		found := false
-		participationIndex, err := ts.tApp.HouseKeeper.Deposit(
+		participationIndex, _, err := ts.tApp.HouseKeeper.Deposit(
 			ts.ctx,
 			ts.deposits[i].DepositorAddress,
 			ts.deposits[i].DepositorAddress,
