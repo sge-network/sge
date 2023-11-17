@@ -55,11 +55,11 @@ func (k Keeper) GetAllDeposits(ctx sdk.Context) (list []types.Deposit, err error
 // Deposit performs a deposit transaction and stores a new deposit in store.
 func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	marketUID string, amount sdkmath.Int,
-) (participationIndex uint64, err error) {
+) (participationIndex uint64, feeAmount sdkmath.Int, err error) {
 	// Create the deposit object
 	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdk.ZeroInt(), 0)
 
-	feeAmount := deposit.CalcHouseParticipationFeeAmount(k.GetHouseParticipationFee(ctx))
+	feeAmount = deposit.CalcHouseParticipationFeeAmount(k.GetHouseParticipationFee(ctx))
 
 	depositorAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
@@ -79,5 +79,5 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 
 	k.SetDeposit(ctx, deposit)
 
-	return participationIndex, err
+	return participationIndex, feeAmount, err
 }
