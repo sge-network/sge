@@ -15,7 +15,7 @@ func CreateUpgradeHandler(
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		depositParams := keepers.GovKeeper.GetDepositParams(ctx)
-		depositParams.MinExpeditedDeposit = sdk.NewCoins(sdk.NewCoin("sge", v1.DefaultMinExpeditedDepositTokens))
+		depositParams.MinExpeditedDeposit = sdk.NewCoins(sdk.NewCoin("usge", v1.DefaultMinExpeditedDepositTokens))
 		keepers.GovKeeper.SetDepositParams(ctx, depositParams)
 
 		tallyParams := keepers.GovKeeper.GetTallyParams(ctx)
