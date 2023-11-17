@@ -77,7 +77,7 @@ func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, s
 func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 	var subaccounts []types.GenesisSubaccount
 	k.IterateSubaccounts(ctx, func(subAccountAddress, ownerAddress sdk.AccAddress) (stop bool) {
-		balance, exists := k.GetBalance(ctx, subAccountAddress)
+		balance, exists := k.GetAccountSummary(ctx, subAccountAddress)
 		if !exists {
 			panic("subaccount balance does not exist")
 		}
@@ -96,7 +96,7 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
 	lockedBalances []types.LockedBalance,
 ) (string, error) {
-	moneyToSend, err := sumBalanceUnlocks(ctx, lockedBalances)
+	lockedBalance, err := sumlockedBalance(ctx, lockedBalances)
 	if err != nil {
 		return "", err
 	}
@@ -114,15 +114,15 @@ func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
 	subaccountAccount := k.accountKeeper.NewAccountWithAddress(ctx, subAccAddr)
 	k.accountKeeper.SetAccount(ctx, subaccountAccount)
 
-	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, moneyToSend)
+	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, lockedBalance)
 	if err != nil {
 		return "", sdkerrors.Wrap(err, "unable to send coins")
 	}
 
 	k.SetSubAccountOwner(ctx, subAccAddr, subAccOwnerAddr)
 	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
-	k.SetBalance(ctx, subAccAddr, types.AccountSummary{
-		DepositedAmount: moneyToSend,
+	k.SetAccountSummary(ctx, subAccAddr, types.AccountSummary{
+		DepositedAmount: lockedBalance,
 		SpentAmount:     sdk.ZeroInt(),
 		WithdrawnAmount: sdk.ZeroInt(),
 		LostAmount:      sdk.ZeroInt(),
@@ -140,18 +140,19 @@ func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccoun
 	return nil
 }
 
-// sumBalanceUnlocks sums all the balances to unlock and returns the total amount. It
+// sumlockedBalance sums all the balances to unlock and returns the total amount. It
 // returns an error if any of to unlock times is expired.
-func sumBalanceUnlocks(ctx sdk.Context, balanceUnlocks []types.LockedBalance) (sdkmath.Int, error) {
-	moneyToSend := sdkmath.NewInt(0)
+func sumlockedBalance(ctx sdk.Context, lockedBalances []types.LockedBalance) (sdkmath.Int, error) {
+	lockedBalance := sdkmath.NewInt(0)
 
-	for _, balanceUnlock := range balanceUnlocks {
-		if balanceUnlock.UnlockTS < cast.ToUint64(ctx.BlockTime().Unix()) {
+	for _, lb := range lockedBalances {
+		// return error if balance is unlocked
+		if lb.UnlockTS < cast.ToUint64(ctx.BlockTime().Unix()) {
 			return sdkmath.Int{}, types.ErrUnlockTokenTimeExpired
 		}
 
-		moneyToSend = moneyToSend.Add(balanceUnlock.Amount)
+		lockedBalance = lockedBalance.Add(lb.Amount)
 	}
 
-	return moneyToSend, nil
+	return lockedBalance, nil
 }

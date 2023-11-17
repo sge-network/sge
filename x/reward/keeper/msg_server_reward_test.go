@@ -273,7 +273,7 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 	subAccAddr, found := tApp.SubaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiverAddr))
 	require.True(t, found)
 
-	balance, found := tApp.SubaccountKeeper.GetBalance(ctx, subAccAddr)
+	balance, found := tApp.SubaccountKeeper.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, found)
 
 	require.Equal(t, rewardAmount, balance.DepositedAmount.Int64())

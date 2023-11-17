@@ -80,10 +80,10 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	// we force some money to be spent on the subaccount to correctly test
 	// that if the amount is unlocked but spent, it will not be withdrawable.
 	subAccountAddress := types.NewAddressFromSubaccount(1)
-	subaccountBalance, exists := app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	subaccountBalance, exists := app.SubaccountKeeper.GetAccountSummary(ctx, subAccountAddress)
 	require.True(t, exists)
 	require.NoError(t, subaccountBalance.Spend(sdkmath.NewInt(100)))
-	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
+	app.SubaccountKeeper.SetAccountSummary(ctx, subAccountAddr, subaccountBalance)
 
 	ctx = ctx.WithBlockTime(lockedTime2.Add(1 * time.Second))
 	t.Log("Withdraw unlocked balances, with 2 expires")
@@ -101,10 +101,10 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	require.Equal(t, sdkmath.NewInt(100), balance.Amount)
 
 	t.Log("after unspending the money of the subaccount, the owner will be able to get the money back when withdrawing")
-	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	subaccountBalance, exists = app.SubaccountKeeper.GetAccountSummary(ctx, subAccountAddress)
 	require.True(t, exists)
 	require.NoError(t, subaccountBalance.Unspend(sdkmath.NewInt(100)))
-	app.SubaccountKeeper.SetBalance(ctx, subAccountAddr, subaccountBalance)
+	app.SubaccountKeeper.SetAccountSummary(ctx, subAccountAddr, subaccountBalance)
 	_, err = msgServer.WithdrawUnlockedBalances(sdk.WrapSDKContext(ctx), &types.MsgWithdrawUnlockedBalances{
 		Creator: subaccountOwner.String(),
 	})
@@ -113,7 +113,7 @@ func TestMsgServer_WithdrawUnlockedBalances(t *testing.T) {
 	// check balances
 	balance = app.BankKeeper.GetBalance(ctx, subAccountAddr, "usge")
 	require.Equal(t, sdkmath.NewInt(0), balance.Amount)
-	subaccountBalance, exists = app.SubaccountKeeper.GetBalance(ctx, subAccountAddress)
+	subaccountBalance, exists = app.SubaccountKeeper.GetAccountSummary(ctx, subAccountAddress)
 	require.True(t, exists)
 	require.Equal(t, sdkmath.NewInt(300), subaccountBalance.WithdrawnAmount)
 
@@ -181,7 +181,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 
 	subAccountAddr := types.NewAddressFromSubaccount(1)
 
-	balance, exists := k.GetBalance(ctx, subAccountAddr)
+	balance, exists := k.GetAccountSummary(ctx, subAccountAddr)
 	require.True(t, exists)
 	require.Equal(t, sdkmath.NewInt(0), balance.DepositedAmount)
 	balances := k.GetLockedBalances(ctx, subAccountAddr)
@@ -201,7 +201,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	require.NoError(t, err)
 
 	// Check balance
-	balance, exists = k.GetBalance(ctx, subAccountAddr)
+	balance, exists = k.GetAccountSummary(ctx, subAccountAddr)
 	require.True(t, exists)
 	require.Equal(t, sdkmath.NewInt(123), balance.DepositedAmount)
 	balances = k.GetLockedBalances(ctx, subAccountAddr)

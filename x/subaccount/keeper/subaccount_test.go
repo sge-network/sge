@@ -100,10 +100,10 @@ func TestSetBalances(t *testing.T) {
 	}
 
 	subAccAddr := types.NewAddressFromSubaccount(1)
-	k.SetBalance(ctx, subAccAddr, balance)
+	k.SetAccountSummary(ctx, subAccAddr, balance)
 
 	// Get balance
-	gotBalance, exists := k.GetBalance(ctx, subAccAddr)
+	gotBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	require.Equal(t, balance, gotBalance)
 }

@@ -63,3 +63,24 @@ func (m *AccountSummary) AddLoss(amt sdkmath.Int) error {
 	m.LostAmount = m.LostAmount.Add(amt)
 	return nil
 }
+
+// Withdraw sends deposited amount to withdrawn
+func (m *AccountSummary) Withdraw(amt sdkmath.Int) error {
+	if amt.IsNegative() {
+		return fmt.Errorf("amount is not positive")
+	}
+	if amt.GT(m.Available()) {
+		return fmt.Errorf("amount is greater than available")
+	}
+	m.WithdrawnAmount = m.WithdrawnAmount.Add(amt)
+
+	return nil
+}
+
+// WithdrawableBalance returns withdrawable balance of a subaccount
+func (ac *AccountSummary) WithdrawableBalance(unlockedBalance, bankBalance sdkmath.Int) sdkmath.Int {
+	// calculate withdrawable balance, which is the minimum between the available balance, and
+	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
+	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
+	return sdkmath.MinInt(sdkmath.MinInt(ac.Available(), unlockedBalance), bankBalance)
+}

@@ -19,7 +19,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 		addr := sdk.MustAccAddressFromBech32(acc.Address)
 		k.SetSubAccountOwner(ctx, addr, owner)
 		k.SetLockedBalances(ctx, addr, acc.LockedBalances)
-		k.SetBalance(ctx, addr, acc.Balance)
+		k.SetAccountSummary(ctx, addr, acc.Balance)
 	}
 }
 

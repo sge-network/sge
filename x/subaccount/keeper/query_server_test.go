@@ -10,6 +10,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 	"github.com/sge-network/sge/app/params"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/subaccount/keeper"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -18,6 +19,8 @@ func TestQueryServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 	queryServer := keeper.NewQueryServer(*k)
 
+	subAccOwner := simapp.TestParamUsers["user1"].Address
+	subAccFunder := simapp.TestParamUsers["user1"].Address
 	// setup
 	wantParams := types.DefaultParams()
 	k.SetParams(ctx, wantParams)

@@ -28,7 +28,7 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	balance, exists := q.keeper.GetBalance(ctx, subaccountAddr)
+	balance, exists := q.keeper.GetAccountSummary(ctx, subaccountAddr)
 	if !exists {
 		panic("subaccount exists but balance not found")
 	}

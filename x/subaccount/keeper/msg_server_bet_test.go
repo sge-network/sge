@@ -13,7 +13,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/bank/testutil"
 
 	"github.com/sge-network/sge/app/params"
-	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -56,15 +55,18 @@ var (
 )
 
 var (
-	subAccOwner  = sample.NativeAccAddress()
-	subAccFunder = sample.NativeAccAddress()
-	micro        = sdkmath.NewInt(1_000_000)
-	subAccFunds  = sdkmath.NewInt(10_000).Mul(micro)
-	subAccAddr   = types.NewAddressFromSubaccount(1)
+	micro       = sdkmath.NewInt(1_000_000)
+	subAccFunds = sdkmath.NewInt(10_000).Mul(micro)
+	subAccAddr  = types.NewAddressFromSubaccount(1)
 )
 
 func TestMsgServer_Bet(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	subAccOwner := simapp.TestParamUsers["user2"].Address
+	subAccFunder := simapp.TestParamUsers["user1"].Address
+
+	initialOwnerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
 
 	// do subaccount creation
 	require.NoError(
@@ -94,22 +96,32 @@ func TestMsgServer_Bet(t *testing.T) {
 
 	// start betting using the subaccount
 	betAmt := sdkmath.NewInt(1000).Mul(micro)
+	halfBetAmt := betAmt.Quo(sdkmath.NewInt(2))
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
-		&types.MsgWager{Msg: testBet(t, subAccOwner, betAmt)},
+		&types.MsgWager{
+			Msg:                 testBet(t, subAccOwner, betAmt),
+			MainaccDeductAmount: halfBetAmt,
+			SubaccDeductAmount:  halfBetAmt,
+		},
 	)
 	require.NoError(t, err)
 
-	// check subaccount balance
-	balance, exists := k.GetBalance(ctx, subAccAddr)
+	afterBetOwnerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
+
+	require.Equal(t, initialOwnerBalance.Sub(halfBetAmt).Int64(), afterBetOwnerBalance.Int64())
+
+	// check subaccount accSumm
+	accSumm, exists := k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	betFees := sdkmath.NewInt(100)
 
-	require.Equal(t, balance.SpentAmount, betAmt)
+	require.Equal(t, accSumm.SpentAmount, sdkmath.ZeroInt())
+	require.Equal(t, accSumm.WithdrawnAmount, halfBetAmt)
 
-	t.Run("resolve market – better wins", func(t *testing.T) {
+	t.Run("resolve market – bettor wins", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
-		// resolve the market – better wins
+		// resolve the market – bettor wins
 		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -119,26 +131,26 @@ func TestMsgServer_Bet(t *testing.T) {
 		err := app.BetKeeper.BatchMarketSettlements(ctx)
 		require.NoError(t, err)
 
-		// now we check the subaccount balance
-		balance, exists := k.GetBalance(ctx, subAccAddr)
+		// now we check the subaccount accSumm
+		accSumm, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, sdk.ZeroInt().Add(betFees).String(), balance.SpentAmount.String())
+		require.Equal(t, halfBetAmt.String(), accSumm.WithdrawnAmount.String())
 
 		// now we want the user to have some balance which is the payout
-		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
+		winningAmount := betAmt.Sub(betFees).ToLegacyDec().
+			Mul(sdkmath.LegacyMustNewDecFromStr("4.2")).TruncateInt().
+			Sub(halfBetAmt)
+
+		ownerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
 		require.Equal(t,
-			sdk.NewCoins(
-				sdk.NewCoin(
-					params.DefaultBondDenom,
-					sdkmath.LegacyNewDecFromInt(betAmt.Sub(betFees)).Mul(sdkmath.LegacyMustNewDecFromStr("3.2")).TruncateInt(), // 4.2 - 1 = 3.2
-				)),
-			ownerBalance,
+			initialOwnerBalance.Add(winningAmount).Int64(), // 4.2 - 1 = 3.2
+			ownerBalance.Int64(),
 		)
 	})
-	// resolve the market – better loses
-	t.Run("resolve market – better loses", func(t *testing.T) {
+	// resolve the market – bettor loses
+	t.Run("resolve market – bettor loses", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
-		// resolve the market – better loses
+		// resolve the market – bettor loses
 		app.MarketKeeper.Resolve(ctx, *market, &markettypes.MarketResolutionTicketPayload{
 			UID:            market.UID,
 			ResolutionTS:   uint64(ctx.BlockTime().Unix()) + 10000,
@@ -149,13 +161,17 @@ func TestMsgServer_Bet(t *testing.T) {
 		require.NoError(t, err)
 
 		// now we check the subaccount balance
-		balance, exists := k.GetBalance(ctx, subAccAddr)
+		balance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, sdk.ZeroInt().Add(betFees).String(), balance.SpentAmount.String())
-		require.Equal(t, betAmt.Sub(betFees), balance.LostAmount)
+		require.Equal(t, sdk.ZeroInt(), balance.SpentAmount)
+		require.Equal(t, sdk.ZeroInt(), balance.LostAmount)
+		require.Equal(t, halfBetAmt, balance.WithdrawnAmount)
 		// the owner has no balances
-		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
-		require.Equal(t, sdk.NewCoins(), ownerBalance)
+		ownerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
+		require.Equal(t,
+			initialOwnerBalance.Sub(halfBetAmt).Int64(),
+			ownerBalance.Int64(),
+		)
 	})
 	t.Run("resolve market – refund", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
@@ -170,12 +186,14 @@ func TestMsgServer_Bet(t *testing.T) {
 		require.NoError(t, err)
 
 		// now we check the subaccount balance
-		balance, exists := k.GetBalance(ctx, subAccAddr)
+		balance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
 
+		ownerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
+
 		// the owner balance is zero
-		require.Equal(t, sdk.NewCoins(), app.BankKeeper.GetAllBalances(ctx, subAccOwner))
+		require.Equal(t, initialOwnerBalance.Add(halfBetAmt).Int64(), ownerBalance.Int64())
 	})
 }
 
@@ -230,21 +248,21 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, better sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
+func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
 	ticket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
 		"selected_odds": testSelectedBetOdds,
 		"kyc_data": &sgetypes.KycDataPayload{
 			Approved: true,
-			ID:       better.String(),
+			ID:       bettor.String(),
 		},
 		"all_odds": testBetOdds,
 	})
 	require.NoError(t, err)
 
 	return &bettypes.MsgWager{
-		Creator: better.String(),
+		Creator: bettor.String(),
 		Props: &bettypes.WagerProps{
 			UID:    uuid.NewString(),
 			Amount: amount,

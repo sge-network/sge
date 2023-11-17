@@ -28,6 +28,8 @@ var (
 
 func TestMsgServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+	subAccOwner := simapp.TestParamUsers["user1"].Address
+	subAccFunder := simapp.TestParamUsers["user1"].Address
 
 	// do subaccount creation
 	require.NoError(
@@ -71,7 +73,7 @@ func TestMsgServer(t *testing.T) {
 	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
 	require.NoError(t, err)
 	// check spend
-	subBalance, exists := k.GetBalance(ctx, subAccAddr)
+	subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	require.Equal(t, subBalance.SpentAmount, deposit)
 
@@ -96,7 +98,7 @@ func TestMsgServer(t *testing.T) {
 		err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
 		require.NoError(t, err)
 
-		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 		require.NoError(t, err)
 
@@ -121,7 +123,7 @@ func TestMsgServer(t *testing.T) {
 		err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
 		require.NoError(t, err)
 
-		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 		require.NoError(t, err)
 
@@ -144,7 +146,7 @@ func TestMsgServer(t *testing.T) {
 		err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
 		require.NoError(t, err)
 
-		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 		require.NoError(t, err)
 
@@ -163,7 +165,7 @@ func TestMsgServer(t *testing.T) {
 		require.NoError(t, err)
 
 		// do subaccount balance check
-		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 
 		require.Equal(t, subBalance.SpentAmount.String(), sdkmath.NewInt(131999680).String()) // NOTE: there was a match in the bet + participate fee
@@ -187,7 +189,7 @@ func TestMsgServer(t *testing.T) {
 		err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
 		require.NoError(t, err)
 
-		subBalance, exists := k.GetBalance(ctx, subAccAddr)
+		subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
 		require.NoError(t, err)
 
@@ -201,6 +203,9 @@ func TestMsgServer(t *testing.T) {
 
 func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	subAccOwner := simapp.TestParamUsers["user1"].Address
+	subAccFunder := simapp.TestParamUsers["user1"].Address
 
 	// do subaccount creation
 	require.NoError(
@@ -244,7 +249,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	depResp, err := msgServer.HouseDeposit(sdk.WrapSDKContext(ctx), houseDepositMsg(t, subAccOwner, market.UID, deposit))
 	require.NoError(t, err)
 	// check spend
-	subBalance, exists := k.GetBalance(ctx, subAccAddr)
+	subBalance, exists := k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	require.Equal(t, subBalance.SpentAmount, deposit)
 
@@ -253,7 +258,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	require.NoError(t, err)
 
 	// we expect the balance to be the original one minus participation fee
-	subBalance, exists = k.GetBalance(ctx, subAccAddr)
+	subBalance, exists = k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	require.Equal(t, subBalance.SpentAmount, sdkmath.NewInt(100).Mul(micro)) // all minus participation fee
 	require.Equal(t, subBalance.LostAmount, sdk.ZeroInt())
@@ -273,7 +278,7 @@ func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	err = app.OrderbookKeeper.BatchOrderBookSettlements(ctx)
 	require.NoError(t, err)
 
-	subBalance, exists = k.GetBalance(ctx, subAccAddr)
+	subBalance, exists = k.GetAccountSummary(ctx, subAccAddr)
 	require.True(t, exists)
 	require.NoError(t, err)
 
