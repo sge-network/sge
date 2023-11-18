@@ -28,8 +28,9 @@ var (
 
 func TestMsgServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
-	subAccOwner := simapp.TestParamUsers["user1"].Address
-	subAccFunder := simapp.TestParamUsers["user1"].Address
+
+	subAccOwner := sample.NativeAccAddress()
+	subAccFunder := sample.NativeAccAddress()
 
 	// do subaccount creation
 	require.NoError(
@@ -204,9 +205,8 @@ func TestMsgServer(t *testing.T) {
 func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
-	subAccOwner := simapp.TestParamUsers["user1"].Address
-	subAccFunder := simapp.TestParamUsers["user1"].Address
-
+	subAccOwner := sample.NativeAccAddress()
+	subAccFunder := sample.NativeAccAddress()
 	// do subaccount creation
 	require.NoError(
 		t,

@@ -147,6 +147,7 @@ func TestMsgServer_Bet(t *testing.T) {
 			ownerBalance.Int64(),
 		)
 	})
+
 	// resolve the market – bettor loses
 	t.Run("resolve market – bettor loses", func(t *testing.T) {
 		ctx, _ := ctx.CacheContext()
