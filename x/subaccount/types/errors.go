@@ -13,4 +13,5 @@ var (
 	ErrNothingToWithdraw      = sdkerrors.Register(ModuleName, 4, "nothing to withdraw")
 	ErrInvalidLockedBalance   = sdkerrors.Register(ModuleName, 5, "invalid locked balance")
 	ErrSendCoinError          = sdkerrors.Register(ModuleName, 6, "send coin error")
+	ErrWithdrawLocked         = sdkerrors.Register(ModuleName, 7, "withdrawal of locked coins failed")
 )

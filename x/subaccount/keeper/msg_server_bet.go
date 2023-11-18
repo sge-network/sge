@@ -41,15 +41,23 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 
 	accSummary, unlockedBalance, _ := k.keeper.getAccountSummary(ctx, subAccAddr)
 	if unlockedBalance.GTE(msg.SubaccDeductAmount) {
-		k.keeper.bankKeeper.SendCoins(ctx,
+		if err := k.keeper.bankKeeper.SendCoins(ctx,
 			subAccAddr,
 			sdk.MustAccAddressFromBech32(msg.Msg.Creator),
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, msg.SubaccDeductAmount)))
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, msg.SubaccDeductAmount))); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
 	} else {
 		lockedAmountToWithdraw := msg.SubaccDeductAmount.Sub(unlockedBalance)
-		accSummary.Withdraw(lockedAmountToWithdraw)
-		k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, subAccOwner,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw)))
+
+		if err := accSummary.Withdraw(lockedAmountToWithdraw); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
+		}
+
+		if err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, subAccOwner,
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw))); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
 
 		// calculate locked balances
 		lockedBalances := k.keeper.GetLockedBalances(ctx, subAccAddr)
@@ -71,7 +79,6 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 
 				lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
 			}
-
 		}
 
 		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {

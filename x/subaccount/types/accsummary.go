@@ -24,63 +24,63 @@ func (lb *LockedBalance) Validate() error {
 }
 
 // Available reports the coins that are available in the subaccount.
-func (m *AccountSummary) Available() sdkmath.Int {
-	return m.DepositedAmount.
-		Sub(m.WithdrawnAmount).
-		Sub(m.SpentAmount).
-		Sub(m.LostAmount)
+func (as *AccountSummary) Available() sdkmath.Int {
+	return as.DepositedAmount.
+		Sub(as.WithdrawnAmount).
+		Sub(as.SpentAmount).
+		Sub(as.LostAmount)
 }
 
 // Spend modifies the spent amount of subaccount balance according to the spent value.
-func (m *AccountSummary) Spend(amt sdkmath.Int) error {
+func (as *AccountSummary) Spend(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
-	if amt.GT(m.Available()) {
+	if amt.GT(as.Available()) {
 		return fmt.Errorf("amount is greater than available")
 	}
-	m.SpentAmount = m.SpentAmount.Add(amt)
+	as.SpentAmount = as.SpentAmount.Add(amt)
 	return nil
 }
 
 // Unspend modifies the spent amount of subaccount balance according to the undpent value.
-func (m *AccountSummary) Unspend(amt sdkmath.Int) error {
+func (as *AccountSummary) Unspend(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
-	if amt.GT(m.SpentAmount) {
+	if amt.GT(as.SpentAmount) {
 		return fmt.Errorf("amount is greater than spent")
 	}
-	m.SpentAmount = m.SpentAmount.Sub(amt)
+	as.SpentAmount = as.SpentAmount.Sub(amt)
 	return nil
 }
 
 // AddLoss adds to the lost amout of subaccount balance after losing the bet.
-func (m *AccountSummary) AddLoss(amt sdkmath.Int) error {
+func (as *AccountSummary) AddLoss(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
-	m.LostAmount = m.LostAmount.Add(amt)
+	as.LostAmount = as.LostAmount.Add(amt)
 	return nil
 }
 
 // Withdraw sends deposited amount to withdrawn
-func (m *AccountSummary) Withdraw(amt sdkmath.Int) error {
+func (as *AccountSummary) Withdraw(amt sdkmath.Int) error {
 	if amt.IsNegative() {
 		return fmt.Errorf("amount is not positive")
 	}
-	if amt.GT(m.Available()) {
+	if amt.GT(as.Available()) {
 		return fmt.Errorf("amount is greater than available")
 	}
-	m.WithdrawnAmount = m.WithdrawnAmount.Add(amt)
+	as.WithdrawnAmount = as.WithdrawnAmount.Add(amt)
 
 	return nil
 }
 
 // WithdrawableBalance returns withdrawable balance of a subaccount
-func (ac *AccountSummary) WithdrawableBalance(unlockedBalance, bankBalance sdkmath.Int) sdkmath.Int {
+func (as *AccountSummary) WithdrawableBalance(unlockedBalance, bankBalance sdkmath.Int) sdkmath.Int {
 	// calculate withdrawable balance, which is the minimum between the available balance, and
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
 	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
-	return sdkmath.MinInt(sdkmath.MinInt(ac.Available(), unlockedBalance), bankBalance)
+	return sdkmath.MinInt(sdkmath.MinInt(as.Available(), unlockedBalance), bankBalance)
 }

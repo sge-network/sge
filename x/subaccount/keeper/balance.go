@@ -145,7 +145,10 @@ func (k Keeper) withdraw(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr s
 		return types.ErrNothingToWithdraw
 	}
 
-	summary.Withdraw(withdrawableBalance)
+	if err := summary.Withdraw(withdrawableBalance); err != nil {
+		return err
+	}
+
 	k.SetAccountSummary(ctx, subAccAddr, summary)
 
 	err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
