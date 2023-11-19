@@ -5,7 +5,6 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -27,26 +26,13 @@ func (k msgServer) TopUp(goCtx context.Context, msg *types.MsgTopUp) (*types.Msg
 func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.MsgWithdrawUnlockedBalances) (*types.MsgWithdrawUnlockedBalancesResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	creatorAddr := sdk.MustAccAddressFromBech32(msg.Creator)
-	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, creatorAddr)
+	ownerAddr := sdk.MustAccAddressFromBech32(msg.Creator)
+	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, ownerAddr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	balance, unlockedBalance, bankBalance := k.keeper.getBalances(ctx, subAccAddr)
-
-	// calculate withdrawable balance, which is the minimum between the available balance, and
-	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
-	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
-	withdrawableBalance := sdk.MinInt(sdk.MinInt(balance.Available(), unlockedBalance), bankBalance.Amount)
-	if withdrawableBalance.IsZero() {
-		return nil, types.ErrNothingToWithdraw
-	}
-
-	balance.WithdrawnAmount = balance.WithdrawnAmount.Add(withdrawableBalance)
-	k.keeper.SetBalance(ctx, subAccAddr, balance)
-
-	err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, creatorAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
+	err := k.keeper.withdraw(ctx, subAccAddr, ownerAddr)
 	if err != nil {
 		return nil, err
 	}

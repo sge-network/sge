@@ -3,10 +3,14 @@ package keeper
 import (
 	"context"
 
+	sdkerrors "cosmossdk.io/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/app/params"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -27,25 +31,72 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, err
 	}
 
-	// here we swap the original creator with the subaccount address
-	bet.Creator = subAccAddr.String()
-
-	// make subaccount balance adjustments
-	balance, exists := k.keeper.GetBalance(ctx, subAccAddr)
-	if !exists {
-		panic("state corruption: subaccount balance not found")
+	mainAccBalance := k.keeper.bankKeeper.GetBalance(
+		ctx,
+		sdk.MustAccAddressFromBech32(bet.Creator),
+		params.DefaultBondDenom)
+	if mainAccBalance.Amount.LT(msg.MainaccDeductAmount) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
-	err = balance.Spend(bet.Amount)
-	if err != nil {
-		return nil, err
+	accSummary, unlockedBalance, _ := k.keeper.getAccountSummary(ctx, subAccAddr)
+	if unlockedBalance.GTE(msg.SubaccDeductAmount) {
+		if err := k.keeper.bankKeeper.SendCoins(ctx,
+			subAccAddr,
+			sdk.MustAccAddressFromBech32(msg.Msg.Creator),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, msg.SubaccDeductAmount))); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
+	} else {
+		lockedAmountToWithdraw := msg.SubaccDeductAmount.Sub(unlockedBalance)
+
+		if err := accSummary.Withdraw(lockedAmountToWithdraw); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
+		}
+
+		if err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, subAccOwner,
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw))); err != nil {
+			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
+
+		// calculate locked balances
+		lockedBalances := k.keeper.GetLockedBalances(ctx, subAccAddr)
+		updatedLockedBalances := []types.LockedBalance{}
+		for _, lb := range lockedBalances {
+			if lockedAmountToWithdraw.LTE(sdkmath.ZeroInt()) {
+				break
+			}
+
+			if lb.Amount.GT(lockedAmountToWithdraw) {
+				lb.Amount = lb.Amount.Sub(lockedAmountToWithdraw)
+				updatedLockedBalances = append(updatedLockedBalances, lb)
+
+				lockedAmountToWithdraw = sdkmath.ZeroInt()
+				break
+			} else {
+				lb.Amount = sdkmath.ZeroInt()
+				updatedLockedBalances = append(updatedLockedBalances, lb)
+
+				lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
+			}
+		}
+
+		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
+			return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in sub account")
+		}
+
+		k.keeper.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
 	}
+
+	// if err := accSummary.Spend(msg.SubaccDeductAmount); err != nil {
+	// 	return nil, err
+	// }
 
 	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
 		return nil, err
 	}
 
-	k.keeper.SetBalance(ctx, subAccAddr, balance)
+	k.keeper.SetAccountSummary(ctx, subAccAddr, accSummary)
 
 	msg.EmitEvent(&ctx, subAccOwner.String())
 

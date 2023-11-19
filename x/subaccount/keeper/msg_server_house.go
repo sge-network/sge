@@ -20,7 +20,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// get subaccount balance, and check if it can spend
-	balance, exists := k.keeper.GetBalance(ctx, subAccAddr)
+	balance, exists := k.keeper.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount balance not found")
 	}
@@ -48,7 +48,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// update subaccount balance
-	k.keeper.SetBalance(ctx, subAccAddr, balance)
+	k.keeper.SetAccountSummary(ctx, subAccAddr, balance)
 
 	// emit event
 	msg.EmitEvent(&ctx, subAccAddr.String(), participationIndex, feeAmount)
@@ -70,7 +70,7 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	subAccountBalance, exists := k.keeper.GetBalance(ctx, subAccAddr)
+	subAccountBalance, exists := k.keeper.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount balance not found")
 	}
@@ -90,7 +90,7 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 		panic("data corruption: it must be possible to unspend an house withdrawal")
 	}
 
-	k.keeper.SetBalance(ctx, subAccAddr, subAccountBalance)
+	k.keeper.SetAccountSummary(ctx, subAccAddr, subAccountBalance)
 
 	msg.Msg.EmitEvent(&ctx, subAccAddr.String(), id)
 

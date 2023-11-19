@@ -35,6 +35,15 @@ func (msg *MsgWager) ValidateBasic() error {
 	if msg.Msg == nil {
 		return errors.ErrInvalidRequest.Wrap("msg is nil")
 	}
+
+	if msg.MainaccDeductAmount.IsNil() || msg.SubaccDeductAmount.IsNil() {
+		return errors.ErrInvalidRequest.Wrap("main account and subaccount deduction should be set")
+	}
+
+	if !msg.MainaccDeductAmount.Add(msg.SubaccDeductAmount).Equal(msg.Msg.Props.Amount) {
+		return errors.ErrInvalidRequest.Wrap("sum of main and sub account deduction should be equal to bet amount")
+	}
+
 	return msg.Msg.ValidateBasic()
 }
 
