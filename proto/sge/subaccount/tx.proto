@@ -2,8 +2,8 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "sge/subaccount/balance.proto";
-import "sge/bet/tx.proto";
 import "sge/house/tx.proto";
+import "sge/bet/tx.proto";
 import "gogoproto/gogo.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
@@ -78,7 +78,12 @@ message MsgWithdrawUnlockedBalancesResponse {}
 
 // MsgWager wraps the MsgWager message. We need it in order not to have
 // double interface registration conflicts.
-message MsgWager { sgenetwork.sge.bet.MsgWager msg = 1; }
+message MsgWager {
+  // creator is the subaccount owner.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+}
 
 // MsgWagerResponse wraps the MsgWagerResponse message. We need it in order not
 // to have double interface registration conflicts.

@@ -19,43 +19,50 @@ import (
 func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	subAccOwner := sdk.MustAccAddressFromBech32(msg.Msg.Creator)
+	subAccOwner := sdk.MustAccAddressFromBech32(msg.Creator)
 	// find subaccount
 	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, subAccOwner)
 	if !exists {
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
-	bet, oddsMap, subAccPayload, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props, true)
+	payload := &types.SubAccWagerTicketPayload{}
+	err := k.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload)
+	if err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	if msg.Creator != payload.Msg.Creator {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "message creator should be the same as the sub message creator%s", msg.Creator)
+	}
+
+	bet, oddsMap, err := k.keeper.betKeeper.PrepareBetObject(ctx, payload.Msg.Creator, payload.Msg.Props)
 	if err != nil {
 		return nil, err
 	}
-	if subAccPayload.MainaccDeductAmount.IsNil() || subAccPayload.SubaccDeductAmount.IsNil() {
-		return nil, sdkerrtypes.ErrInvalidRequest.Wrap("main account and subaccount deduction should be set")
-	}
 
-	if !subAccPayload.MainaccDeductAmount.Add(subAccPayload.SubaccDeductAmount).Equal(msg.Msg.Props.Amount) {
-		return nil, sdkerrtypes.ErrInvalidRequest.Wrap("sum of main and sub account deduction should be equal to bet amount")
+	if err := payload.Validate(bet.Amount); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
 	mainAccBalance := k.keeper.bankKeeper.GetBalance(
 		ctx,
 		sdk.MustAccAddressFromBech32(bet.Creator),
 		params.DefaultBondDenom)
-	if mainAccBalance.Amount.LT(subAccPayload.MainaccDeductAmount) {
+	if mainAccBalance.Amount.LT(payload.MainaccDeductAmount) {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
 	accSummary, unlockedBalance, _ := k.keeper.getAccountSummary(ctx, subAccAddr)
-	if unlockedBalance.GTE(subAccPayload.SubaccDeductAmount) {
+	if unlockedBalance.GTE(payload.SubaccDeductAmount) {
 		if err := k.keeper.bankKeeper.SendCoins(ctx,
 			subAccAddr,
-			sdk.MustAccAddressFromBech32(msg.Msg.Creator),
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccPayload.SubaccDeductAmount))); err != nil {
+			sdk.MustAccAddressFromBech32(msg.Creator),
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, payload.SubaccDeductAmount))); err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
 		}
 	} else {
-		lockedAmountToWithdraw := subAccPayload.SubaccDeductAmount.Sub(unlockedBalance)
+		lockedAmountToWithdraw := payload.SubaccDeductAmount.Sub(unlockedBalance)
 
 		if err := accSummary.Withdraw(lockedAmountToWithdraw); err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
@@ -101,9 +108,9 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 
 	k.keeper.SetAccountSummary(ctx, subAccAddr, accSummary)
 
-	msg.EmitEvent(&ctx, subAccOwner.String())
+	msg.EmitEvent(&ctx, payload.Msg, subAccOwner.String())
 
 	return &types.MsgWagerResponse{
-		Response: &bettypes.MsgWagerResponse{Props: msg.Msg.Props},
+		Response: &bettypes.MsgWagerResponse{Props: payload.Msg.Props},
 	}, nil
 }

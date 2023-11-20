@@ -22,20 +22,4 @@ message WagerTicketPayload {
   MetaData meta = 5 [ (gogoproto.nullable) = false ];
   // context contains the data from services and just for processing purpose.
   string context = 6;
-  // subacc_ticket contains materials for the subaccount module for wager
-  SubAccWagerTicketPayload subacc_ticket = 7 [ (gogoproto.nullable) = true ];
-}
-
-// SubAccWagerTicketPayload indicates data of subaccount wager ticket.
-message SubAccWagerTicketPayload {
-  // mainacc_deduct_amount is amount to be deducted from main account
-  string mainacc_deduct_amount = 1 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false
-  ];
-  // subacc_deduct_amount is amount to be deducted from sub account
-  string subacc_deduct_amount = 2 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false
-  ];
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
@@ -81,11 +82,7 @@ func TestMsgServer(t *testing.T) {
 
 	// place bet
 	betMsgServer := betmodulekeeper.NewMsgServerImpl(*app.BetKeeper)
-	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds,
-		&bettypes.SubAccWagerTicketPayload{
-			MainaccDeductAmount: sdkmath.ZeroInt(),
-			SubaccDeductAmount:  bettor1Funds,
-		}))
+	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBetMsgWager(t, bettor1, bettor1Funds))
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()
@@ -342,5 +339,28 @@ func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdkmath
 
 	return &types.MsgHouseDeposit{
 		Msg: inputDeposit,
+	}
+}
+
+func testBetMsgWager(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
+	betTicket, err := createJwtTicket(jwt.MapClaims{
+		"exp":           9999999999,
+		"iat":           7777777777,
+		"selected_odds": testSelectedBetOdds,
+		"kyc_data": &sgetypes.KycDataPayload{
+			Approved: true,
+			ID:       bettor.String(),
+		},
+		"all_odds": testBetOdds,
+	})
+	require.NoError(t, err)
+
+	return &bettypes.MsgWager{
+		Creator: bettor.String(),
+		Props: &bettypes.WagerProps{
+			UID:    uuid.NewString(),
+			Amount: amount,
+			Ticket: betTicket,
+		},
 	}
 }

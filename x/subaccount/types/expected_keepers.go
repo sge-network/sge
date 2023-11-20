@@ -13,8 +13,7 @@ import (
 
 // BetKeeper defines the expected interface needed to retrieve or set bets.
 type BetKeeper interface {
-	PrepareBetObject(ctx sdk.Context, creator string, props *bettypes.WagerProps, isSubAcc bool,
-	) (*bettypes.Bet, map[string]*bettypes.BetOddsCompact, *bettypes.SubAccWagerTicketPayload, error)
+	PrepareBetObject(ctx sdk.Context, creator string, props *bettypes.WagerProps) (*bettypes.Bet, map[string]*bettypes.BetOddsCompact, error)
 	Wager(ctx sdk.Context, bet *bettypes.Bet, betOdds map[string]*bettypes.BetOddsCompact) error
 }
 

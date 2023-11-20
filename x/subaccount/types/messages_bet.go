@@ -5,6 +5,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/utils"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
 const (
@@ -14,6 +15,14 @@ const (
 
 var _ sdk.Msg = &MsgWager{}
 
+// NewMsgWager returns a MsgWager using given data
+func NewMsgWager(creator, ticket string) *MsgWager {
+	return &MsgWager{
+		Creator: creator,
+		Ticket:  ticket,
+	}
+}
+
 // Route returns the module's message router key.
 func (*MsgWager) Route() string { return RouterKey }
 
@@ -21,7 +30,11 @@ func (*MsgWager) Route() string { return RouterKey }
 func (*MsgWager) Type() string { return typeMsgWager }
 
 func (msg *MsgWager) GetSigners() []sdk.AccAddress {
-	return msg.Msg.GetSigners()
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
 }
 
 // GetSignBytes returns sortJson form of its message
@@ -32,20 +45,20 @@ func (msg *MsgWager) GetSignBytes() []byte {
 
 // ValidateBasic validates basic constraints of original msgWager of bet module.
 func (msg *MsgWager) ValidateBasic() error {
-	if msg.Msg == nil {
-		return errors.ErrInvalidRequest.Wrap("msg is nil")
+	if msg.Ticket == "" {
+		return errors.ErrInvalidRequest.Wrap("ticket is nil")
 	}
 
-	return msg.Msg.ValidateBasic()
+	return nil
 }
 
 // EmitEvent emits the event for the message success.
-func (msg *MsgWager) EmitEvent(ctx *sdk.Context, accOwnerAddr string) {
+func (msg *MsgWager) EmitEvent(ctx *sdk.Context, wagerMsg *bettypes.MsgWager, accOwnerAddr string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
-	emitter.AddMsg(typeMsgWager, msg.Msg.Creator,
-		sdk.NewAttribute(attributeKeyBetCreator, msg.Msg.Creator),
+	emitter.AddMsg(typeMsgWager, wagerMsg.Creator,
+		sdk.NewAttribute(attributeKeyBetCreator, wagerMsg.Creator),
 		sdk.NewAttribute(attributeKeyBetCreatorOwner, accOwnerAddr),
-		sdk.NewAttribute(attributeKeyBetUID, msg.Msg.Props.UID),
+		sdk.NewAttribute(attributeKeyBetUID, wagerMsg.Props.UID),
 	)
 	emitter.Emit()
 }

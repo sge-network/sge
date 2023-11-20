@@ -100,12 +100,7 @@ func TestMsgServer_Bet(t *testing.T) {
 
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
-		&types.MsgWager{
-			Msg: testBet(t, subAccOwner, betAmt, &bettypes.SubAccWagerTicketPayload{
-				MainaccDeductAmount: halfBetAmt,
-				SubaccDeductAmount:  halfBetAmt,
-			}),
-		},
+		testMsgWager(t, subAccOwner, betAmt, halfBetAmt, halfBetAmt),
 	)
 	require.NoError(t, err)
 
@@ -251,8 +246,8 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int, subAccPayload *bettypes.SubAccWagerTicketPayload) *bettypes.MsgWager {
-	ticket, err := createJwtTicket(jwt.MapClaims{
+func testMsgWager(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int, mainAccDeduct, subAccDeduct sdkmath.Int) *types.MsgWager {
+	betTicket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
 		"selected_odds": testSelectedBetOdds,
@@ -260,17 +255,28 @@ func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int, subAccPayl
 			Approved: true,
 			ID:       bettor.String(),
 		},
-		"all_odds":      testBetOdds,
-		"subacc_ticket": subAccPayload,
+		"all_odds": testBetOdds,
 	})
 	require.NoError(t, err)
 
-	return &bettypes.MsgWager{
-		Creator: bettor.String(),
-		Props: &bettypes.WagerProps{
-			UID:    uuid.NewString(),
-			Amount: amount,
-			Ticket: ticket,
+	subAccTicket, err := createJwtTicket(jwt.MapClaims{
+		"exp": 9999999999,
+		"iat": 7777777777,
+		"msg": bettypes.MsgWager{
+			Creator: bettor.String(),
+			Props: &bettypes.WagerProps{
+				UID:    uuid.NewString(),
+				Amount: amount,
+				Ticket: betTicket,
+			},
 		},
+		"mainacc_deduct_amount": mainAccDeduct,
+		"subacc_deduct_amount":  subAccDeduct,
+	})
+	require.NoError(t, err)
+
+	return &types.MsgWager{
+		Creator: bettor.String(),
+		Ticket:  subAccTicket,
 	}
 }
