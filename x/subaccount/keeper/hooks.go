@@ -19,59 +19,6 @@ var _ orderbooktypes.OrderBookHooks = Hooks{}
 // Create new distribution hooks
 func (k Keeper) Hooks() Hooks { return Hooks{k} }
 
-// AfterBettorWin is subaccount module hook for subaccount bettor winning.
-func (h Hooks) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit sdkmath.Int) {
-	balance, exists := h.k.GetAccountSummary(ctx, bettor)
-	if !exists {
-		return
-	}
-	err := balance.Unspend(originalAmount)
-	if err != nil {
-		panic(err)
-	}
-	// send profits to subaccount owner
-	owner, exists := h.k.GetSubAccountOwner(ctx, bettor)
-	if !exists {
-		panic("subaccount owner not found")
-	}
-	err = h.k.bankKeeper.SendCoins(ctx, bettor, owner, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, profit)))
-	if err != nil {
-		panic(err)
-	}
-	h.k.SetAccountSummary(ctx, bettor, balance)
-}
-
-// AfterBettorLoss is subaccount module hook for subaccount bettor loss.
-func (h Hooks) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount sdkmath.Int) {
-	balance, exists := h.k.GetAccountSummary(ctx, bettor)
-	if !exists {
-		return
-	}
-	err := balance.Unspend(originalAmount)
-	if err != nil {
-		panic(err)
-	}
-	err = balance.AddLoss(originalAmount)
-	if err != nil {
-		panic(err)
-	}
-	h.k.SetAccountSummary(ctx, bettor, balance)
-}
-
-// AfterBettorRefund is subaccount module hook for subaccount bettor refund.
-func (h Hooks) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee sdkmath.Int) {
-	balance, exists := h.k.GetAccountSummary(ctx, bettor)
-	if !exists {
-		return
-	}
-	totalUnspent := originalAmount.Add(fee)
-	err := balance.Unspend(totalUnspent)
-	if err != nil {
-		panic(err)
-	}
-	h.k.SetAccountSummary(ctx, bettor, balance)
-}
-
 // AfterHouseWin is subaccount module hook for house winning over subbacount.
 func (h Hooks) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdkmath.Int) {
 	// update balance
