@@ -63,6 +63,10 @@ var (
 func TestMsgServer_Bet(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
+	parm := k.GetParams(ctx)
+	parm.WagerEnabled = true
+	k.SetParams(ctx, parm)
+
 	subAccOwner := simapp.TestParamUsers["user2"].Address
 	subAccFunder := simapp.TestParamUsers["user1"].Address
 

@@ -31,6 +31,10 @@ var (
 func TestMsgServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
+	parm := k.GetParams(ctx)
+	parm.DepositEnabled = true
+	k.SetParams(ctx, parm)
+
 	subAccOwner := sample.NativeAccAddress()
 	subAccFunder := sample.NativeAccAddress()
 
@@ -206,6 +210,10 @@ func TestMsgServer(t *testing.T) {
 
 func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	parm := k.GetParams(ctx)
+	parm.DepositEnabled = true
+	k.SetParams(ctx, parm)
 
 	subAccOwner := sample.NativeAccAddress()
 	subAccFunder := sample.NativeAccAddress()
