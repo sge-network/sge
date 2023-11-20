@@ -19,6 +19,10 @@ import (
 func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	if !k.keeper.GetWagerEnabled(ctx) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "currently the subacount wager tx is not enabled")
+	}
+
 	subAccOwner := sdk.MustAccAddressFromBech32(msg.Creator)
 	// find subaccount
 	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, subAccOwner)
