@@ -26,29 +26,36 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
-	bet, oddsMap, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props)
+	bet, oddsMap, subAccPayload, err := k.keeper.betKeeper.PrepareBetObject(ctx, msg.Msg.Creator, msg.Msg.Props, true)
 	if err != nil {
 		return nil, err
+	}
+	if subAccPayload.MainaccDeductAmount.IsNil() || subAccPayload.SubaccDeductAmount.IsNil() {
+		return nil, sdkerrtypes.ErrInvalidRequest.Wrap("main account and subaccount deduction should be set")
+	}
+
+	if !subAccPayload.MainaccDeductAmount.Add(subAccPayload.SubaccDeductAmount).Equal(msg.Msg.Props.Amount) {
+		return nil, sdkerrtypes.ErrInvalidRequest.Wrap("sum of main and sub account deduction should be equal to bet amount")
 	}
 
 	mainAccBalance := k.keeper.bankKeeper.GetBalance(
 		ctx,
 		sdk.MustAccAddressFromBech32(bet.Creator),
 		params.DefaultBondDenom)
-	if mainAccBalance.Amount.LT(msg.MainaccDeductAmount) {
+	if mainAccBalance.Amount.LT(subAccPayload.MainaccDeductAmount) {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
 	accSummary, unlockedBalance, _ := k.keeper.getAccountSummary(ctx, subAccAddr)
-	if unlockedBalance.GTE(msg.SubaccDeductAmount) {
+	if unlockedBalance.GTE(subAccPayload.SubaccDeductAmount) {
 		if err := k.keeper.bankKeeper.SendCoins(ctx,
 			subAccAddr,
 			sdk.MustAccAddressFromBech32(msg.Msg.Creator),
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, msg.SubaccDeductAmount))); err != nil {
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAccPayload.SubaccDeductAmount))); err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
 		}
 	} else {
-		lockedAmountToWithdraw := msg.SubaccDeductAmount.Sub(unlockedBalance)
+		lockedAmountToWithdraw := subAccPayload.SubaccDeductAmount.Sub(unlockedBalance)
 
 		if err := accSummary.Withdraw(lockedAmountToWithdraw); err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
@@ -87,10 +94,6 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 
 		k.keeper.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
 	}
-
-	// if err := accSummary.Spend(msg.SubaccDeductAmount); err != nil {
-	// 	return nil, err
-	// }
 
 	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
 		return nil, err

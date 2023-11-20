@@ -171,23 +171,28 @@ func (k Keeper) GetSettledBets(ctx sdk.Context) (list []types.SettledBet, err er
 	return
 }
 
-func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.WagerProps) (*types.Bet, map[string]*types.BetOddsCompact, error) {
+func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.WagerProps, isSubAcc bool,
+) (*types.Bet, map[string]*types.BetOddsCompact, *types.SubAccWagerTicketPayload, error) {
 	// Check if the value already exists
 	_, isFound := k.GetBetID(ctx, props.UID)
 	if isFound {
-		return nil, nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", props.UID)
+		return nil, nil, nil, sdkerrors.Wrapf(types.ErrDuplicateUID, "%s", props.UID)
 	}
 
 	payload := &types.WagerTicketPayload{}
 	err := k.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), props.Ticket, &payload)
 	if err != nil {
-		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+		return nil, nil, nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	if isSubAcc && payload.SubaccTicket == nil {
+		return nil, nil, nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "subaccount bet ticket should not have sub account info")
 	}
 
 	if err = payload.Validate(creator); err != nil {
-		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
+		return nil, nil, nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
 	bet := types.NewBet(creator, props, payload.SelectedOdds, payload.Meta)
-	return bet, payload.OddsMap(), nil
+	return bet, payload.OddsMap(), payload.SubaccTicket, nil
 }

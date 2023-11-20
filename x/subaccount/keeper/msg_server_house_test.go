@@ -16,6 +16,7 @@ import (
 	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -80,7 +81,11 @@ func TestMsgServer(t *testing.T) {
 
 	// place bet
 	betMsgServer := betmodulekeeper.NewMsgServerImpl(*app.BetKeeper)
-	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds))
+	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds,
+		&bettypes.SubAccWagerTicketPayload{
+			MainaccDeductAmount: sdkmath.ZeroInt(),
+			SubaccDeductAmount:  bettor1Funds,
+		}))
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()

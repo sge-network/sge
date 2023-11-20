@@ -97,12 +97,14 @@ func TestMsgServer_Bet(t *testing.T) {
 	// start betting using the subaccount
 	betAmt := sdkmath.NewInt(1000).Mul(micro)
 	halfBetAmt := betAmt.Quo(sdkmath.NewInt(2))
+
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
 		&types.MsgWager{
-			Msg:                 testBet(t, subAccOwner, betAmt),
-			MainaccDeductAmount: halfBetAmt,
-			SubaccDeductAmount:  halfBetAmt,
+			Msg: testBet(t, subAccOwner, betAmt, &bettypes.SubAccWagerTicketPayload{
+				MainaccDeductAmount: halfBetAmt,
+				SubaccDeductAmount:  halfBetAmt,
+			}),
 		},
 	)
 	require.NoError(t, err)
@@ -249,7 +251,7 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
+func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int, subAccPayload *bettypes.SubAccWagerTicketPayload) *bettypes.MsgWager {
 	ticket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
@@ -258,7 +260,8 @@ func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.
 			Approved: true,
 			ID:       bettor.String(),
 		},
-		"all_odds": testBetOdds,
+		"all_odds":      testBetOdds,
+		"subacc_ticket": subAccPayload,
 	})
 	require.NoError(t, err)
 

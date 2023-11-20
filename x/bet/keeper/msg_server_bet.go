@@ -14,7 +14,7 @@ func (k msgServer) Wager(
 ) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	bet, odsMap, err := k.PrepareBetObject(ctx, msg.Creator, msg.Props)
+	bet, odsMap, _, err := k.PrepareBetObject(ctx, msg.Creator, msg.Props, false)
 	if err != nil {
 		return nil, err
 	}
