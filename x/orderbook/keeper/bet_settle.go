@@ -27,8 +27,6 @@ func (k Keeper) RefundBettor(
 		return err
 	}
 
-	k.hooks.AfterBettorRefund(ctx, bettorAddress, betAmount, betFee)
-
 	return nil
 }
 
@@ -73,8 +71,6 @@ func (k Keeper) BettorWins(
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
-	k.hooks.AfterBettorWin(ctx, bettorAddress, betAmount, payoutProfit)
-
 	return nil
 }
 
@@ -114,8 +110,6 @@ func (k Keeper) BettorLoses(
 		)
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
-
-	k.hooks.AfterBettorLoss(ctx, bettorAddress, betAmount)
 
 	return nil
 }

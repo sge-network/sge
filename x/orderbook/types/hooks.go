@@ -15,27 +15,6 @@ func NewMultiOrderBookHooks(hooks ...OrderBookHooks) MultiOrderBookHooks {
 	return hooks
 }
 
-// AfterBettorWin registers all of hooks for this method.
-func (h MultiOrderBookHooks) AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit sdkmath.Int) {
-	for i := range h {
-		h[i].AfterBettorWin(ctx, bettor, originalAmount, profit)
-	}
-}
-
-// AfterBettorLoss registers all of hooks for this method.
-func (h MultiOrderBookHooks) AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount sdkmath.Int) {
-	for i := range h {
-		h[i].AfterBettorLoss(ctx, bettor, originalAmount)
-	}
-}
-
-// AfterBettorRefund registers all of hooks for this method.
-func (h MultiOrderBookHooks) AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee sdkmath.Int) {
-	for i := range h {
-		h[i].AfterBettorRefund(ctx, bettor, originalAmount, fee)
-	}
-}
-
 // AfterHouseWin registers all of hooks for this method.
 func (h MultiOrderBookHooks) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdkmath.Int) {
 	for i := range h {

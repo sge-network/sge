@@ -5,6 +5,7 @@ import (
 
 	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -12,6 +13,10 @@ import (
 
 func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposit) (*types.MsgHouseDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	if !k.keeper.GetDepositEnabled(ctx) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "currently the subacount deposit tx is not enabled")
+	}
 
 	// check if subaccount exists
 	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))

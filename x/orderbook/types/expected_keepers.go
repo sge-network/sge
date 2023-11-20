@@ -80,10 +80,6 @@ type FeeGrantKeeper interface {
 
 // OrderBookHooks event hooks for orderbook methods.
 type OrderBookHooks interface {
-	AfterBettorWin(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, profit sdkmath.Int)
-	AfterBettorLoss(ctx sdk.Context, bettor sdk.AccAddress, originalAmount sdkmath.Int)
-	AfterBettorRefund(ctx sdk.Context, bettor sdk.AccAddress, originalAmount, fee sdkmath.Int)
-
 	AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdkmath.Int)
 	AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt sdkmath.Int)
 	AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount sdkmath.Int)

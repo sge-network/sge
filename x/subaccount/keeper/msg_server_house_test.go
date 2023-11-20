@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
@@ -16,6 +17,7 @@ import (
 	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -28,6 +30,10 @@ var (
 
 func TestMsgServer(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	parm := k.GetParams(ctx)
+	parm.DepositEnabled = true
+	k.SetParams(ctx, parm)
 
 	subAccOwner := sample.NativeAccAddress()
 	subAccFunder := sample.NativeAccAddress()
@@ -80,7 +86,7 @@ func TestMsgServer(t *testing.T) {
 
 	// place bet
 	betMsgServer := betmodulekeeper.NewMsgServerImpl(*app.BetKeeper)
-	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBet(t, bettor1, bettor1Funds))
+	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBetMsgWager(t, bettor1, bettor1Funds))
 	require.NoError(t, err)
 
 	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()
@@ -204,6 +210,10 @@ func TestMsgServer(t *testing.T) {
 
 func TestHouseWithdrawal_MarketRefund(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
+
+	parm := k.GetParams(ctx)
+	parm.DepositEnabled = true
+	k.SetParams(ctx, parm)
 
 	subAccOwner := sample.NativeAccAddress()
 	subAccFunder := sample.NativeAccAddress()
@@ -337,5 +347,28 @@ func houseDepositMsg(t *testing.T, owner sdk.AccAddress, uid string, amt sdkmath
 
 	return &types.MsgHouseDeposit{
 		Msg: inputDeposit,
+	}
+}
+
+func testBetMsgWager(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
+	betTicket, err := createJwtTicket(jwt.MapClaims{
+		"exp":           9999999999,
+		"iat":           7777777777,
+		"selected_odds": testSelectedBetOdds,
+		"kyc_data": &sgetypes.KycDataPayload{
+			Approved: true,
+			ID:       bettor.String(),
+		},
+		"all_odds": testBetOdds,
+	})
+	require.NoError(t, err)
+
+	return &bettypes.MsgWager{
+		Creator: bettor.String(),
+		Props: &bettypes.WagerProps{
+			UID:    uuid.NewString(),
+			Amount: amount,
+			Ticket: betTicket,
+		},
 	}
 }

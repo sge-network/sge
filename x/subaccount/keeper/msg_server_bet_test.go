@@ -63,6 +63,10 @@ var (
 func TestMsgServer_Bet(t *testing.T) {
 	app, k, msgServer, ctx := setupMsgServerAndApp(t)
 
+	parm := k.GetParams(ctx)
+	parm.WagerEnabled = true
+	k.SetParams(ctx, parm)
+
 	subAccOwner := simapp.TestParamUsers["user2"].Address
 	subAccFunder := simapp.TestParamUsers["user1"].Address
 
@@ -97,13 +101,10 @@ func TestMsgServer_Bet(t *testing.T) {
 	// start betting using the subaccount
 	betAmt := sdkmath.NewInt(1000).Mul(micro)
 	halfBetAmt := betAmt.Quo(sdkmath.NewInt(2))
+
 	_, err = msgServer.Wager(
 		sdk.WrapSDKContext(ctx),
-		&types.MsgWager{
-			Msg:                 testBet(t, subAccOwner, betAmt),
-			MainaccDeductAmount: halfBetAmt,
-			SubaccDeductAmount:  halfBetAmt,
-		},
+		testMsgWager(t, subAccOwner, betAmt, halfBetAmt, halfBetAmt),
 	)
 	require.NoError(t, err)
 
@@ -249,8 +250,8 @@ func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
-func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.MsgWager {
-	ticket, err := createJwtTicket(jwt.MapClaims{
+func testMsgWager(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int, mainAccDeduct, subAccDeduct sdkmath.Int) *types.MsgWager {
+	betTicket, err := createJwtTicket(jwt.MapClaims{
 		"exp":           9999999999,
 		"iat":           7777777777,
 		"selected_odds": testSelectedBetOdds,
@@ -262,12 +263,24 @@ func testBet(t testing.TB, bettor sdk.AccAddress, amount sdkmath.Int) *bettypes.
 	})
 	require.NoError(t, err)
 
-	return &bettypes.MsgWager{
-		Creator: bettor.String(),
-		Props: &bettypes.WagerProps{
-			UID:    uuid.NewString(),
-			Amount: amount,
-			Ticket: ticket,
+	subAccTicket, err := createJwtTicket(jwt.MapClaims{
+		"exp": 9999999999,
+		"iat": 7777777777,
+		"msg": bettypes.MsgWager{
+			Creator: bettor.String(),
+			Props: &bettypes.WagerProps{
+				UID:    uuid.NewString(),
+				Amount: amount,
+				Ticket: betTicket,
+			},
 		},
+		"mainacc_deduct_amount": mainAccDeduct,
+		"subacc_deduct_amount":  subAccDeduct,
+	})
+	require.NoError(t, err)
+
+	return &types.MsgWager{
+		Creator: bettor.String(),
+		Ticket:  subAccTicket,
 	}
 }

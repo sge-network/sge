@@ -15,7 +15,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/version"
 
-	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
@@ -171,38 +170,27 @@ func TxWithdraw() *cobra.Command {
 // TxWager implements a command to place and store a single bet
 func TxWager() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "wager [uid] [amount] [ticket] --from subaccount-owner-key",
+		Use:   "wager [ticket] --from subaccount-owner-key",
 		Short: "Wager on an odds",
 		Long:  "Wager on an odds. the uuid, amount and ticket required.",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get value arguments
-			uid := args[0]
-			argAmount := args[1]
-			argTicket := args[2]
-
-			argAmountCosmosInt, ok := sdkmath.NewIntFromString(argAmount)
-			if !ok {
-				return fmt.Errorf("invalid amount: %s", argAmount)
-			}
+			argTicket := args[0]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
-			msg := bettypes.NewMsgWager(
+			msg := types.NewMsgWager(
 				clientCtx.GetFromAddress().String(),
-				bettypes.WagerProps{
-					UID:    uid,
-					Amount: argAmountCosmosInt,
-					Ticket: argTicket,
-				},
+				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
 			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgWager{Msg: msg})
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
 		},
 	}
 

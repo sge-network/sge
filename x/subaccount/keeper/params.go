@@ -16,3 +16,13 @@ func (k Keeper) GetParams(ctx sdk.Context) (params types.Params) {
 	k.paramstore.GetParamSet(ctx, &params)
 	return params
 }
+
+// GetWagerEnabled returns enable/disable status of wager
+func (k Keeper) GetWagerEnabled(ctx sdk.Context) bool {
+	return k.GetParams(ctx).WagerEnabled
+}
+
+// GetDepositEnabled returns enable/disable status of deposit
+func (k Keeper) GetDepositEnabled(ctx sdk.Context) bool {
+	return k.GetParams(ctx).DepositEnabled
+}
