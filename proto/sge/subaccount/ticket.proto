@@ -1,5 +1,5 @@
 syntax = "proto3";
-package sgenetwork.sge.bet;
+package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
 
@@ -9,7 +9,7 @@ option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // SubAccWagerTicketPayload indicates data of subaccount wager ticket.
 message SubAccWagerTicketPayload {
-  // msg holds normal wager message 
+  // msg holds normal wager message
   sgenetwork.sge.bet.MsgWager msg = 1;
   // mainacc_deduct_amount is amount to be deducted from main account
   string mainacc_deduct_amount = 2 [
