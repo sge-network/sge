@@ -56,7 +56,9 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
-	k.keeper.withdrawLockedAndUnlocked(ctx, subAccAddr, subAccOwner, payload.SubaccDeductAmount)
+	if err := k.keeper.withdrawLockedAndUnlocked(ctx, subAccAddr, subAccOwner, payload.SubaccDeductAmount); err != nil {
+		return nil, err
+	}
 
 	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
 		return nil, err
