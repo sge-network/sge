@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/sge-network/sge/app/params"
@@ -57,60 +56,11 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
-	accSummary, unlockedBalance, _ := k.keeper.getAccountSummary(ctx, subAccAddr)
-	if unlockedBalance.GTE(payload.SubaccDeductAmount) {
-		if err := k.keeper.bankKeeper.SendCoins(ctx,
-			subAccAddr,
-			sdk.MustAccAddressFromBech32(msg.Creator),
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, payload.SubaccDeductAmount))); err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
-		}
-	} else {
-		lockedAmountToWithdraw := payload.SubaccDeductAmount.Sub(unlockedBalance)
-
-		if err := accSummary.Withdraw(lockedAmountToWithdraw); err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
-		}
-
-		if err := k.keeper.bankKeeper.SendCoins(ctx, subAccAddr, subAccOwner,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw))); err != nil {
-			return nil, sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
-		}
-
-		// calculate locked balances
-		lockedBalances := k.keeper.GetLockedBalances(ctx, subAccAddr)
-		updatedLockedBalances := []types.LockedBalance{}
-		for _, lb := range lockedBalances {
-			if lockedAmountToWithdraw.LTE(sdkmath.ZeroInt()) {
-				break
-			}
-
-			if lb.Amount.GT(lockedAmountToWithdraw) {
-				lb.Amount = lb.Amount.Sub(lockedAmountToWithdraw)
-				updatedLockedBalances = append(updatedLockedBalances, lb)
-
-				lockedAmountToWithdraw = sdkmath.ZeroInt()
-				break
-			} else {
-				lb.Amount = sdkmath.ZeroInt()
-				updatedLockedBalances = append(updatedLockedBalances, lb)
-
-				lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
-			}
-		}
-
-		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
-			return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in sub account")
-		}
-
-		k.keeper.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
-	}
+	k.keeper.withdrawLockedAndUnlocked(ctx, subAccAddr, subAccOwner, payload.SubaccDeductAmount)
 
 	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
 		return nil, err
 	}
-
-	k.keeper.SetAccountSummary(ctx, subAccAddr, accSummary)
 
 	msg.EmitEvent(&ctx, payload.Msg, subAccOwner.String())
 
