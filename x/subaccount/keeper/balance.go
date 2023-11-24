@@ -5,6 +5,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/utils"
@@ -136,25 +137,84 @@ func (k Keeper) getAccountSummary(sdkContext sdk.Context, subaccountAddr sdk.Acc
 	return balance, unlockedBalance, bankBalance
 }
 
-// getBalances returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) withdraw(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress) error {
-	summary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+// withdrawUnlocked returns the balance, unlocked balance and bank balance of a subaccount
+func (k Keeper) withdrawUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress) error {
+	accSummary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
 
-	withdrawableBalance := summary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
+	withdrawableBalance := accSummary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
 	if withdrawableBalance.IsZero() {
 		return types.ErrNothingToWithdraw
 	}
 
-	if err := summary.Withdraw(withdrawableBalance); err != nil {
+	if err := accSummary.Withdraw(withdrawableBalance); err != nil {
 		return err
 	}
 
-	k.SetAccountSummary(ctx, subAccAddr, summary)
+	k.SetAccountSummary(ctx, subAccAddr, accSummary)
 
 	err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// withdrawLockedAndUnlocked withdraws unlocked balance first, if more balance is needed to be deducted,
+// modifies the locked balances accordingly
+func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress, subAmountDeduct sdkmath.Int,
+) error {
+	accSummary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+	withdrawableBalance := accSummary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
+
+	if withdrawableBalance.GT(sdkmath.ZeroInt()) {
+		if err := k.bankKeeper.SendCoins(ctx,
+			subAccAddr,
+			ownerAddr,
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance))); err != nil {
+			return sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
+	}
+
+	lockedAmountToWithdraw := subAmountDeduct.Sub(withdrawableBalance)
+
+	if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
+		if err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr,
+			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw))); err != nil {
+			return sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+		}
+
+		// calculate locked balances
+		lockedBalances := k.GetLockedBalances(ctx, subAccAddr)
+		updatedLockedBalances := []types.LockedBalance{}
+		for _, lb := range lockedBalances {
+			if lb.Amount.GTE(lockedAmountToWithdraw) {
+				lb.Amount = lb.Amount.Sub(lockedAmountToWithdraw)
+				updatedLockedBalances = append(updatedLockedBalances, lb)
+
+				lockedAmountToWithdraw = sdkmath.ZeroInt()
+				break
+			} else {
+				lb.Amount = sdkmath.ZeroInt()
+				updatedLockedBalances = append(updatedLockedBalances, lb)
+
+				lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
+			}
+		}
+
+		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
+			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest,
+				"not enough balance in sub account locked balances, need more %s tokens",
+				lockedAmountToWithdraw)
+		}
+
+		k.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
+	}
+
+	if err := accSummary.Withdraw(subAmountDeduct); err != nil {
+		return sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
+	}
+	k.SetAccountSummary(ctx, subAccAddr, accSummary)
 
 	return nil
 }

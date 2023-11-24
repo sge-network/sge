@@ -32,7 +32,7 @@ func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.Ms
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	err := k.keeper.withdraw(ctx, subAccAddr, ownerAddr)
+	err := k.keeper.withdrawUnlocked(ctx, subAccAddr, ownerAddr)
 	if err != nil {
 		return nil, err
 	}
