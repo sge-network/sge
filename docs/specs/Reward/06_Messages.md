@@ -5,12 +5,14 @@ handler endpoints is as follows
 
 ```proto
 service Msg {
-  // CreateCampaign is campaign create message endpoint.
+  // CreateCampaign is a method to create a campaign
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
-  // UpdateCampaign is campaign update message endpoint.
+  // UpdateCampaign is a method to update campaign
   rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
-  // ApplyReward is reward application message endpoint.
-  rpc ApplyReward(MsgApplyReward) returns (MsgApplyRewardResponse);
+  // WithdrawCampaignFunds is method to withdraw funds from the campaign
+  rpc WithdrawFunds(MsgWithdrawFunds) returns (MsgWithdrawFundsResponse);
+  // GrantReward is method to allocate rewards
+  rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
 }
 ```
 
@@ -19,14 +21,20 @@ service Msg {
 Within this message, the user specifies the campaign information they wish to create.
 
 ```proto
-// MsgCreateCampaign is campaign create message type.
+// MsgCreateCampaign is msg to create a reward campaign
 message MsgCreateCampaign {
-  // creator is the address of creator account.
+  // creator is the address of campaign creator account.
   string creator = 1;
-  // uid is the uinque identifier of the campaign.
+  // uid is the unique identifier of the campaign.
   string uid = 2;
+  // total_funds is the total funds allocated to the campaign.
+  string total_funds = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"total_funds\""
+  ];
   // ticket is the payload data.
-  string ticket = 3;
+  string ticket = 4;
 }
 
 // MsgCreateCampaignResponse campaign create message response type.
@@ -37,19 +45,20 @@ message MsgCreateCampaignResponse {}
 
 ```json
 {
- "funder_address": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+ "promoter": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
  "start_ts": 1695970800,
  "end_ts": 1727593200,
- "type": 3,
-    "reward_defs": [
-        {
-            "rec_type": 1,
-            "amount": "100",
-            "rec_acc_type": 1,
-            "unlock_ts": 0
-        }
-    ],
- "pool_amount": "1000",
+ "category": 1,
+ "reward_type": 1,
+ "reward_amount_type": 1,
+ "reward_amount": {
+  "main_account_amount": "100",
+  "sub_account_amount": "100",
+  "unlock_period": 136318754373
+ },
+ "is_active": true,
+ "claims_per_category": 1,
+ "meta": "custom metadata",
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
@@ -57,61 +66,109 @@ message MsgCreateCampaignResponse {}
 }
 ```
 
-## **MsgApplyReward**
+## **MsgUpdateCampaign**
+
+Within this message, the user specifies the campaign information they wish to update.
+
+```proto
+// MsgUpdateCampaign is campaign update message type.
+message MsgUpdateCampaign {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the campaign.
+  string uid = 2;
+  // topup_funds is the topup funds to increase the pool balance of the
+  // campaign.
+  string topup_funds = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"topup_funds\""
+  ];
+  // ticket is the payload data.
+  string ticket = 4;
+}
+
+// MsgUpdateCampaignResponse campaign update message response type.
+message MsgUpdateCampaignResponse {}
+```
+
+### **Sample Update Campaign ticket**
+
+```json
+{
+ "end_ts": 1727593200,
+ "is_active": true,
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "UpdateCampaign"
+}
+```
+
+## **MsgGrantReward**
 
 Within this message, the user specifies the reward application information they wish to apply.
 
 ```proto
-// MsgApplyReward is apply reward message type.
-message MsgApplyReward {
+// MsgGrantReward is execute reward message type.
+message MsgGrantReward {
   // creator is the address of creator account.
   string creator = 1;
-  // campaign_uid is the uinque identifier of the campaign.
-  string campaign_uid = 2;
+  // uid is the unique identifier of the reward.
+  string uid = 2;
+  // campaign_uid is the unique identifier of the reward campaign.
+  string campaign_uid = 3;
   // ticket is the payload data.
-  string ticket = 3;
+  string ticket = 4;
 }
 
 // MsgApplyRewardResponse apply reward message response type.
 message MsgApplyRewardResponse {}
 ```
 
-### **Sample Apply Reward ticket**
-
-Note: Signup, Affiliation, and noloss bets rewards needs this format of payload.
+### **Sample Grant Reward ticket**
 
 ```json
 {
- "receiver": {
-    "rec_type": 1,
-    "addr": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
+ "common": {
+  "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+  "source_uid": "source uid",
+  "meta": "custom grant metadata"
  },
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
- "sub": "ApplyReward"
+ "sub": "GrantReward"
 }
 ```
 
-Note: Referral reward needs this format of payload.
+## **MsgWithdrawFunds**
+
+Within this message, the user specifies the reward application information they wish to apply.
+
+```proto
+// MsgWithdrawFunds is withdraw funds message type.
+message MsgWithdrawFunds {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the reward campaign.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgWithdrawFundsResponse withdraw funds message response type.
+message MsgWithdrawFundsResponse {}
+```
+
+### **Sample Withdraw funds ticket**
 
 ```json
 {
- "receivers": [
-  {
-    "rec_type": 2,
-    "addr": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
-  },
-  {
-    "rec_type": 3,
-    "addr": "sge1afdqdea8r2uh0ujn8l62fw7plvagzqgcmph40n"
-  }
- ],
+ "promoter": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
- "sub": "ApplyReward"
+ "sub": "WithdrawFunds"
 }
 ```
-
-Note: All of the definitions of the campaign `reward_defs` should be defined in the `receiver`/`receivers`.

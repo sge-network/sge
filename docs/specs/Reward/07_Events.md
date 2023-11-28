@@ -26,13 +26,29 @@ The Bet module emits the following events
 
 ---
 
-## *MsgApplyReward*
+## *MsgWithdrawFunds*
+
+| **Type**                   | **Attribute Key**         | **Attribute Value**   |
+|----------------------------|---------------------------|-----------------------|
+| withdraw_funds             | creator                   | {creator}             |
+| withdraw_funds             | uid                       | {uid}                 |
+| message                    | module                    | reward                |
+| message                    | action                    | withdraw_funds        |
+| message                    | sender                    | {creator}             |
+
+---
+
+## *MsgGrantReward*
 
 | **Type**                   | **Attribute Key**         | **Attribute Value**              |
 |----------------------------|---------------------------|----------------------------------|
 | apply_reward               | creator                   | {creator}                        |
 | apply_reward               | campaign_uid              | {campaign_uid}                   |
-| distributions              | distributions             | {yaml string of distributions}   |
+| apply_reward               | reward_uid                | {reward_uid}                     |
+| apply_reward               | promoter                  | {promoter}                       |
+| apply_reward               | main_acc_amount           | {main_acc_amount}                |
+| apply_reward               | sub_acc_amount            | {sub_acc_amount}                 |
+| apply_reward               | sub_acc_unlock_period     | {sub_acc_unlock_period}          |
 | message                    | module                    | reward                           |
 | message                    | action                    | apply_reward                     |
 | message                    | sender                    | {creator}                        |
