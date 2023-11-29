@@ -107,6 +107,10 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrKeyNotFound, "campaign with the id: %s does not exist", msg.Uid)
 	}
 
+	if !campaign.IsActive {
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "inactive campaign can not be updated")
+	}
+
 	// Checks if the msg creator is the same as the current owner
 	if msg.Creator != campaign.Promoter {
 		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, campaign.Promoter, msg,

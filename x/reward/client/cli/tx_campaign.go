@@ -15,6 +15,7 @@ func CmdCreateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-campaign [uid] [totalfunds] [ticket]",
 		Short: "Create a new campaign",
+		Long:  "Creating a new campaign with certain amount of funds and the ticket",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
@@ -55,6 +56,7 @@ func CmdUpdateCampaign() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update-campaign [uid] [topupfunds] [ticket]",
 		Short: "Update a campaign",
+		Long:  "Updating a new campaign with certain amount of funds and the ticket",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
@@ -95,6 +97,7 @@ func CmdWithdrawFunds() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "withdraw-funds [uid] [ticket]",
 		Short: "Withdraw funds from a campaign",
+		Long:  "Withdrawal of the funds from a certain campaign",
 		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
