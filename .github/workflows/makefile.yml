@@ -3,7 +3,7 @@ name: Deploy Proto & NPM publish
 on:
   pull_request_target:
     types: [opened, edited, synchronize]
-    branches: [ master ]
+    branches: [ master, dev ]
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
