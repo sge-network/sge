@@ -20,13 +20,13 @@ func CmdCreateCampaign() *cobra.Command {
 			// Get indexes
 			argUID := args[0]
 
-			// Get value arguments
-			argTicket := args[1]
-
-			argTotalFundsCosmosInt, ok := sdkmath.NewIntFromString(args[2])
+			argTotalFundsCosmosInt, ok := sdkmath.NewIntFromString(args[1])
 			if !ok {
 				return types.ErrInvalidFunds
 			}
+
+			// Get value arguments
+			argTicket := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -60,13 +60,13 @@ func CmdUpdateCampaign() *cobra.Command {
 			// Get indexes
 			argUID := args[0]
 
-			// Get value arguments
-			argTicket := args[1]
-
-			argTopupFundsCosmosInt, ok := sdkmath.NewIntFromString(args[2])
+			argTopupFundsCosmosInt, ok := sdkmath.NewIntFromString(args[1])
 			if !ok {
 				return types.ErrInvalidFunds
 			}
+
+			// Get value arguments
+			argTicket := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
