@@ -167,23 +167,13 @@ func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAdd
 	accSummary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
 	withdrawableBalance := accSummary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
 
-	if withdrawableBalance.GT(sdkmath.ZeroInt()) {
-		if err := k.bankKeeper.SendCoins(ctx,
-			subAccAddr,
-			ownerAddr,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance))); err != nil {
-			return sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
-		}
-	}
+	// take the minimum of the withdrawable balance and the amount that need to be transferred from sub account
+	withdrawableToSend := sdkmath.MinInt(withdrawableBalance, subAmountDeduct)
 
-	lockedAmountToWithdraw := subAmountDeduct.Sub(withdrawableBalance)
+	// calculate the amount that need to be deducted from locked balances
+	lockedAmountToWithdraw := subAmountDeduct.Sub(withdrawableToSend)
 
 	if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
-		if err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr,
-			sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, lockedAmountToWithdraw))); err != nil {
-			return sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
-		}
-
 		// calculate locked balances
 		lockedBalances := k.GetLockedBalances(ctx, subAccAddr)
 		updatedLockedBalances := []types.LockedBalance{}
@@ -211,6 +201,15 @@ func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAdd
 		k.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
 	}
 
+	// send the total calculated amount to the owner
+	if err := k.bankKeeper.SendCoins(ctx,
+		subAccAddr,
+		ownerAddr,
+		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, subAmountDeduct))); err != nil {
+		return sdkerrors.Wrapf(types.ErrSendCoinError, "error sending coin from subaccount to main account %s", err)
+	}
+
+	// update account summary withdrawn amount
 	if err := accSummary.Withdraw(subAmountDeduct); err != nil {
 		return sdkerrors.Wrapf(types.ErrWithdrawLocked, "%s", err)
 	}
