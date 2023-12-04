@@ -1,12 +1,15 @@
 package v3
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/sge-network/sge/app/keepers"
 )
+
+const DefaultExpeditedPeriod time.Duration = time.Hour * 24
 
 func CreateUpgradeHandler(
 	mm *module.Manager,
@@ -15,16 +18,16 @@ func CreateUpgradeHandler(
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		depositParams := keepers.GovKeeper.GetDepositParams(ctx)
-		depositParams.MinExpeditedDeposit = sdk.NewCoins(sdk.NewCoin("usge", v1.DefaultMinExpeditedDepositTokens))
+		depositParams.MinExpeditedDeposit = sdk.NewCoins(sdk.NewCoin("usge", DefaultMinExpeditedDepositTokens))
 		keepers.GovKeeper.SetDepositParams(ctx, depositParams)
 
 		tallyParams := keepers.GovKeeper.GetTallyParams(ctx)
-		tallyParams.ExpeditedThreshold = v1.DefaultExpeditedThreshold.String()
-		tallyParams.ExpeditedQuorum = v1.DefaultExpeditedQuorum.String()
+		tallyParams.ExpeditedThreshold = DefaultExpeditedThreshold.String()
+		tallyParams.ExpeditedQuorum = DefaultExpeditedQuorum.String()
 		keepers.GovKeeper.SetTallyParams(ctx, tallyParams)
 
 		votingParams := keepers.GovKeeper.GetVotingParams(ctx)
-		expeditedPeriod := v1.DefaultExpeditedPeriod
+		expeditedPeriod := DefaultExpeditedPeriod
 		votingParams.ExpeditedVotingPeriod = &expeditedPeriod
 		keepers.GovKeeper.SetVotingParams(ctx, votingParams)
 
