@@ -108,7 +108,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 	}
 
 	if !campaign.IsActive {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrKeyNotFound, "inactive campaign can not be updated")
+		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "inactive campaign can not be updated")
 	}
 
 	// Checks if the msg creator is the same as the current owner
