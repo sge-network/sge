@@ -90,3 +90,48 @@ func (k Keeper) OrderBookParticipations(
 		Pagination:              pageRes,
 	}, nil
 }
+
+// SettledOrderbookParticipationsOfHeight returns settled orderbook participations of a certain height
+func (k Keeper) SettledOrderbookParticipationsOfHeight(
+	c context.Context,
+	req *types.QuerySettledOrderBookParticipationsOfHeightRequest,
+) (*types.QuerySettledOrderBookParticipationsOfHeightResponse, error) {
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
+	}
+
+	var orderbookParticipations []types.OrderBookParticipation
+	ctx := sdk.UnwrapSDKContext(c)
+
+	settledOrderbookParticipationStore := prefix.NewStore(
+		ctx.KVStore(k.storeKey),
+		types.SettledOrderbookParticipationListOfBlockHeightPrefix(req.BlockHeight),
+	)
+
+	pageRes, err := query.Paginate(
+		settledOrderbookParticipationStore,
+		req.Pagination,
+		func(key []byte, value []byte) error {
+			var settledOrderbookParticipation types.SettledOrderbookParticipation
+			if err := k.cdc.Unmarshal(value, &settledOrderbookParticipation); err != nil {
+				return err
+			}
+
+			orderBookParticipation, found := k.GetOrderBookParticipation(
+				ctx,
+				settledOrderbookParticipation.OrderBookUID,
+				settledOrderbookParticipation.Index,
+			)
+			if found {
+				orderbookParticipations = append(orderbookParticipations, orderBookParticipation)
+			}
+
+			return nil
+		},
+	)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &types.QuerySettledOrderBookParticipationsOfHeightResponse{Participations: orderbookParticipations, Pagination: pageRes}, nil
+}

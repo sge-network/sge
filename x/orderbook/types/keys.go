@@ -46,6 +46,8 @@ var (
 		0x07,
 	} // prefix for keys that store book participation and bet pairs
 	FeeGrantPrefix = []byte{0x08} // prefix for keys that store fee grants
+	// SettledOrderbookParticipationListPrefix is the prefix to retrieve all settled orderbook participations
+	SettledOrderbookParticipationListPrefix = []byte{0x09}
 )
 
 // GetOrderBookKey returns the bytes of an book key
@@ -108,4 +110,10 @@ func GetParticipationBetPairKey(bookUID string, bookParticipationIndex uint64, b
 	return append(
 		GetParticipationByIndexKey(bookUID, bookParticipationIndex),
 		utils.Uint64ToBytes(betID)...)
+}
+
+// SettledOrderbookParticipationListOfBlockHeightPrefix returns prefix of
+// settled orderbook participation list on a certain block height.
+func SettledOrderbookParticipationListOfBlockHeightPrefix(blockHeight int64) []byte {
+	return append(SettledOrderbookParticipationListPrefix, utils.Int64ToBytes(blockHeight)...)
 }
