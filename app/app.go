@@ -2,11 +2,12 @@ package app
 
 import (
 	"fmt"
-	v3 "github.com/sge-network/sge/app/upgrades/v3"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	v3 "github.com/sge-network/sge/app/upgrades/v3"
 
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
