@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	v3 "github.com/sge-network/sge/app/upgrades/v3"
 	"io"
 	"net/http"
 	"os"
@@ -70,6 +71,7 @@ var (
 	Upgrades        = []upgrades.Upgrade{
 		v1.Upgrade,
 		v2.Upgrade,
+		v3.Upgrade,
 	}
 )
 
