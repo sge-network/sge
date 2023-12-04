@@ -1,11 +1,12 @@
 package v3
 
 import (
+	"time"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/sge-network/sge/app/keepers"
-	"time"
 )
 
 const DefaultExpeditedPeriod time.Duration = time.Hour * 24
