@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
+	v3 "github.com/sge-network/sge/app/upgrades/v3"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
@@ -70,6 +72,7 @@ var (
 	Upgrades        = []upgrades.Upgrade{
 		v1.Upgrade,
 		v2.Upgrade,
+		v3.Upgrade,
 	}
 )
 
