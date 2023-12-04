@@ -13,6 +13,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgCreateCampaign{}, "reward/CreateCampaign")
 	legacy.RegisterAminoMsg(cdc, &MsgUpdateCampaign{}, "reward/UpdateCampaign")
+	legacy.RegisterAminoMsg(cdc, &MsgWithdrawFunds{}, "reward/WithdrawFunds")
 	legacy.RegisterAminoMsg(cdc, &MsgGrantReward{}, "reward/GrantReward")
 }
 
@@ -20,6 +21,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateCampaign{},
 		&MsgUpdateCampaign{},
+		&MsgWithdrawFunds{},
 		&MsgGrantReward{},
 	)
 

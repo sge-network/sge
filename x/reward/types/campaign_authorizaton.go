@@ -57,6 +57,10 @@ func (a CreateCampaignAuthorization) ValidateBasic() error {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
 	}
 
+	if a.SpendLimit.LT(minCampaignFunds) {
+		return sdkerrtypes.ErrInvalidCoins.Wrapf("spend limit cannot be less than %s", minCampaignFunds)
+	}
+
 	return nil
 }
 
@@ -107,6 +111,10 @@ func (a UpdateCampaignAuthorization) ValidateBasic() error {
 	}
 	if a.SpendLimit.LTE(sdk.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
+	}
+
+	if a.SpendLimit.LT(minCampaignFunds) {
+		return sdkerrtypes.ErrInvalidCoins.Wrapf("spend limit cannot be less than %s", minCampaignFunds)
 	}
 
 	return nil
