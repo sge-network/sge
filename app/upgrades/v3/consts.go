@@ -5,8 +5,8 @@ import (
 	"github.com/sge-network/sge/app/upgrades"
 )
 
-// UpgradeName defines the on-chain upgrade name for the v1.1.3 upgrade.
-const UpgradeName = "v1.1.3"
+// UpgradeName defines the on-chain upgrade name for the v1.1.4 upgrade.
+const UpgradeName = "v1.1.4"
 
 // Expedite governance params
 var (
