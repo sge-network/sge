@@ -9,7 +9,7 @@ import (
 	"github.com/sge-network/sge/app/keepers"
 )
 
-const DefaultExpeditedPeriod time.Duration = time.Hour * 24
+const DefaultExpeditedPeriod time.Duration = time.Minute * 30
 
 func CreateUpgradeHandler(
 	mm *module.Manager,
