@@ -6,7 +6,7 @@ import "gogoproto/gogo.proto";
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // Params defines the parameters for the module.
-message Params { 
+message Params {
   option (gogoproto.goproto_stringer) = false;
 
   // wager_enabled is enable/disable status of wager feature.

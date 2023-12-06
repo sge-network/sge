@@ -105,6 +105,19 @@ message RewardByCampaign {
   ];
 }
 
+// RewardPair is the type to track the rewarder and rewardee pair.
+message RewardPair {
+  // uid is the unique identifier for a reward.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
+  // reward_type is the type of the reward.
+  RewardType reward_type = 2;
+}
+
 // RewardType defines supported types of rewards in reward module.
 enum RewardCategory {
   // the invalid or unknown

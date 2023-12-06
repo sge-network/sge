@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/binary"
+	"strings"
 
 	"github.com/sge-network/sge/utils"
 )
@@ -17,6 +18,9 @@ var (
 
 	// RewardByCampaignKeyPrefix is the prefix to retrieve all applied rewards for a certain campaign.
 	RewardByCampaignKeyPrefix = []byte{0x03}
+
+	// RewardPairKeyPrefix is the prefix to retrieve all pairs of reward granter and reward grantee.
+	RewardPairKeyPrefix = []byte{0x04}
 )
 
 // GetRewardsByAccPrefix returns the store key to retrieve list of all applied rewards of a certain campaign
@@ -50,4 +54,10 @@ func GetRewardsByCampaignPrefix(campaignUID string) []byte {
 // this should be used with RewardKeyPrefix
 func GetRewardsByCampaignKey(campaignUID, uid string) []byte {
 	return append(utils.StrBytes(campaignUID), utils.StrBytes(uid)...)
+}
+
+// GetRewardPairKey returns the store key to retrieve applied reward of a list of accounts
+// this should be used with RewardPairKeyPrefix
+func GetRewardPairKey(rewardType RewardType, addrPairs []string) []byte {
+	return append(utils.Int32ToBytes(int32(rewardType)), utils.StrBytes(strings.Join(addrPairs, ""))...)
 }
