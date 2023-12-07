@@ -81,6 +81,12 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 	return
 }
 
+// HasRewardByReceiver returns true if there is a record for the category and reward receiver
+func (k Keeper) HasRewardByReceiver(ctx sdk.Context, addr string, category types.RewardCategory) bool {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	return store.Has(types.GetRewardsByCategoryPrefix(addr, category))
+}
+
 // GetAllRewardsByReceiverAndCategory returns all rewards by receiver and category
 func (k Keeper) GetAllRewardsByReceiverAndCategory(ctx sdk.Context) (list []types.RewardByCategory) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
@@ -117,43 +123,4 @@ func (k Keeper) GetAllRewardsByCampaign(ctx sdk.Context) (list []types.RewardByC
 	}
 
 	return
-}
-
-// SetRewardPair sets reward pair of the
-func (k Keeper) SetRewardPair(ctx sdk.Context, rewardPair types.RewardPair, pairs []string) {
-	store := k.getRewardPairStore(ctx)
-	b := k.cdc.MustMarshal(&rewardPair)
-	store.Set(types.GetRewardPairKey(rewardPair.RewardType, pairs), b)
-}
-
-// GetRewardPair returns all reward account pairs.
-func (k Keeper) GetRewardPair(
-	ctx sdk.Context,
-	rewardPair types.RewardPair,
-	pairs []string,
-) (list []types.RewardPair, err error) {
-	store := k.getRewardPairStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardPairKey(rewardPair.RewardType, pairs))
-
-	defer func() {
-		err = iterator.Close()
-	}()
-
-	for ; iterator.Valid(); iterator.Next() {
-		var val types.RewardPair
-		k.cdc.MustUnmarshal(iterator.Value(), &val)
-		list = append(list, val)
-	}
-
-	return
-}
-
-// HasRewardPair returns true if there is already a reward object for this.
-func (k Keeper) HasRewardPair(
-	ctx sdk.Context,
-	rewardPair types.RewardPair,
-	pairs []string,
-) bool {
-	store := k.getRewardPairStore(ctx)
-	return store.Has(types.GetRewardPairKey(rewardPair.RewardType, pairs))
 }

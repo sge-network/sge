@@ -44,10 +44,12 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	// TODO: check if referee is signed up
+	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Referee, campaign.RewardCategory) {
+		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "referee account has signed up yet, there is no referee claim record")
+	}
 
 	pairs := []string{
-		payload.Referee, // referrer address
+		payload.Referee,
 		payload.Common.Receiver,
 	}
 

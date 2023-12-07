@@ -25,6 +25,7 @@ type RewardFactoryKeepers struct {
 	OVMKeeper
 	BetKeeper
 	SubAccountKeeper
+	RewardKeeper
 }
 
 func (keepers *RewardFactoryKeepers) getSubAccAddr(ctx sdk.Context, creator, receiver string) (string, error) {

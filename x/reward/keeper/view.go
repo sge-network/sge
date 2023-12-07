@@ -30,9 +30,3 @@ func (k Keeper) getRewardsByCampaignStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.RewardByCampaignKeyPrefix)
 }
-
-// getRewardPairStore gets the store containing all rewards by granters and grantees pair.
-func (k Keeper) getRewardPairStore(ctx sdk.Context) prefix.Store {
-	store := ctx.KVStore(k.storeKey)
-	return prefix.NewStore(store, types.RewardPairKeyPrefix)
-}

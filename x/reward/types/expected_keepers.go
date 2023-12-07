@@ -69,8 +69,7 @@ type SubAccountKeeper interface {
 	IsSubAccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool
 }
 
-// // RewardKeeper defines the expected interface needed to get and filter the rewards.
-// type RewardKeeper interface {
-// 	GetRewardPair(ctx sdk.Context, rewardPair RewardPair, pairs ...string) (list []RewardPair, err error)
-// 	SetRewardPair(ctx sdk.Context, rewardPair RewardPair, pairs ...string)
-// }
+// RewardKeeper defines the expected interface needed to get and filter the rewards.
+type RewardKeeper interface {
+	HasRewardByReceiver(ctx sdk.Context, addr string, category RewardCategory) bool
+}
