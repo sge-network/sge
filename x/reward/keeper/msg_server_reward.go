@@ -54,17 +54,6 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
 	}
 
-	if len(factData.Pairs) > 0 {
-		rewardPair := types.NewRewardPair(
-			campaign.RewardType,
-			msg.Uid,
-		)
-		if k.HasRewardPair(ctx, rewardPair, factData.Pairs) {
-			return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "this reward type is already set for the accounts pair")
-		}
-		k.SetRewardPair(ctx, rewardPair, factData.Pairs)
-	}
-
 	if err := campaign.CheckPoolBalance(factData.Receiver.SubAccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}

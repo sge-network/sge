@@ -85,10 +85,12 @@ message GrantSignupRewardPayload {
   RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
 }
 
-// GrantSignupReferreeRewardPayload is the type for signup referrer reward grant
+// GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
 // payload.
-message GrantSignupReferreeRewardPayload {
+message GrantSignupReferrerRewardPayload {
   // common is the common properties of a reward
   RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
-}
 
+  // referee is the address of the account that used this referrer address as source_uid
+  string referee = 2; 
+}

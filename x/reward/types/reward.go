@@ -48,14 +48,12 @@ func (keepers *RewardFactoryKeepers) getSubAccAddr(ctx sdk.Context, creator, rec
 type RewardFactoryData struct {
 	Receiver Receiver
 	Common   RewardPayloadCommon
-	Pairs    []string
 }
 
 func NewRewardFactoryData(receiver Receiver, common RewardPayloadCommon, pairs ...string) RewardFactoryData {
 	return RewardFactoryData{
 		Receiver: receiver,
 		Common:   common,
-		Pairs:    pairs,
 	}
 }
 
@@ -88,13 +86,6 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 	return RewardByCampaign{
 		UID:         uid,
 		CampaignUID: campaignUID,
-	}
-}
-
-func NewRewardPair(rewardType RewardType, uid string) RewardPair {
-	return RewardPair{
-		UID:        uid,
-		RewardType: rewardType,
 	}
 }
 

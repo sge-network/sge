@@ -9,14 +9,14 @@ import (
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// SignUpReferralReward is the type for signup referral rewards calculations
-type SignUpReferralReward struct{}
+// SignUpRefereelReward is the type for signup referral rewards calculations
+type SignUpRefereelReward struct{}
 
-// NewSignUpReferralReward create new object of signup referral reward calculator type.
-func NewSignUpReferralReward() SignUpReward { return SignUpReward{} }
+// NewSignUpRefereelReward create new object of signup referral reward calculator type.
+func NewSignUpRefereelReward() SignUpReward { return SignUpReward{} }
 
-// VaidateCampaign validates campaign definitions.
-func (sur SignUpReferralReward) ValidateCampaign(campaign Campaign, blockTime uint64) error {
+// ValidateCampaign validates campaign definitions.
+func (sur SignUpRefereelReward) ValidateCampaign(campaign Campaign, blockTime uint64) error {
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}
@@ -31,10 +31,10 @@ func (sur SignUpReferralReward) ValidateCampaign(campaign Campaign, blockTime ui
 }
 
 // Calculate parses ticket payload and returns the distribution list of signup reward.
-func (sur SignUpReferralReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
+func (sur SignUpRefereelReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	campaign Campaign, ticket, creator string,
 ) (RewardFactoryData, error) {
-	var payload GrantSignupReferreeRewardPayload
+	var payload GrantSignupRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
