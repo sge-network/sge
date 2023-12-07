@@ -34,7 +34,7 @@ func (sur SignUpReferralReward) ValidateCampaign(campaign Campaign, blockTime ui
 func (sur SignUpReferralReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	campaign Campaign, ticket, creator string,
 ) (RewardFactoryData, error) {
-	var payload GrantSignupReferrerRewardPayload
+	var payload GrantSignupReferreeRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}

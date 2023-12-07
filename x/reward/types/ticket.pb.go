@@ -369,25 +369,25 @@ func (m *GrantSignupRewardPayload) GetCommon() RewardPayloadCommon {
 	return RewardPayloadCommon{}
 }
 
-// GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
+// GrantSignupReferreeRewardPayload is the type for signup referrer reward grant
 // payload.
-type GrantSignupReferrerRewardPayload struct {
+type GrantSignupReferreeRewardPayload struct {
 	// common is the common properties of a reward
 	Common RewardPayloadCommon `protobuf:"bytes,1,opt,name=common,proto3" json:"common"`
 }
 
-func (m *GrantSignupReferrerRewardPayload) Reset()         { *m = GrantSignupReferrerRewardPayload{} }
-func (m *GrantSignupReferrerRewardPayload) String() string { return proto.CompactTextString(m) }
-func (*GrantSignupReferrerRewardPayload) ProtoMessage()    {}
-func (*GrantSignupReferrerRewardPayload) Descriptor() ([]byte, []int) {
+func (m *GrantSignupReferreeRewardPayload) Reset()         { *m = GrantSignupReferreeRewardPayload{} }
+func (m *GrantSignupReferreeRewardPayload) String() string { return proto.CompactTextString(m) }
+func (*GrantSignupReferreeRewardPayload) ProtoMessage()    {}
+func (*GrantSignupReferreeRewardPayload) Descriptor() ([]byte, []int) {
 	return fileDescriptor_5d710bc1249ca8ae, []int{5}
 }
-func (m *GrantSignupReferrerRewardPayload) XXX_Unmarshal(b []byte) error {
+func (m *GrantSignupReferreeRewardPayload) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *GrantSignupReferrerRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *GrantSignupReferreeRewardPayload) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_GrantSignupReferrerRewardPayload.Marshal(b, m, deterministic)
+		return xxx_messageInfo_GrantSignupReferreeRewardPayload.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -397,19 +397,19 @@ func (m *GrantSignupReferrerRewardPayload) XXX_Marshal(b []byte, deterministic b
 		return b[:n], nil
 	}
 }
-func (m *GrantSignupReferrerRewardPayload) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GrantSignupReferrerRewardPayload.Merge(m, src)
+func (m *GrantSignupReferreeRewardPayload) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GrantSignupReferreeRewardPayload.Merge(m, src)
 }
-func (m *GrantSignupReferrerRewardPayload) XXX_Size() int {
+func (m *GrantSignupReferreeRewardPayload) XXX_Size() int {
 	return m.Size()
 }
-func (m *GrantSignupReferrerRewardPayload) XXX_DiscardUnknown() {
-	xxx_messageInfo_GrantSignupReferrerRewardPayload.DiscardUnknown(m)
+func (m *GrantSignupReferreeRewardPayload) XXX_DiscardUnknown() {
+	xxx_messageInfo_GrantSignupReferreeRewardPayload.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GrantSignupReferrerRewardPayload proto.InternalMessageInfo
+var xxx_messageInfo_GrantSignupReferreeRewardPayload proto.InternalMessageInfo
 
-func (m *GrantSignupReferrerRewardPayload) GetCommon() RewardPayloadCommon {
+func (m *GrantSignupReferreeRewardPayload) GetCommon() RewardPayloadCommon {
 	if m != nil {
 		return m.Common
 	}
@@ -422,7 +422,7 @@ func init() {
 	proto.RegisterType((*WithdrawFundsPayload)(nil), "sgenetwork.sge.reward.WithdrawFundsPayload")
 	proto.RegisterType((*RewardPayloadCommon)(nil), "sgenetwork.sge.reward.RewardPayloadCommon")
 	proto.RegisterType((*GrantSignupRewardPayload)(nil), "sgenetwork.sge.reward.GrantSignupRewardPayload")
-	proto.RegisterType((*GrantSignupReferrerRewardPayload)(nil), "sgenetwork.sge.reward.GrantSignupReferrerRewardPayload")
+	proto.RegisterType((*GrantSignupReferreeRewardPayload)(nil), "sgenetwork.sge.reward.GrantSignupReferreeRewardPayload")
 }
 
 func init() { proto.RegisterFile("sge/reward/ticket.proto", fileDescriptor_5d710bc1249ca8ae) }
@@ -459,11 +459,11 @@ var fileDescriptor_5d710bc1249ca8ae = []byte{
 	0xd8, 0x2e, 0x74, 0xc1, 0x07, 0xe3, 0x03, 0xa7, 0xb1, 0x3c, 0x09, 0x83, 0x38, 0x4d, 0x4a, 0xe5,
 	0x90, 0x23, 0xa8, 0x79, 0xaa, 0x24, 0x55, 0xc6, 0x5e, 0xef, 0xd5, 0xc6, 0x29, 0x96, 0x2e, 0x31,
 	0xa8, 0x5e, 0xce, 0x5b, 0x15, 0x67, 0x9d, 0xdf, 0x9e, 0x80, 0x55, 0x3a, 0xe5, 0x2b, 0x72, 0x8e,
-	0xfc, 0x3f, 0x9d, 0x36, 0x18, 0x5e, 0x2e, 0x4c, 0xed, 0x6a, 0x61, 0x6a, 0xbf, 0x16, 0xa6, 0xf6,
-	0x63, 0x69, 0x56, 0xae, 0x96, 0x66, 0xe5, 0xe7, 0xd2, 0xac, 0x7c, 0x79, 0x19, 0x84, 0xf2, 0x2c,
-	0x3d, 0xb5, 0x3d, 0x16, 0x75, 0x45, 0x80, 0xaf, 0xd7, 0xf8, 0x95, 0xdd, 0xfd, 0x96, 0x7f, 0x2e,
-	0xb3, 0x04, 0xc5, 0x69, 0x4d, 0x7d, 0x0b, 0x6f, 0xfe, 0x06, 0x00, 0x00, 0xff, 0xff, 0x08, 0xe4,
-	0xc9, 0x38, 0x77, 0x04, 0x00, 0x00,
+	0xf8, 0x9f, 0x4e, 0x1b, 0x0c, 0x2f, 0x17, 0xa6, 0x76, 0xb5, 0x30, 0xb5, 0x5f, 0x0b, 0x53, 0xfb,
+	0xb1, 0x34, 0x2b, 0x57, 0x4b, 0xb3, 0xf2, 0x73, 0x69, 0x56, 0xbe, 0xbc, 0x0c, 0x42, 0x79, 0x96,
+	0x9e, 0xda, 0x1e, 0x8b, 0xba, 0x22, 0xc0, 0xd7, 0x6b, 0xfc, 0xca, 0xee, 0x7e, 0xcb, 0x3f, 0x97,
+	0x59, 0x82, 0xe2, 0xb4, 0xa6, 0xbe, 0x85, 0x37, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x3d, 0xdb,
+	0x7a, 0x85, 0x77, 0x04, 0x00, 0x00,
 }
 
 func (m *CreateCampaignPayload) Marshal() (dAtA []byte, err error) {
@@ -700,7 +700,7 @@ func (m *GrantSignupRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *GrantSignupReferrerRewardPayload) Marshal() (dAtA []byte, err error) {
+func (m *GrantSignupReferreeRewardPayload) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -710,12 +710,12 @@ func (m *GrantSignupReferrerRewardPayload) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *GrantSignupReferrerRewardPayload) MarshalTo(dAtA []byte) (int, error) {
+func (m *GrantSignupReferreeRewardPayload) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *GrantSignupReferrerRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *GrantSignupReferreeRewardPayload) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -846,7 +846,7 @@ func (m *GrantSignupRewardPayload) Size() (n int) {
 	return n
 }
 
-func (m *GrantSignupReferrerRewardPayload) Size() (n int) {
+func (m *GrantSignupReferreeRewardPayload) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1547,7 +1547,7 @@ func (m *GrantSignupRewardPayload) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *GrantSignupReferrerRewardPayload) Unmarshal(dAtA []byte) error {
+func (m *GrantSignupReferreeRewardPayload) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1570,10 +1570,10 @@ func (m *GrantSignupReferrerRewardPayload) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: GrantSignupReferrerRewardPayload: wiretype end group for non-group")
+			return fmt.Errorf("proto: GrantSignupReferreeRewardPayload: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: GrantSignupReferrerRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: GrantSignupReferreeRewardPayload: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
