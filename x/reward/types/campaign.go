@@ -40,6 +40,8 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 		return NewSignUpReward(), nil
 	case RewardType_REWARD_TYPE_REFERRAL_SIGNUP:
 		return NewSignUpRefereelReward(), nil
+	case RewardType_REWARD_TYPE_REFERRAL:
+		return NewSignUpReferrerReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}
