@@ -44,6 +44,11 @@ func (sur SignUpRefereelReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
+	acc := keepers.AccountKeeper.GetAccount(ctx, sdk.MustAccAddressFromBech32(payload.Common.SourceUID))
+	if acc == nil {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "source id is not a valid account %s", payload.Common.SourceUID)
+	}
+
 	pairs := []string{
 		payload.Common.SourceUID, // referrer address
 		payload.Common.Receiver,

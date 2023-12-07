@@ -41,6 +41,8 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
 			SubAccountKeeper: k.subaccountKeeper,
+			RewardKeeper:     k.Keeper,
+			AccountKeeper:    k.accountKeeper,
 		}, campaign, msg.Ticket, msg.Creator)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
