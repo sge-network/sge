@@ -5,11 +5,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// AccAddress returns a sample account address
+// AccAddress returns a sample account address as string
 func AccAddress() string {
+	return NativeAccAddress().String()
+}
+
+func NativeAccAddress() sdk.AccAddress {
 	pk := ed25519.GenPrivKey().PubKey()
 	addr := pk.Address()
-	return sdk.AccAddress(addr).String()
+	return sdk.AccAddress(addr)
 }
 
 // ValAddress returns a sample validator address

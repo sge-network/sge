@@ -10,9 +10,10 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestVerifyWithKey(t *testing.T) {

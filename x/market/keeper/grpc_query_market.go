@@ -3,12 +3,14 @@ package keeper
 import (
 	"context"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/x/market/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/x/market/types"
 )
 
 // Markets returns all the markets
@@ -25,7 +27,7 @@ func (k Keeper) Markets(
 
 	marketStore := k.getMarketsStore(ctx)
 
-	pageRes, err := query.Paginate(marketStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(marketStore, req.Pagination, func(key, value []byte) error {
 		var market types.Market
 		if err := k.cdc.Unmarshal(value, &market); err != nil {
 			return err

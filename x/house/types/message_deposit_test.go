@@ -3,12 +3,15 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgDepositValidateBasic(t *testing.T) {
@@ -22,14 +25,14 @@ func TestMsgDepositValidateBasic(t *testing.T) {
 			msg: types.MsgDeposit{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
 			msg: types.MsgDeposit{
 				Creator:   sample.AccAddress(),
 				MarketUID: uuid.NewString(),
-				Amount:    sdk.NewInt(100),
+				Amount:    sdkmath.NewInt(100),
 				Ticket:    "Ticket",
 			},
 		},
@@ -49,7 +52,7 @@ func TestMsgDepositValidateBasic(t *testing.T) {
 				Amount:    sdk.ZeroInt(),
 				Ticket:    "Ticket",
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -70,7 +73,7 @@ func TestNewDeposit(t *testing.T) {
 			Creator:               uuid.NewString(),
 			DepositorAddress:      uuid.NewString(),
 			MarketUID:             uuid.NewString(),
-			Amount:                sdk.NewInt(100),
+			Amount:                sdkmath.NewInt(100),
 			ParticipationIndex:    0,
 			WithdrawalCount:       0,
 			TotalWithdrawalAmount: sdk.ZeroInt(),

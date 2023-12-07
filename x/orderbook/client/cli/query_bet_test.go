@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/google/uuid"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	"github.com/google/uuid"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/orderbook/client/cli"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
 )
 
 func networkWithParticipationBetObjects(t *testing.T, n int) (*network.Network, []types.ParticipationBetPair) {
@@ -35,7 +38,7 @@ func networkWithParticipationBetObjects(t *testing.T, n int) (*network.Network, 
 	for i := 0; i < n; i++ {
 		bet := bettypes.Bet{
 			UID:     uuid.NewString(),
-			Creator: simappUtil.TestParamUsers["user"+cast.ToString(i+1)].Address.String(),
+			Creator: simapp.TestParamUsers["user"+cast.ToString(i+1)].Address.String(),
 		}
 		nullify.Fill(&bet)
 		betState.BetList = append(betState.BetList, bet)

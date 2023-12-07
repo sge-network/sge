@@ -3,16 +3,17 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 )
 
@@ -168,7 +169,7 @@ func TestBetsByCreatorQueryPaginated(t *testing.T) {
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryBetsByCreatorRequest {
 		return &types.QueryBetsByCreatorRequest{
-			Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+			Creator: simapp.TestParamUsers["user1"].Address.String(),
 			Pagination: &query.PageRequest{
 				Key:        next,
 				Offset:     offset,
@@ -267,7 +268,7 @@ func TestBetByUIDsQuery(t *testing.T) {
 			desc: "First",
 			request: &types.QueryBetsByUIDsRequest{
 				Items: []string{
-					simappUtil.TestParamUsers["user1"].Address.String() + ":" + msgs[0].UID,
+					simapp.TestParamUsers["user1"].Address.String() + ":" + msgs[0].UID,
 				},
 			},
 			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[0]}},
@@ -276,7 +277,7 @@ func TestBetByUIDsQuery(t *testing.T) {
 			desc: "Second",
 			request: &types.QueryBetsByUIDsRequest{
 				Items: []string{
-					simappUtil.TestParamUsers["user1"].Address.String() + ":" + msgs[1].UID,
+					simapp.TestParamUsers["user1"].Address.String() + ":" + msgs[1].UID,
 				},
 			},
 			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{msgs[1]}},
@@ -285,7 +286,7 @@ func TestBetByUIDsQuery(t *testing.T) {
 			desc: "NotFound",
 			request: &types.QueryBetsByUIDsRequest{
 				Items: []string{
-					simappUtil.TestParamUsers["user1"].Address.String() + ":" + "100000",
+					simapp.TestParamUsers["user1"].Address.String() + ":" + "100000",
 				},
 			},
 			response: &types.QueryBetsByUIDsResponse{Bets: []types.Bet{}, NotFoundBetUids: []string{"100000"}},

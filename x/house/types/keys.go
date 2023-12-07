@@ -30,7 +30,7 @@ var (
 )
 
 // GetDepositKey creates the key for deposit bond with market and participation
-func GetDepositKey(depositorAddr string, marketUID string, participationIndex uint64) []byte {
+func GetDepositKey(depositorAddr, marketUID string, participationIndex uint64) []byte {
 	return append(
 		GetDepositListPrefix(depositorAddr),
 		append(utils.StrBytes(marketUID), utils.Uint64ToBytes(participationIndex)...)...)

@@ -3,11 +3,13 @@ package ovm_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
+
 	"github.com/sge-network/sge/x/ovm"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {
@@ -18,7 +20,7 @@ func TestGenesis(t *testing.T) {
 		},
 	}
 
-	tApp, ctx, err := simappUtil.GetTestObjects()
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	ovm.InitGenesis(ctx, *tApp.OVMKeeper, genesisState)

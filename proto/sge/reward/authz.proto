@@ -1,0 +1,24 @@
+syntax = "proto3";
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// CreateCampaignAuthorization allows the grantee to spend up to spend_limit
+// from the granter's account for create campaign.
+message CreateCampaignAuthorization {
+  string spend_limit = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// UpdateCampaignAuthorization allows the grantee to spend up to spend_limit
+// from the granter's account for update campaign.
+message UpdateCampaignAuthorization {
+  string spend_limit = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

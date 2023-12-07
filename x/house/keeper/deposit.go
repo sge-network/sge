@@ -1,9 +1,10 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/x/house/types"
 )
@@ -63,7 +64,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 
 	depositorAddr, err := sdk.AccAddressFromBech32(depositor)
 	if err != nil {
-		err = sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		err = sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 		return
 	}
 

@@ -3,10 +3,12 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/x/house/types"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+
+	"github.com/sge-network/sge/x/house/types"
 )
 
 const (
@@ -21,9 +23,9 @@ func TestGenesisState_Validate(t *testing.T) {
 				Creator:               testAddress,
 				MarketUID:             MarketUID,
 				ParticipationIndex:    1,
-				Amount:                sdk.NewInt(10),
+				Amount:                sdkmath.NewInt(10),
 				WithdrawalCount:       1,
-				TotalWithdrawalAmount: sdk.NewInt(10),
+				TotalWithdrawalAmount: sdkmath.NewInt(10),
 			},
 		},
 		WithdrawalList: []types.Withdrawal{
@@ -33,7 +35,7 @@ func TestGenesisState_Validate(t *testing.T) {
 				MarketUID:          MarketUID,
 				ParticipationIndex: 1,
 				Mode:               types.WithdrawalMode_WITHDRAWAL_MODE_FULL,
-				Amount:             sdk.NewInt(10),
+				Amount:             sdkmath.NewInt(10),
 			},
 		},
 		Params: types.DefaultParams(),

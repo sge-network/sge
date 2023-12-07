@@ -3,7 +3,7 @@ package types
 import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/authz"
 )
 
@@ -25,12 +25,12 @@ func (DepositAuthorization) MsgTypeURL() string {
 func (a DepositAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
 	mDeposit, ok := msg.(*MsgDeposit)
 	if !ok {
-		return authz.AcceptResponse{}, sdkerrors.ErrInvalidType.Wrap("type mismatch")
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInvalidType.Wrap("type mismatch")
 	}
 
 	limitLeft := a.SpendLimit.Sub(mDeposit.Amount)
 	if limitLeft.IsNegative() {
-		return authz.AcceptResponse{}, sdkerrors.ErrInsufficientFunds.Wrapf(
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInsufficientFunds.Wrapf(
 			"requested amount is more than spend limit",
 		)
 	}
@@ -48,13 +48,13 @@ func (a DepositAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptRe
 // ValidateBasic implements Authorization.ValidateBasic.
 func (a DepositAuthorization) ValidateBasic() error {
 	if a.SpendLimit.IsNil() {
-		return sdkerrors.ErrInvalidCoins.Wrap("spend limit cannot be nil")
+		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be nil")
 	}
 	if a.SpendLimit.LTE(sdk.ZeroInt()) {
-		return sdkerrors.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
+		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
 	}
 	if a.SpendLimit.LT(minDepositGrant) {
-		return sdkerrors.ErrInvalidCoins.Wrapf("spend limit cannot be less than %s", minDepositGrant)
+		return sdkerrtypes.ErrInvalidCoins.Wrapf("spend limit cannot be less than %s", minDepositGrant)
 	}
 
 	return nil

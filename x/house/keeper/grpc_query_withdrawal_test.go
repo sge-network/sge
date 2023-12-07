@@ -3,15 +3,17 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/house/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/house/types"
 )
 
 func TestWithdrawQuerySingle(t *testing.T) {

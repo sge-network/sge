@@ -7,12 +7,14 @@ import (
 	"testing"
 	"time"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/golang-jwt/jwt/v4"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/ovm/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNTestPubKeys(n int) ([]string, error) {
@@ -39,7 +41,7 @@ func createNTestPubKeys(n int) ([]string, error) {
 func TestChangePubkeysListProposal(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		msgk, _, wctx := setupMsgServer(t)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
@@ -48,7 +50,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 			"leader_index": 0,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedT1, err := T1.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedT1, err := T1.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -66,7 +68,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MinPubKeysCount - 1)
 		require.NoError(t, err)
 
@@ -75,7 +77,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 			"leader_index": 0,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedProposalTicket, err := proposalTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -85,7 +87,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 
@@ -93,7 +95,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MaxPubKeysCount + 1)
 		require.NoError(t, err)
 
@@ -102,7 +104,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 			"leader_index": 0,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedProposalTicket, err := proposalTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -112,7 +114,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 
@@ -120,7 +122,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 		k, msgk, ctx, wctx := setupMsgServerAndKeeper(t)
 
 		createNActiveProposal(k, ctx, 1)
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		pubs, err := createNTestPubKeys(types.MinPubKeysCount)
 		require.NoError(t, err)
 
@@ -129,7 +131,7 @@ func TestChangePubkeysListProposal(t *testing.T) {
 			"leader_index": types.MaxPubKeysCount,
 			"exp":          jwt.NewNumericDate(time.Now().Add(1 * time.Hour)),
 		})
-		singedProposalTicket, err := proposalTicket.SignedString(simappUtil.TestOVMPrivateKeys[0])
+		singedProposalTicket, err := proposalTicket.SignedString(simapp.TestOVMPrivateKeys[0])
 		require.NoError(t, err)
 
 		resp, err := msgk.SubmitPubkeysChangeProposal(
@@ -139,14 +141,14 @@ func TestChangePubkeysListProposal(t *testing.T) {
 				Ticket:  singedProposalTicket,
 			},
 		)
-		require.ErrorIs(t, sdkerrors.ErrInvalidRequest, err)
+		require.ErrorIs(t, sdkerrtypes.ErrInvalidRequest, err)
 		require.Nil(t, resp)
 	})
 
 	t.Run("fails", func(t *testing.T) {
 		msgk, _, wctx := setupMsgServer(t)
 
-		creator := simappUtil.TestParamUsers["user1"]
+		creator := simapp.TestParamUsers["user1"]
 		t.Run("public keys change proposal", func(t *testing.T) {
 			_, err := msgk.SubmitPubkeysChangeProposal(
 				wctx,

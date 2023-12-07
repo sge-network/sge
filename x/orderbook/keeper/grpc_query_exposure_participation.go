@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // OrderBookParticipationExposures queries participation exposures info for a given orderbook
@@ -35,7 +37,7 @@ func (k Keeper) OrderBookParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err
@@ -85,7 +87,7 @@ func (k Keeper) ParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err
@@ -129,7 +131,7 @@ func (k Keeper) HistoricalParticipationExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationExposure types.ParticipationExposure
 			if err := k.cdc.Unmarshal(value, &participationExposure); err != nil {
 				return false, err

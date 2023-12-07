@@ -4,12 +4,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestWager(t *testing.T) {
@@ -33,14 +36,14 @@ func TestWager(t *testing.T) {
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
 				"odds2": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("1.0")},
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			desc: "not found market",
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "notExistMarketUID",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -57,7 +60,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_inactive",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -74,7 +77,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_declared",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -92,7 +95,7 @@ func TestWager(t *testing.T) {
 			bet: &types.Bet{
 				UID:       "betUID",
 				MarketUID: "uid_expired",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -119,9 +122,9 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_oddsNotexist",
 				OddsUID:   "notExistOdds",
-				Amount:    sdk.NewInt(1000),
+				Amount:    sdkmath.NewInt(1000),
 				OddsValue: "5",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -148,9 +151,9 @@ func TestWager(t *testing.T) {
 				UID:       "betUID",
 				MarketUID: "uid_lowBetAmount",
 				OddsUID:   "odds1",
-				Amount:    sdk.NewInt(100),
+				Amount:    sdkmath.NewInt(100),
 				OddsValue: "5",
-				Creator:   simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:   simapp.TestParamUsers["user1"].Address.String(),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
 				"odds1": {UID: "odds1", MaxLossMultiplier: sdk.MustNewDecFromStr("0.1")},
@@ -187,9 +190,9 @@ func TestWager(t *testing.T) {
 				UID:               "betUID",
 				MarketUID:         "uid_success",
 				OddsUID:           "odds1",
-				Amount:            sdk.NewInt(1000000),
+				Amount:            sdkmath.NewInt(1000000),
 				OddsValue:         "5",
-				Creator:           simappUtil.TestParamUsers["user1"].Address.String(),
+				Creator:           simapp.TestParamUsers["user1"].Address.String(),
 				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 			},
 			betOdds: map[string]*types.BetOddsCompact{
@@ -214,10 +217,10 @@ func TestWager(t *testing.T) {
 				if tc.market.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
 					_, err = tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 						ctx,
-						simappUtil.TestParamUsers["user1"].Address,
+						simapp.TestParamUsers["user1"].Address,
 						tc.market.UID,
-						sdk.NewInt(100000000),
-						sdk.NewInt(1),
+						sdkmath.NewInt(100000000),
+						sdkmath.NewInt(1),
 					)
 					require.NoError(t, err)
 				}

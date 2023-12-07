@@ -1,8 +1,10 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
 )
 
@@ -43,11 +45,11 @@ func (msg *MsgResolve) GetSignBytes() []byte {
 func (msg *MsgResolve) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
 	if msg.Ticket == "" {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "invalid ticket param")
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket param")
 	}
 
 	return nil

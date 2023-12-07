@@ -3,12 +3,14 @@ package keeper_test
 import (
 	"testing"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/market/keeper"
 	"github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func createNMarket(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Market {

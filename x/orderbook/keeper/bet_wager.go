@@ -1,9 +1,10 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -192,7 +193,7 @@ func (k Keeper) initFulfillmentInfo(
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
 
 		// initialize the fulfilled bet amount with 0
-		fulfilledBetAmount: sdk.NewInt(0),
+		fulfilledBetAmount: sdkmath.NewInt(0),
 		betOdds:            odds,
 		oddUIDS:            oddUIDS,
 	}
@@ -202,7 +203,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(bps)) {
-		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
+		err = sdkerrtypes.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
 		return
 	}
 
@@ -211,7 +212,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(pes)) {
-		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
+		err = sdkerrtypes.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
 

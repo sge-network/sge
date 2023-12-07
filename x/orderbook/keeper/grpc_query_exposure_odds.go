@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // OrderBookExposure queries book exposure info for given order book id and odds id
@@ -63,7 +65,7 @@ func (k Keeper) OrderBookExposures(
 	pageRes, err := query.FilteredPaginate(
 		exposureStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var orderBookExposure types.OrderBookOddsExposure
 			if err := k.cdc.Unmarshal(value, &orderBookExposure); err != nil {
 				return false, err

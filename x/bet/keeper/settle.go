@@ -3,8 +3,10 @@ package keeper
 import (
 	"fmt"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -31,7 +33,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	if bet.Creator != bettorAddressStr {
@@ -106,7 +108,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	payout, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)

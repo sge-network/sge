@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/house/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // Deposits queries all deposits
@@ -25,7 +27,7 @@ func (k Keeper) Deposits(
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := k.getDepositStore(ctx)
-	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
 			return err
@@ -53,7 +55,7 @@ func (k Keeper) DepositsByAccount(c context.Context,
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(k.getDepositStore(ctx), types.GetDepositListPrefix(req.Address))
-	pageRes, err := query.Paginate(store, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
 		var deposit types.Deposit
 		if err := k.cdc.Unmarshal(value, &deposit); err != nil {
 			return err

@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/orderbook/simulation"
@@ -31,15 +32,15 @@ func TestDecodeStore(t *testing.T) {
 		Index:                      1,
 		OrderBookUID:               orderBookUID,
 		ParticipantAddress:         sample.AccAddress(),
-		Liquidity:                  sdk.NewInt(100),
-		CurrentRoundLiquidity:      sdk.NewInt(50),
+		Liquidity:                  sdkmath.NewInt(100),
+		CurrentRoundLiquidity:      sdkmath.NewInt(50),
 		ExposuresNotFilled:         1,
-		TotalBetAmount:             sdk.NewInt(10),
-		CurrentRoundTotalBetAmount: sdk.NewInt(10),
-		MaxLoss:                    sdk.NewInt(10),
-		CurrentRoundMaxLoss:        sdk.NewInt(10),
+		TotalBetAmount:             sdkmath.NewInt(10),
+		CurrentRoundTotalBetAmount: sdkmath.NewInt(10),
+		MaxLoss:                    sdkmath.NewInt(10),
+		CurrentRoundMaxLoss:        sdkmath.NewInt(10),
 		CurrentRoundMaxLossOddsUID: uuid.NewString(),
-		ActualProfit:               sdk.NewInt(20),
+		ActualProfit:               sdkmath.NewInt(20),
 		IsSettled:                  false,
 	}
 
@@ -53,8 +54,8 @@ func TestDecodeStore(t *testing.T) {
 		OrderBookUID:       orderBookUID,
 		OddsUID:            uuid.NewString(),
 		ParticipationIndex: 1,
-		Exposure:           sdk.NewInt(10),
-		BetAmount:          sdk.NewInt(10),
+		Exposure:           sdkmath.NewInt(10),
+		BetAmount:          sdkmath.NewInt(10),
 		IsFulfilled:        false,
 		Round:              1,
 	}

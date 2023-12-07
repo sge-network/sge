@@ -1,9 +1,10 @@
 package types
 
 import (
+	yaml "gopkg.in/yaml.v2"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // NewOrderBookOddsExposure creates a new book odds exposure object

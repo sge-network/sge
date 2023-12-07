@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // CreateCampaign is a method to create a campaign
+  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
+  // UpdateCampaign is a method to update campaign
+  rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
+  // WithdrawCampaignFunds is method to withdraw funds from the campaign
+  rpc WithdrawFunds(MsgWithdrawFunds) returns (MsgWithdrawFundsResponse);
+  // GrantReward is method to allocate rewards
+  rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
+}
+
+// MsgCreateCampaign is msg to create a reward campaign
+message MsgCreateCampaign {
+  // creator is the address of campaign creator account.
+  string creator = 1;
+  // uid is the unique identifier of the campaign.
+  string uid = 2;
+  // total_funds is the total funds allocated to the campaign.
+  string total_funds = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"total_funds\""
+  ];
+  // ticket is the payload data.
+  string ticket = 4;
+}
+
+// MsgCreateCampaignResponse campaign create message response type.
+message MsgCreateCampaignResponse {}
+
+// MsgUpdateCampaign is campaign update message type.
+message MsgUpdateCampaign {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the campaign.
+  string uid = 2;
+  // topup_funds is the topup funds to increase the pool balance of the
+  // campaign.
+  string topup_funds = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"topup_funds\""
+  ];
+  // ticket is the payload data.
+  string ticket = 4;
+}
+
+// MsgUpdateCampaignResponse campaign update message response type.
+message MsgUpdateCampaignResponse {}
+
+// MsgGrantReward is execute reward message type.
+message MsgGrantReward {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the reward.
+  string uid = 2;
+  // campaign_uid is the unique identifier of the reward campaign.
+  string campaign_uid = 3;
+  // ticket is the payload data.
+  string ticket = 4;
+}
+
+// MsgGrantSignupRewardResponse execute signup reward message response type.
+message MsgGrantRewardResponse {}
+
+// MsgWithdrawFunds is withdraw funds message type.
+message MsgWithdrawFunds {
+  // creator is the address of creator account.
+  string creator = 1;
+  // uid is the unique identifier of the reward campaign.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgWithdrawFundsResponse withdraw funds message response type.
+message MsgWithdrawFundsResponse {}

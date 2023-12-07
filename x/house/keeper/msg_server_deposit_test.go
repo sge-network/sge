@@ -4,20 +4,23 @@ import (
 	"testing"
 	"time"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/golang-jwt/jwt"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgServerDeposit(t *testing.T) {
 	tApp, k, msgk, ctx, wctx := setupMsgServerAndApp(t)
-	creator := simappUtil.TestParamUsers["user1"]
-	depositor := simappUtil.TestParamUsers["user2"]
+	creator := simapp.TestParamUsers["user1"]
+	depositor := simapp.TestParamUsers["user2"]
 	// var err error
 
 	marketItem := markettypes.Market{
@@ -41,7 +44,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	t.Run("min deposit", func(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator: creator.Address.String(),
-			Amount:  sdk.NewInt(1),
+			Amount:  sdkmath.NewInt(1),
 		}
 
 		_, err := msgk.Deposit(wctx, inputDeposit)
@@ -51,7 +54,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	t.Run("no ticket", func(t *testing.T) {
 		inputDeposit := &types.MsgDeposit{
 			Creator: creator.Address.String(),
-			Amount:  sdk.NewInt(1000),
+			Amount:  sdkmath.NewInt(1000),
 		}
 
 		_, err := msgk.Deposit(wctx, inputDeposit)
@@ -69,13 +72,13 @@ func TestMsgServerDeposit(t *testing.T) {
 			"kyc_data":          testKyc,
 			"depositor_address": depositor.Address.String(),
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
 			Creator:   creator.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 
@@ -93,13 +96,13 @@ func TestMsgServerDeposit(t *testing.T) {
 			"iat":      time.Now().Unix(),
 			"kyc_data": testKyc,
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
 			Creator:   depositor.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 
@@ -115,7 +118,7 @@ func TestMsgServerDeposit(t *testing.T) {
 	})
 
 	t.Run("success with authorization", func(t *testing.T) {
-		grantAmount := sdk.NewInt(1000)
+		grantAmount := sdkmath.NewInt(1000)
 
 		expTime := time.Now().Add(5 * time.Minute)
 		err := tApp.AuthzKeeper.SaveGrant(ctx,
@@ -146,13 +149,13 @@ func TestMsgServerDeposit(t *testing.T) {
 			"depositor_address": depositor.Address.String(),
 			"kyc_data":          testKyc,
 		}
-		ticket, err := simappUtil.CreateJwtTicket(ticketClaim)
+		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
 
 		inputDeposit := &types.MsgDeposit{
 			Creator:   creator.Address.String(),
 			MarketUID: testMarketUID,
-			Amount:    sdk.NewInt(1000),
+			Amount:    sdkmath.NewInt(1000),
 			Ticket:    ticket,
 		}
 

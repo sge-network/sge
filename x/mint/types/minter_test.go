@@ -6,10 +6,12 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/sge-network/sge/x/mint/types"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/x/mint/types"
 )
 
 func TestPhaseInflation(t *testing.T) {
@@ -205,7 +207,7 @@ func TestBlockProvision(t *testing.T) {
 		provisions, _ := minter.BlockProvisions(params, 1)
 
 		expProvisions := sdk.NewCoin(params.MintDenom,
-			sdk.NewInt(tc.expProvisions))
+			sdkmath.NewInt(tc.expProvisions))
 
 		require.True(t, expProvisions.IsEqual(provisions),
 			"test: %v\n\tExp: %v\n\tGot: %v\n",
@@ -230,8 +232,8 @@ func TestBlockProvisions(t *testing.T) {
 	params := types.DefaultParams()
 
 	blocksPerYear := int64(51480)
-	totalSupply := sdk.NewIntFromUint64(1150000000000000)
-	params.ExcludeAmount = sdk.NewInt(445000000000025)
+	totalSupply := sdkmath.NewIntFromUint64(1150000000000000)
+	params.ExcludeAmount = sdkmath.NewInt(445000000000025)
 	tests := []struct {
 		phaseindex   int
 		expProvision int64
@@ -263,7 +265,7 @@ func TestBlockProvisions(t *testing.T) {
 		params.BlocksPerYear = blocksPerYear
 		minter.PhaseProvisions = minter.NextPhaseProvisions(totalSupply, params.ExcludeAmount, phase)
 
-		currentPhaseProvision := sdk.NewInt(0)
+		currentPhaseProvision := sdkmath.NewInt(0)
 		if !types.IsEndPhase(phase) {
 			for phaseStep == currentPhaseStep {
 				blockIProvision, truncatedToken := minter.BlockProvisions(params, phaseStep)
@@ -279,7 +281,7 @@ func TestBlockProvisions(t *testing.T) {
 			t.Logf("Total Supply after phase %v: %v", phaseStep, totalSupply)
 		}
 
-		phaseDeviation := sdk.NewInt(tc.expProvision).Sub(currentPhaseProvision).Abs().Int64()
+		phaseDeviation := sdkmath.NewInt(tc.expProvision).Sub(currentPhaseProvision).Abs().Int64()
 		allowedPhaseDeviation := int64(4)
 		require.LessOrEqual(
 			t,
@@ -293,7 +295,7 @@ func TestBlockProvisions(t *testing.T) {
 		)
 	}
 
-	expTotalSupply := sdk.NewInt(1600000000000000)
+	expTotalSupply := sdkmath.NewInt(1600000000000000)
 	deviation := totalSupply.Sub(expTotalSupply).Abs().Int64()
 	allowedTotalSupplyDeviation := int64(17)
 	require.LessOrEqual(t, deviation, allowedTotalSupplyDeviation,
@@ -310,8 +312,8 @@ func TestAnnualProvisions(t *testing.T) {
 	minter.PhaseStep = 1
 	minter.Inflation = firstPhase.Inflation
 	minter.PhaseProvisions = minter.NextPhaseProvisions(
-		sdk.NewInt(totalSupply),
-		sdk.NewInt(excludeAmount),
+		sdkmath.NewInt(totalSupply),
+		sdkmath.NewInt(excludeAmount),
 		firstPhase,
 	)
 	t.Log(minter.PhaseProvisions)
@@ -361,7 +363,7 @@ func BenchmarkNextPhaseProvisions(b *testing.B) {
 	b.ReportAllocs()
 	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
 	params := types.DefaultParams()
-	totalSupply := sdk.NewInt(100000000000000)
+	totalSupply := sdkmath.NewInt(100000000000000)
 	phase := params.GetPhaseAtStep(1)
 
 	// run the NextPhaseProvisions function b.N times
