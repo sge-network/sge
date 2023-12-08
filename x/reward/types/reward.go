@@ -52,7 +52,7 @@ type RewardFactoryData struct {
 	Common   RewardPayloadCommon
 }
 
-func NewRewardFactoryData(receiver Receiver, common RewardPayloadCommon, pairs ...string) RewardFactoryData {
+func NewRewardFactoryData(receiver Receiver, common RewardPayloadCommon) RewardFactoryData {
 	return RewardFactoryData{
 		Receiver: receiver,
 		Common:   common,

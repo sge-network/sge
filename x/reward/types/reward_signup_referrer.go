@@ -13,12 +13,12 @@ import (
 type SignUpReferrerReward struct{}
 
 // NewSignUpReferrerlReward create new object of signup referrer reward calculator type.
-func NewSignUpReferrerReward() SignUpReward { return SignUpReward{} }
+func NewSignUpReferrerReward() SignUpReferrerReward { return SignUpReferrerReward{} }
 
 // ValidateCampaign validates campaign definitions.
 func (sur SignUpReferrerReward) ValidateCampaign(campaign Campaign, blockTime uint64) error {
-	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
-		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
+	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_REFERRAL {
+		return sdkerrors.Wrapf(ErrWrongRewardCategory, "wrong reward category")
 	}
 	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
 		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
@@ -39,38 +39,32 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
 
-	addr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
+	receiverAddr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Referee, campaign.RewardCategory) {
+	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Referee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
 		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "referee account has signed up yet, there is no referee claim record")
 	}
 
-	pairs := []string{
-		payload.Referee,
-		payload.Common.Receiver,
-	}
-
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, addr) {
+	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
 		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
 	}
 
-	subAccountAddressString, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccAddrStr, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	return NewRewardFactoryData(
 		NewReceiver(
-			subAccountAddressString,
+			subAccAddrStr,
 			payload.Common.Receiver,
 			campaign.RewardAmount.SubaccountAmount,
 			campaign.RewardAmount.MainAccountAmount,
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,
-		pairs...,
 	), nil
 }

@@ -62,11 +62,11 @@ func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rByCategory types.RewardByC
 // GetRewardsByAddressAndCategory returns all rewards by address and category.
 func (k Keeper) GetRewardsByAddressAndCategory(
 	ctx sdk.Context,
-	address string,
+	addr string,
 	category types.RewardCategory,
 ) (list []types.RewardByCategory, err error) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsByCategoryPrefix(address, category))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsByCategoryPrefix(addr, category))
 
 	defer func() {
 		err = iterator.Close()
@@ -83,8 +83,11 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 
 // HasRewardByReceiver returns true if there is a record for the category and reward receiver
 func (k Keeper) HasRewardByReceiver(ctx sdk.Context, addr string, category types.RewardCategory) bool {
-	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	return store.Has(types.GetRewardsByCategoryPrefix(addr, category))
+	rewardsByCat, err := k.GetRewardsByAddressAndCategory(ctx, addr, category)
+	if err != nil || len(rewardsByCat) > 0 {
+		return true
+	}
+	return false
 }
 
 // GetAllRewardsByReceiverAndCategory returns all rewards by receiver and category
