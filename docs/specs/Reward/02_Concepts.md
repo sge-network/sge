@@ -16,8 +16,8 @@ This reward can be given when a user is creating an account by signing up in sys
 
 #### **2. Referral**
 
-This reward can be given when a user is referring another new user to the system, the referrer and referee reward is in `subaccount` balance and can be used for betting or be the house functionalities.
+This reward can be given when a user is referred by another user to the system, the referee reward is in `subaccount` balance and can be used for betting or be the house functionalities.
 
-#### **3. Affiliation**
+### **Referral**
 
-This reward can be given when an influencer or advertisement entity brings an amount of attention to the platform, responsible user account will be rewarded.
+This reward can be given when a user is referring another new user to the system, the referrer reward is in `subaccount` balance and can be used for betting or be the house functionalities.

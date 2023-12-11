@@ -126,15 +126,118 @@ message MsgGrantReward {
 message MsgApplyRewardResponse {}
 ```
 
-### **Sample Grant Reward ticket**
+### MsgGrantRewardTicket Payloads
+
+#### Common ticket payload type
+
+This is a common type that should be present in all of the ticket payloads
+
+```proto
+// RewardPayloadCommon
+message RewardPayloadCommon {
+  // receiver is the address of the account that receives the reward.
+  string receiver = 1;
+
+  // source_uid is the address of the source.
+  // It is used to identify the source of the reward.
+  // For example, the source uid of a referral signup reward is the address of
+  // the referer.
+  string source_uid = 2 [
+    (gogoproto.customname) = "SourceUID",
+    (gogoproto.jsontag) = "source_uid",
+    json_name = "source_uid"
+  ];
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 3;
+}
+```
+
+#### **1. Individual Signup**
+
+```proto
+// GrantSignupRewardPayload is the type for signup reward grant payload.
+message GrantSignupRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
+}
+```
+
+##### **Sample Signup Grant Reward ticket**
+
+The `source_uid` should be empty.
 
 ```json
 {
  "common": {
   "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
-  "source_uid": "source uid",
+  "source_uid": "",
   "meta": "custom grant metadata"
  },
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "GrantReward"
+}
+```
+
+#### **2. Referral Sign Up**
+
+The `source_uid` is the address of the referrer.
+
+```proto
+// GrantSignupRewardPayload is the type for signup reward grant payload.
+message GrantSignupRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
+}
+```
+
+### **Sample Referral Signup Grant Reward ticket**
+
+```json
+{
+ "common": {
+  "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+  "source_uid": "{account address of the referrer}",
+  "meta": "custom grant metadata"
+ },
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "GrantReward"
+}
+```
+
+#### **2. Referral**
+
+- The `source_uid` should be empty.
+- The `referee` should contain the address of referee who already claimed their signup referral reward.
+
+```proto
+// GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
+// payload.
+message GrantSignupReferrerRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // referee is the address of the account that used this referrer address as
+  // source_uid
+  string referee = 2;
+}
+```
+
+#### **Sample Referral Grant Reward ticket**
+
+```json
+{
+ "common": {
+  "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+  "source_uid": "",
+  "meta": "custom grant metadata"
+ },
+ "referee": "{account address of the referee who has already claimed their reward}",
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",

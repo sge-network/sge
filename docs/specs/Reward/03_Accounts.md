@@ -2,7 +2,7 @@
 
 There is one account in the Reward module.
 
-- Reward Pool: This account holds the reward amount transferred from the campaign `funder` to the `reward_pool` module account.
+- Reward Pool: This account holds the reward amount transferred from the campaign `promoter` to the `reward_pool` module account.
 
 During the campaign creation the pool amount will be transferred to the reward pool module account.
 
