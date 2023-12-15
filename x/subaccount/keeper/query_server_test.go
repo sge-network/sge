@@ -51,7 +51,7 @@ func TestQueryServer(t *testing.T) {
 	t.Run("Params", func(t *testing.T) {
 		gotParams, err := queryServer.Params(sdk.WrapSDKContext(ctx), &types.QueryParamsRequest{})
 		require.NoError(t, err)
-		require.Equal(t, wantParams, *gotParams.Params)
+		require.Equal(t, wantParams, gotParams.Params)
 	})
 
 	t.Run("Subaccount", func(t *testing.T) {

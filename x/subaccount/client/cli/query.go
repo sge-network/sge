@@ -27,6 +27,7 @@ func GetQueryCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdQueryParams())
 	cmd.AddCommand(QuerySubaccount())
 
 	return cmd
