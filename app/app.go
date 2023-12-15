@@ -41,6 +41,7 @@ import (
 	v1 "github.com/sge-network/sge/app/upgrades/v1"
 	v2 "github.com/sge-network/sge/app/upgrades/v2"
 	v3 "github.com/sge-network/sge/app/upgrades/v3"
+	v4 "github.com/sge-network/sge/app/upgrades/v4"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -73,6 +74,7 @@ var (
 		v1.Upgrade,
 		v2.Upgrade,
 		v3.Upgrade,
+		v4.Upgrade,
 	}
 )
 
