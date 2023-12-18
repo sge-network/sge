@@ -128,9 +128,12 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 		); err != nil {
 			return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
 		}
+
+		campaign.Pool.Total = campaign.Pool.Total.Add(msg.TopupFunds)
 	}
 
 	campaign.EndTS = payload.EndTs
+	campaign.IsActive = payload.IsActive
 
 	k.SetCampaign(ctx, campaign)
 
