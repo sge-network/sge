@@ -36,17 +36,19 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve reward factory")
 	}
 
-	receiver, rewardCommon, err := rewardFactory.Calculate(goCtx, ctx,
+	factData, err := rewardFactory.Calculate(goCtx, ctx,
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
 			SubAccountKeeper: k.subaccountKeeper,
+			RewardKeeper:     k.Keeper,
+			AccountKeeper:    k.accountKeeper,
 		}, campaign, msg.Ticket, msg.Creator)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	rewards, err := k.GetRewardsByAddressAndCategory(ctx, receiver.MainAccountAddr, campaign.RewardCategory)
+	rewards, err := k.GetRewardsByAddressAndCategory(ctx, factData.Receiver.MainAccountAddr, campaign.RewardCategory)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
 	}
@@ -54,25 +56,25 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
 	}
 
-	if err := campaign.CheckPoolBalance(receiver.SubAccountAmount.Add(receiver.MainAccountAmount)); err != nil {
+	if err := campaign.CheckPoolBalance(factData.Receiver.SubAccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
-	if err := k.DistributeRewards(ctx, receiver); err != nil {
+	if err := k.DistributeRewards(ctx, factData.Receiver); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInDistributionOfRewards, "%s", err)
 	}
 
-	k.UpdateCampaignPool(ctx, campaign, receiver)
+	k.UpdateCampaignPool(ctx, campaign, factData.Receiver)
 	k.SetReward(ctx, types.NewReward(
-		msg.Uid, msg.Creator, receiver.MainAccountAddr,
+		msg.Uid, msg.Creator, factData.Receiver.MainAccountAddr,
 		msg.CampaignUid, campaign.RewardAmount,
-		rewardCommon.SourceUID,
-		rewardCommon.Meta,
+		factData.Common.SourceUID,
+		factData.Common.Meta,
 	))
-	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, receiver.MainAccountAddr, campaign.RewardCategory))
+	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, factData.Receiver.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
-	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, receiver)
+	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, factData.Receiver)
 
 	return &types.MsgGrantRewardResponse{}, nil
 }
