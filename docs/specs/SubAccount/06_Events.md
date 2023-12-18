@@ -58,6 +58,7 @@ The Sub Account module emits the following events
 |:---------------------:|:---------------------:|:---------------------------------:|
 | subacc_house_deposit  | creator               |  {creator}                        |
 | subacc_house_deposit  | subacc_depositor      |  {subacc_depositor}               |
+| subacc_house_deposit  | subacc_deposit_fee    |  {feeAmount}                      |
 | subacc_house_deposit  | deposit_market_index  |  {market_uid#participation_index} |
 | message               | module                |  subaccount                       |
 | message               | action                |  subacc_house_deposit             |

@@ -39,10 +39,11 @@ message MsgCreate {
   // creator is the msg signer.
   string creator = 1;
 
-  // sub_account_owner is the owner of the subaccount.
-  string sub_account_owner = 2;
+  // owner is the owner of the subaccount.
+  string owner = 2;
 
   // locked_balances is the list of balance locks.
+  // Fixme: why this attribute needs to be repeated?
   repeated LockedBalance locked_balances = 3 [ (gogoproto.nullable) = false ];
 }
 
@@ -60,10 +61,12 @@ message MsgTopUp {
   // creator is the msg signer.
   string creator = 1;
 
-  // sub_account is the subaccount address.
-  string sub_account = 2;
+  // address is the subaccount address.
+  string address = 2;
 
   // locked_balances is the list of balance locks.
+  // Fixme: Are we sending multiple balance update together? If not, then only
+  // locked balance should be enough
   repeated LockedBalance locked_balances = 3 [ (gogoproto.nullable) = false ];
 }
 
@@ -93,9 +96,14 @@ message MsgWithdrawUnlockedBalancesResponse {}
 The user is able to wager using the sub account balance.
 
 ```proto
-// MsgPlaceBet wraps the MsgPlaceBet message. We need it in order not to have
+// MsgWager wraps the MsgWager message. We need it in order not to have
 // double interface registration conflicts.
-message MsgWager { sgenetwork.sge.bet.MsgWager msg = 1; }
+message MsgWager {
+  // creator is the subaccount owner.
+  string creator = 1;
+  // ticket is the jwt ticket data.
+  string ticket = 2;
+}
 
 // MsgBetResponse wraps the MsgPlaceBetResponse message. We need it in order not
 // to have double interface registration conflicts.

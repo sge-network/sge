@@ -12,45 +12,77 @@ The Reward model in the Proto files is as below:
 
 1. `creator`: is the creator account(message signer of the CreateCampaign).
 2. `uid`: is the universal unique identifier of the campaign.
-3. `funder_address`: The account address that is responsible for paying the campaing pool balance.
+3. `promoter`: The account address that is responsible for paying the campaign pool balance.
 4. `start_ts`: The time that campaign would be started and receive apply reward message.
 5. `end_ts`: The time that campaign would be ended and is not able tor receive apply reward message.
-6. `reward_type`: Defines the type of reward that is defined for the campaign.
-7. `reward_defs`: Definitions of the payable rewards receivers and amounts.
-8. `pool`: Information of the current pool balance.
+6. `reward_category`: Defines the general category of reward that is defined for the campaign.
+7. `reward_type`: Defines the type of reward that is defined for the campaign.
+8. `reward_amount_type`: Defines the type of reward amount allocation that is defined for the campaign.
+9. `reward_amount`: Defines the amount of reward that is defined for the campaign to be granted to main or sub account.
+10. `pool`: Information of the current pool balance.
+11. `is_active`: Is active/inactive status of the campaign.
+12. `claims_per_category`: Maximum number of reward grant transaction per category.
+13. `meta`: Contains a string metadata that can be a simple description or a json.
 
 ```proto
 // Campaign is type for defining the campaign properties.
 message Campaign {
   // creator is the address of campaign creator.
   string creator = 1;
+
+  // uid is the unique identifier of a campaign.
   string uid = 2 [
     (gogoproto.customname) = "UID",
     (gogoproto.jsontag) = "uid",
     json_name = "uid"
   ];
-  string funder_address = 3;
+
+  // promoter is the address of campaign promoter.
+  // Funds for the campaign would be deducted from this account.
+  string promoter = 3;
+
   // start_ts is the start timestamp of a campaign.
   uint64 start_ts = 4 [
     (gogoproto.customname) = "StartTS",
     (gogoproto.jsontag) = "start_ts",
     json_name = "start_ts"
   ];
+
   // end_ts is the end timestamp of a campaign.
   uint64 end_ts = 5 [
     (gogoproto.customname) = "EndTS",
     (gogoproto.jsontag) = "end_ts",
     json_name = "end_ts"
   ];
-  // reward_type is the type of defined reward.
-  RewardType reward_type = 6;
-  // reward_defs is the list of definitions of the campaign rewards.
-  repeated Definition reward_defs = 7 [ (gogoproto.nullable) = false ];
-  // pool is the tracker of pool funds of the campaign.
-  Pool pool = 8 [ (gogoproto.nullable) = false ];
+
+  // reward_category is the category of reward.
+  RewardCategory reward_category = 6;
+
+  // reward_type is the type of reward.
+  RewardType reward_type = 7;
+
+  // amount_type is the type of reward amount.
+  RewardAmountType reward_amount_type = 8;
+
+  // reward_amount is the amount defined for a reward.
+  RewardAmount reward_amount = 9;
+
+  // pool is the tracker of campaign funds.
+  Pool pool = 10 [ (gogoproto.nullable) = false ];
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 11;
+
+  // claims_per_category is the number of times a user can claim a
+  // reward for category of this campaign.
+  uint64 claims_per_category = 12;
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 13;
 }
 
-// Pool is the type for the campaign funding pool.
+// Pool tracks funds assigned and spent to/for a campaign.
 message Pool {
   string total = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
@@ -64,62 +96,160 @@ message Pool {
   ];
 }
 
-// Definition is the type for reward declaration for a campaign.
-message Definition {
-  ReceiverType rec_type = 1;
-  ReceiverAccType rec_acc_type = 2;
-  string amount = 3 [
-    (gogoproto.customtype) = "cosmossdk.io/math.Int",
-    (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"amount\""
-  ];
-  uint64 unlock_ts = 4 [
-    (gogoproto.customname) = "UnlockTS",
-    (gogoproto.jsontag) = "unlock_ts",
-    json_name = "unlock_ts"
-  ];
-}
+// RewardType defines supported types of rewards in reward module.
+enum RewardCategory {
+  // the invalid or unknown
+  REWARD_CATEGORY_UNSPECIFIED = 0;
 
-// Receiver is the type for reward receiver properties.
-message Receiver {
-  ReceiverType rec_type = 1;
-  string addr = 2;
+  // signup reward
+  REWARD_CATEGORY_SIGNUP = 1;
+
+  // referral reward
+  REWARD_CATEGORY_REFERRAL = 2;
+
+  // affiliate reward
+  REWARD_CATEGORY_AFFILIATE = 3;
+
+  // bet refunds
+  REWARD_CATEGORY_BET_REFUND = 4;
+
+  // milestone reward
+  REWARD_CATEGORY_MILESTONE = 5;
+
+  // bet discounts
+  REWARD_CATEGORY_BET_DISCOUNT = 6;
+
+  // other rewards
+  REWARD_CATEGORY_OTHER = 7;
 }
 
 // RewardType defines supported types of rewards of reward module.
 enum RewardType {
   // the invalid or unknown
   REWARD_TYPE_UNSPECIFIED = 0;
+
   // signup reward
   REWARD_TYPE_SIGNUP = 1;
+
+  // referral signup reward
+  REWARD_TYPE_REFERRAL_SIGNUP = 2;
+
+  // affiliate signup reward
+  REWARD_TYPE_AFFILIATE_SIGNUP = 3;
+
   // referral reward
-  REWARD_TYPE_REFERRAL = 2;
-  // affiliation reward
-  REWARD_TYPE_AFFILIATION = 3;
-  // noloss bets reward
-  REWARD_TYPE_NOLOSS_BETS = 4;
+  REWARD_TYPE_REFERRAL = 4;
+
+  // affiliate reward
+  REWARD_TYPE_AFFILIATE = 5;
+
+  // bet refunds
+  REWARD_TYPE_BET_REFUND = 6;
+
+  // milestone reward
+  REWARD_TYPE_MILESTONE = 7;
+
+  // bet discounts
+  REWARD_TYPE_BET_DISCOUNT = 8;
+
+  // other rewards
+  REWARD_TYPE_OTHER = 9;
 }
 
-// ReceiverAccType defines supported types account types for reward
-// distribution.
-enum ReceiverAccType {
+// RewardType defines supported types of rewards of reward module.
+enum RewardAmountType {
   // the invalid or unknown
-  RECEIVER_ACC_TYPE_UNSPECIFIED = 0;
-  // main account
-  RECEIVER_ACC_TYPE_MAIN = 1;
-  // sub account
-  RECEIVER_ACC_TYPE_SUB = 2;
+  REWARD_AMOUNT_TYPE_UNSPECIFIED = 0;
+
+  // Fixed amount
+  REWARD_AMOUNT_TYPE_FIXED = 1;
+
+  // Business logic defined amount
+  REWARD_AMOUNT_TYPE_LOGIC = 2;
+
+  // Percentage of bet amount
+  REWARD_AMOUNT_TYPE_PERCENTAGE = 3;
+}
+```
+
+## **Reward**
+
+1. `uid`: is the unique universal identifier of the granted reward.
+2. `creator`: is the creator account(message signer of the CreateCampaign).
+3. `receiver`: is the string address of the main account.
+4. `campaign_uid`: is the unique identifier of the associated campaign.
+5. `reward_amount`: is the amount to be deducted from main and sub account balances.
+6. `source_uid`: is the source of reward grant universal unique identifier.
+7. `meta`: is the metadata related to the granted reward, can be a string or json.
+
+```proto
+// Reward is the type for transaction made to reward a user
+// based on users eligibility.
+message Reward {
+
+  // uid is the unique identifier for a reward.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
+  // creator is the address of the account that invokes the reward transaction.
+  string creator = 2;
+
+  // receiver is the address of the account that receives the reward.
+  string receiver = 3;
+
+  // campaign_uid is the unique identifier of the campaign.
+  string campaign_uid = 4 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
+  ];
+
+  // reward_amount is the amount of the reward.
+  RewardAmount reward_amount = 7 [
+    (gogoproto.customname) = "RewardAmount",
+    (gogoproto.jsontag) = "reward_amount",
+    json_name = "reward_amount"
+  ];
+
+  // source_uid is the address of the source.
+  // It is used to identify the source of the reward.
+  // For example, the source uid of a referral signup
+  // reward is the address of the referer.
+  string source_uid = 8 [
+    (gogoproto.customname) = "SourceUID",
+    (gogoproto.jsontag) = "source_uid",
+    json_name = "source_uid"
+  ];
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 12;
 }
 
-// ReceiverType defines all of reward receiver types in the system.
-enum ReceiverType {
-  // the invalid or unknown
-  RECEIVER_TYPE_UNSPECIFIED = 0;
-  // single receiver account
-  RECEIVER_TYPE_SINGLE = 1;
-  // referrer
-  RECEIVER_TYPE_REFERRER = 2;
-  // referee
-  RECEIVER_TYPE_REFEREE = 3;
+// RewardAmount
+message RewardAmount {
+  // main_account_reward amount transferred to main account address
+  string main_account_amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"main_account_amount\""
+  ];
+
+  // sub_account reward amount transferred to subaccount address
+  string subaccount_amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"subaccount_amount\""
+  ];
+
+  // unlock_period is the period after which the reward is unlocked.
+  uint64 unlock_period = 3 [
+    (gogoproto.customname) = "UnlockPeriod",
+    (gogoproto.jsontag) = "unlock_period",
+    json_name = "unlock_period"
+  ];
 }
 ```
