@@ -43,5 +43,5 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 
 func (q queryServer) Params(ctx context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	params := q.keeper.GetParams(sdk.UnwrapSDKContext(ctx))
-	return &types.QueryParamsResponse{Params: &params}, nil
+	return &types.QueryParamsResponse{Params: params}, nil
 }

@@ -77,7 +77,7 @@ func TxCreate() *cobra.Command {
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgCreate{
-				Creator: clientCtx.From,
+				Creator: clientCtx.GetFromAddress().String(),
 				Owner:   subaccountOwner.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -128,7 +128,7 @@ func TxTopup() *cobra.Command {
 			}
 
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgTopUp{
-				Creator: clientCtx.From,
+				Creator: clientCtx.GetFromAddress().String(),
 				Address: subaccountAddress.String(),
 				LockedBalances: []types.LockedBalance{
 					{
@@ -159,7 +159,7 @@ func TxWithdraw() *cobra.Command {
 				return err
 			}
 			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), &types.MsgWithdrawUnlockedBalances{
-				Creator: clientCtx.From,
+				Creator: clientCtx.GetFromAddress().String(),
 			})
 		},
 	}

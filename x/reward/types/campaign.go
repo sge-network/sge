@@ -43,9 +43,12 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 	}
 }
 
-func (c *Campaign) CheckExpiration(blockTime uint64) error {
+func (c *Campaign) CheckTS(blockTime uint64) error {
 	if blockTime > c.EndTS {
 		return sdkerrors.Wrapf(ErrCampaignEnded, "end timestamp %d, block time %d", c.EndTS, blockTime)
+	}
+	if blockTime < c.StartTS {
+		return sdkerrors.Wrapf(ErrCampaignHasNotStarted, "start timestamp %d, block time %d", c.EndTS, blockTime)
 	}
 	return nil
 }
