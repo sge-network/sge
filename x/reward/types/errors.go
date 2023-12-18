@@ -34,4 +34,5 @@ var (
 	ErrUnknownAccType             = sdkerrors.Register(ModuleName, 7124, "unknown account type")
 	ErrReceiverAddrCanNotBeSubAcc = sdkerrors.Register(ModuleName, 7125, "receiver account can not be sub account address")
 	ErrInvalidFunds               = sdkerrors.Register(ModuleName, 7126, "invalid funds")
+	ErrCampaignHasNotStarted      = sdkerrors.Register(ModuleName, 7127, "campaign validity period is not started yet")
 )
