@@ -82,7 +82,7 @@ message RewardPayloadCommon {
 // GrantSignupRewardPayload is the type for signup reward grant payload.
 message GrantSignupRewardPayload {
   // common is the common properties of a reward
-  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
 }
 
 // GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
