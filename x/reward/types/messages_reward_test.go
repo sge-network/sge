@@ -24,10 +24,21 @@ func TestMsgGrantReward_ValidateBasic(t *testing.T) {
 			err: sdkerrors.ErrInvalidAddress,
 		},
 		{
-			name: "invalid uid",
+			name: "invalid campaign uid",
 			msg: types.MsgGrantReward{
 				Creator:     sample.AccAddress(),
 				CampaignUid: "bad uid",
+				Uid:         uuid.NewString(),
+				Ticket:      "ticket",
+			},
+			err: sdkerrors.ErrInvalidRequest,
+		},
+		{
+			name: "invalid reward uid",
+			msg: types.MsgGrantReward{
+				Creator:     sample.AccAddress(),
+				CampaignUid: uuid.NewString(),
+				Uid:         "bad uid",
 				Ticket:      "ticket",
 			},
 			err: sdkerrors.ErrInvalidRequest,
@@ -45,6 +56,7 @@ func TestMsgGrantReward_ValidateBasic(t *testing.T) {
 			msg: types.MsgGrantReward{
 				Creator:     sample.AccAddress(),
 				CampaignUid: uuid.NewString(),
+				Uid:         uuid.NewString(),
 				Ticket:      "ticket",
 			},
 		},
