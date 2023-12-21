@@ -48,7 +48,7 @@ The Bet module emits the following events
 | apply_reward               | promoter                  | {promoter}                       |
 | apply_reward               | main_acc_amount           | {main_acc_amount}                |
 | apply_reward               | sub_acc_amount            | {sub_acc_amount}                 |
-| apply_reward               | sub_acc_unlock_period     | {sub_acc_unlock_period}          |
+| apply_reward               | sub_acc_unlock_ts         | {sub_acc_unlock_ts}              |
 | message                    | module                    | reward                           |
 | message                    | action                    | apply_reward                     |
 | message                    | sender                    | {creator}                        |

@@ -10,17 +10,19 @@ import (
 )
 
 // DistributeRewards distributes the rewards according to the input distribution list.
-func (k Keeper) DistributeRewards(ctx sdk.Context, receiver types.Receiver) error {
+func (k Keeper) DistributeRewards(ctx sdk.Context, receiver types.Receiver) (uint64, error) {
+	unlockTS := uint64(0)
 	if receiver.SubAccountAmount.GT(sdk.ZeroInt()) {
 		moduleAccAddr := types.RewardPoolFunder{}.GetModuleAcc()
+		unlockTS = cast.ToUint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod
 		if _, err := k.subaccountKeeper.TopUp(ctx, k.accountKeeper.GetModuleAddress(moduleAccAddr).String(), receiver.MainAccountAddr,
 			[]subaccounttypes.LockedBalance{
 				{
-					UnlockTS: cast.ToUint64(ctx.BlockTime().Unix()) + receiver.UnlockPeriod,
+					UnlockTS: unlockTS,
 					Amount:   receiver.SubAccountAmount,
 				},
 			}); err != nil {
-			return sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", receiver.SubAccountAddr, err)
+			return unlockTS, sdkerrors.Wrapf(types.ErrSubAccRewardTopUp, "subaccount address %s, %s", receiver.SubAccountAddr, err)
 		}
 	}
 	if receiver.MainAccountAmount.GT(sdk.ZeroInt()) {
@@ -29,9 +31,9 @@ func (k Keeper) DistributeRewards(ctx sdk.Context, receiver types.Receiver) erro
 			sdk.MustAccAddressFromBech32(receiver.MainAccountAddr),
 			receiver.MainAccountAmount,
 		); err != nil {
-			return err
+			return unlockTS, err
 		}
 	}
 
-	return nil
+	return unlockTS, nil
 }
