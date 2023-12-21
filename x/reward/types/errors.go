@@ -35,4 +35,6 @@ var (
 	ErrReceiverAddrCanNotBeSubAcc = sdkerrors.Register(ModuleName, 7125, "receiver account can not be sub account address")
 	ErrInvalidFunds               = sdkerrors.Register(ModuleName, 7126, "invalid funds")
 	ErrCampaignHasNotStarted      = sdkerrors.Register(ModuleName, 7127, "campaign validity period is not started yet")
+	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 7128, "KYC Validation failed for receiver account address")
+	ErrUserKycNotProvided         = sdkerrors.Register(ModuleName, 7129, "KYC data not provided")
 )
