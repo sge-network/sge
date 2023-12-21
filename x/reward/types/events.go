@@ -9,5 +9,5 @@ const (
 	attributeKeyRewardPromoter = "promoter"
 	attributeKeyMainAmount     = "main_acc_amount"
 	attributeKeySubAmount      = "sub_acc_amount"
-	attributeKeyUnlockPeriod   = "sub_acc_unlock_period"
+	attributeKeyUnlockTS       = "sub_acc_unlock_ts"
 )
