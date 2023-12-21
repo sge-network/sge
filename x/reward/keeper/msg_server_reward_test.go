@@ -198,6 +198,10 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 					Receiver:  receiverAddr,
 					SourceUID: referrer,
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: true,
+						ID:       receiverAddr,
+					},
 				},
 			},
 		},
@@ -269,6 +273,10 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 			Receiver:  referee,
 			SourceUID: referrer,
 			Meta:      "signup reward for example user",
+			KycData: &sgetypes.KycDataPayload{
+				Approved: true,
+				ID:       referee,
+			},
 		},
 	}
 	refereeTicket, err := simapp.CreateJwtTicket(refereeClaims)
@@ -329,6 +337,10 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 					Receiver:  receiverAddr,
 					SourceUID: "",
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: true,
+						ID:       receiverAddr,
+					},
 				},
 				"referee": referee,
 			},
