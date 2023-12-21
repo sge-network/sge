@@ -95,3 +95,14 @@ func (payload *WithdrawFundsPayload) Validate() error {
 	}
 	return nil
 }
+
+// Validate validates common reward ticket payload.
+func (payload *RewardPayloadCommon) Validate() error {
+	if payload.KycData == nil {
+		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", payload.Receiver)
+	}
+	if !payload.KycData.Validate(payload.Receiver) {
+		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", payload.Receiver)
+	}
+	return nil
+}
