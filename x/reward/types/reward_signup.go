@@ -46,6 +46,10 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 		err                     error
 	)
 
+	if err = payload.Common.Validate(); err != nil {
+		return Receiver{}, payload.Common, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "%s", err)
+	}
+
 	addr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
 	if err != nil {
 		return Receiver{}, payload.Common, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)

@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
+import "sge/type/kyc.proto";
 import "sge/reward/reward.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
@@ -77,6 +78,9 @@ message RewardPayloadCommon {
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 3;
+
+  // kyc_data contains the details of user kyc.
+  sgenetwork.sge.type.KycDataPayload kyc_data = 4;
 }
 
 // GrantSignupRewardPayload is the type for signup reward grant payload.
