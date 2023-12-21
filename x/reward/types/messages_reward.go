@@ -57,6 +57,10 @@ func (msg *MsgGrantReward) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
 	}
 
+	if !utils.IsValidUID(msg.Uid) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid reward uid")
+	}
+
 	if !utils.IsValidUID(msg.CampaignUid) {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid campaign uid")
 	}
