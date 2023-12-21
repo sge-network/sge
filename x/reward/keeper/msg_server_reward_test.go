@@ -14,6 +14,7 @@ import (
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
+	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
@@ -105,6 +106,10 @@ func TestMsgApplySignupReward(t *testing.T) {
 					Receiver:  receiverAddr,
 					SourceUID: "",
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: true,
+						ID:       receiverAddr,
+					},
 				},
 			},
 		},
@@ -398,6 +403,11 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 					Receiver:  "invalid",
 					SourceUID: "source id",
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: false,
+						ID:       "",
+						Ignore:   true,
+					},
 				},
 			},
 			err: sdkerrtypes.ErrInvalidAddress,
@@ -411,6 +421,11 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 					Receiver:  sample.AccAddress(),
 					SourceUID: "source id",
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: false,
+						ID:       "",
+						Ignore:   true,
+					},
 				},
 			},
 		},
@@ -423,6 +438,10 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 					Receiver:  receiverAddr,
 					SourceUID: "source id",
 					Meta:      "signup reward for example user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: true,
+						ID:       receiverAddr,
+					},
 				},
 			},
 		},
@@ -475,6 +494,10 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 			Receiver:  receiverAddr,
 			SourceUID: "source id",
 			Meta:      "signup reward for example user",
+			KycData: &sgetypes.KycDataPayload{
+				Approved: true,
+				ID:       receiverAddr,
+			},
 		},
 	}
 
