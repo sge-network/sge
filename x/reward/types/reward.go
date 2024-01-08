@@ -20,7 +20,7 @@ type Receiver struct {
 	MainAccountAmount sdkmath.Int
 }
 
-// RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
+// RewardFactoryKeepers holds the keeper objects usable by reward types methods.
 type RewardFactoryKeepers struct {
 	OVMKeeper
 	BetKeeper
