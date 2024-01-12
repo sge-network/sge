@@ -49,7 +49,7 @@ func (sur SignUpAffiliatorReward) Calculate(goCtx context.Context, ctx sdk.Conte
 	}
 
 	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Affiliatee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
-		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "affiliatee account has signed up yet, there is no referee claim record")
+		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "affiliatee account has signed up yet, there is no affiliatee claim record")
 	}
 
 	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
