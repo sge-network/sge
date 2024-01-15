@@ -3,9 +3,11 @@ package keeper
 import (
 	"fmt"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -106,7 +108,7 @@ func (k Keeper) settleParticipation(
 
 	depositorAddress, err := sdk.AccAddressFromBech32(bp.ParticipantAddress)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, types.ErrTextInvalidDepositor, err)
 	}
 
 	refundHouseDepositFeeToDepositor := false
@@ -121,6 +123,12 @@ func (k Keeper) settleParticipation(
 		if bp.NotParticipatedInBetFulfillment() {
 			refundHouseDepositFeeToDepositor = true
 		}
+		if bp.ActualProfit.IsNegative() {
+			k.hooks.AfterHouseLoss(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit.Abs())
+		} else {
+			k.hooks.AfterHouseWin(ctx, depositorAddress, bp.Liquidity, bp.ActualProfit)
+		}
+
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
 		// refund participant's account from orderbook liquidity pool.
@@ -128,6 +136,7 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
+		k.hooks.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
 	default:
 		return sdkerrors.Wrapf(
 			types.ErrUnknownMarketStatus,
@@ -142,6 +151,7 @@ func (k Keeper) settleParticipation(
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, bp.Fee); err != nil {
 			return err
 		}
+		k.hooks.AfterHouseFeeRefund(ctx, depositorAddress, bp.Fee)
 	} else {
 		// refund participant's account from house fee collector.
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), bp.Fee); err != nil {
@@ -151,5 +161,6 @@ func (k Keeper) settleParticipation(
 
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
+
 	return nil
 }

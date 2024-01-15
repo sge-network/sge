@@ -25,12 +25,13 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
-	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
-
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -55,6 +56,8 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		marketmoduletypes.StoreKey,
 		ovmmoduletypes.StoreKey,
 		housemoduletypes.StoreKey,
+		rewardmoduletypes.StoreKey,
+		subaccounttypes.StoreKey,
 	)
 
 	// Define transient store keys

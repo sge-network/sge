@@ -3,9 +3,12 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/app/params"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/app/params"
 )
 
 func TestTokenSupply(t *testing.T) {
@@ -30,10 +33,10 @@ func TestBondedRatio(t *testing.T) {
 func TestMintCoins(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	mintAmount := int64(100)
-	err := k.MintCoins(ctx, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(mintAmount))))
+	err := k.MintCoins(ctx, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(mintAmount))))
 	require.NoError(t, err)
 
 	totalSupply := k.TokenSupply(ctx, params.DefaultBondDenom)
-	totalSupply = totalSupply.Add(sdk.NewInt(mintAmount))
+	totalSupply = totalSupply.Add(sdkmath.NewInt(mintAmount))
 	require.Equal(t, int64(10020000200), totalSupply.Int64())
 }

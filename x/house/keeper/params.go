@@ -27,3 +27,8 @@ func (k Keeper) GetMinAllowedDepositAmount(ctx sdk.Context) (res sdkmath.Int) {
 func (k Keeper) GetHouseParticipationFee(ctx sdk.Context) (res sdk.Dec) {
 	return k.GetParams(ctx).HouseParticipationFee
 }
+
+// GetMaxWithdrawalCount returns number of max withdrawals allowed per participation
+func (k Keeper) GetMaxWithdrawalCount(ctx sdk.Context) (res uint64) {
+	return k.GetParams(ctx).MaxWithdrawalCount
+}

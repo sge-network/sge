@@ -1,9 +1,10 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -19,7 +20,6 @@ func (k Keeper) ProcessWager(
 	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
 	betFee sdkmath.Int,
-	oddsType bettypes.OddsType,
 	oddsVal string, betID uint64,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
@@ -42,7 +42,6 @@ func (k Keeper) ProcessWager(
 		betUID,
 		betID,
 		oddsUID,
-		oddsType,
 		oddsVal,
 		maxLossMultiplier,
 		&book,
@@ -103,7 +102,6 @@ func (k Keeper) fulfillBetByParticipationQueue(
 		case fInfo.notEnoughLiquidityAvailable():
 			var betAmountToFulfill sdkmath.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
-				fInfo.oddsType,
 				fInfo.oddsVal,
 				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
@@ -158,7 +156,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	}
 
 	if fInfo.NoMoreLiquidityAvailable() {
-		return sdkerrors.Wrapf(types.ErrInternalProcessingBet, "insufficient liquidity in order book")
+		return types.ErrInsufficientLiquidityInOrderBook
 	}
 
 	return nil
@@ -172,7 +170,6 @@ func (k Keeper) initFulfillmentInfo(
 	betUID string,
 	betID uint64,
 	oddsUID string,
-	oddsType bettypes.OddsType,
 	oddsVal string,
 	maxLossMultiplier sdk.Dec,
 	book *types.OrderBook,
@@ -189,7 +186,6 @@ func (k Keeper) initFulfillmentInfo(
 		betUID:            betUID,
 		betID:             betID,
 		oddsUID:           oddsUID,
-		oddsType:          oddsType,
 		oddsVal:           oddsVal,
 		maxLossMultiplier: maxLossMultiplier,
 
@@ -197,7 +193,7 @@ func (k Keeper) initFulfillmentInfo(
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
 
 		// initialize the fulfilled bet amount with 0
-		fulfilledBetAmount: sdk.NewInt(0),
+		fulfilledBetAmount: sdkmath.NewInt(0),
 		betOdds:            odds,
 		oddUIDS:            oddUIDS,
 	}
@@ -207,7 +203,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(bps)) {
-		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
+		err = sdkerrtypes.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
 		return
 	}
 
@@ -216,7 +212,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(pes)) {
-		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
+		err = sdkerrtypes.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
 
@@ -420,7 +416,6 @@ type fulfillmentInfo struct {
 	betUID             string
 	betID              uint64
 	oddsUID            string
-	oddsType           bettypes.OddsType
 	oddsVal            string
 	maxLossMultiplier  sdk.Dec
 	betAmount          sdkmath.Int

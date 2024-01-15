@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	tmdb "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cometbft/cometbft/crypto/secp256k1"
@@ -185,7 +186,7 @@ func generateSimappUsers() {
 func generateSimappUserBalances() (balances []banktypes.Balance) {
 	genTokens := sdk.TokensFromConsensusPower(1, sdk.DefaultPowerReduction)
 	genCoin := sdk.NewCoin(params.DefaultBondDenom, genTokens)
-	sdkgenCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(1000000000))
+	sdkgenCoin := sdk.NewCoin(sdk.DefaultBondDenom, sdkmath.NewInt(1000000000))
 	for _, v := range TestParamUsers {
 		balances = append(balances, banktypes.Balance{
 			Address: v.Address.String(),
@@ -213,7 +214,7 @@ func generateSimappAccountCoins(ctx *sdk.Context, tApp *TestApp) error {
 
 // SetAccountCoins sets the balance of accounts for testing
 func SetAccountCoins(ctx *sdk.Context, k bankkeeper.Keeper, addr sdk.AccAddress, amount int64) error {
-	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(amount)))
+	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(amount)))
 	err := k.MintCoins(*ctx, mintmoduletypes.ModuleName, coin)
 	if err != nil {
 		return err
@@ -232,7 +233,7 @@ func SetModuleAccountCoins(
 	moduleName string,
 	amount int64,
 ) error {
-	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdk.NewInt(amount)))
+	coin := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(amount)))
 	err := k.MintCoins(*ctx, mintmoduletypes.ModuleName, coin)
 	if err != nil {
 		return err

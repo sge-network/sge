@@ -3,8 +3,9 @@ package house
 import (
 	"fmt"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/x/house/keeper"
 	"github.com/sge-network/sge/x/house/types"
@@ -28,7 +29,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
+			return nil, sdkerrors.Wrap(sdkerrtypes.ErrUnknownRequest, errMsg)
 		}
 	}
 }

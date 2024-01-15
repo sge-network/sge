@@ -3,19 +3,22 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/bet/types"
-	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/bet/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 func TestSettleBet(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	addTestMarket(t, tApp, ctx)
 
 	tcs := []struct {
@@ -42,14 +45,13 @@ func TestSettleBet(t *testing.T) {
 				MarketUID: "nonExistMarket",
 				Creator:   "invalid creator",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			desc: "failed in checking status",
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -71,7 +73,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -91,7 +92,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -111,7 +111,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -132,7 +131,6 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				Amount:    sdk.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
@@ -169,10 +167,10 @@ func TestSettleBet(t *testing.T) {
 				if resetMarket.Status == markettypes.MarketStatus_MARKET_STATUS_ACTIVE {
 					_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 						ctx,
-						simappUtil.TestParamUsers["user1"].Address,
+						simapp.TestParamUsers["user1"].Address,
 						resetMarket.UID,
-						sdk.NewInt(100000000),
-						sdk.NewInt(1),
+						sdkmath.NewInt(100000000),
+						sdkmath.NewInt(1),
 					)
 					require.NoError(t, err)
 				}
@@ -232,10 +230,10 @@ func TestBatchSettleBet(t *testing.T) {
 		for i := depositorUser; i <= depositorUser+participationCount; i++ {
 			_, err := tApp.OrderbookKeeper.InitiateOrderBookParticipation(
 				ctx,
-				simappUtil.TestParamUsers["user"+cast.ToString(i)].Address,
+				simapp.TestParamUsers["user"+cast.ToString(i)].Address,
 				market.UID,
-				sdk.NewInt(100000000),
-				sdk.NewInt(1),
+				sdkmath.NewInt(100000000),
+				sdkmath.NewInt(1),
 			)
 			require.NoError(t, err)
 		}

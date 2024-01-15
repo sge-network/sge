@@ -8,3 +8,5 @@
   * [Market](specs/Market/01_Overview.md)
   * [House](specs/House/01_Overview.md)
   * [Order Book](specs/OrderBook/01_Overview.md)
+  * [Reward](specs/Reward/01_Overview.md)
+  * [Sub Account](specs/SubAccount/01_Overview.md)

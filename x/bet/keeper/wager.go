@@ -1,18 +1,21 @@
 package keeper
 
 import (
+	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/spf13/cast"
 )
 
 // Wager stores a new bet in KVStore
 func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types.BetOddsCompact) error {
 	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
 	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	market, err := k.getMarket(ctx, bet.MarketUID)
@@ -46,7 +49,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 	bet.SetFee(betConstraints.Fee)
 
 	// calculate payoutProfit
-	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	if err != nil {
 		return err
 	}
@@ -57,10 +60,10 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 
 	betFulfillment, err := k.orderbookKeeper.ProcessWager(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddress, bet.Fee, bet.OddsType, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
+		bettorAddress, bet.Fee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
 	)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrInOBWagerProcessing, "%s", err)
+		return err
 	}
 
 	// set bet as placed

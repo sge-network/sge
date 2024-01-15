@@ -20,10 +20,7 @@ import (
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
-var (
-	_ module.AppModule      = AppModule{}
-	_ module.AppModuleBasic = AppModuleBasic{}
-)
+var ()
 
 // ----------------------------------------------------------------------------
 // AppModuleBasic

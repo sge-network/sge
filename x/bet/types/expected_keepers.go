@@ -6,6 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -43,7 +44,6 @@ type OrderbookKeeper interface {
 		payoutProfit sdk.Dec,
 		bettorAddress sdk.AccAddress,
 		betFee sdkmath.Int,
-		oddsType OddsType,
 		oddsVal string,
 		betID uint64,
 		odds map[string]*BetOddsCompact,

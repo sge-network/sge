@@ -16,9 +16,14 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	sdkmath "cosmossdk.io/math"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/client/cli"
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -36,7 +41,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	market := markettypes.Market{
 		UID:     testMarketUID,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds: []*markettypes.Odds{
@@ -63,8 +68,8 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			UID:               uuid.NewString(),
 			MarketUID:         market.UID,
 			OddsValue:         "10",
-			Amount:            sdk.NewInt(10),
-			Fee:               sdk.NewInt(1),
+			Amount:            sdkmath.NewInt(10),
+			Fee:               sdkmath.NewInt(1),
 			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)

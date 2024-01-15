@@ -15,6 +15,10 @@ import (
 
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
+	"github.com/gorilla/mux"
+	"github.com/rakyll/statik/fs"
+	"github.com/spf13/cast"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
@@ -39,13 +43,15 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcclientHandler "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
-	"github.com/gorilla/mux"
-	"github.com/rakyll/statik/fs"
+
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
 	v1 "github.com/sge-network/sge/app/upgrades/v1"
-	"github.com/spf13/cast"
+	v2 "github.com/sge-network/sge/app/upgrades/v2"
+	v3 "github.com/sge-network/sge/app/upgrades/v3"
+	v4 "github.com/sge-network/sge/app/upgrades/v4"
+	v5 "github.com/sge-network/sge/app/upgrades/v5"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -68,7 +74,13 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
-	Upgrades        = []upgrades.Upgrade{v1.Upgrade}
+	Upgrades        = []upgrades.Upgrade{
+		v1.Upgrade,
+		v2.Upgrade,
+		v3.Upgrade,
+		v4.Upgrade,
+		v5.Upgrade,
+	}
 )
 
 var (

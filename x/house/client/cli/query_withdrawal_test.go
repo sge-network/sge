@@ -7,6 +7,7 @@ import (
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/house/client/cli"
 	"github.com/sge-network/sge/x/house/types"

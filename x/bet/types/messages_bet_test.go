@@ -3,11 +3,12 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkmath "cosmossdk.io/math"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgWagerValidateBasic(t *testing.T) {
@@ -21,7 +22,7 @@ func TestMsgWagerValidateBasic(t *testing.T) {
 			msg: types.MsgWager{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid bet message",
@@ -29,7 +30,7 @@ func TestMsgWagerValidateBasic(t *testing.T) {
 				Creator: sample.AccAddress(),
 				Props: &types.WagerProps{
 					UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-					Amount: sdk.NewInt(int64(10)),
+					Amount: sdkmath.NewInt(int64(10)),
 					Ticket: "Ticket",
 				},
 			},
@@ -62,7 +63,7 @@ func TestNewBet(t *testing.T) {
 		inputBet := &types.WagerProps{
 			UID:    "betUid",
 			Ticket: "ticket",
-			Amount: sdk.NewInt(int64(10)),
+			Amount: sdkmath.NewInt(int64(10)),
 		}
 		creator := "creator"
 		inputBetOdds := &types.BetOdds{
@@ -78,9 +79,19 @@ func TestNewBet(t *testing.T) {
 			OddsUID:   inputBetOdds.UID,
 			OddsValue: inputBetOdds.Value,
 			Amount:    inputBet.Amount,
-			OddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+			Meta: types.MetaData{
+				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				SelectedOddsValue: "1.5",
+			},
 		}
-		res := types.NewBet(creator, inputBet, types.OddsType_ODDS_TYPE_DECIMAL, inputBetOdds)
+		res := types.NewBet(creator,
+			inputBet,
+			inputBetOdds,
+			types.MetaData{
+				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
+				SelectedOddsValue: "1.5",
+			},
+		)
 		require.Equal(t, expectedBet, res)
 	})
 }

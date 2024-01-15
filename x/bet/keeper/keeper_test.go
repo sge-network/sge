@@ -7,15 +7,17 @@ import (
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
+
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
 	marketkeeper "github.com/sge-network/sge/x/market/keeper"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -54,7 +56,7 @@ var (
 
 	testMarket = markettypes.Market{
 		UID:     testMarketUID,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		StartTS: 1111111111,
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds:    testMarketOdds,
@@ -62,8 +64,8 @@ var (
 	}
 )
 
-func setupKeeperAndApp(t testing.TB) (*simappUtil.TestApp, *keeper.KeeperTest, sdk.Context) {
-	tApp, ctx, err := simappUtil.GetTestObjects()
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
+	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
 	return tApp, tApp.BetKeeper, ctx
@@ -75,8 +77,8 @@ func setupKeeper(t testing.TB) (*keeper.KeeperTest, sdk.Context) {
 	return k, ctx
 }
 
-func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+func addTestMarket(t testing.TB, tApp *simapp.TestApp, ctx sdk.Context) {
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	testAddMarketClaim := jwt.MapClaims{
 		"uid":      testMarketUID,
 		"start_ts": 1111111111,
@@ -103,12 +105,12 @@ func addTestMarket(t testing.TB, tApp *simappUtil.TestApp, ctx sdk.Context) {
 
 func addTestMarketBatch(
 	t testing.TB,
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	ctx sdk.Context,
 	count int,
 ) (uids []string) {
 	for i := 0; i < count; i++ {
-		testCreator = simappUtil.TestParamUsers["user"+cast.ToString(i)].Address.String()
+		testCreator = simapp.TestParamUsers["user"+cast.ToString(i)].Address.String()
 		uid := uuid.NewString()
 		uids = append(uids, uid)
 		testAddMarketClaim := jwt.MapClaims{
@@ -141,11 +143,11 @@ func addTestMarketBatch(
 func placeTestBet(
 	ctx sdk.Context,
 	t testing.TB,
-	tApp *simappUtil.TestApp,
+	tApp *simapp.TestApp,
 	betUID string,
 	selectedOdds *types.BetOdds,
 ) {
-	testCreator = simappUtil.TestParamUsers["user1"].Address.String()
+	testCreator = simapp.TestParamUsers["user1"].Address.String()
 	wctx := sdk.WrapSDKContext(ctx)
 	betSrv := keeper.NewMsgServerImpl(*tApp.BetKeeper)
 	testKyc := &sgetypes.KycDataPayload{
@@ -162,7 +164,6 @@ func placeTestBet(
 		"iat":           7777777777,
 		"selected_odds": selectedOdds,
 		"kyc_data":      testKyc,
-		"odds_type":     1,
 		"all_odds":      testBetOdds,
 	}
 	testWagerTicket, err := createJwtTicket(testWagerClaim)
@@ -172,7 +173,7 @@ func placeTestBet(
 		Creator: testCreator,
 		Props: &types.WagerProps{
 			UID:    betUID,
-			Amount: sdk.NewInt(1000000),
+			Amount: sdkmath.NewInt(1000000),
 			Ticket: testWagerTicket,
 		},
 	}
@@ -183,7 +184,7 @@ func placeTestBet(
 
 func createJwtTicket(claim jwt.MapClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodEdDSA, claim)
-	return token.SignedString(simappUtil.TestOVMPrivateKeys[0])
+	return token.SignedString(simapp.TestOVMPrivateKeys[0])
 }
 
 func TestLogger(t *testing.T) {

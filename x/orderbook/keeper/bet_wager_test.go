@@ -4,18 +4,20 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/google/uuid"
+
 	"github.com/sge-network/sge/app/params"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/testutil/simapp"
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
 )
 
 func TestWager(t *testing.T) {
@@ -27,7 +29,7 @@ type testBetSuite struct {
 	t              *testing.T
 	k              *keeper.KeeperTest
 	ctx            sdk.Context
-	tApp           simappUtil.TestApp
+	tApp           simapp.TestApp
 	betFee         sdkmath.Int
 	market         markettypes.Market
 	deposits       []housetypes.Deposit
@@ -50,22 +52,22 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 			{UID: uuid.NewString(), Meta: "test odds3"},
 		},
 		Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		Meta:    "test market",
 		BookUID: marketUID,
 	}
 
 	deposits := []housetypes.Deposit{
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user2"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user2"].Address.String(),
 			Amount:           sdkmath.NewInt(8000),
 		},
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user3"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user3"].Address.String(),
 			Amount:           sdkmath.NewInt(10000),
 		},
 		{
-			DepositorAddress: simappUtil.TestParamUsers["user4"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user4"].Address.String(),
 			Amount:           sdkmath.NewInt(10000),
 		},
 	}
@@ -86,7 +88,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	require.NoError(ts.t, err)
 
 	found := false
-	participationIndex, err := ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err := ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[0].DepositorAddress,
 		ts.deposits[0].DepositorAddress,
@@ -108,7 +110,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	require.True(ts.t, found)
 
-	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[1].DepositorAddress,
 		ts.deposits[1].DepositorAddress,
@@ -130,7 +132,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	)
 	require.True(ts.t, found)
 
-	participationIndex, err = ts.tApp.HouseKeeper.Deposit(
+	participationIndex, _, err = ts.tApp.HouseKeeper.Deposit(
 		ts.ctx,
 		ts.deposits[2].DepositorAddress,
 		ts.deposits[2].DepositorAddress,
@@ -172,7 +174,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// winner1 bet placement
 	//
 	//
-	winner1BettorAddr := simappUtil.TestParamUsers["user5"].Address
+	winner1BettorAddr := simapp.TestParamUsers["user5"].Address
 	winner1Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner1BettorAddr, params.DefaultBondDenom)
 	winner1BetID := uint64(1)
 	winner1Bet, winner1PayoutProfit, winner1BetFulfillment := ts.placeTestBet(
@@ -211,7 +213,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// winner2 bet placement
 	//
 	//
-	winner2BettorAddr := simappUtil.TestParamUsers["user6"].Address
+	winner2BettorAddr := simapp.TestParamUsers["user6"].Address
 	winner2Bal := ts.tApp.BankKeeper.GetBalance(ts.ctx, winner2BettorAddr, params.DefaultBondDenom)
 	winner2BetID := uint64(2)
 	winner2Bet, winner2PayoutProfit, winner2BetFulfillment := ts.placeTestBet(
@@ -250,7 +252,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// failed winner bet placement
 	// should fail because there is not participation to fulfill this bet.
 	//
-	failedWinnerBettorAddr := simappUtil.TestParamUsers["user7"].Address
+	failedWinnerBettorAddr := simapp.TestParamUsers["user7"].Address
 	failedWinnerBetID := uint64(3)
 	ts.placeTestBet(
 		failedWinnerBettorAddr,
@@ -259,7 +261,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		failedWinnerBetID,
 		sdkmath.NewInt(100000000000),
 		ts.betFee,
-		types.ErrInternalProcessingBet,
+		types.ErrInsufficientLiquidityInOrderBook,
 		betOdds,
 		oddUIDS,
 	)
@@ -267,7 +269,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	///// loser bet placement
 	//
 	//
-	loserBettorAddr := simappUtil.TestParamUsers["user8"].Address
+	loserBettorAddr := simapp.TestParamUsers["user8"].Address
 	loserBal := ts.tApp.BankKeeper.GetBalance(ts.ctx, loserBettorAddr, params.DefaultBondDenom)
 	loserBetID := uint64(4)
 	loserBet, _, loserBetFulfillment := ts.placeTestBet(
@@ -312,7 +314,6 @@ func (ts *testBetSuite) placeTestBet(
 		UID:               uuid.NewString(),
 		MarketUID:         marketUID,
 		OddsUID:           oddsUID,
-		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "1.1",
 		Amount:            amount,
 		Fee:               fee,
@@ -322,7 +323,7 @@ func (ts *testBetSuite) placeTestBet(
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
 	}
 
-	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
 	betFeeCollectorBalanceBeforeWager := ts.tApp.BankKeeper.GetBalance(
@@ -338,7 +339,7 @@ func (ts *testBetSuite) placeTestBet(
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1, odds, oddUIDS,
+		bettorAddr, bet.Fee, bet.OddsValue, 1, odds, oddUIDS,
 	)
 	if expErr != nil {
 		require.ErrorIs(ts.t, expErr, err)
@@ -387,7 +388,7 @@ func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 			{UID: uuid.NewString(), Meta: "test odds6"},
 		},
 		Status:  markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
-		Creator: simappUtil.TestParamUsers["user1"].Address.String(),
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		Meta:    "test market",
 		BookUID: marketUID,
 	}
@@ -395,7 +396,7 @@ func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 	deposits := []housetypes.Deposit{}
 	for i := 0; i < 100; i++ {
 		deposits = append(deposits, housetypes.Deposit{
-			DepositorAddress: simappUtil.TestParamUsers["user2"].Address.String(),
+			DepositorAddress: simapp.TestParamUsers["user2"].Address.String(),
 			Amount:           sdkmath.NewInt(10000000),
 		})
 	}
@@ -419,7 +420,7 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 
 	for i := 0; i < len(ts.deposits); i++ {
 		found := false
-		participationIndex, err := ts.tApp.HouseKeeper.Deposit(
+		participationIndex, _, err := ts.tApp.HouseKeeper.Deposit(
 			ts.ctx,
 			ts.deposits[i].DepositorAddress,
 			ts.deposits[i].DepositorAddress,
@@ -457,12 +458,11 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		oddUIDS = append(oddUIDS, odd.UID)
 	}
 
-	bettorAddr := simappUtil.TestParamUsers["user5"].Address
+	bettorAddr := simapp.TestParamUsers["user5"].Address
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
 		MarketUID:         ts.market.UID,
 		OddsUID:           ts.market.Odds[1].UID,
-		OddsType:          bettypes.OddsType_ODDS_TYPE_DECIMAL,
 		OddsValue:         "4.415",
 		Amount:            betAmount,
 		Fee:               sdk.ZeroInt(),
@@ -472,27 +472,27 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		MaxLossMultiplier: betOdds[ts.market.Odds[1].UID].MaxLossMultiplier,
 	}
 
-	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsType, bet.OddsValue, bet.Amount)
+	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	require.NoError(ts.t, err)
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsType, bet.OddsValue, 1, betOdds, oddUIDS,
+		bettorAddr, bet.Fee, bet.OddsValue, 1, betOdds, oddUIDS,
 	)
 	require.NoError(ts.t, err)
 
 	expected := []*bettypes.BetFulfillment{
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 1, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 2, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 3, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 4, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 5, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 6, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 7, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 8, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 9, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 10, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
-		{ParticipantAddress: simappUtil.TestParamUsers["user2"].Address.String(), ParticipationIndex: 11, BetAmount: sdkmath.NewInt(13), PayoutProfit: sdkmath.NewInt(31)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 1, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 2, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 3, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 4, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 5, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 6, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 7, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 8, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 9, BetAmount: sdkmath.NewInt(2535453), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 10, BetAmount: sdkmath.NewInt(2535454), PayoutProfit: sdkmath.NewInt(8658575)},
+		{ParticipantAddress: simapp.TestParamUsers["user2"].Address.String(), ParticipationIndex: 11, BetAmount: sdkmath.NewInt(13), PayoutProfit: sdkmath.NewInt(31)},
 	}
 	require.Equal(ts.t, expected, betFulfillment)
 

@@ -3,8 +3,10 @@ package types
 import (
 	"strings"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/mrz1836/go-sanitize"
 	"github.com/sge-network/sge/utils"
 )
 
@@ -51,7 +53,7 @@ func (msg *MsgWager) GetSignBytes() []byte {
 func (msg *MsgWager) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil || msg.Creator == "" || strings.Contains(msg.Creator, " ") {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "%s", err)
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	return WagerValidation(msg.Props)
@@ -68,7 +70,9 @@ func (msg *MsgWager) EmitEvent(ctx *sdk.Context) {
 }
 
 // NewBet creates and returns a new bet from given message
-func NewBet(creator string, props *WagerProps, oddsType OddsType, odds *BetOdds) *Bet {
+func NewBet(creator string, props *WagerProps, odds *BetOdds, meta MetaData) *Bet {
+	meta.SelectedOddsValue = sanitize.XSS(meta.SelectedOddsValue)
+
 	return &Bet{
 		Creator:           creator,
 		UID:               props.UID,
@@ -76,7 +80,7 @@ func NewBet(creator string, props *WagerProps, oddsType OddsType, odds *BetOdds)
 		OddsUID:           odds.UID,
 		OddsValue:         odds.Value,
 		Amount:            props.Amount,
-		OddsType:          oddsType,
 		MaxLossMultiplier: odds.MaxLossMultiplier,
+		Meta:              meta,
 	}
 }

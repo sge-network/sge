@@ -7,8 +7,7 @@ import (
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/google/uuid"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/orderbook/client/cli"
@@ -30,8 +29,8 @@ func networkWithParticipationExposureObjects(t *testing.T, n int) (*network.Netw
 			OddsUID:            uuid.NewString(),
 			ParticipationIndex: testParticipationIndex,
 			OrderBookUID:       testMarketUID,
-			Exposure:           sdk.NewInt(1000),
-			BetAmount:          sdk.NewInt(1000),
+			Exposure:           sdkmath.NewInt(1000),
+			BetAmount:          sdkmath.NewInt(1000),
 			IsFulfilled:        false,
 			Round:              1,
 		}

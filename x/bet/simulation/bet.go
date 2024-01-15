@@ -9,9 +9,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/spf13/cast"
+
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/spf13/cast"
 )
 
 // SimulateMsgWager returns an Operation function to run a state machine transition

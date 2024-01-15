@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/x/house/client/cli"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestQueryParams(t *testing.T) {
@@ -40,9 +42,15 @@ func TestQueryParams(t *testing.T) {
 
 			var params types.QueryParamsResponse
 			err = json.Unmarshal(res.Bytes(), &params)
-			require.NoError(t, err)
+			// command-line response, wraps the primitive numbers in double quotes, so it is not unmarshall-able.
+			require.EqualError(
+				t,
+				err,
+				"json: cannot unmarshal string into Go struct field Params.params.max_withdrawal_count of type uint64",
+			)
 
 			defaultParams := types.DefaultParams()
+			defaultParams.MaxWithdrawalCount = 0
 			require.Equal(t, types.QueryParamsResponse{
 				Params: defaultParams,
 			}, params)

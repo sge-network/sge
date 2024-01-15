@@ -43,24 +43,26 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
-	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint"
 	minttypes "github.com/sge-network/sge/x/mint/types"
 
+	sgeappparams "github.com/sge-network/sge/app/params"
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
-
-	marketmodule "github.com/sge-network/sge/x/market"
-	marketmoduletypes "github.com/sge-network/sge/x/market/types"
-
-	orderbookmodule "github.com/sge-network/sge/x/orderbook"
-	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
-
-	ovmmodule "github.com/sge-network/sge/x/ovm"
-	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
-
 	housemodule "github.com/sge-network/sge/x/house"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
+	marketmodule "github.com/sge-network/sge/x/market"
+	marketmoduletypes "github.com/sge-network/sge/x/market/types"
+	mintmodule "github.com/sge-network/sge/x/mint"
+	orderbookmodule "github.com/sge-network/sge/x/orderbook"
+	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
+	ovmmodule "github.com/sge-network/sge/x/ovm"
+	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
+	subaccountmodule "github.com/sge-network/sge/x/subaccount"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
+
+	rewardmodule "github.com/sge-network/sge/x/reward"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -84,6 +86,7 @@ var mAccPerms = map[string][]string{
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
 	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():      nil,
 	orderbookmoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
+	rewardmoduletypes.RewardPoolFunder{}.GetModuleAcc():            nil,
 }
 
 // ModuleBasics defines the module BasicManager is in charge of setting up basic,
@@ -95,7 +98,7 @@ var ModuleBasics = module.NewBasicManager(
 	bank.AppModuleBasic{},
 	capability.AppModuleBasic{},
 	staking.AppModuleBasic{},
-	mint.AppModuleBasic{},
+	mintmodule.AppModuleBasic{},
 	distr.AppModuleBasic{},
 	gov.NewAppModuleBasic(getGovProposalHandlers()),
 	params.AppModuleBasic{},
@@ -118,6 +121,8 @@ var ModuleBasics = module.NewBasicManager(
 	orderbookmodule.AppModuleBasic{},
 	ovmmodule.AppModuleBasic{},
 	housemodule.AppModuleBasic{},
+	rewardmodule.AppModuleBasic{},
+	subaccountmodule.AppModuleBasic{},
 )
 
 func appModules(
@@ -191,6 +196,8 @@ func appModules(
 		app.OrderbookModule,
 		app.OVMModule,
 		app.HouseModule,
+		app.RewardModule,
+		app.SubaccountModule,
 		// this line is u
 	}
 }
@@ -255,6 +262,7 @@ func simulationModules(
 		app.BetModule,
 		app.MarketModule,
 		app.OVMModule,
+		app.RewardModule,
 	}
 }
 
@@ -289,6 +297,8 @@ func orderBeginBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }
 
@@ -320,6 +330,8 @@ func orderEndBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }
 
@@ -351,5 +363,7 @@ func orderInitBlockers() []string {
 		orderbookmoduletypes.ModuleName,
 		ovmmoduletypes.ModuleName,
 		housemoduletypes.ModuleName,
+		rewardmoduletypes.ModuleName,
+		subaccounttypes.ModuleName,
 	}
 }

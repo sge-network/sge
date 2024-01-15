@@ -3,8 +3,9 @@ package types
 import (
 	"strings"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/utils"
 )
 
@@ -12,6 +13,11 @@ import (
 func (payload *WagerTicketPayload) Validate(creator string) error {
 	if payload.SelectedOdds == nil {
 		return ErrOddsDataNotFound
+	}
+
+	if OddsType_ODDS_TYPE_UNSPECIFIED > payload.Meta.SelectedOddsType ||
+		OddsType_ODDS_TYPE_MONEYLINE < payload.Meta.SelectedOddsType {
+		return sdkerrors.Wrapf(ErrMetaOddsType, "%s", payload.Meta.SelectedOddsType)
 	}
 
 	if err := payload.ValidateOdds(); err != nil {
@@ -26,11 +32,6 @@ func (payload *WagerTicketPayload) Validate(creator string) error {
 
 	if !payload.KycData.Validate(creator) {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", creator)
-	}
-
-	if payload.OddsType < OddsType_ODDS_TYPE_DECIMAL ||
-		payload.OddsType > OddsType_ODDS_TYPE_MONEYLINE {
-		return ErrInvalidOddsType
 	}
 
 	return nil

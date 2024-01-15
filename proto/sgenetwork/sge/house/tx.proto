@@ -35,7 +35,7 @@ message MsgDeposit {
   ];
   // amount is the amount being deposited on an order book to be a house
   string amount = 3 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
   // ticket is the jwt ticket data.
@@ -77,7 +77,7 @@ message MsgWithdraw {
   WithdrawalMode mode = 4 [ (gogoproto.moretags) = "yaml:\"mode\"" ];
   // amount is the requested withdrawal amount
   string amount = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
   // ticket is the jwt ticket data.

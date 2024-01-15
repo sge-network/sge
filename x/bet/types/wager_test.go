@@ -3,9 +3,10 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/bet/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/x/bet/types"
 )
 
 func TestBetFieldsValidation(t *testing.T) {
@@ -18,7 +19,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			desc: "space in UID",
 			bet: &types.WagerProps{
 				UID:    " ",
-				Amount: sdk.NewInt(int64(10)),
+				Amount: sdkmath.NewInt(int64(10)),
 				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidBetUID,
@@ -27,7 +28,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			desc: "invalid UID",
 			bet: &types.WagerProps{
 				UID:    "invalidUID",
-				Amount: sdk.NewInt(int64(10)),
+				Amount: sdkmath.NewInt(int64(10)),
 				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidBetUID,
@@ -36,7 +37,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			desc: "invalid amount",
 			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(-1)),
+				Amount: sdkmath.NewInt(int64(-1)),
 				Ticket: "Ticket",
 			},
 			err: types.ErrInvalidAmount,
@@ -53,7 +54,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			desc: "space in ticket",
 			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(10)),
+				Amount: sdkmath.NewInt(int64(10)),
 				Ticket: " ",
 			},
 			err: types.ErrInvalidTicket,
@@ -62,7 +63,7 @@ func TestBetFieldsValidation(t *testing.T) {
 			desc: "valid message",
 			bet: &types.WagerProps{
 				UID:    "6e31c60f-2025-48ce-ae79-1dc110f16355",
-				Amount: sdk.NewInt(int64(10)),
+				Amount: sdkmath.NewInt(int64(10)),
 				Ticket: "Ticket",
 			},
 		},

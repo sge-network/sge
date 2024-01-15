@@ -11,6 +11,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/kv"
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
+
 	"github.com/sge-network/sge/x/ovm/simulation"
 	"github.com/sge-network/sge/x/ovm/types"
 )

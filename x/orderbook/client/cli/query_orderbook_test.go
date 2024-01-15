@@ -8,14 +8,18 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/network"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/orderbook/client/cli"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+	"github.com/sge-network/sge/testutil/network"
+	"github.com/sge-network/sge/testutil/nullify"
+
+	"github.com/sge-network/sge/x/orderbook/client/cli"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func networkWithOrderBookObjects(t *testing.T, n int) (*network.Network, []types.OrderBook) {

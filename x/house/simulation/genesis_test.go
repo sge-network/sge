@@ -6,13 +6,14 @@ import (
 	"math/rand"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/stretchr/testify/require"
 
 	"github.com/sge-network/sge/x/house/simulation"
 	"github.com/sge-network/sge/x/house/types"
@@ -44,7 +45,7 @@ func TestRandomizedGenState(t *testing.T) {
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &houseGenesis)
 
 	require.Equal(t, sdk.NewDecWithPrec(1, 1), houseGenesis.Params.HouseParticipationFee)
-	require.Equal(t, sdk.NewInt(100), houseGenesis.Params.MinDeposit)
+	require.Equal(t, sdkmath.NewInt(100), houseGenesis.Params.MinDeposit)
 }
 
 // TestRandomizedGenState tests abnormal scenarios of applying RandomizedGenState.
