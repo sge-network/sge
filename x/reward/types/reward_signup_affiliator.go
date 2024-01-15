@@ -20,8 +20,11 @@ func (sur SignUpAffiliatorReward) ValidateCampaign(campaign Campaign, blockTime 
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_AFFILIATE {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "wrong reward category")
 	}
-	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
+	if campaign.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "affiliate rewards for subaccount should be zero")
+	}
+	if campaign.RewardAmount.MainAccountAmount.LTE(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "affiliate rewards for main account should be positive")
 	}
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_FIXED {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
