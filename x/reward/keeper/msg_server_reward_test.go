@@ -493,8 +493,8 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 	affiliateCampClaims["reward_type"] = types.RewardType_REWARD_TYPE_AFFILIATE
 	affiliateCampClaims["reward_amount_type"] = types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED
 	affiliateCampClaims["reward_amount"] = types.RewardAmount{
-		SubaccountAmount: sdkmath.NewInt(100),
-		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+		MainAccountAmount: sdkmath.NewInt(100),
+		UnlockPeriod:      0,
 	}
 	affiliateCampUID := createCampaign(t, k, srv, ctx, promoter, affiliateCampClaims)
 
