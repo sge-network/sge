@@ -98,6 +98,20 @@ message OrderBookParticipation {
 
   // is_settled represents if the participation is settled or not.
   bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
+
+  // reimbursed_liquidity is the liquidity reimbursed because of reasons such as market calcellation.
+  string reimbursed_liquidity = 15 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reimbursed_liquidity\""
+  ];
+
+  // reimbursed_fee is the fee reimbursed because of reasons such as market calcellation.
+  string reimbursed_fee = 16 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reimbursed_fee\""
+  ];
 }
 
 // ParticipationBetPair represents the book participation and bet bond.
