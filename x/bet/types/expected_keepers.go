@@ -63,7 +63,6 @@ type OrderbookKeeper interface {
 	) error
 	BettorLoses(
 		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error

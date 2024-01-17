@@ -112,7 +112,7 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 	}
 
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.orderbookKeeper.BettorLoses(ctx, bettorAddress, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, bet.BetFulfillment, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED

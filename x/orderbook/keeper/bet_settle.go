@@ -77,7 +77,6 @@ func (k Keeper) BettorWins(
 // removes the payout lock.
 func (k Keeper) BettorLoses(
 	ctx sdk.Context,
-	bettorAddress sdk.AccAddress,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {

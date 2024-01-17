@@ -184,12 +184,12 @@ func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAdd
 
 				lockedAmountToWithdraw = sdkmath.ZeroInt()
 				break
-			} else {
-				lb.Amount = sdkmath.ZeroInt()
-				updatedLockedBalances = append(updatedLockedBalances, lb)
-
-				lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
 			}
+
+			lb.Amount = sdkmath.ZeroInt()
+			updatedLockedBalances = append(updatedLockedBalances, lb)
+
+			lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
 		}
 
 		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {

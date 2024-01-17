@@ -30,7 +30,6 @@ linters:
     - ineffassign
     - makezero
     - misspell
-    - nakedret
     - nilnil
     - promlinter
     - staticcheck
