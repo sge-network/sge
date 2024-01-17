@@ -6,7 +6,6 @@ import "gogoproto/gogo.proto";
 import "sgenetwork/sge/type/kyc.proto";
 import "sgenetwork/sge/bet/bet.proto";
 import "sgenetwork/sge/bet/bet_odds.proto";
-import "sgenetwork/sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
