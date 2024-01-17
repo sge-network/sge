@@ -159,7 +159,6 @@ func NewSgeApp(
 		bApp,
 		cdc,
 		mAccPerms,
-		app.ModuleAccountAddrs(),
 		skipUpgradeHeights,
 		homePath,
 		invCheckPeriod,

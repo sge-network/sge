@@ -20,7 +20,7 @@ import (
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.
 // Abnormal scenarios are not tested here.
-func TestRandomizedGenState(t *testing.T) {
+func TestRandomizedGenState(_ *testing.T) {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 

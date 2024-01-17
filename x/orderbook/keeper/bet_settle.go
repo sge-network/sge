@@ -36,9 +36,6 @@ func (k Keeper) RefundBettor(
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount sdkmath.Int,
-	payoutProfit sdkmath.Int,
-	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {
@@ -81,9 +78,6 @@ func (k Keeper) BettorWins(
 func (k Keeper) BettorLoses(
 	ctx sdk.Context,
 	bettorAddress sdk.AccAddress,
-	betAmount sdkmath.Int,
-	_ sdkmath.Int,
-	_ string,
 	betFulfillments []*bettypes.BetFulfillment,
 	orderBookUID string,
 ) error {

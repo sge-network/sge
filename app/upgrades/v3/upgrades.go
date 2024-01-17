@@ -14,7 +14,7 @@ const DefaultExpeditedPeriod time.Duration = time.Hour * 24
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
-	keepers *keepers.AppKeepers,
+	_ *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		// not applicable anymore
