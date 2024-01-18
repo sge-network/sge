@@ -371,8 +371,9 @@ func (app *SgeApp) setupUpgradeStoreLoaders() {
 
 	for _, upgrade := range Upgrades {
 		if upgradeInfo.Name == upgrade.UpgradeName {
+			storeUpgrade := upgrade.StoreUpgrades
 			app.SetStoreLoader(
-				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades),
+				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrade),
 			)
 		}
 	}
