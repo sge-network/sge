@@ -87,7 +87,8 @@ func TestProcessBetResultAndStatus(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := tc.bet.SetResult(&tc.market)
+			tcMarket := tc.market
+			err := tc.bet.SetResult(&tcMarket)
 			if tc.err != nil {
 				require.Equal(t, tc.err, err)
 			} else {
