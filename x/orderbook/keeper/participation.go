@@ -82,6 +82,8 @@ func (k Keeper) GetAllOrderBookParticipations(
 }
 
 // InitiateOrderBookParticipation starts a participation on a book for a certain account.
+//
+//nolint:nakedret
 func (k Keeper) InitiateOrderBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, depositAmount, feeAmount sdkmath.Int,
 ) (index uint64, err error) {

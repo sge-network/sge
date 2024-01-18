@@ -169,6 +169,8 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 }
 
 // batchMarketSettlement settles pending bets of a markets
+//
+//nolint:nakedret
 func (k Keeper) batchMarketSettlement(
 	ctx sdk.Context,
 	marketUID string,
