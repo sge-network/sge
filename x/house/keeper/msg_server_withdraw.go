@@ -16,7 +16,7 @@ func (k msgServer) Withdraw(goCtx context.Context,
 ) (*types.MsgWithdrawResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	depositorAddr, isOnBehalf, err := k.Keeper.ParseWithdrawTicketAndValidate(goCtx, ctx, msg, true)
+	depositorAddr, isOnBehalf, err := k.Keeper.ParseWithdrawTicketAndValidate(goCtx, msg, true)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,6 @@ func (k msgServer) Withdraw(goCtx context.Context,
 // ParseWithdrawTicketAndValidate parses the withdraw payload ticket and validate.
 func (k Keeper) ParseWithdrawTicketAndValidate(
 	goCtx context.Context,
-	ctx sdk.Context,
 	msg *types.MsgWithdraw,
 	authzAllowed bool,
 ) (string, bool, error) {
