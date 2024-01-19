@@ -40,6 +40,8 @@ func createNParticipation(
 		items[i].Fee = sdkmath.NewInt(10)
 		items[i].MaxLoss = sdkmath.NewInt(100)
 		items[i].TotalBetAmount = sdkmath.NewInt(100)
+		items[i].ReimbursedFee = sdkmath.NewInt(10)
+		items[i].ReimbursedLiquidity = sdkmath.NewInt(10)
 
 		keeper.SetOrderBookParticipation(ctx, items[i])
 	}
