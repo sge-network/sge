@@ -9,7 +9,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
-	"github.com/sge-network/sge/utils"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -171,15 +170,16 @@ func (k Keeper) settleParticipation(
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 
-	emitter := utils.NewEventEmitter(&ctx, types.AttributeValueCategory)
-	emitter.AddEvent(types.TypeParticipationSettlement,
-		sdk.NewAttribute(types.AttributeValueMarketUID, market.UID),
-		sdk.NewAttribute(types.AttributeValueParticipationIndex, cast.ToString(bp.Index)),
-		sdk.NewAttribute(types.AttributeValueParticipationReimbursedFees, bp.ReimbursedFee.String()),
-		sdk.NewAttribute(types.AttributeValueParticipationReimbursedLiquidity, bp.ReimbursedLiquidity.String()),
-		sdk.NewAttribute(types.AttributeValueParticipationActualProfit, bp.ActualProfit.String()),
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeParticipationSettlement,
+			sdk.NewAttribute(types.AttributeValueMarketUID, market.UID),
+			sdk.NewAttribute(types.AttributeValueParticipationIndex, cast.ToString(bp.Index)),
+			sdk.NewAttribute(types.AttributeValueParticipationReimbursedFees, bp.ReimbursedFee.String()),
+			sdk.NewAttribute(types.AttributeValueParticipationReimbursedLiquidity, bp.ReimbursedLiquidity.String()),
+			sdk.NewAttribute(types.AttributeValueParticipationActualProfit, bp.ActualProfit.String()),
+		),
 	)
-	emitter.Emit()
 
 	return nil
 }
