@@ -162,6 +162,8 @@ func (k Keeper) fulfillBetByParticipationQueue(
 }
 
 // initFulfillmentInfo initializes the fulfillment info for the queue iteration process.
+//
+//nolint:nakedret
 func (k Keeper) initFulfillmentInfo(
 	ctx sdk.Context,
 	betAmount sdkmath.Int,
@@ -431,6 +433,7 @@ type fulfillmentInfo struct {
 	oddUIDS                 []string
 }
 
+//nolint:nakedret
 func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkmath.Int) (eUpdate []types.ParticipationExposure, err error) {
 	if fInfo.inProcessItem.participation.ExposuresNotFilled == 0 {
 		return

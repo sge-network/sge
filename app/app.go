@@ -52,6 +52,7 @@ import (
 	v3 "github.com/sge-network/sge/app/upgrades/v3"
 	v4 "github.com/sge-network/sge/app/upgrades/v4"
 	v5 "github.com/sge-network/sge/app/upgrades/v5"
+	v6 "github.com/sge-network/sge/app/upgrades/v6"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -80,6 +81,7 @@ var (
 		v3.Upgrade,
 		v4.Upgrade,
 		v5.Upgrade,
+		v6.Upgrade,
 	}
 )
 
@@ -385,8 +387,9 @@ func (app *SgeApp) setupUpgradeStoreLoaders() {
 
 	for _, upgrade := range Upgrades {
 		if upgradeInfo.Name == upgrade.UpgradeName {
+			storeUpgrade := upgrade.StoreUpgrades
 			app.SetStoreLoader(
-				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades),
+				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrade),
 			)
 		}
 	}

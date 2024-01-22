@@ -49,6 +49,8 @@ func networkWithParticipationObjects(t *testing.T, n int) (*network.Network, []t
 			CurrentRoundMaxLossOddsUID: "6db09053-2901-4110-8fb5-c14e21f8d666",
 			ActualProfit:               sdkmath.NewInt(0),
 			IsSettled:                  false,
+			ReimbursedLiquidity:        sdkmath.NewInt(10),
+			ReimbursedFee:              sdkmath.NewInt(10),
 		}
 		nullify.Fill(&participation)
 
