@@ -21,7 +21,6 @@ import (
 )
 
 func createNParticipation(
-	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -48,7 +47,6 @@ func createNParticipation(
 
 func createTestMarket(
 	tApp *simapp.TestApp,
-	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	marketUID string,
 	status markettypes.MarketStatus,
@@ -71,8 +69,8 @@ func createTestMarket(
 }
 
 func TestParticipationGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipation(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipation(k, ctx, 10)
 
 	rst, found := k.GetOrderBookParticipation(ctx,
 		items[0].OrderBookUID,
@@ -99,8 +97,8 @@ func TestParticipationGet(t *testing.T) {
 }
 
 func TestParticipationsOfOrderBookGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipation(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipation(k, ctx, 10)
 
 	rst, err := k.GetParticipationsOfOrderBook(ctx,
 		uuid.NewString(),
@@ -123,8 +121,8 @@ func TestParticipationsOfOrderBookGet(t *testing.T) {
 }
 
 func TestParticipationGetAll(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipation(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipation(k, ctx, 10)
 
 	participations, err := k.GetAllOrderBookParticipations(ctx)
 	require.NoError(t, err)
@@ -177,7 +175,7 @@ func TestInitiateOrderBookParticipation(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			marketUID := uuid.NewString()
-			createTestMarket(tApp, k, ctx, marketUID, tc.marketStatus, oddsUIDs)
+			createTestMarket(tApp, ctx, marketUID, tc.marketStatus, oddsUIDs)
 
 			err := k.InitiateOrderBook(ctx, marketUID, oddsUIDs)
 			require.NoError(t, err)
@@ -246,7 +244,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
 			marketUID := uuid.NewString()
-			createTestMarket(tApp, k, ctx, marketUID, markettypes.MarketStatus_MARKET_STATUS_ACTIVE, oddsUIDs)
+			createTestMarket(tApp, ctx, marketUID, markettypes.MarketStatus_MARKET_STATUS_ACTIVE, oddsUIDs)
 
 			err := k.InitiateOrderBook(ctx, marketUID, oddsUIDs)
 			require.NoError(t, err)

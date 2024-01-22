@@ -58,16 +58,11 @@ type OrderbookKeeper interface {
 	BettorWins(
 		ctx sdk.Context,
 		bettorAddress sdk.AccAddress,
-		betAmount, payout sdkmath.Int,
-		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error
 	BettorLoses(
 		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		betAmount, payout sdkmath.Int,
-		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error

@@ -18,7 +18,7 @@ type SignUpReward struct{}
 func NewSignUpReward() SignUpReward { return SignUpReward{} }
 
 // VaidateCampaign validates campaign definitions.
-func (sur SignUpReward) ValidateCampaign(campaign Campaign, blockTime uint64) error {
+func (sur SignUpReward) ValidateCampaign(campaign Campaign) error {
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup rewards can only have single definition")
 	}

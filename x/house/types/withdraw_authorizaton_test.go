@@ -36,13 +36,14 @@ func TestWithdrawGrantValidateBasic(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			expTime := tt.expiration
 			msgGrant, err := authz.NewMsgGrant(
 				sdk.MustAccAddressFromBech32(sample.AccAddress()),
 				sdk.MustAccAddressFromBech32(sample.AccAddress()),
 				&types.WithdrawAuthorization{
 					WithdrawLimit: tt.withdrawLimit,
 				},
-				&tt.expiration)
+				&expTime)
 			require.NoError(t, err)
 
 			err = msgGrant.ValidateBasic()

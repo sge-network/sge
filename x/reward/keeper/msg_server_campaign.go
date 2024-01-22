@@ -68,7 +68,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, err
 	}
 
-	err = rewardFactory.ValidateCampaign(campaign, cast.ToUint64(ctx.BlockTime().Unix()))
+	err = rewardFactory.ValidateCampaign(campaign)
 	if err != nil {
 		return nil, err
 	}

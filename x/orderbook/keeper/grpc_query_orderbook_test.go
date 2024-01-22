@@ -17,9 +17,9 @@ import (
 )
 
 func TestOrderBookQuerySingle(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBook(tApp, k, ctx, 2)
+	msgs := createNOrderBook(k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryOrderBookRequest
@@ -68,9 +68,9 @@ func TestOrderBookQuerySingle(t *testing.T) {
 }
 
 func TestOrderBooksQueryPaginated(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBook(tApp, k, ctx, 5)
+	msgs := createNOrderBook(k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryOrderBooksRequest {
 		return &types.QueryOrderBooksRequest{

@@ -10,13 +10,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func createNParticipationExposure(
-	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -40,8 +38,8 @@ func createNParticipationExposure(
 }
 
 func TestParticipationExposureGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipationExposure(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipationExposure(k, ctx, 10)
 
 	rst, err := k.GetExposureByOrderBookAndOdds(ctx,
 		items[0].OrderBookUID,
@@ -68,8 +66,8 @@ func TestParticipationExposureGet(t *testing.T) {
 }
 
 func TestExposureByOrderBookAndParticipationIndexGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipationExposure(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipationExposure(k, ctx, 10)
 
 	rst, err := k.GetExposureByOrderBookAndParticipationIndex(ctx,
 		items[0].OrderBookUID,
@@ -91,8 +89,8 @@ func TestExposureByOrderBookAndParticipationIndexGet(t *testing.T) {
 }
 
 func TestAllHistoricalParticipationExposuresGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipationExposure(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipationExposure(k, ctx, 10)
 
 	rst, err := k.GetAllHistoricalParticipationExposures(ctx)
 	require.NoError(t, err)
@@ -100,8 +98,8 @@ func TestAllHistoricalParticipationExposuresGet(t *testing.T) {
 }
 
 func TestParticipationExposureGetAll(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipationExposure(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipationExposure(k, ctx, 10)
 
 	exposures, err := k.GetAllParticipationExposures(ctx)
 	require.NoError(t, err)

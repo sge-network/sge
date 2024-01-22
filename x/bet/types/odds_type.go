@@ -1,9 +1,9 @@
 package types
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // CalculateDecimalPayout calculates total payout of a certain bet amount by decimal odds calculations
@@ -12,19 +12,19 @@ func CalculateDecimalPayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error)
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
+			sdkerrors.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
 	}
 
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1
 	if oddsDecVal.LTE(sdk.OneDec()) {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
 
 	// calculate payout
@@ -40,19 +40,19 @@ func CalculateDecimalBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, e
 	oddsDecVal, err := sdk.NewDecFromStr(oddsVal)
 	if err != nil {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
+			sdkerrors.Wrapf(ErrDecimalOddsIncorrectFormat, "%s", err)
 	}
 
 	// odds value should not be negative or zero
 	if !oddsDecVal.IsPositive() {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsShouldBePositive, "%s", oddsVal)
 	}
 
 	// odds value should not be less than 1
 	if oddsDecVal.LTE(sdk.OneDec()) {
 		return sdk.ZeroDec(),
-			sdkerrtypes.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
+			sdkerrors.Wrapf(ErrDecimalOddsCanNotBeLessThanOne, "%s", oddsVal)
 	}
 
 	// calculate bet amount
