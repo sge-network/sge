@@ -136,6 +136,7 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
+		bp.ReimbursedLiquidity = bp.Liquidity
 		k.hooks.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
 	default:
 		return sdkerrors.Wrapf(
@@ -151,6 +152,7 @@ func (k Keeper) settleParticipation(
 		if err := k.refund(housetypes.HouseFeeCollectorFunder{}, ctx, depositorAddress, bp.Fee); err != nil {
 			return err
 		}
+		bp.ReimbursedFee = bp.Fee
 		k.hooks.AfterHouseFeeRefund(ctx, depositorAddress, bp.Fee)
 	} else {
 		// refund participant's account from house fee collector.
@@ -159,8 +161,25 @@ func (k Keeper) settleParticipation(
 		}
 	}
 
+	// market uid
+	// participation index
+	// returned fees
+	// returned liquidity
+	// actual profit
+
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
+
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			types.TypeParticipationSettlement,
+			sdk.NewAttribute(types.AttributeValueMarketUID, market.UID),
+			sdk.NewAttribute(types.AttributeValueParticipationIndex, cast.ToString(bp.Index)),
+			sdk.NewAttribute(types.AttributeValueParticipationReimbursedFees, bp.ReimbursedFee.String()),
+			sdk.NewAttribute(types.AttributeValueParticipationReimbursedLiquidity, bp.ReimbursedLiquidity.String()),
+			sdk.NewAttribute(types.AttributeValueParticipationActualProfit, bp.ActualProfit.String()),
+		),
+	)
 
 	return nil
 }
