@@ -16,7 +16,6 @@ func CreateUpgradeHandler(
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-
 		participationList, err := k.OrderbookKeeper.GetAllOrderBookParticipations(ctx)
 		if err != nil {
 			panic(err)
