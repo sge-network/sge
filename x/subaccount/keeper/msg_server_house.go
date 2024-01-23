@@ -80,7 +80,7 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 		panic("data corruption: subaccount balance not found")
 	}
 
-	_, _, err := k.keeper.houseKeeper.ParseWithdrawTicketAndValidate(goCtx, ctx, msg.Msg, true)
+	_, _, err := k.keeper.houseKeeper.ParseWithdrawTicketAndValidate(goCtx, msg.Msg, true)
 	if err != nil {
 		return nil, err
 	}

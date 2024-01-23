@@ -1,4 +1,4 @@
-package v6
+package v7
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
@@ -6,8 +6,8 @@ import (
 	"github.com/sge-network/sge/app/upgrades"
 )
 
-// UpgradeName defines the on-chain upgrade name for the v1.4.1 upgrade.
-const UpgradeName = "v1.4.1"
+// UpgradeName defines the on-chain upgrade name for the v1.5.0 upgrade.
+const UpgradeName = "v1.5.0"
 
 var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,

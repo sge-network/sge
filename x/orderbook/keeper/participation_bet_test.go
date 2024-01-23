@@ -10,13 +10,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/orderbook/keeper"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func createNParticipationBetPair(
-	tApp *simapp.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -34,8 +32,8 @@ func createNParticipationBetPair(
 }
 
 func TestParticipationBetPairGetAll(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNParticipationBetPair(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNParticipationBetPair(k, ctx, 10)
 
 	betPairs, err := k.GetAllParticipationBetPair(ctx)
 	require.NoError(t, err)

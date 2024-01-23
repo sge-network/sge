@@ -16,9 +16,9 @@ import (
 )
 
 func TestParticipationFulfilledBetsQueryPaginated(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNParticipationBetPair(tApp, k, ctx, 5)
+	msgs := createNParticipationBetPair(k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryParticipationFulfilledBetsRequest {
 		return &types.QueryParticipationFulfilledBetsRequest{

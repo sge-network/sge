@@ -44,6 +44,7 @@ import (
 	v4 "github.com/sge-network/sge/app/upgrades/v4"
 	v5 "github.com/sge-network/sge/app/upgrades/v5"
 	v6 "github.com/sge-network/sge/app/upgrades/v6"
+	v7 "github.com/sge-network/sge/app/upgrades/v7"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -79,6 +80,7 @@ var (
 		v4.Upgrade,
 		v5.Upgrade,
 		v6.Upgrade,
+		v7.Upgrade,
 	}
 )
 
@@ -373,8 +375,9 @@ func (app *SgeApp) setupUpgradeStoreLoaders() {
 
 	for _, upgrade := range Upgrades {
 		if upgradeInfo.Name == upgrade.UpgradeName {
+			storeUpgrade := upgrade.StoreUpgrades
 			app.SetStoreLoader(
-				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades),
+				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrade),
 			)
 		}
 	}

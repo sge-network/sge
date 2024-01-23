@@ -16,7 +16,7 @@ type SignUpAffiliateeReward struct{}
 func NewSignUpAffiliateeReward() SignUpAffiliateeReward { return SignUpAffiliateeReward{} }
 
 // ValidateCampaign validates campaign definitions.
-func (sur SignUpAffiliateeReward) ValidateCampaign(campaign Campaign, blockTime uint64) error {
+func (sur SignUpAffiliateeReward) ValidateCampaign(campaign Campaign) error {
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "wrong reward category")
 	}

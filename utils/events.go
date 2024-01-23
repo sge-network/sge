@@ -14,7 +14,6 @@ type EventEmitter struct {
 
 func (em *EventEmitter) AddMsg(msgType, sender string, attrs ...sdk.Attribute) {
 	em.AddEvent(sdk.EventTypeMessage,
-		sdk.NewAttribute(sdk.AttributeKeyModule, em.category),
 		sdk.NewAttribute(sdk.AttributeKeyAction, msgType),
 		sdk.NewAttribute(sdk.AttributeKeySender, sender),
 	)
@@ -24,7 +23,12 @@ func (em *EventEmitter) AddMsg(msgType, sender string, attrs ...sdk.Attribute) {
 }
 
 func (em *EventEmitter) AddEvent(ty string, attrs ...sdk.Attribute) {
-	em.Events = append(em.Events, sdk.NewEvent(ty, attrs...))
+	allAttrs := []sdk.Attribute{
+		sdk.NewAttribute(sdk.AttributeKeyModule, em.category),
+	}
+	allAttrs = append(allAttrs, attrs...)
+
+	em.Events = append(em.Events, sdk.NewEvent(ty, allAttrs...))
 }
 
 func (em EventEmitter) Emit() {
