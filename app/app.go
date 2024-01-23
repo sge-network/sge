@@ -45,7 +45,8 @@ import (
 	v5 "github.com/sge-network/sge/app/upgrades/v5"
 	v6 "github.com/sge-network/sge/app/upgrades/v6"
 	v7 "github.com/sge-network/sge/app/upgrades/v7"
-	abci "github.com/tendermint/tendermint/abci/types"
+
+  abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
 	tmos "github.com/tendermint/tendermint/libs/os"
