@@ -64,7 +64,7 @@ func TestIsPhaseEndPhase(t *testing.T) {
 	require.True(t, p.IsEndPhaseByStep(11))
 }
 
-func TestParamKeyTable(t *testing.T) {
+func TestParamKeyTable(_ *testing.T) {
 	types.ParamKeyTable()
 }
 

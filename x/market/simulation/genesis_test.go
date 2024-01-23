@@ -20,7 +20,7 @@ import (
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.
 // Abnormal scenarios are not tested here.
-func TestRandomizedGenState(t *testing.T) {
+func TestRandomizedGenState(_ *testing.T) {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
@@ -68,6 +68,7 @@ func TestRandomizedGenState1(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		require.Panicsf(t, func() { simulation.RandomizedGenState(&tt.simState) }, tt.panicMsg)
+		simTest := tt.simState
+		require.Panicsf(t, func() { simulation.RandomizedGenState(&simTest) }, tt.panicMsg)
 	}
 }

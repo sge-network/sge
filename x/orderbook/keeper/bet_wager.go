@@ -4,7 +4,6 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -163,6 +162,8 @@ func (k Keeper) fulfillBetByParticipationQueue(
 }
 
 // initFulfillmentInfo initializes the fulfillment info for the queue iteration process.
+//
+//nolint:nakedret
 func (k Keeper) initFulfillmentInfo(
 	ctx sdk.Context,
 	betAmount sdkmath.Int,
@@ -203,7 +204,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(bps)) {
-		err = sdkerrtypes.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
+		err = sdkerrors.Wrapf(types.ErrBookParticipationsNotFound, "%s", book.UID)
 		return
 	}
 
@@ -212,7 +213,7 @@ func (k Keeper) initFulfillmentInfo(
 		return
 	}
 	if book.ParticipationCount != cast.ToUint64(len(pes)) {
-		err = sdkerrtypes.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
+		err = sdkerrors.Wrapf(types.ErrParticipationExposuresNotFound, "%s, %s", book.UID, oddsUID)
 		return
 	}
 
@@ -432,6 +433,7 @@ type fulfillmentInfo struct {
 	oddUIDS                 []string
 }
 
+//nolint:nakedret
 func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkmath.Int) (eUpdate []types.ParticipationExposure, err error) {
 	if fInfo.inProcessItem.participation.ExposuresNotFilled == 0 {
 		return
