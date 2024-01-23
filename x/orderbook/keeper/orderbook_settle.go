@@ -161,6 +161,12 @@ func (k Keeper) settleParticipation(
 		}
 	}
 
+	// market uid
+	// participation index
+	// returned fees
+	// returned liquidity
+	// actual profit
+
 	bp.IsSettled = true
 	k.SetOrderBookParticipation(ctx, bp)
 
