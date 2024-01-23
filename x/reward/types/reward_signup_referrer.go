@@ -9,19 +9,19 @@ import (
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
-// SignUpReward is the type for signup rewards calculations
-type SignUpReward struct{}
+// SignUpReferrerReward is the type for signup referrer rewards calculations
+type SignUpReferrerReward struct{}
 
-// NewSignUpReward create new object of signup reward calculator type.
-func NewSignUpReward() SignUpReward { return SignUpReward{} }
+// NewSignUpReferrerlReward create new object of signup referrer reward calculator type.
+func NewSignUpReferrerReward() SignUpReferrerReward { return SignUpReferrerReward{} }
 
-// VaidateCampaign validates campaign definitions.
-func (sur SignUpReward) ValidateCampaign(campaign Campaign) error {
-	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_SIGNUP {
-		return sdkerrors.Wrapf(ErrWrongRewardCategory, "signup referral rewards can only have single definition")
+// ValidateCampaign validates campaign definitions.
+func (sur SignUpReferrerReward) ValidateCampaign(campaign Campaign) error {
+	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_REFERRAL {
+		return sdkerrors.Wrapf(ErrWrongRewardCategory, "wrong reward category")
 	}
 	if campaign.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt()) {
-		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup referral rewards for subaccount should be positive")
+		return sdkerrors.Wrapf(ErrWrongAmountForType, "signup rewards for subaccount should be positive")
 	}
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_FIXED {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
@@ -31,10 +31,10 @@ func (sur SignUpReward) ValidateCampaign(campaign Campaign) error {
 }
 
 // Calculate parses ticket payload and returns the distribution list of signup reward.
-func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
+func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers,
 	campaign Campaign, ticket, creator string,
 ) (RewardFactoryData, error) {
-	var payload GrantSignupRewardPayload
+	var payload GrantSignupReferrerRewardPayload
 	if err := keepers.OVMKeeper.VerifyTicketUnmarshal(goCtx, ticket, &payload); err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(ErrInTicketVerification, "%s", err)
 	}
@@ -43,23 +43,27 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "%s", err)
 	}
 
-	addr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
+	receiverAddr, err := sdk.AccAddressFromBech32(payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, addr) {
+	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Referee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
+		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "referee account has signed up yet, there is no referee claim record")
+	}
+
+	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
 		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
 	}
 
-	subAccountAddressString, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccAddrStr, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	return NewRewardFactoryData(
 		NewReceiver(
-			subAccountAddressString,
+			subAccAddrStr,
 			payload.Common.Receiver,
 			campaign.RewardAmount.SubaccountAmount,
 			campaign.RewardAmount.MainAccountAmount,
