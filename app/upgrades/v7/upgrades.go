@@ -33,7 +33,6 @@ func CreateUpgradeHandler(
 
 			reimburseFee := false
 			switch market.Status {
-
 			case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
 				bp.ReturnedAmount = bp.Liquidity.Add(bp.ActualProfit)
 				if bp.NotParticipatedInBetFulfillment() {
