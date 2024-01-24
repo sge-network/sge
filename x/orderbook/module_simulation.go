@@ -41,11 +41,6 @@ func (AppModule) ProposalContents(_ module.SimulationState) []simtypes.WeightedP
 	return nil
 }
 
-// RandomizedParams creates randomized  param changes for the simulator
-func (AppModule) RandomizedParams(r *rand.Rand) []simtypes.LegacyParamChange {
-	return orderbooksimulation.ParamChanges(r)
-}
-
 // RegisterStoreDecoder registers a decoder
 func (am AppModule) RegisterStoreDecoder(sdr sdk.StoreDecoderRegistry) {
 	sdr[types.StoreKey] = orderbooksimulation.NewDecodeStore(am.cdc)
