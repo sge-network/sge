@@ -2,6 +2,8 @@ package v8
 
 import (
 	store "github.com/cosmos/cosmos-sdk/store/types"
+	consensustypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
+	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 
 	"github.com/sge-network/sge/app/upgrades"
 )
@@ -13,7 +15,10 @@ var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
 	CreateUpgradeHandler: CreateUpgradeHandler,
 	StoreUpgrades: store.StoreUpgrades{
-		Added:   []string{},
+		Added: []string{
+			crisistypes.ModuleName,
+			consensustypes.ModuleName,
+		},
 		Deleted: []string{},
 	},
 }
