@@ -7,7 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/sge-network/sge/app/keepers"
-	"github.com/sge-network/sge/x/market/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
 func CreateUpgradeHandler(
@@ -21,28 +21,37 @@ func CreateUpgradeHandler(
 			panic(err)
 		}
 
-		for _, p := range participationList {
-			if !p.IsSettled {
+		for _, bp := range participationList {
+			if !bp.IsSettled {
 				continue
 			}
 
-			market, found := k.MarketKeeper.GetMarket(ctx, p.OrderBookUID)
+			market, found := k.MarketKeeper.GetMarket(ctx, bp.OrderBookUID)
 			if !found {
-				panic(fmt.Errorf("market not found %s", p.OrderBookUID))
+				panic(fmt.Errorf("market not found %s", bp.OrderBookUID))
 			}
 
 			reimburseFee := false
-			if market.Status == types.MarketStatus_MARKET_STATUS_CANCELED ||
-				market.Status == types.MarketStatus_MARKET_STATUS_ABORTED {
+			switch market.Status {
+
+			case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
+				bp.ReturnedAmount = bp.Liquidity.Add(bp.ActualProfit)
+				if bp.NotParticipatedInBetFulfillment() {
+					reimburseFee = true
+				}
+
+			case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
+				markettypes.MarketStatus_MARKET_STATUS_ABORTED:
+				bp.ReturnedAmount = bp.Liquidity
 				reimburseFee = true
-				p.ReimbursedLiquidity = p.Liquidity
 			}
 
-			if reimburseFee || p.NotParticipatedInBetFulfillment() {
-				p.ReimbursedFee = p.Fee
+			if reimburseFee {
+				bp.ReimbursedFee = bp.Fee
+				bp.ReturnedAmount = bp.ReturnedAmount.Add(bp.ReimbursedFee)
 			}
 
-			k.OrderbookKeeper.SetOrderBookParticipation(ctx, p)
+			k.OrderbookKeeper.SetOrderBookParticipation(ctx, bp)
 		}
 
 		return mm.RunMigrations(ctx, configurator, fromVM)

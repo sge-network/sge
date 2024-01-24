@@ -5,9 +5,9 @@ const (
 
 	TypeParticipationSettlement = "participation_settlement"
 
-	AttributeValueMarketUID                        = "market_uid"
-	AttributeValueParticipationIndex               = "participation_index"
-	AttributeValueParticipationReimbursedFees      = "participation_reimbursed_fee"
-	AttributeValueParticipationReimbursedLiquidity = "participation_reimbursed_liquidity"
-	AttributeValueParticipationActualProfit        = "participation_actual_profit"
+	AttributeValueMarketUID                   = "market_uid"
+	AttributeValueParticipationIndex          = "participation_index"
+	AttributeValueParticipationReimbursedFees = "participation_reimbursed_fee"
+	AttributeValueParticipationReturnedAmount = "participation_returned_amount"
+	AttributeValueParticipationActualProfit   = "participation_actual_profit"
 )
