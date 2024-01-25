@@ -115,9 +115,9 @@ func (k Keeper) settleParticipation(
 
 	switch market.Status {
 	case markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED:
-		depositPlusProfit := bp.Liquidity.Add(bp.ActualProfit)
+		bp.ReturnedAmount = bp.Liquidity.Add(bp.ActualProfit)
 		// refund participant's account from orderbook liquidity pool.
-		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, depositPlusProfit); err != nil {
+		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, bp.ReturnedAmount); err != nil {
 			return err
 		}
 		if bp.NotParticipatedInBetFulfillment() {
@@ -131,13 +131,13 @@ func (k Keeper) settleParticipation(
 
 	case markettypes.MarketStatus_MARKET_STATUS_CANCELED,
 		markettypes.MarketStatus_MARKET_STATUS_ABORTED:
+		bp.ReturnedAmount = bp.Liquidity
 		// refund participant's account from orderbook liquidity pool.
-		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, bp.Liquidity); err != nil {
+		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, depositorAddress, bp.ReturnedAmount); err != nil {
 			return err
 		}
 		refundHouseDepositFeeToDepositor = true
-		bp.ReimbursedLiquidity = bp.Liquidity
-		k.hooks.AfterHouseRefund(ctx, depositorAddress, bp.Liquidity)
+		k.hooks.AfterHouseRefund(ctx, depositorAddress, bp.ReturnedAmount)
 	default:
 		return sdkerrors.Wrapf(
 			types.ErrUnknownMarketStatus,
@@ -153,6 +153,7 @@ func (k Keeper) settleParticipation(
 			return err
 		}
 		bp.ReimbursedFee = bp.Fee
+		bp.ReturnedAmount = bp.ReturnedAmount.Add(bp.ReimbursedFee)
 		k.hooks.AfterHouseFeeRefund(ctx, depositorAddress, bp.Fee)
 	} else {
 		// refund participant's account from house fee collector.
@@ -176,7 +177,7 @@ func (k Keeper) settleParticipation(
 			sdk.NewAttribute(types.AttributeValueMarketUID, market.UID),
 			sdk.NewAttribute(types.AttributeValueParticipationIndex, cast.ToString(bp.Index)),
 			sdk.NewAttribute(types.AttributeValueParticipationReimbursedFees, bp.ReimbursedFee.String()),
-			sdk.NewAttribute(types.AttributeValueParticipationReimbursedLiquidity, bp.ReimbursedLiquidity.String()),
+			sdk.NewAttribute(types.AttributeValueParticipationReturnedAmount, bp.ReturnedAmount.String()),
 			sdk.NewAttribute(types.AttributeValueParticipationActualProfit, bp.ActualProfit.String()),
 		),
 	)
