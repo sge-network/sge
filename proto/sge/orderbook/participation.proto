@@ -99,11 +99,11 @@ message OrderBookParticipation {
   // is_settled represents if the participation is settled or not.
   bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
 
-  // reimbursed_liquidity is the liquidity reimbursed because of reasons such as market calcellation.
-  string reimbursed_liquidity = 15 [
+  // returned_amount is the total returned amount to the user's account including reimbursed fees.
+  string returned_amount = 15 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
-    (gogoproto.moretags) = "yaml:\"reimbursed_liquidity\""
+    (gogoproto.moretags) = "yaml:\"returned_amount\""
   ];
 
   // reimbursed_fee is the fee reimbursed because of reasons such as market calcellation.
