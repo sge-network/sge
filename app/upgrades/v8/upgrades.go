@@ -31,6 +31,7 @@ import (
 	subaccountmoduletypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
+//nolint:staticcheck
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
