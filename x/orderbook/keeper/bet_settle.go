@@ -13,17 +13,17 @@ import (
 // this method transfers the bet amount from order book liquidity module account balance to the bettor account balance.
 func (k Keeper) RefundBettor(
 	ctx sdk.Context,
-	bettorAddress sdk.AccAddress,
-	betAmount, betFee, _ sdkmath.Int,
-	_ string,
+	bet bettypes.Bet,
 ) error {
+	bettorAddress := sdk.MustAccAddressFromBech32(bet.Creator)
+
 	// refund bettor's account from orderbook liquidity pool.
-	if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, betAmount); err != nil {
+	if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, bet.Amount); err != nil {
 		return err
 	}
 
 	// refund bettor's account from bet fee collector.
-	if err := k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
+	if err := k.refund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, bet.Fee); err != nil {
 		return err
 	}
 
@@ -35,11 +35,12 @@ func (k Keeper) RefundBettor(
 // updates actual profit of the participation to the subtracted value from the payout profit.
 func (k Keeper) BettorWins(
 	ctx sdk.Context,
-	bettorAddress sdk.AccAddress,
-	betFulfillments []*bettypes.BetFulfillment,
+	bet bettypes.Bet,
 	orderBookUID string,
+
 ) error {
-	for _, betFulfillment := range betFulfillments {
+	bettorAddr := sdk.MustAccAddressFromBech32(bet.Creator)
+	for _, betFulfillment := range bet.BetFulfillment {
 		orderBookParticipation, found := k.GetOrderBookParticipation(
 			ctx,
 			orderBookUID,
@@ -56,7 +57,7 @@ func (k Keeper) BettorWins(
 
 		betAmountAndPayout := betFulfillment.PayoutProfit.Add(betFulfillment.BetAmount)
 		// refund bettor's account from orderbook liquidity pool.
-		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddress, betAmountAndPayout); err != nil {
+		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddr, betAmountAndPayout); err != nil {
 			return err
 		}
 
@@ -68,6 +69,12 @@ func (k Keeper) BettorWins(
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
 	}
 
+	if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+		if err := k.refund(types.PriceLockFunder{}, ctx, bettorAddr, bet.PriceReimbursement); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -77,10 +84,10 @@ func (k Keeper) BettorWins(
 // removes the payout lock.
 func (k Keeper) BettorLoses(
 	ctx sdk.Context,
-	betFulfillments []*bettypes.BetFulfillment,
+	bet bettypes.Bet,
 	orderBookUID string,
 ) error {
-	for _, betFulfillment := range betFulfillments {
+	for _, betFulfillment := range bet.BetFulfillment {
 		// update amount to be transferred to house
 		orderBookParticipation, found := k.GetOrderBookParticipation(
 			ctx,

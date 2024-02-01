@@ -188,6 +188,6 @@ func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.W
 		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
-	bet := types.NewBet(creator, props, payload.SelectedOdds, payload.Meta)
+	bet := types.NewBet(creator, props, payload.SelectedOdds, payload.Meta, payload.SgePrice)
 	return bet, payload.OddsMap(), nil
 }

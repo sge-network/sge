@@ -49,23 +49,9 @@ type OrderbookKeeper interface {
 		odds map[string]*BetOddsCompact,
 		oddUIDS []string,
 	) ([]*BetFulfillment, error)
-	RefundBettor(
-		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		betAmount, betFee, payout sdkmath.Int,
-		uniqueLock string,
-	) error
-	BettorWins(
-		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		fulfillment []*BetFulfillment,
-		bookUID string,
-	) error
-	BettorLoses(
-		ctx sdk.Context,
-		fulfillment []*BetFulfillment,
-		bookUID string,
-	) error
+	RefundBettor(ctx sdk.Context, bet Bet) error
+	BettorWins(ctx sdk.Context, bet Bet, orderBookUID string) error
+	BettorLoses(ctx sdk.Context, bet Bet, orderBookUID string) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
 }

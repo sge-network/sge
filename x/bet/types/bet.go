@@ -3,6 +3,7 @@ package types
 import (
 	sdkmath "cosmossdk.io/math"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -46,7 +47,7 @@ func (bet *Bet) CheckSettlementEligiblity() error {
 	return nil
 }
 
-// SetResult sets the bet object results according to the market resolusion.
+// SetResult sets the bet object results according to the market resolution.
 func (bet *Bet) SetResult(market *markettypes.Market) error {
 	// check if market result is declared or not
 	if market.Status != markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
@@ -78,4 +79,29 @@ func (bet *Bet) SetResult(market *markettypes.Market) error {
 func (bet *Bet) SetFee(fee sdkmath.Int) {
 	bet.Amount = bet.Amount.Sub(fee)
 	bet.Fee = fee
+}
+
+// SetPriceReimbursement calculates and sets the price reimbursement.
+func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
+	for _, bf := range bet.BetFulfillment {
+		bet.PriceReimbursement = bet.PriceReimbursement.Add(
+			bf.PriceReimbursed(
+				bet.WagerSgePrice,
+				resolutionPrice,
+			),
+		)
+	}
+}
+
+// PriceReimbursed calculates the price reimbursement amount.
+func (bf *BetFulfillment) PriceReimbursed(first, second sdk.Dec) sdkmath.Int {
+	diff := second.Sub(first)
+	if diff.IsNegative() {
+		// sge token value dropped
+		coefficient := diff.Abs().Quo(first)
+		reimbursementAmount := sdk.NewDecFromInt(bf.PayoutProfit).Mul(coefficient)
+		return reimbursementAmount.TruncateInt()
+	}
+
+	return sdkmath.ZeroInt()
 }

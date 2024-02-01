@@ -31,8 +31,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return types.ErrNoMatchingBet
 	}
 
-	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
-	if err != nil {
+	if _, err := sdk.AccAddressFromBech32(bet.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
@@ -53,12 +52,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 
 	if market.Status == markettypes.MarketStatus_MARKET_STATUS_ABORTED ||
 		market.Status == markettypes.MarketStatus_MARKET_STATUS_CANCELED {
-		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
-		if err != nil {
-			return err
-		}
-
-		if err := k.orderbookKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.Fee, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.orderbookKeeper.RefundBettor(ctx, bet); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBRefund, "%s", err)
 		}
 
@@ -75,7 +69,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return err
 	}
 
-	if err := k.settleResolved(ctx, &bet); err != nil {
+	if err := k.settleResolved(ctx, &bet, &market); err != nil {
 		return err
 	}
 
@@ -105,19 +99,15 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 
 // settleResolved settles a bet by calling order book functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
-func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
-	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
-	}
-
+func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *markettypes.Market) error {
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.orderbookKeeper.BettorLoses(ctx, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.BetFulfillment, bet.MarketUID); err != nil {
+		bet.SetPriceReimbursement(market.ResolutionSgePrice)
+		if err := k.orderbookKeeper.BettorWins(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED

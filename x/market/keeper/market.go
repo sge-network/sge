@@ -72,6 +72,8 @@ func (k Keeper) Resolve(
 		k.appendUnsettledResolvedMarket(ctx, storedMarket.UID)
 	}
 
+	storedMarket.ResolutionSgePrice = resolutionMarket.SgePrice
+
 	k.SetMarket(ctx, storedMarket)
 
 	return &storedMarket
