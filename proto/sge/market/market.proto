@@ -53,6 +53,11 @@ message Market {
     (gogoproto.jsontag) = "book_uid",
     json_name = "book_uid"
   ];
+  // sge_price is the price of sge token in dollars during resolution.
+  string resolution_sge_price = 11 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MarketStatus is the market status enumeration

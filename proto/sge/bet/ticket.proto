@@ -22,4 +22,9 @@ message WagerTicketPayload {
   MetaData meta = 5 [ (gogoproto.nullable) = false ];
   // context contains the data from services and just for processing purpose.
   string context = 6;
+  // sge_price is the price of sge token in dollars.
+  string sge_price = 7 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }
