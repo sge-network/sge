@@ -83,6 +83,10 @@ func (bet *Bet) SetFee(fee sdkmath.Int) {
 
 // SetPriceReimbursement calculates and sets the price reimbursement.
 func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
+	if bet.WagerSgePrice.IsZero() {
+		return
+	}
+
 	for _, bf := range bet.BetFulfillment {
 		bet.PriceReimbursement = bet.PriceReimbursement.Add(
 			bf.PriceReimbursed(

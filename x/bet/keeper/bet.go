@@ -188,6 +188,13 @@ func (k Keeper) PrepareBetObject(ctx sdk.Context, creator string, props *types.W
 		return nil, nil, sdkerrors.Wrapf(types.ErrInTicketValidation, "%s", err)
 	}
 
+	if payload.SgePrice.GT(sdk.ZeroDec()) {
+		priceLockPoolBalance := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
+		if priceLockPoolBalance.LT(k.GetMinPriceLockPoolBalance(ctx)) {
+			return nil, nil, sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalance, "%s", priceLockPoolBalance)
+		}
+	}
+
 	bet := types.NewBet(creator, props, payload.SelectedOdds, payload.Meta, payload.SgePrice)
 	return bet, payload.OddsMap(), nil
 }

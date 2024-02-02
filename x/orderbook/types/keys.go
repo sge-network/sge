@@ -22,8 +22,6 @@ const (
 const (
 	// orderBookLiquidityPool defines the account name for book liquidity for the participants.
 	orderBookLiquidityPool = "orderbook_liquidity_pool"
-	// priceLockPool defines the account name for price locking feature pool.
-	priceLockPool = "price_lock_pool"
 )
 
 var (

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -106,9 +107,14 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *marketty
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		bet.SetPriceReimbursement(market.ResolutionSgePrice)
 		if err := k.orderbookKeeper.BettorWins(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorWins, "%s", err)
+		}
+		bet.SetPriceReimbursement(market.ResolutionSgePrice)
+		if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+			if err := k.modFunder.Refund(types.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
+				return err
+			}
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	}

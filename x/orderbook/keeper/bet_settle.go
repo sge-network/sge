@@ -2,7 +2,6 @@ package keeper
 
 import (
 	sdkerrors "cosmossdk.io/errors"
-	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -39,7 +38,6 @@ func (k Keeper) BettorWins(
 	orderBookUID string,
 
 ) error {
-	bettorAddr := sdk.MustAccAddressFromBech32(bet.Creator)
 	for _, betFulfillment := range bet.BetFulfillment {
 		orderBookParticipation, found := k.GetOrderBookParticipation(
 			ctx,
@@ -57,7 +55,7 @@ func (k Keeper) BettorWins(
 
 		betAmountAndPayout := betFulfillment.PayoutProfit.Add(betFulfillment.BetAmount)
 		// refund bettor's account from orderbook liquidity pool.
-		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, bettorAddr, betAmountAndPayout); err != nil {
+		if err := k.refund(types.OrderBookLiquidityFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), betAmountAndPayout); err != nil {
 			return err
 		}
 
@@ -67,12 +65,6 @@ func (k Keeper) BettorWins(
 			betFulfillment.PayoutProfit,
 		)
 		k.SetOrderBookParticipation(ctx, orderBookParticipation)
-	}
-
-	if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
-		if err := k.refund(types.PriceLockFunder{}, ctx, bettorAddr, bet.PriceReimbursement); err != nil {
-			return err
-		}
 	}
 
 	return nil

@@ -28,6 +28,8 @@ const (
 const (
 	// betFeeCollector is the module account name for the bet fee collection module account.
 	betFeeCollector = "bet_fee_collector"
+	// priceLockPool defines the account name for price locking feature pool.
+	priceLockPool = "price_lock_pool"
 )
 
 var (

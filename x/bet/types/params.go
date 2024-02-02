@@ -16,8 +16,9 @@ const (
 )
 
 var (
-	defaultMinAmount = sdkmath.NewInt(1000000)
-	defaultFee       = sdkmath.NewInt(100)
+	defaultMinAmount               = sdkmath.NewInt(1000000)
+	defaultFee                     = sdkmath.NewInt(100)
+	defaultMinPriceLockPoolBalance = sdkmath.NewInt(1000000000)
 )
 
 // parameter store keys
@@ -33,6 +34,9 @@ var (
 	// keyWagerConstraints is the default bet placement
 	// constraints.
 	keyWagerConstraints = []byte("WagerConstraints")
+
+	// keyMinPriceLockPoolBalance is the minimum pool balance of the price lock.
+	keyMinPriceLockPoolBalance = []byte("MinPriceLockPoolBalance")
 )
 
 var _ paramtypes.ParamSet = (*Params)(nil)
@@ -51,6 +55,7 @@ func NewParams() Params {
 			MinAmount: defaultMinAmount,
 			Fee:       defaultFee,
 		},
+		MinPriceLockPoolBalance: defaultMinPriceLockPoolBalance,
 	}
 }
 
@@ -77,6 +82,11 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 			&p.Constraints,
 			validateConstraints,
 		),
+		paramtypes.NewParamSetPair(
+			keyMinPriceLockPoolBalance,
+			&p.MinPriceLockPoolBalance,
+			validateMinPriceLockPoolBalance,
+		),
 	}
 }
 
@@ -90,7 +100,11 @@ func (p Params) Validate() error {
 		return err
 	}
 
-	return validateConstraints(p.Constraints)
+	if err := validateConstraints(p.Constraints); err != nil {
+		return err
+	}
+
+	return validateMinPriceLockPoolBalance(p.MinPriceLockPoolBalance)
 }
 
 // String implements the Stringer interface.
@@ -140,6 +154,19 @@ func validateConstraints(i interface{}) error {
 
 	if v.Fee.LT(sdk.ZeroInt()) {
 		return fmt.Errorf("minimum bet fee must be positive: %d", v.Fee.Int64())
+	}
+
+	return nil
+}
+
+func validateMinPriceLockPoolBalance(i interface{}) error {
+	v, ok := i.(sdkmath.Int)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	if v.LTE(sdk.OneInt()) {
+		return fmt.Errorf("minimum price lock pool balance must be positive and more than one: %d", v)
 	}
 
 	return nil
