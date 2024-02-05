@@ -1,0 +1,112 @@
+syntax = "proto3";
+package sgenetwork.sge.reward;
+
+import "gogoproto/gogo.proto";
+import "sgenetwork/sge/type/kyc.proto";
+import "sgenetwork/sge/reward/reward.proto";
+
+option go_package = "github.com/sge-network/sge/x/reward/types";
+
+// CreateCampaignPayload is the type for campaign creation payload.
+message CreateCampaignPayload {
+  // promoter is the address of campaign promoter.
+  // Funds for the campaign would be deducted from this account.
+  string promoter = 1;
+
+  // start_ts is the start timestamp of the campaign.
+  uint64 start_ts = 2;
+
+  // end_ts is the end timestamp of the campaign.
+  uint64 end_ts = 3;
+
+  // category is the category of the campaign.
+  RewardCategory category = 4;
+
+  // reward_type is the type of reward.
+  RewardType reward_type = 5;
+
+  // Reward amount
+  RewardAmountType reward_amount_type = 6;
+
+  // reward_amount is the amount of reward.
+  RewardAmount reward_amount = 7;
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 8;
+
+  // claims_per_category is the number of times a user can claim a reward for
+  // category of this campaign.
+  uint64 claims_per_category = 9;
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 10;
+}
+
+// UpdateCampaignPayload is the type for campaign update payload.
+message UpdateCampaignPayload {
+
+  // end_ts is the end timestamp of the campaign.
+  uint64 end_ts = 1;
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 2;
+}
+
+// WithdrawFundsPayload is the type for campaign withdraw funds payload.
+message WithdrawFundsPayload {
+  // promoter is the address of campaign promoter.
+  // Funds would be transferred to this account.
+  string promoter = 1;
+}
+
+// RewardPayloadCommon
+message RewardPayloadCommon {
+  // receiver is the address of the account that receives the reward.
+  string receiver = 1;
+
+  // source_uid is the address of the source.
+  // It is used to identify the source of the reward.
+  // For example, the source uid of a referral signup reward is the address of
+  // the referer.
+  string source_uid = 2 [
+    (gogoproto.customname) = "SourceUID",
+    (gogoproto.jsontag) = "source_uid",
+    json_name = "source_uid"
+  ];
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 3;
+
+  // kyc_data contains the details of user kyc.
+  sgenetwork.sge.type.KycDataPayload kyc_data = 4;
+}
+
+// GrantSignupRewardPayload is the type for signup reward grant payload.
+message GrantSignupRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
+}
+
+// GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
+// payload.
+message GrantSignupReferrerRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // referee is the address of the account that used this referrer address as
+  // source_uid
+  string referee = 2;
+}
+
+// GrantSignupAffiliatorRewardPayload is the type for signup affiliator reward
+// grant payload.
+message GrantSignupAffiliatorRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // affiliatee is the address of the account that used this affiliator's
+  // address as source_uid
+  string affiliatee = 2;
+}

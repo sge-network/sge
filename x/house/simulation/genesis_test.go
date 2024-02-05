@@ -11,7 +11,6 @@ import (
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
@@ -44,7 +43,7 @@ func TestRandomizedGenState(t *testing.T) {
 	var houseGenesis types.GenesisState
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &houseGenesis)
 
-	require.Equal(t, sdk.NewDecWithPrec(1, 1), houseGenesis.Params.HouseParticipationFee)
+	require.Equal(t, sdkmath.LegacyNewDecWithPrec(1, 1), houseGenesis.Params.HouseParticipationFee)
 	require.Equal(t, sdkmath.NewInt(100), houseGenesis.Params.MinDeposit)
 }
 

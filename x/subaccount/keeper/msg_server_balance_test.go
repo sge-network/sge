@@ -275,7 +275,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 				_, err := msgServer.Create(sdk.WrapSDKContext(ctx), msg)
 				require.NoError(t, err)
 			},
-			expectedErr: "0usge is smaller than 123usge: insufficient funds",
+			expectedErr: "spendable balance  is smaller than 123usge",
 		},
 	}
 
