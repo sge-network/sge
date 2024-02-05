@@ -29,7 +29,7 @@ message BetOdds {
     (gogoproto.customname) = "MaxLossMultiplier",
     (gogoproto.jsontag) = "max_loss_multiplier",
     json_name = "max_loss_multiplier",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
 }
@@ -49,7 +49,7 @@ message BetOddsCompact {
     (gogoproto.customname) = "MaxLossMultiplier",
     (gogoproto.jsontag) = "max_loss_multiplier",
     json_name = "max_loss_multiplier",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
 }

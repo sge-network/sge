@@ -300,12 +300,12 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk0,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower1,
-		DelegatorShares: sdk.NewDecFromInt(valPower1),
+		DelegatorShares: sdkmath.LegacyNewDecFromInt(valPower1),
 		Description:     stakingtypes.NewDescription("hoop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDec(0),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDec(0),
 		),
 	}
 	bondedVal2 := stakingtypes.Validator{
@@ -313,12 +313,12 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk1,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower2,
-		DelegatorShares: sdk.NewDecFromInt(valPower2),
+		DelegatorShares: sdkmath.LegacyNewDecFromInt(valPower2),
 		Description:     stakingtypes.NewDescription("bloop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDec(0),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDec(0),
 		),
 	}
 
@@ -379,9 +379,9 @@ func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *st
 
 func validatorDefaultCommission() stakingtypes.CommissionRates {
 	return stakingtypes.NewCommissionRates(
-		sdk.MustNewDecFromStr("0.1"),
-		sdk.MustNewDecFromStr("0.2"),
-		sdk.MustNewDecFromStr("0.01"),
+		sdkmath.LegacyMustNewDecFromStr("0.1"),
+		sdkmath.LegacyMustNewDecFromStr("0.2"),
+		sdkmath.LegacyMustNewDecFromStr("0.01"),
 	)
 }
 

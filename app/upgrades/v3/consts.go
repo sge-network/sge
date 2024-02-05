@@ -1,7 +1,7 @@
 package v3
 
 import (
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 	"github.com/sge-network/sge/app/upgrades"
 )
 
@@ -11,11 +11,11 @@ const UpgradeName = "v1.2.0"
 // Expedite governance params
 var (
 	// DefaultMinExpeditedDepositTokens is the default minimum deposit required for expedited proposals.
-	DefaultMinExpeditedDepositTokens = sdk.NewInt(50000000000)
+	DefaultMinExpeditedDepositTokens = sdkmath.NewInt(50000000000)
 	// DefaultExpeditedQuorum is the default quorum percentage required for expedited proposals.
-	DefaultExpeditedQuorum = sdk.NewDecWithPrec(750, 3)
+	DefaultExpeditedQuorum = sdkmath.LegacyNewDecWithPrec(750, 3)
 	// DefaultExpeditedThreshold is the default voting threshold percentage required for expedited proposals.
-	DefaultExpeditedThreshold = sdk.NewDecWithPrec(750, 3)
+	DefaultExpeditedThreshold = sdkmath.LegacyNewDecWithPrec(750, 3)
 )
 
 var Upgrade = upgrades.Upgrade{

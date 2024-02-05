@@ -1,7 +1,9 @@
 package app
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/params"
 )
@@ -26,11 +28,11 @@ func SetConfig() {
 	config.SetBech32PrefixForValidator(ValidatorAddressPrefix, ValidatorPubKeyPrefix)
 	config.SetBech32PrefixForConsensusNode(ConsNodeAddressPrefix, ConsNodePubKeyPrefix)
 
-	err := sdk.RegisterDenom(params.HumanCoinUnit, sdk.OneDec())
+	err := sdk.RegisterDenom(params.HumanCoinUnit, sdkmath.LegacyOneDec())
 	if err != nil {
 		panic(err)
 	}
-	err = sdk.RegisterDenom(params.BaseCoinUnit, sdk.NewDecWithPrec(1, params.SGEExponent))
+	err = sdk.RegisterDenom(params.BaseCoinUnit, sdkmath.LegacyNewDecWithPrec(1, params.SGEExponent))
 	if err != nil {
 		panic(err)
 	}

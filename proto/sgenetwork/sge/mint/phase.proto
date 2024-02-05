@@ -12,13 +12,13 @@ message Phase {
   // inflation is the current phase inflation rate.
   string inflation = 1 [
     (gogoproto.moretags) = "yaml:\"inflation\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
   // year_coefficient is the proportion of a complete year.
   string year_coefficient = 2 [
     (gogoproto.moretags) = "yaml:\"year_coefficient\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
 }

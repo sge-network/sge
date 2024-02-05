@@ -9,7 +9,7 @@ import "gogoproto/gogo.proto";
 message Minter {
   // inflation is the current annual inflation rate.
   string inflation = 1 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
   // phase_step is the index of phases slice + 1.
@@ -17,13 +17,13 @@ message Minter {
   // phase_provisions is the current phase expected provisions.
   string phase_provisions = 3 [
     (gogoproto.moretags) = "yaml:\"phase_provisions\"",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
   // truncated_tokens holds current truncated tokens because of Dec to Int
   // conversion in the minting.
   string truncated_tokens = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
 }

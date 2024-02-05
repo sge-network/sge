@@ -4,7 +4,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // NewDeposit creates a new deposit object
@@ -33,6 +32,6 @@ func (d *Deposit) String() string {
 }
 
 // CalcHouseParticipationFeeAmount sets participation fee amount for house
-func (d *Deposit) CalcHouseParticipationFeeAmount(feePercentage sdk.Dec) sdkmath.Int {
+func (d *Deposit) CalcHouseParticipationFeeAmount(feePercentage sdkmath.LegacyDec) sdkmath.Int {
 	return feePercentage.MulInt(d.Amount).RoundInt()
 }

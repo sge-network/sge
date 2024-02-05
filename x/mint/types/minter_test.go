@@ -21,36 +21,36 @@ func TestPhaseInflation(t *testing.T) {
 
 	tests := []struct {
 		phase        int
-		expInflation sdk.Dec
+		expInflation sdkmath.LegacyDec
 	}{
 		// phase 1
-		{1, sdk.MustNewDecFromStr("0.229787234042553191")},
+		{1, sdkmath.LegacyMustNewDecFromStr("0.229787234042553191")},
 		// phase 2
-		{2, sdk.MustNewDecFromStr("0.286259541984732824")},
+		{2, sdkmath.LegacyMustNewDecFromStr("0.286259541984732824")},
 		// phase 3
-		{3, sdk.MustNewDecFromStr("0.150250417362270451")},
+		{3, sdkmath.LegacyMustNewDecFromStr("0.150250417362270451")},
 		// phase 4
-		{4, sdk.MustNewDecFromStr("0.116459627329192547")},
+		{4, sdkmath.LegacyMustNewDecFromStr("0.116459627329192547")},
 		// phase 5
-		{5, sdk.MustNewDecFromStr("0.088041085840058694")},
+		{5, sdkmath.LegacyMustNewDecFromStr("0.088041085840058694")},
 		// phase 6
-		{6, sdk.MustNewDecFromStr("0.063246661981728742")},
+		{6, sdkmath.LegacyMustNewDecFromStr("0.063246661981728742")},
 		// phase 7
-		{7, sdk.MustNewDecFromStr("0.040871934604904632")},
+		{7, sdkmath.LegacyMustNewDecFromStr("0.040871934604904632")},
 		// phase 8
-		{8, sdk.MustNewDecFromStr("0.032042723631508678")},
+		{8, sdkmath.LegacyMustNewDecFromStr("0.032042723631508678")},
 		// phase 9
-		{9, sdk.MustNewDecFromStr("0.019710906701708279")},
+		{9, sdkmath.LegacyMustNewDecFromStr("0.019710906701708279")},
 		// phase 10
-		{10, sdk.MustNewDecFromStr("0.003903708523096942")},
+		{10, sdkmath.LegacyMustNewDecFromStr("0.003903708523096942")},
 		// end phase, inflation: 0%
-		{11, sdk.MustNewDecFromStr("0")},
+		{11, sdkmath.LegacyMustNewDecFromStr("0")},
 		// end phase, inflation: 0%
-		{13, sdk.MustNewDecFromStr("0")},
+		{13, sdkmath.LegacyMustNewDecFromStr("0")},
 		// end phase, inflation: 0%
-		{23, sdk.MustNewDecFromStr("0")},
+		{23, sdkmath.LegacyMustNewDecFromStr("0")},
 		// end phase, inflation: 0%
-		{-1, sdk.MustNewDecFromStr("0")},
+		{-1, sdkmath.LegacyMustNewDecFromStr("0")},
 	}
 	for i, tc := range tests {
 		inflation := params.GetPhaseAtStep(tc.phase).Inflation
@@ -112,8 +112,8 @@ func TestNextPhaseAfterAppendToEndPhase(t *testing.T) {
 	params.Phases = append(
 		params.Phases,
 		types.Phase{
-			YearCoefficient: sdk.MustNewDecFromStr("1"),
-			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("1"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.032042723631508678"),
 		},
 	)
 	phase, _ := minter.CurrentPhase(params, 351)
@@ -129,8 +129,8 @@ func TestNextPhaseAfterRelaceEndPhase(t *testing.T) {
 	params.BlocksPerYear = 100
 	params.Phases = []types.Phase{
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("1"),
-			Inflation:       sdk.MustNewDecFromStr("0.00000000000000000"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("1"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.00000000000000000"),
 		},
 		types.EndPhase(),
 	}
@@ -139,48 +139,48 @@ func TestNextPhaseAfterRelaceEndPhase(t *testing.T) {
 
 	params.Phases = []types.Phase{
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("2.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.00000000000000000"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("2.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.00000000000000000"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.229787234042553191"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.229787234042553191"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.286259541984732824"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.286259541984732824"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.150250417362270451"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.150250417362270451"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.116459627329192547"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.116459627329192547"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.088041085840058694"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.088041085840058694"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.063246661981728742"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.063246661981728742"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.040871934604904632"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.040871934604904632"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.032042723631508678"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.019710906701708279"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.019710906701708279"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.003903708523096942"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.003903708523096942"),
 		},
 	}
 	phase, _ := minter.CurrentPhase(params, 250)
@@ -189,7 +189,7 @@ func TestNextPhaseAfterRelaceEndPhase(t *testing.T) {
 }
 
 func TestBlockProvision(t *testing.T) {
-	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	minter := types.InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 	params := types.DefaultParams()
 
 	tests := []struct {
@@ -203,7 +203,7 @@ func TestBlockProvision(t *testing.T) {
 	}
 
 	for i, tc := range tests {
-		minter.PhaseProvisions = sdk.NewDec(tc.phaseProvisions)
+		minter.PhaseProvisions = sdkmath.LegacyNewDec(tc.phaseProvisions)
 		provisions, _ := minter.BlockProvisions(params, 1)
 
 		expProvisions := sdk.NewCoin(params.MintDenom,
@@ -319,24 +319,24 @@ func TestAnnualProvisions(t *testing.T) {
 	t.Log(minter.PhaseProvisions)
 	annualProvisions := minter.AnnualProvisions(firstPhase)
 
-	require.Equal(t, firstPhase.Inflation.Mul(sdk.NewDec(totalSupply-excludeAmount)), annualProvisions)
+	require.Equal(t, firstPhase.Inflation.Mul(sdkmath.LegacyNewDec(totalSupply-excludeAmount)), annualProvisions)
 }
 
 // Benchmarking :)
 // previously using sdkmath.Int operations:
 // BenchmarkBlockProvision-4 5000000 220 ns/op
 //
-// using sdk.Dec operations: (current implementation)
+// using sdkmath.LegacyDec operations: (current implementation)
 // BenchmarkBlockProvision-4 3000000 429 ns/op
 func BenchmarkBlockProvision(b *testing.B) {
 	b.ReportAllocs()
-	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	minter := types.InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 	params := types.DefaultParams()
 
 	s1 := rand.NewSource(100)
 	//#nosec
 	r1 := rand.New(s1)
-	minter.PhaseProvisions = sdk.NewDec(r1.Int63n(1000000))
+	minter.PhaseProvisions = sdkmath.LegacyNewDec(r1.Int63n(1000000))
 
 	// run the BlockProvision function b.N times
 	for n := 0; n < b.N; n++ {
@@ -361,7 +361,7 @@ func BenchmarkPhaseInflation(b *testing.B) {
 // BenchmarkNextPhaseProvisions-4 5000000 251 ns/op
 func BenchmarkNextPhaseProvisions(b *testing.B) {
 	b.ReportAllocs()
-	minter := types.InitialMinter(sdk.NewDecWithPrec(1, 1))
+	minter := types.InitialMinter(sdkmath.LegacyNewDecWithPrec(1, 1))
 	params := types.DefaultParams()
 	totalSupply := sdkmath.NewInt(100000000000000)
 	phase := params.GetPhaseAtStep(1)

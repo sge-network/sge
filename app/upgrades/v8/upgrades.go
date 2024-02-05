@@ -1,6 +1,7 @@
 package v8
 
 import (
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -108,7 +109,7 @@ func CreateUpgradeHandler(
 
 		// update gov params to use a 20% initial deposit ratio, allowing us to remote the ante handler
 		govParams := k.GovKeeper.GetParams(ctx)
-		govParams.MinInitialDepositRatio = sdk.NewDec(20).Quo(sdk.NewDec(100)).String()
+		govParams.MinInitialDepositRatio = sdkmath.LegacyNewDec(20).Quo(sdkmath.LegacyNewDec(100)).String()
 		if err := k.GovKeeper.SetParams(ctx, govParams); err != nil {
 			return nil, err
 		}

@@ -57,9 +57,11 @@ type OrderBookParticipation struct {
 	ActualProfit cosmossdk_io_math.Int `protobuf:"bytes,13,opt,name=actual_profit,json=actualProfit,proto3,customtype=cosmossdk.io/math.Int" json:"actual_profit" yaml:"actual_profit"`
 	// is_settled represents if the participation is settled or not.
 	IsSettled bool `protobuf:"varint,14,opt,name=is_settled,json=isSettled,proto3" json:"is_settled,omitempty" yaml:"is_settled"`
-	// returned_amount is the total returned amount to the user's account including reimbursed fees.
+	// returned_amount is the total returned amount to the user's account
+	// including reimbursed fees.
 	ReturnedAmount cosmossdk_io_math.Int `protobuf:"bytes,15,opt,name=returned_amount,json=returnedAmount,proto3,customtype=cosmossdk.io/math.Int" json:"returned_amount" yaml:"returned_amount"`
-	// reimbursed_fee is the fee reimbursed because of reasons such as market calcellation.
+	// reimbursed_fee is the fee reimbursed because of reasons such as market
+	// calcellation.
 	ReimbursedFee cosmossdk_io_math.Int `protobuf:"bytes,16,opt,name=reimbursed_fee,json=reimbursedFee,proto3,customtype=cosmossdk.io/math.Int" json:"reimbursed_fee" yaml:"reimbursed_fee"`
 }
 

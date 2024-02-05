@@ -63,7 +63,7 @@ message Bet {
 
   // max_loss_multiplier is the multiplier coefficient of max loss.
   string max_loss_multiplier = 13 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false
   ];
 
