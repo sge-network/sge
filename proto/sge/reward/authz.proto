@@ -22,3 +22,7 @@ message UpdateCampaignAuthorization {
     (gogoproto.nullable) = false
   ];
 }
+
+// WithdrawCampaignAuthorization allows the grantee to withdraw remaining 
+// pool balance of the campaign from the granter's account.
+message WithdrawCampaignAuthorization {}
