@@ -169,7 +169,7 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 		// update counter of bets to be processed in the next iteration.
 		toFetch -= settledCount
 		// update market index to be checked in the next loop.
-		unresolvedMarketIndex += 1
+		unresolvedMarketIndex++
 	}
 
 	return nil
