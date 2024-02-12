@@ -38,6 +38,7 @@ func TestDecodeStore(t *testing.T) {
 			SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 			SelectedOddsValue: "1.5",
 		},
+		sdk.ZeroDec(),
 	)
 
 	betUID := types.UID2ID{

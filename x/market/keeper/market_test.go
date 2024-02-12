@@ -17,6 +17,7 @@ func createNMarket(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Market
 	items := make([]types.Market, n)
 	for i := range items {
 		items[i].UID = cast.ToString(i)
+		items[i].ResolutionSgePrice = sdk.ZeroDec()
 
 		keeper.SetMarket(ctx, items[i])
 	}
