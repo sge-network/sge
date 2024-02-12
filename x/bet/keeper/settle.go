@@ -203,7 +203,6 @@ func (k Keeper) batchMarketSettlement(
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
 		err = k.Settle(ctx, val.Creator, val.UID)
-
 		if err != nil {
 			if errors.Is(err, types.ErrInsufficientPriceLockBalanceForSettle) {
 				continue

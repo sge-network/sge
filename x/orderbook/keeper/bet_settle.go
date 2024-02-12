@@ -36,7 +36,6 @@ func (k Keeper) BettorWins(
 	ctx sdk.Context,
 	bet bettypes.Bet,
 	orderBookUID string,
-
 ) error {
 	for _, betFulfillment := range bet.BetFulfillment {
 		orderBookParticipation, found := k.GetOrderBookParticipation(
