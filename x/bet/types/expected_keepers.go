@@ -30,7 +30,7 @@ type BankKeeper interface {
 // MarketKeeper defines the expected interface needed to get markets from KVStore
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
-	GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool)
+	GetFirstUnsettledResolvedMarket(ctx sdk.Context, index int) (string, bool)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
 }
 

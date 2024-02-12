@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
@@ -65,6 +66,13 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return nil
 	}
 
+	if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+		availablePriceFunds := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
+		if availablePriceFunds.LT(bet.PriceReimbursement) {
+			return types.ErrInsufficientPriceLockBalanceForSettle
+		}
+	}
+
 	// check if the bet odds is a winner odds or not and set the bet pointer states
 	if err := bet.SetResult(&market); err != nil {
 		return err
@@ -113,7 +121,7 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *marketty
 		bet.SetPriceReimbursement(market.ResolutionSgePrice)
 		if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
 			if err := k.modFunder.Refund(types.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
-				return err
+				return sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalanceForSettle, "%s", err)
 			}
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
@@ -126,10 +134,11 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *marketty
 func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
+	unresolvedMarketIndex := 0
 	// continue looping until reach batch settlement count parameter
 	for toFetch > 0 {
 		// get the first resolved market to process corresponding pending bets.
-		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx)
+		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx, unresolvedMarketIndex)
 		// exit loop if there is no resolved bet.
 		if !found {
 			return nil
@@ -159,6 +168,8 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 
 		// update counter of bets to be processed in the next iteration.
 		toFetch -= settledCount
+		// update market index to be checked in the next loop.
+		unresolvedMarketIndex += 1
 	}
 
 	return nil
@@ -192,7 +203,11 @@ func (k Keeper) batchMarketSettlement(
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 
 		err = k.Settle(ctx, val.Creator, val.UID)
+
 		if err != nil {
+			if errors.Is(err, types.ErrInsufficientPriceLockBalanceForSettle) {
+				continue
+			}
 			return
 		}
 
