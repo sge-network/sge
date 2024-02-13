@@ -84,6 +84,7 @@ var mAccPerms = map[string][]string{
 
 	// sge
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
+	betmoduletypes.PriceLockFunder{}.GetModuleAcc():                nil,
 	housemoduletypes.HouseFeeCollectorFunder{}.GetModuleAcc():      nil,
 	orderbookmoduletypes.OrderBookLiquidityFunder{}.GetModuleAcc(): nil,
 	rewardmoduletypes.RewardPoolFunder{}.GetModuleAcc():            nil,

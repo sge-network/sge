@@ -50,6 +50,7 @@ var (
 	ErrAuthorizationNotFound                 = sdkerrors.Register(ModuleName, 2041, "no authorization found")
 	ErrAuthorizationNotAccepted              = sdkerrors.Register(ModuleName, 2042, "authorization not accepted")
 	ErrInsufficientBalanceInPriceLockFunder  = sdkerrors.Register(ModuleName, 2043, "insufficient ballance in the funder account")
+	ErrInvalidPriceLockTopUpAmount           = sdkerrors.Register(ModuleName, 2044, "invalid price lock top up amount")
 )
 
 // x/bet module sentinel error text

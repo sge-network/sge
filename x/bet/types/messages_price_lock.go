@@ -50,6 +50,10 @@ func (msg *MsgPriceLockPoolTopUp) ValidateBasic() error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
+	if msg.Amount.IsNil() || msg.Amount.LTE(sdkmath.ZeroInt()) {
+		return sdkerrors.Wrapf(ErrInvalidPriceLockTopUpAmount, "%s", msg.Amount)
+	}
+
 	return nil
 }
 
