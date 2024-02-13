@@ -430,6 +430,7 @@ func NewAppKeeper(
 		betmodulekeeper.SdkExpectedKeepers{
 			BankKeeper:    appKeepers.BankKeeper,
 			AccountKeeper: appKeepers.AccountKeeper,
+			AuthzKeeper:   appKeepers.AuthzKeeper,
 		},
 	)
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
