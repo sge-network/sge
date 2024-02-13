@@ -2,10 +2,12 @@ package types
 
 import (
 	context "context"
+	"time"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
@@ -59,4 +61,25 @@ type OrderbookKeeper interface {
 	BettorLoses(ctx sdk.Context, bet Bet, orderBookUID string) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
+}
+
+// AuthzKeeper defines the expected authz keeper.
+type AuthzKeeper interface {
+	GetAuthorization(
+		ctx sdk.Context,
+		grantee sdk.AccAddress,
+		granter sdk.AccAddress,
+		msgType string,
+	) (authz.Authorization, *time.Time)
+	SaveGrant(
+		ctx sdk.Context,
+		grantee, granter sdk.AccAddress,
+		authorization authz.Authorization,
+		expiration *time.Time,
+	) error
+	DeleteGrant(
+		ctx sdk.Context,
+		grantee, granter sdk.AccAddress,
+		msgType string,
+	) error
 }

@@ -21,6 +21,7 @@ type Keeper struct {
 	memKey          storetypes.StoreKey
 	paramstore      paramtypes.Subspace
 	modFunder       *utils.ModuleAccFunder
+	authzKeeper     types.AuthzKeeper
 	marketKeeper    types.MarketKeeper
 	orderbookKeeper types.OrderbookKeeper
 	ovmKeeper       types.OVMKeeper
@@ -30,6 +31,7 @@ type Keeper struct {
 type SdkExpectedKeepers struct {
 	BankKeeper    types.BankKeeper
 	AccountKeeper types.AccountKeeper
+	AuthzKeeper   types.AuthzKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -55,6 +57,7 @@ func NewKeeper(
 			expectedKeepers.AccountKeeper,
 			types.ErrorBank,
 		),
+		authzKeeper: expectedKeepers.AuthzKeeper,
 	}
 }
 

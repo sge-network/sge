@@ -47,6 +47,9 @@ var (
 	ErrorBank                                = sdkerrors.Register(ModuleName, 2038, "bank error")
 	ErrInsufficientPriceLockBalance          = sdkerrors.Register(ModuleName, 2039, "insufficient price lock pool balance for wager")
 	ErrInsufficientPriceLockBalanceForSettle = sdkerrors.Register(ModuleName, 2040, "insufficient price lock pool balance for settlement")
+	ErrAuthorizationNotFound                 = sdkerrors.Register(ModuleName, 2041, "no authorization found")
+	ErrAuthorizationNotAccepted              = sdkerrors.Register(ModuleName, 2042, "authorization not accepted")
+	ErrInsufficientBalanceInPriceLockFunder  = sdkerrors.Register(ModuleName, 2043, "insufficient ballance in the funder account")
 )
 
 // x/bet module sentinel error text

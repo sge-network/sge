@@ -1,15 +1,17 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
+import "gogoproto/gogo.proto";
 import "sge/bet/wager.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // Msg defines the Msg service.
 service Msg {
-
   // Wager defines a method to place a bet with the given data.
   rpc Wager(MsgWager) returns (MsgWagerResponse);
+  // PriceLockPoolTopUp defines a method to top up price lock module account with the given amount.
+  rpc PriceLockPoolTopUp(MsgPriceLockPoolTopUp) returns (MsgPriceLockPoolTopUpResponse);
 }
 
 // MsgWager defines a message to place a bet with the given data.
@@ -23,3 +25,20 @@ message MsgWager {
 // MsgWagerResponse is the returning value in the response
 // of MsgWagerResponse request.
 message MsgWagerResponse { WagerProps props = 1; }
+
+// MsgPriceLockPoolTopUp defines a message to top up price lock pool module account with the given data.
+message MsgPriceLockPoolTopUp {
+  // creator is the transaction signer.
+  string creator = 1;
+  // funder is the address of funder account.
+  string funder = 2;
+  // amount is the amount being topped up into the price lock module account.
+  string amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// MsgPriceLockPoolTopUpResponse is the returning value in the response
+// of MsgPriceLockPoolTopUp request.
+message MsgPriceLockPoolTopUpResponse { }

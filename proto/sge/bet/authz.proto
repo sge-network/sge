@@ -1,0 +1,15 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+// PriceLockAuthorization allows the grantee to spend up to spend_limit from
+// the granter's account for deposit.
+message PriceLockAuthorization {
+  string spend_limit = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
