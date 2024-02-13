@@ -66,7 +66,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return nil
 	}
 
-	if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+	if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
 		availablePriceFunds := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
 		if availablePriceFunds.LT(bet.PriceReimbursement) {
 			return types.ErrInsufficientPriceLockBalanceForSettle
@@ -119,7 +119,7 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *marketty
 			return sdkerrors.Wrapf(types.ErrInOBBettorWins, "%s", err)
 		}
 		bet.SetPriceReimbursement(market.ResolutionSgePrice)
-		if bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+		if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
 			if err := k.modFunder.Refund(types.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
 				return sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalanceForSettle, "%s", err)
 			}
