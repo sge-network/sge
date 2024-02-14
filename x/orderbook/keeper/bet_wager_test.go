@@ -39,6 +39,13 @@ type testBetSuite struct {
 func newTestBetSuite(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
+	err := tApp.BankKeeper.SendCoins(ctx,
+		simapp.TestParamUsers["user9"].Address,
+		tApp.AccountKeeper.GetModuleAddress(bettypes.PriceLockFunder{}.GetModuleAcc()),
+		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1000))),
+	)
+	require.NoError(t, err)
+
 	betFee := sdkmath.NewInt(10)
 
 	marketUID := uuid.NewString()
@@ -187,6 +194,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		nil,
 		betOdds,
 		oddUIDS,
+		sdk.NewDecWithPrec(7, 10),
 	)
 	winner1Bet.BetFulfillment = winner1BetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner1Bet, winner1BetID)
@@ -226,6 +234,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		nil,
 		betOdds,
 		oddUIDS,
+		sdk.ZeroDec(),
 	)
 
 	winner2Bet.BetFulfillment = winner2BetFulfillment
@@ -264,6 +273,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		types.ErrInsufficientLiquidityInOrderBook,
 		betOdds,
 		oddUIDS,
+		sdk.ZeroDec(),
 	)
 
 	///// loser bet placement
@@ -282,6 +292,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		nil,
 		betOdds,
 		oddUIDS,
+		sdk.ZeroDec(),
 	)
 	loserBet.BetFulfillment = loserBetFulfillment
 	ts.tApp.BetKeeper.SetBet(ts.ctx, loserBet, loserBetID)
@@ -309,6 +320,7 @@ func (ts *testBetSuite) placeTestBet(
 	expErr error,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
+	wagerSgePrice sdk.Dec,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
@@ -321,6 +333,7 @@ func (ts *testBetSuite) placeTestBet(
 		Creator:           bettorAddr.String(),
 		CreatedAt:         cast.ToInt64(ts.ctx.BlockTime().Unix()),
 		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		WagerSgePrice:     wagerSgePrice,
 	}
 
 	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)

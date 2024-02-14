@@ -88,6 +88,9 @@ func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
 	}
 
 	for _, bf := range bet.BetFulfillment {
+		if bet.PriceReimbursement.IsNil() {
+			bet.PriceReimbursement = sdkmath.ZeroInt()
+		}
 		bet.PriceReimbursement = bet.PriceReimbursement.Add(
 			bf.PriceReimbursed(
 				bet.WagerSgePrice,
