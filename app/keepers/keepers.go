@@ -340,6 +340,7 @@ func NewAppKeeper(
 		govConfig,
 		govModAddress,
 	)
+	appKeepers.GovKeeper.SetLegacyRouter(govRouter)
 
 	// IBC Fee Module keeper
 	appKeepers.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
