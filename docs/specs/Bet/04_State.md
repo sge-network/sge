@@ -20,6 +20,7 @@ The bet model in the Proto files is as below:
 3. `constraints` contains criteria of the bet placement.
     - `min_amount` minimum bet amount while placement.
     - `fee` bet fee amount payable by bettor.
+4. `min_price_lock_pool_balance`: is the minimum allowed amount to be topped up to the price lock pool module account.
 
 ```proto
 // Params defines the parameters for the module.
@@ -33,6 +34,11 @@ message Params {
   // constraints is the bet constraints.
   Constraints constraints = 3 [
     (gogoproto.moretags) = "yaml:\"constraints\"",
+    (gogoproto.nullable) = false
+  ];
+  // min_price_lock_pool_balance is the minimum balance of price lock module account.
+  string min_price_lock_pool_balance = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
 }
@@ -94,13 +100,13 @@ message Bet {
 
   // amount is the wager amount.
   string amount = 6 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
 
   // fee is the betting fee user needs to pay for placing a bet
   string fee = 7 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
 
@@ -129,7 +135,19 @@ message Bet {
   repeated BetFulfillment bet_fulfillment = 14;
 
   // meta is metadata for bet
-  MetaData meta = 15;
+  MetaData meta = 15 [ (gogoproto.nullable) = false ];
+
+  // sge_price is the price of sge token in dollars during wager.
+  string wager_sge_price = 16 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+
+  // price_reimbursement is the extra sge tokens transferret to the bettors's account to cover price volatility
+  string price_reimbursement = 17 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 
   // Status of the Bet.
   enum Status {
