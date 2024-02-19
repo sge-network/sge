@@ -164,12 +164,15 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 			if err != nil {
 				return fmt.Errorf("could not resolve orderbook %s %s", marketUID, err)
 			}
+		} else {
+			// update market index to be checked in the next loop,
+			// the next loop happens when toFetch is greater than 0 which means
+			// the loop can check the next unsettled market in this block.
+			unresolvedMarketIndex++
 		}
 
 		// update counter of bets to be processed in the next iteration.
 		toFetch -= settledCount
-		// update market index to be checked in the next loop.
-		unresolvedMarketIndex++
 	}
 
 	return nil
