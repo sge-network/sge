@@ -54,12 +54,13 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 
 			book.Status = types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_SETTLED
 			k.SetOrderBook(ctx, book)
+		} else {
+			// update market index to be checked in the next loop.
+			unresolvedOrderBookIndex++
 		}
 
 		// update counter of bets to be processed in the next iteration.
 		toFetch -= settledCount
-		// update market index to be checked in the next loop.
-		unresolvedOrderBookIndex++
 	}
 
 	return nil
@@ -74,12 +75,14 @@ func (k Keeper) batchSettlementOfParticipation(
 ) (allSettled bool, settledCount uint64, err error) {
 	// initialize iterator for the certain number of active deposits
 	// equal to countToBeSettled
-	allSettled = true
 	bookParticipations, err := k.GetParticipationsOfOrderBook(ctx, orderBookUID)
 	if err != nil {
 		return false, settledCount, fmt.Errorf("batch settlement of book %s failed: %s", orderBookUID, err)
 	}
+
+	processed := 0
 	for _, bookParticipation := range bookParticipations {
+		processed++
 		if !bookParticipation.IsSettled {
 			err = k.settleParticipation(ctx, bookParticipation, market)
 			if err != nil {
@@ -90,11 +93,14 @@ func (k Keeper) batchSettlementOfParticipation(
 				)
 			}
 			settledCount++
-			allSettled = false
 		}
 		if cast.ToUint64(settledCount) >= countToBeSettled {
 			break
 		}
+	}
+
+	if len(bookParticipations) == processed {
+		allSettled = true
 	}
 
 	return allSettled, settledCount, nil
