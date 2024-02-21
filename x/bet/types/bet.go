@@ -106,7 +106,8 @@ func (bf *BetFulfillment) PriceReimbursed(first, second sdk.Dec) sdkmath.Int {
 	if diff.IsNegative() {
 		// sge token value dropped
 		coefficient := diff.Abs().Quo(first)
-		reimbursementAmount := sdk.NewDecFromInt(bf.PayoutProfit).Mul(coefficient)
+		amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
+		reimbursementAmount := sdk.NewDecFromInt(amountAndProfit).Mul(coefficient)
 		return reimbursementAmount.TruncateInt()
 	}
 

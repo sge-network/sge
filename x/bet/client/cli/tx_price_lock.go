@@ -14,7 +14,7 @@ import (
 // CmdPriceLockTopUp implements a command to top up the price lock module account.
 func CmdPriceLockTopUp() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "TopUpPriceLockPool [funder_address] [amount]",
+		Use:   "top-up-price-lock-pool [funder_address] [amount]",
 		Short: "Top up price lock pool",
 		Long:  "Top up price lock pool module account. the funder and amount required.",
 		Args:  cobra.ExactArgs(2),
