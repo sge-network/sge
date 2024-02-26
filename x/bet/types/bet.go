@@ -102,12 +102,13 @@ func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
 
 // PriceReimbursed calculates the price reimbursement amount.
 func (bf *BetFulfillment) PriceReimbursed(first, second sdk.Dec) sdkmath.Int {
-	diff := second.Sub(first)
-	if diff.IsNegative() {
+	if second.LT(first) {
 		// sge token value dropped
-		coefficient := diff.Abs().Quo(first)
 		amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
-		reimbursementAmount := sdk.NewDecFromInt(amountAndProfit).Mul(coefficient)
+		firstValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(first)
+		secondValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(second)
+		// sge reimbursement tokens
+		reimbursementAmount := firstValueInDollars.Sub(secondValueInDollars)
 		return reimbursementAmount.TruncateInt()
 	}
 
