@@ -82,7 +82,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return err
 	}
 
-	if err := k.orderbookKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee); err != nil {
+	if err := k.orderbookKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee, bet.PriceLockFee); err != nil {
 		return err
 	}
 

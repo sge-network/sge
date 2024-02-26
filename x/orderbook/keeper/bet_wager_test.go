@@ -352,7 +352,7 @@ func (ts *testBetSuite) placeTestBet(
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsValue, 1, odds, oddUIDS,
+		bettorAddr, bet.Fee, bet.PriceLockFee, bet.OddsValue, 1, odds, oddUIDS,
 	)
 	if expErr != nil {
 		require.ErrorIs(ts.t, expErr, err)
@@ -490,7 +490,7 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 
 	betFulfillment, err := ts.k.ProcessWager(
 		ts.ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddr, bet.Fee, bet.OddsValue, 1, betOdds, oddUIDS,
+		bettorAddr, bet.Fee, bet.PriceLockFee, bet.OddsValue, 1, betOdds, oddUIDS,
 	)
 	require.NoError(ts.t, err)
 

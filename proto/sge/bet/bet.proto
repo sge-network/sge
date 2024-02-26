@@ -85,6 +85,12 @@ message Bet {
     (gogoproto.nullable) = false
   ];
 
+  // price_lock_fee is the betting price lock fee user needs to pay for placing a bet
+  string price_lock_fee = 18 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
   // Status of the Bet.
   enum Status {
     // the invalid or unknown

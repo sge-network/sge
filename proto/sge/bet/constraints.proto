@@ -18,4 +18,10 @@ message Constraints {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
+
+  // price_lock_fee_percent is the fee that the bettor needs to pay to enable price lock on the bet.
+  string price_lock_fee_percent = 3 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }

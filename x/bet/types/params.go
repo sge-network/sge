@@ -18,6 +18,7 @@ const (
 var (
 	defaultMinAmount               = sdkmath.NewInt(1000000)
 	defaultFee                     = sdkmath.NewInt(100)
+	defaultPriceLockFeePercent     = sdk.NewDecWithPrec(5, 2)
 	defaultMinPriceLockPoolBalance = sdkmath.NewInt(1000000000)
 )
 
@@ -52,8 +53,9 @@ func NewParams() Params {
 		BatchSettlementCount:  batchSettlementCount,
 		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
 		Constraints: Constraints{
-			MinAmount: defaultMinAmount,
-			Fee:       defaultFee,
+			MinAmount:           defaultMinAmount,
+			Fee:                 defaultFee,
+			PriceLockFeePercent: defaultPriceLockFeePercent,
 		},
 		MinPriceLockPoolBalance: defaultMinPriceLockPoolBalance,
 	}
@@ -154,6 +156,10 @@ func validateConstraints(i interface{}) error {
 
 	if v.Fee.LT(sdk.ZeroInt()) {
 		return fmt.Errorf("minimum bet fee must be positive: %d", v.Fee.Int64())
+	}
+
+	if v.PriceLockFeePercent.LT(sdk.ZeroDec()) {
+		return fmt.Errorf("minimum bet price lock fee must be positive: %s", v.PriceLockFeePercent)
 	}
 
 	return nil

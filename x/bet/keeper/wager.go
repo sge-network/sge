@@ -48,6 +48,10 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 	// modify the bet fee and subtracted amount
 	bet.SetFee(betConstraints.Fee)
 
+	if bet.IsPriceLockEnabled() {
+		bet.SetPriceLockFee(betConstraints.PriceLockFeePercent)
+	}
+
 	// calculate payoutProfit
 	payoutProfit, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
 	if err != nil {
@@ -60,7 +64,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 
 	betFulfillment, err := k.orderbookKeeper.ProcessWager(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddress, bet.Fee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
+		bettorAddress, bet.Fee, bet.PriceLockFee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
 	)
 	if err != nil {
 		return err

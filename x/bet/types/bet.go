@@ -81,6 +81,18 @@ func (bet *Bet) SetFee(fee sdkmath.Int) {
 	bet.Fee = fee
 }
 
+// SetPriceLockFee calculates and sets the price lock fee.
+func (bet *Bet) SetPriceLockFee(feePercentage sdk.Dec) {
+	feeAmount := sdk.NewDecFromInt(bet.Amount).Mul(feePercentage).TruncateInt()
+	bet.PriceLockFee = feeAmount
+	bet.Amount = bet.Amount.Sub(feeAmount)
+}
+
+// IsPriceLockEnabled returns true if the price lock feature is requested for this bet
+func (bet *Bet) IsPriceLockEnabled() bool {
+	return bet.WagerSgePrice.GT(sdk.ZeroDec())
+}
+
 // SetPriceReimbursement calculates and sets the price reimbursement.
 func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
 	if bet.WagerSgePrice.IsZero() {

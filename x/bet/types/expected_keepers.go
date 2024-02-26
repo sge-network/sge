@@ -51,6 +51,7 @@ type OrderbookKeeper interface {
 		payoutProfit sdk.Dec,
 		bettorAddress sdk.AccAddress,
 		betFee sdkmath.Int,
+		betPriceLockFee sdkmath.Int,
 		oddsVal string,
 		betID uint64,
 		odds map[string]*BetOddsCompact,
@@ -60,7 +61,7 @@ type OrderbookKeeper interface {
 	BettorWins(ctx sdk.Context, bet Bet, orderBookUID string) error
 	BettorLoses(ctx sdk.Context, bet Bet, orderBookUID string) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
-	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
+	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee, priceLockBetFee sdkmath.Int) error
 }
 
 // AuthzKeeper defines the expected authz keeper.
