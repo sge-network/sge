@@ -72,6 +72,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			MaxLossMultiplier:  sdk.MustNewDecFromStr("0.1"),
 			WagerSgePrice:      sdk.ZeroDec(),
 			PriceReimbursement: sdkmath.ZeroInt(),
+			PriceLockFee:       sdkmath.ZeroInt(),
 		}
 		nullify.Fill(&bet)
 

@@ -90,7 +90,7 @@ func (bet *Bet) SetPriceLockFee(feePercentage sdk.Dec) {
 
 // IsPriceLockEnabled returns true if the price lock feature is requested for this bet
 func (bet *Bet) IsPriceLockEnabled() bool {
-	return bet.WagerSgePrice.GT(sdk.ZeroDec())
+	return !bet.WagerSgePrice.IsNil() && bet.WagerSgePrice.GT(sdk.ZeroDec())
 }
 
 // SetPriceReimbursement calculates and sets the price reimbursement.
