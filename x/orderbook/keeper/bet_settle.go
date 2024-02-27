@@ -27,7 +27,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// refund bettor's account from price lock pool.
-	if err := k.refund(bettypes.PriceLockFunder{}, ctx, bettorAddress, bet.PriceLockFee); err != nil {
+	if err := k.refund(bettypes.PriceLockFeeCollector{}, ctx, bettorAddress, bet.PriceLockFee); err != nil {
 		return err
 	}
 

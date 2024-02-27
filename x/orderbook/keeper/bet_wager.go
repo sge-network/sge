@@ -66,7 +66,7 @@ func (k Keeper) ProcessWager(
 
 	if !betPriceLockFee.IsNil() && betPriceLockFee.GT(sdkmath.ZeroInt()) {
 		// fund bet price lock pool from bettor's account.
-		if err := k.fund(bettypes.PriceLockFunder{}, ctx, bettorAddress, betPriceLockFee); err != nil {
+		if err := k.fund(bettypes.PriceLockFeeCollector{}, ctx, bettorAddress, betPriceLockFee); err != nil {
 			return nil, err
 		}
 	}

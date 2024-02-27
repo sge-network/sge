@@ -75,3 +75,34 @@ func (k *Keeper) refund(
 
 	return nil
 }
+
+func (k *Keeper) refundModule(
+	mf iModuleFunder,
+	ctx sdk.Context,
+	moduleName string,
+	amount sdkmath.Int,
+) error {
+	mAcc := mf.GetModuleAcc()
+	// Get the balance of the sender module account
+	balance := k.bankKeeper.GetBalance(
+		ctx,
+		k.accountKeeper.GetModuleAddress(mAcc),
+		params.DefaultBondDenom,
+	)
+
+	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
+
+	// If module account has insufficient balance, return error
+	if balance.Amount.LT(amt.AmountOf(params.DefaultBondDenom)) {
+		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount,
+			mAcc)
+	}
+
+	// Transfer funds
+	err := k.bankKeeper.SendCoinsFromModuleToModule(ctx, mAcc, moduleName, amt)
+	if err != nil {
+		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
+	}
+
+	return nil
+}

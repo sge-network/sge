@@ -12,5 +12,5 @@ func (k Keeper) WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, be
 	if err := k.refund(bettypes.BetFeeCollectorFunder{}, ctx, marketCreator, betFee); err != nil {
 		return err
 	}
-	return k.refund(bettypes.PriceLockFunder{}, ctx, marketCreator, betPriceLockFee)
+	return k.refundModule(bettypes.PriceLockFeeCollector{}, ctx, bettypes.PriceLockFunder{}.GetModuleAcc(), betPriceLockFee)
 }
