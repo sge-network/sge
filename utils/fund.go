@@ -79,3 +79,23 @@ func (f *ModuleAccFunder) Refund(
 
 	return nil
 }
+
+// RefundModule transfers the input amount from the module account to another one account.
+func (f *ModuleAccFunder) RefundModule(
+	mf IModuleFunder,
+	ctx sdk.Context,
+	receiverModuleAcc string,
+	amount sdkmath.Int,
+) error {
+	mAcc := mf.GetModuleAcc()
+
+	amt := sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, amount))
+
+	// Transfer funds
+	err := f.bk.SendCoinsFromModuleToModule(ctx, mAcc, receiverModuleAcc, amt)
+	if err != nil {
+		return sdkerrors.Wrapf(f.bankError, err.Error())
+	}
+
+	return nil
+}

@@ -94,8 +94,7 @@ func (k *Keeper) refundModule(
 
 	// If module account has insufficient balance, return error
 	if balance.Amount.LT(amt.AmountOf(params.DefaultBondDenom)) {
-		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount,
-			mAcc)
+		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, mAcc)
 	}
 
 	// Transfer funds

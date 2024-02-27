@@ -39,9 +39,9 @@ type testBetSuite struct {
 func newTestBetSuite(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
-	err := tApp.BankKeeper.SendCoins(ctx,
+	err := tApp.BankKeeper.SendCoinsFromAccountToModule(ctx,
 		simapp.TestParamUsers["user9"].Address,
-		tApp.AccountKeeper.GetModuleAddress(bettypes.PriceLockFunder{}.GetModuleAcc()),
+		bettypes.PriceLockFunder{}.GetModuleAcc(),
 		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1000))),
 	)
 	require.NoError(t, err)
