@@ -50,7 +50,7 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 
 	promoter, isFound := keepers.GetPromoterByAddress(ctx, campaign.Promoter)
 	if !isFound {
-		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", &campaign.Promoter)
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", campaign.Promoter)
 	}
 
 	if !keepers.RewardKeeper.HasRewardOfReceiverByPromoter(ctx, promoter.PromoterUID, payload.Referee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
