@@ -40,10 +40,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
 	}
 
-	if payload.ClaimsPerCategory == 0 {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "claim per category should be a positive number")
-	}
-
 	return nil
 }
 

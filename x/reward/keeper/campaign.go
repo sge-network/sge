@@ -10,9 +10,7 @@ import (
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	store := k.getCampaignStore(ctx)
 	b := k.cdc.MustMarshal(&campaign)
-	store.Set(types.GetCampaignKey(
-		campaign.UID,
-	), b)
+	store.Set(types.GetCampaignKey(campaign.UID), b)
 }
 
 // GetCampaign returns a campaign from its index

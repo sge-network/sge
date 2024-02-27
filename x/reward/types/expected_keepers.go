@@ -71,5 +71,6 @@ type SubAccountKeeper interface {
 
 // RewardKeeper defines the expected interface needed to get and filter the rewards.
 type RewardKeeper interface {
-	HasRewardByReceiver(ctx sdk.Context, addr string, category RewardCategory) bool
+	HasRewardOfReceiverByPromoter(ctx sdk.Context, promoterUID, addr string, category RewardCategory) bool
+	GetPromoterByAddress(ctx sdk.Context, address string) (val PromoterByAddress, found bool)
 }

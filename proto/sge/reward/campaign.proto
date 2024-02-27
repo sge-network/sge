@@ -54,10 +54,6 @@ message Campaign {
   // is_active is the flag to check if the campaign is active or not.
   bool is_active = 11;
 
-  // claims_per_category is the number of times a user can claim a
-  // reward for category of this campaign.
-  uint64 claims_per_category = 12;
-
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 13;

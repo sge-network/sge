@@ -20,6 +20,8 @@ import (
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
+var promoterUID = uuid.NewString()
+
 func getDefaultClaim(creator string) jwt.MapClaims {
 	return jwt.MapClaims{
 		"exp":                 time.Now().Add(time.Minute * 5).Unix(),
@@ -37,6 +39,23 @@ func getDefaultClaim(creator string) jwt.MapClaims {
 func createCampaign(t *testing.T, k *keeper.Keeper, srv types.MsgServer, ctx sdk.Context,
 	promoter string, claims jwt.MapClaims,
 ) string {
+	k.SetPromoter(ctx, types.Promoter{
+		Creator:   promoter,
+		UID:       promoterUID,
+		Addresses: []string{promoter},
+		Conf: types.PromoterConf{
+			CategoryCap: []types.CategoryCap{
+				{Category: types.RewardCategory_REWARD_CATEGORY_SIGNUP, CapPerAcc: 1},
+			},
+		},
+	})
+
+	k.SetPromoterByAddress(ctx,
+		types.PromoterByAddress{
+			Address:     promoter,
+			PromoterUID: promoterUID,
+		})
+
 	ticket, err := simapp.CreateJwtTicket(claims)
 	require.Nil(t, err)
 
@@ -290,7 +309,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
-	rewardGrant, err := k.GetRewardsByAddressAndCategory(ctx, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
+	rewardGrant, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
 	require.NoError(t, err)
 	require.Equal(t, types.RewardByCategory{
 		UID:            reward.Uid,
@@ -298,7 +317,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 		RewardCategory: types.RewardCategory_REWARD_CATEGORY_SIGNUP,
 	}, rewardGrant[0])
 
-	require.True(t, k.HasRewardByReceiver(ctx, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
+	require.True(t, k.HasRewardOfReceiverByPromoter(ctx, promoterUID, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
 
 	for _, tc := range []struct {
 		desc   string
@@ -522,7 +541,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
-	rewardGrant, err := k.GetRewardsByAddressAndCategory(ctx, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
+	rewardGrant, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
 	require.NoError(t, err)
 	require.Equal(t, types.RewardByCategory{
 		UID:            reward.Uid,
@@ -530,7 +549,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 		RewardCategory: types.RewardCategory_REWARD_CATEGORY_SIGNUP,
 	}, rewardGrant[0])
 
-	require.True(t, k.HasRewardByReceiver(ctx, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
+	require.True(t, k.HasRewardOfReceiverByPromoter(ctx, promoterUID, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
 
 	for _, tc := range []struct {
 		desc   string
