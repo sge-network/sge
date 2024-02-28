@@ -120,8 +120,9 @@ func (bf *BetFulfillment) PriceReimbursed(first, second sdk.Dec) sdkmath.Int {
 		firstValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(first)
 		secondValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(second)
 		// sge reimbursement tokens
-		reimbursementAmount := firstValueInDollars.Sub(secondValueInDollars)
-		return reimbursementAmount.TruncateInt()
+		reimbursementInDollar := firstValueInDollars.Sub(secondValueInDollars)
+		reimbursementInSGE := reimbursementInDollar.Quo(second)
+		return reimbursementInSGE.TruncateInt()
 	}
 
 	return sdkmath.ZeroInt()
