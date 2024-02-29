@@ -69,6 +69,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"uid":           "invalid uid",
 			"status":        types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts": uint64(time.Now().Unix()),
+			"sge_price":     "0.75",
 			"exp":           9999999999,
 			"iat":           1111111111,
 		}
@@ -89,6 +90,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{uuid.NewString()},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
@@ -109,6 +111,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{uuid.NewString()},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
@@ -129,6 +132,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{"invalidWId"},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
@@ -149,6 +153,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{uuid.NewString(), uuid.NewString()},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
@@ -169,6 +174,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_CANCELED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{uuid.NewString()},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
@@ -189,6 +195,7 @@ func TestMsgServerResolveMarketResponse(t *testing.T) {
 			"status":           types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
 			"resolution_ts":    uint64(time.Now().Unix()),
 			"winner_odds_uids": []string{uuid.NewString()},
+			"sge_price":        "0.75",
 			"exp":              9999999999,
 			"iat":              1111111111,
 		}
