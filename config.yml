@@ -46,7 +46,8 @@ genesis:
       params:
         constraints:
           min_amount: "1000000"
-          fee: "100"
+          fee: "0"
+          price_lock_fee_percent: "0.050000000000000000"
     mint:
       minter:
         phase_provisions: "100000000000000.000000000000000000"

@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/simapp"
@@ -255,6 +256,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 		},
 		{
@@ -263,6 +265,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				UID:          uuid.NewString(),
 				ResolutionTS: cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				Status:       types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
+				SgePrice:     sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -273,6 +276,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_UNSPECIFIED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -283,6 +287,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString(), uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -292,6 +297,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				UID:            uuid.NewString(),
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -302,6 +308,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{uuid.NewString()},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -312,6 +319,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},
@@ -322,6 +330,7 @@ func TestResolveMarketTicketPayloadValidation(t *testing.T) {
 				ResolutionTS:   cast.ToUint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				WinnerOddsUIDs: []string{"invalid uuid"},
 				Status:         types.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+				SgePrice:       sdk.NewDecWithPrec(75, 2),
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
 		},

@@ -93,37 +93,41 @@ func (bet *Bet) IsPriceLockEnabled() bool {
 	return !bet.WagerSgePrice.IsNil() && bet.WagerSgePrice.GT(sdk.ZeroDec())
 }
 
+// IsEligibleForPriceLockReimbursement returns true if eligible for price lock refund.
+func (bet *Bet) IsEligibleForPriceLockReimbursement(resolutionPrice sdk.Dec) bool {
+	return resolutionPrice.LT(bet.WagerSgePrice)
+}
+
 // SetPriceReimbursement calculates and sets the price reimbursement.
 func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
 	if bet.WagerSgePrice.IsZero() {
 		return
 	}
 
-	for _, bf := range bet.BetFulfillment {
-		if bet.PriceReimbursement.IsNil() {
-			bet.PriceReimbursement = sdkmath.ZeroInt()
+	if bet.IsEligibleForPriceLockReimbursement(resolutionPrice) {
+		for _, bf := range bet.BetFulfillment {
+			if bet.PriceReimbursement.IsNil() {
+				bet.PriceReimbursement = sdkmath.ZeroInt()
+			}
+
+			bet.PriceReimbursement = bet.PriceReimbursement.Add(
+				bf.PriceReimbursed(
+					bet.WagerSgePrice,
+					resolutionPrice,
+				),
+			)
 		}
-		bet.PriceReimbursement = bet.PriceReimbursement.Add(
-			bf.PriceReimbursed(
-				bet.WagerSgePrice,
-				resolutionPrice,
-			),
-		)
 	}
 }
 
 // PriceReimbursed calculates the price reimbursement amount.
-func (bf *BetFulfillment) PriceReimbursed(first, second sdk.Dec) sdkmath.Int {
-	if second.LT(first) {
-		// sge token value dropped
-		amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
-		firstValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(first)
-		secondValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(second)
-		// sge reimbursement tokens
-		reimbursementInDollar := firstValueInDollars.Sub(secondValueInDollars)
-		reimbursementInSGE := reimbursementInDollar.Quo(second)
-		return reimbursementInSGE.TruncateInt()
-	}
-
-	return sdkmath.ZeroInt()
+func (bf *BetFulfillment) PriceReimbursed(wagerPrice, resolutionPrice sdk.Dec) sdkmath.Int {
+	// sge token value dropped
+	amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
+	firstValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(wagerPrice)
+	secondValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(resolutionPrice)
+	// sge reimbursement tokens
+	reimbursementInDollar := firstValueInDollars.Sub(secondValueInDollars)
+	reimbursementInSGE := reimbursementInDollar.Quo(resolutionPrice)
+	return reimbursementInSGE.TruncateInt()
 }

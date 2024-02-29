@@ -31,6 +31,7 @@ type testBetSuite struct {
 	ctx            sdk.Context
 	tApp           simapp.TestApp
 	betFee         sdkmath.Int
+	priceLockFee   sdk.Dec
 	market         markettypes.Market
 	deposits       []housetypes.Deposit
 	participations []types.OrderBookParticipation
@@ -47,6 +48,7 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 	require.NoError(t, err)
 
 	betFee := sdkmath.NewInt(10)
+	priceLockFee := sdk.NewDecWithPrec(5, 2)
 
 	marketUID := uuid.NewString()
 	market := markettypes.Market{
@@ -81,7 +83,7 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 
 	participations := make([]types.OrderBookParticipation, len(deposits))
 
-	return testBetSuite{t, k, ctx, *tApp, betFee, market, deposits, participations}
+	return testBetSuite{t, k, ctx, *tApp, betFee, priceLockFee, market, deposits, participations}
 }
 
 func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
@@ -191,6 +193,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		winner1BetID,
 		defaultBetAmount,
 		ts.betFee,
+		ts.priceLockFee,
 		nil,
 		betOdds,
 		oddUIDS,
@@ -203,7 +206,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		winner1BettorAddr,
 		params.DefaultBondDenom,
 	)
-	expWinner1BalanceAfterWager := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.Fee)
+	expWinner1BalanceAfterWager := winner1Bal.Amount.Sub(winner1Bet.Amount).Sub(winner1Bet.Fee).Sub(winner1Bet.PriceLockFee)
 	require.Equal(
 		ts.t,
 		expWinner1BalanceAfterWager.Int64(),
@@ -231,6 +234,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		winner2BetID,
 		defaultBetAmount,
 		ts.betFee,
+		ts.priceLockFee,
 		nil,
 		betOdds,
 		oddUIDS,
@@ -241,7 +245,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	ts.tApp.BetKeeper.SetBet(ts.ctx, winner2Bet, winner2BetID)
 	winner2BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,
-		winner1BettorAddr,
+		winner2BettorAddr,
 		params.DefaultBondDenom,
 	)
 	expWinner2BalanceAfterWager := winner2Bal.Amount.Sub(winner2Bet.Amount).Sub(winner2Bet.Fee)
@@ -270,6 +274,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		failedWinnerBetID,
 		sdkmath.NewInt(100000000000),
 		ts.betFee,
+		ts.priceLockFee,
 		types.ErrInsufficientLiquidityInOrderBook,
 		betOdds,
 		oddUIDS,
@@ -289,6 +294,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 		loserBetID,
 		defaultBetAmount,
 		ts.betFee,
+		ts.priceLockFee,
 		nil,
 		betOdds,
 		oddUIDS,
@@ -317,11 +323,16 @@ func (ts *testBetSuite) placeTestBet(
 	betID uint64,
 	amount sdkmath.Int,
 	fee sdkmath.Int,
+	priceLockFee sdk.Dec,
 	expErr error,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
 	wagerSgePrice sdk.Dec,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
+	var priceLockFeeAmount = sdkmath.ZeroInt()
+	if wagerSgePrice.GT(sdk.ZeroDec()) {
+		priceLockFeeAmount = sdk.NewDecFromInt(amount).Mul(priceLockFee).TruncateInt()
+	}
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
 		MarketUID:         marketUID,
@@ -329,6 +340,7 @@ func (ts *testBetSuite) placeTestBet(
 		OddsValue:         "1.1",
 		Amount:            amount,
 		Fee:               fee,
+		PriceLockFee:      priceLockFeeAmount,
 		Status:            bettypes.Bet_STATUS_PENDING,
 		Creator:           bettorAddr.String(),
 		CreatedAt:         cast.ToInt64(ts.ctx.BlockTime().Unix()),
@@ -382,6 +394,7 @@ func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
 	betFee := sdkmath.NewInt(10)
+	priceLockFee := sdk.NewDecWithPrec(5, 2)
 
 	params := tApp.HouseKeeper.GetParams(ctx)
 	params.HouseParticipationFee = sdk.NewDec(0)
@@ -416,7 +429,7 @@ func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 
 	participations := make([]types.OrderBookParticipation, len(deposits))
 
-	return testBetSuite{t, k, ctx, *tApp, betFee, market, deposits, participations}
+	return testBetSuite{t, k, ctx, *tApp, betFee, priceLockFee, market, deposits, participations}
 }
 
 func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
