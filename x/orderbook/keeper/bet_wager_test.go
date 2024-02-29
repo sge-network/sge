@@ -329,7 +329,7 @@ func (ts *testBetSuite) placeTestBet(
 	oddUIDS []string,
 	wagerSgePrice sdk.Dec,
 ) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
-	var priceLockFeeAmount = sdkmath.ZeroInt()
+	priceLockFeeAmount := sdkmath.ZeroInt()
 	if wagerSgePrice.GT(sdk.ZeroDec()) {
 		priceLockFeeAmount = sdk.NewDecFromInt(amount).Mul(priceLockFee).TruncateInt()
 	}
