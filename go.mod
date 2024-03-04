@@ -4,8 +4,8 @@ go 1.21
 
 require (
 	cosmossdk.io/errors v1.0.0
-	cosmossdk.io/math v1.2.0
 	github.com/cosmos/cosmos-sdk v0.46.16
+	cosmossdk.io/math v1.3.0
 	github.com/cosmos/gogoproto v1.4.11
 	github.com/cosmos/ibc-go/v5 v5.3.1
 	github.com/gogo/protobuf v1.3.3
@@ -13,7 +13,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/golang/protobuf v1.5.3
 	github.com/golangci/golangci-lint v1.55.2
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	github.com/mrz1836/go-sanitize v1.3.1
@@ -120,7 +120,7 @@ require (
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
 	github.com/dustin/go-humanize v1.0.1-0.20200219035652-afde56e7acac // indirect
-	github.com/dvsekhvalnov/jose2go v1.5.0 // indirect
+	github.com/dvsekhvalnov/jose2go v1.6.0 // indirect
 	github.com/esimonov/ifshort v1.0.4 // indirect
 	github.com/ettle/strcase v0.1.1 // indirect
 	github.com/fatih/color v1.15.0 // indirect
@@ -311,7 +311,7 @@ require (
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect
 	mvdan.cc/unparam v0.0.0-20221223090309-7455f1af531d // indirect
 	nhooyr.io/websocket v1.8.7 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
+	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
 replace (
