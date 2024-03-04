@@ -4,8 +4,8 @@
 package types
 
 import (
+	cosmossdk_io_math "cosmossdk.io/math"
 	fmt "fmt"
-	github_com_cosmos_cosmos_sdk_types "github.com/cosmos/cosmos-sdk/types"
 	_ "github.com/cosmos/gogoproto/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
@@ -33,30 +33,34 @@ type OrderBookParticipation struct {
 	// participant_address is the bech32-encoded address of the participant.
 	ParticipantAddress string `protobuf:"bytes,3,opt,name=participant_address,json=participantAddress,proto3" json:"participant_address,omitempty" yaml:"participant_address"`
 	// liquidity is the total initial liquidity provided.
-	Liquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,4,opt,name=liquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"liquidity" yaml:"liquidity"`
+	Liquidity cosmossdk_io_math.Int `protobuf:"bytes,4,opt,name=liquidity,proto3,customtype=cosmossdk.io/math.Int" json:"liquidity" yaml:"liquidity"`
 	// fee is the amount of fee to be paid if participation happens.
-	Fee github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,5,opt,name=fee,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"fee" yaml:"fee"`
+	Fee cosmossdk_io_math.Int `protobuf:"bytes,5,opt,name=fee,proto3,customtype=cosmossdk.io/math.Int" json:"fee" yaml:"fee"`
 	// current_round_liquidity is the liquidity provided for the current round.
-	CurrentRoundLiquidity github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,6,opt,name=current_round_liquidity,json=currentRoundLiquidity,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_liquidity" yaml:"current_round_liquidity"`
+	CurrentRoundLiquidity cosmossdk_io_math.Int `protobuf:"bytes,6,opt,name=current_round_liquidity,json=currentRoundLiquidity,proto3,customtype=cosmossdk.io/math.Int" json:"current_round_liquidity" yaml:"current_round_liquidity"`
 	// exposures_not_filled represents if all of the exposures of the
 	// participation are filled or not.
 	ExposuresNotFilled uint64 `protobuf:"varint,7,opt,name=exposures_not_filled,json=exposuresNotFilled,proto3" json:"exposures_not_filled,omitempty" yaml:"exposures_not_filled"`
 	// total_bet_amount is the total bet amount corresponding to all exposures.
-	TotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,8,opt,name=total_bet_amount,json=totalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"total_bet_amount" yaml:"total_bet_amount"`
+	TotalBetAmount cosmossdk_io_math.Int `protobuf:"bytes,8,opt,name=total_bet_amount,json=totalBetAmount,proto3,customtype=cosmossdk.io/math.Int" json:"total_bet_amount" yaml:"total_bet_amount"`
 	// current_round_total_bet_amount is the total bet amount corresponding to all
 	// exposures in the current round.
-	CurrentRoundTotalBetAmount github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,9,opt,name=current_round_total_bet_amount,json=currentRoundTotalBetAmount,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_total_bet_amount" yaml:"current_round_total_bet_amount"`
+	CurrentRoundTotalBetAmount cosmossdk_io_math.Int `protobuf:"bytes,9,opt,name=current_round_total_bet_amount,json=currentRoundTotalBetAmount,proto3,customtype=cosmossdk.io/math.Int" json:"current_round_total_bet_amount" yaml:"current_round_total_bet_amount"`
 	// max_loss is the total bet amount corresponding to all exposure.
-	MaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,10,opt,name=max_loss,json=maxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"max_loss" yaml:"max_loss"`
+	MaxLoss cosmossdk_io_math.Int `protobuf:"bytes,10,opt,name=max_loss,json=maxLoss,proto3,customtype=cosmossdk.io/math.Int" json:"max_loss" yaml:"max_loss"`
 	// current_round_max_loss is the current round max loss.
-	CurrentRoundMaxLoss github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,11,opt,name=current_round_max_loss,json=currentRoundMaxLoss,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"current_round_max_loss" yaml:"current_round_max_loss"`
+	CurrentRoundMaxLoss cosmossdk_io_math.Int `protobuf:"bytes,11,opt,name=current_round_max_loss,json=currentRoundMaxLoss,proto3,customtype=cosmossdk.io/math.Int" json:"current_round_max_loss" yaml:"current_round_max_loss"`
 	// current_round_max_loss_odds_uid is the total max loss corresponding to
 	// all exposures.
 	CurrentRoundMaxLossOddsUID string `protobuf:"bytes,12,opt,name=current_round_max_loss_odds_uid,proto3" json:"current_round_max_loss_odds_uid" yaml:"current_round_max_loss_odds_uid"`
 	// actual_profit is the actual profit of the participation fulfillment.
-	ActualProfit github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,13,opt,name=actual_profit,json=actualProfit,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"actual_profit" yaml:"actual_profit"`
+	ActualProfit cosmossdk_io_math.Int `protobuf:"bytes,13,opt,name=actual_profit,json=actualProfit,proto3,customtype=cosmossdk.io/math.Int" json:"actual_profit" yaml:"actual_profit"`
 	// is_settled represents if the participation is settled or not.
 	IsSettled bool `protobuf:"varint,14,opt,name=is_settled,json=isSettled,proto3" json:"is_settled,omitempty" yaml:"is_settled"`
+	// returned_amount is the total returned amount to the user's account including reimbursed fees.
+	ReturnedAmount cosmossdk_io_math.Int `protobuf:"bytes,15,opt,name=returned_amount,json=returnedAmount,proto3,customtype=cosmossdk.io/math.Int" json:"returned_amount" yaml:"returned_amount"`
+	// reimbursed_fee is the fee reimbursed because of reasons such as market calcellation.
+	ReimbursedFee cosmossdk_io_math.Int `protobuf:"bytes,16,opt,name=reimbursed_fee,json=reimbursedFee,proto3,customtype=cosmossdk.io/math.Int" json:"reimbursed_fee" yaml:"reimbursed_fee"`
 }
 
 func (m *OrderBookParticipation) Reset()      { *m = OrderBookParticipation{} }
@@ -301,6 +305,28 @@ func (m *OrderBookParticipation) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	_ = i
 	var l int
 	_ = l
+	{
+		size := m.ReimbursedFee.Size()
+		i -= size
+		if _, err := m.ReimbursedFee.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintParticipation(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1
+	i--
+	dAtA[i] = 0x82
+	{
+		size := m.ReturnedAmount.Size()
+		i -= size
+		if _, err := m.ReturnedAmount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintParticipation(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x7a
 	if m.IsSettled {
 		i--
 		if m.IsSettled {
@@ -563,6 +589,10 @@ func (m *OrderBookParticipation) Size() (n int) {
 	if m.IsSettled {
 		n += 2
 	}
+	l = m.ReturnedAmount.Size()
+	n += 1 + l + sovParticipation(uint64(l))
+	l = m.ReimbursedFee.Size()
+	n += 2 + l + sovParticipation(uint64(l))
 	return n
 }
 
@@ -1067,6 +1097,74 @@ func (m *OrderBookParticipation) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.IsSettled = bool(v != 0)
+		case 15:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReturnedAmount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParticipation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParticipation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParticipation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ReturnedAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 16:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ReimbursedFee", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowParticipation
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthParticipation
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthParticipation
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.ReimbursedFee.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipParticipation(dAtA[iNdEx:])

@@ -6,6 +6,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -57,16 +58,11 @@ type OrderbookKeeper interface {
 	BettorWins(
 		ctx sdk.Context,
 		bettorAddress sdk.AccAddress,
-		betAmount, payout sdkmath.Int,
-		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error
 	BettorLoses(
 		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		betAmount, payout sdkmath.Int,
-		uniqueLock string,
 		fulfillment []*BetFulfillment,
 		bookUID string,
 	) error

@@ -3,8 +3,10 @@ package types
 import (
 	context "context"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkfeegrant "github.com/cosmos/cosmos-sdk/x/feegrant"
+
 	bettypes "github.com/sge-network/sge/x/bet/types"
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -70,4 +72,16 @@ type FeeGrantKeeper interface {
 		feeAllowance sdkfeegrant.FeeAllowanceI,
 	) error
 	GetAllowance(ctx sdk.Context, granter, grantee sdk.AccAddress) (sdkfeegrant.FeeAllowanceI, error)
+}
+
+// Event Hooks
+// These can be utilized to communicate between a orderbook keeper and another
+// keepers.
+
+// OrderBookHooks event hooks for orderbook methods.
+type OrderBookHooks interface {
+	AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmount, profit sdkmath.Int)
+	AfterHouseLoss(ctx sdk.Context, house sdk.AccAddress, originalAmount, lostAmt sdkmath.Int)
+	AfterHouseRefund(ctx sdk.Context, house sdk.AccAddress, originalAmount sdkmath.Int)
+	AfterHouseFeeRefund(ctx sdk.Context, house sdk.AccAddress, fee sdkmath.Int)
 }

@@ -3,21 +3,23 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestParticipationQuerySingle(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNParticipation(tApp, k, ctx, 2)
+	msgs := createNParticipation(k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryOrderBookParticipationRequest
@@ -69,9 +71,9 @@ func TestParticipationQuerySingle(t *testing.T) {
 }
 
 func TestOrderBookParticipationsQueryPaginated(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNParticipation(tApp, k, ctx, 5)
+	msgs := createNParticipation(k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryOrderBookParticipationsRequest {
 		return &types.QueryOrderBookParticipationsRequest{

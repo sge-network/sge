@@ -86,6 +86,14 @@ import (
 	orderbookmodulekeeper "github.com/sge-network/sge/x/orderbook/keeper"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 
+	subaccountmodule "github.com/sge-network/sge/x/subaccount"
+	subaccountmodulekeeper "github.com/sge-network/sge/x/subaccount/keeper"
+	subaccountmoduletypes "github.com/sge-network/sge/x/subaccount/types"
+
+	rewardmodule "github.com/sge-network/sge/x/reward"
+	rewardmodulekeeper "github.com/sge-network/sge/x/reward/keeper"
+	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
+
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
@@ -114,19 +122,23 @@ type AppKeepers struct {
 	GroupKeeper      groupkeeper.Keeper
 
 	//// SGE keepers \\\\
-	BetKeeper       *betmodulekeeper.Keeper
-	MarketKeeper    *marketmodulekeeper.Keeper
-	MintKeeper      mintkeeper.Keeper
-	HouseKeeper     *housemodulekeeper.Keeper
-	OrderbookKeeper *orderbookmodulekeeper.Keeper
-	OVMKeeper       *ovmmodulekeeper.Keeper
+	BetKeeper        *betmodulekeeper.Keeper
+	MarketKeeper     *marketmodulekeeper.Keeper
+	MintKeeper       mintkeeper.Keeper
+	HouseKeeper      *housemodulekeeper.Keeper
+	OrderbookKeeper  *orderbookmodulekeeper.Keeper
+	OVMKeeper        *ovmmodulekeeper.Keeper
+	RewardKeeper     *rewardmodulekeeper.Keeper
+	SubaccountKeeper *subaccountmodulekeeper.Keeper
 
 	//// SGE modules \\\\
-	BetModule       betmodule.AppModule
-	MarketModule    marketmodule.AppModule
-	HouseModule     housemodule.AppModule
-	OrderbookModule orderbookmodule.AppModule
-	OVMModule       ovmmodule.AppModule
+	BetModule        betmodule.AppModule
+	MarketModule     marketmodule.AppModule
+	HouseModule      housemodule.AppModule
+	OrderbookModule  orderbookmodule.AppModule
+	OVMModule        ovmmodule.AppModule
+	RewardModule     rewardmodule.AppModule
+	SubaccountModule subaccountmodule.AppModule
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper           capabilitykeeper.ScopedKeeper
@@ -381,7 +393,7 @@ func NewAppKeeper(
 		appKeepers.SlashingKeeper,
 	)
 
-	//// SGE keepers \\\\
+	// // SGE keepers \\\\
 
 	appKeepers.OrderbookKeeper = orderbookmodulekeeper.NewKeeper(
 		appCodec,
@@ -436,7 +448,42 @@ func NewAppKeeper(
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
-	//// SGE modules \\\\
+	appKeepers.SubaccountKeeper = subaccountmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[subaccountmoduletypes.StoreKey],
+		appKeepers.GetSubspace(subaccountmoduletypes.ModuleName),
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.OVMKeeper,
+		appKeepers.BetKeeper,
+		appKeepers.OrderbookKeeper,
+		appKeepers.HouseKeeper,
+	)
+
+	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[rewardmoduletypes.StoreKey],
+		appKeepers.keys[rewardmoduletypes.MemStoreKey],
+		appKeepers.GetSubspace(rewardmoduletypes.ModuleName),
+		appKeepers.BetKeeper,
+		appKeepers.OVMKeeper,
+		appKeepers.SubaccountKeeper,
+		rewardmodulekeeper.SdkExpectedKeepers{
+			AuthzKeeper:   appKeepers.AuthzKeeper,
+			BankKeeper:    appKeepers.BankKeeper,
+			AccountKeeper: appKeepers.AccountKeeper,
+		},
+	)
+
+	// ** Hooks ** \\
+
+	appKeepers.OrderbookKeeper.SetHooks(
+		orderbookmoduletypes.NewMultiOrderBookHooks(
+			appKeepers.SubaccountKeeper.Hooks(),
+		),
+	)
+
+	// // SGE modules \\\\
 
 	appKeepers.BetModule = betmodule.NewAppModule(
 		appCodec,
@@ -468,6 +515,14 @@ func NewAppKeeper(
 		appKeepers.AccountKeeper,
 		appKeepers.BankKeeper,
 	)
+	appKeepers.RewardModule = rewardmodule.NewAppModule(
+		appCodec,
+		*appKeepers.RewardKeeper,
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+	)
+
+	appKeepers.SubaccountModule = subaccountmodule.NewAppModule(*appKeepers.SubaccountKeeper)
 
 	//// IBC modules \\\\
 	appKeepers.IBCModule = ibc.NewAppModule(appKeepers.IBCKeeper)
@@ -530,6 +585,8 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(orderbookmoduletypes.ModuleName)
 	paramsKeeper.Subspace(ovmmoduletypes.ModuleName)
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
+	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
+	paramsKeeper.Subspace(subaccountmoduletypes.ModuleName)
 
 	return paramsKeeper
 }

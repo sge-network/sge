@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // OrderBookParticipation queries book participation info for given order book id and participation index
@@ -69,7 +71,7 @@ func (k Keeper) OrderBookParticipations(
 	pageRes, err := query.FilteredPaginate(
 		participationStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var bookParticipation types.OrderBookParticipation
 			if err := k.cdc.Unmarshal(value, &bookParticipation); err != nil {
 				return false, err

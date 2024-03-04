@@ -3,21 +3,23 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestOrderBookExposureQuerySingle(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBookOddsExposure(tApp, k, ctx, 2)
+	msgs := createNOrderBookOddsExposure(k, ctx, 2)
 	for _, tc := range []struct {
 		desc     string
 		request  *types.QueryOrderBookExposureRequest
@@ -69,9 +71,9 @@ func TestOrderBookExposureQuerySingle(t *testing.T) {
 }
 
 func TestOrderBookExposuresQueryPaginated(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNOrderBookOddsExposure(tApp, k, ctx, 5)
+	msgs := createNOrderBookOddsExposure(k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryOrderBookExposuresRequest {
 		return &types.QueryOrderBookExposuresRequest{

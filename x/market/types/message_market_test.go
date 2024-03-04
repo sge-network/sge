@@ -3,11 +3,13 @@ package types_test
 import (
 	"testing"
 
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestMsgAddValidateBasic(t *testing.T) {
@@ -21,7 +23,7 @@ func TestMsgAddValidateBasic(t *testing.T) {
 			msg: types.MsgAdd{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
@@ -35,7 +37,7 @@ func TestMsgAddValidateBasic(t *testing.T) {
 			msg: types.MsgAdd{
 				Creator: sample.AccAddress(),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {
@@ -75,7 +77,7 @@ func TestMsgUpdateValidateBasic(t *testing.T) {
 			msg: types.MsgUpdate{
 				Creator: "invalid_address",
 			},
-			err: sdkerrors.ErrInvalidAddress,
+			err: sdkerrtypes.ErrInvalidAddress,
 		},
 		{
 			name: "valid",
@@ -89,7 +91,7 @@ func TestMsgUpdateValidateBasic(t *testing.T) {
 			msg: types.MsgUpdate{
 				Creator: sample.AccAddress(),
 			},
-			err: sdkerrors.ErrInvalidRequest,
+			err: sdkerrtypes.ErrInvalidRequest,
 		},
 	}
 	for _, tt := range tests {

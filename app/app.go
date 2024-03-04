@@ -7,6 +7,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/gorilla/mux"
+	"github.com/rakyll/statik/fs"
+	"github.com/spf13/cast"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	nodeservice "github.com/cosmos/cosmos-sdk/client/grpc/node"
@@ -31,14 +35,17 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	ibcclientHandler "github.com/cosmos/ibc-go/v5/modules/core/02-client/client"
-	"github.com/gorilla/mux"
-	"github.com/rakyll/statik/fs"
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
 	v1 "github.com/sge-network/sge/app/upgrades/v1"
 	v2 "github.com/sge-network/sge/app/upgrades/v2"
-	"github.com/spf13/cast"
+	v3 "github.com/sge-network/sge/app/upgrades/v3"
+	v4 "github.com/sge-network/sge/app/upgrades/v4"
+	v5 "github.com/sge-network/sge/app/upgrades/v5"
+	v6 "github.com/sge-network/sge/app/upgrades/v6"
+	v7 "github.com/sge-network/sge/app/upgrades/v7"
+
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	"github.com/tendermint/tendermint/libs/log"
@@ -70,6 +77,11 @@ var (
 	Upgrades        = []upgrades.Upgrade{
 		v1.Upgrade,
 		v2.Upgrade,
+		v3.Upgrade,
+		v4.Upgrade,
+		v5.Upgrade,
+		v6.Upgrade,
+		v7.Upgrade,
 	}
 )
 
@@ -364,8 +376,9 @@ func (app *SgeApp) setupUpgradeStoreLoaders() {
 
 	for _, upgrade := range Upgrades {
 		if upgradeInfo.Name == upgrade.UpgradeName {
+			storeUpgrade := upgrade.StoreUpgrades
 			app.SetStoreLoader(
-				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &upgrade.StoreUpgrades),
+				upgradetypes.UpgradeStoreLoader(upgradeInfo.Height, &storeUpgrade),
 			)
 		}
 	}

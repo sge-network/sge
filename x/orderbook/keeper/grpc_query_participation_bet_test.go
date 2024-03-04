@@ -3,20 +3,22 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
-	"github.com/sge-network/sge/consts"
-	"github.com/sge-network/sge/testutil/nullify"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/types/query"
+
+	"github.com/sge-network/sge/consts"
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func TestParticipationFulfilledBetsQueryPaginated(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
+	k, ctx := setupKeeper(t)
 	wctx := sdk.WrapSDKContext(ctx)
-	msgs := createNParticipationBetPair(tApp, k, ctx, 5)
+	msgs := createNParticipationBetPair(k, ctx, 5)
 
 	request := func(next []byte, offset, limit uint64, total bool) *types.QueryParticipationFulfilledBetsRequest {
 		return &types.QueryParticipationFulfilledBetsRequest{

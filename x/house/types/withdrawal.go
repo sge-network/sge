@@ -1,9 +1,10 @@
 package types
 
 import (
+	yaml "gopkg.in/yaml.v2"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // NewWithdrawal creates a new withdrawal object

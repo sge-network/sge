@@ -7,8 +7,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/bet/simulation"
@@ -23,7 +25,7 @@ func TestDecodeStore(t *testing.T) {
 		sample.AccAddress(),
 		&types.WagerProps{
 			UID:    uuid.NewString(),
-			Amount: sdk.NewInt(10),
+			Amount: sdkmath.NewInt(10),
 			Ticket: "",
 		},
 		&types.BetOdds{

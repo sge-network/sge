@@ -3,9 +3,10 @@ package types_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestCheckSettlementEligiblity(t *testing.T) {
@@ -86,7 +87,8 @@ func TestProcessBetResultAndStatus(t *testing.T) {
 	}
 	for _, tc := range tcs {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := tc.bet.SetResult(&tc.market)
+			tcMarket := tc.market
+			err := tc.bet.SetResult(&tcMarket)
 			if tc.err != nil {
 				require.Equal(t, tc.err, err)
 			} else {

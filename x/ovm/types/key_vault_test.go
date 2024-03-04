@@ -3,9 +3,10 @@ package types_test
 import (
 	"testing"
 
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/ovm/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sge-network/sge/testutil/simapp"
+	"github.com/sge-network/sge/x/ovm/types"
 )
 
 func TestMajority(t *testing.T) {
@@ -17,22 +18,22 @@ func TestMajority(t *testing.T) {
 	}{
 		{
 			name:       "odd public keys",
-			publicKeys: simappUtil.GenerateOvmPublicKeys(5),
+			publicKeys: simapp.GenerateOvmPublicKeys(5),
 			exp:        4,
 		},
 		{
 			name:       "even public keys",
-			publicKeys: simappUtil.GenerateOvmPublicKeys(4),
+			publicKeys: simapp.GenerateOvmPublicKeys(4),
 			exp:        3,
 		},
 		{
 			name:       "large odd number",
-			publicKeys: simappUtil.GenerateOvmPublicKeys(51),
+			publicKeys: simapp.GenerateOvmPublicKeys(51),
 			exp:        35,
 		},
 		{
 			name:       "large even number",
-			publicKeys: simappUtil.GenerateOvmPublicKeys(50),
+			publicKeys: simapp.GenerateOvmPublicKeys(50),
 			exp:        34,
 		},
 	}

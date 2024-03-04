@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/spf13/cast"
+	"github.com/stretchr/testify/require"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	tmcli "github.com/tendermint/tendermint/libs/cli"
+
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/x/orderbook/client/cli"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"github.com/spf13/cast"
-	"github.com/stretchr/testify/require"
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 const (
@@ -36,17 +39,19 @@ func networkWithParticipationObjects(t *testing.T, n int) (*network.Network, []t
 			Index:                      cast.ToUint64(i + 1),
 			OrderBookUID:               testMarketUID,
 			ParticipantAddress:         testAddress,
-			Liquidity:                  sdk.NewInt(1000),
-			Fee:                        sdk.NewInt(10),
-			CurrentRoundLiquidity:      sdk.NewInt(1000),
+			Liquidity:                  sdkmath.NewInt(1000),
+			Fee:                        sdkmath.NewInt(10),
+			CurrentRoundLiquidity:      sdkmath.NewInt(1000),
 			ExposuresNotFilled:         1,
-			TotalBetAmount:             sdk.NewInt(0),
-			CurrentRoundTotalBetAmount: sdk.NewInt(0),
-			MaxLoss:                    sdk.NewInt(0),
-			CurrentRoundMaxLoss:        sdk.NewInt(0),
+			TotalBetAmount:             sdkmath.NewInt(0),
+			CurrentRoundTotalBetAmount: sdkmath.NewInt(0),
+			MaxLoss:                    sdkmath.NewInt(0),
+			CurrentRoundMaxLoss:        sdkmath.NewInt(0),
 			CurrentRoundMaxLossOddsUID: "6db09053-2901-4110-8fb5-c14e21f8d666",
-			ActualProfit:               sdk.NewInt(0),
+			ActualProfit:               sdkmath.NewInt(0),
 			IsSettled:                  false,
+			ReturnedAmount:             sdkmath.NewInt(1010),
+			ReimbursedFee:              sdkmath.NewInt(10),
 		}
 		nullify.Fill(&participation)
 

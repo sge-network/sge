@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/ovm/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // PublicKeysChangeProposal returns a specific proposal by its id and status
@@ -49,7 +51,7 @@ func (k Keeper) PublicKeysChangeProposals(
 	marketStore := k.getPubKeysChangeProposalStore(ctx)
 	proposalStore := prefix.NewStore(marketStore, types.PubkeysChangeProposalPrefix(req.Status))
 
-	pageRes, err := query.Paginate(proposalStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(proposalStore, req.Pagination, func(key, value []byte) error {
 		var proposal types.PublicKeysChangeProposal
 		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
 			return err

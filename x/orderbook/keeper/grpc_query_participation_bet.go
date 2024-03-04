@@ -3,13 +3,15 @@ package keeper
 import (
 	"context"
 
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/query"
+
 	"github.com/sge-network/sge/consts"
 	"github.com/sge-network/sge/x/orderbook/types"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 // ParticipationFulfilledBets queries participation fulfilled bets info for given order book id and participation index
@@ -40,7 +42,7 @@ func (k Keeper) ParticipationFulfilledBets(
 	pageRes, err := query.FilteredPaginate(
 		betsStore,
 		req.Pagination,
-		func(key []byte, value []byte, accumulate bool) (bool, error) {
+		func(key, value []byte, accumulate bool) (bool, error) {
 			var participationBet types.ParticipationBetPair
 			if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
 				return false, err

@@ -4,10 +4,12 @@ import (
 	"context"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
+
 	"github.com/sge-network/sge/x/bet/types"
-	"github.com/spf13/cobra"
 )
 
 // CmdListBet implements a command to return all bets

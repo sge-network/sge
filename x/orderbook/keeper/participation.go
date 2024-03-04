@@ -1,9 +1,9 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	housetypes "github.com/sge-network/sge/x/house/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
@@ -82,6 +82,8 @@ func (k Keeper) GetAllOrderBookParticipations(
 }
 
 // InitiateOrderBookParticipation starts a participation on a book for a certain account.
+//
+//nolint:nakedret
 func (k Keeper) InitiateOrderBookParticipation(
 	ctx sdk.Context, addr sdk.AccAddress, bookUID string, depositAmount, feeAmount sdkmath.Int,
 ) (index uint64, err error) {

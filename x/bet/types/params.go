@@ -3,9 +3,11 @@ package types
 import (
 	fmt "fmt"
 
+	"gopkg.in/yaml.v2"
+
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -14,8 +16,8 @@ const (
 )
 
 var (
-	defaultMinAmount = sdk.NewInt(1000000)
-	defaultFee       = sdk.NewInt(100)
+	defaultMinAmount = sdkmath.NewInt(1000000)
+	defaultFee       = sdkmath.NewInt(100)
 )
 
 // parameter store keys

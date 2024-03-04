@@ -4,13 +4,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	authz "github.com/cosmos/cosmos-sdk/x/authz"
+
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestDepositGrantValidateBasic(t *testing.T) {
@@ -24,23 +26,24 @@ func TestDepositGrantValidateBasic(t *testing.T) {
 			name:       "invalid coins",
 			spendLimit: sdkmath.Int{},
 			expiration: time.Now().Add(5 * time.Minute),
-			err:        sdkerrors.ErrInvalidCoins,
+			err:        sdkerrtypes.ErrInvalidCoins,
 		},
 		{
 			name:       "valid",
-			spendLimit: sdk.NewInt(10000),
+			spendLimit: sdkmath.NewInt(10000),
 			expiration: time.Now().Add(5 * time.Minute),
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			expTime := tt.expiration
 			msgGrant, err := authz.NewMsgGrant(
 				sdk.MustAccAddressFromBech32(sample.AccAddress()),
 				sdk.MustAccAddressFromBech32(sample.AccAddress()),
 				&types.DepositAuthorization{
 					SpendLimit: tt.spendLimit,
 				},
-				&tt.expiration)
+				&expTime)
 			require.NoError(t, err)
 
 			err = msgGrant.ValidateBasic()

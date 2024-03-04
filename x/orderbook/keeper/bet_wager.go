@@ -1,9 +1,9 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
@@ -162,6 +162,8 @@ func (k Keeper) fulfillBetByParticipationQueue(
 }
 
 // initFulfillmentInfo initializes the fulfillment info for the queue iteration process.
+//
+//nolint:nakedret
 func (k Keeper) initFulfillmentInfo(
 	ctx sdk.Context,
 	betAmount sdkmath.Int,
@@ -192,7 +194,7 @@ func (k Keeper) initFulfillmentInfo(
 		fulfillmentMap: make(map[uint64]fulfillmentItem),
 
 		// initialize the fulfilled bet amount with 0
-		fulfilledBetAmount: sdk.NewInt(0),
+		fulfilledBetAmount: sdkmath.NewInt(0),
 		betOdds:            odds,
 		oddUIDS:            oddUIDS,
 	}
@@ -431,6 +433,7 @@ type fulfillmentInfo struct {
 	oddUIDS                 []string
 }
 
+//nolint:nakedret
 func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkmath.Int) (eUpdate []types.ParticipationExposure, err error) {
 	if fInfo.inProcessItem.participation.ExposuresNotFilled == 0 {
 		return

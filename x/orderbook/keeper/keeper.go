@@ -3,12 +3,12 @@ package keeper
 import (
 	"fmt"
 
-	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
-	"github.com/tendermint/tendermint/libs/log"
 
 	"github.com/sge-network/sge/x/orderbook/types"
 )
@@ -25,6 +25,7 @@ type Keeper struct {
 	houseKeeper    types.HouseKeeper
 	ovmKeeper      types.OVMKeeper
 	feeGrantKeeper types.FeeGrantKeeper
+	hooks          types.OrderBookHooks
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -74,6 +75,17 @@ func (k *Keeper) SetHouseKeeper(houseKeeper types.HouseKeeper) {
 // SetOVMKeeper sets the ovm module keeper to the market keeper.
 func (k *Keeper) SetOVMKeeper(ovmKeeper types.OVMKeeper) {
 	k.ovmKeeper = ovmKeeper
+}
+
+// SetHooks sets the hooks for governance
+func (k *Keeper) SetHooks(gh types.OrderBookHooks) *Keeper {
+	if k.hooks != nil {
+		panic("cannot set orderbook hooks twice")
+	}
+
+	k.hooks = gh
+
+	return k
 }
 
 // Logger returns the logger of the keeper

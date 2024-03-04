@@ -27,21 +27,21 @@ message OrderBookParticipation {
 
   // liquidity is the total initial liquidity provided.
   string liquidity = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"liquidity\""
   ];
 
   // fee is the amount of fee to be paid if participation happens.
   string fee = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"fee\""
   ];
 
   // current_round_liquidity is the liquidity provided for the current round.
   string current_round_liquidity = 6 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_liquidity\""
   ];
@@ -53,7 +53,7 @@ message OrderBookParticipation {
 
   // total_bet_amount is the total bet amount corresponding to all exposures.
   string total_bet_amount = 8 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"total_bet_amount\""
   ];
@@ -61,21 +61,21 @@ message OrderBookParticipation {
   // current_round_total_bet_amount is the total bet amount corresponding to all
   // exposures in the current round.
   string current_round_total_bet_amount = 9 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_total_bet_amount\""
   ];
 
   // max_loss is the total bet amount corresponding to all exposure.
   string max_loss = 10 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"max_loss\""
   ];
 
   // current_round_max_loss is the current round max loss.
   string current_round_max_loss = 11 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"current_round_max_loss\""
   ];
@@ -91,13 +91,29 @@ message OrderBookParticipation {
 
   // actual_profit is the actual profit of the participation fulfillment.
   string actual_profit = 13 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"actual_profit\""
   ];
 
   // is_settled represents if the participation is settled or not.
   bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
+
+  // returned_amount is the total returned amount to the user's account
+  // including reimbursed fees.
+  string returned_amount = 15 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"returned_amount\""
+  ];
+
+  // reimbursed_fee is the fee reimbursed because of reasons such as market
+  // calcellation.
+  string reimbursed_fee = 16 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"reimbursed_fee\""
+  ];
 }
 
 // ParticipationBetPair represents the book participation and bet bond.
@@ -123,7 +139,8 @@ message ParticipationBetPair {
   ];
 }
 
-// SettledOrderbookParticipation is the type for a settled orderbook participation.
+// SettledOrderbookParticipation is the type for a settled orderbook
+// participation.
 message SettledOrderbookParticipation {
   // index is the index of the participation in the participation queue.
   uint64 index = 1 [ (gogoproto.moretags) = "yaml:\"index\"" ];

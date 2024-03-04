@@ -3,13 +3,16 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/sge-network/sge/testutil/nullify"
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/house/keeper"
 	"github.com/sge-network/sge/x/house/types"
-	"github.com/stretchr/testify/require"
 )
 
 func createNDeposits(
@@ -24,8 +27,8 @@ func createNDeposits(
 		items[i].MarketUID = testMarketUID
 		items[i].ParticipationIndex = uint64(i + 1)
 		items[i].DepositorAddress = testDepositorAddress
-		items[i].Amount = sdk.NewInt(100)
-		items[i].TotalWithdrawalAmount = sdk.NewInt(0)
+		items[i].Amount = sdkmath.NewInt(100)
+		items[i].TotalWithdrawalAmount = sdkmath.NewInt(0)
 
 		keeper.SetDeposit(ctx, items[i])
 	}

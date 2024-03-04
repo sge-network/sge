@@ -3,12 +3,14 @@ package types_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/bet/types"
 	"github.com/stretchr/testify/require"
+
+	sdkmath "cosmossdk.io/math"
+
+	"github.com/sge-network/sge/x/bet/types"
 )
 
-var ecceptedTruncatedValue = sdk.NewInt(1)
+var ecceptedTruncatedValue = sdkmath.NewInt(1)
 
 var defaultBetAmount = int64(35625789)
 
@@ -55,13 +57,13 @@ func TestCalculateDecimalPayout(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			payoutProfit, err := types.CalculatePayoutProfit(
 				tc.oddsValue,
-				sdk.NewInt(tc.betAmount),
+				sdkmath.NewInt(tc.betAmount),
 			)
 			if tc.err != nil {
 				require.ErrorIs(t, tc.err, err)
 			} else {
 				require.NoError(t, err)
-				require.True(t, sdk.NewInt(tc.expVal).Equal(payoutProfit.TruncateInt()), "expected: %d, actual: %d", tc.expVal, payoutProfit)
+				require.True(t, sdkmath.NewInt(tc.expVal).Equal(payoutProfit.TruncateInt()), "expected: %d, actual: %d", tc.expVal, payoutProfit)
 			}
 
 			calcBetAmount, err := types.CalculateBetAmount(
@@ -72,7 +74,7 @@ func TestCalculateDecimalPayout(t *testing.T) {
 				require.ErrorIs(t, tc.err, err)
 			} else {
 				require.NoError(t, err)
-				require.True(t, sdk.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().TruncateInt()).LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
+				require.True(t, sdkmath.NewInt(tc.betAmount).Sub(calcBetAmount.Ceil().TruncateInt()).LT(ecceptedTruncatedValue), "expected: %d, actual: %d", tc.betAmount, calcBetAmount)
 			}
 		})
 	}

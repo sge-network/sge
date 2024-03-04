@@ -3,18 +3,18 @@ package keeper_test
 import (
 	"testing"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/google/uuid"
-	"github.com/sge-network/sge/testutil/nullify"
-	simappUtil "github.com/sge-network/sge/testutil/simapp"
-	"github.com/sge-network/sge/x/orderbook/keeper"
-	"github.com/sge-network/sge/x/orderbook/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
+
+	sdk "github.com/cosmos/cosmos-sdk/types"
+
+	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/x/orderbook/keeper"
+	"github.com/sge-network/sge/x/orderbook/types"
 )
 
 func createNOrderBook(
-	tApp *simappUtil.TestApp,
 	keeper *keeper.KeeperTest,
 	ctx sdk.Context,
 	n int,
@@ -33,8 +33,8 @@ func createNOrderBook(
 }
 
 func TestOrderBookGet(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNOrderBook(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNOrderBook(k, ctx, 10)
 
 	rst, found := k.GetOrderBook(ctx,
 		uuid.NewString(),
@@ -59,8 +59,8 @@ func TestOrderBookGet(t *testing.T) {
 }
 
 func TestOrderBookGetAll(t *testing.T) {
-	tApp, k, ctx := setupKeeperAndApp(t)
-	items := createNOrderBook(tApp, k, ctx, 10)
+	k, ctx := setupKeeper(t)
+	items := createNOrderBook(k, ctx, 10)
 
 	orderBooks, err := k.GetAllOrderBooks(ctx)
 	require.NoError(t, err)

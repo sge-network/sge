@@ -6,20 +6,21 @@ import (
 	"math/rand"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
-	"github.com/sge-network/sge/x/ovm/simulation"
-	"github.com/stretchr/testify/require"
 
+	"github.com/sge-network/sge/x/ovm/simulation"
 	"github.com/sge-network/sge/x/ovm/types"
 )
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.
 // Abnormal scenarios are not tested here.
-func TestRandomizedGenState(t *testing.T) {
+func TestRandomizedGenState(_ *testing.T) {
 	interfaceRegistry := codectypes.NewInterfaceRegistry()
 	cdc := codec.NewProtoCodec(interfaceRegistry)
 
@@ -67,6 +68,7 @@ func TestRandomizedGenState1(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		require.Panicsf(t, func() { simulation.RandomizedGenState(&tt.simState) }, tt.panicMsg)
+		simTest := tt.simState
+		require.Panicsf(t, func() { simulation.RandomizedGenState(&simTest) }, tt.panicMsg)
 	}
 }

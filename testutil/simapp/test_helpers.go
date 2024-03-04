@@ -8,12 +8,14 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/golang-jwt/jwt"
+	"github.com/spf13/cast"
+
+	sdkerrors "cosmossdk.io/errors"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ed25519"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/golang-jwt/jwt"
-	"github.com/spf13/cast"
 )
 
 // PKs is a slice of public keys for test
@@ -47,7 +49,7 @@ func createIncrementalAccounts(accNum int) []sdk.AccAddress {
 }
 
 // testAddr returns sample account address
-func testAddr(addr string, bech string) (sdk.AccAddress, error) {
+func testAddr(addr, bech string) (sdk.AccAddress, error) {
 	res, err := sdk.AccAddressFromHexUnsafe(addr)
 	if err != nil {
 		return nil, err
@@ -95,7 +97,7 @@ func newPubKeyFromHex(pk string) (res cryptotypes.PubKey) {
 		panic(err)
 	}
 	if len(pkBytes) != ed25519.PubKeySize {
-		panic(errors.Wrap(errors.ErrInvalidPubKey, "invalid pubkey size"))
+		panic(sdkerrors.Wrap(errors.ErrInvalidPubKey, "invalid pubkey size"))
 	}
 	return &ed25519.PubKey{Key: pkBytes}
 }

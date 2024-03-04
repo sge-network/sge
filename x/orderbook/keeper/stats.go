@@ -1,8 +1,8 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -46,10 +46,10 @@ func (k Keeper) SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID st
 }
 
 // GetFirstUnsettledResolvedOrderBook returns first element of resolved orderbook that have active deposits
-func (k Keeper) GetFirstUnsettledResolvedOrderBook(ctx sdk.Context) (string, bool) {
+func (k Keeper) GetFirstUnsettledResolvedOrderBook(ctx sdk.Context, index int) (string, bool) {
 	stats := k.GetOrderBookStats(ctx)
-	if len(stats.ResolvedUnsettled) > 0 {
-		return stats.ResolvedUnsettled[0], true
+	if len(stats.ResolvedUnsettled) > index {
+		return stats.ResolvedUnsettled[index], true
 	}
 	return "", false
 }
