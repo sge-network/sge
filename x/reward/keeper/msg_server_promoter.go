@@ -15,7 +15,7 @@ func (k msgServer) SetPromoterConf(goCtx context.Context, msg *types.MsgSetPromo
 	// Check if the value already exists
 	promoter, isFound := k.GetPromoter(ctx, msg.Uid)
 	if !isFound {
-		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter does not exist", msg.Uid)
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter does not exist %s", msg.Uid)
 	}
 
 	creatorIsPromoter := false
