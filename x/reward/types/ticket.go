@@ -102,3 +102,21 @@ func (payload *RewardPayloadCommon) Validate() error {
 	}
 	return nil
 }
+
+// Validate validates promoter config set ticket payload.
+func (payload *SetPromoterConfPayload) Validate() error {
+	catMap := make(map[RewardCategory]struct{})
+	for _, v := range payload.Conf.CategoryCap {
+		_, ok := catMap[v.Category]
+		if ok {
+			return sdkerrors.Wrapf(ErrDuplicateCategoryInConf, "%s", v.Category)
+		}
+		if v.CapPerAcc <= 0 {
+			return sdkerrors.Wrapf(ErrCategoryCapShouldBePos, "%s", v.Category)
+		}
+
+		catMap[v.Category] = struct{}{}
+	}
+
+	return nil
+}
