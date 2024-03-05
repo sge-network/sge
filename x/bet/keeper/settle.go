@@ -80,7 +80,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return err
 	}
 
-	if err := k.settleResolved(ctx, &bet, &market); err != nil {
+	if err := k.settleResolved(ctx, &bet); err != nil {
 		return err
 	}
 
@@ -116,7 +116,7 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 
 // settleResolved settles a bet by calling order book functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
-func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet, market *markettypes.Market) error {
+func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 	if bet.Result == types.Bet_RESULT_LOST {
 		if err := k.orderbookKeeper.BettorLoses(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorLoses, "%s", err)
