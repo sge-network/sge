@@ -23,6 +23,6 @@ message UpdateCampaignAuthorization {
   ];
 }
 
-// WithdrawCampaignAuthorization allows the grantee to withdraw remaining 
+// WithdrawCampaignAuthorization allows the grantee to withdraw remaining
 // pool balance of the campaign from the granter's account.
 message WithdrawCampaignAuthorization {}
