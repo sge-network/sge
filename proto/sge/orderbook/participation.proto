@@ -99,14 +99,16 @@ message OrderBookParticipation {
   // is_settled represents if the participation is settled or not.
   bool is_settled = 14 [ (gogoproto.moretags) = "yaml:\"is_settled\"" ];
 
-  // returned_amount is the total returned amount to the user's account including reimbursed fees.
+  // returned_amount is the total returned amount to the user's account
+  // including reimbursed fees.
   string returned_amount = 15 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"returned_amount\""
   ];
 
-  // reimbursed_fee is the fee reimbursed because of reasons such as market calcellation.
+  // reimbursed_fee is the fee reimbursed because of reasons such as market
+  // calcellation.
   string reimbursed_fee = 16 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -135,4 +137,22 @@ message ParticipationBetPair {
     (gogoproto.jsontag) = "bet_uid",
     json_name = "bet_uid"
   ];
+}
+
+// SettledOrderbookParticipation is the type for a settled orderbook
+// participation.
+message SettledOrderbookParticipation {
+  // index is the index of the participation in the participation queue.
+  uint64 index = 1 [ (gogoproto.moretags) = "yaml:\"index\"" ];
+
+  // order_book_uid is the unique identifier corresponding to the order book.
+  string order_book_uid = 2 [
+    (gogoproto.customname) = "OrderBookUID",
+    (gogoproto.jsontag) = "order_book_uid",
+    json_name = "order_book_uid"
+  ];
+
+  // participant_address is the bech32-encoded address of the participant.
+  string participant_address = 3
+      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
 }

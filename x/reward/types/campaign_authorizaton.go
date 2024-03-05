@@ -10,6 +10,7 @@ import (
 var (
 	_ authz.Authorization = &CreateCampaignAuthorization{}
 	_ authz.Authorization = &UpdateCampaignAuthorization{}
+	_ authz.Authorization = &WithdrawCampaignAuthorization{}
 )
 
 // NewCreateCampaignAuthorization creates a new CreateCampaignAuthorization object.
@@ -119,3 +120,25 @@ func (a UpdateCampaignAuthorization) ValidateBasic() error {
 
 	return nil
 }
+
+// MsgTypeURL implements Authorization.MsgTypeURL.
+func (WithdrawCampaignAuthorization) MsgTypeURL() string {
+	return sdk.MsgTypeURL(&MsgUpdateCampaign{})
+}
+
+// Accept implements Authorization.Accept.
+func (a WithdrawCampaignAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
+	_, ok := msg.(*MsgWithdrawFunds)
+	if !ok {
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInvalidType.Wrap("type mismatch")
+	}
+
+	return authz.AcceptResponse{
+		Accept:  true,
+		Delete:  true,
+		Updated: &WithdrawCampaignAuthorization{},
+	}, nil
+}
+
+// ValidateBasic implements Authorization.ValidateBasic.
+func (a WithdrawCampaignAuthorization) ValidateBasic() error { return nil }
