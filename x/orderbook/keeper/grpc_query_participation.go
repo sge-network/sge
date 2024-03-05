@@ -97,7 +97,7 @@ func (k Keeper) OrderBookParticipations(
 func (k Keeper) SettledOrderbookParticipationsOfHeight(
 	c context.Context,
 	req *types.QuerySettledOrderBookParticipationsOfHeightRequest,
-) (*types.QuerySettledOrderBookParticipationsOfHeightResponse, error) {
+) (*types.QuerySettledOrderbookParticipationsOfHeightResponse, error) {
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, consts.ErrTextInvalidRequest)
 	}
@@ -135,5 +135,5 @@ func (k Keeper) SettledOrderbookParticipationsOfHeight(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &types.QuerySettledOrderBookParticipationsOfHeightResponse{Participations: orderbookParticipations, Pagination: pageRes}, nil
+	return &types.QuerySettledOrderbookParticipationsOfHeightResponse{Participations: orderbookParticipations, Pagination: pageRes}, nil
 }
