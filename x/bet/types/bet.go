@@ -83,9 +83,7 @@ func (bet *Bet) SetFee(fee sdkmath.Int) {
 
 // SetPriceLockFee calculates and sets the price lock fee.
 func (bet *Bet) SetPriceLockFee(feePercentage sdk.Dec) {
-	feeAmount := sdk.NewDecFromInt(bet.Amount).Mul(feePercentage).TruncateInt()
-	bet.PriceLockFee = feeAmount
-	bet.Amount = bet.Amount.Sub(feeAmount)
+	bet.PriceLockFee = sdk.NewDecFromInt(bet.Amount).Mul(feePercentage).TruncateInt()
 }
 
 // IsPriceLockEnabled returns true if the price lock feature is requested for this bet
