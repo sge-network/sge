@@ -6,7 +6,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
+	sdkmath "cosmossdk.io/math"
 	"github.com/sge-network/sge/app/keepers"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -16,6 +19,30 @@ func CreateUpgradeHandler(
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+		betPS := k.GetSubspace(bettypes.ModuleName)
+
+		if !betPS.Has(ctx, []byte("MinPriceLockPoolBalance")) {
+			var batchSettlementCount uint32
+			betPS.Get(ctx, []byte("BatchSettlementCount"), &batchSettlementCount)
+
+			var maxBetByUidQueryCount uint32
+			betPS.Get(ctx, []byte("MaxBetByUidQueryCount"), &maxBetByUidQueryCount)
+
+			var constraints bettypes.Constraints
+			betPS.Get(ctx, []byte("WagerConstraints"), &constraints)
+
+			p := bettypes.NewParams(
+				batchSettlementCount,
+				maxBetByUidQueryCount,
+				constraints.MinAmount,
+				constraints.Fee,
+				constraints.PriceLockFeePercent,
+				sdkmath.NewInt(1000),
+			)
+
+			k.BetKeeper.SetParams(ctx, p)
+		}
+
 		participationList, err := k.OrderbookKeeper.GetAllOrderBookParticipations(ctx)
 		if err != nil {
 			panic(err)

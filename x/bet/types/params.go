@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	batchSettlementCount  = 1000
-	maxBetByUIDQueryCount = 10
+	defaultBatchSettlementCount  = 1000
+	defaultMaxBetByUIDQueryCount = 10
 )
 
 var (
@@ -48,22 +48,36 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams() Params {
+func NewParams(
+	batchSettlementCount uint32,
+	maxBetByUIDQueryCount uint32,
+	minAmount sdkmath.Int,
+	fee sdkmath.Int,
+	priceLockFeePercent sdk.Dec,
+	minPriceLockPoolBalance sdkmath.Int,
+) Params {
 	return Params{
 		BatchSettlementCount:  batchSettlementCount,
 		MaxBetByUidQueryCount: maxBetByUIDQueryCount,
 		Constraints: Constraints{
-			MinAmount:           defaultMinAmount,
-			Fee:                 defaultFee,
-			PriceLockFeePercent: defaultPriceLockFeePercent,
+			MinAmount:           minAmount,
+			Fee:                 fee,
+			PriceLockFeePercent: priceLockFeePercent,
 		},
-		MinPriceLockPoolBalance: defaultMinPriceLockPoolBalance,
+		MinPriceLockPoolBalance: minPriceLockPoolBalance,
 	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams()
+	return NewParams(
+		defaultBatchSettlementCount,
+		defaultMaxBetByUIDQueryCount,
+		defaultMinAmount,
+		defaultFee,
+		defaultPriceLockFeePercent,
+		defaultMinPriceLockPoolBalance,
+	)
 }
 
 // ParamSetPairs get the params.ParamSet
