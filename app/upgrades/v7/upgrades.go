@@ -25,15 +25,15 @@ func CreateUpgradeHandler(
 			var batchSettlementCount uint32
 			betPS.Get(ctx, []byte("BatchSettlementCount"), &batchSettlementCount)
 
-			var maxBetByUidQueryCount uint32
-			betPS.Get(ctx, []byte("MaxBetByUidQueryCount"), &maxBetByUidQueryCount)
+			var maxBetByUIDQueryCount uint32
+			betPS.Get(ctx, []byte("MaxBetByUidQueryCount"), &maxBetByUIDQueryCount)
 
 			var constraints bettypes.Constraints
 			betPS.Get(ctx, []byte("WagerConstraints"), &constraints)
 
 			p := bettypes.NewParams(
 				batchSettlementCount,
-				maxBetByUidQueryCount,
+				maxBetByUIDQueryCount,
 				constraints.MinAmount,
 				constraints.Fee,
 				constraints.PriceLockFeePercent,
