@@ -38,6 +38,9 @@ message CreateCampaignPayload {
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 10;
+
+  // cap_count is the maximum allowed grant for a certain account.
+  uint64 cap_count = 11;
 }
 
 // UpdateCampaignPayload is the type for campaign update payload.

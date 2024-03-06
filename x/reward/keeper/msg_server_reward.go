@@ -48,6 +48,20 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
+	var grantStats uint64
+	if campaign.CapCount > 0 {
+		grantStats, isFound = k.GetRewardGrantsStats(ctx, msg.CampaignUid, factData.Receiver.MainAccountAddr)
+		if !isFound {
+			grantStats = 0
+		}
+		if grantStats >= campaign.CapCount {
+			return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "maximum count cap of the campaign is reached %d", grantStats)
+		}
+
+		grantStats++
+		k.SetRewardGrantsStats(ctx, msg.CampaignUid, factData.Receiver.MainAccountAddr, grantStats)
+	}
+
 	promoterByAddress, isFound := k.GetPromoterByAddress(ctx, campaign.Promoter)
 	if !isFound {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", campaign.Promoter)

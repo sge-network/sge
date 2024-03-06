@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -126,4 +127,21 @@ func (k Keeper) GetAllRewardsByCampaign(ctx sdk.Context) (list []types.RewardByC
 	}
 
 	return
+}
+
+func (k Keeper) SetRewardGrantsStats(ctx sdk.Context, campaignUID, accAddr string, count uint64) {
+	store := k.getRewardGrantsStatStore(ctx)
+	b := utils.Uint64ToBytes(count)
+	store.Set(types.GetRewardGrantStatKey(campaignUID, accAddr), b)
+}
+
+func (k Keeper) GetRewardGrantsStats(ctx sdk.Context, campaignUID, accAddr string) (val uint64, found bool) {
+	store := k.getRewardGrantsStatStore(ctx)
+	b := store.Get(types.GetRewardGrantStatKey(campaignUID, accAddr))
+	if b == nil {
+		return val, false
+	}
+
+	val = utils.Uint64FromBytes(b)
+	return val, true
 }

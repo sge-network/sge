@@ -15,6 +15,7 @@ func NewCampaign(
 	isActive bool,
 	meta string,
 	pool Pool,
+	capCount uint64,
 ) Campaign {
 	return Campaign{
 		Creator:          creator,
@@ -29,6 +30,7 @@ func NewCampaign(
 		IsActive:         isActive,
 		Meta:             meta,
 		Pool:             pool,
+		CapCount:         capCount,
 	}
 }
 

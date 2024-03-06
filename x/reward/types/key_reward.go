@@ -17,6 +17,9 @@ var (
 
 	// RewardByCampaignKeyPrefix is the prefix to retrieve all applied rewards for a certain campaign.
 	RewardByCampaignKeyPrefix = []byte{0x03}
+
+	// RewardGrantStatKeyPrefix is the prefix to retrieve count of reward grants for a certain account.
+	RewardGrantStatKeyPrefix = []byte{0x06}
 )
 
 // GetRewardsOfReceiverByPromoterPrefix returns the store key to retrieve list of all applied rewards of a certain campaign
@@ -50,4 +53,9 @@ func GetRewardsByCampaignPrefix(campaignUID string) []byte {
 // this should be used with RewardKeyPrefix
 func GetRewardsByCampaignKey(campaignUID, uid string) []byte {
 	return append(utils.StrBytes(campaignUID), utils.StrBytes(uid)...)
+}
+
+// GetRewardGrantStatKey returns the store key to retrieve a certain account.
+func GetRewardGrantStatKey(campaignUID, addr string) []byte {
+	return append(utils.StrBytes(campaignUID), utils.StrBytes(addr)...)
 }

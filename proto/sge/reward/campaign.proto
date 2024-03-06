@@ -57,6 +57,9 @@ message Campaign {
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 13;
+
+  // cap_count is the maximum allowed grant for a certain account.
+  uint64 cap_count = 14;
 }
 
 // Pool tracks funds assigned and spent to/for a campaign.
