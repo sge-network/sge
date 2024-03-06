@@ -4,8 +4,8 @@ go 1.21
 
 require (
 	cosmossdk.io/errors v1.0.0
-	github.com/cosmos/cosmos-sdk v0.46.16
 	cosmossdk.io/math v1.3.0
+	github.com/cosmos/cosmos-sdk v0.46.16
 	github.com/cosmos/gogoproto v1.4.11
 	github.com/cosmos/ibc-go/v5 v5.3.1
 	github.com/gogo/protobuf v1.3.3
