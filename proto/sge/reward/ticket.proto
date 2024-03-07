@@ -111,6 +111,20 @@ message GrantSignupAffiliatorRewardPayload {
   string affiliatee = 2;
 }
 
+// GrantBetBonusRewardPayload is the type for bet bonus reward
+// grant payload.
+message GrantBetBonusRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // bet_uid is the list of uids
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
+}
+
 // SetPromoterConfPayload is the payload for the promoter configuration change.
 message SetPromoterConfPayload {
   PromoterConf conf = 1 [ (gogoproto.nullable) = false ];
