@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/utils"
@@ -72,9 +73,14 @@ func (k Keeper) Resolve(
 		k.appendUnsettledResolvedMarket(ctx, storedMarket.UID)
 	}
 
-	storedMarket.ResolutionSgePrice = resolutionMarket.SgePrice
+	storedMarket.PriceStats.ResolutionSgePrice = resolutionMarket.SgePrice
 
 	k.SetMarket(ctx, storedMarket)
 
 	return &storedMarket
+}
+
+func (k Keeper) IncrementAddPriceLock(ctx sdk.Context, market types.Market, priceReimbursement sdkmath.Int) {
+	market.PriceStats.PriceReimbursement = market.PriceStats.PriceReimbursement.Add(priceReimbursement)
+	k.SetMarket(ctx, market)
 }

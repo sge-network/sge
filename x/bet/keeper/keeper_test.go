@@ -55,13 +55,15 @@ var (
 	testAddMarket *markettypes.MsgAdd
 
 	testMarket = markettypes.Market{
-		UID:                testMarketUID,
-		Creator:            simapp.TestParamUsers["user1"].Address.String(),
-		StartTS:            1111111111,
-		EndTS:              uint64(time.Now().Unix()) + 5000,
-		Odds:               testMarketOdds,
-		Status:             markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-		ResolutionSgePrice: sdk.ZeroDec(),
+		UID:     testMarketUID,
+		Creator: simapp.TestParamUsers["user1"].Address.String(),
+		StartTS: 1111111111,
+		EndTS:   uint64(time.Now().Unix()) + 5000,
+		Odds:    testMarketOdds,
+		Status:  markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		PriceStats: &markettypes.PriceStats{
+			ResolutionSgePrice: sdk.ZeroDec(),
+		},
 	}
 )
 

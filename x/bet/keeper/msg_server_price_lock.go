@@ -22,9 +22,9 @@ func (k msgServer) PriceLockPoolTopUp(
 		}
 	}
 
-	if err := k.Keeper.TopUpPriceLockPool(ctx, msg.Funder, msg.Amount); err != nil {
-		return nil, err
-	}
+	// if err := k.Keeper.TopUpPriceLockPool(ctx, msg.Funder, msg.Amount); err != nil {
+	// 	return nil, err
+	// }
 
 	msg.EmitEvent(&ctx)
 

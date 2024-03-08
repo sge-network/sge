@@ -5,6 +5,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
@@ -27,7 +28,7 @@ func (k Keeper) RefundBettor(
 	}
 
 	// refund bettor's account from price lock pool.
-	if err := k.refund(bettypes.PriceLockFeeCollector{}, ctx, bettorAddress, bet.PriceLockFee); err != nil {
+	if err := k.refund(markettypes.PriceLockFeeCollector{}, ctx, bettorAddress, bet.PriceLockFee); err != nil {
 		return err
 	}
 

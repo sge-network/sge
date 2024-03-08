@@ -57,7 +57,7 @@ func (ts *testBetSuite) settleBetsAndTest(
 		params.DefaultBondDenom,
 	)
 
-	bets[0].SetPriceReimbursement(ts.market.ResolutionSgePrice)
+	bets[0].SetPriceReimbursement(ts.market.PriceStats.ResolutionSgePrice)
 	expWinner1BalanceAfterSettlement := winner1BalAfterWager.Add(bets[0].Amount).
 		Add(winner1PayoutProfit.TruncateInt()).Add(bets[0].PriceReimbursement)
 	require.Equal(

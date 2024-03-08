@@ -50,6 +50,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 
 	if bet.IsPriceLockEnabled() {
 		bet.SetPriceLockFee(betConstraints.PriceLockFeePercent)
+		k.marketKeeper.IncrementAddPriceLock(ctx, market, bet.PriceReimbursement)
 	}
 
 	// calculate payoutProfit

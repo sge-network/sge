@@ -39,6 +39,10 @@ func (k msgServer) Resolve(
 		return nil, sdkerrors.Wrapf(types.ErrInvalidWinnerOdds, "%s", err)
 	}
 
+	if err := k.Keeper.TopUpPriceLockPool(ctx, market.Creator, market.PriceStats.PriceReimbursement); err != nil {
+		return nil, err
+	}
+
 	resolvedMarket := k.Keeper.Resolve(ctx, market, &resolutionPayload)
 
 	msg.EmitEvent(&ctx, market.UID)

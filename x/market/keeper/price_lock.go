@@ -4,7 +4,7 @@ import (
 	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/sge-network/sge/x/bet/types"
+	"github.com/sge-network/sge/x/market/types"
 )
 
 func (k Keeper) TopUpPriceLockPool(

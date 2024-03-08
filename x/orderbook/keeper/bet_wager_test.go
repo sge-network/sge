@@ -42,7 +42,7 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 
 	err := tApp.BankKeeper.SendCoinsFromAccountToModule(ctx,
 		simapp.TestParamUsers["user9"].Address,
-		bettypes.PriceLockFunder{}.GetModuleAcc(),
+		markettypes.PriceLockFunder{}.GetModuleAcc(),
 		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1000))),
 	)
 	require.NoError(t, err)

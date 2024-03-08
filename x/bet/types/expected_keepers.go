@@ -34,6 +34,7 @@ type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
 	GetFirstUnsettledResolvedMarket(ctx sdk.Context, index int) (string, bool)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
+	IncrementAddPriceLock(ctx sdk.Context, market markettypes.Market, priceReimbursement sdkmath.Int)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
@@ -62,6 +63,7 @@ type OrderbookKeeper interface {
 	BettorLoses(ctx sdk.Context, bet Bet, orderBookUID string) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
+	WithdrawPriceLockFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
 }
 
 // AuthzKeeper defines the expected authz keeper.

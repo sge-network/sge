@@ -53,9 +53,25 @@ message Market {
     (gogoproto.jsontag) = "book_uid",
     json_name = "book_uid"
   ];
+  // price_stats is statistics related to the price fluctuation.
+  PriceStats price_stats = 11;
+}
+
+// PriceStats is a type for the sge price fluctuation definitions and statistics.
+message PriceStats {
   // sge_price is the price of sge token in dollars during resolution.
-  string resolution_sge_price = 11 [
+  string resolution_sge_price = 1 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+  // price_reimbursement is the sum of price lock reimbursement that should be paid after settlement.
+  string price_reimbursement = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+  // max_price_reimbursement is maximum price reimbursement allowed for the price reimbursement.
+  string max_price_reimbursement = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false
   ];
 }

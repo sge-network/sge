@@ -66,14 +66,17 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return nil
 	}
 
-	bet.SetPriceReimbursement(market.ResolutionSgePrice)
+	bet.SetPriceReimbursement(market.PriceStats.ResolutionSgePrice)
 
-	if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
-		availablePriceFunds := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
-		if availablePriceFunds.LT(bet.PriceReimbursement) {
-			return types.ErrInsufficientPriceLockBalanceForSettle
-		}
-	}
+	// if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+	// 	if market.PriceStats.MaxPriceReimbursement.LT(market.PriceStats.PriceReimbursement.Add(bet.PriceReimbursement)) {
+	// 		return types.ErrInsufficientPriceLockBalanceForSettle
+	// 	}
+	// 	// availablePriceFunds := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
+	// 	// if availablePriceFunds.LT(bet.PriceReimbursement) {
+	// 	// 	return types.ErrInsufficientPriceLockBalanceForSettle
+	// 	// }
+	// }
 
 	// check if the bet odds is a winner odds or not and set the bet pointer states
 	if err := bet.SetResult(&market); err != nil {
@@ -89,7 +92,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 	}
 
 	if !bet.PriceLockFee.IsNil() && bet.PriceLockFee.GT(sdkmath.ZeroInt()) {
-		if err := k.modFunder.RefundModule(types.PriceLockFeeCollector{}, ctx, types.PriceLockFunder{}.GetModuleAcc(), bet.PriceLockFee); err != nil {
+		if err := k.orderbookKeeper.WithdrawPriceLockFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee); err != nil {
 			return err
 		}
 	}
@@ -124,7 +127,7 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
 		if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
-			if err := k.modFunder.Refund(types.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
+			if err := k.modFunder.Refund(markettypes.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
 				return sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalanceForSettle, "%s", err)
 			}
 		}

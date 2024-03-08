@@ -47,8 +47,10 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "5e31c60f-2025-48ce-ae79-1dc110f16358", Meta: "Odds 2"},
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
-		Status:             markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
-		ResolutionSgePrice: sdk.ZeroDec(),
+		Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		PriceStats: &markettypes.PriceStats{
+			ResolutionSgePrice: sdk.ZeroDec(),
+		},
 	}
 	nullify.Fill(&market)
 	marketState.MarketList = []markettypes.Market{market}

@@ -418,6 +418,11 @@ func NewAppKeeper(
 		appKeepers.keys[marketmoduletypes.StoreKey],
 		appKeepers.keys[marketmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
+		marketmodulekeeper.SdkExpectedKeepers{
+			BankKeeper:    appKeepers.BankKeeper,
+			AccountKeeper: appKeepers.AccountKeeper,
+			AuthzKeeper:   appKeepers.AuthzKeeper,
+		},
 	)
 	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
