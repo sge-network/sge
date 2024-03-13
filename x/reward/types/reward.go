@@ -4,8 +4,10 @@ import (
 	context "context"
 
 	"github.com/mrz1836/go-sanitize"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 	yaml "gopkg.in/yaml.v2"
 
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
@@ -18,11 +20,43 @@ type Receiver struct {
 	MainAccountAmount sdkmath.Int
 }
 
-// RewardFactoryKeepers holds the keeper objectes usable by reward types methods.
+// RewardFactoryKeepers holds the keeper objects usable by reward types methods.
 type RewardFactoryKeepers struct {
 	OVMKeeper
 	BetKeeper
 	SubAccountKeeper
+	RewardKeeper
+	AccountKeeper
+}
+
+func (keepers *RewardFactoryKeepers) getSubAccAddr(ctx sdk.Context, creator, receiver string) (string, error) {
+	var (
+		subAccountAddressString string
+		err                     error
+	)
+	subAccountAddress, found := keepers.SubAccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiver))
+	if !found {
+		subAccountAddressString, err = keepers.SubAccountKeeper.CreateSubAccount(ctx, creator, receiver, []subaccounttypes.LockedBalance{})
+		if err != nil {
+			return "", sdkerrors.Wrapf(ErrSubAccountCreationFailed, "%s", receiver)
+		}
+	} else {
+		subAccountAddressString = subAccountAddress.String()
+	}
+	return subAccountAddressString, nil
+}
+
+// RewardFactoryData holds the data usable by reward types methods.
+type RewardFactoryData struct {
+	Receiver Receiver
+	Common   RewardPayloadCommon
+}
+
+func NewRewardFactoryData(receiver Receiver, common RewardPayloadCommon) RewardFactoryData {
+	return RewardFactoryData{
+		Receiver: receiver,
+		Common:   common,
+	}
 }
 
 func NewReward(
@@ -59,13 +93,13 @@ func NewRewardByCampaign(uid, campaignUID string) RewardByCampaign {
 
 // IRewardFactory defines the methods that should be implemented for all reward types.
 type IRewardFactory interface {
-	ValidateCampaign(campaign Campaign, blockTime uint64) error
+	ValidateCampaign(campaign Campaign) error
 	Calculate(
 		goCtx context.Context, ctx sdk.Context, keepers RewardFactoryKeepers, campaign Campaign, ticket, creator string,
-	) (Receiver, RewardPayloadCommon, error)
+	) (RewardFactoryData, error)
 }
 
-// NewReceiver creates reveiver object.
+// NewReceiver creates receiver object.
 func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPeriod uint64) Receiver {
 	return Receiver{
 		SubAccountAddr:    saAddr,

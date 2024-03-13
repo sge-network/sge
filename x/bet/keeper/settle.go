@@ -111,18 +111,13 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	payout, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
-	if err != nil {
-		return err
-	}
-
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.orderbookKeeper.BettorLoses(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, bet.BetFulfillment, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.Amount, payout.TruncateInt(), bet.UID, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.BetFulfillment, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorWins, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
@@ -174,6 +169,8 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 }
 
 // batchMarketSettlement settles pending bets of a markets
+//
+//nolint:nakedret
 func (k Keeper) batchMarketSettlement(
 	ctx sdk.Context,
 	marketUID string,
