@@ -232,7 +232,7 @@ func local_request_Query_Rewards_0(ctx context.Context, marshaler runtime.Marsha
 }
 
 var (
-	filter_Query_RewardsByAddress_0 = &utilities.DoubleArray{Encoding: map[string]int{"address": 0}, Base: []int{1, 1, 0}, Check: []int{0, 1, 2}}
+	filter_Query_RewardsByAddress_0 = &utilities.DoubleArray{Encoding: map[string]int{"promoter_uid": 0, "address": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
 )
 
 func request_Query_RewardsByAddress_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -245,6 +245,17 @@ func request_Query_RewardsByAddress_0(ctx context.Context, marshaler runtime.Mar
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["promoter_uid"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "promoter_uid")
+	}
+
+	protoReq.PromoterUid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "promoter_uid", err)
+	}
 
 	val, ok = pathParams["address"]
 	if !ok {
@@ -280,6 +291,17 @@ func local_request_Query_RewardsByAddress_0(ctx context.Context, marshaler runti
 		_   = err
 	)
 
+	val, ok = pathParams["promoter_uid"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "promoter_uid")
+	}
+
+	protoReq.PromoterUid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "promoter_uid", err)
+	}
+
 	val, ok = pathParams["address"]
 	if !ok {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "address")
@@ -304,7 +326,7 @@ func local_request_Query_RewardsByAddress_0(ctx context.Context, marshaler runti
 }
 
 var (
-	filter_Query_RewardsByAddressAndCategory_0 = &utilities.DoubleArray{Encoding: map[string]int{"address": 0, "category": 1}, Base: []int{1, 1, 2, 0, 0}, Check: []int{0, 1, 1, 2, 3}}
+	filter_Query_RewardsByAddressAndCategory_0 = &utilities.DoubleArray{Encoding: map[string]int{"promoter_uid": 0, "address": 1, "category": 2}, Base: []int{1, 1, 2, 3, 0, 0, 0}, Check: []int{0, 1, 1, 1, 2, 3, 4}}
 )
 
 func request_Query_RewardsByAddressAndCategory_0(ctx context.Context, marshaler runtime.Marshaler, client QueryClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
@@ -318,6 +340,17 @@ func request_Query_RewardsByAddressAndCategory_0(ctx context.Context, marshaler 
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["promoter_uid"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "promoter_uid")
+	}
+
+	protoReq.PromoterUid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "promoter_uid", err)
+	}
 
 	val, ok = pathParams["address"]
 	if !ok {
@@ -366,6 +399,17 @@ func local_request_Query_RewardsByAddressAndCategory_0(ctx context.Context, mars
 		err error
 		_   = err
 	)
+
+	val, ok = pathParams["promoter_uid"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "promoter_uid")
+	}
+
+	protoReq.PromoterUid, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "promoter_uid", err)
+	}
 
 	val, ok = pathParams["address"]
 	if !ok {
@@ -880,9 +924,9 @@ var (
 
 	pattern_Query_Rewards_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"sge-network", "sge", "reward", "rewards"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RewardsByAddress_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"sge-network", "sge", "reward", "rewards", "address"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_RewardsByAddress_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"sge-network", "sge", "reward", "rewards", "promoter_uid", "address"}, "", runtime.AssumeColonVerbOpt(false)))
 
-	pattern_Query_RewardsByAddressAndCategory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5}, []string{"sge-network", "sge", "reward", "rewards", "address", "category"}, "", runtime.AssumeColonVerbOpt(false)))
+	pattern_Query_RewardsByAddressAndCategory_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 1, 0, 4, 1, 5, 4, 1, 0, 4, 1, 5, 5, 1, 0, 4, 1, 5, 6}, []string{"sge-network", "sge", "reward", "rewards", "promoter_uid", "address", "category"}, "", runtime.AssumeColonVerbOpt(false)))
 
 	pattern_Query_RewardsByCampaign_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3, 2, 4, 1, 0, 4, 1, 5, 5}, []string{"sge-network", "sge", "reward", "rewards", "campaign", "campaign_uid"}, "", runtime.AssumeColonVerbOpt(false)))
 )

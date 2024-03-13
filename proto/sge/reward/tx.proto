@@ -8,6 +8,8 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 
 // Msg defines the Msg service.
 service Msg {
+  // SetPromoterConf is a method to set the configurations of a promoter.
+  rpc SetPromoterConf(MsgSetPromoterConf) returns (MsgSetPromoterConfResponse);
   // CreateCampaign is a method to create a campaign
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // UpdateCampaign is a method to update campaign
@@ -17,6 +19,19 @@ service Msg {
   // GrantReward is method to allocate rewards
   rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
 }
+
+// MsgSetPromoterConf is msg to set promoter configuration.
+message MsgSetPromoterConf {
+  // creator is the address of message signer account.
+  string creator = 1;
+  // uid is the unique identifier of the promoter.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgCreateCampaignResponse campaign create message response type.
+message MsgSetPromoterConfResponse {}
 
 // MsgCreateCampaign is msg to create a reward campaign
 message MsgCreateCampaign {

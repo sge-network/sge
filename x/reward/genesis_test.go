@@ -13,39 +13,75 @@ import (
 )
 
 func TestGenesis(t *testing.T) {
+	promoterAddr := "promoter"
+	promoterUID := uuid.NewString()
+
+	campaignUID1 := uuid.NewString()
+	campaignUID2 := uuid.NewString()
+
+	rewardID1 := uuid.NewString()
+	rewardID2 := uuid.NewString()
+
 	genesisState := types.GenesisState{
 		Params: types.DefaultParams(),
 
+		PromoterList: []types.Promoter{
+			{
+				Creator:   promoterAddr,
+				UID:       promoterUID,
+				Addresses: []string{promoterAddr},
+				Conf: types.PromoterConf{
+					CategoryCap: []types.CategoryCap{
+						{
+							Category:  types.RewardCategory_REWARD_CATEGORY_SIGNUP,
+							CapPerAcc: 1,
+						},
+					},
+				},
+			},
+		},
+		PromoterByAddressList: []types.PromoterByAddress{
+			{
+				PromoterUID: promoterUID,
+				Address:     promoterAddr,
+			},
+		},
 		CampaignList: []types.Campaign{
 			{
-				UID: uuid.NewString(),
+				UID:      campaignUID1,
+				Promoter: promoterAddr,
 			},
 			{
-				UID: uuid.NewString(),
+				UID:      campaignUID2,
+				Promoter: promoterAddr,
 			},
 		},
 		RewardList: []types.Reward{
 			{
-				UID: uuid.NewString(),
+				UID:         rewardID1,
+				CampaignUID: campaignUID1,
 			},
 			{
-				UID: uuid.NewString(),
+				UID:         rewardID2,
+				CampaignUID: campaignUID2,
 			},
 		},
 		RewardByCategoryList: []types.RewardByCategory{
 			{
-				UID: uuid.NewString(),
+				UID: rewardID1,
 			},
 			{
-				UID: uuid.NewString(),
+				UID: rewardID2,
 			},
 		},
 		RewardByCampaignList: []types.RewardByCampaign{
 			{
-				UID: uuid.NewString(),
+				UID:         rewardID1,
+				CampaignUID: campaignUID1,
 			},
 			{
-				UID: uuid.NewString(),
+				UID:         rewardID1,
+				CampaignUID: campaignUID2,
 			},
 		},
 	}

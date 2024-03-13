@@ -20,6 +20,12 @@ import (
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
+var promoterUID = uuid.NewString()
+
+var defaultCategoryCap = []types.CategoryCap{
+	{Category: types.RewardCategory_REWARD_CATEGORY_SIGNUP, CapPerAcc: 1},
+}
+
 func getDefaultClaim(creator string) jwt.MapClaims {
 	return jwt.MapClaims{
 		"exp":                 time.Now().Add(time.Minute * 5).Unix(),
@@ -35,8 +41,23 @@ func getDefaultClaim(creator string) jwt.MapClaims {
 }
 
 func createCampaign(t *testing.T, k *keeper.Keeper, srv types.MsgServer, ctx sdk.Context,
-	promoter string, claims jwt.MapClaims,
+	promoter string, claims jwt.MapClaims, categoryCap []types.CategoryCap,
 ) string {
+	k.SetPromoter(ctx, types.Promoter{
+		Creator:   promoter,
+		UID:       promoterUID,
+		Addresses: []string{promoter},
+		Conf: types.PromoterConf{
+			CategoryCap: categoryCap,
+		},
+	})
+
+	k.SetPromoterByAddress(ctx,
+		types.PromoterByAddress{
+			Address:     promoter,
+			PromoterUID: promoterUID,
+		})
+
 	ticket, err := simapp.CreateJwtTicket(claims)
 	require.Nil(t, err)
 
@@ -81,7 +102,7 @@ func TestMsgApplySignupReward(t *testing.T) {
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
 
-	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims)
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
 	for _, tc := range []struct {
 		desc   string
@@ -133,6 +154,62 @@ func TestMsgApplySignupReward(t *testing.T) {
 	}
 }
 
+func TestMsgApplySignupRewardWithCap(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+
+	promoter := simapp.TestParamUsers["user1"].Address.String()
+	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
+
+	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
+	campClaims := getDefaultClaim(promoter)
+	campClaims["reward_type"] = types.RewardType_REWARD_TYPE_SIGNUP
+	campClaims["reward_amount_type"] = types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED
+	campClaims["reward_amount"] = types.RewardAmount{
+		SubaccountAmount: sdkmath.NewInt(100),
+		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+	}
+	campClaims["cap_count"] = 1
+
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, []types.CategoryCap{})
+
+	ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
+		"exp": time.Now().Add(time.Minute * 5).Unix(),
+		"iat": time.Now().Unix(),
+		"common": types.RewardPayloadCommon{
+			Receiver:  receiverAddr,
+			SourceUID: "",
+			Meta:      "signup reward for example user",
+			KycData: &sgetypes.KycDataPayload{
+				Approved: true,
+				ID:       receiverAddr,
+			},
+		},
+	})
+	require.Nil(t, err)
+	reward := &types.MsgGrantReward{
+		Uid:         uuid.NewString(),
+		Creator:     promoter,
+		CampaignUid: campUID,
+		Ticket:      ticket,
+	}
+	_, err = srv.GrantReward(wctx, reward)
+	require.NoError(t, err)
+
+	reward.Uid = uuid.NewString()
+	_, err = srv.GrantReward(wctx, reward)
+	require.ErrorContains(t, err, "maximum count cap of the campaign is reached")
+}
+
 func TestMsgApplySignupRefereeReward(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
@@ -160,7 +237,7 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
 
-	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims)
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
 	for _, tc := range []struct {
 		desc   string
@@ -253,7 +330,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 		SubaccountAmount: sdkmath.NewInt(100),
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
-	referralSignupCampUID := createCampaign(t, k, srv, ctx, promoter, referralSignupCampClaims)
+	referralSignupCampUID := createCampaign(t, k, srv, ctx, promoter, referralSignupCampClaims, defaultCategoryCap)
 
 	// referral campaign
 	referralCampClaims := getDefaultClaim(promoter)
@@ -264,7 +341,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 		SubaccountAmount: sdkmath.NewInt(100),
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
-	referralCampUID := createCampaign(t, k, srv, ctx, promoter, referralCampClaims)
+	referralCampUID := createCampaign(t, k, srv, ctx, promoter, referralCampClaims, defaultCategoryCap)
 
 	refereeClaims := jwt.MapClaims{
 		"exp": time.Now().Add(time.Minute * 5).Unix(),
@@ -290,7 +367,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
-	rewardGrant, err := k.GetRewardsByAddressAndCategory(ctx, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
+	rewardGrant, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
 	require.NoError(t, err)
 	require.Equal(t, types.RewardByCategory{
 		UID:            reward.Uid,
@@ -298,7 +375,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 		RewardCategory: types.RewardCategory_REWARD_CATEGORY_SIGNUP,
 	}, rewardGrant[0])
 
-	require.True(t, k.HasRewardByReceiver(ctx, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
+	require.True(t, k.HasRewardOfReceiverByPromoter(ctx, promoterUID, referee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
 
 	for _, tc := range []struct {
 		desc   string
@@ -392,7 +469,7 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
 
-	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims)
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
 	for _, tc := range []struct {
 		desc   string
@@ -485,7 +562,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 		SubaccountAmount: sdkmath.NewInt(100),
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
-	affiliateSignupCampUID := createCampaign(t, k, srv, ctx, promoter, affiliateSignupCampClaims)
+	affiliateSignupCampUID := createCampaign(t, k, srv, ctx, promoter, affiliateSignupCampClaims, defaultCategoryCap)
 
 	// affiliate campaign
 	affiliateCampClaims := getDefaultClaim(promoter)
@@ -496,7 +573,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 		MainAccountAmount: sdkmath.NewInt(100),
 		UnlockPeriod:      0,
 	}
-	affiliateCampUID := createCampaign(t, k, srv, ctx, promoter, affiliateCampClaims)
+	affiliateCampUID := createCampaign(t, k, srv, ctx, promoter, affiliateCampClaims, defaultCategoryCap)
 
 	affiliateClaims := jwt.MapClaims{
 		"exp": time.Now().Add(time.Minute * 5).Unix(),
@@ -522,7 +599,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
-	rewardGrant, err := k.GetRewardsByAddressAndCategory(ctx, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
+	rewardGrant, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP)
 	require.NoError(t, err)
 	require.Equal(t, types.RewardByCategory{
 		UID:            reward.Uid,
@@ -530,7 +607,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 		RewardCategory: types.RewardCategory_REWARD_CATEGORY_SIGNUP,
 	}, rewardGrant[0])
 
-	require.True(t, k.HasRewardByReceiver(ctx, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
+	require.True(t, k.HasRewardOfReceiverByPromoter(ctx, promoterUID, affiliatee, types.RewardCategory_REWARD_CATEGORY_SIGNUP))
 
 	for _, tc := range []struct {
 		desc   string
@@ -614,7 +691,7 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
 
-	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims)
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
 	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
@@ -729,7 +806,7 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
 
-	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims)
+	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
 	claims := jwt.MapClaims{
 		"exp": time.Now().Add(time.Minute * 5).Unix(),

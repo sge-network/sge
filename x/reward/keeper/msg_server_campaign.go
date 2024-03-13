@@ -53,7 +53,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 
 	campaign := types.NewCampaign(
 		msg.Creator, payload.Promoter, msg.Uid,
-		payload.StartTs, payload.EndTs, payload.ClaimsPerCategory,
+		payload.StartTs, payload.EndTs,
 		payload.RewardType,
 		payload.Category,
 		payload.RewardAmountType,
@@ -61,6 +61,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.IsActive,
 		payload.Meta,
 		types.NewPool(msg.TotalFunds),
+		payload.CapCount,
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()

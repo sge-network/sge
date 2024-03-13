@@ -2,6 +2,7 @@ package keeper
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/reward/types"
 )
 
@@ -53,20 +54,20 @@ func (k Keeper) GetAllRewards(ctx sdk.Context) (list []types.Reward) {
 	return
 }
 
-func (k Keeper) SetRewardByReceiver(ctx sdk.Context, rByCategory types.RewardByCategory) {
+func (k Keeper) SetRewardOfReceiverByPromoterAndCategory(ctx sdk.Context, promoterUID string, rByCategory types.RewardByCategory) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	b := k.cdc.MustMarshal(&rByCategory)
-	store.Set(types.GetRewardsByCategoryKey(rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID), b)
+	store.Set(types.GetRewardsOfReceiverByPromoterAndCategoryKey(promoterUID, rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID), b)
 }
 
-// GetRewardsByAddressAndCategory returns all rewards by address and category.
-func (k Keeper) GetRewardsByAddressAndCategory(
+// GetRewardsOfReceiverByPromoterAndCategory returns all rewards by address and category.
+func (k Keeper) GetRewardsOfReceiverByPromoterAndCategory(
 	ctx sdk.Context,
-	addr string,
+	promoterUID, addr string,
 	category types.RewardCategory,
 ) (list []types.RewardByCategory, err error) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsByCategoryPrefix(addr, category))
+	iterator := sdk.KVStorePrefixIterator(store, types.GetRewardsOfReceiverByPromoterAndCategoryPrefix(promoterUID, addr, category))
 
 	defer func() {
 		err = iterator.Close()
@@ -82,8 +83,8 @@ func (k Keeper) GetRewardsByAddressAndCategory(
 }
 
 // HasRewardByReceiver returns true if there is a record for the category and reward receiver
-func (k Keeper) HasRewardByReceiver(ctx sdk.Context, addr string, category types.RewardCategory) bool {
-	rewardsByCat, err := k.GetRewardsByAddressAndCategory(ctx, addr, category)
+func (k Keeper) HasRewardOfReceiverByPromoter(ctx sdk.Context, promoterUID, addr string, category types.RewardCategory) bool {
+	rewardsByCat, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, addr, category)
 	if err != nil || len(rewardsByCat) > 0 {
 		return true
 	}
@@ -126,4 +127,21 @@ func (k Keeper) GetAllRewardsByCampaign(ctx sdk.Context) (list []types.RewardByC
 	}
 
 	return
+}
+
+func (k Keeper) SetRewardGrantsStats(ctx sdk.Context, campaignUID, accAddr string, count uint64) {
+	store := k.getRewardGrantsStatStore(ctx)
+	b := utils.Uint64ToBytes(count)
+	store.Set(types.GetRewardGrantStatKey(campaignUID, accAddr), b)
+}
+
+func (k Keeper) GetRewardGrantsStats(ctx sdk.Context, campaignUID, accAddr string) (val uint64, found bool) {
+	store := k.getRewardGrantsStatStore(ctx)
+	b := store.Get(types.GetRewardGrantStatKey(campaignUID, accAddr))
+	if b == nil {
+		return val, false
+	}
+
+	val = utils.Uint64FromBytes(b)
+	return val, true
 }

@@ -30,3 +30,21 @@ func (k Keeper) getRewardsByCampaignStore(ctx sdk.Context) prefix.Store {
 	store := ctx.KVStore(k.storeKey)
 	return prefix.NewStore(store, types.RewardByCampaignKeyPrefix)
 }
+
+// getPromoterByAddressStore gets the store containing all promoter by address.
+func (k Keeper) getPromoterByAddressStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.PromoterAddressKeyPrefix)
+}
+
+// getPromoterStore gets the store containing all promoters.
+func (k Keeper) getPromoterStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.PromoterKeyPrefix)
+}
+
+// getRewardGrantsStatStore gets the store containing all reward grant stats.
+func (k Keeper) getRewardGrantsStatStore(ctx sdk.Context) prefix.Store {
+	store := ctx.KVStore(k.storeKey)
+	return prefix.NewStore(store, types.RewardGrantStatKeyPrefix)
+}
