@@ -4,6 +4,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/utils"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -122,10 +123,5 @@ func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
 func (bf *BetFulfillment) PriceReimbursed(wagerPrice, resolutionPrice sdk.Dec) sdkmath.Int {
 	// sge token value dropped
 	amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
-	firstValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(wagerPrice)
-	secondValueInDollars := sdk.NewDecFromInt(amountAndProfit).Mul(resolutionPrice)
-	// sge reimbursement tokens
-	reimbursementInDollar := firstValueInDollars.Sub(secondValueInDollars)
-	reimbursementInSGE := reimbursementInDollar.Quo(resolutionPrice)
-	return reimbursementInSGE.TruncateInt()
+	return utils.CalculatePriceReimbursement(amountAndProfit, wagerPrice, resolutionPrice)
 }

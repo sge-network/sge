@@ -48,6 +48,7 @@ type BetKeeper interface {
 // MarketKeeper defines the expected market keeper methods.
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (val markettypes.Market, found bool)
+	ReturnRemainingPricePoolFunds(ctx sdk.Context, market markettypes.Market) error
 }
 
 // HouseKeeper defines the expected market keeper methods.

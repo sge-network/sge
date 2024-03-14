@@ -36,3 +36,9 @@ func (k Keeper) getSettledBetStore(ctx sdk.Context) prefix.Store {
 	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.SettledBetListPrefix)
 	return betStore
 }
+
+// getTest returns settled bet store ready for iterating
+func (k Keeper) getTest(ctx sdk.Context) prefix.Store {
+	betStore := prefix.NewStore(ctx.KVStore(k.storeKey), types.TestPrefix)
+	return betStore
+}

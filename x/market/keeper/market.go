@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkerrors "cosmossdk.io/errors"
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
@@ -73,6 +74,9 @@ func (k Keeper) Resolve(
 		k.appendUnsettledResolvedMarket(ctx, storedMarket.UID)
 	}
 
+	if storedMarket.PriceStats == nil {
+		storedMarket.PriceStats = &types.PriceStats{}
+	}
 	storedMarket.PriceStats.ResolutionSgePrice = resolutionMarket.SgePrice
 
 	k.SetMarket(ctx, storedMarket)
@@ -80,7 +84,28 @@ func (k Keeper) Resolve(
 	return &storedMarket
 }
 
-func (k Keeper) IncrementAddPriceLock(ctx sdk.Context, market types.Market, priceReimbursement sdkmath.Int) {
-	market.PriceStats.PriceReimbursement = market.PriceStats.PriceReimbursement.Add(priceReimbursement)
+func (k Keeper) SetTotalPayoutAndPrice(ctx sdk.Context, market types.Market, payout sdkmath.Int, wagerPrice sdk.Dec) {
+	market.MaxTotalPayout = market.MaxTotalPayout.Add(payout)
+	if market.PriceStats.MaxWagerSgePrice.LT(wagerPrice) {
+		market.PriceStats.MaxWagerSgePrice = wagerPrice
+	}
 	k.SetMarket(ctx, market)
+}
+
+func (k Keeper) SetSpentPriceFunds(ctx sdk.Context, market types.Market, amount sdkmath.Int) {
+	market.PricePool.SpentFunds = market.PricePool.SpentFunds.Add(amount)
+	k.SetMarket(ctx, market)
+}
+
+func (k Keeper) ReturnRemainingPricePoolFunds(ctx sdk.Context, market types.Market) error {
+	if market.PricePool == nil {
+		return nil
+	}
+
+	market.PricePool.ReturnedFunds = market.PricePool.Remaining()
+	if err := k.modFunder.Refund(types.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(market.Creator), market.PricePool.ReturnedFunds); err != nil {
+		return sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalanceForReturn, "%s", err)
+	}
+	k.SetMarket(ctx, market)
+	return nil
 }

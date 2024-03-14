@@ -34,7 +34,8 @@ type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
 	GetFirstUnsettledResolvedMarket(ctx sdk.Context, index int) (string, bool)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
-	IncrementAddPriceLock(ctx sdk.Context, market markettypes.Market, priceReimbursement sdkmath.Int)
+	SetTotalPayoutAndPrice(ctx sdk.Context, market markettypes.Market, payout sdkmath.Int, wagerPrice sdk.Dec)
+	SetSpentPriceFunds(ctx sdk.Context, market markettypes.Market, amount sdkmath.Int)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
