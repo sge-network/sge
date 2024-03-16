@@ -28,12 +28,21 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 	}
 }
 
-// GetLockedBalances returns the locked balances of an account.
-func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress) []types.LockedBalance {
-	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).Iterator(nil, nil)
+// etBalances returns the locked balances of an account.
+func (k Keeper) GetBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, balanceType types.BalanceType) ([]types.LockedBalance, sdkmath.Int) {
+	var start, end []byte
+	switch balanceType {
+	case types.BalanceType_BALANCE_TYPE_LOCKED:
+		start = utils.Int64ToBytes(ctx.BlockTime().Unix())
+	case types.BalanceType_BALANCE_TYPE_UNLOCKED:
+		end = utils.Int64ToBytes(ctx.BlockTime().Unix())
+	}
+
+	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).Iterator(start, end)
 	defer iterator.Close()
 
 	var lockedBalances []types.LockedBalance
+	totalAmount := sdkmath.ZeroInt()
 	for ; iterator.Valid(); iterator.Next() {
 		unlockTime := utils.Uint64FromBytes(iterator.Key())
 
@@ -46,29 +55,10 @@ func (k Keeper) GetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 			UnlockTS: unlockTime,
 			Amount:   *amount,
 		})
+		totalAmount = totalAmount.Add(*amount)
 	}
 
-	return lockedBalances
-}
-
-// GetUnlockedBalance returns the unlocked balance of an account.
-func (k Keeper) GetUnlockedBalance(ctx sdk.Context, subAccountAddress sdk.AccAddress) sdkmath.Int {
-	iterator := prefix.NewStore(ctx.KVStore(k.storeKey), types.LockedBalancePrefixKey(subAccountAddress)).
-		Iterator(nil, utils.Int64ToBytes(ctx.BlockTime().Unix()))
-
-	unlockedBalance := sdk.ZeroInt()
-	defer iterator.Close()
-
-	for ; iterator.Valid(); iterator.Next() {
-		amount := new(sdkmath.Int)
-		err := amount.Unmarshal(iterator.Value())
-		if err != nil {
-			panic(err)
-		}
-		unlockedBalance = unlockedBalance.Add(*amount)
-	}
-
-	return unlockedBalance
+	return lockedBalances, totalAmount
 }
 
 // SetAccountSummary saves the balance of an account.
@@ -87,17 +77,17 @@ func (k Keeper) GetAccountSummary(ctx sdk.Context, subAccountAddress sdk.AccAddr
 		return types.AccountSummary{}, false
 	}
 
-	balance := types.AccountSummary{}
-	k.cdc.MustUnmarshal(bz, &balance)
+	accSummary := types.AccountSummary{}
+	k.cdc.MustUnmarshal(bz, &accSummary)
 
-	return balance, true
+	return accSummary, true
 }
 
 // TopUp tops up the subaccount balance.
 func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
-	lockedBalance []types.LockedBalance,
+	topUpBalances []types.LockedBalance,
 ) (string, error) {
-	addedBalance, err := sumlockedBalance(ctx, lockedBalance)
+	addedBalance, err := sumlockedBalance(ctx, topUpBalances)
 	if err != nil {
 		return "", err
 	}
@@ -109,14 +99,17 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	if !exists {
 		return "", types.ErrSubaccountDoesNotExist
 	}
-	balance, exists := k.GetAccountSummary(ctx, subAccAddr)
+	accSummary, exists := k.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
 
-	balance.DepositedAmount = balance.DepositedAmount.Add(addedBalance)
-	k.SetAccountSummary(ctx, subAccAddr, balance)
-	k.SetLockedBalances(ctx, subAccAddr, lockedBalance)
+	accSummary.DepositedAmount = accSummary.DepositedAmount.Add(addedBalance)
+	k.SetAccountSummary(ctx, subAccAddr, accSummary)
+
+	lockedBalances, _ := k.GetBalances(ctx, subAccAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
+	lockedBalances = append(lockedBalances, topUpBalances...)
+	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
 
 	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, addedBalance)
 	if err != nil {
@@ -127,21 +120,21 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 
 // getAccountSummary returns the balance, unlocked balance and bank balance of a subaccount
 func (k Keeper) getAccountSummary(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.AccountSummary, sdkmath.Int, sdk.Coin) {
-	balance, exists := k.GetAccountSummary(sdkContext, subaccountAddr)
+	accSummary, exists := k.GetAccountSummary(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
-	unlockedBalance := k.GetUnlockedBalance(sdkContext, subaccountAddr)
+	_, unlockedAmount := k.GetBalances(sdkContext, subaccountAddr, types.BalanceType_BALANCE_TYPE_UNLOCKED)
 	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.DefaultBondDenom)
 
-	return balance, unlockedBalance, bankBalance
+	return accSummary, unlockedAmount, bankBalance
 }
 
 // withdrawUnlocked returns the balance, unlocked balance and bank balance of a subaccount
 func (k Keeper) withdrawUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress) error {
-	accSummary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+	accSummary, unlockedAmount, bankBalance := k.getAccountSummary(ctx, subAccAddr)
 
-	withdrawableBalance := accSummary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
+	withdrawableBalance := accSummary.WithdrawableUnlockedBalance(unlockedAmount, bankBalance.Amount)
 	if withdrawableBalance.IsZero() {
 		return types.ErrNothingToWithdraw
 	}
@@ -164,41 +157,17 @@ func (k Keeper) withdrawUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, own
 // modifies the locked balances accordingly
 func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress, subAmountDeduct sdkmath.Int,
 ) error {
-	accSummary, unlockedBalance, bankBalance := k.getAccountSummary(ctx, subAccAddr)
-	withdrawableBalance := accSummary.WithdrawableBalance(unlockedBalance, bankBalance.Amount)
+	accSummary, _, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+	withdrawableBalance := accSummary.WithdrawableBalance(bankBalance.Amount)
 
 	// take the minimum of the withdrawable balance and the amount that need to be transferred from sub account
 	withdrawableToSend := sdkmath.MinInt(withdrawableBalance, subAmountDeduct)
 
-	// calculate the amount that need to be deducted from locked balances
-	lockedAmountToWithdraw := subAmountDeduct.Sub(withdrawableToSend)
-
-	if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
-		// calculate locked balances
-		lockedBalances := k.GetLockedBalances(ctx, subAccAddr)
-		updatedLockedBalances := []types.LockedBalance{}
-		for _, lb := range lockedBalances {
-			if lb.Amount.GTE(lockedAmountToWithdraw) {
-				lb.Amount = lb.Amount.Sub(lockedAmountToWithdraw)
-				updatedLockedBalances = append(updatedLockedBalances, lb)
-
-				lockedAmountToWithdraw = sdkmath.ZeroInt()
-				break
-			}
-
-			lb.Amount = sdkmath.ZeroInt()
-			updatedLockedBalances = append(updatedLockedBalances, lb)
-
-			lockedAmountToWithdraw = lockedAmountToWithdraw.Sub(lb.Amount)
-		}
-
-		if lockedAmountToWithdraw.GT(sdkmath.ZeroInt()) {
-			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest,
-				"not enough balance in sub account locked balances, need more %s tokens",
-				lockedAmountToWithdraw)
-		}
-
-		k.SetLockedBalances(ctx, subAccAddr, updatedLockedBalances)
+	// check total withdrawable balance to be enough for withdrawal.
+	if subAmountDeduct.GT(withdrawableToSend) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest,
+			"not enough balance in sub account locked balances, need more %s tokens",
+			subAmountDeduct.Sub(withdrawableToSend))
 	}
 
 	// send the total calculated amount to the owner

@@ -1234,8 +1234,8 @@ func (m *QueryParticipationFulfilledBetsResponse) GetPagination() *query.PageRes
 	return nil
 }
 
-// QuerySettledOrderBookParticipationsOfHeightRequest is the request type for the settled orderbook participations of a
-// certain height list query.
+// QuerySettledOrderBookParticipationsOfHeightRequest is the request type for
+// the settled orderbook participations of a certain height list query.
 type QuerySettledOrderBookParticipationsOfHeightRequest struct {
 	Pagination  *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	BlockHeight int64              `protobuf:"varint,2,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
@@ -1292,8 +1292,8 @@ func (m *QuerySettledOrderBookParticipationsOfHeightRequest) GetBlockHeight() in
 	return 0
 }
 
-// QuerySettledOrderBookParticipationsOfHeightResponse is the response type for the settled orderbook participations of
-// a certain height list query.
+// QuerySettledOrderBookParticipationsOfHeightResponse is the response type for
+// the settled orderbook participations of a certain height list query.
 type QuerySettledOrderBookParticipationsOfHeightResponse struct {
 	Participations []OrderBookParticipation `protobuf:"bytes,1,rep,name=participations,proto3" json:"participations"`
 	Pagination     *query.PageResponse      `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`

@@ -48,3 +48,13 @@ message LockedBalance {
     (gogoproto.nullable) = false
   ];
 }
+
+// Balance type.
+enum BalanceType {
+  // the invalid or unknown
+  BALANCE_TYPE_UNSPECIFIED = 0;
+  // locked
+  BALANCE_TYPE_LOCKED = 1;
+  // unlocked
+  BALANCE_TYPE_UNLOCKED = 2;
+}

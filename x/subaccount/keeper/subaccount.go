@@ -81,7 +81,7 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 		if !exists {
 			panic("subaccount balance does not exist")
 		}
-		lockedBalances := k.GetLockedBalances(ctx, subAccountAddress)
+		lockedBalances, _ := k.GetBalances(ctx, subAccountAddress, types.BalanceType_BALANCE_TYPE_UNSPECIFIED)
 		subaccounts = append(subaccounts, types.GenesisSubaccount{
 			Address:        subAccountAddress.String(),
 			Owner:          ownerAddress.String(),
