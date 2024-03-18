@@ -64,6 +64,10 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 		Creator: simapp.TestParamUsers["user1"].Address.String(),
 		Meta:    "test market",
 		BookUID: marketUID,
+		PriceStats: &markettypes.PriceStats{
+			ResolutionSgePrice: sdk.NewDecWithPrec(15, 2),
+		},
+		PricePool: &markettypes.PricePool{},
 	}
 
 	deposits := []housetypes.Deposit{
