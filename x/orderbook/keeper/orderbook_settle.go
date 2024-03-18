@@ -54,6 +54,10 @@ func (k Keeper) BatchOrderBookSettlements(ctx sdk.Context) error {
 
 			book.Status = types.OrderBookStatus_ORDER_BOOK_STATUS_STATUS_SETTLED
 			k.SetOrderBook(ctx, book)
+
+			if err = k.marketKeeper.ReturnRemainingPricePoolFunds(ctx, market); err != nil {
+				return fmt.Errorf("could not return remaining price lock to market creator for the orderbook %s %s", orderBookUID, err)
+			}
 		} else {
 			// update market index to be checked in the next loop.
 			unresolvedOrderBookIndex++

@@ -64,6 +64,7 @@ var (
 		PriceStats: &markettypes.PriceStats{
 			ResolutionSgePrice: sdk.ZeroDec(),
 		},
+		MaxTotalPayout: sdkmath.ZeroInt(),
 	}
 )
 

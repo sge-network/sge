@@ -3,6 +3,7 @@ package types
 import (
 	"encoding/binary"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/sge-network/sge/utils"
 )
 
@@ -41,7 +42,14 @@ var (
 	PendingBetListPrefix = []byte{0x03}
 	// SettledBetListPrefix is the prefix to retrieve all settled bets
 	SettledBetListPrefix = []byte{0x04}
+	// TestPrefix is the prefix to retrieve all settled bets
+	TestPrefix = []byte{0x10}
 )
+
+// TestPrefix returns prefix of the certain creator bet list.
+func TestPrefixs(creator sdk.Dec) []byte {
+	return append(TestPrefix, creator.BigInt().Bytes()...)
+}
 
 // BetListByCreatorPrefix returns prefix of the certain creator bet list.
 func BetListByCreatorPrefix(creator string) []byte {
