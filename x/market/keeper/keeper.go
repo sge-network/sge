@@ -11,6 +11,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/market/types"
 )
 
@@ -20,8 +21,16 @@ type Keeper struct {
 	storeKey        storetypes.StoreKey
 	memKey          storetypes.StoreKey
 	paramStore      paramtypes.Subspace
+	modFunder       *utils.ModuleAccFunder
 	ovmKeeper       types.OVMKeeper
 	orderbookKeeper types.OrderbookKeeper
+}
+
+// SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
+type SdkExpectedKeepers struct {
+	BankKeeper    types.BankKeeper
+	AccountKeeper types.AccountKeeper
+	AuthzKeeper   types.AuthzKeeper
 }
 
 // NewKeeper creates new keeper object
@@ -30,6 +39,7 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
+	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -41,6 +51,11 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramStore: ps,
+		modFunder: utils.NewModuleAccFunder(
+			expectedKeepers.BankKeeper,
+			expectedKeepers.AccountKeeper,
+			types.ErrorBank,
+		),
 	}
 }
 

@@ -5,6 +5,13 @@ import "encoding/binary"
 var _ binary.ByteOrder
 
 const (
+	// priceLockPool defines the account name for price locking feature pool.
+	priceLockPool = "price_lock_pool"
+	// priceLockFeeCollector is the module account name for the price lock fee collection module account.
+	priceLockFeeCollector = "price_lock_fee_collector"
+)
+
+const (
 	// ModuleName defines the module name
 	ModuleName = "market"
 

@@ -25,6 +25,7 @@ func GetTxCmd() *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdWager())
+	cmd.AddCommand(CmdPriceLockTopUp())
 
 	return cmd
 }

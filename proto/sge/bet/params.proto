@@ -19,4 +19,9 @@ message Params {
     (gogoproto.moretags) = "yaml:\"constraints\"",
     (gogoproto.nullable) = false
   ];
+  // min_price_lock_pool_balance is the minimum balance of price lock module account.
+  string min_price_lock_pool_balance = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }

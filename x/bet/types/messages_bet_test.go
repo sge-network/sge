@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/stretchr/testify/require"
 
@@ -83,6 +84,7 @@ func TestNewBet(t *testing.T) {
 				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				SelectedOddsValue: "1.5",
 			},
+			WagerSgePrice: sdk.ZeroDec(),
 		}
 		res := types.NewBet(creator,
 			inputBet,
@@ -91,6 +93,7 @@ func TestNewBet(t *testing.T) {
 				SelectedOddsType:  types.OddsType_ODDS_TYPE_DECIMAL,
 				SelectedOddsValue: "1.5",
 			},
+			sdk.ZeroDec(),
 		)
 		require.Equal(t, expectedBet, res)
 	})

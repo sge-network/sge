@@ -5,7 +5,9 @@ package types
 
 import (
 	context "context"
+	cosmossdk_io_math "cosmossdk.io/math"
 	fmt "fmt"
+	_ "github.com/cosmos/gogoproto/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"
 	grpc "google.golang.org/grpc"
@@ -128,30 +130,135 @@ func (m *MsgWagerResponse) GetProps() *WagerProps {
 	return nil
 }
 
+// MsgPriceLockPoolTopUp defines a message to top up price lock pool module account with the given data.
+type MsgPriceLockPoolTopUp struct {
+	// creator is the transaction signer.
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// funder is the address of funder account.
+	Funder string `protobuf:"bytes,2,opt,name=funder,proto3" json:"funder,omitempty"`
+	// amount is the amount being topped up into the price lock module account.
+	Amount cosmossdk_io_math.Int `protobuf:"bytes,3,opt,name=amount,proto3,customtype=cosmossdk.io/math.Int" json:"amount"`
+}
+
+func (m *MsgPriceLockPoolTopUp) Reset()         { *m = MsgPriceLockPoolTopUp{} }
+func (m *MsgPriceLockPoolTopUp) String() string { return proto.CompactTextString(m) }
+func (*MsgPriceLockPoolTopUp) ProtoMessage()    {}
+func (*MsgPriceLockPoolTopUp) Descriptor() ([]byte, []int) {
+	return fileDescriptor_38b4167f68c2a7f8, []int{2}
+}
+func (m *MsgPriceLockPoolTopUp) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgPriceLockPoolTopUp) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgPriceLockPoolTopUp.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgPriceLockPoolTopUp) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgPriceLockPoolTopUp.Merge(m, src)
+}
+func (m *MsgPriceLockPoolTopUp) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgPriceLockPoolTopUp) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgPriceLockPoolTopUp.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgPriceLockPoolTopUp proto.InternalMessageInfo
+
+func (m *MsgPriceLockPoolTopUp) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgPriceLockPoolTopUp) GetFunder() string {
+	if m != nil {
+		return m.Funder
+	}
+	return ""
+}
+
+// MsgPriceLockPoolTopUpResponse is the returning value in the response
+// of MsgPriceLockPoolTopUp request.
+type MsgPriceLockPoolTopUpResponse struct {
+}
+
+func (m *MsgPriceLockPoolTopUpResponse) Reset()         { *m = MsgPriceLockPoolTopUpResponse{} }
+func (m *MsgPriceLockPoolTopUpResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgPriceLockPoolTopUpResponse) ProtoMessage()    {}
+func (*MsgPriceLockPoolTopUpResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_38b4167f68c2a7f8, []int{3}
+}
+func (m *MsgPriceLockPoolTopUpResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgPriceLockPoolTopUpResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgPriceLockPoolTopUpResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgPriceLockPoolTopUpResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgPriceLockPoolTopUpResponse.Merge(m, src)
+}
+func (m *MsgPriceLockPoolTopUpResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgPriceLockPoolTopUpResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgPriceLockPoolTopUpResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgPriceLockPoolTopUpResponse proto.InternalMessageInfo
+
 func init() {
 	proto.RegisterType((*MsgWager)(nil), "sgenetwork.sge.bet.MsgWager")
 	proto.RegisterType((*MsgWagerResponse)(nil), "sgenetwork.sge.bet.MsgWagerResponse")
+	proto.RegisterType((*MsgPriceLockPoolTopUp)(nil), "sgenetwork.sge.bet.MsgPriceLockPoolTopUp")
+	proto.RegisterType((*MsgPriceLockPoolTopUpResponse)(nil), "sgenetwork.sge.bet.MsgPriceLockPoolTopUpResponse")
 }
 
 func init() { proto.RegisterFile("sge/bet/tx.proto", fileDescriptor_38b4167f68c2a7f8) }
 
 var fileDescriptor_38b4167f68c2a7f8 = []byte{
-	// 239 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x28, 0x4e, 0x4f, 0xd5,
-	0x4f, 0x4a, 0x2d, 0xd1, 0x2f, 0xa9, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0x2a, 0x4e,
-	0x4f, 0xcd, 0x4b, 0x2d, 0x29, 0xcf, 0x2f, 0xca, 0xd6, 0x2b, 0x4e, 0x4f, 0xd5, 0x4b, 0x4a, 0x2d,
-	0x91, 0x12, 0x86, 0xa9, 0x2a, 0x4f, 0x4c, 0x4f, 0x2d, 0x82, 0x28, 0x54, 0x8a, 0xe2, 0xe2, 0xf0,
-	0x2d, 0x4e, 0x0f, 0x07, 0x89, 0x08, 0x49, 0x70, 0xb1, 0x27, 0x17, 0xa5, 0x26, 0x96, 0xe4, 0x17,
-	0x49, 0x30, 0x2a, 0x30, 0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x42, 0x26, 0x5c, 0xac, 0x05, 0x45, 0xf9,
-	0x05, 0xc5, 0x12, 0x4c, 0x0a, 0x8c, 0x1a, 0xdc, 0x46, 0x72, 0x7a, 0x98, 0xc6, 0xeb, 0x81, 0xcd,
-	0x08, 0x00, 0xa9, 0x0a, 0x82, 0x28, 0x56, 0xf2, 0xe0, 0x12, 0x80, 0x99, 0x1d, 0x94, 0x5a, 0x5c,
-	0x90, 0x9f, 0x57, 0x9c, 0x8a, 0x30, 0x89, 0x91, 0x04, 0x93, 0x8c, 0x82, 0xb8, 0x98, 0x7d, 0x8b,
-	0xd3, 0x85, 0xbc, 0xb9, 0x58, 0x21, 0x2e, 0x95, 0xc1, 0xa6, 0x0d, 0x66, 0x97, 0x94, 0x0a, 0x3e,
-	0x59, 0x98, 0x4b, 0x9c, 0x1c, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23,
-	0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a,
-	0x2d, 0x3d, 0xb3, 0x24, 0xa3, 0x34, 0x49, 0x2f, 0x39, 0x3f, 0x57, 0xbf, 0x38, 0x3d, 0x55, 0x17,
-	0x6a, 0x14, 0x88, 0xad, 0x5f, 0x01, 0x09, 0xe7, 0xca, 0x82, 0xd4, 0xe2, 0x24, 0x36, 0x70, 0x10,
-	0x1a, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0x41, 0x9b, 0xc2, 0x84, 0x7f, 0x01, 0x00, 0x00,
+	// 363 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x92, 0xcd, 0x4e, 0xea, 0x40,
+	0x14, 0xc7, 0x3b, 0x97, 0xc0, 0xbd, 0xcc, 0xdd, 0x90, 0xde, 0x8b, 0x69, 0x1a, 0x29, 0x84, 0x18,
+	0x83, 0x0b, 0xa7, 0x11, 0x75, 0x6f, 0x58, 0x69, 0x94, 0x84, 0x34, 0x1a, 0x13, 0x76, 0x6d, 0x19,
+	0x07, 0x82, 0xed, 0x69, 0xe6, 0x0c, 0x01, 0x77, 0x3e, 0x82, 0x4f, 0x65, 0x58, 0xb2, 0x34, 0x2e,
+	0x88, 0x81, 0x17, 0x31, 0x6d, 0xa9, 0x2e, 0x40, 0xa2, 0xbb, 0xf3, 0xf1, 0x3b, 0xff, 0xf3, 0x91,
+	0x43, 0x4b, 0x28, 0xb8, 0xed, 0x71, 0x65, 0xab, 0x09, 0x8b, 0x24, 0x28, 0xd0, 0x75, 0x14, 0x3c,
+	0xe4, 0x6a, 0x0c, 0x72, 0xc8, 0x50, 0x70, 0xe6, 0x71, 0x65, 0xfe, 0x17, 0x20, 0x20, 0x49, 0xdb,
+	0xb1, 0x95, 0x92, 0xe6, 0xbf, 0xac, 0x76, 0xec, 0x0a, 0x2e, 0xd3, 0x60, 0xbd, 0x4b, 0xff, 0xb4,
+	0x51, 0xdc, 0xc6, 0x11, 0xdd, 0xa0, 0xbf, 0x7d, 0xc9, 0x5d, 0x05, 0xd2, 0x20, 0x35, 0xd2, 0x28,
+	0x3a, 0x99, 0xab, 0x9f, 0xd0, 0x7c, 0x24, 0x21, 0x42, 0xe3, 0x57, 0x8d, 0x34, 0xfe, 0x36, 0x2d,
+	0xb6, 0xde, 0x94, 0x25, 0x1a, 0x9d, 0x98, 0x72, 0x52, 0xb8, 0x7e, 0x4e, 0x4b, 0x99, 0xb6, 0xc3,
+	0x31, 0x82, 0x10, 0xf9, 0xa7, 0x12, 0xf9, 0x89, 0xd2, 0x23, 0xa1, 0xe5, 0x36, 0x8a, 0x8e, 0x1c,
+	0xf8, 0xfc, 0x0a, 0xfc, 0x61, 0x07, 0xe0, 0xfe, 0x1a, 0xa2, 0x9b, 0x68, 0xcb, 0xcc, 0x3b, 0xb4,
+	0x70, 0x37, 0x0a, 0x7b, 0x5c, 0x26, 0x43, 0x17, 0x9d, 0x95, 0xa7, 0x9f, 0xd2, 0x82, 0x1b, 0xc0,
+	0x28, 0x54, 0x46, 0x2e, 0x8e, 0xb7, 0x2a, 0xd3, 0x79, 0x55, 0x7b, 0x9d, 0x57, 0xcb, 0x3e, 0x60,
+	0x00, 0x88, 0xbd, 0x21, 0x1b, 0x80, 0x1d, 0xb8, 0xaa, 0xcf, 0x2e, 0x42, 0xe5, 0xac, 0xe0, 0x7a,
+	0x95, 0x56, 0x36, 0x4e, 0x90, 0x6d, 0xd6, 0x7c, 0x26, 0x34, 0xd7, 0x46, 0xa1, 0x5f, 0xd2, 0x7c,
+	0x7a, 0xce, 0xdd, 0x4d, 0xbb, 0x65, 0x07, 0x31, 0xf7, 0xb6, 0x65, 0x3f, 0xce, 0x25, 0xa9, 0xbe,
+	0x61, 0xe9, 0x83, 0x2f, 0x6a, 0xd7, 0x51, 0xf3, 0xe8, 0xdb, 0x68, 0xd6, 0xb3, 0x75, 0x36, 0x5d,
+	0x58, 0x64, 0xb6, 0xb0, 0xc8, 0xdb, 0xc2, 0x22, 0x4f, 0x4b, 0x4b, 0x9b, 0x2d, 0x2d, 0xed, 0x65,
+	0x69, 0x69, 0xdd, 0x7d, 0x31, 0x50, 0xfd, 0x91, 0xc7, 0x7c, 0x08, 0x6c, 0x14, 0xfc, 0x70, 0xa5,
+	0x1b, 0xdb, 0xf6, 0x24, 0x7d, 0xcb, 0x87, 0x88, 0xa3, 0x57, 0x48, 0x7e, 0xeb, 0xf8, 0x3d, 0x00,
+	0x00, 0xff, 0xff, 0xfc, 0x03, 0xa1, 0x3c, 0xae, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -168,6 +275,8 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	// Wager defines a method to place a bet with the given data.
 	Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOption) (*MsgWagerResponse, error)
+	// PriceLockPoolTopUp defines a method to top up price lock module account with the given amount.
+	PriceLockPoolTopUp(ctx context.Context, in *MsgPriceLockPoolTopUp, opts ...grpc.CallOption) (*MsgPriceLockPoolTopUpResponse, error)
 }
 
 type msgClient struct {
@@ -187,10 +296,21 @@ func (c *msgClient) Wager(ctx context.Context, in *MsgWager, opts ...grpc.CallOp
 	return out, nil
 }
 
+func (c *msgClient) PriceLockPoolTopUp(ctx context.Context, in *MsgPriceLockPoolTopUp, opts ...grpc.CallOption) (*MsgPriceLockPoolTopUpResponse, error) {
+	out := new(MsgPriceLockPoolTopUpResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.bet.Msg/PriceLockPoolTopUp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	// Wager defines a method to place a bet with the given data.
 	Wager(context.Context, *MsgWager) (*MsgWagerResponse, error)
+	// PriceLockPoolTopUp defines a method to top up price lock module account with the given amount.
+	PriceLockPoolTopUp(context.Context, *MsgPriceLockPoolTopUp) (*MsgPriceLockPoolTopUpResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -199,6 +319,9 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) Wager(ctx context.Context, req *MsgWager) (*MsgWagerResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Wager not implemented")
+}
+func (*UnimplementedMsgServer) PriceLockPoolTopUp(ctx context.Context, req *MsgPriceLockPoolTopUp) (*MsgPriceLockPoolTopUpResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PriceLockPoolTopUp not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -223,6 +346,24 @@ func _Msg_Wager_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_PriceLockPoolTopUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgPriceLockPoolTopUp)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).PriceLockPoolTopUp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.bet.Msg/PriceLockPoolTopUp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).PriceLockPoolTopUp(ctx, req.(*MsgPriceLockPoolTopUp))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "sgenetwork.sge.bet.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -230,6 +371,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Wager",
 			Handler:    _Msg_Wager_Handler,
+		},
+		{
+			MethodName: "PriceLockPoolTopUp",
+			Handler:    _Msg_PriceLockPoolTopUp_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -313,6 +458,76 @@ func (m *MsgWagerResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *MsgPriceLockPoolTopUp) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgPriceLockPoolTopUp) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgPriceLockPoolTopUp) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	{
+		size := m.Amount.Size()
+		i -= size
+		if _, err := m.Amount.MarshalTo(dAtA[i:]); err != nil {
+			return 0, err
+		}
+		i = encodeVarintTx(dAtA, i, uint64(size))
+	}
+	i--
+	dAtA[i] = 0x1a
+	if len(m.Funder) > 0 {
+		i -= len(m.Funder)
+		copy(dAtA[i:], m.Funder)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Funder)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgPriceLockPoolTopUpResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgPriceLockPoolTopUpResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgPriceLockPoolTopUpResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -351,6 +566,34 @@ func (m *MsgWagerResponse) Size() (n int) {
 		l = m.Props.Size()
 		n += 1 + l + sovTx(uint64(l))
 	}
+	return n
+}
+
+func (m *MsgPriceLockPoolTopUp) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Funder)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = m.Amount.Size()
+	n += 1 + l + sovTx(uint64(l))
+	return n
+}
+
+func (m *MsgPriceLockPoolTopUpResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
 	return n
 }
 
@@ -543,6 +786,204 @@ func (m *MsgWagerResponse) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgPriceLockPoolTopUp) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgPriceLockPoolTopUp: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgPriceLockPoolTopUp: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Funder", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Funder = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Amount", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if err := m.Amount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgPriceLockPoolTopUpResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgPriceLockPoolTopUpResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgPriceLockPoolTopUpResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])

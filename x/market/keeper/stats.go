@@ -36,10 +36,10 @@ func (k Keeper) appendUnsettledResolvedMarket(ctx sdk.Context, storedMarketUID s
 
 // GetFirstUnsettledResolvedMarket returns first element of resolved
 // markets that have active bets
-func (k Keeper) GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool) {
+func (k Keeper) GetFirstUnsettledResolvedMarket(ctx sdk.Context, index int) (string, bool) {
 	stats := k.GetMarketStats(ctx)
-	if len(stats.ResolvedUnsettled) > 0 {
-		return stats.ResolvedUnsettled[0], true
+	if len(stats.ResolvedUnsettled) > index {
+		return stats.ResolvedUnsettled[index], true
 	}
 	return "", false
 }

@@ -61,6 +61,10 @@ var (
 		EndTS:   uint64(time.Now().Unix()) + 5000,
 		Odds:    testMarketOdds,
 		Status:  markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		PriceStats: &markettypes.PriceStats{
+			ResolutionSgePrice: sdk.ZeroDec(),
+		},
+		MaxTotalPayout: sdkmath.ZeroInt(),
 	}
 )
 

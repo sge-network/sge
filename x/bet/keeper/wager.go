@@ -60,7 +60,7 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 
 	betFulfillment, err := k.orderbookKeeper.ProcessWager(
 		ctx, bet.UID, bet.MarketUID, bet.OddsUID, bet.MaxLossMultiplier, bet.Amount, payoutProfit,
-		bettorAddress, bet.Fee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
+		bettorAddress, bet.Fee, bet.PriceLockFee, bet.OddsValue, betID, betOdds, market.OddsUIDS(),
 	)
 	if err != nil {
 		return err
@@ -74,6 +74,12 @@ func (k Keeper) Wager(ctx sdk.Context, bet *types.Bet, betOdds map[string]*types
 
 	bet.CreatedAt = ctx.BlockTime().Unix()
 	bet.BetFulfillment = betFulfillment
+
+	if bet.IsPriceLockEnabled() {
+		bet.SetPriceLockFee(betConstraints.PriceLockFeePercent)
+		betAmountAndPayout := bet.Amount.Add(payoutProfit.TruncateInt())
+		k.marketKeeper.SetTotalPayoutAndPrice(ctx, market, betAmountAndPayout, bet.WagerSgePrice)
+	}
 
 	// store bet in the module state
 	k.SetBet(ctx, *bet, betID)

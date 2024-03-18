@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cast"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	"github.com/sge-network/sge/x/orderbook/types"
 )
 
@@ -19,6 +20,7 @@ func (k Keeper) ProcessWager(
 	payoutProfit sdk.Dec,
 	bettorAddress sdk.AccAddress,
 	betFee sdkmath.Int,
+	betPriceLockFee sdkmath.Int,
 	oddsVal string, betID uint64,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
@@ -61,6 +63,13 @@ func (k Keeper) ProcessWager(
 	// fund bet fee collector from bettor's account.
 	if err := k.fund(bettypes.BetFeeCollectorFunder{}, ctx, bettorAddress, betFee); err != nil {
 		return nil, err
+	}
+
+	if !betPriceLockFee.IsNil() && betPriceLockFee.GT(sdkmath.ZeroInt()) {
+		// fund bet price lock pool from bettor's account.
+		if err := k.fund(markettypes.PriceLockFeeCollector{}, ctx, bettorAddress, betPriceLockFee); err != nil {
+			return nil, err
+		}
 	}
 
 	// fund order book liquidity pool from bettor's account.

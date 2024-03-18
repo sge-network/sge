@@ -50,3 +50,7 @@ After a bet is accepted:
 Some of the Online Calculators round the division result to two-digit precision in Fractional and Moneyline calculations. In other words, these online calculators try to convert Moneyline and Fractional odds to Decimal odds and then calculate the payout according to the calculated rounded decimal value. This approach makes a big difference in the resulting payout. SGE-Network is accepting bets with usge that may have a high value in the market. For this kind of value, it is better to have a high-precision calculation in the blockchain code.
 
 > Note: The final calculated payout amounts are rounded to 2 digit float values, so we have a small portion of lost benefits/payouts.
+
+### Wager Price Lock
+
+This feature enables house to compensate the users for the tokens that are currently locked in the betting, according to the fluctuation in the price of SGE token. The token value is denominated in US Dollars and the corresponding decrease in value will be reimbursed to the user upon market settlement.

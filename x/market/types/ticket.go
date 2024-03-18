@@ -143,6 +143,10 @@ func (payload *MarketResolutionTicketPayload) Validate() error {
 		}
 	}
 
+	if payload.SgePrice.IsNil() || payload.SgePrice.LTE(sdk.ZeroDec()) {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sge price should be positive")
+	}
+
 	return nil
 }
 

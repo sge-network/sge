@@ -39,11 +39,12 @@ func (ts *testBetSuite) settleBetsAndTest(
 
 	// resolve market
 	//
-	ts.tApp.MarketKeeper.Resolve(ts.ctx, ts.market, &markettypes.MarketResolutionTicketPayload{
+	ts.market = *ts.tApp.MarketKeeper.Resolve(ts.ctx, ts.market, &markettypes.MarketResolutionTicketPayload{
 		UID:            ts.market.UID,
 		ResolutionTS:   ts.market.StartTS + 10,
 		WinnerOddsUIDs: []string{ts.market.Odds[0].UID, ts.market.Odds[1].UID},
 		Status:         markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		SgePrice:       sdk.NewDecWithPrec(5, 10),
 	})
 
 	// settle all the resolved market
@@ -55,8 +56,10 @@ func (ts *testBetSuite) settleBetsAndTest(
 		sdk.MustAccAddressFromBech32(bets[0].Creator),
 		params.DefaultBondDenom,
 	)
+
+	bets[0].SetPriceReimbursement(ts.market.PriceStats.ResolutionSgePrice)
 	expWinner1BalanceAfterSettlement := winner1BalAfterWager.Add(bets[0].Amount).
-		Add(winner1PayoutProfit.TruncateInt())
+		Add(winner1PayoutProfit.TruncateInt()).Add(bets[0].PriceReimbursement)
 	require.Equal(
 		ts.t,
 		expWinner1BalanceAfterSettlement.Int64(),

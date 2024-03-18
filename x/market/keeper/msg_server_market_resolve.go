@@ -4,8 +4,10 @@ import (
 	"context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/sge-network/sge/utils"
 	"github.com/sge-network/sge/x/market/types"
 )
 
@@ -37,6 +39,17 @@ func (k msgServer) Resolve(
 
 	if err := resolutionPayload.ValidateWinnerOdds(&market); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInvalidWinnerOdds, "%s", err)
+	}
+
+	maxReimbursement := utils.CalculatePriceReimbursement(market.MaxTotalPayout, market.PriceStats.MaxWagerSgePrice, resolutionPayload.SgePrice)
+	if err := k.Keeper.TopUpPriceLockPool(ctx, market.Creator, maxReimbursement); err != nil {
+		return nil, err
+	}
+
+	market.PricePool = &types.PricePool{
+		ResolutionFunds: maxReimbursement,
+		SpentFunds:      sdkmath.ZeroInt(),
+		ReturnedFunds:   sdkmath.ZeroInt(),
 	}
 
 	resolvedMarket := k.Keeper.Resolve(ctx, market, &resolutionPayload)

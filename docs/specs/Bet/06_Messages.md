@@ -64,6 +64,15 @@ message MsgWagerResponse { WagerProps props = 1; }
    "approved": true,
    "id": "sge1w77wnncp6w6llqt0ysgahpxjscg8wspw43jvtd"
  },
+ "all_odds": [
+  {
+    "uid": "9991c60f-2025-48ce-ae79-1dc110f16990",
+    "max_loss_multiplier": "0.1"
+  },
+ ],
+ "meta": "metadata of the bet",
+ "context": "usable data for ui",
+ "sge_price": "0.2",
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
@@ -94,4 +103,4 @@ The transaction will fail if:
 
 ### **What Happens if bet placement fails**
 
-- The input data will not be stored in the `Bet` module and a meaningfull error will be returned to the client.
+- The input data will not be stored in the `Bet` module and a meaningful error will be returned to the client.

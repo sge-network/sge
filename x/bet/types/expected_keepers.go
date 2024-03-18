@@ -2,10 +2,12 @@ package types
 
 import (
 	context "context"
+	"time"
 
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/cosmos-sdk/x/authz"
 
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
@@ -13,20 +15,27 @@ import (
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
+	GetModuleAddress(moduleName string) sdk.AccAddress
 	// Methods imported from account should be defined here
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
+	GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin
 	SpendableCoins(ctx sdk.Context, addr sdk.AccAddress) sdk.Coins
+	SendCoinsFromAccountToModule(ctx sdk.Context, senderAddr sdk.AccAddress, ecipientModule string, amt sdk.Coins) error
+	SendCoinsFromModuleToModule(ctx sdk.Context, senderModule, recipientModule string, amt sdk.Coins) error
+	SendCoinsFromModuleToAccount(ctx sdk.Context, senderModule string, recipientAddr sdk.AccAddress, amt sdk.Coins) error
 	// Methods imported from bank should be defined here
 }
 
 // MarketKeeper defines the expected interface needed to get markets from KVStore
 type MarketKeeper interface {
 	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
-	GetFirstUnsettledResolvedMarket(ctx sdk.Context) (string, bool)
+	GetFirstUnsettledResolvedMarket(ctx sdk.Context, index int) (string, bool)
 	RemoveUnsettledResolvedMarket(ctx sdk.Context, marketUID string)
+	SetTotalPayoutAndPrice(ctx sdk.Context, market markettypes.Market, payout sdkmath.Int, wagerPrice sdk.Dec)
+	SetSpentPriceFunds(ctx sdk.Context, market markettypes.Market, amount sdkmath.Int)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
@@ -44,28 +53,37 @@ type OrderbookKeeper interface {
 		payoutProfit sdk.Dec,
 		bettorAddress sdk.AccAddress,
 		betFee sdkmath.Int,
+		betPriceLockFee sdkmath.Int,
 		oddsVal string,
 		betID uint64,
 		odds map[string]*BetOddsCompact,
 		oddUIDS []string,
 	) ([]*BetFulfillment, error)
-	RefundBettor(
-		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		betAmount, betFee, payout sdkmath.Int,
-		uniqueLock string,
-	) error
-	BettorWins(
-		ctx sdk.Context,
-		bettorAddress sdk.AccAddress,
-		fulfillment []*BetFulfillment,
-		bookUID string,
-	) error
-	BettorLoses(
-		ctx sdk.Context,
-		fulfillment []*BetFulfillment,
-		bookUID string,
-	) error
+	RefundBettor(ctx sdk.Context, bet Bet) error
+	BettorWins(ctx sdk.Context, bet Bet, orderBookUID string) error
+	BettorLoses(ctx sdk.Context, bet Bet, orderBookUID string) error
 	SetOrderBookAsUnsettledResolved(ctx sdk.Context, orderBookUID string) error
 	WithdrawBetFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
+	WithdrawPriceLockFee(ctx sdk.Context, marketCreator sdk.AccAddress, betFee sdkmath.Int) error
+}
+
+// AuthzKeeper defines the expected authz keeper.
+type AuthzKeeper interface {
+	GetAuthorization(
+		ctx sdk.Context,
+		grantee sdk.AccAddress,
+		granter sdk.AccAddress,
+		msgType string,
+	) (authz.Authorization, *time.Time)
+	SaveGrant(
+		ctx sdk.Context,
+		grantee, granter sdk.AccAddress,
+		authorization authz.Authorization,
+		expiration *time.Time,
+	) error
+	DeleteGrant(
+		ctx sdk.Context,
+		grantee, granter sdk.AccAddress,
+		msgType string,
+	) error
 }

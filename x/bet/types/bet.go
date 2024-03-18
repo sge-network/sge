@@ -3,6 +3,8 @@ package types
 import (
 	sdkmath "cosmossdk.io/math"
 
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/sge-network/sge/utils"
 	markettypes "github.com/sge-network/sge/x/market/types"
 )
 
@@ -46,7 +48,7 @@ func (bet *Bet) CheckSettlementEligiblity() error {
 	return nil
 }
 
-// SetResult sets the bet object results according to the market resolusion.
+// SetResult sets the bet object results according to the market resolution.
 func (bet *Bet) SetResult(market *markettypes.Market) error {
 	// check if market result is declared or not
 	if market.Status != markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED {
@@ -78,4 +80,48 @@ func (bet *Bet) SetResult(market *markettypes.Market) error {
 func (bet *Bet) SetFee(fee sdkmath.Int) {
 	bet.Amount = bet.Amount.Sub(fee)
 	bet.Fee = fee
+}
+
+// SetPriceLockFee calculates and sets the price lock fee.
+func (bet *Bet) SetPriceLockFee(feePercentage sdk.Dec) {
+	bet.PriceLockFee = sdk.NewDecFromInt(bet.Amount).Mul(feePercentage).TruncateInt()
+}
+
+// IsPriceLockEnabled returns true if the price lock feature is requested for this bet
+func (bet *Bet) IsPriceLockEnabled() bool {
+	return !bet.WagerSgePrice.IsNil() && bet.WagerSgePrice.GT(sdk.ZeroDec())
+}
+
+// IsEligibleForPriceLockReimbursement returns true if eligible for price lock refund.
+func (bet *Bet) IsEligibleForPriceLockReimbursement(resolutionPrice sdk.Dec) bool {
+	return resolutionPrice.LT(bet.WagerSgePrice)
+}
+
+// SetPriceReimbursement calculates and sets the price reimbursement.
+func (bet *Bet) SetPriceReimbursement(resolutionPrice sdk.Dec) {
+	if bet.WagerSgePrice.IsZero() {
+		return
+	}
+
+	if bet.IsEligibleForPriceLockReimbursement(resolutionPrice) {
+		for _, bf := range bet.BetFulfillment {
+			if bet.PriceReimbursement.IsNil() {
+				bet.PriceReimbursement = sdkmath.ZeroInt()
+			}
+
+			bet.PriceReimbursement = bet.PriceReimbursement.Add(
+				bf.PriceReimbursed(
+					bet.WagerSgePrice,
+					resolutionPrice,
+				),
+			)
+		}
+	}
+}
+
+// PriceReimbursed calculates the price reimbursement amount.
+func (bf *BetFulfillment) PriceReimbursed(wagerPrice, resolutionPrice sdk.Dec) sdkmath.Int {
+	// sge token value dropped
+	amountAndProfit := bf.BetAmount.Add(bf.PayoutProfit)
+	return utils.CalculatePriceReimbursement(amountAndProfit, wagerPrice, resolutionPrice)
 }

@@ -57,6 +57,7 @@ When this  is processed:
 
 - If the market result is declared, the `WithdrawBetFee` method of the `orderbook` module is being called and transfers the bet fee to the market creator's account balance.
 - Store the updated bet in the state.
+- If the bettor is winner, the price fluctuation reimbursement will be done.
 
 ---
 

@@ -73,6 +73,24 @@ message Bet {
   // meta is metadata for bet
   MetaData meta = 15 [ (gogoproto.nullable) = false ];
 
+  // sge_price is the price of sge token in dollars during wager.
+  string wager_sge_price = 16 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
+
+  // price_reimbursement is the extra sge tokens transferret to the bettors's account to cover price volatility
+  string price_reimbursement = 17 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // price_lock_fee is the betting price lock fee user needs to pay for placing a bet
+  string price_lock_fee = 18 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
   // Status of the Bet.
   enum Status {
     // the invalid or unknown

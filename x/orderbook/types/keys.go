@@ -25,29 +25,16 @@ const (
 )
 
 var (
-	OrderBookKeyPrefix              = []byte{0x00} // prefix for keys that store books
-	OrderBookParticipationKeyPrefix = []byte{
-		0x01,
-	} // prefix for keys that store book participations
-	OrderBookOddsExposureKeyPrefix = []byte{
-		0x02,
-	} // prefix for keys that store book odds exposures
-	ParticipationExposureKeyPrefix = []byte{
-		0x03,
-	} // prefix for keys that store participation exposures
-	ParticipationExposureByIndexKeyPrefix = []byte{
-		0x04,
-	} // prefix for keys that store participation exposures
-	HistoricalParticipationExposureKeyPrefix = []byte{
-		0x05,
-	} // prefix for keys that store historical participation exposures
-	OrderBookStatsKeyPrefix       = []byte{0x06} // prefix for keys that store book stats
-	ParticipationBetPairKeyPrefix = []byte{
-		0x07,
-	} // prefix for keys that store book participation and bet pairs
-	FeeGrantPrefix = []byte{0x08} // prefix for keys that store fee grants
-	// SettledOrderbookParticipationListPrefix is the prefix to retrieve all settled orderbook participations
-	SettledOrderbookParticipationListPrefix = []byte{0x09}
+	OrderBookKeyPrefix                       = []byte{0x00} // prefix for keys that store books
+	OrderBookParticipationKeyPrefix          = []byte{0x01} // prefix for keys that store book participations
+	OrderBookOddsExposureKeyPrefix           = []byte{0x02} // prefix for keys that store book odds exposures
+	ParticipationExposureKeyPrefix           = []byte{0x03} // prefix for keys that store participation exposures
+	ParticipationExposureByIndexKeyPrefix    = []byte{0x04} // prefix for keys that store participation exposures
+	HistoricalParticipationExposureKeyPrefix = []byte{0x05} // prefix for keys that store historical participation exposures
+	OrderBookStatsKeyPrefix                  = []byte{0x06} // prefix for keys that store book stats
+	ParticipationBetPairKeyPrefix            = []byte{0x07} // prefix for keys that store book participation and bet pairs
+	FeeGrantPrefix                           = []byte{0x08} // prefix for keys that store fee grants
+	SettledOrderbookParticipationListPrefix  = []byte{0x09} // SettledOrderbookParticipationListPrefix is the prefix to retrieve all settled orderbook participations
 )
 
 // GetOrderBookKey returns the bytes of an book key

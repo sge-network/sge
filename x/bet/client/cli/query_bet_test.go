@@ -48,6 +48,9 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			{UID: "6e31c60f-2025-48ce-ae79-1dc110f16354", Meta: "Odds 3"},
 		},
 		Status: markettypes.MarketStatus_MARKET_STATUS_RESULT_DECLARED,
+		PriceStats: &markettypes.PriceStats{
+			ResolutionSgePrice: sdk.ZeroDec(),
+		},
 	}
 	nullify.Fill(&market)
 	marketState.MarketList = []markettypes.Market{market}
@@ -62,13 +65,16 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 
 	for i := 0; i < n; i++ {
 		bet := types.Bet{
-			Creator:           testAddress,
-			UID:               uuid.NewString(),
-			MarketUID:         market.UID,
-			OddsValue:         "10",
-			Amount:            sdkmath.NewInt(10),
-			Fee:               sdkmath.NewInt(1),
-			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			Creator:            testAddress,
+			UID:                uuid.NewString(),
+			MarketUID:          market.UID,
+			OddsValue:          "10",
+			Amount:             sdkmath.NewInt(10),
+			Fee:                sdkmath.NewInt(1),
+			MaxLossMultiplier:  sdk.MustNewDecFromStr("0.1"),
+			WagerSgePrice:      sdk.ZeroDec(),
+			PriceReimbursement: sdkmath.ZeroInt(),
+			PriceLockFee:       sdkmath.ZeroInt(),
 		}
 		nullify.Fill(&bet)
 

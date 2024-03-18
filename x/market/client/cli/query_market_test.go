@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
@@ -29,6 +31,11 @@ func networkWithMarketObjects(t *testing.T, n int) (*network.Network, []types.Ma
 		market := types.Market{
 			UID:            cast.ToString(i),
 			WinnerOddsUIDs: []string{},
+			PriceStats: &types.PriceStats{
+				ResolutionSgePrice: sdk.ZeroDec(),
+				MaxWagerSgePrice:   sdk.ZeroDec(),
+			},
+			MaxTotalPayout: sdkmath.ZeroInt(),
 		}
 		nullify.Fill(&market)
 		state.MarketList = append(state.MarketList, market)

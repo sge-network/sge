@@ -89,4 +89,10 @@ message MarketResolutionTicketPayload {
 
   // status is the status of the resolution.
   MarketStatus status = 4;
+
+  // sge_price is the price of sge token in dollars.
+  string sge_price = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false
+  ];
 }

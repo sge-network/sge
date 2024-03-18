@@ -1,9 +1,11 @@
 package keeper
 
 import (
+	"errors"
 	"fmt"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
@@ -31,8 +33,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return types.ErrNoMatchingBet
 	}
 
-	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
-	if err != nil {
+	if _, err := sdk.AccAddressFromBech32(bet.Creator); err != nil {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
@@ -53,12 +54,7 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 
 	if market.Status == markettypes.MarketStatus_MARKET_STATUS_ABORTED ||
 		market.Status == markettypes.MarketStatus_MARKET_STATUS_CANCELED {
-		payoutProfit, err := types.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
-		if err != nil {
-			return err
-		}
-
-		if err := k.orderbookKeeper.RefundBettor(ctx, bettorAddress, bet.Amount, bet.Fee, payoutProfit.TruncateInt(), bet.UID); err != nil {
+		if err := k.orderbookKeeper.RefundBettor(ctx, bet); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBRefund, "%s", err)
 		}
 
@@ -70,17 +66,37 @@ func (k Keeper) Settle(ctx sdk.Context, bettorAddressStr, betUID string) error {
 		return nil
 	}
 
+	if market.PriceStats != nil {
+		bet.SetPriceReimbursement(market.PriceStats.ResolutionSgePrice)
+	}
+
+	// if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+	// 	if market.PriceStats.MaxPriceReimbursement.LT(market.PriceStats.PriceReimbursement.Add(bet.PriceReimbursement)) {
+	// 		return types.ErrInsufficientPriceLockBalanceForSettle
+	// 	}
+	// 	// availablePriceFunds := k.modFunder.GetFunds(types.PriceLockFunder{}, ctx)
+	// 	// if availablePriceFunds.LT(bet.PriceReimbursement) {
+	// 	// 	return types.ErrInsufficientPriceLockBalanceForSettle
+	// 	// }
+	// }
+
 	// check if the bet odds is a winner odds or not and set the bet pointer states
 	if err := bet.SetResult(&market); err != nil {
 		return err
 	}
 
-	if err := k.settleResolved(ctx, &bet); err != nil {
+	if err := k.settleResolved(ctx, market, &bet); err != nil {
 		return err
 	}
 
 	if err := k.orderbookKeeper.WithdrawBetFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee); err != nil {
 		return err
+	}
+
+	if !bet.PriceLockFee.IsNil() && bet.PriceLockFee.GT(sdkmath.ZeroInt()) {
+		if err := k.orderbookKeeper.WithdrawPriceLockFee(ctx, sdk.MustAccAddressFromBech32(market.Creator), bet.Fee); err != nil {
+			return err
+		}
 	}
 
 	k.updateSettlementState(ctx, bet, uid2ID.ID)
@@ -105,21 +121,24 @@ func (k Keeper) updateSettlementState(ctx sdk.Context, bet types.Bet, betID uint
 
 // settleResolved settles a bet by calling order book functions to unlock fund and payout
 // based on bet's result, and updates status of bet to settled
-func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
-	bettorAddress, err := sdk.AccAddressFromBech32(bet.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
-	}
-
+func (k Keeper) settleResolved(ctx sdk.Context, market markettypes.Market, bet *types.Bet) error {
 	if bet.Result == types.Bet_RESULT_LOST {
-		if err := k.orderbookKeeper.BettorLoses(ctx, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if err := k.orderbookKeeper.BettorLoses(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorLoses, "%s", err)
 		}
 		bet.Status = types.Bet_STATUS_SETTLED
 	} else if bet.Result == types.Bet_RESULT_WON {
-		if err := k.orderbookKeeper.BettorWins(ctx, bettorAddress, bet.BetFulfillment, bet.MarketUID); err != nil {
+		if !bet.PriceReimbursement.IsNil() && bet.PriceReimbursement.GT(sdkmath.ZeroInt()) {
+			if err := k.modFunder.Refund(markettypes.PriceLockFunder{}, ctx, sdk.MustAccAddressFromBech32(bet.Creator), bet.PriceReimbursement); err != nil {
+				return sdkerrors.Wrapf(types.ErrInsufficientPriceLockBalanceForSettle, "%s", err)
+			}
+			k.marketKeeper.SetSpentPriceFunds(ctx, market, bet.PriceReimbursement)
+		}
+
+		if err := k.orderbookKeeper.BettorWins(ctx, *bet, bet.MarketUID); err != nil {
 			return sdkerrors.Wrapf(types.ErrInOBBettorWins, "%s", err)
 		}
+
 		bet.Status = types.Bet_STATUS_SETTLED
 	}
 	return nil
@@ -130,10 +149,11 @@ func (k Keeper) settleResolved(ctx sdk.Context, bet *types.Bet) error {
 func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 	toFetch := k.GetParams(ctx).BatchSettlementCount
 
+	unresolvedMarketIndex := 0
 	// continue looping until reach batch settlement count parameter
 	for toFetch > 0 {
 		// get the first resolved market to process corresponding pending bets.
-		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx)
+		marketUID, found := k.marketKeeper.GetFirstUnsettledResolvedMarket(ctx, unresolvedMarketIndex)
 		// exit loop if there is no resolved bet.
 		if !found {
 			return nil
@@ -159,6 +179,11 @@ func (k Keeper) BatchMarketSettlements(ctx sdk.Context) error {
 			if err != nil {
 				return fmt.Errorf("could not resolve orderbook %s %s", marketUID, err)
 			}
+		} else {
+			// update market index to be checked in the next loop,
+			// the next loop happens when toFetch is greater than 0 which means
+			// the loop can check the next unsettled market in this block.
+			unresolvedMarketIndex++
 		}
 
 		// update counter of bets to be processed in the next iteration.
@@ -197,6 +222,9 @@ func (k Keeper) batchMarketSettlement(
 
 		err = k.Settle(ctx, val.Creator, val.UID)
 		if err != nil {
+			if errors.Is(err, types.ErrInsufficientPriceLockBalanceForSettle) {
+				continue
+			}
 			return
 		}
 
