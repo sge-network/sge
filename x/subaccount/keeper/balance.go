@@ -61,6 +61,12 @@ func (k Keeper) GetBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, b
 	return lockedBalances, totalAmount
 }
 
+// HasLockedBalances returns true if there is an existing locked balance for the sub account address.
+func (k Keeper) HasLockedBalances(ctx sdk.Context, subAccAddr sdk.AccAddress, time uint64) bool {
+	store := ctx.KVStore(k.storeKey)
+	return store.Has(types.LockedBalanceKey(subAccAddr, time))
+}
+
 // SetAccountSummary saves the balance of an account.
 func (k Keeper) SetAccountSummary(ctx sdk.Context, subAccountAddress sdk.AccAddress, accountSummary types.AccountSummary) {
 	store := ctx.KVStore(k.storeKey)
@@ -102,6 +108,12 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	accSummary, exists := k.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
+	}
+
+	for _, v := range topUpBalances {
+		if k.HasLockedBalances(ctx, subAccAddr, v.UnlockTS) {
+			return "", sdkerrors.Wrapf(types.ErrLockedBalanceExists, "%d", v.UnlockTS)
+		}
 	}
 
 	accSummary.DepositedAmount = accSummary.DepositedAmount.Add(addedBalance)
