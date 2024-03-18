@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 
@@ -20,6 +21,7 @@ func createNMarket(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Market
 		items[i].PriceStats = &types.PriceStats{
 			ResolutionSgePrice: sdk.ZeroDec(),
 		}
+		items[i].MaxTotalPayout = sdkmath.ZeroInt()
 
 		keeper.SetMarket(ctx, items[i])
 	}

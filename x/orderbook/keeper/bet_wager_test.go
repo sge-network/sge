@@ -40,10 +40,11 @@ type testBetSuite struct {
 func newTestBetSuite(t *testing.T) testBetSuite {
 	tApp, k, ctx := setupKeeperAndApp(t)
 
+	moduleAccBalance := int64(1000)
 	err := tApp.BankKeeper.SendCoinsFromAccountToModule(ctx,
 		simapp.TestParamUsers["user9"].Address,
 		markettypes.PriceLockFunder{}.GetModuleAcc(),
-		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(1000))),
+		sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(moduleAccBalance))),
 	)
 	require.NoError(t, err)
 
@@ -67,7 +68,9 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 		PriceStats: &markettypes.PriceStats{
 			ResolutionSgePrice: sdk.NewDecWithPrec(15, 2),
 		},
-		PricePool: &markettypes.PricePool{},
+		PricePool: &markettypes.PricePool{
+			ResolutionFunds: sdkmath.NewInt(moduleAccBalance),
+		},
 	}
 
 	deposits := []housetypes.Deposit{
