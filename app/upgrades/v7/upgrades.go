@@ -34,6 +34,8 @@ func CreateUpgradeHandler(
 						break
 					}
 				}
+
+				k.SubaccountKeeper.SetLockedBalances(ctx, subAccAddr, allBalances)
 			}
 		}
 

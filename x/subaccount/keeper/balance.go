@@ -106,10 +106,7 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 
 	accSummary.DepositedAmount = accSummary.DepositedAmount.Add(addedBalance)
 	k.SetAccountSummary(ctx, subAccAddr, accSummary)
-
-	lockedBalances, _ := k.GetBalances(ctx, subAccAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
-	lockedBalances = append(lockedBalances, topUpBalances...)
-	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
+	k.SetLockedBalances(ctx, subAccAddr, topUpBalances)
 
 	err = k.sendCoinsToSubaccount(ctx, creatorAddr, subAccAddr, addedBalance)
 	if err != nil {
