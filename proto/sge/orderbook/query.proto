@@ -95,7 +95,7 @@ service Query {
   }
 
   // Queries list of settled Orderbook Participation items of a certain height.
-  rpc SettledOrderbookParticipationsOfHeight(
+  rpc SettledOrderBookParticipationsOfHeight(
       QuerySettledOrderBookParticipationsOfHeightRequest)
       returns (QuerySettledOrderBookParticipationsOfHeightResponse) {
     option (google.api.http).get =
