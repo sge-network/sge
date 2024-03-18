@@ -6,6 +6,7 @@ import "gogoproto/gogo.proto";
 import "sge/reward/params.proto";
 import "sge/reward/campaign.proto";
 import "sge/reward/reward.proto";
+import "sge/reward/promoter.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -17,5 +18,9 @@ message GenesisState {
   repeated RewardByCategory reward_by_category_list = 4
       [ (gogoproto.nullable) = false ];
   repeated RewardByCampaign reward_by_campaign_list = 5
+      [ (gogoproto.nullable) = false ];
+  repeated Promoter promoter_list = 6
+      [ (gogoproto.nullable) = false ];
+  repeated PromoterByAddress promoter_by_address_list = 7
       [ (gogoproto.nullable) = false ];
 }

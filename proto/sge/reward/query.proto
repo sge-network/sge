@@ -42,7 +42,7 @@ service Query {
   // Queries list of all Reward items by user address.
   rpc RewardsByAddress(QueryRewardsByAddressRequest)
       returns (QueryRewardsByAddressResponse) {
-    option (google.api.http).get = "/sge-network/sge/reward/rewards/{address}";
+    option (google.api.http).get = "/sge-network/sge/reward/rewards/{promoter_uid}/{address}";
   }
 
   // Queries list of all Reward items by user address and reward type
@@ -50,7 +50,7 @@ service Query {
   rpc RewardsByAddressAndCategory(QueryRewardsByAddressAndCategoryRequest)
       returns (QueryRewardsByAddressAndCategoryResponse) {
     option (google.api.http).get =
-        "/sge-network/sge/reward/rewards/{address}/{category}";
+        "/sge-network/sge/reward/rewards/{promoter_uid}/{address}/{category}";
   }
 
   // Queries list of all Reward items by campaign endpoint.
@@ -114,6 +114,7 @@ message QueryRewardsResponse {
 message QueryRewardsByAddressRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string address = 2;
+  string promoter_uid = 3;
 }
 
 // QueryRewardsByAddressResponse is response body of the query all rewards by
@@ -129,6 +130,7 @@ message QueryRewardsByAddressAndCategoryRequest {
   cosmos.base.query.v1beta1.PageRequest pagination = 1;
   string address = 2;
   RewardCategory category = 3;
+  string promoter_uid = 4;
 }
 
 // QueryRewardsByAddressAndCategoryResponse is response body of the query all

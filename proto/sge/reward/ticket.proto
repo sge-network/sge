@@ -4,6 +4,7 @@ package sgenetwork.sge.reward;
 import "gogoproto/gogo.proto";
 import "sge/type/kyc.proto";
 import "sge/reward/reward.proto";
+import "sge/reward/promoter.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -34,13 +35,12 @@ message CreateCampaignPayload {
   // is_active is the flag to check if the campaign is active or not.
   bool is_active = 8;
 
-  // claims_per_category is the number of times a user can claim a reward for
-  // category of this campaign.
-  uint64 claims_per_category = 9;
-
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 10;
+
+  // cap_count is the maximum allowed grant for a certain account.
+  uint64 cap_count = 11;
 }
 
 // UpdateCampaignPayload is the type for campaign update payload.
@@ -109,4 +109,23 @@ message GrantSignupAffiliatorRewardPayload {
   // affiliatee is the address of the account that used this affiliator's
   // address as source_uid
   string affiliatee = 2;
+}
+
+// GrantBetBonusRewardPayload is the type for bet bonus reward
+// grant payload.
+message GrantBetBonusRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // bet_uid is the list of uids
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
+}
+
+// SetPromoterConfPayload is the payload for the promoter configuration change.
+message SetPromoterConfPayload {
+  PromoterConf conf = 1 [ (gogoproto.nullable) = false ];
 }

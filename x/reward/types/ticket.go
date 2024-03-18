@@ -40,10 +40,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
 	}
 
-	if payload.ClaimsPerCategory == 0 {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "claim per category should be a positive number")
-	}
-
 	return nil
 }
 
@@ -104,5 +100,23 @@ func (payload *RewardPayloadCommon) Validate() error {
 	if !payload.KycData.Validate(payload.Receiver) {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", payload.Receiver)
 	}
+	return nil
+}
+
+// Validate validates promoter config set ticket payload.
+func (payload *SetPromoterConfPayload) Validate() error {
+	catMap := make(map[RewardCategory]struct{})
+	for _, v := range payload.Conf.CategoryCap {
+		_, ok := catMap[v.Category]
+		if ok {
+			return sdkerrors.Wrapf(ErrDuplicateCategoryInConf, "%s", v.Category)
+		}
+		if v.CapPerAcc <= 0 {
+			return sdkerrors.Wrapf(ErrCategoryCapShouldBePos, "%s", v.Category)
+		}
+
+		catMap[v.Category] = struct{}{}
+	}
+
 	return nil
 }

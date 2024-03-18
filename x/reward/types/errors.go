@@ -37,4 +37,6 @@ var (
 	ErrCampaignHasNotStarted      = sdkerrors.Register(ModuleName, 7127, "campaign validity period is not started yet")
 	ErrUserKycFailed              = sdkerrors.Register(ModuleName, 7128, "KYC Validation failed for receiver account address")
 	ErrUserKycNotProvided         = sdkerrors.Register(ModuleName, 7129, "KYC data not provided")
+	ErrDuplicateCategoryInConf    = sdkerrors.Register(ModuleName, 7130, "duplicate category in promoter configurations")
+	ErrCategoryCapShouldBePos     = sdkerrors.Register(ModuleName, 7131, "category cap should be a positive number")
 )
