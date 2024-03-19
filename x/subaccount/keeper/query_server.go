@@ -5,6 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -23,21 +24,27 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	subaccountAddr, exists := q.keeper.GetSubAccountByOwner(ctx, addr)
+	subaccountAddr, exists := q.keeper.GetSubaccountByOwner(ctx, addr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	balance, exists := q.keeper.GetAccountSummary(ctx, subaccountAddr)
+	accSummary, exists := q.keeper.GetAccountSummary(ctx, subaccountAddr)
 	if !exists {
 		panic("subaccount exists but balance not found")
 	}
 
-	balanceLocks := q.keeper.GetLockedBalances(ctx, subaccountAddr)
+	lockedBalances, _ := q.keeper.GetBalances(ctx, subaccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
+	unlockedBalances, unlockedAmount := q.keeper.GetBalances(ctx, subaccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED)
+
+	bankBalance := q.keeper.bankKeeper.GetBalance(ctx, subaccountAddr, params.DefaultBondDenom)
+
 	return &types.QuerySubaccountResponse{
-		Address:       subaccountAddr.String(),
-		Balance:       balance,
-		LockedBalance: balanceLocks,
+		Address:                     subaccountAddr.String(),
+		Balance:                     accSummary,
+		LockedBalance:               lockedBalances,
+		UnlockedBalance:             unlockedBalances,
+		WithdrawableUnlockedBalance: accSummary.WithdrawableUnlockedBalance(unlockedAmount, bankBalance.Amount),
 	}, nil
 }
 

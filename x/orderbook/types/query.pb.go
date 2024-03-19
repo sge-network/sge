@@ -1234,8 +1234,8 @@ func (m *QueryParticipationFulfilledBetsResponse) GetPagination() *query.PageRes
 	return nil
 }
 
-// QuerySettledOrderBookParticipationsOfHeightRequest is the request type for the settled orderbook participations of a
-// certain height list query.
+// QuerySettledOrderBookParticipationsOfHeightRequest is the request type for
+// the settled orderbook participations of a certain height list query.
 type QuerySettledOrderBookParticipationsOfHeightRequest struct {
 	Pagination  *query.PageRequest `protobuf:"bytes,1,opt,name=pagination,proto3" json:"pagination,omitempty"`
 	BlockHeight int64              `protobuf:"varint,2,opt,name=block_height,json=blockHeight,proto3" json:"block_height,omitempty"`
@@ -1292,8 +1292,8 @@ func (m *QuerySettledOrderBookParticipationsOfHeightRequest) GetBlockHeight() in
 	return 0
 }
 
-// QuerySettledOrderBookParticipationsOfHeightResponse is the response type for the settled orderbook participations of
-// a certain height list query.
+// QuerySettledOrderBookParticipationsOfHeightResponse is the response type for
+// the settled orderbook participations of a certain height list query.
 type QuerySettledOrderBookParticipationsOfHeightResponse struct {
 	Participations []OrderBookParticipation `protobuf:"bytes,1,rep,name=participations,proto3" json:"participations"`
 	Pagination     *query.PageResponse      `protobuf:"bytes,2,opt,name=pagination,proto3" json:"pagination,omitempty"`
@@ -1380,7 +1380,7 @@ func init() {
 func init() { proto.RegisterFile("sge/orderbook/query.proto", fileDescriptor_8b016841afa49a45) }
 
 var fileDescriptor_8b016841afa49a45 = []byte{
-	// 1241 bytes of a gzipped FileDescriptorProto
+	// 1238 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x59, 0x5f, 0x4f, 0x1c, 0x55,
 	0x14, 0xe7, 0xd2, 0x8a, 0x72, 0x68, 0x9a, 0xf4, 0x40, 0x59, 0x98, 0x94, 0x05, 0xa6, 0x0d, 0x54,
 	0x0b, 0x33, 0x40, 0x4d, 0xff, 0x24, 0x50, 0x75, 0xd3, 0x52, 0x6a, 0xda, 0x80, 0xdb, 0xf0, 0xa2,
@@ -1452,13 +1452,13 @@ var fileDescriptor_8b016841afa49a45 = []byte{
 	0x21, 0xc6, 0xbb, 0x5c, 0x8c, 0x9b, 0x58, 0x88, 0x13, 0x63, 0xc3, 0xcf, 0x38, 0x1d, 0x65, 0xf8,
 	0xdf, 0x04, 0xa4, 0xe8, 0xd9, 0x11, 0xdf, 0x4e, 0x63, 0x5b, 0xd8, 0x00, 0x2d, 0xbd, 0x73, 0x8c,
 	0x0c, 0x82, 0xef, 0x07, 0x9c, 0xef, 0x2a, 0xde, 0xef, 0xc4, 0xe1, 0xaa, 0xae, 0x7b, 0x35, 0xf8,
-	0xfc, 0x8b, 0x9f, 0x75, 0xc3, 0x44, 0xf3, 0x00, 0x57, 0x8a, 0x1c, 0xe0, 0xf0, 0x6e, 0x0c, 0x95,
-	0x54, 0x93, 0xaa, 0x74, 0xaf, 0x43, 0xd9, 0x62, 0xce, 0xba, 0x16, 0x4d, 0x2c, 0x37, 0xab, 0xba,
-	0xd3, 0x3c, 0xdd, 0xee, 0x16, 0x16, 0x9f, 0xec, 0xe7, 0xc9, 0xde, 0x7e, 0x9e, 0xfc, 0xb6, 0x9f,
-	0x27, 0x5f, 0x1d, 0xe4, 0xbb, 0xf6, 0x0e, 0xf2, 0x5d, 0xbf, 0x1e, 0xe4, 0xbb, 0xde, 0x9f, 0xd2,
-	0x0d, 0x7b, 0xa3, 0x51, 0x52, 0xca, 0x6c, 0xcb, 0xc9, 0x3c, 0x2d, 0x10, 0xf3, 0x2a, 0xdb, 0x4d,
-	0x75, 0xec, 0x87, 0x26, 0xb5, 0x4a, 0x3d, 0xfc, 0x3f, 0x27, 0x97, 0xff, 0x0d, 0x00, 0x00, 0xff,
-	0xff, 0xeb, 0x7c, 0xb0, 0x77, 0x4c, 0x1a, 0x00, 0x00,
+	0xfc, 0x8b, 0x9f, 0x75, 0xc3, 0x44, 0xb2, 0x01, 0x0e, 0xef, 0xc6, 0x50, 0x49, 0x35, 0xa9, 0x4a,
+	0xf7, 0x3a, 0x94, 0x2d, 0xe6, 0xac, 0x6b, 0xd1, 0xc4, 0x72, 0xb3, 0xaa, 0x3b, 0xcd, 0xd3, 0xed,
+	0x6e, 0x61, 0xf1, 0xc9, 0x7e, 0x9e, 0xec, 0xed, 0xe7, 0xc9, 0x6f, 0xfb, 0x79, 0xf2, 0xd5, 0x41,
+	0xbe, 0x6b, 0xef, 0x20, 0xdf, 0xf5, 0xeb, 0x41, 0xbe, 0xeb, 0xfd, 0x29, 0xdd, 0xb0, 0x37, 0x1a,
+	0x25, 0xa5, 0xcc, 0xb6, 0x9c, 0xcc, 0xd3, 0x02, 0x31, 0xaf, 0xb2, 0xdd, 0x54, 0xc7, 0x7e, 0x68,
+	0x52, 0xab, 0xd4, 0xc3, 0xff, 0x73, 0x72, 0xf9, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xa5, 0x86,
+	0x58, 0x22, 0x4c, 0x1a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1503,7 +1503,7 @@ type QueryClient interface {
 	// participation.
 	ParticipationFulfilledBets(ctx context.Context, in *QueryParticipationFulfilledBetsRequest, opts ...grpc.CallOption) (*QueryParticipationFulfilledBetsResponse, error)
 	// Queries list of settled Orderbook Participation items of a certain height.
-	SettledOrderbookParticipationsOfHeight(ctx context.Context, in *QuerySettledOrderBookParticipationsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledOrderBookParticipationsOfHeightResponse, error)
+	SettledOrderBookParticipationsOfHeight(ctx context.Context, in *QuerySettledOrderBookParticipationsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledOrderBookParticipationsOfHeightResponse, error)
 }
 
 type queryClient struct {
@@ -1613,9 +1613,9 @@ func (c *queryClient) ParticipationFulfilledBets(ctx context.Context, in *QueryP
 	return out, nil
 }
 
-func (c *queryClient) SettledOrderbookParticipationsOfHeight(ctx context.Context, in *QuerySettledOrderBookParticipationsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledOrderBookParticipationsOfHeightResponse, error) {
+func (c *queryClient) SettledOrderBookParticipationsOfHeight(ctx context.Context, in *QuerySettledOrderBookParticipationsOfHeightRequest, opts ...grpc.CallOption) (*QuerySettledOrderBookParticipationsOfHeightResponse, error) {
 	out := new(QuerySettledOrderBookParticipationsOfHeightResponse)
-	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/SettledOrderbookParticipationsOfHeight", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.orderbook.Query/SettledOrderBookParticipationsOfHeight", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1654,7 +1654,7 @@ type QueryServer interface {
 	// participation.
 	ParticipationFulfilledBets(context.Context, *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error)
 	// Queries list of settled Orderbook Participation items of a certain height.
-	SettledOrderbookParticipationsOfHeight(context.Context, *QuerySettledOrderBookParticipationsOfHeightRequest) (*QuerySettledOrderBookParticipationsOfHeightResponse, error)
+	SettledOrderBookParticipationsOfHeight(context.Context, *QuerySettledOrderBookParticipationsOfHeightRequest) (*QuerySettledOrderBookParticipationsOfHeightResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -1694,8 +1694,8 @@ func (*UnimplementedQueryServer) HistoricalParticipationExposures(ctx context.Co
 func (*UnimplementedQueryServer) ParticipationFulfilledBets(ctx context.Context, req *QueryParticipationFulfilledBetsRequest) (*QueryParticipationFulfilledBetsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParticipationFulfilledBets not implemented")
 }
-func (*UnimplementedQueryServer) SettledOrderbookParticipationsOfHeight(ctx context.Context, req *QuerySettledOrderBookParticipationsOfHeightRequest) (*QuerySettledOrderBookParticipationsOfHeightResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SettledOrderbookParticipationsOfHeight not implemented")
+func (*UnimplementedQueryServer) SettledOrderBookParticipationsOfHeight(ctx context.Context, req *QuerySettledOrderBookParticipationsOfHeightRequest) (*QuerySettledOrderBookParticipationsOfHeightResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SettledOrderBookParticipationsOfHeight not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -1900,20 +1900,20 @@ func _Query_ParticipationFulfilledBets_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Query_SettledOrderbookParticipationsOfHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Query_SettledOrderBookParticipationsOfHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(QuerySettledOrderBookParticipationsOfHeightRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(QueryServer).SettledOrderbookParticipationsOfHeight(ctx, in)
+		return srv.(QueryServer).SettledOrderBookParticipationsOfHeight(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/sgenetwork.sge.orderbook.Query/SettledOrderbookParticipationsOfHeight",
+		FullMethod: "/sgenetwork.sge.orderbook.Query/SettledOrderBookParticipationsOfHeight",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).SettledOrderbookParticipationsOfHeight(ctx, req.(*QuerySettledOrderBookParticipationsOfHeightRequest))
+		return srv.(QueryServer).SettledOrderBookParticipationsOfHeight(ctx, req.(*QuerySettledOrderBookParticipationsOfHeightRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1967,8 +1967,8 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_ParticipationFulfilledBets_Handler,
 		},
 		{
-			MethodName: "SettledOrderbookParticipationsOfHeight",
-			Handler:    _Query_SettledOrderbookParticipationsOfHeight_Handler,
+			MethodName: "SettledOrderBookParticipationsOfHeight",
+			Handler:    _Query_SettledOrderBookParticipationsOfHeight_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

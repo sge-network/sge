@@ -24,7 +24,7 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 
 	subAccOwner := sdk.MustAccAddressFromBech32(msg.Creator)
 	// find subaccount
-	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, subAccOwner)
+	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, subAccOwner)
 	if !exists {
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}

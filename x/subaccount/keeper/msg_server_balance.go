@@ -27,7 +27,7 @@ func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.Ms
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	ownerAddr := sdk.MustAccAddressFromBech32(msg.Creator)
-	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, ownerAddr)
+	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, ownerAddr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
