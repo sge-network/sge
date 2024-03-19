@@ -38,8 +38,8 @@ func TestDecodeStore(t *testing.T) {
 	kvPairs := kv.Pairs{
 		Pairs: []kv.Pair{
 			{Key: types.SubaccountIDPrefix, Value: sdk.Uint64ToBigEndian(uint64(subID))},
-			{Key: types.SubAccountOwnerPrefix, Value: address},
-			{Key: types.SubAccountOwnerReversePrefix, Value: address},
+			{Key: types.SubaccountOwnerPrefix, Value: address},
+			{Key: types.SubaccountOwnerReversePrefix, Value: address},
 			{Key: types.LockedBalancePrefix, Value: cdc.MustMarshal(&lockedBalance)},
 			{Key: types.AccountSummaryPrefix, Value: cdc.MustMarshal(&accSummary)},
 			{Key: []byte{0x99}, Value: []byte{0x99}},

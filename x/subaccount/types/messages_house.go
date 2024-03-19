@@ -52,8 +52,8 @@ func (msg *MsgHouseDeposit) EmitEvent(ctx *sdk.Context, subAccAddr string, parti
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgHouseDeposit, msg.Msg.Creator,
 		sdk.NewAttribute(attributeKeyDepositCreator, msg.Msg.Creator),
-		sdk.NewAttribute(attributeKeySubAccDepositor, subAccAddr),
-		sdk.NewAttribute(attributeKeySubAccDepositFee, feeAmount.String()),
+		sdk.NewAttribute(attributeKeySubaccountDepositor, subAccAddr),
+		sdk.NewAttribute(attributeKeySubaccountDepositFee, feeAmount.String()),
 		sdk.NewAttribute(attributeKeyDepositMarketUIDParticipantIndex,
 			strings.Join([]string{msg.Msg.MarketUID, cast.ToString(participationIndex)}, "#"),
 		),
@@ -89,7 +89,7 @@ func (msg *MsgHouseWithdraw) EmitEvent(ctx *sdk.Context, subAccAddr string, with
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeHouseWithdraw, msg.Msg.Creator,
 		sdk.NewAttribute(attributeKeyDepositCreator, msg.Msg.Creator),
-		sdk.NewAttribute(attributeKeySubAccDepositor, subAccAddr),
+		sdk.NewAttribute(attributeKeySubaccountDepositor, subAccAddr),
 		sdk.NewAttribute(attributeKeyWithdrawalID, cast.ToString(withdrawalID)),
 		sdk.NewAttribute(attributeKeyWithdrawMarketUIDParticipantIndex,
 			strings.Join([]string{msg.Msg.MarketUID, cast.ToString(msg.Msg.ParticipationIndex)}, "#"),

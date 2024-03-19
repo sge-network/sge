@@ -24,7 +24,7 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 	}
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	subaccountAddr, exists := q.keeper.GetSubAccountByOwner(ctx, addr)
+	subaccountAddr, exists := q.keeper.GetSubaccountByOwner(ctx, addr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}

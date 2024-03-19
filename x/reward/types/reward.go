@@ -13,8 +13,8 @@ import (
 )
 
 type Receiver struct {
-	SubAccountAddr    string
-	SubAccountAmount  sdkmath.Int
+	SubaccountAddr    string
+	SubaccountAmount  sdkmath.Int
 	UnlockPeriod      uint64
 	MainAccountAddr   string
 	MainAccountAmount sdkmath.Int
@@ -24,21 +24,21 @@ type Receiver struct {
 type RewardFactoryKeepers struct {
 	OVMKeeper
 	BetKeeper
-	SubAccountKeeper
+	SubaccountKeeper
 	RewardKeeper
 	AccountKeeper
 }
 
-func (keepers *RewardFactoryKeepers) getSubAccAddr(ctx sdk.Context, creator, receiver string) (string, error) {
+func (keepers *RewardFactoryKeepers) getSubaccountAddr(ctx sdk.Context, creator, receiver string) (string, error) {
 	var (
 		subAccountAddressString string
 		err                     error
 	)
-	subAccountAddress, found := keepers.SubAccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiver))
+	subAccountAddress, found := keepers.SubaccountKeeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiver))
 	if !found {
-		subAccountAddressString, err = keepers.SubAccountKeeper.CreateSubAccount(ctx, creator, receiver, []subaccounttypes.LockedBalance{})
+		subAccountAddressString, err = keepers.SubaccountKeeper.CreateSubaccount(ctx, creator, receiver, []subaccounttypes.LockedBalance{})
 		if err != nil {
-			return "", sdkerrors.Wrapf(ErrSubAccountCreationFailed, "%s", receiver)
+			return "", sdkerrors.Wrapf(ErrSubaccountCreationFailed, "%s", receiver)
 		}
 	} else {
 		subAccountAddressString = subAccountAddress.String()
@@ -102,8 +102,8 @@ type IRewardFactory interface {
 // NewReceiver creates receiver object.
 func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPeriod uint64) Receiver {
 	return Receiver{
-		SubAccountAddr:    saAddr,
-		SubAccountAmount:  saAmount,
+		SubaccountAddr:    saAddr,
+		SubaccountAmount:  saAmount,
 		UnlockPeriod:      unlockPeriod,
 		MainAccountAddr:   maAddr,
 		MainAccountAmount: maAmount,

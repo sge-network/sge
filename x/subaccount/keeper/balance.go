@@ -101,7 +101,7 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	creatorAddr := sdk.MustAccAddressFromBech32(creator)
 	subaccountOwner := sdk.MustAccAddressFromBech32(subAccOwnerAddr)
 
-	subAccAddr, exists := k.GetSubAccountByOwner(ctx, subaccountOwner)
+	subAccAddr, exists := k.GetSubaccountByOwner(ctx, subaccountOwner)
 	if !exists {
 		return "", types.ErrSubaccountDoesNotExist
 	}

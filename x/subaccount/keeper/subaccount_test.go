@@ -28,36 +28,36 @@ func TestSubaccountID(t *testing.T) {
 	require.Equal(t, uint64(100), k.Peek(ctx))
 }
 
-func TestSubAccountOwner(t *testing.T) {
+func TestSubaccountOwner(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
 	owner := sample.NativeAccAddress()
 
 	// Account should not have subaccount
-	_, exists := k.GetSubAccountOwner(ctx, owner)
+	_, exists := k.GetSubaccountOwner(ctx, owner)
 	require.False(t, exists)
 
 	// Set subaccount owner
 	id := k.NextID(ctx)
-	k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(id), owner)
+	k.SetSubaccountOwner(ctx, types.NewAddressFromSubaccount(id), owner)
 
 	// Account should have subaccount
-	_, exists = k.GetSubAccountByOwner(ctx, owner)
+	_, exists = k.GetSubaccountByOwner(ctx, owner)
 	require.True(t, exists)
 
 	// Get subaccount ID
-	subAccountAddress, exists := k.GetSubAccountByOwner(ctx, owner)
+	subAccountAddress, exists := k.GetSubaccountByOwner(ctx, owner)
 	require.True(t, exists)
 	require.Equal(t, types.NewAddressFromSubaccount(id), subAccountAddress)
 
 	// Get owner of subaccount
-	gotOwner, exists := k.GetSubAccountOwner(ctx, subAccountAddress)
+	gotOwner, exists := k.GetSubaccountOwner(ctx, subAccountAddress)
 	require.True(t, exists)
 	require.Equal(t, owner, gotOwner)
 	// Get account ID by owner
-	gotSubAccount, exists := k.GetSubAccountByOwner(ctx, owner)
+	gotSubaccount, exists := k.GetSubaccountByOwner(ctx, owner)
 	require.True(t, exists)
-	require.Equal(t, types.NewAddressFromSubaccount(id), gotSubAccount)
+	require.Equal(t, types.NewAddressFromSubaccount(id), gotSubaccount)
 }
 
 func TestSetLockedBalances(t *testing.T) {

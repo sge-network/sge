@@ -34,41 +34,41 @@ func (k Keeper) SetID(ctx sdk.Context, id uint64) {
 	ctx.KVStore(k.storeKey).Set(types.SubaccountIDPrefix, sdk.Uint64ToBigEndian(id))
 }
 
-// SetSubAccountOwner sets the owner of a subaccount.
-func (k Keeper) SetSubAccountOwner(ctx sdk.Context, subAccountAddress, ownerAddress sdk.AccAddress) {
+// SetSubaccountOwner sets the owner of a subaccount.
+func (k Keeper) SetSubaccountOwner(ctx sdk.Context, subAccountAddress, ownerAddress sdk.AccAddress) {
 	store := ctx.KVStore(k.storeKey)
-	store.Set(types.SubAccountOwnerKey(ownerAddress), subAccountAddress)
+	store.Set(types.SubaccountOwnerKey(ownerAddress), subAccountAddress)
 	// and reverse mapping
-	store.Set(types.SubAccountKey(subAccountAddress), ownerAddress)
+	store.Set(types.SubaccountKey(subAccountAddress), ownerAddress)
 }
 
-// GetSubAccountByOwner returns the subaccount ID of an owner.
-func (k Keeper) GetSubAccountByOwner(ctx sdk.Context, address sdk.AccAddress) (sdk.AccAddress, bool) {
+// GetSubaccountByOwner returns the subaccount ID of an owner.
+func (k Keeper) GetSubaccountByOwner(ctx sdk.Context, address sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	addr := store.Get(types.SubAccountOwnerKey(address))
+	addr := store.Get(types.SubaccountOwnerKey(address))
 	return addr, addr != nil
 }
 
-// GetSubAccountOwner returns the owner of a subaccount given the subaccount address.
-func (k Keeper) GetSubAccountOwner(ctx sdk.Context, subAccAddr sdk.AccAddress) (sdk.AccAddress, bool) {
+// GetSubaccountOwner returns the owner of a subaccount given the subaccount address.
+func (k Keeper) GetSubaccountOwner(ctx sdk.Context, subAccAddr sdk.AccAddress) (sdk.AccAddress, bool) {
 	store := ctx.KVStore(k.storeKey)
-	addr := store.Get(types.SubAccountKey(subAccAddr))
+	addr := store.Get(types.SubaccountKey(subAccAddr))
 	return addr, addr != nil
 }
 
-// IsSubAccount returns true if the address blongs to a sub account.
-func (k Keeper) IsSubAccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool {
+// IsSubaccount returns true if the address blongs to a sub account.
+func (k Keeper) IsSubaccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool {
 	store := ctx.KVStore(k.storeKey)
-	return store.Has(types.SubAccountKey(subAccAddr))
+	return store.Has(types.SubaccountKey(subAccAddr))
 }
 
 func (k Keeper) IterateSubaccounts(ctx sdk.Context, cb func(subAccountAddress, subaccountOwner sdk.AccAddress) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)
-	iterator := sdk.KVStorePrefixIterator(store, types.SubAccountOwnerReversePrefix)
+	iterator := sdk.KVStorePrefixIterator(store, types.SubaccountOwnerReversePrefix)
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		if cb(iterator.Key()[len(types.SubAccountOwnerReversePrefix):], iterator.Value()) {
+		if cb(iterator.Key()[len(types.SubaccountOwnerReversePrefix):], iterator.Value()) {
 			break
 		}
 	}
@@ -93,7 +93,7 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 	return subaccounts
 }
 
-func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
+func (k Keeper) CreateSubaccount(ctx sdk.Context, creator, owner string,
 	lockedBalances []types.LockedBalance,
 ) (string, error) {
 	lockedBalance, err := sumlockedBalance(ctx, lockedBalances)
@@ -103,7 +103,7 @@ func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
 
 	creatorAddr := sdk.MustAccAddressFromBech32(creator)
 	subAccOwnerAddr := sdk.MustAccAddressFromBech32(owner)
-	if _, exists := k.GetSubAccountByOwner(ctx, subAccOwnerAddr); exists {
+	if _, exists := k.GetSubaccountByOwner(ctx, subAccOwnerAddr); exists {
 		return "", types.ErrSubaccountAlreadyExist
 	}
 
@@ -119,7 +119,7 @@ func (k Keeper) CreateSubAccount(ctx sdk.Context, creator, owner string,
 		return "", sdkerrors.Wrap(err, "unable to send coins")
 	}
 
-	k.SetSubAccountOwner(ctx, subAccAddr, subAccOwnerAddr)
+	k.SetSubaccountOwner(ctx, subAccAddr, subAccOwnerAddr)
 	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
 	k.SetAccountSummary(ctx, subAccAddr, types.AccountSummary{
 		DepositedAmount: lockedBalance,

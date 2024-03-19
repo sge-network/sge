@@ -18,9 +18,9 @@ func CreateUpgradeHandler(
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		allSubAccounts := k.SubaccountKeeper.GetAllSubaccounts(ctx)
+		allSubaccounts := k.SubaccountKeeper.GetAllSubaccounts(ctx)
 
-		for _, sa := range allSubAccounts {
+		for _, sa := range allSubaccounts {
 			subAccAddr := sdk.MustAccAddressFromBech32(sa.Address)
 			accSummary, found := k.SubaccountKeeper.GetAccountSummary(ctx, subAccAddr)
 			if !found {
