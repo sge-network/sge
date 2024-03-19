@@ -3,10 +3,12 @@ package v7
 import (
 	"fmt"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/sge-network/sge/app/keepers"
+	"github.com/sge-network/sge/app/params"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -25,17 +27,18 @@ func CreateUpgradeHandler(
 				panic(fmt.Errorf("account summary for the subaccount not found %s", subAccAddr))
 			}
 
-			allBalances, totalAmount := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.BalanceType_BALANCE_TYPE_UNSPECIFIED)
+			_, totalBalances := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.BalanceType_BALANCE_TYPE_UNSPECIFIED)
+			bankBalance := k.BankKeeper.GetBalance(ctx, subAccAddr, params.DefaultBondDenom).Amount
 
-			if totalAmount.LT(accSumm.DepositedAmount) {
-				for _, b := range allBalances {
-					if b.Amount.IsZero() {
-						b.Amount = accSumm.DepositedAmount.Sub(totalAmount)
-						break
-					}
-				}
-
-				k.SubaccountKeeper.SetLockedBalances(ctx, subAccAddr, allBalances)
+			totalBalanceDiff := accSumm.DepositedAmount.Sub(totalBalances)
+			missingBalance := sdkmath.MinInt(bankBalance, totalBalanceDiff)
+			if missingBalance.GT(sdkmath.ZeroInt()) {
+				k.SubaccountKeeper.SetLockedBalances(ctx, subAccAddr, []subaccounttypes.LockedBalance{
+					{
+						Amount:   missingBalance,
+						UnlockTS: 1710830000,
+					},
+				})
 			}
 		}
 
