@@ -8,7 +8,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	"github.com/sge-network/sge/app/keepers"
-	"github.com/sge-network/sge/app/params"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -28,13 +27,8 @@ func CreateUpgradeHandler(
 			}
 
 			_, totalBalances := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNSPECIFIED)
-			bankBalance := k.BankKeeper.GetBalance(ctx, subAccAddr, params.DefaultBondDenom).Amount
 
-			totalBalanceDiff := accSummary.DepositedAmount.
-				Sub(accSummary.SpentAmount).
-				Sub(accSummary.LostAmount).
-				Sub(accSummary.WithdrawnAmount)
-			missingBalance := sdkmath.MinInt(bankBalance, totalBalanceDiff).Sub(totalBalances)
+			missingBalance := accSummary.DepositedAmount.Sub(totalBalances)
 			if missingBalance.GT(sdkmath.ZeroInt()) {
 				k.SubaccountKeeper.SetLockedBalances(ctx, subAccAddr, []subaccounttypes.LockedBalance{
 					{
