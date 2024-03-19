@@ -22,7 +22,7 @@ func CreateUpgradeHandler(
 
 		for _, sa := range allSubAccounts {
 			subAccAddr := sdk.MustAccAddressFromBech32(sa.Address)
-			accSumm, found := k.SubaccountKeeper.GetAccountSummary(ctx, subAccAddr)
+			accSummary, found := k.SubaccountKeeper.GetAccountSummary(ctx, subAccAddr)
 			if !found {
 				panic(fmt.Errorf("account summary for the subaccount not found %s", subAccAddr))
 			}
@@ -30,8 +30,11 @@ func CreateUpgradeHandler(
 			_, totalBalances := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.BalanceType_BALANCE_TYPE_UNSPECIFIED)
 			bankBalance := k.BankKeeper.GetBalance(ctx, subAccAddr, params.DefaultBondDenom).Amount
 
-			totalBalanceDiff := accSumm.DepositedAmount.Sub(totalBalances)
-			missingBalance := sdkmath.MinInt(bankBalance, totalBalanceDiff)
+			totalBalanceDiff := accSummary.DepositedAmount.
+				Sub(accSummary.SpentAmount).
+				Sub(accSummary.LostAmount).
+				Sub(accSummary.WithdrawnAmount)
+			missingBalance := sdkmath.MinInt(bankBalance, totalBalanceDiff).Sub(totalBalances)
 			if missingBalance.GT(sdkmath.ZeroInt()) {
 				k.SubaccountKeeper.SetLockedBalances(ctx, subAccAddr, []subaccounttypes.LockedBalance{
 					{
