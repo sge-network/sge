@@ -93,7 +93,7 @@ func (k Keeper) GetAccountSummary(ctx sdk.Context, subAccountAddress sdk.AccAddr
 func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	topUpBalances []types.LockedBalance,
 ) (string, error) {
-	addedBalance, err := sumlockedBalance(ctx, topUpBalances)
+	addedBalance, err := sumLockedBalance(ctx, topUpBalances)
 	if err != nil {
 		return "", err
 	}
@@ -127,8 +127,8 @@ func (k Keeper) TopUp(ctx sdk.Context, creator, subAccOwnerAddr string,
 	return subAccAddr.String(), nil
 }
 
-// getAccountSummary returns the balance, unlocked balance and bank balance of a subaccount
-func (k Keeper) getAccountSummary(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.AccountSummary, sdkmath.Int, sdk.Coin) {
+// getSubaccountSummary returns the balance, unlocked balance and bank balance of a subaccount
+func (k Keeper) getSubaccountSummary(sdkContext sdk.Context, subaccountAddr sdk.AccAddress) (types.AccountSummary, sdkmath.Int, sdk.Coin) {
 	accSummary, exists := k.GetAccountSummary(sdkContext, subaccountAddr)
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
@@ -141,20 +141,20 @@ func (k Keeper) getAccountSummary(sdkContext sdk.Context, subaccountAddr sdk.Acc
 
 // withdrawUnlocked returns the balance, unlocked balance and bank balance of a subaccount
 func (k Keeper) withdrawUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress) error {
-	accSummary, unlockedAmount, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+	accSummary, unlockedAmount, bankBalance := k.getSubaccountSummary(ctx, subAccAddr)
 
-	withdrawableBalance := accSummary.WithdrawableUnlockedBalance(unlockedAmount, bankBalance.Amount)
-	if withdrawableBalance.IsZero() {
+	withdrawableUnlockedBalance := accSummary.WithdrawableUnlockedBalance(unlockedAmount, bankBalance.Amount)
+	if withdrawableUnlockedBalance.IsZero() {
 		return types.ErrNothingToWithdraw
 	}
 
-	if err := accSummary.Withdraw(withdrawableBalance); err != nil {
+	if err := accSummary.Withdraw(withdrawableUnlockedBalance); err != nil {
 		return err
 	}
 
 	k.SetAccountSummary(ctx, subAccAddr, accSummary)
 
-	err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableBalance)))
+	err := k.bankKeeper.SendCoins(ctx, subAccAddr, ownerAddr, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, withdrawableUnlockedBalance)))
 	if err != nil {
 		return err
 	}
@@ -166,7 +166,7 @@ func (k Keeper) withdrawUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, own
 // modifies the locked balances accordingly
 func (k Keeper) withdrawLockedAndUnlocked(ctx sdk.Context, subAccAddr sdk.AccAddress, ownerAddr sdk.AccAddress, subAmountDeduct sdkmath.Int,
 ) error {
-	accSummary, _, bankBalance := k.getAccountSummary(ctx, subAccAddr)
+	accSummary, _, bankBalance := k.getSubaccountSummary(ctx, subAccAddr)
 	withdrawableBalance := accSummary.WithdrawableBalance(bankBalance.Amount)
 
 	// take the minimum of the withdrawable balance and the amount that need to be transferred from sub account

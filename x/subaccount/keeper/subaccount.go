@@ -96,14 +96,14 @@ func (k Keeper) GetAllSubaccounts(ctx sdk.Context) []types.GenesisSubaccount {
 func (k Keeper) CreateSubaccount(ctx sdk.Context, creator, owner string,
 	lockedBalances []types.LockedBalance,
 ) (string, error) {
-	lockedBalance, err := sumlockedBalance(ctx, lockedBalances)
+	lockedBalance, err := sumLockedBalance(ctx, lockedBalances)
 	if err != nil {
 		return "", err
 	}
 
 	creatorAddr := sdk.MustAccAddressFromBech32(creator)
-	subAccOwnerAddr := sdk.MustAccAddressFromBech32(owner)
-	if _, exists := k.GetSubaccountByOwner(ctx, subAccOwnerAddr); exists {
+	subaccountOwnerAddr := sdk.MustAccAddressFromBech32(owner)
+	if _, exists := k.GetSubaccountByOwner(ctx, subaccountOwnerAddr); exists {
 		return "", types.ErrSubaccountAlreadyExist
 	}
 
@@ -119,7 +119,7 @@ func (k Keeper) CreateSubaccount(ctx sdk.Context, creator, owner string,
 		return "", sdkerrors.Wrap(err, "unable to send coins")
 	}
 
-	k.SetSubaccountOwner(ctx, subAccAddr, subAccOwnerAddr)
+	k.SetSubaccountOwner(ctx, subAccAddr, subaccountOwnerAddr)
 	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
 	k.SetAccountSummary(ctx, subAccAddr, types.AccountSummary{
 		DepositedAmount: lockedBalance,
@@ -140,9 +140,9 @@ func (k Keeper) sendCoinsToSubaccount(ctx sdk.Context, creatorAccount, subAccoun
 	return nil
 }
 
-// sumlockedBalance sums all the balances to unlock and returns the total amount. It
+// sumLockedBalance sums all the balances to unlock and returns the total amount. It
 // returns an error if any of to unlock times is expired.
-func sumlockedBalance(ctx sdk.Context, lockedBalances []types.LockedBalance) (sdkmath.Int, error) {
+func sumLockedBalance(ctx sdk.Context, lockedBalances []types.LockedBalance) (sdkmath.Int, error) {
 	lockedBalance := sdkmath.NewInt(0)
 
 	for _, lb := range lockedBalances {
