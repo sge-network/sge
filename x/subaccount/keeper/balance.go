@@ -29,12 +29,12 @@ func (k Keeper) SetLockedBalances(ctx sdk.Context, subAccountAddress sdk.AccAddr
 }
 
 // etBalances returns the locked balances of an account.
-func (k Keeper) GetBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, balanceType types.BalanceType) ([]types.LockedBalance, sdkmath.Int) {
+func (k Keeper) GetBalances(ctx sdk.Context, subAccountAddress sdk.AccAddress, balanceType types.LockedBalanceStatus) ([]types.LockedBalance, sdkmath.Int) {
 	var start, end []byte
 	switch balanceType {
-	case types.BalanceType_BALANCE_TYPE_LOCKED:
+	case types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED:
 		start = utils.Int64ToBytes(ctx.BlockTime().Unix())
-	case types.BalanceType_BALANCE_TYPE_UNLOCKED:
+	case types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED:
 		end = utils.Int64ToBytes(ctx.BlockTime().Unix())
 	}
 
@@ -133,7 +133,7 @@ func (k Keeper) getSubaccountSummary(sdkContext sdk.Context, subaccountAddr sdk.
 	if !exists {
 		panic("data corruption: subaccount exists but balance does not")
 	}
-	_, unlockedAmount := k.GetBalances(sdkContext, subaccountAddr, types.BalanceType_BALANCE_TYPE_UNLOCKED)
+	_, unlockedAmount := k.GetBalances(sdkContext, subaccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED)
 	bankBalance := k.bankKeeper.GetBalance(sdkContext, subaccountAddr, params.DefaultBondDenom)
 
 	return accSummary, unlockedAmount, bankBalance

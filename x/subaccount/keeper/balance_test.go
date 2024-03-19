@@ -32,7 +32,7 @@ func TestUnlockedBalanceQuery(t *testing.T) {
 		},
 	})
 
-	locked, _ := k.GetBalances(ctx, subAccAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
+	locked, _ := k.GetBalances(ctx, subAccAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	require.Equal(t, []types.LockedBalance{
 		{
 			UnlockTS: cast.ToUint64(blockTime.Unix()),
@@ -44,6 +44,6 @@ func TestUnlockedBalanceQuery(t *testing.T) {
 		},
 	}, locked)
 
-	_, unlockedAmount := k.GetBalances(ctx, subAccAddr, types.BalanceType_BALANCE_TYPE_UNLOCKED)
+	_, unlockedAmount := k.GetBalances(ctx, subAccAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED)
 	require.Equal(t, int64(1000), unlockedAmount.Int64())
 }

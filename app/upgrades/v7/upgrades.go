@@ -27,7 +27,7 @@ func CreateUpgradeHandler(
 				panic(fmt.Errorf("account summary for the subaccount not found %s", subAccAddr))
 			}
 
-			_, totalBalances := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.BalanceType_BALANCE_TYPE_UNSPECIFIED)
+			_, totalBalances := k.SubaccountKeeper.GetBalances(ctx, subAccAddr, subaccounttypes.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNSPECIFIED)
 			bankBalance := k.BankKeeper.GetBalance(ctx, subAccAddr, params.DefaultBondDenom).Amount
 
 			totalBalanceDiff := accSummary.DepositedAmount.

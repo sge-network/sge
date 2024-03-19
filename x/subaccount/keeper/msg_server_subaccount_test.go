@@ -56,7 +56,7 @@ func TestMsgServer_Create(t *testing.T) {
 	require.Equal(t, account, owner)
 
 	// check that balance unlocks are set correctly
-	lockedBalances, _ := app.SubaccountKeeper.GetBalances(ctx, types.NewAddressFromSubaccount(1), types.BalanceType_BALANCE_TYPE_LOCKED)
+	lockedBalances, _ := app.SubaccountKeeper.GetBalances(ctx, types.NewAddressFromSubaccount(1), types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	require.Len(t, lockedBalances, 1)
 	require.True(t, someTime == lockedBalances[0].UnlockTS)
 	require.Equal(t, sdkmath.NewInt(123), lockedBalances[0].Amount)

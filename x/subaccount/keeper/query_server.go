@@ -34,8 +34,8 @@ func (q queryServer) Subaccount(goCtx context.Context, request *types.QuerySubac
 		panic("subaccount exists but balance not found")
 	}
 
-	lockedBalances, _ := q.keeper.GetBalances(ctx, subaccountAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
-	unlockedBalances, unlockedAmount := q.keeper.GetBalances(ctx, subaccountAddr, types.BalanceType_BALANCE_TYPE_UNLOCKED)
+	lockedBalances, _ := q.keeper.GetBalances(ctx, subaccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
+	unlockedBalances, unlockedAmount := q.keeper.GetBalances(ctx, subaccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED)
 
 	bankBalance := q.keeper.bankKeeper.GetBalance(ctx, subaccountAddr, params.DefaultBondDenom)
 

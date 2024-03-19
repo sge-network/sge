@@ -49,12 +49,12 @@ message LockedBalance {
   ];
 }
 
-// Balance type.
-enum BalanceType {
+// LockedBalanceStatus type.
+enum LockedBalanceStatus {
   // the invalid or unknown
-  BALANCE_TYPE_UNSPECIFIED = 0;
+  LOCKED_BALANCE_STATUS_UNSPECIFIED = 0;
   // locked
-  BALANCE_TYPE_LOCKED = 1;
+  LOCKED_BALANCE_STATUS_LOCKED = 1;
   // unlocked
-  BALANCE_TYPE_UNLOCKED = 2;
+  LOCKED_BALANCE_STATUS_UNLOCKED = 2;
 }

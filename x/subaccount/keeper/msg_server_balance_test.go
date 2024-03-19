@@ -184,7 +184,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	balance, exists := k.GetAccountSummary(ctx, subAccountAddr)
 	require.True(t, exists)
 	require.Equal(t, sdkmath.NewInt(0), balance.DepositedAmount)
-	balances, _ := k.GetBalances(ctx, subAccountAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
+	balances, _ := k.GetBalances(ctx, subAccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	require.Len(t, balances, 0)
 
 	msgTopUp := &types.MsgTopUp{
@@ -204,7 +204,7 @@ func TestMsgServerTopUp_HappyPath(t *testing.T) {
 	balance, exists = k.GetAccountSummary(ctx, subAccountAddr)
 	require.True(t, exists)
 	require.Equal(t, sdkmath.NewInt(123), balance.DepositedAmount)
-	balances, _ = k.GetBalances(ctx, subAccountAddr, types.BalanceType_BALANCE_TYPE_LOCKED)
+	balances, _ = k.GetBalances(ctx, subAccountAddr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	require.Len(t, balances, 1)
 	require.True(t, afterTime == balances[0].UnlockTS)
 	require.Equal(t, sdkmath.NewInt(123), balances[0].Amount)

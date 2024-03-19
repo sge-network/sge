@@ -82,7 +82,7 @@ func TestSetLockedBalances(t *testing.T) {
 	k.SetLockedBalances(ctx, addr, balanceUnlocks)
 
 	// Get locked balances
-	lockedBalances, _ := k.GetBalances(ctx, addr, types.BalanceType_BALANCE_TYPE_LOCKED)
+	lockedBalances, _ := k.GetBalances(ctx, addr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	for i, lockedBalance := range lockedBalances {
 		require.Equal(t, lockedBalance.Amount, balanceUnlocks[i].Amount)
 		require.True(t, lockedBalance.UnlockTS == balanceUnlocks[i].UnlockTS)
@@ -141,6 +141,6 @@ func TestKeeper_GetLockedBalances(t *testing.T) {
 	k.SetLockedBalances(ctx, addr, balanceUnlocks)
 
 	// get unlocked balance
-	_, unlockedAmount := k.GetBalances(ctx, addr, types.BalanceType_BALANCE_TYPE_UNLOCKED)
+	_, unlockedAmount := k.GetBalances(ctx, addr, types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_UNLOCKED)
 	require.True(t, unlockedAmount.Equal(sdkmath.NewInt(10000+20000)))
 }
