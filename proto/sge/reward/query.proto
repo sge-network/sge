@@ -8,6 +8,7 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "sge/reward/params.proto";
 import "sge/reward/campaign.proto";
 import "sge/reward/reward.proto";
+import "sge/reward/promoter.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
 
@@ -17,6 +18,16 @@ service Query {
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sge-network/sge/reward/params";
+  }
+
+  // PromoterByAddress queries a certain promoter.
+  rpc PromoterByAddress(QueryPromoterByAddressRequest) returns (QueryPromoterByAddressResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/promoter-by-address/{addr}";
+  }
+
+  // Queries list of all Promoter items.
+  rpc Promoters(QueryPromotersRequest) returns (QueryPromotersResponse) {
+    option (google.api.http).get = "/sge-network/sge/reward/promoters";
   }
 
   // Queries a specific Campaign item.
@@ -68,6 +79,29 @@ message QueryParamsResponse {
 
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryPromoterByAddressRequest is request type for the Query/GetPromoterByAddress RPC method.
+message QueryPromoterByAddressRequest {
+  string addr = 1;
+}
+
+// QueryPromoterByAddressResponse is response type for the Query/GetPromoterByAddress RPC method.
+message QueryPromoterByAddressResponse {
+  // promoter holds the queries promoter.
+  Promoter promoter = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryPromotersRequest is request body for the query all promoters endpoint.
+message QueryPromotersRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryPromotersResponse is response body of the query all promoters
+// endpoint.
+message QueryPromotersResponse {
+  repeated Promoter promoter = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // QueryCampaignRequest is request body of the query campaign endpoint.

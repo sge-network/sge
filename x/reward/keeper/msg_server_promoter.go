@@ -9,6 +9,36 @@ import (
 	"github.com/sge-network/sge/x/reward/types"
 )
 
+func (k msgServer) CreatePromoter(goCtx context.Context, msg *types.MsgCreatePromoter) (*types.MsgCreatePromoterResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	var payload types.CreatePromoterPayload
+	if err := k.ovmKeeper.VerifyTicketUnmarshal(goCtx, msg.Ticket, &payload); err != nil {
+		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
+	}
+
+	// Check if the value already exists
+	_, isFound := k.GetPromoter(ctx, payload.UID)
+	if isFound {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the uid: %s already exists", payload.UID)
+	}
+
+	if err := payload.Validate(); err != nil {
+		return nil, err
+	}
+
+	k.SetPromoter(ctx, types.Promoter{
+		Creator:   msg.Creator,
+		Addresses: []string{msg.Creator},
+		UID:       payload.UID,
+		Conf:      payload.Conf,
+	})
+
+	msg.EmitEvent(&ctx, payload.UID, payload.Conf)
+
+	return &types.MsgCreatePromoterResponse{}, nil
+}
+
 func (k msgServer) SetPromoterConf(goCtx context.Context, msg *types.MsgSetPromoterConf) (*types.MsgSetPromoterConfResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 

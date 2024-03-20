@@ -7,6 +7,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/sge-network/sge/x/bet/types"
 )
 
 // Validate validates campaign creation ticket payload.
@@ -104,18 +106,21 @@ func (payload *RewardPayloadCommon) Validate() error {
 }
 
 // Validate validates promoter config set ticket payload.
-func (payload *SetPromoterConfPayload) Validate() error {
-	catMap := make(map[RewardCategory]struct{})
-	for _, v := range payload.Conf.CategoryCap {
-		_, ok := catMap[v.Category]
-		if ok {
-			return sdkerrors.Wrapf(ErrDuplicateCategoryInConf, "%s", v.Category)
-		}
-		if v.CapPerAcc <= 0 {
-			return sdkerrors.Wrapf(ErrCategoryCapShouldBePos, "%s", v.Category)
-		}
+func (payload *CreatePromoterPayload) Validate() error {
+	if !utils.IsValidUID(payload.UID) {
+		return types.ErrInvalidBetUID
+	}
+	if err := payload.Conf.Validate(); err != nil {
+		return err
+	}
 
-		catMap[v.Category] = struct{}{}
+	return nil
+}
+
+// Validate validates promoter config set ticket payload.
+func (payload *SetPromoterConfPayload) Validate() error {
+	if err := payload.Conf.Validate(); err != nil {
+		return err
 	}
 
 	return nil

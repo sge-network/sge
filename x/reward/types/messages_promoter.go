@@ -10,9 +10,11 @@ import (
 
 const (
 	TypeMsgSetPromoterConf = "set_promoter_conf"
+	TypeMsgCreatePromoter  = "create_promoter"
 )
 
 var _ sdk.Msg = &MsgSetPromoterConf{}
+var _ sdk.Msg = &MsgCreatePromoter{}
 
 func NewMsgSetPromoterConfig(
 	creator string,
@@ -69,6 +71,60 @@ func (msg *MsgSetPromoterConf) EmitEvent(ctx *sdk.Context, conf PromoterConf) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(TypeMsgSetPromoterConf, msg.Creator,
 		sdk.NewAttribute(attributeKeyUID, msg.Uid),
+		sdk.NewAttribute(attributeKeyPromoterConf, conf.String()),
+	)
+	emitter.Emit()
+}
+
+func NewMsgCreatePromoter(
+	creator string,
+	ticket string,
+) *MsgCreatePromoter {
+	return &MsgCreatePromoter{
+		Creator: creator,
+		Ticket:  ticket,
+	}
+}
+
+func (msg *MsgCreatePromoter) Route() string {
+	return RouterKey
+}
+
+func (msg *MsgCreatePromoter) Type() string {
+	return TypeMsgCreatePromoter
+}
+
+func (msg *MsgCreatePromoter) GetSigners() []sdk.AccAddress {
+	creator, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		panic(err)
+	}
+	return []sdk.AccAddress{creator}
+}
+
+func (msg *MsgCreatePromoter) GetSignBytes() []byte {
+	bz := ModuleCdc.MustMarshalJSON(msg)
+	return sdk.MustSortJSON(bz)
+}
+
+func (msg *MsgCreatePromoter) ValidateBasic() error {
+	_, err := sdk.AccAddressFromBech32(msg.Creator)
+	if err != nil {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "invalid creator address (%s)", err)
+	}
+
+	if msg.Ticket == "" {
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "invalid ticket")
+	}
+
+	return nil
+}
+
+// EmitEvent emits the event for the message success.
+func (msg *MsgCreatePromoter) EmitEvent(ctx *sdk.Context, uid string, conf PromoterConf) {
+	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
+	emitter.AddMsg(TypeMsgCreatePromoter, msg.Creator,
+		sdk.NewAttribute(attributeKeyUID, uid),
 		sdk.NewAttribute(attributeKeyPromoterConf, conf.String()),
 	)
 	emitter.Emit()

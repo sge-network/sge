@@ -22,6 +22,8 @@ func GetQueryCmd(_ string) *cobra.Command {
 	}
 
 	cmd.AddCommand(CmdQueryParams())
+	cmd.AddCommand(CmdListPromoters())
+	cmd.AddCommand(CmdGetPromoterByAddress())
 	cmd.AddCommand(CmdListCampaign())
 	cmd.AddCommand(CmdGetCampaign())
 	cmd.AddCommand(CmdListReward())
