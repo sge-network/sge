@@ -16,4 +16,5 @@ var (
 	ErrInvalidLockedBalance      = sdkerrors.Register(ModuleName, 8007, "invalid locked balance")
 	ErrSendCoinError             = sdkerrors.Register(ModuleName, 8008, "send coin error")
 	ErrWithdrawLocked            = sdkerrors.Register(ModuleName, 8009, "withdrawal of locked coins failed")
+	ErrLockedBalanceExists       = sdkerrors.Register(ModuleName, 8010, "locked balance for the expire time exists")
 )

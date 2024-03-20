@@ -17,7 +17,7 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, acc := range genState.Subaccounts {
 		owner := sdk.MustAccAddressFromBech32(acc.Owner)
 		addr := sdk.MustAccAddressFromBech32(acc.Address)
-		k.SetSubAccountOwner(ctx, addr, owner)
+		k.SetSubaccountOwner(ctx, addr, owner)
 		k.SetLockedBalances(ctx, addr, acc.LockedBalances)
 		k.SetAccountSummary(ctx, addr, acc.Balance)
 	}

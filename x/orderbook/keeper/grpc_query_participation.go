@@ -93,8 +93,8 @@ func (k Keeper) OrderBookParticipations(
 	}, nil
 }
 
-// SettledOrderbookParticipationsOfHeight returns settled orderbook participations of a certain height
-func (k Keeper) SettledOrderbookParticipationsOfHeight(
+// SettledOrderBookParticipationsOfHeight returns settled orderbook participations of a certain height
+func (k Keeper) SettledOrderBookParticipationsOfHeight(
 	c context.Context,
 	req *types.QuerySettledOrderBookParticipationsOfHeightRequest,
 ) (*types.QuerySettledOrderBookParticipationsOfHeightResponse, error) {

@@ -55,11 +55,11 @@ func (sur SignUpAffiliatorReward) Calculate(goCtx context.Context, ctx sdk.Conte
 		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "affiliatee account has signed up yet, there is no affiliatee claim record")
 	}
 
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
-		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
+	if keepers.SubaccountKeeper.IsSubaccount(ctx, receiverAddr) {
+		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccAddrStr, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}

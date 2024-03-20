@@ -60,8 +60,8 @@ func (msg *MsgCreate) ValidateBasic() error {
 func (msg *MsgCreate) EmitEvent(ctx *sdk.Context, subAccAddr string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgCreate, msg.Creator,
-		sdk.NewAttribute(attributeKeySubAccOwner, msg.Owner),
-		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+		sdk.NewAttribute(attributeKeySubaccountOwner, msg.Owner),
+		sdk.NewAttribute(attributeKeySubaccount, subAccAddr),
 	)
 	emitter.Emit()
 }

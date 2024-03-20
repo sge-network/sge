@@ -77,10 +77,18 @@ func (as *AccountSummary) Withdraw(amt sdkmath.Int) error {
 	return nil
 }
 
-// WithdrawableBalance returns withdrawable balance of a subaccount
-func (as *AccountSummary) WithdrawableBalance(unlockedBalance, bankBalance sdkmath.Int) sdkmath.Int {
+// WithdrawableUnlockedBalance returns withdrawable unlocked balance of a subaccount
+func (as *AccountSummary) WithdrawableUnlockedBalance(unlockedBalance, bankBalance sdkmath.Int) sdkmath.Int {
 	// calculate withdrawable balance, which is the minimum between the available balance, and
 	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
 	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
 	return sdkmath.MinInt(sdkmath.MinInt(as.Available(), unlockedBalance), bankBalance)
+}
+
+// WithdrawableBalance returns total (unlocked and locked) withdrawable balance of a subaccount
+func (as *AccountSummary) WithdrawableBalance(bankBalance sdkmath.Int) sdkmath.Int {
+	// calculate withdrawable balance, which is the minimum between the available balance, and
+	// what has been unlocked so far. Also, it cannot be greater than the bank balance.
+	// Available reports the deposited amount - spent amount - lost amount - withdrawn amount.
+	return sdkmath.MinInt(as.Available(), bankBalance)
 }

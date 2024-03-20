@@ -36,4 +36,10 @@ message QuerySubaccountResponse {
   sge.subaccount.AccountSummary balance = 2 [ (gogoproto.nullable) = false ];
   repeated sge.subaccount.LockedBalance locked_balance = 3
       [ (gogoproto.nullable) = false ];
+  repeated sge.subaccount.LockedBalance unlocked_balance = 4
+      [ (gogoproto.nullable) = false ];
+  string withdrawable_unlocked_balance = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }
