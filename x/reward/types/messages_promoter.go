@@ -13,8 +13,10 @@ const (
 	TypeMsgCreatePromoter  = "create_promoter"
 )
 
-var _ sdk.Msg = &MsgSetPromoterConf{}
-var _ sdk.Msg = &MsgCreatePromoter{}
+var (
+	_ sdk.Msg = &MsgSetPromoterConf{}
+	_ sdk.Msg = &MsgCreatePromoter{}
+)
 
 func NewMsgSetPromoterConfig(
 	creator string,

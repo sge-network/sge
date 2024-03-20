@@ -40,6 +40,7 @@ func CmdCreatePromoter() *cobra.Command {
 
 	return cmd
 }
+
 func CmdSetPromoterConf() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "set-promoter-conf [uid] [ticket]",
