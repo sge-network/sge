@@ -95,9 +95,9 @@ service Query {
   }
 
   // Queries list of settled Orderbook Participation items of a certain height.
-  rpc SettledOrderbookParticipationsOfHeight(
+  rpc SettledOrderBookParticipationsOfHeight(
       QuerySettledOrderBookParticipationsOfHeightRequest)
-      returns (QuerySettledOrderbookParticipationsOfHeightResponse) {
+      returns (QuerySettledOrderBookParticipationsOfHeightResponse) {
     option (google.api.http).get =
         "/sge/orderbook/participations/settled/{block_height}";
   }
@@ -320,9 +320,9 @@ message QuerySettledOrderBookParticipationsOfHeightRequest {
   int64 block_height = 2;
 }
 
-// QuerySettledOrderbookParticipationsOfHeightResponse is the response type for
+// QuerySettledOrderBookParticipationsOfHeightResponse is the response type for
 // the settled orderbook participations of a certain height list query.
-message QuerySettledOrderbookParticipationsOfHeightResponse {
+message QuerySettledOrderBookParticipationsOfHeightResponse {
   repeated OrderBookParticipation participations = 1
       [ (gogoproto.nullable) = false ];
   cosmos.base.query.v1beta1.PageResponse pagination = 2;

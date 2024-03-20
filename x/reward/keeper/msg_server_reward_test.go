@@ -86,7 +86,7 @@ func TestMsgApplySignupReward(t *testing.T) {
 	promoter := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -163,7 +163,7 @@ func TestMsgApplySignupRewardWithCap(t *testing.T) {
 	promoter := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -221,7 +221,7 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 
 	referrer := simapp.TestParamUsers["user3"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -314,7 +314,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 	referee := simapp.TestParamUsers["user3"].Address.String()
 	referrer := simapp.TestParamUsers["user4"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -453,7 +453,7 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 
 	leadGen := simapp.TestParamUsers["user3"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -546,7 +546,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 	affiliatee := simapp.TestParamUsers["user3"].Address.String()
 	affiliator := simapp.TestParamUsers["user4"].Address.String()
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -674,7 +674,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 	}
 }
 
-func TestMsgApplySignupRewardSubAcc(t *testing.T) {
+func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
@@ -693,7 +693,7 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 
 	campUID := createCampaign(t, k, srv, ctx, promoter, campClaims, defaultCategoryCap)
 
-	_, err := tApp.SubaccountKeeper.CreateSubAccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdk.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
@@ -786,7 +786,7 @@ func TestMsgApplySignupRewardSubAcc(t *testing.T) {
 	}
 }
 
-func TestMsgApplySubAccFunds(t *testing.T) {
+func TestMsgApplySubaccountFunds(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
@@ -834,7 +834,7 @@ func TestMsgApplySubAccFunds(t *testing.T) {
 	_, err = srv.GrantReward(wctx, reward)
 	require.NoError(t, err)
 
-	subAccAddr, found := tApp.SubaccountKeeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiverAddr))
+	subAccAddr, found := tApp.SubaccountKeeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(receiverAddr))
 	require.True(t, found)
 
 	balance, found := tApp.SubaccountKeeper.GetAccountSummary(ctx, subAccAddr)

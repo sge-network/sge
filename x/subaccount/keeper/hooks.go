@@ -34,7 +34,7 @@ func (h Hooks) AfterHouseWin(ctx sdk.Context, house sdk.AccAddress, originalAmou
 	h.k.SetAccountSummary(ctx, house, balance)
 
 	// send profits
-	subAccountOwner, exists := h.k.GetSubAccountOwner(ctx, house)
+	subAccountOwner, exists := h.k.GetSubaccountOwner(ctx, house)
 	if !exists {
 		panic("data corruption: subaccount owner not found")
 	}
