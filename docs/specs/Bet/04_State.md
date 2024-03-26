@@ -258,3 +258,19 @@ message BetFulfillment {
   ];
 }
 ```
+
+## **Metadata**
+
+The metadata needed by the external oracle services. it contains the actual and business characteristics of a bet.
+
+```proto
+// metadata for bet
+message MetaData {
+  // selected_odds_type is metadata for bet
+  sgenetwork.sge.bet.OddsType selected_odds_type = 1;
+  // selected_odds_value is metadata for bet
+  string selected_odds_value = 2;
+  // is_main_market will tell weather the bet placed on the main market or not
+  bool is_main_market = 3;
+}
+```

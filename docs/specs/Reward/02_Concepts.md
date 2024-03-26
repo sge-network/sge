@@ -21,3 +21,11 @@ This reward can be given when a user is referred by another user to the system, 
 ### **Referral**
 
 This reward can be given when a user is referring another new user to the system, the referrer reward is in `subaccount` balance and can be used for betting or be the house functionalities.
+
+### **Affiliate**
+
+This reward can be given when a lead generator company is referring a new user to the system, the affiliate reward is in the main account balance and can be be freely be spent after grant.
+
+### **Bet Bonus**
+
+This reward can be given when a user is equal to a defined percentage of the bet amount in the campaign, this reward would be transferred to the corresponding `subaccount` of the bettor.
