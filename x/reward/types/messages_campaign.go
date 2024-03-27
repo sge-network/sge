@@ -149,11 +149,13 @@ var _ sdk.Msg = &MsgWithdrawFunds{}
 func NewMsgWithdrawFunds(
 	creator string,
 	uid string,
+	amount sdkmath.Int,
 	ticket string,
 ) *MsgWithdrawFunds {
 	return &MsgWithdrawFunds{
 		Creator: creator,
 		Uid:     uid,
+		Amount:  amount,
 		Ticket:  ticket,
 	}
 }

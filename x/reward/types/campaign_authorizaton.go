@@ -121,24 +121,58 @@ func (a UpdateCampaignAuthorization) ValidateBasic() error {
 	return nil
 }
 
+var _ authz.Authorization = &WithdrawCampaignAuthorization{}
+
+// NewWithdrawAuthorization creates a new WithdrawAuthorization object.
+func NewWithdrawAuthorization(withdrawLimit sdkmath.Int) *WithdrawCampaignAuthorization {
+	return &WithdrawCampaignAuthorization{
+		WithdrawLimit: withdrawLimit,
+	}
+}
+
 // MsgTypeURL implements Authorization.MsgTypeURL.
 func (WithdrawCampaignAuthorization) MsgTypeURL() string {
-	return sdk.MsgTypeURL(&MsgUpdateCampaign{})
+	return sdk.MsgTypeURL(&MsgWithdrawFunds{})
 }
 
 // Accept implements Authorization.Accept.
 func (a WithdrawCampaignAuthorization) Accept(_ sdk.Context, msg sdk.Msg) (authz.AcceptResponse, error) {
-	_, ok := msg.(*MsgWithdrawFunds)
+	mWithdraw, ok := msg.(*MsgWithdrawFunds)
 	if !ok {
 		return authz.AcceptResponse{}, sdkerrtypes.ErrInvalidType.Wrap("type mismatch")
 	}
 
+	limitLeft := a.WithdrawLimit.Sub(mWithdraw.Amount)
+	if limitLeft.IsNegative() {
+		return authz.AcceptResponse{}, sdkerrtypes.ErrInsufficientFunds.Wrapf(
+			"requested amount is more than withdraw limit",
+		)
+	}
+	if limitLeft.IsZero() {
+		return authz.AcceptResponse{Accept: true, Delete: true}, nil
+	}
+
 	return authz.AcceptResponse{
 		Accept:  true,
-		Delete:  true,
-		Updated: &WithdrawCampaignAuthorization{},
+		Delete:  false,
+		Updated: &WithdrawCampaignAuthorization{WithdrawLimit: limitLeft},
 	}, nil
 }
 
 // ValidateBasic implements Authorization.ValidateBasic.
-func (a WithdrawCampaignAuthorization) ValidateBasic() error { return nil }
+func (a WithdrawCampaignAuthorization) ValidateBasic() error {
+	if a.WithdrawLimit.IsNil() {
+		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be nil")
+	}
+	if a.WithdrawLimit.LTE(sdk.ZeroInt()) {
+		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
+	}
+	if a.WithdrawLimit.GT(maxWithdrawGrant) {
+		return sdkerrtypes.ErrInvalidCoins.Wrapf(
+			"withdraw limit cannot be grated than %s",
+			maxWithdrawGrant,
+		)
+	}
+
+	return nil
+}
