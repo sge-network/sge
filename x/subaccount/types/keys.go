@@ -26,11 +26,11 @@ var (
 	// SubaccountIDPrefix is the key used to store the subaccount ID in the keeper KVStore
 	SubaccountIDPrefix = []byte{0x00}
 
-	// SubAccountOwnerPrefix is the key used to store the subaccount owner in the keeper KVStore
-	SubAccountOwnerPrefix = []byte{0x01}
+	// SubaccountOwnerPrefix is the key used to store the subaccount owner in the keeper KVStore
+	SubaccountOwnerPrefix = []byte{0x01}
 
-	// SubAccountOwnerReversePrefix is the key used to store the subaccount owner by ID in the keeper KVStore
-	SubAccountOwnerReversePrefix = []byte{0x02}
+	// SubaccountOwnerReversePrefix is the key used to store the subaccount owner by ID in the keeper KVStore
+	SubaccountOwnerReversePrefix = []byte{0x02}
 
 	// LockedBalancePrefix is the key used to store the locked balance in the keeper KVStore
 	LockedBalancePrefix = []byte{0x03}
@@ -39,12 +39,12 @@ var (
 	AccountSummaryPrefix = []byte{0x04}
 )
 
-func SubAccountOwnerKey(address sdk.AccAddress) []byte {
-	return append(SubAccountOwnerPrefix, address...)
+func SubaccountOwnerKey(address sdk.AccAddress) []byte {
+	return append(SubaccountOwnerPrefix, address...)
 }
 
-func SubAccountKey(subAccountAddress sdk.AccAddress) []byte {
-	return append(SubAccountOwnerReversePrefix, subAccountAddress...)
+func SubaccountKey(subAccountAddress sdk.AccAddress) []byte {
+	return append(SubaccountOwnerReversePrefix, subAccountAddress...)
 }
 
 func LockedBalanceKey(subAccountAddress sdk.AccAddress, unlockTime uint64) []byte {

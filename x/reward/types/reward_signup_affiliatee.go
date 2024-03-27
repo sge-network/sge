@@ -48,20 +48,15 @@ func (sur SignUpAffiliateeReward) Calculate(goCtx context.Context, ctx sdk.Conte
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	sourceUIDAddr, err := sdk.AccAddressFromBech32(payload.Common.SourceUID)
-	if err != nil {
+	if _, err = sdk.AccAddressFromBech32(payload.Common.SourceUID); err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "source address is invalid %s", err)
 	}
 
-	if acc := keepers.AccountKeeper.GetAccount(ctx, sourceUIDAddr); acc == nil {
-		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "source id is not a valid account %s", payload.Common.SourceUID)
+	if keepers.SubaccountKeeper.IsSubaccount(ctx, receiverAddr) {
+		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
-		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
-	}
-
-	subAccAddrStr, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}

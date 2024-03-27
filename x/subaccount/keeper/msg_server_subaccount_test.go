@@ -51,12 +51,12 @@ func TestMsgServer_Create(t *testing.T) {
 	require.Equal(t, sdkmath.NewInt(123), balance.Amount)
 
 	// Check that we can get the account by owner
-	owner, exists := app.SubaccountKeeper.GetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1))
+	owner, exists := app.SubaccountKeeper.GetSubaccountOwner(ctx, types.NewAddressFromSubaccount(1))
 	require.True(t, exists)
 	require.Equal(t, account, owner)
 
 	// check that balance unlocks are set correctly
-	lockedBalances := app.SubaccountKeeper.GetLockedBalances(ctx, types.NewAddressFromSubaccount(1))
+	lockedBalances, _ := app.SubaccountKeeper.GetBalances(ctx, types.NewAddressFromSubaccount(1), types.LockedBalanceStatus_LOCKED_BALANCE_STATUS_LOCKED)
 	require.Len(t, lockedBalances, 1)
 	require.True(t, someTime == lockedBalances[0].UnlockTS)
 	require.Equal(t, sdkmath.NewInt(123), lockedBalances[0].Amount)
@@ -70,7 +70,7 @@ func TestMsgServer_Create(t *testing.T) {
 	require.Equal(t, sdkmath.NewInt(123), subaccountBalance.DepositedAmount)
 }
 
-func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
+func TestMsgServer_CreateSubaccount_Errors(t *testing.T) {
 	beforeTime := uint64(time.Now().Add(-10 * time.Minute).Unix())
 	afterTime := uint64(time.Now().Add(10 * time.Minute).Unix())
 	account := sample.NativeAccAddress()
@@ -110,7 +110,7 @@ func TestMsgServer_CreateSubAccount_Errors(t *testing.T) {
 				},
 			},
 			prepare: func(ctx sdk.Context, k *keeper.Keeper) {
-				k.SetSubAccountOwner(ctx, types.NewAddressFromSubaccount(1), account)
+				k.SetSubaccountOwner(ctx, types.NewAddressFromSubaccount(1), account)
 			},
 			expectedErr: types.ErrSubaccountAlreadyExist.Error(),
 		},

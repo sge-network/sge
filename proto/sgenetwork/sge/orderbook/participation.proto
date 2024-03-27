@@ -138,3 +138,21 @@ message ParticipationBetPair {
     json_name = "bet_uid"
   ];
 }
+
+// SettledOrderbookParticipation is the type for a settled orderbook
+// participation.
+message SettledOrderbookParticipation {
+  // index is the index of the participation in the participation queue.
+  uint64 index = 1 [ (gogoproto.moretags) = "yaml:\"index\"" ];
+
+  // order_book_uid is the unique identifier corresponding to the order book.
+  string order_book_uid = 2 [
+    (gogoproto.customname) = "OrderBookUID",
+    (gogoproto.jsontag) = "order_book_uid",
+    json_name = "order_book_uid"
+  ];
+
+  // participant_address is the bech32-encoded address of the participant.
+  string participant_address = 3
+      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
+}

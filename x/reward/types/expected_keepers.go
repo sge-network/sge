@@ -61,12 +61,12 @@ type AuthzKeeper interface {
 	) error
 }
 
-// SubAccountKeeper defines the expected interface needed to get/create/topup a subaccount.
-type SubAccountKeeper interface {
+// SubaccountKeeper defines the expected interface needed to get/create/topup a subaccount.
+type SubaccountKeeper interface {
 	TopUp(ctx sdk.Context, creator, subAccOwnerAddr string, lockedBalance []subaccounttypes.LockedBalance) (string, error)
-	GetSubAccountByOwner(ctx sdk.Context, mainAccountAddress sdk.AccAddress) (sdk.AccAddress, bool)
-	CreateSubAccount(ctx sdk.Context, creator, owner string, lockedBalances []subaccounttypes.LockedBalance) (string, error)
-	IsSubAccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool
+	GetSubaccountByOwner(ctx sdk.Context, mainAccountAddress sdk.AccAddress) (sdk.AccAddress, bool)
+	CreateSubaccount(ctx sdk.Context, creator, owner string, lockedBalances []subaccounttypes.LockedBalance) (string, error)
+	IsSubaccount(ctx sdk.Context, subAccAddr sdk.AccAddress) bool
 }
 
 // RewardKeeper defines the expected interface needed to get and filter the rewards.

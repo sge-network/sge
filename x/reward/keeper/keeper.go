@@ -25,7 +25,7 @@ type (
 		authzKeeper      types.AuthzKeeper
 		betKeeper        types.BetKeeper
 		ovmKeeper        types.OVMKeeper
-		subaccountKeeper types.SubAccountKeeper
+		subaccountKeeper types.SubaccountKeeper
 	}
 )
 
@@ -43,7 +43,7 @@ func NewKeeper(
 	ps paramtypes.Subspace,
 	betKeeper types.BetKeeper,
 	ovmKeeper types.OVMKeeper,
-	subaccountKeeper types.SubAccountKeeper,
+	subaccountKeeper types.SubaccountKeeper,
 	expectedKeepers SdkExpectedKeepers,
 ) *Keeper {
 	// set KeyTable if it has not already been set
