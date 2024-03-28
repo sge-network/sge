@@ -60,6 +60,9 @@ message Campaign {
 
   // cap_count is the maximum allowed grant for a certain account.
   uint64 cap_count = 14;
+
+  // constraints is the constrains of a campaign.
+  CampaignConstraints constraints = 15;
 }
 
 // Pool tracks funds assigned and spent to/for a campaign.
@@ -73,5 +76,14 @@ message Pool {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"spent\""
+  ];
+}
+
+// CampaignConstraints contains campaign constraints and criteria.
+message CampaignConstraints {
+  string max_bet_amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"max_bet_amount\""
   ];
 }

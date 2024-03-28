@@ -4,6 +4,7 @@ import (
 	context "context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -74,8 +75,23 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet not found with uid %s", payload.BetUID)
 	}
 
-	mainAmount := bet.Amount.Mul(campaign.RewardAmount.MainAccountAmount).Quo(percent)
-	subAmount := bet.Amount.Mul(campaign.RewardAmount.SubaccountAmount).Quo(percent)
+	effectiveBetAmount := sdk.NewDecFromInt(bet.Amount)
+	if campaign.Constraints != nil {
+		if !campaign.Constraints.MaxBetAmount.IsNil() && campaign.Constraints.MaxBetAmount.GT(sdkmath.ZeroInt()) {
+			if bet.Meta.IsMainMarket {
+				effectiveBetAmount = sdk.NewDecFromInt(
+					sdkmath.MinInt(campaign.Constraints.MaxBetAmount, bet.Amount),
+				)
+			}
+		}
+	}
+
+	mainAmount := effectiveBetAmount.Mul(
+		sdk.NewDecFromInt(campaign.RewardAmount.MainAccountAmount).QuoInt(percent),
+	).TruncateInt()
+	subAmount := effectiveBetAmount.Mul(
+		sdk.NewDecFromInt(campaign.RewardAmount.SubaccountAmount).QuoInt(percent),
+	).TruncateInt()
 
 	return NewRewardFactoryData(
 		NewReceiver(

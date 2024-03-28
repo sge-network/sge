@@ -62,6 +62,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.Meta,
 		types.NewPool(msg.TotalFunds),
 		payload.CapCount,
+		payload.Constraints,
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()

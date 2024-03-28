@@ -16,6 +16,7 @@ func NewCampaign(
 	meta string,
 	pool Pool,
 	capCount uint64,
+	constraint *CampaignConstraints,
 ) Campaign {
 	return Campaign{
 		Creator:          creator,
@@ -31,6 +32,7 @@ func NewCampaign(
 		Meta:             meta,
 		Pool:             pool,
 		CapCount:         capCount,
+		Constraints:      constraint,
 	}
 }
 
