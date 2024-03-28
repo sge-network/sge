@@ -3,17 +3,16 @@ package types_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/mint/types"
 )
 
 func TestPhaseYML(t *testing.T) {
 	phase := types.Phase{
-		Inflation:       sdk.NewDec(10),
-		YearCoefficient: sdk.NewDec(1),
+		Inflation:       sdkmath.LegacyNewDec(10),
+		YearCoefficient: sdkmath.LegacyNewDec(1),
 	}
 
 	ymlStr := phase.String()

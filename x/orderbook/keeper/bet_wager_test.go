@@ -77,7 +77,7 @@ func newTestBetSuite(t *testing.T) testBetSuite {
 	return testBetSuite{t, k, ctx, *tApp, betFee, market, deposits, participations}
 }
 
-func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
+func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdkmath.LegacyDec, sdkmath.LegacyDec) {
 	ts.tApp.MarketKeeper.SetMarket(ts.ctx, ts.market)
 
 	err := ts.k.InitiateOrderBook(ts.ctx, ts.market.UID, []string{
@@ -167,7 +167,7 @@ func (ts *testBetSuite) placeBetsAndTest() ([]bettypes.Bet, sdk.Dec, sdk.Dec) {
 	betOdds := make(map[string]*bettypes.BetOddsCompact)
 	var oddUIDS []string
 	for _, odd := range ts.market.Odds {
-		betOdds[odd.UID] = &bettypes.BetOddsCompact{UID: odd.UID, MaxLossMultiplier: sdk.MustNewDecFromStr("0.3")}
+		betOdds[odd.UID] = &bettypes.BetOddsCompact{UID: odd.UID, MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.3")}
 		oddUIDS = append(oddUIDS, odd.UID)
 	}
 
@@ -309,7 +309,7 @@ func (ts *testBetSuite) placeTestBet(
 	expErr error,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
-) (bettypes.Bet, sdk.Dec, []*bettypes.BetFulfillment) {
+) (bettypes.Bet, sdkmath.LegacyDec, []*bettypes.BetFulfillment) {
 	bet := bettypes.Bet{
 		UID:               uuid.NewString(),
 		MarketUID:         marketUID,
@@ -320,7 +320,7 @@ func (ts *testBetSuite) placeTestBet(
 		Status:            bettypes.Bet_STATUS_PENDING,
 		Creator:           bettorAddr.String(),
 		CreatedAt:         cast.ToInt64(ts.ctx.BlockTime().Unix()),
-		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 	}
 
 	payoutProfit, err := bettypes.CalculatePayoutProfit(bet.OddsValue, bet.Amount)
@@ -371,7 +371,7 @@ func newTestBetSuiteForLargeNumbers(t *testing.T) testBetSuite {
 	betFee := sdkmath.NewInt(10)
 
 	params := tApp.HouseKeeper.GetParams(ctx)
-	params.HouseParticipationFee = sdk.NewDec(0)
+	params.HouseParticipationFee = sdkmath.LegacyNewDec(0)
 	tApp.HouseKeeper.SetParams(ctx, params)
 
 	marketUID := uuid.NewString()
@@ -443,13 +443,13 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		require.True(ts.t, found)
 	}
 
-	multipliers := []sdk.Dec{
-		sdk.MustNewDecFromStr("0.8649932157"),
-		sdk.MustNewDecFromStr("0.8658575751"),
-		sdk.MustNewDecFromStr("0.9368906369"),
-		sdk.MustNewDecFromStr("0.81411403723"),
-		sdk.MustNewDecFromStr("1.00"),
-		sdk.MustNewDecFromStr("0.92010393313"),
+	multipliers := []sdkmath.LegacyDec{
+		sdkmath.LegacyMustNewDecFromStr("0.8649932157"),
+		sdkmath.LegacyMustNewDecFromStr("0.8658575751"),
+		sdkmath.LegacyMustNewDecFromStr("0.9368906369"),
+		sdkmath.LegacyMustNewDecFromStr("0.81411403723"),
+		sdkmath.LegacyMustNewDecFromStr("1.00"),
+		sdkmath.LegacyMustNewDecFromStr("0.92010393313"),
 	}
 	betOdds := make(map[string]*bettypes.BetOddsCompact)
 	var oddUIDS []string

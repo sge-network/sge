@@ -15,7 +15,7 @@ endif
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
-TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::') # grab everything after the space in "github.com/tendermint/tendermint v0.34.7"
+TM_VERSION := $(shell go list -m github.com/cometbft/cometbft | sed 's:.* ::') # grab everything after the space in "github.com/cometbft/cometbft v0.34.7"
 HTTPS_GIT := https://github.com/sge-network/sge.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR)/proto:/workspace --workdir /workspace bufbuild/buf
@@ -72,7 +72,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=sge \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
-			-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
+			-X github.com/cometbft/cometbft/version.TMCoreSemVer=$(TM_VERSION)
 
 # DB backend selection
 ifeq (cleveldb,$(findstring cleveldb,$(SGE_BUILD_OPTIONS)))
@@ -157,7 +157,7 @@ distclean: clean
 ###                                  Proto                                  ###
 ###############################################################################
 
-proto-all: proto-format proto-gen
+proto-all: proto-format proto-lint proto-gen
 
 docs:
 	@echo
@@ -177,36 +177,33 @@ docs:
 	@echo
 .PHONY: docs
 
-protoVer=v0.8
-protoImageName=sgenetwork/sge-proto-gen:$(protoVer)
-containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
-containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
-
-# this can be used to regenrate the proto image
-proto-image:
-	cd proto; docker build -t $(protoImageName) -f Dockerfile .
+protoVer=0.13.1
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+# containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
+# containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
+	@$(protoImage) sh ./scripts/protocgen.sh
+
+proto-swagger-gen:
+	@echo "Generating Protobuf Swagger"
+	@$(protoImage) sh ./scripts/protoc-swagger-gen.sh
+	$(MAKE) update-swagger-docs
 
 proto-format:
 	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@$(protoImage) find ./ -name "*.proto" -exec clang-format -i {} \;
 
 proto-image-build:
 	@DOCKER_BUILDKIT=1 docker build -t $(protoImageName) -f ./proto/Dockerfile ./proto
 
-proto-image-push:
-	docker push $(protoImageName)
-
 proto-lint:
-	@$(DOCKER_BUF) lint --error-format=json
+	@$(protoImage) buf lint --error-format=json
 
 proto-check-breaking:
-	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=master
+	@$(protoImage) buf breaking --against $(HTTPS_GIT)#branch=master
 
 
 ###############################################################################

@@ -22,7 +22,7 @@ func CreateUpgradeHandler(
 			var minDeposit sdkmath.Int
 			housePS.Get(ctx, []byte("MinDeposit"), &minDeposit)
 
-			var houseParticipationFee sdk.Dec
+			var houseParticipationFee sdkmath.LegacyDec
 			housePS.Get(ctx, []byte("HouseParticipationFee"), &houseParticipationFee)
 
 			p := housetypes.NewParams(

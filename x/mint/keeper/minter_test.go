@@ -26,7 +26,7 @@ func TestStakingTokenSupply(t *testing.T) {
 func TestBondedRatio(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	bondedRatio := k.BondedRatio(ctx)
-	expectedBondedRatio, _ := sdk.NewDecFromStr("0.000998003992015968")
+	expectedBondedRatio, _ := sdkmath.LegacyNewDecFromStr("0.000998003992015968")
 	require.Equal(t, expectedBondedRatio, bondedRatio)
 }
 

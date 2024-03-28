@@ -12,6 +12,6 @@ import (
 
 // ParamChanges defines the parameters that can be modified by param change proposals
 // on the simulation
-func ParamChanges(_ *rand.Rand) []simtypes.ParamChange {
-	return []simtypes.ParamChange{}
+func ParamChanges(_ *rand.Rand) []simtypes.LegacyParamChange {
+	return []simtypes.LegacyParamChange{}
 }

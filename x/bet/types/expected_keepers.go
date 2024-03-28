@@ -39,9 +39,9 @@ type OrderbookKeeper interface {
 	ProcessWager(
 		ctx sdk.Context,
 		betUID, bookUID, oddsUID string,
-		maxLossMultiplier sdk.Dec,
+		maxLossMultiplier sdkmath.LegacyDec,
 		betAmount sdkmath.Int,
-		payoutProfit sdk.Dec,
+		payoutProfit sdkmath.LegacyDec,
 		bettorAddress sdk.AccAddress,
 		betFee sdkmath.Int,
 		oddsVal string,

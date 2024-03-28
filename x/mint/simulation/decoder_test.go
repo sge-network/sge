@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/kv"
 
 	"github.com/sge-network/sge/app"
@@ -18,7 +18,7 @@ func TestDecodeStore(t *testing.T) {
 	cdc := app.MakeEncodingConfig().Marshaler
 	dec := simulation.NewDecodeStore(cdc)
 
-	minter := types.NewMinter(sdk.OneDec(), sdk.NewDec(15), 1, sdk.NewDec(0))
+	minter := types.NewMinter(sdkmath.LegacyOneDec(), sdkmath.LegacyNewDec(15), 1, sdkmath.LegacyNewDec(0))
 
 	kvPairs := kv.Pairs{
 		Pairs: []kv.Pair{

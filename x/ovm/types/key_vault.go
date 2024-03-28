@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 
 	"github.com/sge-network/sge/utils"
 )
@@ -57,7 +57,7 @@ func (k *KeyVault) validatePubKeys() error {
 func (k *KeyVault) MajorityCount() int64 {
 	count := len(k.PublicKeys)
 
-	majorityVoteCount := sdk.NewDec(int64(count)).
+	majorityVoteCount := sdkmath.LegacyNewDec(int64(count)).
 		Mul(minVoteMajorityForDecisionPercentage).
 		Ceil().TruncateInt64()
 

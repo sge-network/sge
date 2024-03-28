@@ -7,11 +7,9 @@ import (
 	"strings"
 	gtime "time"
 
-	"github.com/golang-jwt/jwt/v4"
-
-	"github.com/tendermint/tendermint/types/time"
-
+	"github.com/cometbft/cometbft/types/time"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 // jwtTicket is the Ticket implementer.

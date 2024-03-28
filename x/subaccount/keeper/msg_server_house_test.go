@@ -89,7 +89,7 @@ func TestMsgServer(t *testing.T) {
 	_, err = betMsgServer.Wager(sdk.WrapSDKContext(ctx), testBetMsgWager(t, bettor1, bettor1Funds))
 	require.NoError(t, err)
 
-	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdk.NewDecFromInt(deposit)).TruncateInt()
+	participateFee := app.HouseKeeper.GetHouseParticipationFee(ctx).Mul(sdkmath.LegacyNewDecFromInt(deposit)).TruncateInt()
 	bettorFee := sdkmath.NewInt(100)
 
 	t.Run("house wins", func(t *testing.T) {
@@ -135,7 +135,7 @@ func TestMsgServer(t *testing.T) {
 		require.NoError(t, err)
 
 		require.Equal(t, subBalance.SpentAmount.String(), sdk.ZeroInt().Add(participateFee).String())
-		require.Equal(t, subBalance.LostAmount, sdk.NewDecFromInt(bettor1Funds.Sub(bettorFee)).Mul(sdk.MustNewDecFromStr("3.2")).TruncateInt())
+		require.Equal(t, subBalance.LostAmount, sdkmath.LegacyNewDecFromInt(bettor1Funds.Sub(bettorFee)).Mul(sdkmath.LegacyMustNewDecFromStr("3.2")).TruncateInt())
 		// check profits were forwarded to subacc owner
 		ownerBalance := app.BankKeeper.GetAllBalances(ctx, subAccOwner)
 		require.Equal(t, ownerBalance.AmountOf(params.DefaultBondDenom), sdk.ZeroInt())

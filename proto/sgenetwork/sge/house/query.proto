@@ -1,0 +1,129 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sgenetwork/sge/house/params.proto";
+import "sgenetwork/sge/house/deposit.proto";
+import "sgenetwork/sge/house/withdraw.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/house/params";
+  }
+
+  // Deposits queries all deposits.
+  rpc Deposits(QueryDepositsRequest) returns (QueryDepositsResponse) {
+    option (google.api.http).get = "/sge/house/deposits";
+  }
+
+  // DepositsByAccount queries deposits info for given account.
+  rpc DepositsByAccount(QueryDepositsByAccountRequest)
+      returns (QueryDepositsByAccountResponse) {
+    option (google.api.http).get = "/sge/house/deposits/{address}";
+  }
+
+  // WithdrawalsByAccount queries withdrawals info for given account.
+  rpc WithdrawalsByAccount(QueryWithdrawalsByAccountRequest)
+      returns (QueryWithdrawalsByAccountResponse) {
+    option (google.api.http).get = "/sge/house/withdrawals/{address}";
+  }
+
+  // Queries a wthdrawal by depositor, market, participation index and id.
+  rpc Withdrawal(QueryWithdrawalRequest) returns (QueryWithdrawalResponse) {
+    option (google.api.http).get = "/sge/withdrawal/{depositor_address}/"
+                                   "{market_uid}/{participation_index}/{id}";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryDepositsRequest is request type for Query/Deposits RPC method.
+message QueryDepositsRequest {
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryDepositsResponse is response type for the Query/Deposits RPC method
+message QueryDepositsResponse {
+  // deposits is the list of deposits returned for the request.
+  repeated Deposit deposits = 1 [ (gogoproto.nullable) = false ];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryDepositsByAccountRequest is request type for Query/DepositsByAccount RPC
+// method.
+message QueryDepositsByAccountRequest {
+  // address defines the address of depositor/account for which deposits are
+  // queried.
+  string address = 1;
+
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryDepositsByAccountResponse is response type for the
+// Query/DepositsByAccount RPC method
+message QueryDepositsByAccountResponse {
+  // deposits contains all the queried deposits.
+  repeated Deposit deposits = 1 [ (gogoproto.nullable) = false ];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryDepositorWithdrawalsRequest is request type for
+// Query/WithdrawalsByAccount RPC method.
+message QueryWithdrawalsByAccountRequest {
+  // address defines the address of depositor/account for which withdrawals are
+  // queried.
+  string address = 1;
+
+  // pagination defines an optional pagination for the request.
+  cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+// QueryWithdrawalsByAccountResponse is response type for the
+// Query/WithdrawalsByAccount RPC method
+message QueryWithdrawalsByAccountResponse {
+  // withdrawals contains all the queried withdrawals.
+  repeated Withdrawal withdrawals = 1 [ (gogoproto.nullable) = false ];
+
+  // pagination defines the pagination in the response.
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryWithdrawalRequest is the request type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
+message QueryWithdrawalRequest {
+  string depositor_address = 1;
+  string market_uid = 2;
+  // participation_index is the index corresponding to the order book
+  // participation
+  uint64 participation_index = 3;
+  // id is the sequential id of the withdrawal
+  uint64 id = 4;
+}
+
+// QueryWithdrawalResponse is the response type for the Query/Withdrawal RPC
+// method. Query/Withdrawal RPC method.
+message QueryWithdrawalResponse {
+  // withdrawal holds all the withdrawal properties.
+  Withdrawal withdrawal = 1 [ (gogoproto.nullable) = false ];
+}

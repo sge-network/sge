@@ -1,0 +1,25 @@
+syntax = "proto3";
+package sgenetwork.sge.bet;
+
+import "sgenetwork/sge/bet/wager.proto";
+
+option go_package = "github.com/sge-network/sge/x/bet/types";
+
+// Msg defines the Msg service.
+service Msg {
+
+  // Wager defines a method to place a bet with the given data.
+  rpc Wager(MsgWager) returns (MsgWagerResponse);
+}
+
+// MsgWager defines a message to place a bet with the given data.
+message MsgWager {
+  // creator is the bettor address.
+  string creator = 1;
+  // props contains bet properties.
+  WagerProps props = 2;
+}
+
+// MsgWagerResponse is the returning value in the response
+// of MsgWagerResponse request.
+message MsgWagerResponse { WagerProps props = 1; }

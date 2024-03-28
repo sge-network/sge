@@ -1,0 +1,30 @@
+syntax = "proto3";
+package sgenetwork.sge.house;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/house/types";
+
+// Params define the parameters for the house module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  // min_deposit is the minimum acceptable deposit amount.
+  string min_deposit = 1 [
+    (gogoproto.moretags) = "yaml:\"min_deposit\"",
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // house_participation_fee is the % of the deposit to be paid for a house
+  // participation by the depositor.
+  string house_participation_fee = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+
+  // max_withdrawal_count is the maximum number of withdrawals allowed
+  // per participation index.
+  uint64 max_withdrawal_count = 3
+      [ (gogoproto.moretags) = "yaml:\"max_withdrawal_count\"" ];
+}

@@ -3,6 +3,7 @@ package keeper_test
 import (
 	"testing"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -19,7 +20,7 @@ func TestBetSettlement(t *testing.T) {
 
 func (ts *testBetSuite) settleBetsAndTest(
 	bets []bettypes.Bet,
-	winner1PayoutProfit, winner2PayoutProfit sdk.Dec,
+	winner1PayoutProfit, winner2PayoutProfit sdkmath.LegacyDec,
 ) {
 	winner1BalAfterWager := ts.tApp.BankKeeper.GetBalance(
 		ts.ctx,

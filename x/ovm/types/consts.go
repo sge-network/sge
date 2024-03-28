@@ -1,6 +1,6 @@
 package types
 
-import sdk "github.com/cosmos/cosmos-sdk/types"
+import sdkmath "cosmossdk.io/math"
 
 // JWT constants
 const (
@@ -34,4 +34,4 @@ const (
 
 // minVoteMajorityForDecisionPercentage is the minimum majority percentage of votes for
 // a proposal to be valid for making decision.
-var minVoteMajorityForDecisionPercentage = sdk.NewDecWithPrec(6667, 4) // 66.67%
+var minVoteMajorityForDecisionPercentage = sdkmath.LegacyNewDecWithPrec(6667, 4) // 66.67%

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 
 	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/bet/types"
@@ -24,7 +24,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               " ",
 				Value:             "10",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			kyc: sgetypes.KycDataPayload{
 				Ignore:   true,
@@ -39,7 +39,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         " ",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			kyc: sgetypes.KycDataPayload{
 				Approved: true,
@@ -53,7 +53,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			kyc: sgetypes.KycDataPayload{
 				Approved: true,
@@ -67,7 +67,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			err: types.ErrUserKycFailed,
 		},
@@ -77,7 +77,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			kyc: sgetypes.KycDataPayload{
 				Approved: true,
@@ -91,7 +91,7 @@ func TestTicketFieldsValidation(t *testing.T) {
 				MarketUID:         "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				UID:               "6e31c60f-2025-48ce-ae79-1dc110f16355",
 				Value:             "10",
-				MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+				MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 			},
 			kyc: sgetypes.KycDataPayload{
 				Approved: true,
