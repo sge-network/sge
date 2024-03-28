@@ -186,7 +186,7 @@ func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFu
 	if err := k.modFunder.Refund(
 		types.RewardPoolFunder{}, ctx,
 		sdk.MustAccAddressFromBech32(payload.Promoter),
-		availableAmount,
+		msg.Amount,
 	); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "%s", err)
 	}
