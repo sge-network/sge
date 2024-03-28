@@ -125,6 +125,17 @@ message GrantBetBonusRewardPayload {
   ];
 }
 
+// CreatePromoterPayload is the payload for the promoter create.
+message CreatePromoterPayload {
+  // uid is the uid of the promoter to be created
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  PromoterConf conf = 2 [ (gogoproto.nullable) = false ];
+}
+
 // SetPromoterConfPayload is the payload for the promoter configuration change.
 message SetPromoterConfPayload {
   PromoterConf conf = 1 [ (gogoproto.nullable) = false ];

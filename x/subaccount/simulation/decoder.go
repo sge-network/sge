@@ -20,11 +20,11 @@ func NewDecodeStore(cdc codec.BinaryCodec) func(kvA, kvB kv.Pair) string {
 			idA := sdk.BigEndianToUint64(kvA.Value)
 			idB := sdk.BigEndianToUint64(kvB.Value)
 			return fmt.Sprintf("%v\n%v", idA, idB)
-		case bytes.Equal(kvA.Key, types.SubAccountOwnerPrefix):
+		case bytes.Equal(kvA.Key, types.SubaccountOwnerPrefix):
 			idA := sdk.AccAddress(kvA.Value)
 			idB := sdk.AccAddress(kvB.Value)
 			return fmt.Sprintf("%v\n%v", idA, idB)
-		case bytes.Equal(kvA.Key, types.SubAccountOwnerReversePrefix):
+		case bytes.Equal(kvA.Key, types.SubaccountOwnerReversePrefix):
 			idA := sdk.AccAddress(kvA.Value)
 			idB := sdk.AccAddress(kvB.Value)
 			return fmt.Sprintf("%v\n%v", idA, idB)

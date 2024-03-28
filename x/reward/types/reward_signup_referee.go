@@ -52,11 +52,11 @@ func (sur SignUpRefereelReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "source address is invalid %s", err)
 	}
 
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, receiverAddr) {
-		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
+	if keepers.SubaccountKeeper.IsSubaccount(ctx, receiverAddr) {
+		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccAddrStr, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}

@@ -40,7 +40,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		types.RewardFactoryKeepers{
 			OVMKeeper:        k.ovmKeeper,
 			BetKeeper:        k.betKeeper,
-			SubAccountKeeper: k.subaccountKeeper,
+			SubaccountKeeper: k.subaccountKeeper,
 			RewardKeeper:     k.Keeper,
 			AccountKeeper:    k.accountKeeper,
 		}, campaign, msg.Ticket, msg.Creator)
@@ -84,7 +84,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		}
 	}
 
-	if err := campaign.CheckPoolBalance(factData.Receiver.SubAccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
+	if err := campaign.CheckPoolBalance(factData.Receiver.SubaccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 

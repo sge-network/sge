@@ -55,11 +55,11 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	if keepers.SubAccountKeeper.IsSubAccount(ctx, addr) {
-		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubAcc
+	if keepers.SubaccountKeeper.IsSubaccount(ctx, addr) {
+		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccountAddressString, err := keepers.getSubAccAddr(ctx, creator, payload.Common.Receiver)
+	subAccountAddressString, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}

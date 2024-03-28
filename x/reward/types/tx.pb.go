@@ -29,6 +29,98 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgCreatePromoter is msg to create a promoter.
+type MsgCreatePromoter struct {
+	// creator is the address of message signer account.
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	// ticket is the payload data.
+	Ticket string `protobuf:"bytes,2,opt,name=ticket,proto3" json:"ticket,omitempty"`
+}
+
+func (m *MsgCreatePromoter) Reset()         { *m = MsgCreatePromoter{} }
+func (m *MsgCreatePromoter) String() string { return proto.CompactTextString(m) }
+func (*MsgCreatePromoter) ProtoMessage()    {}
+func (*MsgCreatePromoter) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad69e28332238e66, []int{0}
+}
+func (m *MsgCreatePromoter) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreatePromoter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreatePromoter.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreatePromoter) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreatePromoter.Merge(m, src)
+}
+func (m *MsgCreatePromoter) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreatePromoter) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreatePromoter.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreatePromoter proto.InternalMessageInfo
+
+func (m *MsgCreatePromoter) GetCreator() string {
+	if m != nil {
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *MsgCreatePromoter) GetTicket() string {
+	if m != nil {
+		return m.Ticket
+	}
+	return ""
+}
+
+// MsgCreatePromoterResponse promoter create message response type.
+type MsgCreatePromoterResponse struct {
+}
+
+func (m *MsgCreatePromoterResponse) Reset()         { *m = MsgCreatePromoterResponse{} }
+func (m *MsgCreatePromoterResponse) String() string { return proto.CompactTextString(m) }
+func (*MsgCreatePromoterResponse) ProtoMessage()    {}
+func (*MsgCreatePromoterResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ad69e28332238e66, []int{1}
+}
+func (m *MsgCreatePromoterResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgCreatePromoterResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgCreatePromoterResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgCreatePromoterResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgCreatePromoterResponse.Merge(m, src)
+}
+func (m *MsgCreatePromoterResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgCreatePromoterResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgCreatePromoterResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgCreatePromoterResponse proto.InternalMessageInfo
+
 // MsgSetPromoterConf is msg to set promoter configuration.
 type MsgSetPromoterConf struct {
 	// creator is the address of message signer account.
@@ -43,7 +135,7 @@ func (m *MsgSetPromoterConf) Reset()         { *m = MsgSetPromoterConf{} }
 func (m *MsgSetPromoterConf) String() string { return proto.CompactTextString(m) }
 func (*MsgSetPromoterConf) ProtoMessage()    {}
 func (*MsgSetPromoterConf) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{0}
+	return fileDescriptor_ad69e28332238e66, []int{2}
 }
 func (m *MsgSetPromoterConf) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -101,7 +193,7 @@ func (m *MsgSetPromoterConfResponse) Reset()         { *m = MsgSetPromoterConfRe
 func (m *MsgSetPromoterConfResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSetPromoterConfResponse) ProtoMessage()    {}
 func (*MsgSetPromoterConfResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{1}
+	return fileDescriptor_ad69e28332238e66, []int{3}
 }
 func (m *MsgSetPromoterConfResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -146,7 +238,7 @@ func (m *MsgCreateCampaign) Reset()         { *m = MsgCreateCampaign{} }
 func (m *MsgCreateCampaign) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaign) ProtoMessage()    {}
 func (*MsgCreateCampaign) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{2}
+	return fileDescriptor_ad69e28332238e66, []int{4}
 }
 func (m *MsgCreateCampaign) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -204,7 +296,7 @@ func (m *MsgCreateCampaignResponse) Reset()         { *m = MsgCreateCampaignResp
 func (m *MsgCreateCampaignResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgCreateCampaignResponse) ProtoMessage()    {}
 func (*MsgCreateCampaignResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{3}
+	return fileDescriptor_ad69e28332238e66, []int{5}
 }
 func (m *MsgCreateCampaignResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -250,7 +342,7 @@ func (m *MsgUpdateCampaign) Reset()         { *m = MsgUpdateCampaign{} }
 func (m *MsgUpdateCampaign) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateCampaign) ProtoMessage()    {}
 func (*MsgUpdateCampaign) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{4}
+	return fileDescriptor_ad69e28332238e66, []int{6}
 }
 func (m *MsgUpdateCampaign) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -308,7 +400,7 @@ func (m *MsgUpdateCampaignResponse) Reset()         { *m = MsgUpdateCampaignResp
 func (m *MsgUpdateCampaignResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgUpdateCampaignResponse) ProtoMessage()    {}
 func (*MsgUpdateCampaignResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{5}
+	return fileDescriptor_ad69e28332238e66, []int{7}
 }
 func (m *MsgUpdateCampaignResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -353,7 +445,7 @@ func (m *MsgGrantReward) Reset()         { *m = MsgGrantReward{} }
 func (m *MsgGrantReward) String() string { return proto.CompactTextString(m) }
 func (*MsgGrantReward) ProtoMessage()    {}
 func (*MsgGrantReward) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{6}
+	return fileDescriptor_ad69e28332238e66, []int{8}
 }
 func (m *MsgGrantReward) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -418,7 +510,7 @@ func (m *MsgGrantRewardResponse) Reset()         { *m = MsgGrantRewardResponse{}
 func (m *MsgGrantRewardResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgGrantRewardResponse) ProtoMessage()    {}
 func (*MsgGrantRewardResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{7}
+	return fileDescriptor_ad69e28332238e66, []int{9}
 }
 func (m *MsgGrantRewardResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -461,7 +553,7 @@ func (m *MsgWithdrawFunds) Reset()         { *m = MsgWithdrawFunds{} }
 func (m *MsgWithdrawFunds) String() string { return proto.CompactTextString(m) }
 func (*MsgWithdrawFunds) ProtoMessage()    {}
 func (*MsgWithdrawFunds) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{8}
+	return fileDescriptor_ad69e28332238e66, []int{10}
 }
 func (m *MsgWithdrawFunds) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -519,7 +611,7 @@ func (m *MsgWithdrawFundsResponse) Reset()         { *m = MsgWithdrawFundsRespon
 func (m *MsgWithdrawFundsResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgWithdrawFundsResponse) ProtoMessage()    {}
 func (*MsgWithdrawFundsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_ad69e28332238e66, []int{9}
+	return fileDescriptor_ad69e28332238e66, []int{11}
 }
 func (m *MsgWithdrawFundsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -549,6 +641,8 @@ func (m *MsgWithdrawFundsResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgWithdrawFundsResponse proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*MsgCreatePromoter)(nil), "sgenetwork.sge.reward.MsgCreatePromoter")
+	proto.RegisterType((*MsgCreatePromoterResponse)(nil), "sgenetwork.sge.reward.MsgCreatePromoterResponse")
 	proto.RegisterType((*MsgSetPromoterConf)(nil), "sgenetwork.sge.reward.MsgSetPromoterConf")
 	proto.RegisterType((*MsgSetPromoterConfResponse)(nil), "sgenetwork.sge.reward.MsgSetPromoterConfResponse")
 	proto.RegisterType((*MsgCreateCampaign)(nil), "sgenetwork.sge.reward.MsgCreateCampaign")
@@ -564,39 +658,41 @@ func init() {
 func init() { proto.RegisterFile("sge/reward/tx.proto", fileDescriptor_ad69e28332238e66) }
 
 var fileDescriptor_ad69e28332238e66 = []byte{
-	// 505 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x54, 0x41, 0x6e, 0xd3, 0x40,
-	0x14, 0x8d, 0x49, 0x55, 0xc4, 0x0f, 0x94, 0x62, 0x68, 0x65, 0x0c, 0x72, 0xc0, 0x12, 0xa2, 0x5d,
-	0xd4, 0x06, 0xba, 0x63, 0xd9, 0x48, 0x20, 0x16, 0x96, 0x50, 0xa0, 0x80, 0xd8, 0x54, 0x53, 0x7b,
-	0x3a, 0xb1, 0x12, 0x7b, 0x46, 0x33, 0x63, 0xa5, 0xbd, 0x05, 0x67, 0x60, 0xcf, 0x3d, 0xba, 0xec,
-	0x12, 0xb1, 0x88, 0x50, 0x72, 0x03, 0x4e, 0x80, 0x6c, 0xc7, 0x96, 0xc7, 0x69, 0x2a, 0x07, 0xba,
-	0x9b, 0x3f, 0x7e, 0xff, 0xbd, 0xff, 0xe4, 0xf7, 0x07, 0xee, 0x0b, 0x82, 0x5d, 0x8e, 0xc7, 0x88,
-	0x07, 0xae, 0x3c, 0x75, 0x18, 0xa7, 0x92, 0xea, 0x5b, 0x82, 0xe0, 0x18, 0xcb, 0x31, 0xe5, 0x43,
-	0x47, 0x10, 0xec, 0xe4, 0xdf, 0xcd, 0x07, 0x84, 0x12, 0x9a, 0x21, 0xdc, 0xf4, 0x94, 0x83, 0xed,
-	0x2f, 0xa0, 0x7b, 0x82, 0x7c, 0xc0, 0xf2, 0x3d, 0xa7, 0x11, 0x95, 0x98, 0xf7, 0x68, 0x7c, 0xa2,
-	0x1b, 0x70, 0xd3, 0xe7, 0x18, 0x49, 0xca, 0x0d, 0xed, 0x89, 0xb6, 0x73, 0xab, 0x5f, 0x94, 0xfa,
-	0x26, 0xb4, 0x93, 0x30, 0x30, 0x6e, 0x64, 0xb7, 0xe9, 0x51, 0xdf, 0x86, 0x75, 0x19, 0xfa, 0x43,
-	0x2c, 0x8d, 0x76, 0x76, 0x39, 0xaf, 0xec, 0xc7, 0x60, 0x2e, 0x32, 0xf7, 0xb1, 0x60, 0x34, 0x16,
-	0xd8, 0xfe, 0xa1, 0xc1, 0x3d, 0x4f, 0x90, 0x5e, 0x4a, 0x8b, 0x7b, 0x28, 0x62, 0x28, 0x24, 0xf1,
-	0x4a, 0xba, 0x1f, 0xa1, 0x23, 0xa9, 0x44, 0xa3, 0xa3, 0x93, 0x24, 0x0e, 0x44, 0x2e, 0x7e, 0xb0,
-	0x7f, 0x3e, 0xe9, 0xb6, 0x7e, 0x4d, 0xba, 0x5b, 0x3e, 0x15, 0x11, 0x15, 0x22, 0x18, 0x3a, 0x21,
-	0x75, 0x23, 0x24, 0x07, 0xce, 0xbb, 0x58, 0xfe, 0x99, 0x74, 0xf5, 0x33, 0x14, 0x8d, 0x5e, 0xdb,
-	0x95, 0x4e, 0xbb, 0x0f, 0x59, 0xf5, 0x26, 0x2d, 0x2a, 0x6e, 0xd6, 0x14, 0x37, 0x8f, 0xe0, 0xe1,
-	0xc2, 0xb8, 0x75, 0x33, 0x87, 0x2c, 0xf8, 0x2f, 0x33, 0x2c, 0x61, 0xff, 0x68, 0xa6, 0xec, 0xcc,
-	0xcc, 0xb0, 0x84, 0x35, 0x31, 0xa3, 0x8e, 0x5b, 0x9a, 0x19, 0xc3, 0x86, 0x27, 0xc8, 0x5b, 0x8e,
-	0x62, 0xd9, 0xcf, 0x92, 0xb3, 0x92, 0x91, 0xa7, 0x70, 0xdb, 0x9f, 0x33, 0x1e, 0xa5, 0x9f, 0xf2,
-	0x4c, 0x74, 0x8a, 0xbb, 0x43, 0x25, 0x30, 0xea, 0x54, 0x06, 0x6c, 0xab, 0xc2, 0xe5, 0x48, 0x9f,
-	0x60, 0xd3, 0x13, 0xe4, 0x73, 0x28, 0x07, 0x01, 0x47, 0xe3, 0xdc, 0xdb, 0x75, 0x44, 0xd4, 0x04,
-	0xa3, 0xce, 0x5b, 0x68, 0xbe, 0xfa, 0xbe, 0x06, 0x6d, 0x4f, 0x10, 0x9d, 0xc2, 0xdd, 0xfa, 0x76,
-	0xec, 0x3a, 0x97, 0x6e, 0x98, 0xb3, 0x18, 0x77, 0xf3, 0x65, 0x63, 0x68, 0x21, 0xac, 0x8f, 0x60,
-	0xa3, 0xb6, 0x15, 0x3b, 0xcb, 0x49, 0x54, 0xa4, 0xf9, 0xa2, 0x29, 0xb2, 0xaa, 0x56, 0x8b, 0xed,
-	0x15, 0x6a, 0x2a, 0xf2, 0x2a, 0xb5, 0xcb, 0xb3, 0xa5, 0x87, 0x70, 0x47, 0xfd, 0x8b, 0xcf, 0x97,
-	0x53, 0x28, 0x40, 0xd3, 0x6d, 0x08, 0x2c, 0xa5, 0x7c, 0xe8, 0x54, 0x33, 0xfc, 0x6c, 0x79, 0x7f,
-	0x05, 0x66, 0xee, 0x35, 0x82, 0x15, 0x22, 0x07, 0xbd, 0xf3, 0xa9, 0xa5, 0x5d, 0x4c, 0x2d, 0xed,
-	0xf7, 0xd4, 0xd2, 0xbe, 0xcd, 0xac, 0xd6, 0xc5, 0xcc, 0x6a, 0xfd, 0x9c, 0x59, 0xad, 0xaf, 0xbb,
-	0x24, 0x94, 0x83, 0xe4, 0xd8, 0xf1, 0x69, 0xe4, 0x0a, 0x82, 0xf7, 0xe6, 0x9c, 0xe9, 0xd9, 0x3d,
-	0x2d, 0x9f, 0xec, 0x33, 0x86, 0xc5, 0xf1, 0x7a, 0xf6, 0x12, 0xef, 0xff, 0x0d, 0x00, 0x00, 0xff,
-	0xff, 0x85, 0x43, 0xde, 0x62, 0xcd, 0x05, 0x00, 0x00,
+	// 531 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x95, 0xc1, 0x6e, 0xd3, 0x30,
+	0x18, 0xc7, 0x1b, 0x06, 0x43, 0x7c, 0x85, 0x31, 0x02, 0x9b, 0x42, 0x40, 0x29, 0x44, 0x42, 0x6c,
+	0x87, 0x25, 0xc0, 0x6e, 0x1c, 0x57, 0x01, 0xe2, 0x10, 0x09, 0x15, 0x06, 0x88, 0xcb, 0xe4, 0x25,
+	0x9e, 0x1b, 0xb5, 0x89, 0x2d, 0xdb, 0x51, 0xb7, 0xb7, 0xd8, 0x8b, 0xf0, 0x1e, 0x3b, 0xee, 0x88,
+	0x38, 0x54, 0xa8, 0x7d, 0x03, 0x9e, 0x00, 0x25, 0x69, 0xa2, 0x38, 0x5d, 0xbb, 0x0c, 0xb8, 0xd9,
+	0xf1, 0xdf, 0xdf, 0xef, 0xfb, 0x47, 0xff, 0x4f, 0x86, 0xfb, 0x82, 0x60, 0x97, 0xe3, 0x11, 0xe2,
+	0x81, 0x2b, 0x8f, 0x1d, 0xc6, 0xa9, 0xa4, 0xfa, 0x86, 0x20, 0x38, 0xc6, 0x72, 0x44, 0xf9, 0xc0,
+	0x11, 0x04, 0x3b, 0xf9, 0xb9, 0xf9, 0x80, 0x50, 0x42, 0x33, 0x85, 0x9b, 0xae, 0x72, 0xb1, 0xfd,
+	0x06, 0xee, 0x79, 0x82, 0x74, 0x39, 0x46, 0x12, 0x7f, 0xe0, 0x34, 0xa2, 0x12, 0x73, 0xdd, 0x80,
+	0x9b, 0x7e, 0xfa, 0x85, 0x72, 0x43, 0x7b, 0xa2, 0x6d, 0xdd, 0xea, 0x15, 0x5b, 0x7d, 0x13, 0x56,
+	0x65, 0xe8, 0x0f, 0xb0, 0x34, 0xae, 0x65, 0x07, 0xb3, 0x9d, 0xfd, 0x08, 0x1e, 0xce, 0x95, 0xe9,
+	0x61, 0xc1, 0x68, 0x2c, 0xb0, 0xfd, 0x15, 0x74, 0x4f, 0x90, 0x8f, 0x58, 0x16, 0x27, 0x5d, 0x1a,
+	0x1f, 0x2d, 0x81, 0xac, 0xc3, 0x4a, 0x12, 0x06, 0x33, 0x42, 0xba, 0xac, 0x60, 0x57, 0x14, 0xec,
+	0x63, 0x30, 0xe7, 0x2b, 0x97, 0xdc, 0xef, 0x5a, 0xc5, 0x5c, 0x17, 0x45, 0x0c, 0x85, 0x24, 0xbe,
+	0x12, 0xf7, 0x13, 0xb4, 0x25, 0x95, 0x68, 0x78, 0x70, 0x94, 0xc4, 0x81, 0xc8, 0xe1, 0x7b, 0xbb,
+	0x67, 0xe3, 0x4e, 0xeb, 0xe7, 0xb8, 0xb3, 0xe1, 0x53, 0x11, 0x51, 0x21, 0x82, 0x81, 0x13, 0x52,
+	0x37, 0x42, 0xb2, 0xef, 0xbc, 0x8f, 0xe5, 0xef, 0x71, 0x47, 0x3f, 0x41, 0xd1, 0xf0, 0xb5, 0x5d,
+	0xb9, 0x69, 0xf7, 0x20, 0xdb, 0xbd, 0x4d, 0x37, 0x15, 0x37, 0xd7, 0x17, 0xfe, 0xc4, 0xa2, 0xdd,
+	0xba, 0x99, 0x7d, 0x16, 0xfc, 0x93, 0x19, 0x96, 0xb0, 0xbf, 0x34, 0x53, 0xde, 0xcc, 0xcc, 0xb0,
+	0x84, 0x35, 0x31, 0xa3, 0xb6, 0x5b, 0x9a, 0x19, 0xc1, 0x9a, 0x27, 0xc8, 0x3b, 0x8e, 0x62, 0xd9,
+	0xcb, 0xd2, 0x79, 0x25, 0x23, 0x4f, 0xe1, 0xb6, 0x3f, 0xab, 0x78, 0x90, 0x1e, 0xe5, 0x99, 0x68,
+	0x17, 0xdf, 0xf6, 0x95, 0xc0, 0xa8, 0x5d, 0x19, 0xb0, 0xa9, 0x82, 0xcb, 0x96, 0x3e, 0xc3, 0xba,
+	0x27, 0xc8, 0x97, 0x50, 0xf6, 0x03, 0x8e, 0x46, 0xb9, 0xb7, 0xff, 0x11, 0x51, 0x13, 0x8c, 0x7a,
+	0xdd, 0x82, 0xf9, 0xea, 0xf4, 0x06, 0xac, 0x78, 0x82, 0xe8, 0x14, 0xee, 0xd6, 0xa7, 0x63, 0xdb,
+	0xb9, 0x70, 0x8a, 0x9d, 0xf9, 0xb8, 0x9b, 0x2f, 0x1b, 0x4b, 0x0b, 0xb0, 0x3e, 0x84, 0xb5, 0xda,
+	0xc8, 0x6f, 0x2d, 0x2e, 0xa2, 0x2a, 0xcd, 0x17, 0x4d, 0x95, 0xf3, 0xb4, 0x32, 0xb6, 0x97, 0xd2,
+	0x0a, 0xe5, 0xe5, 0xb4, 0x7a, 0xb6, 0x52, 0x5a, 0x6d, 0x48, 0x96, 0xd0, 0x54, 0xe5, 0x32, 0xda,
+	0xc5, 0x49, 0xd6, 0x43, 0xb8, 0xa3, 0x66, 0xe6, 0xf9, 0xe2, 0x12, 0x8a, 0xd0, 0x74, 0x1b, 0x0a,
+	0x4b, 0x94, 0x0f, 0xed, 0xea, 0xc4, 0x3c, 0x5b, 0x7c, 0xbf, 0x22, 0x33, 0x77, 0x1a, 0xc9, 0x0a,
+	0xc8, 0x5e, 0xf7, 0x6c, 0x62, 0x69, 0xe7, 0x13, 0x4b, 0xfb, 0x35, 0xb1, 0xb4, 0xd3, 0xa9, 0xd5,
+	0x3a, 0x9f, 0x5a, 0xad, 0x1f, 0x53, 0xab, 0xf5, 0x6d, 0x9b, 0x84, 0xb2, 0x9f, 0x1c, 0x3a, 0x3e,
+	0x8d, 0x5c, 0x41, 0xf0, 0xce, 0xac, 0x66, 0xba, 0x76, 0x8f, 0xcb, 0x47, 0xe8, 0x84, 0x61, 0x71,
+	0xb8, 0x9a, 0xbd, 0x2d, 0xbb, 0x7f, 0x02, 0x00, 0x00, 0xff, 0xff, 0xb1, 0xba, 0x9b, 0xc3, 0x9f,
+	0x06, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -613,6 +709,8 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	// SetPromoterConf is a method to set the configurations of a promoter.
 	SetPromoterConf(ctx context.Context, in *MsgSetPromoterConf, opts ...grpc.CallOption) (*MsgSetPromoterConfResponse, error)
+	// CreatePromoter is a method to create a promoter
+	CreatePromoter(ctx context.Context, in *MsgCreatePromoter, opts ...grpc.CallOption) (*MsgCreatePromoterResponse, error)
 	// CreateCampaign is a method to create a campaign
 	CreateCampaign(ctx context.Context, in *MsgCreateCampaign, opts ...grpc.CallOption) (*MsgCreateCampaignResponse, error)
 	// UpdateCampaign is a method to update campaign
@@ -634,6 +732,15 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 func (c *msgClient) SetPromoterConf(ctx context.Context, in *MsgSetPromoterConf, opts ...grpc.CallOption) (*MsgSetPromoterConfResponse, error) {
 	out := new(MsgSetPromoterConfResponse)
 	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Msg/SetPromoterConf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) CreatePromoter(ctx context.Context, in *MsgCreatePromoter, opts ...grpc.CallOption) (*MsgCreatePromoterResponse, error) {
+	out := new(MsgCreatePromoterResponse)
+	err := c.cc.Invoke(ctx, "/sgenetwork.sge.reward.Msg/CreatePromoter", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -680,6 +787,8 @@ func (c *msgClient) GrantReward(ctx context.Context, in *MsgGrantReward, opts ..
 type MsgServer interface {
 	// SetPromoterConf is a method to set the configurations of a promoter.
 	SetPromoterConf(context.Context, *MsgSetPromoterConf) (*MsgSetPromoterConfResponse, error)
+	// CreatePromoter is a method to create a promoter
+	CreatePromoter(context.Context, *MsgCreatePromoter) (*MsgCreatePromoterResponse, error)
 	// CreateCampaign is a method to create a campaign
 	CreateCampaign(context.Context, *MsgCreateCampaign) (*MsgCreateCampaignResponse, error)
 	// UpdateCampaign is a method to update campaign
@@ -696,6 +805,9 @@ type UnimplementedMsgServer struct {
 
 func (*UnimplementedMsgServer) SetPromoterConf(ctx context.Context, req *MsgSetPromoterConf) (*MsgSetPromoterConfResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetPromoterConf not implemented")
+}
+func (*UnimplementedMsgServer) CreatePromoter(ctx context.Context, req *MsgCreatePromoter) (*MsgCreatePromoterResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePromoter not implemented")
 }
 func (*UnimplementedMsgServer) CreateCampaign(ctx context.Context, req *MsgCreateCampaign) (*MsgCreateCampaignResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateCampaign not implemented")
@@ -728,6 +840,24 @@ func _Msg_SetPromoterConf_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MsgServer).SetPromoterConf(ctx, req.(*MsgSetPromoterConf))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_CreatePromoter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgCreatePromoter)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).CreatePromoter(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sgenetwork.sge.reward.Msg/CreatePromoter",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).CreatePromoter(ctx, req.(*MsgCreatePromoter))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -813,6 +943,10 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Msg_SetPromoterConf_Handler,
 		},
 		{
+			MethodName: "CreatePromoter",
+			Handler:    _Msg_CreatePromoter_Handler,
+		},
+		{
 			MethodName: "CreateCampaign",
 			Handler:    _Msg_CreateCampaign_Handler,
 		},
@@ -831,6 +965,66 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "sge/reward/tx.proto",
+}
+
+func (m *MsgCreatePromoter) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreatePromoter) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreatePromoter) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Ticket) > 0 {
+		i -= len(m.Ticket)
+		copy(dAtA[i:], m.Ticket)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Ticket)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgCreatePromoterResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgCreatePromoterResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgCreatePromoterResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	return len(dAtA) - i, nil
 }
 
 func (m *MsgSetPromoterConf) Marshal() (dAtA []byte, err error) {
@@ -1206,6 +1400,32 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
+func (m *MsgCreatePromoter) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Ticket)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgCreatePromoterResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	return n
+}
+
 func (m *MsgSetPromoterConf) Size() (n int) {
 	if m == nil {
 		return 0
@@ -1369,6 +1589,170 @@ func sovTx(x uint64) (n int) {
 }
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *MsgCreatePromoter) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreatePromoter: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreatePromoter: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Ticket", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Ticket = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgCreatePromoterResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgCreatePromoterResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgCreatePromoterResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *MsgSetPromoterConf) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)

@@ -38,7 +38,7 @@ func (msg *MsgTopUp) GetSigners() []sdk.AccAddress {
 func (msg *MsgTopUp) EmitEvent(ctx *sdk.Context, subAccAddr string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgTopUp, msg.Creator,
-		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+		sdk.NewAttribute(attributeKeySubaccount, subAccAddr),
 	)
 	emitter.Emit()
 }
@@ -90,7 +90,7 @@ func (msg *MsgWithdrawUnlockedBalances) ValidateBasic() error {
 func (msg *MsgWithdrawUnlockedBalances) EmitEvent(ctx *sdk.Context, subAccAddr string) {
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)
 	emitter.AddMsg(typeMsgWithdrawUnlockedBalances, msg.Creator,
-		sdk.NewAttribute(attributeKeySubAcc, subAccAddr),
+		sdk.NewAttribute(attributeKeySubaccount, subAccAddr),
 	)
 	emitter.Emit()
 }

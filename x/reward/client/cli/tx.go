@@ -24,6 +24,7 @@ func GetTxCmd() *cobra.Command {
 		RunE:                       client.ValidateCmd,
 	}
 
+	cmd.AddCommand(CmdCreatePromoter())
 	cmd.AddCommand(CmdSetPromoterConf())
 	cmd.AddCommand(CmdCreateCampaign())
 	cmd.AddCommand(CmdUpdateCampaign())

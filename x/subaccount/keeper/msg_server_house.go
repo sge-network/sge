@@ -19,7 +19,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// check if subaccount exists
-	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
@@ -70,7 +70,7 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check if subaccount exists
-	subAccAddr, exists := k.keeper.GetSubAccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
