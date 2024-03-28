@@ -98,7 +98,7 @@ func CmdWithdrawFunds() *cobra.Command {
 		Use:   "withdraw-funds [uid] [amount] [ticket]",
 		Short: "Withdraw funds from a campaign",
 		Long:  "Withdrawal of the funds from a certain campaign",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			argUID := args[0]
