@@ -51,7 +51,12 @@ func (sur SignUpAffiliatorReward) Calculate(goCtx context.Context, ctx sdk.Conte
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Affiliatee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
+	promoter, isFound := keepers.GetPromoterByAddress(ctx, campaign.Promoter)
+	if !isFound {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", campaign.Promoter)
+	}
+
+	if !keepers.RewardKeeper.HasRewardOfReceiverByPromoter(ctx, promoter.PromoterUID, payload.Affiliatee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
 		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "affiliatee account has signed up yet, there is no affiliatee claim record")
 	}
 

@@ -64,7 +64,7 @@ func (k Keeper) RewardsByAddress(goCtx context.Context, req *types.QueryRewardsB
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	rewardStore := prefix.NewStore(store, types.GetRewardsByAccPrefix(req.Address))
+	rewardStore := prefix.NewStore(store, types.GetRewardsOfReceiverByPromoterPrefix(req.PromoterUid, req.Address))
 
 	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
 		var reward types.RewardByCategory
@@ -91,7 +91,7 @@ func (k Keeper) RewardsByAddressAndCategory(goCtx context.Context, req *types.Qu
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
-	rewardStore := prefix.NewStore(store, types.GetRewardsByCategoryPrefix(req.Address, req.Category))
+	rewardStore := prefix.NewStore(store, types.GetRewardsOfReceiverByPromoterAndCategoryPrefix(req.PromoterUid, req.Address, req.Category))
 
 	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
 		var reward types.RewardByCategory
