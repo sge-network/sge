@@ -42,9 +42,11 @@ func TestCampaignMsgServerCreate(t *testing.T) {
 				SubaccountAmount: sdkmath.NewInt(100),
 				UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 			},
-			"is_active":           true,
-			"meta":                "sample campaign",
-			"claims_per_category": 1,
+			"is_active": true,
+			"meta":      "sample campaign",
+			"constraints": &types.CampaignConstraints{
+				MaxBetAmount: sdkmath.NewInt(300),
+			},
 		}
 		ticket, err := simapp.CreateJwtTicket(ticketClaim)
 		require.Nil(t, err)
@@ -108,9 +110,11 @@ func TestCampaignMsgServerCreateWithAuthoriation(t *testing.T) {
 			SubaccountAmount: sdkmath.NewInt(100),
 			UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
-		"is_active":           true,
-		"meta":                "sample campaign",
-		"claims_per_category": 1,
+		"is_active": true,
+		"meta":      "sample campaign",
+		"constraints": &types.CampaignConstraints{
+			MaxBetAmount: sdkmath.NewInt(300),
+		},
 	}
 	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)
@@ -212,9 +216,11 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 					SubaccountAmount: sdkmath.NewInt(100),
 					UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 				},
-				"is_active":           true,
-				"meta":                "sample campaign",
-				"claims_per_category": 1,
+				"is_active": true,
+				"meta":      "sample campaign",
+				"constraints": &types.CampaignConstraints{
+					MaxBetAmount: sdkmath.NewInt(300),
+				},
 			}
 			ticket, err := simapp.CreateJwtTicket(ticketClaim)
 			require.Nil(t, err)
@@ -256,7 +262,7 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 	}
 }
 
-func TestCampaignMsgServerUpdateWithAuthoriation(t *testing.T) {
+func TestCampaignMsgServerUpdateWithAuthorization(t *testing.T) {
 	tApp, k, ctx := setupKeeperAndApp(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
@@ -319,9 +325,11 @@ func TestCampaignMsgServerUpdateWithAuthoriation(t *testing.T) {
 			SubaccountAmount: sdkmath.NewInt(100),
 			UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 		},
-		"is_active":           true,
-		"meta":                "sample campaign",
-		"claims_per_category": 1,
+		"is_active": true,
+		"meta":      "sample campaign",
+		"constraints": &types.CampaignConstraints{
+			MaxBetAmount: sdkmath.NewInt(300),
+		},
 	}
 	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)

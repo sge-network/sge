@@ -49,6 +49,8 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 		return NewSignUpAffiliateeReward(), nil
 	case RewardType_REWARD_TYPE_AFFILIATE:
 		return NewSignUpAffiliatorReward(), nil
+	case RewardType_REWARD_TYPE_BET_DISCOUNT:
+		return NewBetBonusReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}

@@ -15,6 +15,7 @@ import (
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 	"github.com/sge-network/sge/x/reward/keeper"
 	"github.com/sge-network/sge/x/reward/types"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
@@ -28,15 +29,14 @@ var defaultCategoryCap = []types.CategoryCap{
 
 func getDefaultClaim(creator string) jwt.MapClaims {
 	return jwt.MapClaims{
-		"exp":                 time.Now().Add(time.Minute * 5).Unix(),
-		"iat":                 time.Now().Unix(),
-		"promoter":            creator,
-		"start_ts":            time.Now().Unix(),
-		"end_ts":              time.Now().Add(5 * time.Minute).Unix(),
-		"category":            types.RewardCategory_REWARD_CATEGORY_SIGNUP,
-		"claims_per_category": 1,
-		"is_active":           true,
-		"meta":                "sample campaign",
+		"exp":       time.Now().Add(time.Minute * 5).Unix(),
+		"iat":       time.Now().Unix(),
+		"promoter":  creator,
+		"start_ts":  time.Now().Unix(),
+		"end_ts":    time.Now().Add(5 * time.Minute).Unix(),
+		"category":  types.RewardCategory_REWARD_CATEGORY_SIGNUP,
+		"is_active": true,
+		"meta":      "sample campaign",
 	}
 }
 
@@ -126,7 +126,7 @@ func TestMsgApplySignupReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -188,7 +188,7 @@ func TestMsgApplySignupRewardWithCap(t *testing.T) {
 		"common": types.RewardPayloadCommon{
 			Receiver:  receiverAddr,
 			SourceUID: "",
-			Meta:      "signup reward for example user",
+			Meta:      "signup reward for sample user",
 			KycData: &sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       receiverAddr,
@@ -261,7 +261,7 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 				},
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
@@ -274,7 +274,7 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: referrer,
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -349,7 +349,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 		"common": types.RewardPayloadCommon{
 			Receiver:  referee,
 			SourceUID: referrer,
-			Meta:      "signup reward for example user",
+			Meta:      "signup reward for sample user",
 			KycData: &sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       referee,
@@ -399,7 +399,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 				},
 				"referee": "invalid",
 			},
@@ -413,7 +413,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -493,7 +493,7 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 				},
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
@@ -506,7 +506,7 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: leadGen,
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -581,7 +581,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 		"common": types.RewardPayloadCommon{
 			Receiver:  affiliatee,
 			SourceUID: affiliator,
-			Meta:      "signup reward for example user",
+			Meta:      "signup reward for sample user",
 			KycData: &sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       affiliatee,
@@ -631,7 +631,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 				},
 				"affiliatee": "invalid",
 			},
@@ -645,7 +645,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -662,6 +662,142 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 				Uid:         uuid.NewString(),
 				Creator:     promoter,
 				CampaignUid: affiliateCampUID,
+				Ticket:      ticket,
+			}
+			_, err = srv.GrantReward(wctx, reward)
+			if tc.err != nil {
+				require.ErrorContains(t, err, tc.err.Error())
+			} else {
+				require.NoError(t, err)
+			}
+		})
+	}
+}
+
+func TestMsgApplyBetBonus(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	srv := keeper.NewMsgServerImpl(*k)
+	ctx = ctx.WithBlockTime(time.Now())
+	wctx := sdk.WrapSDKContext(ctx)
+
+	promoter := simapp.TestParamUsers["user1"].Address.String()
+	bettor := simapp.TestParamUsers["user2"].Address.String()
+
+	bet := bettypes.Bet{
+		Creator:   bettor,
+		UID:       uuid.NewString(),
+		MarketUID: uuid.NewString(),
+		Amount:    sdkmath.NewInt(301),
+	}
+	tApp.BetKeeper.SetBet(ctx, bet, 1)
+
+	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, bettor, bettor, []subaccounttypes.LockedBalance{
+		{
+			Amount:   sdk.ZeroInt(),
+			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
+		},
+	})
+	require.NoError(t, err)
+
+	// referral signup campaign
+	betBonusCampClaims := getDefaultClaim(promoter)
+	betBonusCampClaims["category"] = types.RewardCategory_REWARD_CATEGORY_BET_DISCOUNT
+	betBonusCampClaims["reward_type"] = types.RewardType_REWARD_TYPE_BET_DISCOUNT
+	betBonusCampClaims["reward_amount_type"] = types.RewardAmountType_REWARD_AMOUNT_TYPE_PERCENTAGE
+	betBonusCampClaims["reward_amount"] = types.RewardAmount{
+		SubaccountAmount: sdkmath.NewInt(10),
+		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
+	}
+	betBonusCampUID := createCampaign(t, k, srv, ctx, promoter, betBonusCampClaims, defaultCategoryCap)
+
+	betBonusClaims := jwt.MapClaims{
+		"exp": time.Now().Add(time.Minute * 5).Unix(),
+		"iat": time.Now().Unix(),
+		"common": types.RewardPayloadCommon{
+			Receiver:  bettor,
+			SourceUID: "",
+			Meta:      "bet bonus reward for sample user",
+			KycData: &sgetypes.KycDataPayload{
+				Approved: true,
+				ID:       bettor,
+			},
+		},
+		"bet_uid": bet.UID,
+	}
+	betBonusTicket, err := simapp.CreateJwtTicket(betBonusClaims)
+	require.Nil(t, err)
+	reward := &types.MsgGrantReward{
+		Uid:         uuid.NewString(),
+		Creator:     promoter,
+		CampaignUid: betBonusCampUID,
+		Ticket:      betBonusTicket,
+	}
+	_, err = srv.GrantReward(wctx, reward)
+	require.NoError(t, err)
+
+	rewardGrant, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoterUID, bettor, types.RewardCategory_REWARD_CATEGORY_BET_DISCOUNT)
+	require.NoError(t, err)
+	require.Equal(t, types.RewardByCategory{
+		UID:            reward.Uid,
+		Addr:           bettor,
+		RewardCategory: types.RewardCategory_REWARD_CATEGORY_BET_DISCOUNT,
+	}, rewardGrant[0])
+
+	require.True(t, k.HasRewardOfReceiverByPromoter(ctx, promoterUID, bettor, types.RewardCategory_REWARD_CATEGORY_BET_DISCOUNT))
+
+	for _, tc := range []struct {
+		desc   string
+		claims jwt.MapClaims
+		err    error
+	}{
+		{
+			desc: "invalid ticket",
+			claims: jwt.MapClaims{
+				"exp":    time.Now().Add(time.Minute * 5).Unix(),
+				"iat":    time.Now().Unix(),
+				"common": "invalid",
+			},
+			err: types.ErrInTicketVerification,
+		},
+		{
+			desc: "invalid bettor",
+			claims: jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"common": types.RewardPayloadCommon{
+					Receiver:  bettor,
+					SourceUID: "",
+					Meta:      "bet bonus reward for sample user",
+				},
+				"bet_uid": "invalid",
+			},
+			err: sdkerrtypes.ErrInvalidRequest,
+		},
+		{
+			desc: "valid",
+			claims: jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"common": types.RewardPayloadCommon{
+					Receiver:  bettor,
+					SourceUID: "",
+					Meta:      "bet bonus reward for sample user",
+					KycData: &sgetypes.KycDataPayload{
+						Approved: true,
+						ID:       bettor,
+					},
+				},
+				"bet_uid": bet.UID,
+			},
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			ticket, err := simapp.CreateJwtTicket(tc.claims)
+			require.Nil(t, err)
+			reward := &types.MsgGrantReward{
+				Uid:         uuid.NewString(),
+				Creator:     promoter,
+				CampaignUid: betBonusCampUID,
 				Ticket:      ticket,
 			}
 			_, err = srv.GrantReward(wctx, reward)
@@ -723,7 +859,7 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  "invalid",
 					SourceUID: "source id",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: false,
 						ID:       "",
@@ -741,7 +877,7 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  sample.AccAddress(),
 					SourceUID: "source id",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: false,
 						ID:       "",
@@ -758,7 +894,7 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 				"common": types.RewardPayloadCommon{
 					Receiver:  receiverAddr,
 					SourceUID: "source id",
-					Meta:      "signup reward for example user",
+					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
 						Approved: true,
 						ID:       receiverAddr,
@@ -814,7 +950,7 @@ func TestMsgApplySubaccountFunds(t *testing.T) {
 		"common": types.RewardPayloadCommon{
 			Receiver:  receiverAddr,
 			SourceUID: "source id",
-			Meta:      "signup reward for example user",
+			Meta:      "signup reward for sample user",
 			KycData: &sgetypes.KycDataPayload{
 				Approved: true,
 				ID:       receiverAddr,
