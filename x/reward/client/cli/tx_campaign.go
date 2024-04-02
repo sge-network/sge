@@ -95,16 +95,21 @@ func CmdUpdateCampaign() *cobra.Command {
 
 func CmdWithdrawFunds() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "withdraw-funds [uid] [ticket]",
+		Use:   "withdraw-funds [uid] [amount] [ticket]",
 		Short: "Withdraw funds from a campaign",
 		Long:  "Withdrawal of the funds from a certain campaign",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			argUID := args[0]
 
+			argWithdrawAmountCosmosInt, ok := sdkmath.NewIntFromString(args[1])
+			if !ok {
+				return types.ErrInvalidFunds
+			}
+
 			// Get value arguments
-			argTicket := args[1]
+			argTicket := args[2]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -114,6 +119,7 @@ func CmdWithdrawFunds() *cobra.Command {
 			msg := types.NewMsgWithdrawFunds(
 				clientCtx.GetFromAddress().String(),
 				argUID,
+				argWithdrawAmountCosmosInt,
 				argTicket,
 			)
 			if err := msg.ValidateBasic(); err != nil {

@@ -77,6 +77,11 @@ message Pool {
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"spent\""
   ];
+  string withdrawn = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"spent\""
+  ];
 }
 
 // CampaignConstraints contains campaign constraints and criteria.

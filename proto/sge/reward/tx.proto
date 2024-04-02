@@ -108,6 +108,11 @@ message MsgWithdrawFunds {
   string uid = 2;
   // ticket is the payload data.
   string ticket = 3;
+  // amount is the requested withdrawal amount
+  string amount = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
 }
 
 // MsgWithdrawFundsResponse withdraw funds message response type.

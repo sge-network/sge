@@ -25,4 +25,10 @@ message UpdateCampaignAuthorization {
 
 // WithdrawCampaignAuthorization allows the grantee to withdraw remaining
 // pool balance of the campaign from the granter's account.
-message WithdrawCampaignAuthorization {}
+message WithdrawCampaignAuthorization {
+  // withdraw_limit is the maximum limit of the withdrawal by authorization.
+  string withdraw_limit = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
