@@ -39,4 +39,5 @@ var (
 	ErrUserKycNotProvided             = sdkerrors.Register(ModuleName, 7129, "KYC data not provided")
 	ErrDuplicateCategoryInConf        = sdkerrors.Register(ModuleName, 7130, "duplicate category in promoter configurations")
 	ErrCategoryCapShouldBePos         = sdkerrors.Register(ModuleName, 7131, "category cap should be a positive number")
+	ErrMissingConstraintForCampaign   = sdkerrors.Register(ModuleName, 7132, "missing constraints in the campaign")
 )

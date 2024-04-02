@@ -34,6 +34,9 @@ func (sur BetBonusReward) ValidateCampaign(campaign Campaign) error {
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_PERCENTAGE {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
 	}
+	if campaign.Constraints == nil || campaign.Constraints.MaxBetAmount.IsNil() {
+		return sdkerrors.Wrapf(ErrMissingConstraintForCampaign, "constraints and max bet amount should be set for the bet bonus reward.")
+	}
 
 	return nil
 }
