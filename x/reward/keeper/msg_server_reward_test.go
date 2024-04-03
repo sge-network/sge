@@ -708,6 +708,9 @@ func TestMsgApplyBetBonus(t *testing.T) {
 		SubaccountAmount: sdkmath.NewInt(10),
 		UnlockPeriod:     uint64(ctx.BlockTime().Add(10 * time.Minute).Unix()),
 	}
+	betBonusCampClaims["constraints"] = types.CampaignConstraints{
+		MaxBetAmount: sdkmath.NewInt(300),
+	}
 	betBonusCampUID := createCampaign(t, k, srv, ctx, promoter, betBonusCampClaims, defaultCategoryCap)
 
 	betBonusClaims := jwt.MapClaims{

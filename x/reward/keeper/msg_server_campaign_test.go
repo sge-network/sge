@@ -22,12 +22,28 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
+func setTestPromoter(k *keeper.Keeper, ctx sdk.Context, promoterAddr string) {
+	k.SetPromoter(ctx, types.Promoter{
+		Creator: promoterAddr,
+		UID:     promoterUID,
+		Addresses: []string{
+			promoterAddr,
+		},
+	})
+	k.SetPromoterByAddress(ctx, types.PromoterByAddress{
+		PromoterUID: promoterUID,
+		Address:     promoterAddr,
+	})
+}
 func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
 	ctx = ctx.WithBlockTime(time.Now())
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := simapp.TestParamUsers["user1"].Address.String()
+
+	setTestPromoter(k, ctx, creator)
+
 	for i := 0; i < 5; i++ {
 		ticketClaim := jwt.MapClaims{
 			"exp":                time.Now().Add(time.Minute * 5).Unix(),
@@ -75,6 +91,8 @@ func TestCampaignMsgServerCreateWithAuthoriation(t *testing.T) {
 
 	creator := simapp.TestParamUsers["user2"]
 	promoter := simapp.TestParamUsers["user1"]
+
+	setTestPromoter(k, ctx, promoter.Address.String())
 
 	grantAmount := sdkmath.NewInt(1000000)
 
@@ -147,10 +165,14 @@ func TestCampaignMsgServerUnAuthorizedCreate(t *testing.T) {
 	ctx = ctx.WithBlockTime(time.Now())
 	wctx := sdk.WrapSDKContext(ctx)
 	creator := simapp.TestParamUsers["user1"].Address.String()
+	promoter := sample.AccAddress()
+
+	setTestPromoter(k, ctx, promoter)
+
 	ticketClaim := jwt.MapClaims{
 		"exp":      time.Now().Add(time.Minute * 5).Unix(),
 		"iat":      time.Now().Unix(),
-		"promoter": sample.AccAddress(),
+		"promoter": promoter,
 	}
 	ticket, err := simapp.CreateJwtTicket(ticketClaim)
 	require.Nil(t, err)
@@ -202,6 +224,8 @@ func TestCampaignMsgServerUpdate(t *testing.T) {
 			wctx := sdk.WrapSDKContext(ctx)
 
 			creator := simapp.TestParamUsers["user1"].Address.String()
+
+			setTestPromoter(k, ctx, creator)
 
 			ticketClaim := jwt.MapClaims{
 				"exp":                time.Now().Add(time.Minute * 5).Unix(),
@@ -272,6 +296,8 @@ func TestCampaignMsgServerUpdateWithAuthorization(t *testing.T) {
 
 	creator := simapp.TestParamUsers["user2"]
 	promoter := simapp.TestParamUsers["user1"]
+
+	setTestPromoter(k, ctx, promoter.Address.String())
 
 	grantAmount := sdkmath.NewInt(1000000)
 
