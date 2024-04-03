@@ -35,6 +35,7 @@ func setTestPromoter(k *keeper.Keeper, ctx sdk.Context, promoterAddr string) {
 		Address:     promoterAddr,
 	})
 }
+
 func TestCampaignMsgServerCreate(t *testing.T) {
 	k, ctx := setupKeeper(t)
 	srv := keeper.NewMsgServerImpl(*k)
