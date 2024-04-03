@@ -33,6 +33,10 @@ func (k msgServer) CreatePromoter(goCtx context.Context, msg *types.MsgCreatePro
 		UID:       payload.UID,
 		Conf:      payload.Conf,
 	})
+	k.SetPromoterByAddress(ctx, types.PromoterByAddress{
+		PromoterUID: payload.UID,
+		Address:     msg.Creator,
+	})
 
 	msg.EmitEvent(&ctx, payload.UID, payload.Conf)
 
