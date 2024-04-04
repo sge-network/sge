@@ -688,6 +688,8 @@ func TestMsgApplyBetBonus(t *testing.T) {
 		UID:       uuid.NewString(),
 		MarketUID: uuid.NewString(),
 		Amount:    sdkmath.NewInt(301),
+		Result:    bettypes.Bet_RESULT_LOST,
+		Status:    bettypes.Bet_STATUS_SETTLED,
 	}
 	tApp.BetKeeper.SetBet(ctx, bet, 1)
 
