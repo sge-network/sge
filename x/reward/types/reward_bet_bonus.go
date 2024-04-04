@@ -79,8 +79,9 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet not found with uid %s", payload.BetUID)
 	}
 
-	if bet.Status != bettypes.Bet_STATUS_SETTLED {
-		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet should be settled")
+	if bet.Result != bettypes.Bet_RESULT_LOST &&
+		bet.Result != bettypes.Bet_RESULT_WON {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet should be winner or loser, requested bet result is %s", bet.Result)
 	}
 
 	effectiveBetAmount := sdk.NewDecFromInt(bet.Amount)
