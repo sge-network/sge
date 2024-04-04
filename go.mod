@@ -337,7 +337,7 @@ replace (
 	// cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
-	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240214090649-ddf6d79cf327
+	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240404130223-34f270686d17
 
 	// support concurrency for iavl
 	github.com/cosmos/iavl => github.com/cosmos/iavl v0.20.1
