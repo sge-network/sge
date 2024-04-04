@@ -7,6 +7,7 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
 var percent = sdk.NewInt(100)
@@ -76,6 +77,10 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 	bet, found := keepers.BetKeeper.GetBet(ctx, payload.Common.Receiver, uid2ID.ID)
 	if !found {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet not found with uid %s", payload.BetUID)
+	}
+
+	if bet.Status != bettypes.Bet_STATUS_SETTLED {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet should be settled")
 	}
 
 	effectiveBetAmount := sdk.NewDecFromInt(bet.Amount)
