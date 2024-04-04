@@ -106,8 +106,8 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		NewReceiver(
 			subAccountAddressString,
 			payload.Common.Receiver,
-			mainAmount,
 			subAmount,
+			mainAmount,
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,
