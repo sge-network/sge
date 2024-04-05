@@ -4,8 +4,10 @@ import (
 	context "context"
 
 	sdkerrors "cosmossdk.io/errors"
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
 var percent = sdk.NewInt(100)
@@ -32,6 +34,9 @@ func (sur BetBonusReward) ValidateCampaign(campaign Campaign) error {
 	}
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_PERCENTAGE {
 		return sdkerrors.Wrapf(ErrWrongRewardAmountType, "reward amount type not supported for given reward type.")
+	}
+	if campaign.Constraints == nil || campaign.Constraints.MaxBetAmount.IsNil() {
+		return sdkerrors.Wrapf(ErrMissingConstraintForCampaign, "constraints and max bet amount should be set for the bet bonus reward.")
 	}
 
 	return nil
@@ -74,15 +79,35 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet not found with uid %s", payload.BetUID)
 	}
 
-	mainAmount := bet.Amount.Mul(campaign.RewardAmount.MainAccountAmount).Quo(percent)
-	subAmount := bet.Amount.Mul(campaign.RewardAmount.SubaccountAmount).Quo(percent)
+	if bet.Result != bettypes.Bet_RESULT_LOST &&
+		bet.Result != bettypes.Bet_RESULT_WON {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet should be winner or loser, requested bet result is %s", bet.Result)
+	}
+
+	effectiveBetAmount := sdk.NewDecFromInt(bet.Amount)
+	if campaign.Constraints != nil {
+		if !campaign.Constraints.MaxBetAmount.IsNil() && campaign.Constraints.MaxBetAmount.GT(sdkmath.ZeroInt()) {
+			if bet.Meta.IsMainMarket {
+				effectiveBetAmount = sdk.NewDecFromInt(
+					sdkmath.MinInt(campaign.Constraints.MaxBetAmount, bet.Amount),
+				)
+			}
+		}
+	}
+
+	mainAmount := effectiveBetAmount.Mul(
+		sdk.NewDecFromInt(campaign.RewardAmount.MainAccountAmount).QuoInt(percent),
+	).TruncateInt()
+	subAmount := effectiveBetAmount.Mul(
+		sdk.NewDecFromInt(campaign.RewardAmount.SubaccountAmount).QuoInt(percent),
+	).TruncateInt()
 
 	return NewRewardFactoryData(
 		NewReceiver(
 			subAccountAddressString,
 			payload.Common.Receiver,
-			mainAmount,
 			subAmount,
+			mainAmount,
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,

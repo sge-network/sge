@@ -63,3 +63,9 @@ func (k Keeper) GetPromoterByAddress(ctx sdk.Context, address string) (val types
 	k.cdc.MustUnmarshal(b, &val)
 	return val, true
 }
+
+// IsPromoter returns true if there is a promoter with address
+func (k Keeper) IsPromoter(ctx sdk.Context, address string) bool {
+	store := k.getPromoterByAddressStore(ctx)
+	return store.Has(types.GetPromoterByAddressKey(address))
+}

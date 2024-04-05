@@ -16,6 +16,7 @@ func NewCampaign(
 	meta string,
 	pool Pool,
 	capCount uint64,
+	constraint *CampaignConstraints,
 ) Campaign {
 	return Campaign{
 		Creator:          creator,
@@ -31,6 +32,7 @@ func NewCampaign(
 		Meta:             meta,
 		Pool:             pool,
 		CapCount:         capCount,
+		Constraints:      constraint,
 	}
 }
 
@@ -47,6 +49,8 @@ func (c *Campaign) GetRewardsFactory() (IRewardFactory, error) {
 		return NewSignUpAffiliateeReward(), nil
 	case RewardType_REWARD_TYPE_AFFILIATE:
 		return NewSignUpAffiliatorReward(), nil
+	case RewardType_REWARD_TYPE_BET_DISCOUNT:
+		return NewBetBonusReward(), nil
 	default:
 		return nil, sdkerrors.Wrapf(ErrUnknownRewardType, "%d", c.RewardType)
 	}

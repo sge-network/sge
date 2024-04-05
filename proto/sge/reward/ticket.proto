@@ -3,6 +3,7 @@ package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
 import "sge/type/kyc.proto";
+import "sge/reward/campaign.proto";
 import "sge/reward/reward.proto";
 import "sge/reward/promoter.proto";
 
@@ -41,6 +42,9 @@ message CreateCampaignPayload {
 
   // cap_count is the maximum allowed grant for a certain account.
   uint64 cap_count = 11;
+
+  // constraints is the constrains of a campaign.
+  CampaignConstraints constraints = 12;
 }
 
 // UpdateCampaignPayload is the type for campaign update payload.

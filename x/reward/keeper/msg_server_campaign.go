@@ -28,6 +28,10 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
+	if !k.IsPromoter(ctx, payload.Promoter) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", payload.Promoter)
+	}
+
 	if msg.Creator != payload.Promoter {
 		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, payload.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
@@ -62,6 +66,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.Meta,
 		types.NewPool(msg.TotalFunds),
 		payload.CapCount,
+		payload.Constraints,
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()
