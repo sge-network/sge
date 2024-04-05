@@ -7,7 +7,7 @@ require (
 	cosmossdk.io/math v1.3.0
 	github.com/cosmos/cosmos-sdk v0.46.16
 	github.com/cosmos/gogoproto v1.4.11
-	github.com/cosmos/ibc-go/v5 v5.3.1
+	github.com/cosmos/ibc-go/v5 v5.4.0
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.0
