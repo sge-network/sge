@@ -79,6 +79,10 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet not found with uid %s", payload.BetUID)
 	}
 
+	if !bet.Meta.IsMainMarket {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet bonus grant is allowed for main market bets only %s", payload.BetUID)
+	}
+
 	if bet.Result != bettypes.Bet_RESULT_LOST &&
 		bet.Result != bettypes.Bet_RESULT_WON {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "bet should be winner or loser, requested bet result is %s", bet.Result)
@@ -87,11 +91,9 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 	effectiveBetAmount := sdk.NewDecFromInt(bet.Amount)
 	if campaign.Constraints != nil {
 		if !campaign.Constraints.MaxBetAmount.IsNil() && campaign.Constraints.MaxBetAmount.GT(sdkmath.ZeroInt()) {
-			if bet.Meta.IsMainMarket {
-				effectiveBetAmount = sdk.NewDecFromInt(
-					sdkmath.MinInt(campaign.Constraints.MaxBetAmount, bet.Amount),
-				)
-			}
+			effectiveBetAmount = sdk.NewDecFromInt(
+				sdkmath.MinInt(campaign.Constraints.MaxBetAmount, bet.Amount),
+			)
 		}
 	}
 

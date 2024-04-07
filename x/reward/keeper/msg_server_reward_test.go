@@ -690,6 +690,9 @@ func TestMsgApplyBetBonus(t *testing.T) {
 		Amount:    sdkmath.NewInt(301),
 		Result:    bettypes.Bet_RESULT_LOST,
 		Status:    bettypes.Bet_STATUS_SETTLED,
+		Meta: bettypes.MetaData{
+			IsMainMarket: true,
+		},
 	}
 	tApp.BetKeeper.SetBet(ctx, bet, 1)
 
