@@ -1,6 +1,8 @@
 package v8
 
 import (
+	"sort"
+
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
@@ -28,6 +30,7 @@ func CreateUpgradeHandler(
 		for addr := range promoters {
 			promoterAddresses = append(promoterAddresses, addr)
 		}
+		sort.Strings(promoterAddresses)
 
 		if len(promoterAddresses) > 0 {
 			promoterUID := "f0630627-9e4e-48f3-8cd5-1422b46d2175"
