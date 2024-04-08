@@ -7,6 +7,14 @@ import (
 	"os"
 	"path/filepath"
 
+	dbm "github.com/cometbft/cometbft-db"
+	abci "github.com/cometbft/cometbft/abci/types"
+	tmjson "github.com/cometbft/cometbft/libs/json"
+	"github.com/cometbft/cometbft/libs/log"
+	tmos "github.com/cometbft/cometbft/libs/os"
+
+	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
+	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
 	"github.com/gorilla/mux"
 	"github.com/rakyll/statik/fs"
 	"github.com/spf13/cast"
@@ -17,10 +25,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/grpc/tmservice"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/codec/types"
+	"github.com/cosmos/cosmos-sdk/runtime"
+	runtimeservices "github.com/cosmos/cosmos-sdk/runtime/services"
 	"github.com/cosmos/cosmos-sdk/server/api"
 	"github.com/cosmos/cosmos-sdk/server/config"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/version"
@@ -28,13 +37,13 @@ import (
 	authtx "github.com/cosmos/cosmos-sdk/x/auth/tx"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
-	distrclient "github.com/cosmos/cosmos-sdk/x/distribution/client"
 	govclient "github.com/cosmos/cosmos-sdk/x/gov/client"
 	paramsclient "github.com/cosmos/cosmos-sdk/x/params/client"
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	ibcclientHandler "github.com/cosmos/ibc-go/v5/modules/core/02-client/client"
+	ibcclientHandler "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
+
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
@@ -46,12 +55,7 @@ import (
 	v6 "github.com/sge-network/sge/app/upgrades/v6"
 	v7 "github.com/sge-network/sge/app/upgrades/v7"
 	v8 "github.com/sge-network/sge/app/upgrades/v8"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	"github.com/tendermint/tendermint/libs/log"
-	tmos "github.com/tendermint/tendermint/libs/os"
-	dbm "github.com/tendermint/tm-db"
+	v9 "github.com/sge-network/sge/app/upgrades/v9"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -62,7 +66,6 @@ func getGovProposalHandlers() []govclient.ProposalHandler {
 
 	govProposalHandlers = append(govProposalHandlers,
 		paramsclient.ProposalHandler,
-		distrclient.ProposalHandler,
 		upgradeclient.LegacyProposalHandler,
 		upgradeclient.LegacyCancelProposalHandler,
 		ibcclientHandler.UpdateClientProposalHandler,
@@ -84,11 +87,12 @@ var (
 		v6.Upgrade,
 		v7.Upgrade,
 		v8.Upgrade,
+		v9.Upgrade,
 	}
 )
 
 var (
-	_ sdksimapp.App           = (*SgeApp)(nil)
+	_ runtime.AppI            = (*SgeApp)(nil)
 	_ servertypes.Application = (*SgeApp)(nil)
 )
 
@@ -163,7 +167,6 @@ func NewSgeApp(
 		bApp,
 		cdc,
 		mAccPerms,
-		app.ModuleAccountAddrs(),
 		skipUpgradeHeights,
 		homePath,
 		invCheckPeriod,
@@ -193,8 +196,7 @@ func NewSgeApp(
 	// can do so safely.
 	app.mm.SetOrderInitGenesis(orderInitBlockers()...)
 
-	app.mm.RegisterInvariants(&app.CrisisKeeper)
-	app.mm.RegisterRoutes(app.Router(), app.QueryRouter(), encodingConfig.Amino)
+	app.mm.RegisterInvariants(app.CrisisKeeper)
 
 	app.configurator = module.NewConfigurator(
 		app.appCodec,
@@ -202,6 +204,15 @@ func NewSgeApp(
 		app.GRPCQueryRouter(),
 	)
 	app.mm.RegisterServices(app.configurator)
+
+	// v47 - no dependecy injection, so register new gRPC services.
+	//#nosec
+	autocliv1.RegisterQueryServer(app.GRPCQueryRouter(), runtimeservices.NewAutoCLIQueryService(app.mm.Modules))
+	reflectionSvc, err := runtimeservices.NewReflectionService()
+	if err != nil {
+		panic(err)
+	}
+	reflectionv1.RegisterReflectionServiceServer(app.GRPCQueryRouter(), reflectionSvc)
 
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
@@ -363,6 +374,10 @@ func (app *SgeApp) RegisterTxService(clientCtx client.Context) {
 // RegisterTendermintService implements the Application.RegisterTendermintService method.
 func (app *SgeApp) RegisterTendermintService(clientCtx client.Context) {
 	tmservice.RegisterTendermintService(clientCtx, app.BaseApp.GRPCQueryRouter(), app.interfaceRegistry, app.Query)
+}
+
+func (app *SgeApp) RegisterNodeService(clientCtx client.Context) {
+	nodeservice.RegisterNodeService(clientCtx, app.GRPCQueryRouter())
 }
 
 // configure store loader that checks if version == upgradeHeight and applies store upgrades

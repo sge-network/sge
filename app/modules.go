@@ -35,15 +35,14 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-
-	ica "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts"
-	icatypes "github.com/cosmos/ibc-go/v5/modules/apps/27-interchain-accounts/types"
-	ibcfee "github.com/cosmos/ibc-go/v5/modules/apps/29-fee"
-	ibcfeetypes "github.com/cosmos/ibc-go/v5/modules/apps/29-fee/types"
-	"github.com/cosmos/ibc-go/v5/modules/apps/transfer"
-	ibctransfertypes "github.com/cosmos/ibc-go/v5/modules/apps/transfer/types"
-	ibc "github.com/cosmos/ibc-go/v5/modules/core"
-	ibchost "github.com/cosmos/ibc-go/v5/modules/core/24-host"
+	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
+	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
+	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
+	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
+	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
+	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v7/modules/core"
+	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
 	sgeappparams "github.com/sge-network/sge/app/params"
 	betmodule "github.com/sge-network/sge/x/bet"
@@ -53,7 +52,7 @@ import (
 	marketmodule "github.com/sge-network/sge/x/market"
 	marketmoduletypes "github.com/sge-network/sge/x/market/types"
 	mintmodule "github.com/sge-network/sge/x/mint"
-	minttypes "github.com/sge-network/sge/x/mint/types"
+	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
 	orderbookmodule "github.com/sge-network/sge/x/orderbook"
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 	ovmmodule "github.com/sge-network/sge/x/ovm"
@@ -72,7 +71,7 @@ import (
 var mAccPerms = map[string][]string{
 	authtypes.FeeCollectorName:     nil,
 	distrtypes.ModuleName:          nil,
-	minttypes.ModuleName:           {authtypes.Minter},
+	mintmoduletypes.ModuleName:     {authtypes.Minter},
 	stakingtypes.BondedPoolName:    {authtypes.Burner, authtypes.Staking},
 	stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 	govtypes.ModuleName:            {authtypes.Burner},
@@ -94,7 +93,7 @@ var mAccPerms = map[string][]string{
 // and genesis verification.
 var ModuleBasics = module.NewBasicManager(
 	auth.AppModuleBasic{},
-	genutil.AppModuleBasic{},
+	genutil.NewAppModuleBasic(genutiltypes.DefaultMessageValidator),
 	bank.AppModuleBasic{},
 	capability.AppModuleBasic{},
 	staking.AppModuleBasic{},
@@ -139,12 +138,12 @@ func appModules(
 			app.BaseApp.DeliverTx,
 			encodingConfig.TxConfig,
 		),
-		auth.NewAppModule(appCodec, app.AccountKeeper, nil),
+		auth.NewAppModule(appCodec, app.AccountKeeper, nil, app.GetSubspace(authtypes.ModuleName)),
 		vesting.NewAppModule(app.AccountKeeper, app.BankKeeper),
-		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper),
-		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
-		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
-		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
+		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper, app.GetSubspace(banktypes.ModuleName)),
+		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
+		crisis.NewAppModule(app.CrisisKeeper, skipGenesisInvariants, app.GetSubspace(crisistypes.ModuleName)),
+		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		mintmodule.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, app.BankKeeper),
 		slashing.NewAppModule(
 			appCodec,
@@ -152,6 +151,7 @@ func appModules(
 			app.AccountKeeper,
 			app.BankKeeper,
 			app.StakingKeeper,
+			app.GetSubspace(slashingtypes.ModuleName),
 		),
 		distr.NewAppModule(
 			appCodec,
@@ -159,8 +159,9 @@ func appModules(
 			app.AccountKeeper,
 			app.BankKeeper,
 			app.StakingKeeper,
+			app.GetSubspace(distrtypes.ModuleName),
 		),
-		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
+		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		upgrade.NewAppModule(app.UpgradeKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
 		feegrantmodule.NewAppModule(
@@ -210,9 +211,9 @@ func simulationModules(
 	appCodec := encodingConfig.Marshaler
 
 	return []module.AppModuleSimulation{
-		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts),
-		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper),
-		capability.NewAppModule(appCodec, *app.CapabilityKeeper),
+		auth.NewAppModule(appCodec, app.AccountKeeper, authsims.RandomGenesisAccounts, app.GetSubspace(authtypes.ModuleName)),
+		bank.NewAppModule(appCodec, app.BankKeeper, app.AccountKeeper, app.GetSubspace(banktypes.ModuleName)),
+		capability.NewAppModule(appCodec, *app.CapabilityKeeper, false),
 		feegrantmodule.NewAppModule(
 			appCodec,
 			app.AccountKeeper,
@@ -220,15 +221,16 @@ func simulationModules(
 			app.FeeGrantKeeper,
 			app.interfaceRegistry,
 		),
-		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
+		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(govtypes.ModuleName)),
 		mintmodule.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, nil),
-		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
+		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper, app.GetSubspace(stakingtypes.ModuleName)),
 		distr.NewAppModule(
 			appCodec,
 			app.DistrKeeper,
 			app.AccountKeeper,
 			app.BankKeeper,
 			app.StakingKeeper,
+			app.GetSubspace(distrtypes.ModuleName),
 		),
 		slashing.NewAppModule(
 			appCodec,
@@ -236,6 +238,7 @@ func simulationModules(
 			app.AccountKeeper,
 			app.BankKeeper,
 			app.StakingKeeper,
+			app.GetSubspace(stakingtypes.ModuleName),
 		),
 		params.NewAppModule(app.ParamsKeeper),
 		evidence.NewAppModule(app.EvidenceKeeper),
@@ -269,13 +272,13 @@ func orderBeginBlockers() []string {
 		// upgrades should be run first
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
-		minttypes.ModuleName,
+		mintmoduletypes.ModuleName,
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
 		ibctransfertypes.ModuleName,
-		ibchost.ModuleName,
+		ibcexported.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		govtypes.ModuleName,
@@ -303,14 +306,14 @@ func orderEndBlockers() []string {
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
-		ibchost.ModuleName,
+		ibcexported.ModuleName,
 		ibctransfertypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
-		minttypes.ModuleName,
+		mintmoduletypes.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		authz.ModuleName,
@@ -340,8 +343,8 @@ func orderInitBlockers() []string {
 		stakingtypes.ModuleName,
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
-		minttypes.ModuleName,
-		ibchost.ModuleName,
+		mintmoduletypes.ModuleName,
+		ibcexported.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		authz.ModuleName,

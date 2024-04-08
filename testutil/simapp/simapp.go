@@ -8,31 +8,28 @@ import (
 	"testing"
 	"time"
 
-	"github.com/spf13/cast"
-
 	sdkmath "cosmossdk.io/math"
+	tmdb "github.com/cometbft/cometbft-db"
+	abci "github.com/cometbft/cometbft/abci/types"
+	"github.com/cometbft/cometbft/crypto/secp256k1"
+	"github.com/cometbft/cometbft/libs/log"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
+	tmtypes "github.com/cometbft/cometbft/types"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	stakingKeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
-	"github.com/cosmos/cosmos-sdk/x/staking/teststaking"
+	stakingtestutil "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	tmtypes "github.com/tendermint/tendermint/types"
-	tmdb "github.com/tendermint/tm-db"
-
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/utils"
 	mintmoduletypes "github.com/sge-network/sge/x/mint/types"
 	ovmtypes "github.com/sge-network/sge/x/ovm/types"
+	"github.com/spf13/cast"
 )
 
 // TestApp is used as a container of the sge app
@@ -58,7 +55,7 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 		"",
 		invCheckPeriod,
 		encCdc,
-		sdksimapp.EmptyAppOptions{},
+		simtestutil.EmptyAppOptions{},
 	)
 	if withGenesis {
 		return &TestApp{SgeApp: *appInstance}, app.NewDefaultGenesisState()
@@ -98,6 +95,7 @@ func SetupWithGenesisAccounts(
 		balances,
 		totalSupply,
 		[]banktypes.Metadata{},
+		[]banktypes.SendEnabled{},
 	)
 	genesisState[banktypes.ModuleName] = appInstance.AppCodec().MustMarshalJSON(bankGenesis)
 
@@ -248,8 +246,8 @@ func SetModuleAccountCoins(
 }
 
 // DefaultConsensusParams parameters for tendermint consensus
-var DefaultConsensusParams = &abci.ConsensusParams{
-	Block: &abci.BlockParams{
+var DefaultConsensusParams = &tmproto.ConsensusParams{
+	Block: &tmproto.BlockParams{
 		MaxBytes: 200000,
 		MaxGas:   2000000,
 	},
@@ -277,7 +275,7 @@ func stakingDefaultTestGenesis(
 	p1 := int64(8)
 	p2 := int64(2)
 
-	pks := sdksimapp.CreateTestPubKeys(2)
+	pks := simtestutil.CreateTestPubKeys(2)
 	valConsPk1 := pks[0]
 	valConsPk2 := pks[1]
 
@@ -302,12 +300,12 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk0,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower1,
-		DelegatorShares: sdk.NewDecFromInt(valPower1),
+		DelegatorShares: sdkmath.LegacyNewDecFromInt(valPower1),
 		Description:     stakingtypes.NewDescription("hoop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDec(0),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDec(0),
 		),
 	}
 	bondedVal2 := stakingtypes.Validator{
@@ -315,12 +313,12 @@ func stakingDefaultTestGenesis(
 		ConsensusPubkey: pk1,
 		Status:          stakingtypes.Bonded,
 		Tokens:          valPower2,
-		DelegatorShares: sdk.NewDecFromInt(valPower2),
+		DelegatorShares: sdkmath.LegacyNewDecFromInt(valPower2),
 		Description:     stakingtypes.NewDescription("bloop", "", "", "", ""),
 		Commission: stakingtypes.NewCommission(
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDecWithPrec(5, 1),
-			sdk.NewDec(0),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDecWithPrec(5, 1),
+			sdkmath.LegacyNewDec(0),
 		),
 	}
 
@@ -372,8 +370,8 @@ func stakingDefaultTestGenesis(
 }
 
 // NewStakingHelper creates staking Handler wrapper for tests
-func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *teststaking.Helper {
-	helper := teststaking.NewHelper(t, ctx, k)
+func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *stakingtestutil.Helper {
+	helper := stakingtestutil.NewHelper(t, ctx, &k)
 	helper.Commission = validatorDefaultCommission()
 	helper.Denom = params.DefaultBondDenom
 	return helper
@@ -381,9 +379,9 @@ func NewStakingHelper(t *testing.T, ctx sdk.Context, k stakingKeeper.Keeper) *te
 
 func validatorDefaultCommission() stakingtypes.CommissionRates {
 	return stakingtypes.NewCommissionRates(
-		sdk.MustNewDecFromStr("0.1"),
-		sdk.MustNewDecFromStr("0.2"),
-		sdk.MustNewDecFromStr("0.01"),
+		sdkmath.LegacyMustNewDecFromStr("0.1"),
+		sdkmath.LegacyMustNewDecFromStr("0.2"),
+		sdkmath.LegacyMustNewDecFromStr("0.01"),
 	)
 }
 

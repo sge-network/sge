@@ -1,6 +1,7 @@
 package v1
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
@@ -13,7 +14,7 @@ import (
 func setCommissionRate(stakingKeeper *stakingkeeper.Keeper, ctx sdk.Context) {
 	// the minimal commission rate of 5% (0.05)
 	// (default is needed to be set because of SDK store migrations that set the param)
-	stakingtypes.DefaultMinCommissionRate = sdk.NewDecWithPrec(5, 2)
+	stakingtypes.DefaultMinCommissionRate = sdkmath.LegacyNewDecWithPrec(5, 2)
 
 	stakingKeeper.IterateValidators(ctx, func(index int64, val stakingtypes.ValidatorI) (stop bool) {
 		if val.GetCommission().LT(stakingtypes.DefaultMinCommissionRate) {
@@ -39,7 +40,7 @@ func CreateUpgradeHandler(
 	keepers *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		setCommissionRate(&keepers.StakingKeeper, ctx)
+		setCommissionRate(keepers.StakingKeeper, ctx)
 
 		return mm.RunMigrations(ctx, configurator, fromVM)
 	}

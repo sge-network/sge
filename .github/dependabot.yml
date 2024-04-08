@@ -5,6 +5,6 @@ updates:
     schedule:
       interval: weekly
     ignore:
-      - dependency-name: "github.com/tendermint/tendermint"
+      - dependency-name: "github.com/cometbft/cometbft"
         update-types: ["version-update:semver-major", "version-update:semver-minor"]
     open-pull-requests-limit: 10

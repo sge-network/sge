@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/mint/types"
 )
@@ -75,7 +74,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					MintDenom:     types.DefaultParams().MintDenom,
 					BlocksPerYear: types.DefaultParams().BlocksPerYear,
 					Phases: []types.Phase{
-						{YearCoefficient: sdk.MustNewDecFromStr("0"), Inflation: sdk.MustNewDecFromStr("0")},
+						{YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0"), Inflation: sdkmath.LegacyMustNewDecFromStr("0")},
 					},
 					ExcludeAmount: types.DefaultParams().ExcludeAmount,
 				},
@@ -103,7 +102,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					MintDenom:     types.DefaultParams().MintDenom,
 					BlocksPerYear: types.DefaultParams().BlocksPerYear,
 					Phases: []types.Phase{
-						{YearCoefficient: sdk.MustNewDecFromStr("0"), Inflation: sdk.MustNewDecFromStr("0")},
+						{YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0"), Inflation: sdkmath.LegacyMustNewDecFromStr("0")},
 					},
 					ExcludeAmount: types.DefaultParams().ExcludeAmount,
 				},
@@ -127,7 +126,7 @@ func TestGenesisStateValidate(t *testing.T) {
 			desc: "negative inflation",
 			genState: types.NewGenesisState(
 				types.Minter{
-					Inflation:       sdk.NewDec(-10),
+					Inflation:       sdkmath.LegacyNewDec(-10),
 					PhaseStep:       types.DefaultInitialMinter().PhaseStep,
 					PhaseProvisions: types.DefaultInitialMinter().PhaseProvisions,
 				},

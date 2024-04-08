@@ -2,38 +2,37 @@ package types
 
 import (
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // CalculatePayoutProfit calculates the amount of payout profit portion according to bet odds value and amount
-func CalculatePayoutProfit(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
+func CalculatePayoutProfit(oddsVal string, amount sdkmath.Int) (sdkmath.LegacyDec, error) {
 	payout, err := calculatePayout(oddsVal, amount)
 	if err != nil {
-		return sdk.ZeroDec(), err
+		return sdkmath.LegacyZeroDec(), err
 	}
 
 	// bettor profit is the subtracted amount of payout from bet amount
-	profit := payout.Sub(sdk.NewDecFromInt(amount))
+	profit := payout.Sub(sdkmath.LegacyNewDecFromInt(amount))
 
 	return profit, nil
 }
 
 // calculatePayout calculates the amount of payout according to bet odds value and amount
-func calculatePayout(oddsVal string, amount sdkmath.Int) (sdk.Dec, error) {
+func calculatePayout(oddsVal string, amount sdkmath.Int) (sdkmath.LegacyDec, error) {
 	// total payout should be paid to bettor
 	payout, err := CalculateDecimalPayout(oddsVal, amount)
 	if err != nil {
-		return sdk.ZeroDec(), err
+		return sdkmath.LegacyZeroDec(), err
 	}
 
 	return payout, nil
 }
 
 // CalculateBetAmount calculates the amount of bet according to bet odds value and payout profit
-func CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+func CalculateBetAmount(oddsVal string, payoutProfit sdkmath.LegacyDec) (sdkmath.LegacyDec, error) {
 	betAmount, err := calculateBetAmount(oddsVal, payoutProfit)
 	if err != nil {
-		return sdk.ZeroDec(), err
+		return sdkmath.LegacyZeroDec(), err
 	}
 
 	return betAmount, nil
@@ -43,12 +42,12 @@ func CalculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
 // and returns the int and the truncated decimal part.
 func CalculateBetAmountInt(
 	oddsVal string,
-	payoutProfit sdk.Dec,
-	truncatedBetAmount sdk.Dec,
-) (sdkmath.Int, sdk.Dec, error) {
+	payoutProfit sdkmath.LegacyDec,
+	truncatedBetAmount sdkmath.LegacyDec,
+) (sdkmath.Int, sdkmath.LegacyDec, error) {
 	expectedBetAmountDec, err := CalculateBetAmount(oddsVal, payoutProfit)
 	if err != nil {
-		return sdkmath.Int{}, sdk.Dec{}, err
+		return sdkmath.Int{}, sdkmath.LegacyDec{}, err
 	}
 	// add previous loop truncated value to the calculated bet amount
 	expectedBetAmountDec = expectedBetAmountDec.Add(truncatedBetAmount)
@@ -58,17 +57,17 @@ func CalculateBetAmountInt(
 	betAmount := expectedBetAmountDec.RoundInt()
 
 	// save the truncated amount in the calculations for the next loop
-	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(sdk.NewDecFromInt(betAmount)))
+	truncatedBetAmount = truncatedBetAmount.Add(expectedBetAmountDec.Sub(sdkmath.LegacyNewDecFromInt(betAmount)))
 
 	return betAmount, truncatedBetAmount, nil
 }
 
 // calculateBetAmount calculates the amount of bet according to bet odds value and payoutProfit
-func calculateBetAmount(oddsVal string, payoutProfit sdk.Dec) (sdk.Dec, error) {
+func calculateBetAmount(oddsVal string, payoutProfit sdkmath.LegacyDec) (sdkmath.LegacyDec, error) {
 	// total payout should be paid to bettor
 	betAmount, err := CalculateDecimalBetAmount(oddsVal, payoutProfit)
 	if err != nil {
-		return sdk.ZeroDec(), err
+		return sdkmath.LegacyZeroDec(), err
 	}
 
 	return betAmount, nil

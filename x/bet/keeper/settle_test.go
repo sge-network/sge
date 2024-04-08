@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/simapp"
@@ -52,7 +51,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 				Status:    types.Bet_STATUS_SETTLED,
@@ -73,7 +72,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -92,7 +91,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -111,7 +110,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 			},
@@ -131,7 +130,7 @@ func TestSettleBet(t *testing.T) {
 			bet: &types.Bet{
 				MarketUID: testMarketUID,
 				OddsValue: "10",
-				Amount:    sdk.NewInt(1000000),
+				Amount:    sdkmath.NewInt(1000000),
 				Creator:   testCreator,
 				OddsUID:   testOddsUID1,
 
@@ -245,7 +244,7 @@ func TestBatchSettleBet(t *testing.T) {
 					UID:               testOddsUID1,
 					MarketUID:         marketUID,
 					Value:             "4.20",
-					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+					MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 				},
 			)
 		}
