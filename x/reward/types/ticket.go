@@ -7,6 +7,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/sge-network/sge/utils"
+	"github.com/sge-network/sge/x/bet/types"
 )
 
 // Validate validates campaign creation ticket payload.
@@ -38,10 +40,6 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
 		payload.RewardAmount.UnlockPeriod == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
-	}
-
-	if payload.ClaimsPerCategory == 0 {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "claim per category should be a positive number")
 	}
 
 	return nil
@@ -104,5 +102,26 @@ func (payload *RewardPayloadCommon) Validate() error {
 	if !payload.KycData.Validate(payload.Receiver) {
 		return sdkerrors.Wrapf(ErrUserKycFailed, "%s", payload.Receiver)
 	}
+	return nil
+}
+
+// Validate validates promoter config set ticket payload.
+func (payload *CreatePromoterPayload) Validate() error {
+	if !utils.IsValidUID(payload.UID) {
+		return types.ErrInvalidBetUID
+	}
+	if err := payload.Conf.Validate(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Validate validates promoter config set ticket payload.
+func (payload *SetPromoterConfPayload) Validate() error {
+	if err := payload.Conf.Validate(); err != nil {
+		return err
+	}
+
 	return nil
 }

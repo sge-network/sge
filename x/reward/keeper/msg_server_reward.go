@@ -48,12 +48,40 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "distribution calculation failed %s", err)
 	}
 
-	rewards, err := k.GetRewardsByAddressAndCategory(ctx, factData.Receiver.MainAccountAddr, campaign.RewardCategory)
+	var grantStats uint64
+	if campaign.CapCount > 0 {
+		grantStats, isFound = k.GetRewardGrantsStats(ctx, msg.CampaignUid, factData.Receiver.MainAccountAddr)
+		if !isFound {
+			grantStats = 0
+		}
+		if grantStats >= campaign.CapCount {
+			return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "maximum count cap of the campaign is reached %d", grantStats)
+		}
+
+		grantStats++
+		k.SetRewardGrantsStats(ctx, msg.CampaignUid, factData.Receiver.MainAccountAddr, grantStats)
+	}
+
+	promoterByAddress, isFound := k.GetPromoterByAddress(ctx, campaign.Promoter)
+	if !isFound {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", campaign.Promoter)
+	}
+	promoter, isFound := k.GetPromoter(ctx, promoterByAddress.PromoterUID)
+	if !isFound {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the uid: %s not found", promoterByAddress.PromoterUID)
+	}
+
+	rewards, err := k.GetRewardsOfReceiverByPromoterAndCategory(ctx, promoter.UID, factData.Receiver.MainAccountAddr, campaign.RewardCategory)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "failed to retrieve rewards for user.")
 	}
-	if len(rewards) >= cast.ToInt(campaign.ClaimsPerCategory) {
-		return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
+
+	for _, c := range promoter.Conf.CategoryCap {
+		if c.Category == campaign.RewardCategory {
+			if len(rewards) >= cast.ToInt(c.CapPerAcc) {
+				return nil, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "maximum rewards claimed for the given category.")
+			}
+		}
 	}
 
 	if err := campaign.CheckPoolBalance(factData.Receiver.SubaccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
@@ -72,7 +100,8 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		factData.Common.SourceUID,
 		factData.Common.Meta,
 	))
-	k.SetRewardByReceiver(ctx, types.NewRewardByCategory(msg.Uid, factData.Receiver.MainAccountAddr, campaign.RewardCategory))
+
+	k.SetRewardOfReceiverByPromoterAndCategory(ctx, promoter.UID, types.NewRewardByCategory(msg.Uid, factData.Receiver.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
 	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, factData.Receiver, unlockTS)

@@ -10,6 +10,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/authz"
 
 	bettypes "github.com/sge-network/sge/x/bet/types"
+	markettypes "github.com/sge-network/sge/x/market/types"
 	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
@@ -33,6 +34,11 @@ type BankKeeper interface {
 type BetKeeper interface {
 	GetBet(ctx sdk.Context, creator string, id uint64) (val bettypes.Bet, found bool)
 	GetBetID(ctx sdk.Context, uid string) (val bettypes.UID2ID, found bool)
+}
+
+// BetKeeper defines the expected interface needed to access market state.
+type MarketKeeper interface {
+	GetMarket(ctx sdk.Context, marketUID string) (markettypes.Market, bool)
 }
 
 // OVMKeeper defines the expected interface needed to verify ticket and unmarshal it
@@ -71,5 +77,6 @@ type SubaccountKeeper interface {
 
 // RewardKeeper defines the expected interface needed to get and filter the rewards.
 type RewardKeeper interface {
-	HasRewardByReceiver(ctx sdk.Context, addr string, category RewardCategory) bool
+	HasRewardOfReceiverByPromoter(ctx sdk.Context, promoterUID, addr string, category RewardCategory) bool
+	GetPromoterByAddress(ctx sdk.Context, address string) (val PromoterByAddress, found bool)
 }

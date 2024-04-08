@@ -48,7 +48,12 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
-	if !keepers.RewardKeeper.HasRewardByReceiver(ctx, payload.Referee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
+	promoter, isFound := keepers.GetPromoterByAddress(ctx, campaign.Promoter)
+	if !isFound {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", campaign.Promoter)
+	}
+
+	if !keepers.RewardKeeper.HasRewardOfReceiverByPromoter(ctx, promoter.PromoterUID, payload.Referee, RewardCategory_REWARD_CATEGORY_SIGNUP) {
 		return RewardFactoryData{}, sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, "referee account has signed up yet, there is no referee claim record")
 	}
 

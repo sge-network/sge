@@ -28,6 +28,10 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
 
+	if !k.IsPromoter(ctx, payload.Promoter) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "promoter with the address: %s not found", payload.Promoter)
+	}
+
 	if msg.Creator != payload.Promoter {
 		if err := utils.ValidateMsgAuthorization(k.authzKeeper, ctx, msg.Creator, payload.Promoter, msg,
 			types.ErrAuthorizationNotFound, types.ErrAuthorizationNotAccepted); err != nil {
@@ -53,7 +57,7 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 
 	campaign := types.NewCampaign(
 		msg.Creator, payload.Promoter, msg.Uid,
-		payload.StartTs, payload.EndTs, payload.ClaimsPerCategory,
+		payload.StartTs, payload.EndTs,
 		payload.RewardType,
 		payload.Category,
 		payload.RewardAmountType,
@@ -61,6 +65,8 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		payload.IsActive,
 		payload.Meta,
 		types.NewPool(msg.TotalFunds),
+		payload.CapCount,
+		payload.Constraints,
 	)
 
 	rewardFactory, err := campaign.GetRewardsFactory()
@@ -129,7 +135,7 @@ func (k msgServer) UpdateCampaign(goCtx context.Context, msg *types.MsgUpdateCam
 			return nil, sdkerrors.Wrapf(types.ErrInFundingCampaignPool, "%s", err)
 		}
 
-		campaign.Pool.Total = campaign.Pool.Total.Add(msg.TopupFunds)
+		campaign.Pool.TopUp(msg.TopupFunds)
 	}
 
 	campaign.EndTS = payload.EndTs
@@ -172,24 +178,31 @@ func (k msgServer) WithdrawFunds(goCtx context.Context, msg *types.MsgWithdrawFu
 			return nil, err
 		}
 	}
-	availableAmount := valFound.Pool.Total.Sub(valFound.Pool.Spent)
+	availableAmount := valFound.Pool.AvailableAmount()
 	// check if the pool amount is positive
 	if availableAmount.IsNil() || !availableAmount.GT(sdkmath.ZeroInt()) {
 		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "pool amount should be positive")
+	}
+
+	if availableAmount.LT(msg.Amount) {
+		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "not enough withdrawable balance %s", availableAmount)
 	}
 
 	// transfer the funds present in campaign to the promoter
 	if err := k.modFunder.Refund(
 		types.RewardPoolFunder{}, ctx,
 		sdk.MustAccAddressFromBech32(payload.Promoter),
-		availableAmount,
+		msg.Amount,
 	); err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrWithdrawFromCampaignPool, "%s", err)
 	}
 	// set the pool amount to zero
-	valFound.Pool.Total = sdkmath.ZeroInt()
-	// deactivate the campaign
-	valFound.IsActive = false
+	valFound.Pool.Withdraw(msg.Amount)
+
+	if valFound.Pool.AvailableAmount().LTE(sdkmath.ZeroInt()) {
+		// deactivate the campaign
+		valFound.IsActive = false
+	}
 
 	// store the campaign
 	k.SetCampaign(ctx, valFound)

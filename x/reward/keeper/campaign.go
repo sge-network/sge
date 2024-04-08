@@ -10,9 +10,7 @@ import (
 func (k Keeper) SetCampaign(ctx sdk.Context, campaign types.Campaign) {
 	store := k.getCampaignStore(ctx)
 	b := k.cdc.MustMarshal(&campaign)
-	store.Set(types.GetCampaignKey(
-		campaign.UID,
-	), b)
+	store.Set(types.GetCampaignKey(campaign.UID), b)
 }
 
 // GetCampaign returns a campaign from its index
@@ -58,7 +56,7 @@ func (k Keeper) GetAllCampaign(ctx sdk.Context) (list []types.Campaign) {
 
 func (k Keeper) UpdateCampaignPool(ctx sdk.Context, campaign types.Campaign, receiver types.Receiver) {
 	totalAmount := receiver.SubaccountAmount.Add(receiver.MainAccountAmount) // Fixme: Check if the logic is correct
-	campaign.Pool.Spent = campaign.Pool.Spent.Add(totalAmount)
+	campaign.Pool.Spend(totalAmount)
 
 	k.SetCampaign(ctx, campaign)
 }
