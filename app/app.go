@@ -54,7 +54,7 @@ import (
 	v5 "github.com/sge-network/sge/app/upgrades/v5"
 	v6 "github.com/sge-network/sge/app/upgrades/v6"
 	v7 "github.com/sge-network/sge/app/upgrades/v7"
-	v8 "github.com/sge-network/sge/app/upgrades/v8"
+	v9 "github.com/sge-network/sge/app/upgrades/v9"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -85,7 +85,7 @@ var (
 		v5.Upgrade,
 		v6.Upgrade,
 		v7.Upgrade,
-		v8.Upgrade,
+		v9.Upgrade,
 	}
 )
 
