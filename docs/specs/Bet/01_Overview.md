@@ -1,5 +1,16 @@
 # **Overview**
 
-The Bet module is responsible for receiving and processing requests to wager and settle bets. In the case of wagering, it validates the request and places the bet.
+The **Bet module** handles requests related to betting and bet settlement. Let's break it down:
 
-For the settlement, blockchain automatically queries resolved markets then for each of these markets, checks the result of the market, determines the bet result, and settles the bet using `orderbook` module.
+- **Wagering**:
+  - When a user places a bet, the Bet module validates the request.
+  - It then processes the bet and records it.
+
+- **Settlement**:
+  - After a market is resolved, the blockchain automatically queries the results.
+  - For each market, the Bet module:
+    - Checks the outcome.
+    - Determines the bet result.
+    - Settles the bet using the `orderbook` module.
+
+In summary, the Bet module ensures smooth betting interactions and accurate settlement based on market outcomes.
