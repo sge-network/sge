@@ -1,10 +1,10 @@
 # **Messages**
 
-In this section, we describe the processing of the House messages.
+Within this section, we outline the handling of House messages.
 
 ## **MsgDeposit**
 
-Within this message, the user specifies the deposit information they wish to make.
+In this message, the user outlines the deposit details they want to provide.
 
 ```proto
 // Msg defines the house Msg service.
@@ -57,7 +57,7 @@ message MsgDepositResponse {
 
 ## **Deposit Ticket Payload**
 
-This ticket is being used for validating the KYC and authorization.
+This ticket serves the purpose of KYC validation and authorization.
 
 ```proto
 // DepositTicketPayload indicates data of the deposit ticket.
@@ -72,19 +72,19 @@ message DepositTicketPayload {
 
 ### **Deposit Failure cases**
 
-The transaction will fail if:
+The transaction will not succeed under the following conditions:
 
-- Basic validation fails:
-  - Invalid creator address
-  - Empty or invalid market uid
-  - Invalid amount
-  - No Authorization grant found for the grantee (creator) and granter (depositor)
+- If basic validation encounters issues:
+  - An invalid creator address
+  - An empty or invalid market UID
+  - An invalid amount
+  - No authorization grant is found for the grantee (creator) and granter (depositor).
 
 ---
 
 ## **MsgWithddraw**
 
-Within this message, the user provides a deposit UID they wish to make a withdrawal against.
+In this message, the user specifies a deposit UID against which they intend to make a withdrawal.
 
 ```proto
 // Msg defines the Msg service.
@@ -146,7 +146,7 @@ message MsgWithdrawResponse {
 
 ## **Withdraw Ticket Payload**
 
-This ticket is being used for validating the KYC and authorization.
+This ticket serves the purpose of KYC validation and authorization.
 
 ```proto
 // WithdrawTicketPayload indicates data of the withdrawal ticket.
