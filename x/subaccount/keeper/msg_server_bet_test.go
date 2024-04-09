@@ -165,8 +165,8 @@ func TestMsgServer_Bet(t *testing.T) {
 		// now we check the subaccount balance
 		balance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, sdk.ZeroInt(), balance.SpentAmount)
-		require.Equal(t, sdk.ZeroInt(), balance.LostAmount)
+		require.Equal(t, sdkmath.ZeroInt(), balance.SpentAmount)
+		require.Equal(t, sdkmath.ZeroInt(), balance.LostAmount)
 		require.Equal(t, halfBetAmt, balance.WithdrawnAmount)
 		// the owner has no balances
 		ownerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
@@ -190,7 +190,7 @@ func TestMsgServer_Bet(t *testing.T) {
 		// now we check the subaccount balance
 		balance, exists := k.GetAccountSummary(ctx, subAccAddr)
 		require.True(t, exists)
-		require.Equal(t, balance.SpentAmount, sdk.ZeroInt())
+		require.Equal(t, balance.SpentAmount, sdkmath.ZeroInt())
 
 		ownerBalance := app.BankKeeper.GetBalance(ctx, subAccOwner, params.DefaultBondDenom).Amount
 

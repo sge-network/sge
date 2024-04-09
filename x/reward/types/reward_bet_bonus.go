@@ -10,7 +10,7 @@ import (
 	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
-var percent = sdk.NewInt(100)
+var percent = sdkmath.NewInt(100)
 
 // BetBonusReward is the type for bet bonus rewards calculations
 type BetBonusReward struct{}

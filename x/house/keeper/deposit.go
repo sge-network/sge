@@ -58,7 +58,7 @@ func (k Keeper) Deposit(ctx sdk.Context, creator, depositor string,
 	marketUID string, amount sdkmath.Int,
 ) (participationIndex uint64, feeAmount sdkmath.Int, err error) {
 	// Create the deposit object
-	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdk.ZeroInt(), 0)
+	deposit := types.NewDeposit(creator, depositor, marketUID, amount, sdkmath.ZeroInt(), 0)
 
 	feeAmount = deposit.CalcHouseParticipationFeeAmount(k.GetHouseParticipationFee(ctx))
 

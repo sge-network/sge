@@ -88,7 +88,7 @@ func TestMsgApplySignupReward(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -165,7 +165,7 @@ func TestMsgApplySignupRewardWithCap(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -223,7 +223,7 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -316,7 +316,7 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -455,7 +455,7 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -548,7 +548,7 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -698,7 +698,7 @@ func TestMsgApplyBetBonus(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, bettor, bettor, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})
@@ -839,7 +839,7 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
-			Amount:   sdk.ZeroInt(),
+			Amount:   sdkmath.ZeroInt(),
 			UnlockTS: uint64(ctx.BlockTime().Add(60 * time.Minute).Unix()),
 		},
 	})

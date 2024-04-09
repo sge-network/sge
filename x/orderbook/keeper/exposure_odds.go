@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/x/orderbook/types"
@@ -92,8 +93,8 @@ func (k Keeper) initParticipationExposures(
 		pe := types.NewParticipationExposure(
 			orderBookUID,
 			boe.OddsUID,
-			sdk.ZeroInt(),
-			sdk.ZeroInt(),
+			sdkmath.ZeroInt(),
+			sdkmath.ZeroInt(),
 			participationIndex,
 			1,
 			false,

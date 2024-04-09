@@ -93,9 +93,9 @@ func TestSetBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
 	balance := types.AccountSummary{
-		DepositedAmount: sdk.ZeroInt(),
-		SpentAmount:     sdk.ZeroInt(),
-		WithdrawnAmount: sdk.ZeroInt(),
+		DepositedAmount: sdkmath.ZeroInt(),
+		SpentAmount:     sdkmath.ZeroInt(),
+		WithdrawnAmount: sdkmath.ZeroInt(),
 		LostAmount:      sdk.OneInt(),
 	}
 

@@ -464,7 +464,7 @@ func (fInfo *fulfillmentInfo) checkFullfillmentForOtherOdds(requeThreshold sdkma
 
 		// availableLiquidity is the available amount of tokens to be used from the participation exposure
 		fInfo.secondaryProcessItem.setAvailableLiquidity(betOdd.MaxLossMultiplier)
-		if fInfo.secondaryProcessItem.isLiquidityLessThanThreshold(requeThreshold, sdk.ZeroInt()) {
+		if fInfo.secondaryProcessItem.isLiquidityLessThanThreshold(requeThreshold, sdkmath.ZeroInt()) {
 			fInfo.inProcessItem.setFulfilledSecondary(&fInfo.secondaryProcessItem)
 			eUpdate = append(eUpdate, fInfo.secondaryProcessItem.participationExposure)
 		}
@@ -513,7 +513,7 @@ func (fItem *fulfillmentItem) isLiquidityLessThanThreshold(threshold, adjAmount 
 }
 
 func (fItem *fulfillmentItem) noLiquidityAvailable() bool {
-	return fItem.availableLiquidity.LTE(sdk.ZeroInt())
+	return fItem.availableLiquidity.LTE(sdkmath.ZeroInt())
 }
 
 func (fItem *fulfillmentItem) setFulfilled() {

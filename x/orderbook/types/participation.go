@@ -78,7 +78,7 @@ func (p *OrderBookParticipation) ValidateWithdraw(
 
 // maxWithdrawalAmount returns the max withdrawal amount of a participation.
 func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
-	if p.CurrentRoundMaxLoss.LT(sdk.ZeroInt()) {
+	if p.CurrentRoundMaxLoss.LT(sdkmath.ZeroInt()) {
 		return p.CurrentRoundLiquidity
 	}
 	return p.CurrentRoundLiquidity.Sub(p.CurrentRoundMaxLoss)
@@ -86,7 +86,7 @@ func (p *OrderBookParticipation) maxWithdrawalAmount() sdkmath.Int {
 
 // IsLiquidityInCurrentRound determines if the participation has liquidity in current round.
 func (p *OrderBookParticipation) IsLiquidityInCurrentRound() bool {
-	return p.CurrentRoundLiquidity.GT(sdk.ZeroInt())
+	return p.CurrentRoundLiquidity.GT(sdkmath.ZeroInt())
 }
 
 // WithdrawableAmount returns the withdrawal amount according to the withdrawal mode and max withdrawable amount.
@@ -100,7 +100,7 @@ func (p *OrderBookParticipation) WithdrawableAmount(
 	var withdrawalAmt sdkmath.Int
 	switch mode {
 	case housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL:
-		if maxTransferableAmount.LTE(sdk.ZeroInt()) {
+		if maxTransferableAmount.LTE(sdkmath.ZeroInt()) {
 			return sdkmath.Int{}, sdkerrors.Wrapf(
 				ErrMaxWithdrawableAmountIsZero,
 				"%d, %d",
@@ -135,25 +135,25 @@ func (p *OrderBookParticipation) SetLiquidityAfterWithdrawal(withdrawalAmt sdkma
 // NotParticipatedInBetFulfillment determines if the participation has
 // participated in the bet fulfillment.
 func (p *OrderBookParticipation) NotParticipatedInBetFulfillment() bool {
-	return p.TotalBetAmount.Equal(sdk.ZeroInt())
+	return p.TotalBetAmount.Equal(sdkmath.ZeroInt())
 }
 
 // IsEligibleForNextRound determines if the participation has enough
 // liquidity to be used in the next round or not
 func (p *OrderBookParticipation) IsEligibleForNextRound() bool {
-	return p.CurrentRoundLiquidity.GT(sdk.ZeroInt())
+	return p.CurrentRoundLiquidity.GT(sdkmath.ZeroInt())
 }
 
 // IsEligibleForNextRound determines if the participation has enough
 // liquidity to be used in the next round or not
 func (p *OrderBookParticipation) IsEligibleForNextRoundPreLiquidityReduction() bool {
-	maxLoss := sdk.MaxInt(sdk.ZeroInt(), p.CurrentRoundMaxLoss)
-	return p.CurrentRoundLiquidity.Sub(maxLoss).GT(sdk.ZeroInt())
+	maxLoss := sdk.MaxInt(sdkmath.ZeroInt(), p.CurrentRoundMaxLoss)
+	return p.CurrentRoundLiquidity.Sub(maxLoss).GT(sdkmath.ZeroInt())
 }
 
 // TrimCurrentRoundLiquidity subtracts the max loss from the current round liquidity.
 func (p *OrderBookParticipation) TrimCurrentRoundLiquidity() {
-	maxLoss := sdk.MaxInt(sdk.ZeroInt(), p.CurrentRoundMaxLoss)
+	maxLoss := sdk.MaxInt(sdkmath.ZeroInt(), p.CurrentRoundMaxLoss)
 	p.CurrentRoundLiquidity = p.CurrentRoundLiquidity.Sub(maxLoss)
 }
 
@@ -163,8 +163,8 @@ func (p *OrderBookParticipation) ResetForNextRound(notFilledExposures uint64) {
 	// prepare participation for the next round
 	p.ExposuresNotFilled = notFilledExposures
 	p.MaxLoss = p.MaxLoss.Add(p.CurrentRoundMaxLoss)
-	p.CurrentRoundTotalBetAmount = sdk.ZeroInt()
-	p.CurrentRoundMaxLoss = sdk.ZeroInt()
+	p.CurrentRoundTotalBetAmount = sdkmath.ZeroInt()
+	p.CurrentRoundMaxLoss = sdkmath.ZeroInt()
 }
 
 // SetCurrentRound sets the current round total bet amount and max loss.

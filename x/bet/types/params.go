@@ -138,7 +138,7 @@ func validateConstraints(i interface{}) error {
 		return fmt.Errorf("minimum bet amount must be more than one: %d", v.MinAmount.Int64())
 	}
 
-	if v.Fee.LT(sdk.ZeroInt()) {
+	if v.Fee.LT(sdkmath.ZeroInt()) {
 		return fmt.Errorf("minimum bet fee must be positive: %d", v.Fee.Int64())
 	}
 

@@ -64,9 +64,9 @@ func TestMsgServer_Create(t *testing.T) {
 	// get the balance of the account
 	subaccountBalance, exists := app.SubaccountKeeper.GetAccountSummary(ctx, types.NewAddressFromSubaccount(1))
 	require.True(t, exists)
-	require.Equal(t, sdk.ZeroInt(), subaccountBalance.SpentAmount)
-	require.Equal(t, sdk.ZeroInt(), subaccountBalance.LostAmount)
-	require.Equal(t, sdk.ZeroInt(), subaccountBalance.WithdrawnAmount)
+	require.Equal(t, sdkmath.ZeroInt(), subaccountBalance.SpentAmount)
+	require.Equal(t, sdkmath.ZeroInt(), subaccountBalance.LostAmount)
+	require.Equal(t, sdkmath.ZeroInt(), subaccountBalance.WithdrawnAmount)
 	require.Equal(t, sdkmath.NewInt(123), subaccountBalance.DepositedAmount)
 }
 
