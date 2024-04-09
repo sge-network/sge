@@ -1,9 +1,9 @@
 # This Dockerfile is used for proto generation
 # To build, run `make proto-image-build`
 
-FROM bufbuild/buf:1.7.0 as BUILDER
+FROM bufbuild/buf:1.9.0 as BUILDER
 
-FROM golang:1.21-alpine
+FROM golang:1.22-alpine
 
 
 RUN apk add --no-cache \
@@ -12,7 +12,7 @@ RUN apk add --no-cache \
   git \
   make
 
-ENV GOLANG_PROTOBUF_VERSION=1.28.0 \
+ENV GOLANG_PROTOBUF_VERSION=1.28.1 \
   GOGO_PROTOBUF_VERSION=1.3.2 \
   GRPC_GATEWAY_VERSION=1.16.0
 
