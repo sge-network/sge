@@ -2,8 +2,9 @@
 
 ## **Params**
 
-1. `max_book_participations`: is the maximum participations allowed for a book.
-2. `batch_settlement_count`: is the count of bets to be automatically settlement in `orderbook`.
+1. **Max Orderbook Participations**: is the maximum participations allowed for a book.
+2. **Batch Settlement Count**: is the count of bets to be automatically settlement in `orderbook`.
+3. **Requeue Threshold**: the minimum amount that the fulfillment queue will be refreshed.
 
 ```proto
 // Params defines the parameters for the orderbook module.

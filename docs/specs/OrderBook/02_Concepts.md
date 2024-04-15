@@ -1,20 +1,14 @@
 # **Concepts**
 
-The `orderbook` is tasked with maintaining the order book, participations, exposures and order book settlement,
-each order book will be created as a one-to-one dependency of market. in action, `market` module calls
-order book initiation method of the `orderbook` module to create the corresponding order book, participation and odds exposures.
-The created order book for the market initiated will be maintained until the market marked as settled.
+The **Orderbook Module** is responsible for managing order books, participations, exposures, and order book settlements. Each order book is created as a one-to-one dependency of a market. In practice, the **Market Module** invokes the order book initiation method of the **Orderbook Module** to establish the corresponding order book, participation, and odds exposures. Once created, the order book for an initiated market remains active until the market is marked as settled.
 
-When an orderbook is being created, There is no fund available to cover the payout profit payment of the bets, so at least 1 deposit is needed to be made on the order book to enable `bet` module to accept bets.
+During the order book creation process, there are no available funds to cover the payout profit payment for bets. Therefore, at least one deposit is required on the order book to enable the **Bet Module** to accept bets.
 
-Once the `orderbook` has initiated an order book for a market, users can either bet against the house or
-become a part of the house by deposition of chosen amount through the House module. When a user deposits chosen
-amount through the `house` module, the `house` module will call the `orderbook` module to update the order book
-and set the participation for the user on the requested market.
+After the **Orderbook Module** initializes an order book for a market, users have two options: they can either bet against the house or become part of the house by depositing a chosen amount through the **House Module**. When a user makes a deposit via the **House Module**, the **Orderbook Module** updates the order book and sets the user's participation for the requested market.
 
-The deposit amount of order book participants is used to facilitate betting on the market.
+The deposit amounts from order book participants facilitate betting on the market.
 
-The payout that need to be paid by the system is named Exposure, there are two types of bet odds exposures:
+System payouts are referred to as "Exposure," which comes in two types of bet odds exposures:
 
-- The odds exposure are the payouts that expected to be paid.
-- The participation exposure are the payout that is guaranteed to be paid by the participation.
+1. **Odds Exposure**: These are the expected payouts.
+2. **Participation Exposure**: These payouts are guaranteed based on participation.

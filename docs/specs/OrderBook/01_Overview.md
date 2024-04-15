@@ -1,3 +1,3 @@
 # **Overview**
 
-The `orderbook` module maintains order books for markets and their corresponding participations and fund management of the module accounts, bettors, market creators and depositors of house.
+The **Orderbook Module** oversees market order books and manages the participation, funds, and accounts of module users, bettors, market creators, and house depositors.
