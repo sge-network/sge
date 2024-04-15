@@ -1,25 +1,23 @@
 # **Concepts**
 
-Sub Account module is tasked with create, topup and fund/refund of a sub account.
+The **Subaccount Module** is responsible for creating, topping up, and managing the funds of sub accounts.
 
-## **Sub Account**
+## Sub Account
 
-Sub Account is a special type of account that manipulating its balance can be done by the blockchain code logic and nobody can use `bank` or `staking` modules to transfer or use the `subaccount` balance to delegate.
+A sub account is a special type of account whose balance can be manipulated by the blockchain code logic. Unlike regular accounts, it cannot be accessed or transferred using the **Bank** or **Staking** modules. Each sub account has a one-to-one relationship with its owner account, meaning a normal account can either be associated with a sub account or have no sub account at all.
 
-> There is a One(None)-To-One relationship between a `subaccount` and its owner account, so a normal account is able to have a `subaccount` associated with it or no `subaccount` associated.
+## TopUp
 
-## **TopUp**
+Sub Account balances can be topped up on demand using the transaction endpoints provided by the sub account module.
 
-Sub Account balance can be topped up on demand and can be done by the transaction endpoints of the sub account module.
+## Withdrawal
 
-## **Withdrawal**
+Unlocked balances from a sub account can be withdrawn to the owner's main account balance. This operation is facilitated through the transaction endpoints of the sub account module.
 
-Sub Account unlocked balance can be withdrawn to the owner's account balance. this can be done by the transaction endpoints of the sub account module.
+## Wager
 
-## **Wager**
+Owners can use the **Subaccount Module** transaction message interfaces to wager using the sub account module's balance. This process automatically withdraws both unlocked and locked balances from the sub account, utilizing the main account address and balance for placing bets.
 
-Using the `subaccount` module transaction message interfaces, the owner is able to wager using the sub account module's balance, it concludes automatic withdrawal of unlocked and locked balance of the `subaccount` then use the main account address and balance to place a bet.
+## House Deposit/Withdraw
 
-## **HouseDeposit/Withdraw**
-
-Using the `subaccount` module transaction message interfaces, the owner is able to deposit/withdraw to the house module using the sub account module's balance.
+The **Subaccount Module** also allows owners to deposit to or withdraw from the house module using the sub account module's balance.

@@ -2,18 +2,18 @@
 
 ## **KVStore**
 
-State in sub account module is defined by its KVStore. This KVStore has five prefixes:
+The state within the **Subaccount Module** is defined by its KVStore, which consists of five prefixes:
 
-1. Sub account sequential ID store to track the last generated ID of the sub accounts.
-2. Sub account owner, that makes a 1-1 relation between main account and the `subaccount`.
-3. Sub account address, enable the blockchain to get the `subaccount` info by `subaccount` address itself.
-4. Locked balance of each `subaccount` address at a certain time.
-5. Locked balance of each `subaccount`.
+1. **Sub Account Sequential ID Store**: This prefix keeps track of the last generated ID for sub accounts.
+2. **Sub Account Owner**: Establishes a one-to-one relationship between the main account and its associated `subaccount`.
+3. **Sub Account Address**: Enables the blockchain to retrieve `subaccount` information directly using the `subaccount` address.
+4. **Locked Balance of Each Subaccount Address**: Records the locked balance of each `subaccount` at a specific point in time.
+5. **Locked Balance of Each Subaccount**: Stores the overall locked balance for each `subaccount`.
 
-## **Params**
+## Parameters
 
-1. `wager_enabled`: determines if  the wager via `subaccount` is enabled or not.
-2. `deposit_enabled`: determines if  the deposit to be a house via `subaccount` is enabled or not.
+1. **Wager Enabled**: Determines whether wagering via `subaccount` is enabled.
+2. **Deposit Enabled**: Indicates whether depositing to the house via `subaccount` is allowed.
 
 ```proto
 // Params defines the parameters for the module.
