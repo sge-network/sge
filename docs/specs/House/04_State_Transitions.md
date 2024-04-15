@@ -40,7 +40,6 @@ Before modifying the state, the following validations will be performed:
 
 The deposit will be updated based on these criteria.
 
-
 ```go
     deposit.WithdrawalCount++
     deposit.TotalWithdrawalAmount = deposit.TotalWithdrawalAmount + WithdrawalAmount
