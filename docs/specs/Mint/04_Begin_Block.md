@@ -1,10 +1,10 @@
 # **Begin-Block**
 
-Minting parameters are recalculated and inflation is paid at the beginning of each block.
+Minting parameters are recalculated, and inflation is disbursed at the start of every block.
 
 ## **Detect Current Phase**
 
-Check if the chain has moved from one phase to another, including the final phase:
+Verify whether the chain has transitioned between phases, including the ultimate phase:
 
 ```go
 // CurrentPhase returns current phase of the inflation
@@ -45,7 +45,7 @@ func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 }
 ```
 
-If the phase has changed, set the minter with the changed parameters:
+If there has been a phase change, update the minter with the modified parameters:
 
 ```go
 // set the new minter properties if the phase has changed or inflation has changed
@@ -72,7 +72,7 @@ If the phase has changed, set the minter with the changed parameters:
 
 ## **Next Phase Provision**
 
-Since the SGE-Network chain is predominantly reliant on phases for its inflation model, the phase_provision keeps track of the total amount of tokens to be distributed in the current phase. This value is calculated every time there is a phase change.
+Given that the SGE-Network chain heavily relies on phases for its inflation model, the phase_provision mechanism monitors the overall token distribution in the current phase. This value is recalculated whenever a phase transition occurs.
 
 ```go
 // NextPhaseProvisions returns the phase provisions based on current total
@@ -94,7 +94,21 @@ func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkma
 
 ## **Block Provision**
 
-Calculate the provisions generated for each block based on current phase provisions. The provisions are then minted by the `mint` module's ModuleMinterAccount and then transferred to the auth's FeeCollector ModuleAccount.
+1. **Inflation Calculation**:
+   - At the beginning of each block, the inflation parameters are recalculated.
+   - The target annual inflation rate is adjusted based on the current bonded ratio (the ratio of bonded tokens to the total supply).
+   - The inflation rate can change positively or negatively depending on how close it is to the desired ratio (usually 85%).
+   - The maximum rate change per year is capped at 10%.
+   - The annual inflation is then calculated, ensuring it falls between 5% and 10%.
+
+2. **Annual Provisions**:
+   - Next, we calculate the annual provisions based on the current total supply and the inflation rate.
+   - This parameter is computed once per block.
+
+3. **Block Provisions**:
+   - The provisions generated for each block are derived from the annual provisions.
+   - These provisions are minted by the **Mint module's ModuleMinterAccount**.
+   - Finally, they are transferred to the **FeeCollector ModuleAccount** within the authentication system.
 
 ```go
 // BlockProvisions returns the provisions for a block based on the phase

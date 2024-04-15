@@ -1,14 +1,13 @@
 # **Concepts**
 
-Unlike the default `mint` Module of Cosmos-SDK which can vary the inflation rate dynamically based on the ratio of bonded and unbonded tokens at any point in time, the `mint` module of the SGE-Network chain follows a strict regime of inflation rates defined as phases
+In contrast to the default **Mint Module** in Cosmos-SDK, which dynamically adjusts the inflation rate based on the ratio of bonded and unbonded tokens, the **Mint Module** of the SGE-Network chain adheres to a strict regime of inflation rates defined as **phases**.
 
-Phases are nothing but specific discreet time frames during which a certain inflation rate holds. Phases have two components:
+These phases represent discrete time frames during which a specific inflation rate remains constant. Each phase has two key components:
 
-- duration: The duration is defined as the year_coefficient. It defines the time in years for which a phase will hold. For example a yearcoefficient of 0.75 means that the phase will last for 9 months, that is, 3/4th of a year.
+1. **Duration**: The duration is measured by the **year coefficient**, representing the number of years the phase will last. For instance, a year coefficient of 0.75 corresponds to a phase lasting 9 months (3/4th of a year).
 
-- inflation: This parameter defines the inflation rate of the chain for the phase in question. Inflation is defined as a decimal. That is, inflation of 0.10000 means an inflation rate of 10%.
+2. **Inflation**: This parameter specifies the inflation rate for the given phase. Inflation is expressed as a decimal; for example, an inflation value of 0.10000 corresponds to a 10% inflation rate.
 
-The duration and inflation rate of phases can be modified via governance.
+Governance mechanisms allow adjustments to both the duration and inflation rate of these phases.
 
-> If all the specified phases are over, the chain enters a special phase called the final_phase, where the phase duration is infinite and the phase inflation is zero.
-> Note that the inflation rate does not depend on the number of bonded and unbonded tokens
+Furthermore, once all specified phases conclude, the chain enters a special phase known as the **final phase**. In this phase, the duration is infinite, and the inflation rate becomes zero. Notably, the inflation rate remains independent of the number of bonded and unbonded tokens.

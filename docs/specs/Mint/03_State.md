@@ -2,7 +2,7 @@
 
 ## **Minter**
 
-The minter is a space for holding the current phase and inflation information.
+The minter serves as a repository for storing the present phase and inflation data.
 
 ```proto
 // Minter represents the minting state.
@@ -33,19 +33,19 @@ message Minter {
 
 ## **Params**
 
-Minting params are held in the global params store.
+The **minter** stores minting parameters in the global params store. Let's break down the key parameters:
 
-1. Mint Denom: This parameter represents the denomination of the minted token
+1. **Mint Denom**: This parameter specifies the denomination of the minted token.
 
-2. Blocks Per Year: This parameter is used to signify how many blocks will comprise 1 year. Note that the phases, which are defined as a coefficient of years, will also be based on this parameter. For example, if the year_coefficient is defined as 0.5, and the blocks_per_year is defined as 1000, that means the phase will last for 500 blocks.
+2. **Blocks Per Year**: It indicates how many blocks constitute one year. The phases, which are coefficients of years, depend on this parameter. For instance, if the `year_coefficient` is 0.5 and `blocks_per_year` is 1000, a phase will last for 500 blocks.
 
-3. Phases: Phases are defined as specific discreet time frames during which a certain inflation rate holds.
+3. **Phases**: These represent discrete time frames during which a specific inflation rate applies.
 
-   a. duration: The duration is defined as the year_coefficient. It defines the time in years for which a phase will hold. For example a yearcoefficient of 0.75 means that the phase will last for 9 months, that is, 3/4th of a year.
+   - **Duration**: The duration corresponds to the `year_coefficient`. It defines the phase's duration in years. For example, a `year_coefficient` of 0.75 means the phase lasts for 9 months (3/4th of a year).
 
-   b. inflation: This parameter defines the inflation rate of the chain for the phase in question. Inflation is defined as a decimal. That is, inflation of 0.10000 means an inflation rate of 10%.
+   - **Inflation**: This parameter sets the inflation rate for the given phase. Inflation is expressed as a decimal; for instance, an inflation of 0.10000 corresponds to a 10% inflation rate.
 
-4. Exclude Amount: This parameter defines the number of tokens that will not incur inflation.
+4. **Exclude Amount**: This parameter specifies the number of tokens exempt from inflation.
 
 ```proto
 // Params defines the parameters for the module.

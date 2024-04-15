@@ -1,6 +1,6 @@
 # **Events**
 
-The `mint` module emits the following events:
+The **Mint Module** emits the following events:
 
 ## **BeginBlocker**
 
