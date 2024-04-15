@@ -1,12 +1,13 @@
 # **State Transitions**
 
-This section defines the state transitions of the reward module's KVStore in all scenarios:
+This segment delineates the state transitions of the **KVStore** within the **Reward module** across various situations:
 
-## **Create Campaign**
+## **Creating a Campaign**
 
-When this is processed:
+Upon processing:
 
-- If the ticket is valid a new campaign will be created with the given data and will be added to the `Reward` module state.
+1. In case of a valid ticket, a new campaign will be generated using the provided data and integrated into the **Reward Module** state.
+2. The total pool amount will be subtracted from the promoter's account balance and retained within the pool module account.
 
 ```go
 newCampaign := &types.Campaign{
@@ -21,8 +22,9 @@ newCampaign := &types.Campaign{
     reward_amount:      msg.ticket.RewardAmount,
     Pool:               Pool{ Total: msg.Ticket.TotalFunds },
     is_active:          msg.ticket.IsActive,
-    claims_per_category:msg.ticket.ClaimsPerCategory,
     meta:               msg.ticket.Meta,
+    cap_count:          msg.ticket.CapCount,
+    constraints:        msg.ticket.Constraints
 }
 ```
 
@@ -30,22 +32,15 @@ newCampaign := &types.Campaign{
 
 ## **Grant Reward**
 
-When this is processed:
+Upon processing:
 
-- If the corresponding campaign exists and is not expired, continue the process.
+1. If the corresponding campaign exists and is not expired, proceed with the process.
+2. Determine the distribution of rewards based on the defined reward amounts in the campaign, as well as the reward type and category.
+3. Verify the availability of the pool balance for the campaign.
+4. Allocate the rewards according to the calculated distributions.
+5. Update the campaign pool based on the distribution.
+6. Record the reward in the module state.
+7. Record the reward by receiver in the module state.
+8. Record the reward by campaign in the module state.
 
-- Calculate reward distribution according to the reward amounts defined int the campaign and the reward type and category.  
-
-- Validate availability of the pool balance for the campaign.
-
-- Distribute the rewards according to the calculated distributions.
-
-- Update the campaign pool according to the distribution.
-
-- Set Reward into the module state.
-
-- Set Reward by receiver into the module state.
-
-- Set Reward by campaign into the module state.
-
-> Note: The reward application modifies the campaign pool balance and accounts balances, but does not store reward application in the module state.
+> Note: The reward application alters the campaign pool balance and accounts balances but does not store the reward application in the module state.

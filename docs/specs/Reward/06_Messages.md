@@ -1,10 +1,13 @@
 # **Messages**
 
-In this section, we describe the processing of the Reward messages. the transaction message
-handler endpoints is as follows
+In the following section, we outline the handling of Reward messages. Below are the endpoints for the transaction message handler.
 
 ```proto
 service Msg {
+  // SetPromoterConf is a method to set the configurations of a promoter.
+  rpc SetPromoterConf(MsgSetPromoterConf) returns (MsgSetPromoterConfResponse);
+  // CreatePromoter is a method to create a promoter
+  rpc CreatePromoter(MsgCreatePromoter) returns (MsgCreatePromoterResponse);
   // CreateCampaign is a method to create a campaign
   rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
   // UpdateCampaign is a method to update campaign
@@ -16,9 +19,45 @@ service Msg {
 }
 ```
 
+## **MsgCreatePromoter**
+
+In this message, the information of the promoter which will be created, should be included.
+
+```proto
+// MsgCreatePromoter is msg to create a promoter.
+message MsgCreatePromoter {
+  // creator is the address of message signer account.
+  string creator = 1;
+  // ticket is the payload data.
+  string ticket = 2;
+}
+
+// MsgCreatePromoterResponse promoter create message response type.
+message MsgCreatePromoterResponse {}
+```
+
+## **MsgSetPromoterConf**
+
+In this message, to modify the configurations of a promoter, this message will be broadcasted.
+
+```proto
+// MsgSetPromoterConf is msg to set promoter configuration.
+message MsgSetPromoterConf {
+  // creator is the address of message signer account.
+  string creator = 1;
+  // uid is the unique identifier of the promoter.
+  string uid = 2;
+  // ticket is the payload data.
+  string ticket = 3;
+}
+
+// MsgCreateCampaignResponse campaign create message response type.
+message MsgSetPromoterConfResponse {}
+```
+
 ## **MsgCreateCampaign**
 
-Within this message, the user specifies the campaign information they wish to create.
+In this message, users provide the campaign information they aim to create.
 
 ```proto
 // MsgCreateCampaign is msg to create a reward campaign
@@ -57,8 +96,11 @@ message MsgCreateCampaignResponse {}
   "unlock_period": 136318754373
  },
  "is_active": true,
- "claims_per_category": 1,
  "meta": "custom metadata",
+ "cap_count": 1,
+ "constraints": {
+  "max_bet_amount": "300",
+ },
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
@@ -126,9 +168,9 @@ message MsgGrantReward {
 message MsgApplyRewardResponse {}
 ```
 
-### MsgGrantRewardTicket Payloads
+### **MsgGrantRewardTicket Payloads**
 
-#### Common ticket payload type
+#### **Common ticket payload type**
 
 This is a common type that should be present in all of the ticket payloads
 
@@ -151,6 +193,9 @@ message RewardPayloadCommon {
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 3;
+
+  // kyc_data contains the details of user kyc.
+  sgenetwork.sge.type.KycDataPayload kyc_data = 4;
 }
 ```
 
@@ -238,6 +283,79 @@ message GrantSignupReferrerRewardPayload {
   "meta": "custom grant metadata"
  },
  "referee": "{account address of the referee who has already claimed their reward}",
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "GrantReward"
+}
+```
+
+#### **3. Affiliate**
+
+- The `source_uid` should be empty.
+- The `affiliatee` should contain the address of lead generator who is referring the user.
+
+```proto
+// GrantSignupAffiliatorRewardPayload is the type for signup affiliator reward
+// grant payload.
+message GrantSignupAffiliatorRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // affiliatee is the address of the account that used this affiliator's
+  // address as source_uid
+  string affiliatee = 2;
+}
+```
+
+#### **Sample Affiliate Grant Reward ticket**
+
+```json
+{
+ "common": {
+  "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+  "source_uid": "",
+  "meta": "custom grant metadata"
+ },
+ "affiliatee": "{account address of the user which brought to the system by the lead generator}",
+ "exp": 1667863498866062000,
+ "iat": 1667827498,
+ "iss": "Oracle",
+ "sub": "GrantReward"
+}
+```
+
+#### **4. Bet Bonus**
+
+- The `source_uid` should be empty.
+- The `bet_uid` should contain the UID of the bet which were chosen to grant the reward for.
+
+```proto
+// GrantBetBonusRewardPayload is the type for bet bonus reward
+// grant payload.
+message GrantBetBonusRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // bet_uid is the list of uids
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
+}
+```
+
+#### **Sample Bet Bonus Grant Reward ticket**
+
+```json
+{
+ "common": {
+  "receiver": "sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc",
+  "source_uid": "",
+  "meta": "custom grant metadata"
+ },
+ "bet_uid": "{uid of the bet which the reward will be grantor to the bettor for}",
  "exp": 1667863498866062000,
  "iat": 1667827498,
  "iss": "Oracle",
