@@ -17,7 +17,7 @@ service Msg {
 
 ### **MsgSubmitPubkeysChangeProposalRequest**
 
-This message can be sent by any of the current registered public key owners, If any of the current private keys get compromised, we can use this message to replace the corrupt public key and set the new leader.
+Any of the presently registered public key owners can send this message. In case any of the current private keys are compromised, we can utilize this message to substitute the compromised public key and designate a new leader.
 
 ```proto
 // MsgPubkeysChangeProposalRequest is the type of request for modification of
@@ -96,4 +96,4 @@ message ProposalVotePayload {
 }
 ```
 
-> **NOTE:** In the absence of public keys, signatures cannot be verified for any transaction.
+> **NOTE:** Without public keys, signatures cannot be authenticated for any transaction.

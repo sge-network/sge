@@ -1,6 +1,6 @@
 # **Events**
 
-The OVM module emits the following events:
+The **OVM module** emits the following events:
 
 ## *MsgSubmitPubkeysChangeProposalRequest*
 
