@@ -10,8 +10,6 @@ import (
 	bettypes "github.com/sge-network/sge/x/bet/types"
 )
 
-var percent = sdk.NewInt(100)
-
 // BetBonusReward is the type for bet bonus rewards calculations
 type BetBonusReward struct{}
 
@@ -23,13 +21,7 @@ func (sur BetBonusReward) ValidateCampaign(campaign Campaign) error {
 	if campaign.RewardCategory != RewardCategory_REWARD_CATEGORY_BET_DISCOUNT {
 		return sdkerrors.Wrapf(ErrWrongRewardCategory, "bet bonus rewards can only have single definition")
 	}
-	if campaign.RewardAmount.MainAccountAmount.GT(percent) {
-		return sdkerrors.Wrapf(ErrWrongAmountForType, "bet bonus rewards percent for main account should be between 0 and 100")
-	}
-	if campaign.RewardAmount.SubaccountAmount.GT(percent) {
-		return sdkerrors.Wrapf(ErrWrongAmountForType, "bet bonus rewards percent for sub account should be between 0 and 100")
-	}
-	if campaign.RewardAmount.MainAccountAmount.IsZero() && campaign.RewardAmount.SubaccountAmount.IsZero() {
+	if campaign.RewardAmount.MainAccountPercentage.IsZero() && campaign.RewardAmount.SubaccountPercentage.IsZero() {
 		return sdkerrors.Wrapf(ErrWrongAmountForType, "one of main account and sub account percentage should be higher than zero")
 	}
 	if campaign.RewardAmountType != RewardAmountType_REWARD_AMOUNT_TYPE_PERCENTAGE {
@@ -64,7 +56,7 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccountAddressString, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
+	subaccountAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
@@ -97,19 +89,15 @@ func (sur BetBonusReward) Calculate(goCtx context.Context, ctx sdk.Context, keep
 		}
 	}
 
-	mainAmount := effectiveBetAmount.Mul(
-		sdk.NewDecFromInt(campaign.RewardAmount.MainAccountAmount).QuoInt(percent),
-	).TruncateInt()
-	subAmount := effectiveBetAmount.Mul(
-		sdk.NewDecFromInt(campaign.RewardAmount.SubaccountAmount).QuoInt(percent),
-	).TruncateInt()
+	mainAmount := effectiveBetAmount.Mul(campaign.RewardAmount.MainAccountPercentage).TruncateInt()
+	subAmount := effectiveBetAmount.Mul(campaign.RewardAmount.SubaccountPercentage).TruncateInt()
 
 	return NewRewardFactoryData(
 		NewReceiver(
-			subAccountAddressString,
 			payload.Common.Receiver,
-			subAmount,
-			mainAmount,
+			subaccountAddrStr,
+			mainAmount, subAmount,
+			campaign.RewardAmount.MainAccountPercentage, campaign.RewardAmount.SubaccountPercentage,
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,

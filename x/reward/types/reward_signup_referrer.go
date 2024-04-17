@@ -61,17 +61,18 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
+	subaccountAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	return NewRewardFactoryData(
 		NewReceiver(
-			subAccAddrStr,
 			payload.Common.Receiver,
-			campaign.RewardAmount.SubaccountAmount,
+			subaccountAddrStr,
 			campaign.RewardAmount.MainAccountAmount,
+			campaign.RewardAmount.SubaccountAmount,
+			sdk.ZeroDec(), sdk.ZeroDec(),
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,

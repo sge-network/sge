@@ -19,8 +19,7 @@ message GenesisState {
       [ (gogoproto.nullable) = false ];
   repeated RewardByCampaign reward_by_campaign_list = 5
       [ (gogoproto.nullable) = false ];
-  repeated Promoter promoter_list = 6
-      [ (gogoproto.nullable) = false ];
+  repeated Promoter promoter_list = 6 [ (gogoproto.nullable) = false ];
   repeated PromoterByAddress promoter_by_address_list = 7
       [ (gogoproto.nullable) = false ];
 }

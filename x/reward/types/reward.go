@@ -13,11 +13,9 @@ import (
 )
 
 type Receiver struct {
-	SubaccountAddr    string
-	SubaccountAmount  sdkmath.Int
-	UnlockPeriod      uint64
-	MainAccountAddr   string
-	MainAccountAmount sdkmath.Int
+	SubaccountAddr  string
+	MainAccountAddr string
+	RewardAmount    RewardAmount
 }
 
 // RewardFactoryKeepers holds the keeper objects usable by reward types methods.
@@ -59,18 +57,29 @@ func NewRewardFactoryData(receiver Receiver, common RewardPayloadCommon) RewardF
 	}
 }
 
+func newRewardAmount(mainAccountAmount, subaccountAmount sdkmath.Int,
+	mainAccountPercentage, subaccountPercentage sdk.Dec,
+	unlockPeriod uint64) RewardAmount {
+	return RewardAmount{
+		MainAccountAmount:     mainAccountAmount,
+		SubaccountAmount:      subaccountAmount,
+		MainAccountPercentage: mainAccountPercentage,
+		SubaccountPercentage:  subaccountPercentage,
+		UnlockPeriod:          unlockPeriod,
+	}
+}
+
 func NewReward(
-	uid, creator, receiver string,
+	uid, creator string, receiver Receiver,
 	campaignUID string,
-	rewardAmount *RewardAmount,
 	sourceUID, meta string,
 ) Reward {
 	return Reward{
 		UID:          uid,
 		Creator:      creator,
-		Receiver:     receiver,
+		Receiver:     receiver.MainAccountAddr,
 		CampaignUID:  campaignUID,
-		RewardAmount: rewardAmount,
+		RewardAmount: &receiver.RewardAmount,
 		SourceUID:    sourceUID,
 		Meta:         sanitize.XSS(meta),
 	}
@@ -100,13 +109,20 @@ type IRewardFactory interface {
 }
 
 // NewReceiver creates receiver object.
-func NewReceiver(saAddr, maAddr string, saAmount, maAmount sdkmath.Int, unlockPeriod uint64) Receiver {
+func NewReceiver(maAddr, saAddr string,
+	maAmount, saAmount sdkmath.Int,
+	maPercentage, saPercentage sdk.Dec,
+	unlockPeriod uint64) Receiver {
 	return Receiver{
-		SubaccountAddr:    saAddr,
-		SubaccountAmount:  saAmount,
-		UnlockPeriod:      unlockPeriod,
-		MainAccountAddr:   maAddr,
-		MainAccountAmount: maAmount,
+		SubaccountAddr:  saAddr,
+		MainAccountAddr: maAddr,
+		RewardAmount: newRewardAmount(
+			maAmount,
+			saAmount,
+			maPercentage,
+			saPercentage,
+			unlockPeriod,
+		),
 	}
 }
 
@@ -116,4 +132,8 @@ func (ds Receiver) String() string {
 		panic(err)
 	}
 	return string(out)
+}
+
+func (ds Receiver) TotalAmount() sdkmath.Int {
+	return ds.RewardAmount.MainAccountAmount.Add(ds.RewardAmount.SubaccountAmount)
 }

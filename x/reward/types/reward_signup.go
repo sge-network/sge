@@ -52,17 +52,18 @@ func (sur SignUpReward) Calculate(goCtx context.Context, ctx sdk.Context, keeper
 		return RewardFactoryData{}, ErrReceiverAddrCanNotBeSubaccount
 	}
 
-	subAccountAddressString, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
+	subaccountAddrStr, err := keepers.getSubaccountAddr(ctx, creator, payload.Common.Receiver)
 	if err != nil {
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
 	return NewRewardFactoryData(
 		NewReceiver(
-			subAccountAddressString,
 			payload.Common.Receiver,
-			campaign.RewardAmount.SubaccountAmount,
+			subaccountAddrStr,
 			campaign.RewardAmount.MainAccountAmount,
+			campaign.RewardAmount.SubaccountAmount,
+			sdk.ZeroDec(), sdk.ZeroDec(),
 			campaign.RewardAmount.UnlockPeriod,
 		),
 		payload.Common,
