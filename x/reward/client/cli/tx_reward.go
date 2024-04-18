@@ -12,8 +12,9 @@ import (
 
 func CmdGrantReward() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "apply [uid] [campaign uid] [ticket]",
-		Short: "Apply a new reward",
+		Use:   "grant [uid] [campaign uid] [ticket]",
+		Short: "Grant a new reward for the campaign",
+		Long:  "Grant a new reward for the campaign with the provided uid",
 		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes

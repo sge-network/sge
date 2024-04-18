@@ -23,7 +23,8 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-// Promoter is type for defining the reward promoter properties and configuration.
+// Promoter is type for defining the reward promoter properties and
+// configuration.
 type Promoter struct {
 	// creator is the address of promoter.
 	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`

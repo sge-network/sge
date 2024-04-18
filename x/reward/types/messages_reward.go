@@ -74,15 +74,15 @@ func (msg *MsgGrantReward) ValidateBasic() error {
 
 // EmitEvent emits the event for the message success.
 func (msg *MsgGrantReward) EmitEvent(ctx *sdk.Context, campaignUID string,
-	rewardUID, promoterAddr string, rewardAmount RewardAmount, receiver Receiver, subAccUnlockTS uint64,
+	rewardUID, promoterAddr string, receiver Receiver, subAccUnlockTS uint64,
 ) {
 	mainAmount := sdkmath.ZeroInt()
-	if !rewardAmount.MainAccountAmount.IsNil() {
-		mainAmount = rewardAmount.MainAccountAmount
+	if !receiver.RewardAmount.MainAccountAmount.IsNil() {
+		mainAmount = receiver.RewardAmount.MainAccountAmount
 	}
 	subAmount := sdkmath.ZeroInt()
-	if !rewardAmount.SubaccountAmount.IsNil() {
-		subAmount = rewardAmount.SubaccountAmount
+	if !receiver.RewardAmount.SubaccountAmount.IsNil() {
+		subAmount = receiver.RewardAmount.SubaccountAmount
 	}
 
 	emitter := utils.NewEventEmitter(ctx, attributeValueCategory)

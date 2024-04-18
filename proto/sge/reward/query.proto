@@ -21,8 +21,10 @@ service Query {
   }
 
   // PromoterByAddress queries a certain promoter.
-  rpc PromoterByAddress(QueryPromoterByAddressRequest) returns (QueryPromoterByAddressResponse) {
-    option (google.api.http).get = "/sge-network/sge/reward/promoter-by-address/{addr}";
+  rpc PromoterByAddress(QueryPromoterByAddressRequest)
+      returns (QueryPromoterByAddressResponse) {
+    option (google.api.http).get =
+        "/sge-network/sge/reward/promoter-by-address/{addr}";
   }
 
   // Queries list of all Promoter items.
@@ -53,7 +55,8 @@ service Query {
   // Queries list of all Reward items by user address.
   rpc RewardsByAddress(QueryRewardsByAddressRequest)
       returns (QueryRewardsByAddressResponse) {
-    option (google.api.http).get = "/sge-network/sge/reward/rewards/{promoter_uid}/{address}";
+    option (google.api.http).get =
+        "/sge-network/sge/reward/rewards/{promoter_uid}/{address}";
   }
 
   // Queries list of all Reward items by user address and reward type
@@ -81,12 +84,12 @@ message QueryParamsResponse {
   Params params = 1 [ (gogoproto.nullable) = false ];
 }
 
-// QueryPromoterByAddressRequest is request type for the Query/GetPromoterByAddress RPC method.
-message QueryPromoterByAddressRequest {
-  string addr = 1;
-}
+// QueryPromoterByAddressRequest is request type for the
+// Query/GetPromoterByAddress RPC method.
+message QueryPromoterByAddressRequest { string addr = 1; }
 
-// QueryPromoterByAddressResponse is response type for the Query/GetPromoterByAddress RPC method.
+// QueryPromoterByAddressResponse is response type for the
+// Query/GetPromoterByAddress RPC method.
 message QueryPromoterByAddressResponse {
   // promoter holds the queries promoter.
   Promoter promoter = 1 [ (gogoproto.nullable) = false ];
