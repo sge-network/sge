@@ -254,14 +254,14 @@ message Reward {
 
 // RewardAmount
 message RewardAmount {
-  // main_account_reward amount transferred to main account address
+  // main_account_amount transferred to main account address
   string main_account_amount = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"main_account_amount\""
   ];
 
-  // sub_account reward amount transferred to subaccount address
+  // subaccount_amount transferred to subaccount address
   string subaccount_amount = 2 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -273,6 +273,20 @@ message RewardAmount {
     (gogoproto.customname) = "UnlockPeriod",
     (gogoproto.jsontag) = "unlock_period",
     json_name = "unlock_period"
+  ];
+
+  // main_account_percentage transferred to main account address
+  string main_account_percentage = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"main_account_percentage\""
+  ];
+
+  // subaccount_percentage amount transferred to subaccount address
+  string subaccount_percentage = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"subaccount_percentage\""
   ];
 }
 
