@@ -84,7 +84,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 		}
 	}
 
-	if err := campaign.CheckPoolBalance(factData.Receiver.SubaccountAmount.Add(factData.Receiver.MainAccountAmount)); err != nil {
+	if err := campaign.CheckPoolBalance(factData.Receiver.TotalAmount()); err != nil {
 		return nil, types.ErrInsufficientPoolBalance
 	}
 
@@ -94,9 +94,10 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 	}
 
 	k.UpdateCampaignPool(ctx, campaign, factData.Receiver)
+
 	k.SetReward(ctx, types.NewReward(
-		msg.Uid, msg.Creator, factData.Receiver.MainAccountAddr,
-		msg.CampaignUid, campaign.RewardAmount,
+		msg.Uid, msg.Creator, factData.Receiver,
+		msg.CampaignUid,
 		factData.Common.SourceUID,
 		factData.Common.Meta,
 	))
@@ -104,7 +105,7 @@ func (k msgServer) GrantReward(goCtx context.Context, msg *types.MsgGrantReward)
 	k.SetRewardOfReceiverByPromoterAndCategory(ctx, promoter.UID, types.NewRewardByCategory(msg.Uid, factData.Receiver.MainAccountAddr, campaign.RewardCategory))
 	k.SetRewardByCampaign(ctx, types.NewRewardByCampaign(msg.Uid, campaign.UID))
 
-	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, *campaign.RewardAmount, factData.Receiver, unlockTS)
+	msg.EmitEvent(&ctx, msg.CampaignUid, msg.Uid, campaign.Promoter, factData.Receiver, unlockTS)
 
 	return &types.MsgGrantRewardResponse{}, nil
 }
