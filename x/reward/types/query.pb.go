@@ -113,7 +113,8 @@ func (m *QueryParamsResponse) GetParams() Params {
 	return Params{}
 }
 
-// QueryPromoterByAddressRequest is request type for the Query/GetPromoterByAddress RPC method.
+// QueryPromoterByAddressRequest is request type for the
+// Query/GetPromoterByAddress RPC method.
 type QueryPromoterByAddressRequest struct {
 	Addr string `protobuf:"bytes,1,opt,name=addr,proto3" json:"addr,omitempty"`
 }
@@ -158,7 +159,8 @@ func (m *QueryPromoterByAddressRequest) GetAddr() string {
 	return ""
 }
 
-// QueryPromoterByAddressResponse is response type for the Query/GetPromoterByAddress RPC method.
+// QueryPromoterByAddressResponse is response type for the
+// Query/GetPromoterByAddress RPC method.
 type QueryPromoterByAddressResponse struct {
 	// promoter holds the queries promoter.
 	Promoter Promoter `protobuf:"bytes,1,opt,name=promoter,proto3" json:"promoter"`

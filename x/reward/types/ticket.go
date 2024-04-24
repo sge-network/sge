@@ -30,14 +30,41 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, err.Error())
 	}
 
-	if (payload.RewardAmount.MainAccountAmount.IsNil() ||
-		payload.RewardAmount.MainAccountAmount.Equal(sdkmath.ZeroInt())) &&
-		(payload.RewardAmount.SubaccountAmount.IsNil() ||
-			payload.RewardAmount.SubaccountAmount.Equal(sdkmath.ZeroInt())) {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for atleast one of main account or subaccount")
+	switch payload.RewardAmountType {
+	case RewardAmountType_REWARD_AMOUNT_TYPE_FIXED:
+		if (!payload.RewardAmount.MainAccountPercentage.IsNil() &&
+			payload.RewardAmount.MainAccountPercentage.GT(sdk.ZeroDec())) ||
+			(!payload.RewardAmount.SubaccountPercentage.IsNil() &&
+				payload.RewardAmount.SubaccountPercentage.GT(sdk.ZeroDec())) {
+			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward percentage is not allowed for fixed amount campaign")
+		}
+		if (payload.RewardAmount.MainAccountAmount.IsNil() ||
+			payload.RewardAmount.MainAccountAmount.LTE(sdkmath.ZeroInt())) &&
+			(payload.RewardAmount.SubaccountAmount.IsNil() ||
+				payload.RewardAmount.SubaccountAmount.LTE(sdkmath.ZeroInt())) {
+			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount should be set for at least one of main account or subaccount")
+		}
+	case RewardAmountType_REWARD_AMOUNT_TYPE_PERCENTAGE:
+		if (!payload.RewardAmount.MainAccountAmount.IsNil() &&
+			payload.RewardAmount.MainAccountAmount.GT(sdkmath.ZeroInt())) ||
+			(!payload.RewardAmount.SubaccountAmount.IsNil() &&
+				payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt())) {
+			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward amount is not allowed for percentage campaign")
+		}
+		if (payload.RewardAmount.MainAccountPercentage.IsNil() ||
+			payload.RewardAmount.MainAccountPercentage.LTE(sdk.ZeroDec())) &&
+			(payload.RewardAmount.SubaccountPercentage.IsNil() ||
+				payload.RewardAmount.SubaccountPercentage.LTE(sdk.ZeroDec())) {
+			return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "reward percentage should be set for at least one of main account or subaccount")
+		}
+	default:
+		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "unsupported reward amount type")
 	}
 
-	if payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt()) &&
+	if ((!payload.RewardAmount.SubaccountAmount.IsNil() &&
+		payload.RewardAmount.SubaccountAmount.GT(sdkmath.ZeroInt())) ||
+		(!payload.RewardAmount.SubaccountPercentage.IsNil() &&
+			payload.RewardAmount.SubaccountPercentage.GT(sdk.ZeroDec()))) &&
 		payload.RewardAmount.UnlockPeriod == 0 {
 		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "sub account should have unlock period")
 	}

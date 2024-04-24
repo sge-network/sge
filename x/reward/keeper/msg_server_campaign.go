@@ -55,6 +55,19 @@ func (k msgServer) CreateCampaign(goCtx context.Context, msg *types.MsgCreateCam
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward amount %s is more than total funds %s", totalRewardAmount, msg.TotalFunds)
 	}
 
+	totalRewardPercentage := sdk.ZeroDec()
+	if !payload.RewardAmount.MainAccountPercentage.IsNil() {
+		totalRewardPercentage = totalRewardPercentage.Add(payload.RewardAmount.MainAccountPercentage)
+	}
+	if !payload.RewardAmount.SubaccountPercentage.IsNil() {
+		totalRewardPercentage = totalRewardPercentage.Add(payload.RewardAmount.SubaccountPercentage)
+	}
+
+	// check the sum of percentages, it should not be more than or equal to 1 (100%)
+	if totalRewardPercentage.GTE(sdk.OneDec()) {
+		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "defined reward percentage is equal or more than 1.0(100 percent), the provided value is %s", totalRewardPercentage)
+	}
+
 	campaign := types.NewCampaign(
 		msg.Creator, payload.Promoter, msg.Uid,
 		payload.StartTs, payload.EndTs,
