@@ -1,7 +1,6 @@
 # **Messages**
 
-In this section, we describe the processing of the Bet messages. the transaction message
-handler endpoints is as follows
+In this section, we delve into the handling of Bet messages. The endpoints for transaction message handlers are outlined below.
 
 ```proto
 // Msg defines the Msg service.
@@ -13,7 +12,7 @@ service Msg {
 
 ## **MsgWager**
 
-Within this message, the user specifies the bet information they wish to place.
+In this message, users provide the details of the bet they want to place.
 
 ```proto
 // MsgWager defines a message to place a bet with the given data
@@ -71,27 +70,29 @@ message MsgWagerResponse { WagerProps props = 1; }
 }
 ```
 
-### **Wager Failure cases**
+### **Possible Reasons for Wager Failure**
 
-The transaction will fail if:
+The transaction may fail due to the following reasons:
 
-- Basic validation fails:
-  - Invalid creator address
-  - Empty or invalid bet UID
-  - Empty amount
-  - Non positive amount
-  - Empty or invalid ticket (containing space)
-- Provided bet UID is already set
-- Empty or invalid odds UID in ticket
-- Empty, negative or invalid odds value in ticket
-- There is no any market with the given marketUID
-- The market is not active for accepting bet (it's not active or status in not `PENDING`)
-- The market has expired
-- The market does not contain the selected odds
-- Bet amount is less than minimum allowed amount
-- The creator address is not valid
-- There is an error in `ProcessWager` in `orderbook` module
+1. **Basic Validation Failures**:
+   - Invalid creator address
+   - Empty or invalid bet UID
+   - Empty amount
+   - Non-positive amount
+   - Empty or invalid ticket (containing spaces)
 
-### **What Happens if bet placement fails**
+2. **Specific Conditions**:
+   - Provided bet UID is already set
+   - Empty or invalid odds UID in the ticket
+   - Empty, negative, or invalid odds value in the ticket
+   - No market exists with the given market UID
+   - The market is not active for accepting bets (status is not `PENDING`)
+   - The market has expired
+   - The market does not contain the selected odds
+   - Bet amount is less than the minimum allowed amount
+   - The creator address is not valid
+   - An error occurs in the `ProcessWager` function within the `orderbook` module
 
-- The input data will not be stored in the `Bet` module and a meaningfull error will be returned to the client.
+### **Handling Failed Bet Placement**
+
+If bet placement fails, the input data will not be stored in the `Bet` module. Instead, a meaningful error message will be returned to the client.

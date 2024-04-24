@@ -1,5 +1,5 @@
 # **Overview**
 
-The Reward module is responsible for Campaign state management and reward validation and application.
+The **Reward Module** oversees Campaign state management, reward validation, and application.
 
-To grant rewards, this module uses `subaccount` module methods to TopUp the sub account balance and withdraw it when there is a withdraw request or wager or house deposit.
+To distribute rewards, this module leverages **Subaccount Module** methods to top up the sub-account balance and process withdrawals in response to withdrawal requests, wagers, or house deposits.

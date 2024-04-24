@@ -2,24 +2,23 @@
 
 ## **KVStore**
 
-State in bet module is defined by its KVStore. This KVStore has five prefixes:
+The state in the bet module is defined by its **KVStore**. This KVStore consists of five prefixes:
 
-1. All bets of a certain creator, using this pattern, blockchain is able to return list of all bets, bets of a certain creator and a single bet. The key prefix is created dynamically using this combination: `BetListPrefix`+`{Creator Address}`+`{Secuential Bet ID}`
-
-2. Map of BetID and BetUID. this helps to get corresponding ID of the bet by issuing the UID. The keys are UIDs of bets and the values are sequencial generated IDs by blockchain.
-3. Pending bets of a certain Market to help batch settlement.
-4. Settled bets of a block height to keep track of the settled bets for the oracle services.
-5. Bet statistics that contains the count of the total bets used to create next sequencial BetID.
+1. **All Bets of a Certain Creator**: Using this pattern, the blockchain can retrieve a list of all bets, bets of a specific creator, and individual bets. The key prefix is dynamically created by combining `BetListPrefix`, the `{Creator Address}`, and the `{Sequential Bet ID}`.
+2. **Mapping of BetID to BetUID**: This mapping helps retrieve the corresponding bet ID by issuing the UID. The keys represent UIDs of bets, and the values are sequentially generated IDs by the blockchain.
+3. **Pending Bets of a Certain Market**: This prefix assists with batch settlement.
+4. **Settled Bets of a Block Height**: Used to track settled bets for oracle services.
+5. **Bet Statistics**: Contains the total count of bets, which is used to create the next sequential BetID.
 
 The bet model in the Proto files is as below:
 
 ## **Params**
 
-1. `batch_settlement_count`: is the count of bets to be automatically settlement in end-blocker.
-2. `max_bet_by_uid_query_count`: is the max count of bets to be returned in the bets by uids query.
-3. `constraints` contains criteria of the bet placement.
-    - `min_amount` minimum bet amount while placement.
-    - `fee` bet fee amount payable by bettor.
+1. **`batch_settlement_count`** represents the number of bets that will be automatically settled during the end-blocker process.
+2. **`max_bet_by_uid_query_count`** specifies the maximum number of bets to be returned in the query for bets by user IDs.
+3. **`constraints`** section includes the criteria for placing bets:
+    - **`min_amount`**: This is the minimum bet amount required during placement.
+    - **`fee`**: The bet fee amount payable by the bettor.
 
 ```proto
 // Params defines the parameters for the module.
@@ -40,7 +39,7 @@ message Params {
 
 ## **Constraints**
 
-Holds bet placement constraints of the bet module.
+Holds wager constraints of the bet module.
 
 ```proto
 // Constraints is the bet constrains type for the bets

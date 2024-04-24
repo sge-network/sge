@@ -1,6 +1,6 @@
 # **Messages**
 
-The Market module exposes the following services:
+The **Market Module** exposes the following services:
 
 - AddMarket
 - ResolveMarket
@@ -19,7 +19,7 @@ service Msg {
 
 ## **MsgAdd**
 
-This message is used to add new market to the chain
+This message is used to add new market to the blockchain state.
 
 ```proto
 message MsgAdd {
@@ -99,7 +99,7 @@ message MarketAddTicketPayload {
 
 ## **MsgUpdate**
 
-This message is used to update already existent markets on the chain
+This message serves to provide updates to existing markets within the blockchain's state.
 
 ```proto
 // MsgUpdate is the message type for updating market data.
@@ -157,7 +157,7 @@ message MarketUpdateTicketPayload {
 
 ## **MarketResponse**
 
-This is the common response to all the messages
+This is the common response to all the messages.
 
 ```proto
 // MsgAddResponse response for adding market.
@@ -173,7 +173,7 @@ message MsgAddResponse {
 
 ## **MsgResolve**
 
-This message is used to resolve already existent markets on the chain
+This message is utilized to address existing markets within the blockchain state.
 
 ```proto
 // MsgResolve is the message type for resolving a market.

@@ -1,17 +1,16 @@
 # **State Transitions**
 
-This section defines the state transitions of the house module's KVStore in all scenarios:
+This section outlines the state transitions within the house module's KVStore across various scenarios:
 
-## **Despoit**
+## **Deposit**
 
-Validations before modifiying the state:
+Before modifying the state, the following validations are performed:
 
-- If the sanity checks for making a deposit passes
-- If authorization grant found for the depositor address and creator
-- If the authorization spend limit exceeded.
+1. If the sanity checks for making a deposit pass.
+2. If authorization grants are found for both the depositor address and creator.
+3. If the authorization spend limit has not been exceeded.
 
-a new deposit will be created with the given data and will be added to the `House` module state.
-the order book participation will create in the background and its index will be assigned to the deposit.
+Upon meeting these conditions, a new deposit is created with the provided data and added to the `House` module state. Additionally, an order book participation is created in the background, and its index is assigned to the deposit.
 
 ### **Input data**
 
@@ -33,13 +32,13 @@ newDeposit := &types.Deposit{
 
 ## **Withdraw**
 
-Validations before modifiying the state:
+Before modifying the state, the following validations will be performed:
 
-- If the amount is withdrawable
-- If authorization grant found for the depositor address and creator
-- If the authorization withdraw limit exceeded.
+1. Check if the amount is withdrawable.
+2. Verify if an authorization grant exists for both the depositor address and the creator.
+3. Ensure that the authorization withdraw limit has not been exceeded.
 
-The following changes will be made to the deposit
+The deposit will be updated based on these criteria.
 
 ```go
     deposit.WithdrawalCount++

@@ -1,5 +1,5 @@
 # **Overview**
 
-The Sub Account module is responsible for creating, and funding a special accounts named `subaccount` that have different address from the main(owner) account, this type of account fund/refund is only allowed by this module transaction endpoints and events, the owner is not able to transfer any funds from this account manually using the `bank` module.
+The **Subaccount Module** handles the creation and funding of special accounts called `subaccounts`. These subaccounts have distinct addresses separate from the main (owner) account. Only the **Subaccount module’s** transaction endpoints and events allow for funding or refunding of these accounts. The owner cannot manually transfer funds from this account using the **Bank Module**.
 
-Reward module uses this module's methods internally to grant rewards to corresponding sub account of the reward receiver main account.
+Internally, the Reward module utilizes methods from the **Subaccount Module** to grant rewards to the corresponding subaccount of the reward receiver’s main account.

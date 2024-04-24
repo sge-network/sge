@@ -1,14 +1,12 @@
 # **State Transitions**
 
-This section defines the state transitions of the bet module's KVStore in all scenarios:
+## **Wager State Transitions**
 
-## **Wager**
+When processing the wager, the following state transitions occur in the `Bet` module's KVStore:
 
-When this is processed:
-
-- If the ticket is valid a new bet will be created with the given data and will be added to the `Bet` module state.
-- The pending bet, ID map and statistics will update accordingly.
-- `orderbook` module bet placement processor will calculate and transfer bet amount and bet fee to the corresponding module accounts.
+1. If the ticket is valid, a new bet is created using the provided data and added to the `Bet` module state.
+2. The pending bet, ID map, and statistics are updated accordingly.
+3. The `orderbook` module's bet placement processor calculates and transfers the bet amount and fee to the corresponding module accounts.
 
 ```go
 newBet := &types.Bet{
@@ -29,44 +27,45 @@ newBet := &types.Bet{
 
 ---
 
-## **Settle bet**
+## **Bet Settlement Process**
 
-When this  is processed:
+When processing a bet:
 
-- If corresponding market is aborted or canceled, the bet will be updated in the `Bet` module state as below:
+1. If the corresponding market is aborted or canceled, update the `Bet` module state as follows:
 
     ```go
     bet.Result = types.Bet_RESULT_REFUNDED
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-    and the `RefundBettor` method of the `orderbook` module will be called to refund the bet amount and bet fee.
+    Additionally, invoke the `RefundBettor` method from the `orderbook` module to refund the bet amount and bet fee.
 
-- Resolve the bet result based on the market result, and update field `Result` to indicate won or lost, and field `Status` to indicate result is declared. For Example:
+2. Determine the bet result based on the market outcome. Update the `Result` field to indicate whether the bet was won or lost, and set the `Status` field to reflect that the result has been declared. For example:
 
     ```go
     bet.Result = types.Bet_RESULT_WON // or types.Bet_RESULT_LOST
     bet.Status = types.Bet_STATUS_RESULT_DECLARED
     ```
 
-- Call `orderbook` module `BettorLoses` or `BettorWins` methods to unlock fund and payout user based on the bet's result, and update the bet's `Status` field to indicate it is settled:
+3. Call the `BettorLoses` or `BettorWins` methods from the `orderbook` module to unlock funds and pay out users based on the bet result. Update the bet's `Status` field to indicate that it has been settled:
 
     ```go
     bet.Status = types.Bet_STATUS_SETTLED
     ```
 
-- If the market result is declared, the `WithdrawBetFee` method of the `orderbook` module is being called and transfers the bet fee to the market creator's account balance.
-- Store the updated bet in the state.
+4. If the market result is declared, invoke the `WithdrawBetFee` method from the `orderbook` module to transfer the bet fee to the market creator's account balance.
+
+5. Finally, store the updated bet information in the state.
 
 ---
 
-## **Batch bet settlement**
+## Batch Bet Settlement
 
-Batch bet settlement happens in the end-blocker of the bet module:
+Batch bet settlement occurs during the final block of the bet module. Follow these steps:
 
-1. Get resolved markets that have the unsettled bets.
-    - for each market:
-        1. Settle the bets one by by querying the market bets.
-        2. Remove the resolved market from the list if there is no more active bet.
-        3. Call orderbook's win/lose methods to transfer the appropriate amounts.
-2. Check the `BatchSettlementCount` parameter of bet module and let the rest of bets for the nex block.
+1. Identify resolved markets that still have unsettled bets.
+    - For each market:
+        1. Settle the bets by querying the market's bet data.
+        2. If there are no more active bets in the market, remove it from the list.
+        3. Use the orderbook's win/lose methods to transfer the appropriate amounts.
+2. Verify the `BatchSettlementCount` parameter in the bet module and handle the remaining bets in the next block.

@@ -2,8 +2,8 @@
 
 ## **Params**
 
-1. `min_deposit`: is the minimum allowed amount of deposit.
-2. `house_participation_fee`: os the percentage of deposit amount to be paid as deposit fee.
+1. `min_deposit`: This represents the smallest allowable deposit amount.
+2. `house_participation_fee`: This fee is calculated as a percentage of the deposit amount and is paid as part of the deposit.
 
 ```proto
 // Params define the parameters for the house module.
@@ -30,7 +30,7 @@ message Params {
 
 ## **Deposit**
 
-The deposit keeps track of the deposits made by the users who want to participate as house.
+The deposit monitors the contributions made by users who wish to participate as house members.
 
 ```proto
 // Deposit represents the deposit against a market held by an account.
@@ -98,7 +98,7 @@ message Deposit {
 
 ## **Withdrawal**
 
-The withdrawal keeps track of the withdrawals made by the depositor accounts.
+The withdrawal system monitors the withdrawals initiated by depositor accounts.
 
 ```proto
 // Withdrawal represents the withdrawal against a deposit.

@@ -1,64 +1,66 @@
 # **State Transitions**
 
-This section defines the state transitions of the Sub Account module's KVStore in all scenarios:
+This section outlines the state transitions of the KVStore within the **Subaccount Module** across various scenarios:
 
-## **Create Sub Account**
+## **Creating a Sub Account**
 
-When this is processed:
+Upon processing this:
 
-- Sum the unlock balances according to the input locked balances.
-- Check if there is an existing `subaccount` for the proposed owner address.
-- Generate new account using account module of the Cosmos-SDK.
+- Aggregate the unlocked balances based on the provided locked balances.
+- Verify if a `subaccount` already exists for the designated owner address.
+- Generate a new account using the Cosmos-SDK account module.
 - Transfer the calculated balance to the newly created account.
-- Set Sub account owner in the state.
-- Set locked balance in the state.
-- Set balance in the state.
+- Update the state with the sub account owner.
+- Update the state with the locked balance.
+- Update the state with the balance.
 
 ---
 
-## **Top Up Sub Account**
+## **Topping Up a Sub Account**
 
-When this is processed:
+Upon processing this:
 
-- Sum the unlock balances according to the input locked balances.
-- Get `subaccount` by owner address from the state.
-- Increase the deposited amount of the balance.
-- Set locked balance in the state.
-- Set balance in the state.
+- Aggregate the unlocked balances based on the provided locked balances.
+- Retrieve the `subaccount` associated with the owner address from the state.
+- Increment the deposited amount of the balance.
+- Update the state with the locked balance.
+- Update the state with the balance.
 
 ---
 
-## **Wager**
+## **Wagering**
 
-When this is processed:
+Upon processing this:
 
-- Get `subaccount` by Owner Address from the state.
-- Call bet module's method to prepare the bet object.
-- Get `subaccount` balance from the state.
-- Withdraw `subaccount` locked/unlocked balance according to the input proportion.
-- Call bet module's wager method to set the bet.
-- Set the new balance of the sub account module in the state.
+- Retrieve the `subaccount` associated with the owner address from the state.
+- Invoke the bet module's method to prepare the bet object.
+- Retrieve the balance of the `subaccount` from the state.
+- Withdraw locked/unlocked balances of the `subaccount` based on the input proportion.
+- Invoke the wager method of the **Bet Module** to establish the bet.
+- Update the state with the new balance of the **Subaccount Module**.
 
 ---
 
 ## **House Deposit**
 
-When this is processed:
+Upon processing this:
 
-- Get `subaccount` by Owner Address from the state.
-- Get `subaccount` balance from the state.
-- Call house module's method to parse the ticket and validate.
+- Retrieve the `subaccount` associated with the owner address from the state.
+- Retrieve the balance of the `subaccount` from the state.
+- Invoke the method of the **House Module** to parse the ticket and validate.
 - Deduct the deposit amount from the sub account balance.
-- Call house module's Deposit method to set the participation.
-- Set the new balance of the sub account module in the state.
+- Invoke the Deposit method of the **House Module** to record the participation.
+- Update the state with the new balance of the **Subaccount Module**.
 
-## **House Withdraw**
+---
 
-When this is processed:
+## **House Withdrawal**
 
-- Get `subaccount` by Owner Address from the state.
-- Get `subaccount` balance from the state.
-- Call house module's method to parse the ticket and validate.
+Upon processing this:
+
+- Retrieve the `subaccount` associated with the owner address from the state.
+- Retrieve the balance of the `subaccount` from the state.
+- Invoke the method of the **House Module** to parse the ticket and validate.
 - Return the withdrawal amount from the sub account balance.
-- Call house module's Deposit method to set the participation.
-- Set the new balance of the sub account module in the state.
+- Invoke the Deposit method of the **House Module** to record the participation.
+- Update the state with the new balance of the **Subaccount Module**.

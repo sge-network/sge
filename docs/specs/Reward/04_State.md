@@ -2,27 +2,34 @@
 
 ## **KVStore**
 
-State in Reward module is defined by its KVStore. This KVStore has one prefix:
+The state in the **Reward module** is determined by its KVStore, which contains the following prefixes:
 
-1. All campaigns including active and expired items.
+1. All campaigns, including active and expired items.
+2. All promoters.
+3. Promoters indexed by their addresses.
+4. All rewards.
+5. Rewards categorized by category and the receiving accounts.
+6. Rewards for a specific campaign.
+7. Statistics of reward grants for a campaign.
 
-The Reward model in the Proto files is as below:
+The Reward model in the Proto files is outlined as follows:
 
 ## **Campaign**
 
-1. `creator`: is the creator account(message signer of the CreateCampaign).
-2. `uid`: is the universal unique identifier of the campaign.
-3. `promoter`: The account address that is responsible for paying the campaign pool balance.
-4. `start_ts`: The time that campaign would be started and receive apply reward message.
-5. `end_ts`: The time that campaign would be ended and is not able tor receive apply reward message.
-6. `reward_category`: Defines the general category of reward that is defined for the campaign.
-7. `reward_type`: Defines the type of reward that is defined for the campaign.
-8. `reward_amount_type`: Defines the type of reward amount allocation that is defined for the campaign.
-9. `reward_amount`: Defines the amount of reward that is defined for the campaign to be granted to main or sub account.
-10. `pool`: Information of the current pool balance.
-11. `is_active`: Is active/inactive status of the campaign.
-12. `claims_per_category`: Maximum number of reward grant transaction per category.
-13. `meta`: Contains a string metadata that can be a simple description or a json.
+1. `creator`: The account that signed the CreateCampaign message, serving as the creator.
+2. `uid`: The universally unique identifier of the campaign.
+3. `promoter`: The account address responsible for managing the campaign pool balance.
+4. `start_ts`: The start time of the campaign, indicating when it starts receiving apply reward messages.
+5. `end_ts`: The end time of the campaign, after which it stops receiving apply reward messages.
+6. `reward_category`: The general category defining the campaign's rewards.
+7. `reward_type`: The type of reward designated for the campaign.
+8. `reward_amount_type`: The allocation type for the reward amount.
+9. `reward_amount`: The amount of reward specified for the campaign to be granted to the main or sub account.
+10. `pool`: Information regarding the current pool balance.
+11. `is_active`: Indicates the active/inactive status of the campaign.
+12. `meta`: Contains metadata in the form of a string, which could be a simple description or JSON data.
+13. `cap_count`: The maximum count of reward grants for a specific account.
+14. `constraints`: Contains campaign constraints, a nullable field used for campaigns like *Bet Bonus*.
 
 ```proto
 // Campaign is type for defining the campaign properties.
@@ -73,13 +80,15 @@ message Campaign {
   // is_active is the flag to check if the campaign is active or not.
   bool is_active = 11;
 
-  // claims_per_category is the number of times a user can claim a
-  // reward for category of this campaign.
-  uint64 claims_per_category = 12;
-
   // meta is the metadata of the campaign.
   // It is a stringified base64 encoded json.
   string meta = 13;
+
+  // cap_count is the maximum allowed grant for a certain account.
+  uint64 cap_count = 14;
+
+  // constraints is the constrains of a campaign.
+  CampaignConstraints constraints = 15;
 }
 
 // Pool tracks funds assigned and spent to/for a campaign.
@@ -93,6 +102,20 @@ message Pool {
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"spent\""
+  ];
+  string withdrawn = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"spent\""
+  ];
+}
+
+// CampaignConstraints contains campaign constraints and criteria.
+message CampaignConstraints {
+  string max_bet_amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"max_bet_amount\""
   ];
 }
 
@@ -174,13 +197,13 @@ enum RewardAmountType {
 
 ## **Reward**
 
-1. `uid`: is the unique universal identifier of the granted reward.
-2. `creator`: is the creator account(message signer of the CreateCampaign).
-3. `receiver`: is the string address of the main account.
-4. `campaign_uid`: is the unique identifier of the associated campaign.
-5. `reward_amount`: is the amount to be deducted from main and sub account balances.
-6. `source_uid`: is the source of reward grant universal unique identifier.
-7. `meta`: is the metadata related to the granted reward, can be a string or json.
+1. `uid`: Represents the universally unique identifier assigned to the granted reward.
+2. `creator`: Identifies the account that signed the CreateCampaign message, serving as the creator.
+3. `receiver`: Denotes the string address of the primary account.
+4. `campaign_uid`: Serves as the unique identifier for the associated campaign.
+5. `reward_amount`: Specifies the amount to be deducted from the balances of the main and sub accounts.
+6. `source_uid`: Indicates the unique identifier of the source of the reward grant.
+7. `meta`: Contains metadata pertaining to the granted reward, which can be either a string or JSON.
 
 ```proto
 // Reward is the type for transaction made to reward a user
@@ -231,14 +254,14 @@ message Reward {
 
 // RewardAmount
 message RewardAmount {
-  // main_account_reward amount transferred to main account address
+  // main_account_amount transferred to main account address
   string main_account_amount = 1 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"main_account_amount\""
   ];
 
-  // sub_account reward amount transferred to subaccount address
+  // subaccount_amount transferred to subaccount address
   string subaccount_amount = 2 [
     (gogoproto.customtype) = "cosmossdk.io/math.Int",
     (gogoproto.nullable) = false,
@@ -250,6 +273,50 @@ message RewardAmount {
     (gogoproto.customname) = "UnlockPeriod",
     (gogoproto.jsontag) = "unlock_period",
     json_name = "unlock_period"
+  ];
+
+  // main_account_percentage transferred to main account address
+  string main_account_percentage = 4 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"main_account_percentage\""
+  ];
+
+  // subaccount_percentage amount transferred to subaccount address
+  string subaccount_percentage = 5 [
+    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"subaccount_percentage\""
+  ];
+}
+
+// RewardByCategory
+message RewardByCategory {
+  // uid is the unique identifier for a reward.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // addr is the address of the reward receiver.
+  string addr = 2;
+  // reward_category is the category of the reward.
+  RewardCategory reward_category = 3;
+}
+
+// RewardByCampaign
+message RewardByCampaign {
+  // uid is the unique identifier for a reward.
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // campaign_uid is the unique identifier of the campaign.
+  string campaign_uid = 2 [
+    (gogoproto.customname) = "CampaignUID",
+    (gogoproto.jsontag) = "campaign_uid",
+    json_name = "campaign_uid"
   ];
 }
 ```

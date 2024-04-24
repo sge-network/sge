@@ -1,23 +1,21 @@
 # **Concepts**
 
-Reward module is tasked with create and update of campaigns and reward application (allocation). the user can create a campaign through command-line or singing and broadcasting the campaign create message.
+The **Reward Module** is responsible for creating and updating campaigns, as well as managing reward allocation. Users can create campaigns either through the command-line interface or by broadcasting a campaign creation message.
 
-## **Campaign**
+## Campaigns
 
-Campaigns are being distinguished by their UID, We can have multiple campaigns with a same reward type at the same time. so, reward application is depend on the campaign that is being defined.
+Campaigns are uniquely identified by their UID. It's possible to have multiple campaigns with the same reward type running concurrently. The application of rewards depends on the specific campaign being defined.
 
-## **Reward Types**
+## Reward Types
 
-### **SignUp Rewards**
+### SignUp Rewards
 
-#### **1. SignUp**
+1. **SignUp**
+   - This reward is granted when a user creates an account by signing up in the system. The reward is stored in the `subaccount` balance and can be used for betting or other house functionalities.
 
-This reward can be given when a user is creating an account by signing up in system, the reward is in `subaccount` balance and can be used for betting or be the house functionalities.
+2. **Referral**
+   - Users receive this reward when they are referred to the system by another user. Similar to the SignUp reward, the referee's reward is also in the `subaccount` balance and can be utilized for betting or other purposes.
 
-#### **2. Referral**
+### Referral Rewards
 
-This reward can be given when a user is referred by another user to the system, the referee reward is in `subaccount` balance and can be used for betting or be the house functionalities.
-
-### **Referral**
-
-This reward can be given when a user is referring another new user to the system, the referrer reward is in `subaccount` balance and can be used for betting or be the house functionalities.
+- Referral rewards are given to users who refer new users to the system. The referrer's reward is stored in the `subaccount` balance and can be used for betting or other house functionalities.

@@ -1,6 +1,6 @@
 # **Events**
 
-The Market module emits the following events:
+The **Market Module** emits the following events:
 
 ## *MsgAdd*
 

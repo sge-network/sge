@@ -1,6 +1,6 @@
 # **Events**
 
-The House module emits the following events
+The **House module** emits the subsequent events.
 
 ## *MsgDeposit*
 

@@ -1,6 +1,6 @@
 # **Events**
 
-The Bet module emits the following events
+The **Bet module** generates the subsequent events:
 
 ## *MsgWager*
 

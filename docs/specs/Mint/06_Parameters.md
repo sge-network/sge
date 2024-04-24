@@ -1,6 +1,6 @@
 # **Parameters**
 
-The minting module contains the following parameters:
+The **Mint module** contains the following parameters:
 
 |      Key       |       Type       |  Example   |
 |:-------------: |:---------------: |:---------: |

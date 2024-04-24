@@ -1,29 +1,13 @@
 # **Concepts**
 
-To verify the origin of the data, a simple mechanism of signing and verifiction with a private key and the correponding public key respectively is performed.
+A straightforward process is undertaken to ensure the data's authenticity: signing with a private key and subsequent verification with the corresponding public key.
 
-The data that needs to be pushed into the chain is first signed by the private key of a trusted source. This process occurs off chain. Essentially, we create an encrypted `ticket` with the trusted private key. The curve used for signing and verification of the ticket is the [Edwards-curve Digital Signature Algorithm](https://en.wikipedia.org/wiki/EdDSA). This algorithm has been chosen for the following benefits:
+Initially, the data slated for insertion into the chain undergoes signing using a trusted private key, a step executed off-chain. Essentially, this results in the creation of an encrypted 'ticket' using the trusted private key. The chosen curve for signing and verifying these tickets is the Edwards-curve Digital Signature Algorithm (EdDSA), selected for its various advantages including fast single-signature verification, efficient batch verification, rapid signing, and high security levels. Further details on this algorithm can be found [here](https://ed25519.cr.yp.to/).
 
-- Fast single-signature verification
-- Fast batch verification
-- Very fast signing
-- Fast key generation
-- High security level
-- Foolproof session keys
-- Collision resilience
-- No secret array indices
-- No secret branch conditions
-- Small signatures
-- Small keys
+Once the encrypted signed ticket is generated, it becomes part of the transactions. These transactions cover actions such as adding/editing betting markets on the chain and verifying odds when users engage with these markets. Each ticket includes an expiry timestamp to invalidate it after a set duration, preventing the use of old or expired tickets.
 
-Details of the algorithm can be found [here](https://ed25519.cr.yp.to/)
+The **OVM module** maintains a catalog of trusted public keys, counterparts to the private keys used for off-chain signing and encryption of tickets. When a transaction requiring data origin verification occurs, the corresponding module calls upon the **OVM module** for verification and decryption. Serving as an interface, the **OVM module** decodes any signed data supplied to it, given the encryption algorithm and decrypted type. This design eliminates the need for OVM structural changes with ticket structure alterations, enabling the OVM to function as a universal verification module.
 
----
+Upon invocation, the OVM initially verifies the data signature against the registered public keys. If the leader public key (the primary element in the public keys slice in the key vault store) successfully verifies the signature, the OVM decrypts the data into the provided structure and returns it. Failure of signature verification, ticket expiration, or mismatching decrypted structure results in verification failure, prompting an error returned to the invoking module and consequently transaction failure.
 
-After generating the encrypted signed `ticket`, this signature data is included in the transactions. This includes transactions for adding/editing betting markets on the chain, as well as verifying odds when the user places on these markets. All tickets come with an expiry timestamp which invalidates the ticket after a certain duration. This facility prevents the use or abuse of old and expired tickets.
-
-The `ovm` module essentially stores a list of trusted public keys. These public keys are just the counterpart to the private keys that were used to sign and encrypt the tickets off-chain. When a transaction is made to the chain that necessitates verification of the origin of the data, the corresponding module invokes the OVM module for verification and decryption purpose. The OVM Module works as an interface, which can decode any signed data passed to it when supplied with the encryption algorithm and the decrypted type. This design completely nullifies the need to change the structure of the OVM if the ticket structure changes. This essentially enables the OVM to be a global verification module.
-
-When the OVM is invoked, it first attempts to verify the signature of the data against the list of registered public keys. If the signature is verified successfully by the leader public key (the first element in the public keys slice in the key vault store), the OVM decrypts the data into the provided structure and returns it to the invoking module. In case the signature verification fails, or the ticket seems to have expired, or the decrypted structure does not match with the expected structure, the verification is considered to be a failure and a corresponding error is returned to the invoking module, which consequently results in failure of the transaction.
-
-The OVM Leader is the public key that is being used for the verification of the tickets, The first element of the Key Vault public keys is the leader. If the private key of the leader's public key gets corrupt/hacked/leaked, The holders of the rest of the public keys can create a pub keys-change proposal to replace the leaked public key with a new one and choose the new leader key. Each proposal needs at least 66.67% "yes" or 2 "no" to make blockchain code to decide about the proposal's approval or rejection, the modification happens in the end blocker if the condition of votes is satisfied.
+The OVM Leader, the public key used for ticket verification, resides as the initial element in the Key Vault public keys. If the leader's private key becomes compromised, holders of the remaining public keys can propose a key change, selecting a new leader. Each proposal requires at least 66.67% 'yes' votes or 2 'no' votes for blockchain code to decide its approval or rejection. Modification occurs in the end blocker upon satisfying vote conditions.
