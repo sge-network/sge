@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -93,10 +92,10 @@ func TestSetBalances(t *testing.T) {
 	_, k, ctx := setupKeeperAndApp(t)
 
 	balance := types.AccountSummary{
-		DepositedAmount: sdk.ZeroInt(),
-		SpentAmount:     sdk.ZeroInt(),
-		WithdrawnAmount: sdk.ZeroInt(),
-		LostAmount:      sdk.OneInt(),
+		DepositedAmount: sdkmath.ZeroInt(),
+		SpentAmount:     sdkmath.ZeroInt(),
+		WithdrawnAmount: sdkmath.ZeroInt(),
+		LostAmount:      sdkmath.OneInt(),
 	}
 
 	subAccAddr := types.NewAddressFromSubaccount(1)

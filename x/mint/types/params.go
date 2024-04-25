@@ -245,7 +245,7 @@ func validateExcludeAmount(i interface{}) error {
 		return fmt.Errorf(ErrTextInvalidParamType, i)
 	}
 
-	if v.LT(sdk.ZeroInt()) {
+	if v.LT(sdkmath.ZeroInt()) {
 		return fmt.Errorf(ErrTextExcludeAmountMustBePositive, v)
 	}
 

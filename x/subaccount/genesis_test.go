@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
@@ -36,9 +35,9 @@ func TestGenesis(t *testing.T) {
 				Owner:   subAccOwner.String(),
 				Balance: types.AccountSummary{
 					DepositedAmount: subAccFunds,
-					SpentAmount:     sdk.ZeroInt(),
-					WithdrawnAmount: sdk.ZeroInt(),
-					LostAmount:      sdk.ZeroInt(),
+					SpentAmount:     sdkmath.ZeroInt(),
+					WithdrawnAmount: sdkmath.ZeroInt(),
+					LostAmount:      sdkmath.ZeroInt(),
 				},
 				LockedBalances: []types.LockedBalance{
 					{

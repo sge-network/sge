@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/stretchr/testify/require"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -62,9 +63,9 @@ func TestQueryServer(t *testing.T) {
 		require.Equal(t, subAccAddr.String(), gotSubaccount.Address)
 		require.Equal(t, types.AccountSummary{
 			DepositedAmount: subAccFunds,
-			SpentAmount:     sdk.ZeroInt(),
-			WithdrawnAmount: sdk.ZeroInt(),
-			LostAmount:      sdk.ZeroInt(),
+			SpentAmount:     sdkmath.ZeroInt(),
+			WithdrawnAmount: sdkmath.ZeroInt(),
+			LostAmount:      sdkmath.ZeroInt(),
 		}, gotSubaccount.Balance)
 		require.Len(t, gotSubaccount.LockedBalance, 1)
 		require.Equal(t, subAccFunds, gotSubaccount.LockedBalance[0].Amount)

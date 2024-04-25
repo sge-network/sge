@@ -97,7 +97,7 @@ func validateMinimumDeposit(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v.LTE(sdk.OneInt()) {
+	if v.LTE(sdkmath.OneInt()) {
 		return fmt.Errorf("minimum deposit must be positive and more than one: %d", v)
 	}
 

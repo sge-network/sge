@@ -54,7 +54,7 @@ func (a CreateCampaignAuthorization) ValidateBasic() error {
 	if a.SpendLimit.IsNil() {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be nil")
 	}
-	if a.SpendLimit.LTE(sdk.ZeroInt()) {
+	if a.SpendLimit.LTE(sdkmath.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
 	}
 
@@ -110,7 +110,7 @@ func (a UpdateCampaignAuthorization) ValidateBasic() error {
 	if a.SpendLimit.IsNil() {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be nil")
 	}
-	if a.SpendLimit.LTE(sdk.ZeroInt()) {
+	if a.SpendLimit.LTE(sdkmath.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
 	}
 
@@ -164,7 +164,7 @@ func (a WithdrawCampaignAuthorization) ValidateBasic() error {
 	if a.WithdrawLimit.IsNil() {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be nil")
 	}
-	if a.WithdrawLimit.LTE(sdk.ZeroInt()) {
+	if a.WithdrawLimit.LTE(sdkmath.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
 	}
 	if a.WithdrawLimit.GT(maxWithdrawGrant) {

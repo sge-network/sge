@@ -217,7 +217,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 		{
 			desc:          "no participation",
 			depositorAddr: simapp.TestParamUsers["user1"].Address,
-			depositAmount: sdk.ZeroInt(),
+			depositAmount: sdkmath.ZeroInt(),
 			withdrawMode:  housetypes.WithdrawalMode_WITHDRAWAL_MODE_FULL,
 			err:           types.ErrOrderBookParticipationNotFound,
 		},
@@ -266,7 +266,7 @@ func TestWithdrawOrderBookParticipation(t *testing.T) {
 				marketUID,
 				participationIndex,
 				tc.withdrawMode,
-				sdk.ZeroInt(),
+				sdkmath.ZeroInt(),
 				tc.depositAmount,
 			)
 
