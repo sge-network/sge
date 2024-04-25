@@ -11,10 +11,10 @@ import (
 	"github.com/cosmos/gogoproto/proto"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
+	sdkcli "github.com/sge-network/sge/tests/sdk"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/reward/client/cli"
@@ -23,9 +23,11 @@ import (
 
 var (
 	genesis           types.GenesisState
+	fees              = int64(10)
 	promoterUID       = uuid.NewString()
 	campaignStartDate = uint64(time.Now().Unix())
-	campaignEndDate   = uint64(time.Now().Add(5 * time.Minute).Unix())
+	campaignEndDate   = time.Now().Add(time.Minute * time.Duration(120)).Unix()
+	campaignFunds     = sdkmath.NewInt(100000000)
 )
 
 type E2ETestSuite struct {
@@ -101,10 +103,8 @@ func (s *E2ETestSuite) SetupSuite() {
 
 func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 	val := s.network.Validators[0]
-
+	clientCtx := val.ClientCtx
 	{
-		clientCtx := val.ClientCtx
-
 		ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
 			"exp": time.Now().Add(time.Minute * 5).Unix(),
 			"iat": time.Now().Unix(),
@@ -132,26 +132,30 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 		s.Require().Equal(uint32(0), respType.Code)
 	}
 
+	valBalance := sdkcli.GetSGEBalance(clientCtx, val.Address.String())
+	s.Require().Equal(sdkmath.NewInt(400000000), valBalance)
+
 	testCases := []struct {
-		name         string
-		uid          string
-		totalFunds   sdkmath.Int
-		ticketClaims jwt.MapClaims
-		args         []string
-		expectErr    bool
-		expectedCode uint32
-		respType     proto.Message
+		name           string
+		uid            string
+		totalFunds     sdkmath.Int
+		ticketClaims   jwt.MapClaims
+		args           []string
+		expectErr      bool
+		expectedCode   uint32
+		expectedErrMsg string
+		respType       proto.Message
 	}{
 		{
-			"valid transaction",
+			"not enough balance to charge pool",
 			uuid.NewString(),
-			sdkmath.NewInt(100),
+			sdkmath.NewInt(4000000000),
 			jwt.MapClaims{
 				"exp":                time.Now().Add(time.Minute * 5).Unix(),
 				"iat":                time.Now().Unix(),
 				"promoter":           val.Address,
-				"start_ts":           cast.ToString(campaignStartDate),
-				"end_ts":             cast.ToString(campaignEndDate),
+				"start_ts":           campaignStartDate,
+				"end_ts":             campaignEndDate,
 				"category":           types.RewardCategory_REWARD_CATEGORY_SIGNUP,
 				"reward_type":        types.RewardType_REWARD_TYPE_SIGNUP,
 				"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
@@ -169,7 +173,42 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 				fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
 				fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(10))).String()),
 			},
-			false, 0, &sdk.TxResponse{},
+			false,
+			types.ErrInFundingCampaignPool.ABCICode(),
+			"",
+			&sdk.TxResponse{},
+		},
+		{
+			"valid transaction",
+			uuid.NewString(),
+			campaignFunds,
+			jwt.MapClaims{
+				"exp":                time.Now().Add(time.Minute * 5).Unix(),
+				"iat":                time.Now().Unix(),
+				"promoter":           val.Address,
+				"start_ts":           campaignStartDate,
+				"end_ts":             campaignEndDate,
+				"category":           types.RewardCategory_REWARD_CATEGORY_SIGNUP,
+				"reward_type":        types.RewardType_REWARD_TYPE_SIGNUP,
+				"reward_amount_type": types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
+				"reward_amount": types.RewardAmount{
+					SubaccountAmount: sdkmath.NewInt(100),
+					UnlockPeriod:     uint64(1000),
+				},
+				"is_active": true,
+				"meta":      "sample signup campaign",
+				"cap_count": 1,
+			},
+			[]string{
+				fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address),
+				fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
+				fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
+				fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(10))).String()),
+			},
+			false,
+			0,
+			"",
+			&sdk.TxResponse{},
 		},
 	}
 
@@ -196,9 +235,19 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 				s.Require().NoError(err)
 
 				s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), tc.respType), bz.String())
-				txResp := tc.respType.(*sdk.TxResponse)
+
+				txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, tc.respType.(*sdk.TxResponse).TxHash)
+				s.Require().NoError(err)
 				s.Require().Equal(tc.expectedCode, txResp.Code)
+				if tc.expectedErrMsg != "" {
+					s.Require().Contains(txResp.RawLog, tc.expectedErrMsg)
+				}
 			}
 		})
 	}
+
+	s.Require().NoError(s.network.WaitForNextBlock())
+	expectedBalance := valBalance.Sub(campaignFunds).Sub(sdk.NewInt(fees * 3))
+	valBalance = sdkcli.GetSGEBalance(clientCtx, val.Address.String())
+	s.Require().Equal(expectedBalance, valBalance)
 }
