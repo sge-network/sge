@@ -17,8 +17,11 @@ import (
 	sdkcli "github.com/sge-network/sge/tests/sdk"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/simapp"
+	sgetypes "github.com/sge-network/sge/types"
 	"github.com/sge-network/sge/x/reward/client/cli"
 	"github.com/sge-network/sge/x/reward/types"
+	subaccountcli "github.com/sge-network/sge/x/subaccount/client/cli"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 )
 
 var (
@@ -47,46 +50,6 @@ func (s *E2ETestSuite) SetupSuite() {
 	genesisState := s.cfg.GenesisState
 	s.Require().NoError(s.cfg.Codec.UnmarshalJSON(genesisState[types.ModuleName], &genesis))
 
-	// promoterAddr = simapp.TestParamUsers["user1"].Address.String()
-
-	// genesis.PromoterList = []types.Promoter{
-	// 	{
-	// 		Creator:   promoterAddr,
-	// 		UID:       uuid.NewString(),
-	// 		Addresses: []string{promoterAddr},
-	// 		Conf: types.PromoterConf{
-	// 			CategoryCap: []types.CategoryCap{{
-	// 				Category:  types.RewardCategory_REWARD_CATEGORY_SIGNUP,
-	// 				CapPerAcc: 1,
-	// 			}},
-	// 		},
-	// 	},
-	// }
-
-	// genesis.PromoterByAddressList = []types.PromoterByAddress{
-	// 	{
-	// 		PromoterUID: genesis.PromoterList[0].UID,
-	// 		Address:     promoterAddr,
-	// 	},
-	// }
-
-	// genesis.CampaignList = []types.Campaign{
-	// 	{
-	// 		Creator:          promoterAddr,
-	// 		UID:              uuid.NewString(),
-	// 		Promoter:         promoterAddr,
-	// 		StartTS:          campaignStartDate,
-	// 		EndTS:            campaignEndDate,
-	// 		RewardCategory:   types.RewardCategory_REWARD_CATEGORY_SIGNUP,
-	// 		RewardType:       types.RewardType_REWARD_TYPE_SIGNUP,
-	// 		RewardAmountType: types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED,
-	// 		RewardAmount: &types.RewardAmount{
-	// 			SubaccountAmount: sdkmath.NewInt(100),
-	// 		},
-	// 		Pool: ,
-	// 	},
-	// }
-
 	genesisBz, err := s.cfg.Codec.MarshalJSON(&genesis)
 	s.Require().NoError(err)
 	genesisState[types.ModuleName] = genesisBz
@@ -96,13 +59,10 @@ func (s *E2ETestSuite) SetupSuite() {
 	s.Require().NoError(s.network.WaitForNextBlock())
 }
 
-// func (s *E2ETestSuite) TearDownSuite() {
-// 	s.T().Log("tearing down e2e test suite")
-// 	s.network.Cleanup()
-// }
-
 func (s *E2ETestSuite) TestNewCampaignTxCmd() {
+	s.T().Log("==== new campaign create command test started")
 	val := s.network.Validators[0]
+
 	clientCtx := val.ClientCtx
 	{
 		ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
@@ -135,6 +95,7 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 	valBalance := sdkcli.GetSGEBalance(clientCtx, val.Address.String())
 	s.Require().Equal(sdkmath.NewInt(400000000), valBalance)
 
+	campaignUID := uuid.NewString()
 	testCases := []struct {
 		name           string
 		uid            string
@@ -148,7 +109,7 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 	}{
 		{
 			"not enough balance to charge pool",
-			uuid.NewString(),
+			campaignUID,
 			sdkmath.NewInt(4000000000),
 			jwt.MapClaims{
 				"exp":                time.Now().Add(time.Minute * 5).Unix(),
@@ -180,7 +141,7 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 		},
 		{
 			"valid transaction",
-			uuid.NewString(),
+			campaignUID,
 			campaignFunds,
 			jwt.MapClaims{
 				"exp":                time.Now().Add(time.Minute * 5).Unix(),
@@ -231,6 +192,7 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 
 			if tc.expectErr {
 				s.Require().Error(err)
+				s.T().Logf("error captured: %s", tc.name)
 			} else {
 				s.Require().NoError(err)
 
@@ -242,6 +204,7 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 				if tc.expectedErrMsg != "" {
 					s.Require().Contains(txResp.RawLog, tc.expectedErrMsg)
 				}
+				s.T().Logf("==== success campaign create test case finished: %s", tc.name)
 			}
 		})
 	}
@@ -250,4 +213,69 @@ func (s *E2ETestSuite) TestNewCampaignTxCmd() {
 	expectedBalance := valBalance.Sub(campaignFunds).Sub(sdk.NewInt(fees * 3))
 	valBalance = sdkcli.GetSGEBalance(clientCtx, val.Address.String())
 	s.Require().Equal(expectedBalance, valBalance)
+	s.T().Logf("==== bank balance checked after creating the campaign: %s", valBalance)
+
+	{
+		ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
+			"exp": time.Now().Add(time.Minute * 5).Unix(),
+			"iat": time.Now().Unix(),
+			"common": types.RewardPayloadCommon{
+				Receiver:  val.Address.String(),
+				SourceUID: "",
+				Meta:      "signup reward campaign",
+				KycData: &sgetypes.KycDataPayload{
+					Ignore:   false,
+					Approved: true,
+					ID:       val.Address.String(),
+				},
+			},
+		})
+		require.Nil(s.T(), err)
+
+		rewardUID := uuid.NewString()
+		args := []string{
+			rewardUID,
+			campaignUID,
+			ticket,
+			fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address),
+			fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
+			fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
+			fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(10))).String()),
+		}
+		bz, err := clitestutil.ExecTestCLICmd(clientCtx, cli.CmdGrantReward(), args)
+		s.Require().NoError(err)
+		respType := sdk.TxResponse{}
+
+		s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), &respType), bz.String())
+
+		txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
+		s.Require().NoError(err)
+		s.Require().Equal(uint32(0), txResp.Code)
+		s.T().Logf("==== success reward grant test case finished: %s", rewardUID)
+	}
+
+	valBalance = sdkcli.GetSGEBalance(clientCtx, val.Address.String())
+	expectedBalance = expectedBalance.Sub(sdkmath.NewInt(10))
+	s.Require().Equal(expectedBalance, valBalance)
+	s.T().Logf("==== bank balance checked after creating the campaign: %s", valBalance)
+
+	args := []string{
+		val.Address.String(),
+		fmt.Sprintf("--%s=json", flags.FlagOutput),
+	}
+	bz, err := clitestutil.ExecTestCLICmd(clientCtx, subaccountcli.QuerySubaccount(), args)
+	if err != nil {
+		panic(err)
+	}
+	respType := subaccounttypes.QuerySubaccountResponse{}
+	err = clientCtx.Codec.UnmarshalJSON(bz.Bytes(), &respType)
+	if err != nil {
+		panic(err)
+	}
+
+	subaccountBalance := sdkcli.GetSGEBalance(clientCtx, respType.Address)
+	s.Require().Equal(sdkmath.NewInt(100), subaccountBalance)
+	s.T().Logf("==== bank balance checked after creating the campaign: %s", subaccountBalance)
+
+	s.T().Log("==== new campaign create command test passed successfully")
 }
