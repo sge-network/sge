@@ -28,5 +28,5 @@
 # ignore visual studio code dev container config
 .devcontainer
 
-# ignore build directory
+# ignore build dir
 build

@@ -54,10 +54,31 @@ func (k Keeper) GetAllRewards(ctx sdk.Context) (list []types.Reward) {
 	return
 }
 
+// GetAllRewardsOfReceiverByPromoterAndCategory returns all reward by promoter and category
+func (k Keeper) GetAllRewardsOfReceiverByPromoterAndCategory(ctx sdk.Context) (list []types.RewardByCategory) {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+
+	defer iterator.Close()
+
+	for ; iterator.Valid(); iterator.Next() {
+		var val types.RewardByCategory
+		k.cdc.MustUnmarshal(iterator.Value(), &val)
+		list = append(list, val)
+	}
+
+	return
+}
+
 func (k Keeper) SetRewardOfReceiverByPromoterAndCategory(ctx sdk.Context, promoterUID string, rByCategory types.RewardByCategory) {
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	b := k.cdc.MustMarshal(&rByCategory)
 	store.Set(types.GetRewardsOfReceiverByPromoterAndCategoryKey(promoterUID, rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID), b)
+}
+
+func (k Keeper) RemoveRewardOfReceiverByPromoterAndCategory(ctx sdk.Context, promoterUID string, rByCategory types.RewardByCategory) {
+	store := k.getRewardByReceiverAndCategoryStore(ctx)
+	store.Delete(types.GetRewardsOfReceiverByPromoterAndCategoryKey(promoterUID, rByCategory.Addr, rByCategory.RewardCategory, rByCategory.UID))
 }
 
 // GetRewardsOfReceiverByPromoterAndCategory returns all rewards by address and category.

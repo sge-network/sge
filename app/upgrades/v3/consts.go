@@ -2,6 +2,7 @@ package v3
 
 import (
 	sdkmath "cosmossdk.io/math"
+
 	"github.com/sge-network/sge/app/upgrades"
 )
 

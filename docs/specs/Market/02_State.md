@@ -2,7 +2,7 @@
 
 ## **Params**
 
-The market module does not have any parameters.
+The **Market Module** does not have any parameters.
 
 ---
 
@@ -59,25 +59,16 @@ message Market {
 }
 ```
 
-**UID**: universal unique market ID.
-
-**StartTS**: Timestamp when this market will start.
-
-**EndTS**: Timestamp when this market will be over.
-
-**Odds**: Array of all the associated values of type ***Odds*** with this market.
-
-**WinnerOddsUids**: Array of all the Odds Uids which won this market, this would be a ***subset*** of the above provided OddsUidsArray.
-
-**Status**: current state of the market.
-
-**ResolutionTS**: Timestamp when the market came to a resolution i.e. we received a resolution request for an market.
-
-**Creator**: Account responsible to create this market.
-
-**Meta**: Human-Readable data of the market.
-
-**BookID** The ID of the created order book
+- **UID**: Universal Unique Market ID.
+- **Start Timestamp (`start_ts`)**: Indicates when this market will begin.
+- **End Timestamp (`end_ts`)**: Indicates when this market will conclude.
+- **Odds (`odds`)**: An array containing all associated values of type ***Odds*** for this market.
+- **Winner Odds UIDs (`winner_odds_uids`)**: A subset of the above-provided Odds UIDs, representing the winning outcomes for this market.
+- **Market Status (`status`)**: The current state of the market.
+- **Resolution Timestamp (`resolution_ts`)**: The timestamp when the market was resolved (e.g., upon receiving a resolution request).
+- **Market Creator (`creator`)**: The account responsible for creating this market.
+- **Market Metadata (`meta`)**: Human-readable data associated with the market.
+- **Order Book ID (`book_uid`)**: The unique identifier for the created order book.
 
 ---
 
@@ -127,7 +118,7 @@ message Odds {
 
 ## **Statistics**
 
-Keeps track of statistics of the market module including the resolved unsettled markets.
+Keeps track of statistics of the **Market Module** including the resolved unsettled markets.
 
 ```proto
 // MarketStats holds statistics of the market

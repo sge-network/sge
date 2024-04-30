@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/x/subaccount/types"
@@ -96,7 +95,7 @@ func TestSetBalances(t *testing.T) {
 		DepositedAmount: sdkmath.ZeroInt(),
 		SpentAmount:     sdkmath.ZeroInt(),
 		WithdrawnAmount: sdkmath.ZeroInt(),
-		LostAmount:      sdk.OneInt(),
+		LostAmount:      sdkmath.OneInt(),
 	}
 
 	subAccAddr := types.NewAddressFromSubaccount(1)

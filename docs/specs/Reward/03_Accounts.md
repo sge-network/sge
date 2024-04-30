@@ -1,11 +1,11 @@
 # **Accounts**
 
-There is one account in the Reward module.
+Within the **Reward Module**, there exists a solitary account.
 
-- Reward Pool: This account holds the reward amount transferred from the campaign `promoter` to the `reward_pool` module account.
+- Reward Pool: This particular account stores the sum of rewards transferred from the `promoter` campaign account to the `reward_pool` module account.
 
-During the campaign creation the pool amount will be transferred to the reward pool module account.
+Upon campaign creation, the pool sum will be directed to the reward pool module account.
 
-## **Grant Reward Transfer**
+## **Transfer of Granted Rewards**
 
-The reward would be transferred to the reward receiver main account (or sub account) according to the ticket payload of the grant reward transaction endpoint.
+The rewards are then transferred to the main (or sub) account of the reward receiver, based on the ticket payload of the grant reward transaction endpoint.

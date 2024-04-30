@@ -1,3 +1,3 @@
 # **Messages**
 
-The `orderbook` module does not emit any messages.
+The **Orderbook Module** does not emit any messages.

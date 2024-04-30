@@ -1,6 +1,6 @@
 # **Events**
 
-The Sub Account module emits the following events
+The **Subaccount Module** emits the following events
 
 ## *MsgCreate*
 

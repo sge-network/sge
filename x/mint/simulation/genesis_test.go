@@ -11,7 +11,6 @@ import (
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/codec"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
@@ -57,7 +56,7 @@ func TestRandomizedGenState(t *testing.T) {
 	require.Equal(
 		t,
 		"0.000000000000000000",
-		mintGenesis.Minter.NextPhaseProvisions(sdk.OneInt(), types.DefaultExcludeAmount, types.NonePhase()).
+		mintGenesis.Minter.NextPhaseProvisions(sdkmath.OneInt(), types.DefaultExcludeAmount, types.NonePhase()).
 			String(),
 	)
 	require.Equal(t, "0.229787234042553191", params.GetPhaseAtStep(1).Inflation.String())

@@ -6,7 +6,6 @@ import (
 	"gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -134,7 +133,7 @@ func validateConstraints(i interface{}) error {
 		return fmt.Errorf("%s: %T", ErrTextInvalidParamType, i)
 	}
 
-	if v.MinAmount.LTE(sdk.OneInt()) {
+	if v.MinAmount.LTE(sdkmath.OneInt()) {
 		return fmt.Errorf("minimum bet amount must be more than one: %d", v.MinAmount.Int64())
 	}
 

@@ -6,7 +6,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -97,7 +96,7 @@ func validateMinimumDeposit(i interface{}) error {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v.LTE(sdk.OneInt()) {
+	if v.LTE(sdkmath.OneInt()) {
 		return fmt.Errorf("minimum deposit must be positive and more than one: %d", v)
 	}
 

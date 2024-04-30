@@ -1,20 +1,16 @@
 # **Concepts**
 
-The House is tasked with accepting deposits from the users and faciliatates them to act as a house
-for a specific market for a small amount of fees. A portion of these fees will be consumed to cover
-the transaction costs associated with posting/resolving markets.
+The House serves as a platform for accepting user deposits and acts as a facilitator for specific markets, charging nominal fees. A portion of these fees covers transaction costs related to market posting and resolution.
 
-The user can withdraw the deposited tokens at any point of time. The tokens that has been
-used to accept bets for the house, along with the unused tokens if not withdrawn, will be settled at the
-resolution of the market.
+Users can withdraw their deposited tokens at any time. Tokens used for accepting bets on behalf of the house, along with any unused tokens, are settled upon market resolution.
 
 ## **KYC Validation**
 
-- If Ignore is false in deposit/withdraw ticket payload, then the status of kyc approval should be true and tx signer and kyc id should be same for a deposit/withdraw to be set.
-- If Ignore is true in deposit/withdraw ticket payload, then kyc validation is not required and deposit/withdraw can be happen without kyc check.
+- When `Ignore` is set to false in the deposit/withdraw ticket payload, KYC approval status must be true, and the transaction signer's KYC ID should match the deposit/withdrawal request.
+- If `Ignore` is true, KYC validation is not required, allowing deposit/withdrawal without further checks.
 
 ## **Authorization**
 
-Authorization is being validated in each deposit and withdraw request that includes `depositor_address` in the ticket, This can be useful if and account has willing to deposit/withdraw on behalf of another accounts.
-To grant deposit/withdraw permission, granter needs to grant permission using the `authz` module of the Cosmos-SDK.
-After each deposit or withdrawal success, the spend or withdraw limit is being updated. If the spend limit gets zero, the grant record will remove from the authz state completely.
+Authorization is verified for each deposit and withdrawal request that includes the `depositor_address` in the ticket. This feature is useful when an account wishes to deposit/withdraw on behalf of other accounts.
+To grant deposit/withdrawal permissions, the granter utilizes the `authz` module in the Cosmos-SDK.
+After each successful deposit or withdrawal, the spend or withdrawal limit is updated. If the spend limit reaches zero, the grant record is completely removed from the authz state.
