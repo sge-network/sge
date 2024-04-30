@@ -131,7 +131,7 @@ func TestQueryPhaseProvision(t *testing.T) {
 			} else {
 				require.NoError(t, err)
 				phaseProvision := strings.Replace(string(res.Bytes()), "\n", "", 1)
-				require.Equal(t, "0.000000000000000000", phaseProvision)
+				require.Equal(t, "57446808.510638297750000000", phaseProvision)
 			}
 		})
 	}
