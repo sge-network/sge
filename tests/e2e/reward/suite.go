@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	sdkcli "github.com/sge-network/sge/tests/sdk"
+	sdkcli "github.com/sge-network/sge/tests/e2e/sdk"
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/simapp"
 	sgetypes "github.com/sge-network/sge/types"
