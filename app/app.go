@@ -6,12 +6,14 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	dbm "github.com/cometbft/cometbft-db"
 	abci "github.com/cometbft/cometbft/abci/types"
 	tmjson "github.com/cometbft/cometbft/libs/json"
 	"github.com/cometbft/cometbft/libs/log"
 	tmos "github.com/cometbft/cometbft/libs/os"
+	tmproto "github.com/cometbft/cometbft/proto/tendermint/types"
 
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 	reflectionv1 "cosmossdk.io/api/cosmos/reflection/v1"
@@ -42,7 +44,12 @@ import (
 	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	wasmlckeeper "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/keeper"
 	ibcclientHandler "github.com/cosmos/ibc-go/v7/modules/core/02-client/client"
+
+	wasm "github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
@@ -137,6 +144,7 @@ func NewSgeApp(
 	invCheckPeriod uint,
 	encodingConfig sgeappparams.EncodingConfig,
 	appOpts servertypes.AppOptions,
+	wasmOpts []wasmkeeper.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) *SgeApp {
 	appCodec := encodingConfig.Marshaler
@@ -170,8 +178,15 @@ func NewSgeApp(
 		skipUpgradeHeights,
 		homePath,
 		invCheckPeriod,
+		wasmOpts,
 		appOpts,
 	)
+
+	if maxSize := os.Getenv("MAX_WASM_SIZE"); maxSize != "" {
+		// https://github.com/CosmWasm/wasmd#compile-time-parameters
+		val, _ := strconv.ParseInt(maxSize, 10, 32)
+		wasmtypes.MaxWasmSize = int(val)
+	}
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
 	// we prefer to be more strict in what arguments the modules expect.
@@ -214,6 +229,11 @@ func NewSgeApp(
 	}
 	reflectionv1.RegisterReflectionServiceServer(app.GRPCQueryRouter(), reflectionSvc)
 
+	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
+	if err != nil {
+		panic("error while reading wasm config: " + err.Error())
+	}
+
 	// create the simulation manager and define the order of the modules for deterministic simulations
 	//
 	// NOTE: this is not required apps that don't use the simulator for fuzz testing
@@ -231,13 +251,24 @@ func NewSgeApp(
 	// initialize BaseApp
 	app.SetInitChainer(app.InitChainer)
 	app.SetBeginBlocker(app.BeginBlocker)
-	anteHandler, err := ante.NewAnteHandler(
-		ante.HandlerOptions{
-			AccountKeeper:   app.AccountKeeper,
-			BankKeeper:      app.BankKeeper,
-			FeegrantKeeper:  app.FeeGrantKeeper,
-			SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
-			SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+	anteHandler, err := NewAnteHandler(
+		HandlerOptions{
+			HandlerOptions: ante.HandlerOptions{
+				AccountKeeper:   app.AppKeepers.AccountKeeper,
+				BankKeeper:      app.AppKeepers.BankKeeper,
+				FeegrantKeeper:  app.AppKeepers.FeeGrantKeeper,
+				SignModeHandler: encodingConfig.TxConfig.SignModeHandler(),
+				SigGasConsumer:  ante.DefaultSigVerificationGasConsumer,
+			},
+
+			GovKeeper:         *app.AppKeepers.GovKeeper,
+			IBCKeeper:         app.AppKeepers.IBCKeeper,
+			BankKeeper:        app.AppKeepers.BankKeeper,
+			TxCounterStoreKey: app.AppKeepers.GetKey(wasmtypes.StoreKey),
+			WasmConfig:        wasmConfig,
+			Cdc:               appCodec,
+
+			StakingKeeper: *app.AppKeepers.StakingKeeper,
 		},
 	)
 	if err != nil {
@@ -246,6 +277,17 @@ func NewSgeApp(
 	app.SetAnteHandler(anteHandler)
 	app.SetEndBlocker(app.EndBlocker)
 
+	if manager := app.SnapshotManager(); manager != nil {
+		err = manager.RegisterExtensions(
+			wasmkeeper.NewWasmSnapshotter(app.CommitMultiStore(), &app.AppKeepers.WasmKeeper),
+			// https://github.com/cosmos/ibc-go/pull/5439
+			wasmlckeeper.NewWasmSnapshotter(app.CommitMultiStore(), &app.AppKeepers.WasmClientKeeper),
+		)
+		if err != nil {
+			panic("failed to register snapshot extension: " + err.Error())
+		}
+	}
+
 	app.setupUpgradeHandlers()
 	app.setupUpgradeStoreLoaders()
 
@@ -253,6 +295,18 @@ func NewSgeApp(
 		if err := app.LoadLatestVersion(); err != nil {
 			tmos.Exit(err.Error())
 		}
+		ctx := app.BaseApp.NewUncachedContext(true, tmproto.Header{})
+
+		// https://github.com/cosmos/ibc-go/pull/5439
+		if err := wasmlckeeper.InitializePinnedCodes(ctx, appCodec); err != nil {
+			tmos.Exit(fmt.Sprintf("wasmlckeeper failed initialize pinned codes %s", err))
+		}
+
+		if err := app.AppKeepers.WasmKeeper.InitializePinnedCodes(ctx); err != nil {
+			tmos.Exit(fmt.Sprintf("app.AppKeepers.WasmKeeper failed initialize pinned codes %s", err))
+		}
+
+		app.AppKeepers.CapabilityKeeper.Seal()
 	}
 
 	return app

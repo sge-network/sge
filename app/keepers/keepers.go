@@ -1,10 +1,16 @@
 package keepers
 
 import (
+	"fmt"
+	"path"
+	"path/filepath"
+	"strings"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/codec"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authzkeeper "github.com/cosmos/cosmos-sdk/x/authz/keeper"
@@ -24,6 +30,7 @@ import (
 	feegrantkeeper "github.com/cosmos/cosmos-sdk/x/feegrant/keeper"
 	govkeeper "github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govv1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/cosmos/cosmos-sdk/x/group"
 	groupkeeper "github.com/cosmos/cosmos-sdk/x/group/keeper"
@@ -38,16 +45,19 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
-	icahost "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host"
-	ibc "github.com/cosmos/ibc-go/v7/modules/core"
-	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 
 	// ibc-go
 
+	ibc_hooks "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7"
+	ibchookskeeper "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/keeper"
+	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
+	wasmlckeeper "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/keeper"
+	wasmlctypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icacontroller "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller"
 	icacontrollerkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/keeper"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
+	icahost "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host"
 	icahostkeeper "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/keeper"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
@@ -56,14 +66,27 @@ import (
 	"github.com/cosmos/ibc-go/v7/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v7/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcclient "github.com/cosmos/ibc-go/v7/modules/core/02-client"
 	ibcclienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	ibcconnectiontypes "github.com/cosmos/ibc-go/v7/modules/core/03-connection/types"
 	ibcporttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
+	porttypes "github.com/cosmos/ibc-go/v7/modules/core/05-port/types"
+	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
 	ibckeeper "github.com/cosmos/ibc-go/v7/modules/core/keeper"
-	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
-	minttypes "github.com/sge-network/sge/x/mint/types"
+
+	// cosmwasm
+
+	wasmapp "github.com/CosmWasm/wasmd/app"
+	"github.com/CosmWasm/wasmd/x/wasm"
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	wasmvm "github.com/CosmWasm/wasmvm"
 
 	// sge
+
+	mintkeeper "github.com/sge-network/sge/x/mint/keeper"
+	minttypes "github.com/sge-network/sge/x/mint/types"
 
 	betmodule "github.com/sge-network/sge/x/bet"
 	betmodulekeeper "github.com/sge-network/sge/x/bet/keeper"
@@ -97,6 +120,8 @@ import (
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
 )
 
+var wasmCapabilities = strings.Join(wasmapp.AllCapabilities(), ",")
+
 type AppKeepers struct {
 	// keys to access the substores
 	keys    map[string]*storetypes.KVStoreKey
@@ -120,6 +145,12 @@ type AppKeepers struct {
 	AuthzKeeper           authzkeeper.Keeper
 	GroupKeeper           groupkeeper.Keeper
 	ConsensusParamsKeeper consensusparamkeeper.Keeper
+
+	//// CosmWasm keepers \\\\
+	ContractKeeper   wasmtypes.ContractOpsKeeper
+	WasmClientKeeper wasmlckeeper.Keeper
+	WasmKeeper       wasmkeeper.Keeper
+	ScopedWasmKeeper capabilitykeeper.ScopedKeeper
 
 	//// SGE keepers \\\\
 	BetKeeper        *betmodulekeeper.Keeper
@@ -150,6 +181,7 @@ type AppKeepers struct {
 	// IBC Keepers
 	IBCKeeper           *ibckeeper.Keeper // IBC Keeper must be a pointer in the app, so we can SetRouter on it correctly
 	IBCFeeKeeper        ibcfeekeeper.Keeper
+	IBCHooksKeeper      *ibchookskeeper.Keeper
 	ICAControllerKeeper icacontrollerkeeper.Keeper
 	ICAHostKeeper       icahostkeeper.Keeper
 
@@ -158,6 +190,9 @@ type AppKeepers struct {
 	ICAModule      ica.AppModule
 	TransferModule transfer.AppModule
 	IBCFeeModule   ibcfee.AppModule
+
+	Ics20WasmHooks   *ibc_hooks.WasmHooks
+	HooksICS4Wrapper ibc_hooks.ICS4Middleware
 }
 
 func NewAppKeeper(
@@ -168,7 +203,8 @@ func NewAppKeeper(
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
 	invCheckPeriod uint,
-	_ servertypes.AppOptions,
+	wasmOpts []wasmkeeper.Option,
+	appOpts servertypes.AppOptions,
 ) AppKeepers {
 	appKeepers := AppKeepers{}
 	// Set keys KVStoreKey, TransientStoreKey, MemoryStoreKey
@@ -196,17 +232,10 @@ func NewAppKeeper(
 
 	// grant capabilities for the ibc and ibc-transfer modules
 	appKeepers.ScopedIBCKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibcexported.ModuleName)
-	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
-		ibctransfertypes.ModuleName,
-	)
-	appKeepers.ScopedICAControllerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
-		icacontrollertypes.SubModuleName,
-	)
-	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(
-		icahosttypes.SubModuleName,
-	)
-
-	appKeepers.CapabilityKeeper.Seal()
+	appKeepers.ScopedTransferKeeper = appKeepers.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
+	appKeepers.ScopedICAControllerKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icacontrollertypes.SubModuleName)
+	appKeepers.ScopedICAHostKeeper = appKeepers.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
+	appKeepers.ScopedWasmKeeper = appKeepers.CapabilityKeeper.ScopeToModule(wasmtypes.ModuleName)
 
 	// add keepers
 	appKeepers.CrisisKeeper = crisiskeeper.NewKeeper(
@@ -342,6 +371,20 @@ func NewAppKeeper(
 	)
 	appKeepers.GovKeeper.SetLegacyRouter(govRouter)
 
+	// Configure the hooks keeper
+	hooksKeeper := ibchookskeeper.NewKeeper(
+		appKeepers.keys[ibchookstypes.StoreKey],
+	)
+	appKeepers.IBCHooksKeeper = &hooksKeeper
+
+	junoPrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+	wasmHooks := ibc_hooks.NewWasmHooks(appKeepers.IBCHooksKeeper, &appKeepers.WasmKeeper, junoPrefix) // The contract keeper needs to be set later
+	appKeepers.Ics20WasmHooks = &wasmHooks
+	appKeepers.HooksICS4Wrapper = ibc_hooks.NewICS4Middleware(
+		appKeepers.IBCKeeper.ChannelKeeper,
+		appKeepers.Ics20WasmHooks,
+	)
+
 	// IBC Fee Module keeper
 	appKeepers.IBCFeeKeeper = ibcfeekeeper.NewKeeper(
 		appCodec,
@@ -394,6 +437,101 @@ func NewAppKeeper(
 		appKeepers.StakingKeeper,
 		appKeepers.SlashingKeeper,
 	)
+
+	dataDir := filepath.Join(homePath, "data")
+
+	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
+	if err != nil {
+		panic("error while reading wasm config: " + err.Error())
+	}
+
+	// Stargate Queries
+	acceptedStargateQueries := wasmkeeper.AcceptedStargateQueries{
+		// ibc
+		"/ibc.core.client.v1.Query/ClientState":    &ibcclienttypes.QueryClientStateResponse{},
+		"/ibc.core.client.v1.Query/ConsensusState": &ibcclienttypes.QueryConsensusStateResponse{},
+		"/ibc.core.connection.v1.Query/Connection": &ibcconnectiontypes.QueryConnectionResponse{},
+
+		// governance
+		"/cosmos.gov.v1beta1.Query/Vote": &govv1.QueryVoteResponse{},
+
+		// distribution
+		"/cosmos.distribution.v1beta1.Query/DelegationRewards": &distrtypes.QueryDelegationRewardsResponse{},
+
+		// staking
+		"/cosmos.staking.v1beta1.Query/Delegation":          &stakingtypes.QueryDelegationResponse{},
+		"/cosmos.staking.v1beta1.Query/Redelegations":       &stakingtypes.QueryRedelegationsResponse{},
+		"/cosmos.staking.v1beta1.Query/UnbondingDelegation": &stakingtypes.QueryUnbondingDelegationResponse{},
+		"/cosmos.staking.v1beta1.Query/Validator":           &stakingtypes.QueryValidatorResponse{},
+		"/cosmos.staking.v1beta1.Query/Params":              &stakingtypes.QueryParamsResponse{},
+		"/cosmos.staking.v1beta1.Query/Pool":                &stakingtypes.QueryPoolResponse{},
+	}
+
+	querierOpts := wasmkeeper.WithQueryPlugins(
+		&wasmkeeper.QueryPlugins{
+			Stargate: wasmkeeper.AcceptListStargateQuerier(acceptedStargateQueries, bApp.GRPCQueryRouter(), appCodec),
+		})
+	wasmOpts = append(wasmOpts, querierOpts)
+
+	mainWasmer, err := wasmvm.NewVM(path.Join(dataDir, "wasm"), wasmCapabilities, 32, wasmConfig.ContractDebugMode, wasmConfig.MemoryCacheSize)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create juno wasm vm: %s", err))
+	}
+
+	lcWasmer, err := wasmvm.NewVM(filepath.Join(dataDir, "light-client-wasm"), wasmCapabilities, 32, wasmConfig.ContractDebugMode, wasmConfig.MemoryCacheSize)
+	if err != nil {
+		panic(fmt.Sprintf("failed to create juno wasm vm for 08-wasm: %s", err))
+	}
+
+	appKeepers.WasmKeeper = wasmkeeper.NewKeeper(
+		appCodec,
+		appKeepers.keys[wasmtypes.StoreKey],
+		appKeepers.AccountKeeper,
+		appKeepers.BankKeeper,
+		appKeepers.StakingKeeper,
+		distrkeeper.NewQuerier(appKeepers.DistrKeeper),
+		appKeepers.IBCFeeKeeper,
+		appKeepers.IBCKeeper.ChannelKeeper,
+		&appKeepers.IBCKeeper.PortKeeper,
+		appKeepers.ScopedWasmKeeper,
+		appKeepers.TransferKeeper,
+		bApp.MsgServiceRouter(),
+		bApp.GRPCQueryRouter(),
+		dataDir,
+		wasmConfig,
+		wasmCapabilities,
+		govModAddress,
+		append(wasmOpts, wasmkeeper.WithWasmEngine(mainWasmer))...,
+	)
+
+	// 08-wasm light client
+	accepted := make([]string, 0)
+	for k := range acceptedStargateQueries {
+		accepted = append(accepted, k)
+	}
+
+	wasmLightClientQuerier := wasmlctypes.QueryPlugins{
+		// Custom: MyCustomQueryPlugin(),
+		// `myAcceptList` is a `[]string` containing the list of gRPC query paths that the chain wants to allow for the `08-wasm` module to query.
+		// These queries must be registered in the chain's gRPC query router, be deterministic, and track their gas usage.
+		// The `AcceptListStargateQuerier` function will return a query plugin that will only allow queries for the paths in the `myAcceptList`.
+		// The query responses are encoded in protobuf unlike the implementation in `x/wasm`.
+		Stargate: wasmlctypes.AcceptListStargateQuerier(accepted),
+	}
+
+	appKeepers.WasmClientKeeper = wasmlckeeper.NewKeeperWithVM(
+		appCodec,
+		appKeepers.keys[wasmlctypes.StoreKey],
+		appKeepers.IBCKeeper.ClientKeeper,
+		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
+		lcWasmer,
+		bApp.GRPCQueryRouter(),
+		wasmlckeeper.WithQueryPlugins(&wasmLightClientQuerier),
+	)
+
+	// set the contract keeper for the Ics20WasmHooks
+	appKeepers.ContractKeeper = wasmkeeper.NewDefaultPermissionKeeper(&appKeepers.WasmKeeper)
+	appKeepers.Ics20WasmHooks.ContractKeeper = &appKeepers.WasmKeeper
 
 	// // SGE keepers \\\\
 
@@ -545,11 +683,17 @@ func NewAppKeeper(
 	icaHostStack = icahost.NewIBCModule(appKeepers.ICAHostKeeper)
 	icaHostStack = ibcfee.NewIBCMiddleware(icaHostStack, appKeepers.IBCFeeKeeper)
 
+	// Create fee enabled wasm ibc Stack
+	var wasmStack porttypes.IBCModule
+	wasmStack = wasm.NewIBCHandler(appKeepers.WasmKeeper, appKeepers.IBCKeeper.ChannelKeeper, appKeepers.IBCFeeKeeper)
+	wasmStack = ibcfee.NewIBCMiddleware(wasmStack, appKeepers.IBCFeeKeeper)
+
 	// Create static IBC router, add transfer route, then set and seal it
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icacontrollertypes.SubModuleName, icaControllerStack)
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostStack)
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, transferStack)
+	ibcRouter.AddRoute(wasmtypes.ModuleName, wasmStack)
 
 	appKeepers.IBCKeeper.SetRouter(ibcRouter)
 
@@ -589,6 +733,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec,
 	paramsKeeper.Subspace(housemoduletypes.ModuleName)
 	paramsKeeper.Subspace(rewardmoduletypes.ModuleName)
 	paramsKeeper.Subspace(subaccountmoduletypes.ModuleName)
+	paramsKeeper.Subspace(wasmtypes.ModuleName)
 
 	return paramsKeeper
 }

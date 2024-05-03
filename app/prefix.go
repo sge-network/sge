@@ -4,6 +4,8 @@ import (
 	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/params"
 )
@@ -27,6 +29,8 @@ func SetConfig() {
 	config.SetBech32PrefixForAccount(keepers.AccountAddressPrefix, AccountPubKeyPrefix)
 	config.SetBech32PrefixForValidator(ValidatorAddressPrefix, ValidatorPubKeyPrefix)
 	config.SetBech32PrefixForConsensusNode(ConsNodeAddressPrefix, ConsNodePubKeyPrefix)
+
+	config.SetAddressVerifier(wasmtypes.VerifyAddressLen())
 
 	err := sdk.RegisterDenom(params.HumanCoinUnit, sdkmath.LegacyOneDec())
 	if err != nil {
