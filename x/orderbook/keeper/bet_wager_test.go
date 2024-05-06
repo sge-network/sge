@@ -465,7 +465,7 @@ func (ts *testBetSuite) bulkDepositPlaceBetsAndTest() {
 		OddsUID:           ts.market.Odds[1].UID,
 		OddsValue:         "4.415",
 		Amount:            betAmount,
-		Fee:               sdk.ZeroInt(),
+		Fee:               sdkmath.ZeroInt(),
 		Status:            bettypes.Bet_STATUS_PENDING,
 		Creator:           bettorAddr.String(),
 		CreatedAt:         cast.ToInt64(ts.ctx.BlockTime().Unix()),

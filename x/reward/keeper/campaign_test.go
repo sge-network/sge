@@ -33,7 +33,7 @@ func createNCampaign(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Camp
 		items[i].RewardAmountType = types.RewardAmountType_REWARD_AMOUNT_TYPE_FIXED
 		items[i].IsActive = true
 		items[i].Meta = "campaign " + items[i].UID
-		items[i].Pool = types.Pool{Spent: sdk.ZeroInt(), Withdrawn: sdk.ZeroInt(), Total: sdkmath.NewInt(100)}
+		items[i].Pool = types.Pool{Spent: sdkmath.ZeroInt(), Withdrawn: sdkmath.ZeroInt(), Total: sdkmath.NewInt(100)}
 
 		keeper.SetCampaign(ctx, items[i])
 	}

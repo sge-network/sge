@@ -4,7 +4,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
 // NewOrderBookOddsExposure creates a new book odds exposure object
@@ -55,8 +54,8 @@ func (pe ParticipationExposure) NextRound() ParticipationExposure {
 	return NewParticipationExposure(
 		pe.OrderBookUID,
 		pe.OddsUID,
-		sdk.ZeroInt(),
-		sdk.ZeroInt(),
+		sdkmath.ZeroInt(),
+		sdkmath.ZeroInt(),
 		pe.ParticipationIndex,
 		pe.Round+1,
 		false,

@@ -50,7 +50,7 @@ func (a DepositAuthorization) ValidateBasic() error {
 	if a.SpendLimit.IsNil() {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be nil")
 	}
-	if a.SpendLimit.LTE(sdk.ZeroInt()) {
+	if a.SpendLimit.LTE(sdkmath.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("spend limit cannot be less than or equal to zero")
 	}
 	if a.SpendLimit.LT(minDepositGrant) {

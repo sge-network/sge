@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/sample"
@@ -49,7 +48,7 @@ func TestMsgDepositValidateBasic(t *testing.T) {
 			msg: types.MsgDeposit{
 				Creator:   sample.AccAddress(),
 				MarketUID: uuid.NewString(),
-				Amount:    sdk.ZeroInt(),
+				Amount:    sdkmath.ZeroInt(),
 				Ticket:    "Ticket",
 			},
 			err: sdkerrtypes.ErrInvalidRequest,
@@ -76,7 +75,7 @@ func TestNewDeposit(t *testing.T) {
 			Amount:                sdkmath.NewInt(100),
 			ParticipationIndex:    0,
 			WithdrawalCount:       0,
-			TotalWithdrawalAmount: sdk.ZeroInt(),
+			TotalWithdrawalAmount: sdkmath.ZeroInt(),
 		}
 		res := types.NewDeposit(
 			expected.Creator,

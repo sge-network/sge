@@ -50,7 +50,7 @@ func (a WithdrawAuthorization) ValidateBasic() error {
 	if a.WithdrawLimit.IsNil() {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be nil")
 	}
-	if a.WithdrawLimit.LTE(sdk.ZeroInt()) {
+	if a.WithdrawLimit.LTE(sdkmath.ZeroInt()) {
 		return sdkerrtypes.ErrInvalidCoins.Wrap("withdraw limit cannot be less than or equal to zero")
 	}
 	if a.WithdrawLimit.GT(maxWithdrawGrant) {

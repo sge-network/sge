@@ -318,7 +318,7 @@ replace (
 	// use cosmos fork of keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
-	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.46.17-0.20240223100624-2a2661276cb4
+	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.46.17-0.20240430064306-1b044d03d56c
 	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/gin-gonic/gin => github.com/gin-gonic/gin v1.9.0
 	// use cosmos-compatible protobufs

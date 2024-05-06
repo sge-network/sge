@@ -123,9 +123,9 @@ func (k Keeper) CreateSubaccount(ctx sdk.Context, creator, owner string,
 	k.SetLockedBalances(ctx, subAccAddr, lockedBalances)
 	k.SetAccountSummary(ctx, subAccAddr, types.AccountSummary{
 		DepositedAmount: lockedBalance,
-		SpentAmount:     sdk.ZeroInt(),
-		WithdrawnAmount: sdk.ZeroInt(),
-		LostAmount:      sdk.ZeroInt(),
+		SpentAmount:     sdkmath.ZeroInt(),
+		WithdrawnAmount: sdkmath.ZeroInt(),
+		LostAmount:      sdkmath.ZeroInt(),
 	})
 	return subAccAddr.String(), nil
 }

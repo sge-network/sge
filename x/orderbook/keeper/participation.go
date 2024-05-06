@@ -132,7 +132,7 @@ func (k Keeper) InitiateOrderBookParticipation(
 		index, book.UID, addr.String(),
 		book.OddsCount,                  // all odds need to be filled in the next steps
 		liquidity, feeAmount, liquidity, // int the start, liquidity and current round liquidity are the same
-		sdk.ZeroInt(), sdk.ZeroInt(), sdk.ZeroInt(), sdkmath.Int{}, "", sdk.ZeroInt(),
+		sdkmath.ZeroInt(), sdkmath.ZeroInt(), sdkmath.ZeroInt(), sdkmath.Int{}, "", sdkmath.ZeroInt(),
 	)
 
 	// fund order book liquidity pool from participant's account.
