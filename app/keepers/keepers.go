@@ -377,8 +377,8 @@ func NewAppKeeper(
 	)
 	appKeepers.IBCHooksKeeper = &hooksKeeper
 
-	junoPrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
-	wasmHooks := ibc_hooks.NewWasmHooks(appKeepers.IBCHooksKeeper, &appKeepers.WasmKeeper, junoPrefix) // The contract keeper needs to be set later
+	sgePrefix := sdk.GetConfig().GetBech32AccountAddrPrefix()
+	wasmHooks := ibc_hooks.NewWasmHooks(appKeepers.IBCHooksKeeper, &appKeepers.WasmKeeper, sgePrefix) // The contract keeper needs to be set later
 	appKeepers.Ics20WasmHooks = &wasmHooks
 	appKeepers.HooksICS4Wrapper = ibc_hooks.NewICS4Middleware(
 		appKeepers.IBCKeeper.ChannelKeeper,
@@ -475,12 +475,12 @@ func NewAppKeeper(
 
 	mainWasmer, err := wasmvm.NewVM(path.Join(dataDir, "wasm"), wasmCapabilities, 32, wasmConfig.ContractDebugMode, wasmConfig.MemoryCacheSize)
 	if err != nil {
-		panic(fmt.Sprintf("failed to create juno wasm vm: %s", err))
+		panic(fmt.Sprintf("failed to create sge wasm vm: %s", err))
 	}
 
 	lcWasmer, err := wasmvm.NewVM(filepath.Join(dataDir, "light-client-wasm"), wasmCapabilities, 32, wasmConfig.ContractDebugMode, wasmConfig.MemoryCacheSize)
 	if err != nil {
-		panic(fmt.Sprintf("failed to create juno wasm vm for 08-wasm: %s", err))
+		panic(fmt.Sprintf("failed to create sge wasm vm for 08-wasm: %s", err))
 	}
 
 	appKeepers.WasmKeeper = wasmkeeper.NewKeeper(

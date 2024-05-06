@@ -15,7 +15,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.47.8
 	github.com/cosmos/gogoproto v1.4.10
 	github.com/cosmos/ibc-apps/modules/ibc-hooks/v7 v7.0.0-20240502201956-e9b46e4bf0ad
-	github.com/cosmos/ibc-go/modules/light-clients/08-wasm v0.1.1-ibc-go-v7.3-wasmvm-v1.5
+	github.com/cosmos/ibc-go/modules/light-clients/08-wasm v0.1.1-0.20231213092633-b306e7a706e1
 	github.com/cosmos/ibc-go/v7 v7.4.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.0
@@ -349,7 +349,7 @@ replace (
 	// cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
-	github.com/CosmWasm/wasmd => github.com/sge-network/wasmd v0.0.0-20240503124041-93276618b032
+	github.com/CosmWasm/wasmd => github.com/sge-network/wasmd v0.0.0-20240506113624-5ccb26abde7a
 
 	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240409081440-054c8c413d45
 

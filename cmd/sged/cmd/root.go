@@ -104,7 +104,6 @@ func initAppConfig() (string, interface{}) {
 	// Optionally allow the chain developer to overwrite the SDK's default
 	// server config.
 	srvCfg := serverconfig.DefaultConfig()
-	// srvCfg.MinGasPrices = "0ujuno,0ujunox" // GlobalFee handles
 
 	customAppConfig := CustomAppConfig{
 		Config: *srvCfg,
