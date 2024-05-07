@@ -6,9 +6,9 @@ import (
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 
 	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	wasmlctypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 
 	"github.com/sge-network/sge/app/upgrades"
 )
@@ -25,7 +25,7 @@ var Upgrade = upgrades.Upgrade{
 			consensustypes.ModuleName,
 			ibchookstypes.StoreKey,
 			wasmtypes.ModuleName,
-			wasmlctypes.ModuleName,
+			ibcwasmtypes.ModuleName,
 		},
 		Deleted: []string{},
 	},

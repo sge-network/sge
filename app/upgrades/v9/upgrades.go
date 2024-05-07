@@ -18,7 +18,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
-	wasmlctypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
@@ -115,7 +115,7 @@ func CreateUpgradeHandler(
 		// explicitly update the IBC 02-client params, adding the localhost client type
 		params := k.IBCKeeper.ClientKeeper.GetParams(ctx)
 		params.AllowedClients = append(params.AllowedClients, exported.Localhost)
-		params.AllowedClients = append(params.AllowedClients, wasmlctypes.Wasm)
+		params.AllowedClients = append(params.AllowedClients, ibcwasmtypes.Wasm)
 		k.IBCKeeper.ClientKeeper.SetParams(ctx, params)
 
 		// update gov params to use a 20% initial deposit ratio, allowing us to remote the ante handler

@@ -21,6 +21,7 @@ import (
 
 	// ibc-go
 	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibcfeetypes "github.com/cosmos/ibc-go/v7/modules/apps/29-fee/types"
@@ -29,7 +30,6 @@ import (
 
 	// cosmwasm
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	wasmlctypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
 	housemoduletypes "github.com/sge-network/sge/x/house/types"
@@ -57,7 +57,7 @@ func (appKeepers *AppKeepers) GenerateKeys() {
 		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey,
 		govtypes.StoreKey, paramstypes.StoreKey, consensusparamtypes.StoreKey, upgradetypes.StoreKey,
 		feegrant.StoreKey, evidencetypes.StoreKey, capabilitytypes.StoreKey, authzkeeper.StoreKey, group.StoreKey,
-		wasmtypes.StoreKey, wasmlctypes.StoreKey,
+		wasmtypes.StoreKey, ibcwasmtypes.StoreKey,
 		ibcexported.StoreKey, ibctransfertypes.StoreKey, ibcfeetypes.StoreKey, icacontrollertypes.StoreKey, icahosttypes.StoreKey, ibchookstypes.StoreKey,
 		orderbookmoduletypes.StoreKey,
 		betmoduletypes.StoreKey,

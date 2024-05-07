@@ -300,26 +300,19 @@ func createSimappAndExport(
 	encCfg.Marshaler = codec.NewProtoCodec(encCfg.InterfaceRegistry)
 	var sgeApp *app.SgeApp
 	var emptyWasmOpts []wasmkeeper.Option
-	if height != -1 {
-		sgeApp = app.NewSgeApp(
-			logger,
-			db,
-			traceStore,
-			false,
-			map[int64]bool{},
-			"",
-			cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
-			encCfg,
-			appOpts,
-			emptyWasmOpts,
-		)
-
-		if err := sgeApp.LoadHeight(height); err != nil {
-			return servertypes.ExportedApp{}, err
-		}
-	} else {
-		sgeApp = app.NewSgeApp(logger, db, traceStore, true, map[int64]bool{}, "", cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)), encCfg, appOpts, emptyWasmOpts)
-	}
+	loadLatest := height == -1
+	sgeApp = app.NewSgeApp(
+		logger,
+		db,
+		traceStore,
+		loadLatest,
+		map[int64]bool{},
+		cast.ToString(appOpts.Get(flags.FlagHome)),
+		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
+		encCfg,
+		appOpts,
+		emptyWasmOpts,
+	)
 
 	return sgeApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }

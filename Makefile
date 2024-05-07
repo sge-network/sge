@@ -12,6 +12,7 @@ ifeq (,$(VERSION))
   endif
 endif
 
+GO_VERSION := $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f 2)
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
@@ -130,6 +131,24 @@ $(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
+
+build-reproducible-amd64: go.sum
+	mkdir -p $(BUILDDIR)
+	$(DOCKER) buildx create --name sgebuilder --node sgebinary || true
+	$(DOCKER) buildx use sgebuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.19 \
+		--platform linux/amd64 \
+		-t sge:local-amd64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f sgebinary || true
+	$(DOCKER) create -ti --name sgebinary sge:local-amd64
+	$(DOCKER) cp sgebinary:/bin/sged $(BUILDDIR)/sged-linux-amd64
+	$(DOCKER) rm -f sgebinary
 
 build-linux: go.sum
 	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build

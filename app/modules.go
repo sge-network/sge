@@ -38,8 +38,8 @@ import (
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
 	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
-	wasmlc "github.com/cosmos/ibc-go/modules/light-clients/08-wasm"
-	wasmlctypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
+	ibcwasmmodule "github.com/cosmos/ibc-go/modules/light-clients/08-wasm"
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
@@ -125,7 +125,7 @@ var ModuleBasics = module.NewBasicManager(
 	transfer.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	ibcfee.AppModuleBasic{},
-	wasmlc.AppModuleBasic{},
+	ibcwasmmodule.AppModuleBasic{},
 
 	// sge
 	betmodule.AppModuleBasic{},
@@ -203,7 +203,7 @@ func appModules(
 		app.TransferModule,
 		app.IBCFeeModule,
 		app.ICAModule,
-		wasmlc.NewAppModule(app.AppKeepers.WasmClientKeeper),
+		ibcwasmmodule.NewAppModule(app.AppKeepers.WasmClientKeeper),
 		app.BetModule,
 		app.MarketModule,
 		app.OrderbookModule,
@@ -309,7 +309,7 @@ func orderBeginBlockers() []string {
 		icatypes.ModuleName,
 		wasmtypes.ModuleName,
 		ibchookstypes.ModuleName,
-		wasmlctypes.ModuleName,
+		ibcwasmtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -346,7 +346,7 @@ func orderEndBlockers() []string {
 		icatypes.ModuleName,
 		wasmtypes.ModuleName,
 		ibchookstypes.ModuleName,
-		wasmlctypes.ModuleName,
+		ibcwasmtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -382,7 +382,7 @@ func orderInitBlockers() []string {
 		icatypes.ModuleName,
 		ibcfeetypes.ModuleName,
 		wasmtypes.ModuleName,
-		wasmlctypes.ModuleName,
+		ibcwasmtypes.ModuleName,
 		ibchookstypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
