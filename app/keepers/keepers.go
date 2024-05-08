@@ -433,12 +433,11 @@ func NewAppKeeper(
 		panic("error while reading wasm config: " + err.Error())
 	}
 
-	ibcWasmConfig :=
-		ibcwasmtypes.WasmConfig{
-			DataDir:               filepath.Join(wasmDir, "ibc_08-wasm"),
-			SupportedCapabilities: "iterator,stargate,abort",
-			ContractDebugMode:     false,
-		}
+	ibcWasmConfig := ibcwasmtypes.WasmConfig{
+		DataDir:               filepath.Join(wasmDir, "ibc_08-wasm"),
+		SupportedCapabilities: "iterator,stargate,abort",
+		ContractDebugMode:     false,
+	}
 
 	wasmCapabilities := "iterator,staking,stargate"
 
