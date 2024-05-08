@@ -132,6 +132,8 @@ $(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
 
+build-reproducible: build-reproducible-amd64 build-reproducible-arm64
+
 build-reproducible-amd64: go.sum
 	mkdir -p $(BUILDDIR)
 	$(DOCKER) buildx create --name sgebuilder --node sgebinary || true
@@ -148,6 +150,24 @@ build-reproducible-amd64: go.sum
 	$(DOCKER) rm -f sgebinary || true
 	$(DOCKER) create -ti --name sgebinary sge:local-amd64
 	$(DOCKER) cp sgebinary:/bin/sged $(BUILDDIR)/sged-linux-amd64
+	$(DOCKER) rm -f sgebinary
+
+build-reproducible-arm64: go.sum
+	mkdir -p $(BUILDDIR)
+	$(DOCKER) buildx create --name sgebuilder || true
+	$(DOCKER) buildx use sgebuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.18 \
+		--platform linux/arm64 \
+		-t sge:local-arm64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f sgebinary || true
+	$(DOCKER) create -ti --name sgebinary sge:local-arm64
+	$(DOCKER) cp sgebinary:/bin/sged $(BUILDDIR)/sged-linux-arm64
 	$(DOCKER) rm -f sgebinary
 
 build-linux: go.sum
