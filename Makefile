@@ -140,7 +140,7 @@ build-reproducible-amd64: go.sum
 		--build-arg GO_VERSION=$(GO_VERSION) \
 		--build-arg GIT_VERSION=$(VERSION) \
 		--build-arg GIT_COMMIT=$(COMMIT) \
-		--build-arg RUNNER_IMAGE=alpine:3.19 \
+		--build-arg RUNNER_IMAGE=alpine:3.18 \
 		--platform linux/amd64 \
 		-t sge:local-amd64 \
 		--load \
