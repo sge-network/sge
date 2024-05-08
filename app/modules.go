@@ -13,6 +13,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/capability"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
+	consensusparamtypes "github.com/cosmos/cosmos-sdk/x/consensus/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	crisistypes "github.com/cosmos/cosmos-sdk/x/crisis/types"
 	distr "github.com/cosmos/cosmos-sdk/x/distribution"
@@ -35,6 +36,10 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/cosmos-sdk/x/upgrade"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+
+	ibchookstypes "github.com/cosmos/ibc-apps/modules/ibc-hooks/v7/types"
+	ibcwasmmodule "github.com/cosmos/ibc-go/modules/light-clients/08-wasm"
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	ica "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts"
 	icatypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/types"
 	ibcfee "github.com/cosmos/ibc-go/v7/modules/apps/29-fee"
@@ -43,6 +48,9 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
+	wasm "github.com/CosmWasm/wasmd/x/wasm"
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	sgeappparams "github.com/sge-network/sge/app/params"
 	betmodule "github.com/sge-network/sge/x/bet"
@@ -57,11 +65,10 @@ import (
 	orderbookmoduletypes "github.com/sge-network/sge/x/orderbook/types"
 	ovmmodule "github.com/sge-network/sge/x/ovm"
 	ovmmoduletypes "github.com/sge-network/sge/x/ovm/types"
-	subaccountmodule "github.com/sge-network/sge/x/subaccount"
-	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
-
 	rewardmodule "github.com/sge-network/sge/x/reward"
 	rewardmoduletypes "github.com/sge-network/sge/x/reward/types"
+	subaccountmodule "github.com/sge-network/sge/x/subaccount"
+	subaccounttypes "github.com/sge-network/sge/x/subaccount/types"
 
 	// unnamed import of statik for swagger UI support
 	_ "github.com/cosmos/cosmos-sdk/client/docs/statik"
@@ -80,6 +87,9 @@ var mAccPerms = map[string][]string{
 	ibctransfertypes.ModuleName: {authtypes.Minter, authtypes.Burner},
 	ibcfeetypes.ModuleName:      nil,
 	icatypes.ModuleName:         nil,
+
+	// cosmwasm
+	wasmtypes.ModuleName: {},
 
 	// sge
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
@@ -103,16 +113,19 @@ var ModuleBasics = module.NewBasicManager(
 	params.AppModuleBasic{},
 	crisis.AppModuleBasic{},
 	slashing.AppModuleBasic{},
-	feegrantmodule.AppModuleBasic{},
-	authzmodule.AppModuleBasic{},
-	groupmodule.AppModuleBasic{},
-	ibc.AppModuleBasic{},
 	upgrade.AppModuleBasic{},
 	evidence.AppModuleBasic{},
-	transfer.AppModuleBasic{},
+	feegrantmodule.AppModuleBasic{},
+	authzmodule.AppModuleBasic{},
 	vesting.AppModuleBasic{},
+	groupmodule.AppModuleBasic{},
+
+	wasm.AppModuleBasic{},
+	ibc.AppModuleBasic{},
+	transfer.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	ibcfee.AppModuleBasic{},
+	ibcwasmmodule.AppModuleBasic{},
 
 	// sge
 	betmodule.AppModuleBasic{},
@@ -184,12 +197,13 @@ func appModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
+		wasm.NewAppModule(appCodec, &app.AppKeepers.WasmKeeper, app.AppKeepers.StakingKeeper, app.AppKeepers.AccountKeeper, app.AppKeepers.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		app.IBCModule,
 		params.NewAppModule(app.ParamsKeeper),
 		app.TransferModule,
 		app.IBCFeeModule,
 		app.ICAModule,
-
+		ibcwasmmodule.NewAppModule(app.AppKeepers.WasmClientKeeper),
 		app.BetModule,
 		app.MarketModule,
 		app.OrderbookModule,
@@ -255,6 +269,7 @@ func simulationModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
+		wasm.NewAppModule(appCodec, &app.AppKeepers.WasmKeeper, app.AppKeepers.StakingKeeper, app.AppKeepers.AccountKeeper, app.AppKeepers.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
 		app.IBCModule,
 		app.TransferModule,
 
@@ -277,8 +292,6 @@ func orderBeginBlockers() []string {
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
 		stakingtypes.ModuleName,
-		ibctransfertypes.ModuleName,
-		ibcexported.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
 		govtypes.ModuleName,
@@ -289,8 +302,14 @@ func orderBeginBlockers() []string {
 		group.ModuleName,
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
-		icatypes.ModuleName,
+		consensusparamtypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		ibcexported.ModuleName,
 		ibcfeetypes.ModuleName,
+		icatypes.ModuleName,
+		wasmtypes.ModuleName,
+		ibchookstypes.ModuleName,
+		ibcwasmtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -306,8 +325,6 @@ func orderEndBlockers() []string {
 		crisistypes.ModuleName,
 		govtypes.ModuleName,
 		stakingtypes.ModuleName,
-		ibcexported.ModuleName,
-		ibctransfertypes.ModuleName,
 		capabilitytypes.ModuleName,
 		authtypes.ModuleName,
 		banktypes.ModuleName,
@@ -322,8 +339,14 @@ func orderEndBlockers() []string {
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
-		icatypes.ModuleName,
+		consensusparamtypes.ModuleName,
+		ibcexported.ModuleName,
+		ibctransfertypes.ModuleName,
 		ibcfeetypes.ModuleName,
+		icatypes.ModuleName,
+		wasmtypes.ModuleName,
+		ibchookstypes.ModuleName,
+		ibcwasmtypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,
@@ -344,19 +367,23 @@ func orderInitBlockers() []string {
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
 		mintmoduletypes.ModuleName,
-		ibcexported.ModuleName,
+		crisistypes.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		authz.ModuleName,
-		feegrant.ModuleName,
-		group.ModuleName,
-		crisistypes.ModuleName,
-		ibctransfertypes.ModuleName,
-		icatypes.ModuleName,
-		ibcfeetypes.ModuleName,
 		paramstypes.ModuleName,
 		upgradetypes.ModuleName,
+		group.ModuleName,
 		vestingtypes.ModuleName,
+		feegrant.ModuleName,
+		consensusparamtypes.ModuleName,
+		ibctransfertypes.ModuleName,
+		ibcexported.ModuleName,
+		icatypes.ModuleName,
+		ibcfeetypes.ModuleName,
+		wasmtypes.ModuleName,
+		ibcwasmtypes.ModuleName,
+		ibchookstypes.ModuleName,
 		betmoduletypes.ModuleName,
 		marketmoduletypes.ModuleName,
 		orderbookmoduletypes.ModuleName,

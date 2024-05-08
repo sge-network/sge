@@ -24,6 +24,9 @@ import (
 	stakingKeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	stakingtestutil "github.com/cosmos/cosmos-sdk/x/staking/testutil"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/utils"
@@ -56,6 +59,7 @@ func setup(withGenesis bool, invCheckPeriod uint) (*TestApp, app.GenesisState) {
 		invCheckPeriod,
 		encCdc,
 		simtestutil.EmptyAppOptions{},
+		[]wasmkeeper.Option{},
 	)
 	if withGenesis {
 		return &TestApp{SgeApp: *appInstance}, app.NewDefaultGenesisState()
