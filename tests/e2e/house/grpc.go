@@ -64,3 +64,42 @@ func (s *E2ETestSuite) TestDepositsGRPCHandler() {
 		})
 	}
 }
+
+func (s *E2ETestSuite) TestGRPCHandler() {
+	val := s.network.Validators[0]
+	baseURL := val.APIAddress
+
+	testCases := []struct {
+		name     string
+		url      string
+		headers  map[string]string
+		respType proto.Message
+		expected proto.Message
+	}{
+		{
+			"test GRPC all withdraws",
+			fmt.Sprintf("%s/sge/house/withdrawals/%s", baseURL, dummyDepositor),
+			map[string]string{
+				grpctypes.GRPCBlockHeightHeader: "1",
+			},
+			&types.QueryWithdrawalsByAccountResponse{},
+			&types.QueryWithdrawalsByAccountResponse{
+				Withdrawals: genesis.WithdrawalList,
+				Pagination: &query.PageResponse{
+					Total: 1,
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		s.Run(tc.name, func() {
+			resp, err := testutil.GetRequestWithHeaders(tc.url, tc.headers)
+			s.Require().NoError(err)
+
+			s.Require().NoError(val.ClientCtx.Codec.UnmarshalJSON(resp, tc.respType))
+			s.Require().Equal(tc.expected.String(), tc.respType.String())
+		})
+	}
+}

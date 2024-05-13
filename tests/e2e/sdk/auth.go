@@ -30,7 +30,6 @@ func SetGenericAuthorization(val *sdknetwork.Validator, grantee sdk.AccAddress, 
 			fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, fees)).String()),
 		},
 	)
-
 	if err != nil {
 		panic(err)
 	}

@@ -44,7 +44,6 @@ func SendToken(val *sdknetwork.Validator, acc sdk.AccAddress, amount int) {
 		fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
 		fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, fees)).String()),
 	)
-
 	if err != nil {
 		panic(err)
 	}

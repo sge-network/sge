@@ -42,6 +42,9 @@ var (
 
 	acc1        = sdk.AccAddress{}
 	acc1Balance = sdkmath.ZeroInt()
+
+	acc2        = sdk.AccAddress{}
+	acc2Balance = sdkmath.ZeroInt()
 )
 
 type E2ETestSuite struct {
@@ -311,7 +314,8 @@ func (s *E2ETestSuite) TestDepositTxCmd() {
 				s.Require().NoError(err)
 
 				s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), tc.respType), bz.String())
-				respType := tc.respType.(*sdk.TxResponse)
+				respType, ok := tc.respType.(*sdk.TxResponse)
+				s.Require().True(ok)
 				s.Require().Equal(tc.expectedCode, respType.Code)
 
 				txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
@@ -489,7 +493,8 @@ func (s *E2ETestSuite) TestDepositWithAuthzTxCmd() {
 				s.Require().NoError(err)
 
 				s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), tc.respType), bz.String())
-				respType := tc.respType.(*sdk.TxResponse)
+				respType, ok := tc.respType.(*sdk.TxResponse)
+				s.Require().True(ok)
 				s.Require().Equal(tc.expectedCode, respType.Code)
 
 				txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
@@ -822,6 +827,219 @@ func (s *E2ETestSuite) TestWithdrawTxCmd() {
 			}
 		})
 	}
+
+	s.T().Log("==== new deposit test passed successfully")
+}
+
+func (s *E2ETestSuite) TestWithdrawWithAuthzTxCmd() {
+	s.T().Log("==== new house deposit command test started")
+	val := s.network.Validators[0]
+
+	clientCtx := val.ClientCtx
+	// {
+	// 	ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
+	// 		"exp":      time.Now().Add(time.Minute * 5).Unix(),
+	// 		"iat":      time.Now().Unix(),
+	// 		"uid":      marketUID,
+	// 		"start_ts": marketStartDate,
+	// 		"end_ts":   marketEndDate,
+	// 		"odds": []markettypes.Odds{
+	// 			{
+	// 				UID:  "9991c60f-2025-48ce-ae79-1dc110f16990",
+	// 				Meta: "Home",
+	// 			},
+	// 			{
+	// 				UID:  "9991c60f-2025-48ce-ae79-1dc110f16991",
+	// 				Meta: "Draw",
+	// 			},
+	// 			{
+	// 				UID:  "9991c60f-2025-48ce-ae79-1dc110f16992",
+	// 				Meta: "Away",
+	// 			},
+	// 		},
+	// 		"status": markettypes.MarketStatus_MARKET_STATUS_ACTIVE,
+	// 		"meta":   "sample 3way market",
+	// 	})
+	// 	require.Nil(s.T(), err)
+
+	// 	args := []string{
+	// 		ticket,
+	// 		fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address),
+	// 		fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
+	// 		fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
+	// 		fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(fees))).String()),
+	// 	}
+	// 	bz, err := clitestutil.ExecTestCLICmd(clientCtx, marketcli.CmdAdd(), args)
+	// 	s.Require().NoError(err)
+	// 	respType := sdk.TxResponse{}
+	// 	s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), &respType), bz.String())
+	// 	s.Require().Equal(uint32(0), respType.Code)
+	// }
+	// s.Require().NoError(s.network.WaitForNextBlock())
+
+	acc2initialBalance := 1000
+	acc2 = e2esdk.CreateAccount(val, "acc2")
+	e2esdk.SendToken(val, acc2, acc2initialBalance)
+	s.Require().NoError(s.network.WaitForNextBlock())
+	acc2Balance = e2esdk.GetSGEBalance(clientCtx, acc2.String())
+
+	e2esdk.SetGenericAuthorization(val, acc2, sdk.MsgTypeURL(&types.MsgWithdraw{}))
+	s.Require().NoError(s.network.WaitForNextBlock())
+
+	valBalance = e2esdk.GetSGEBalance(clientCtx, val.Address.String())
+
+	{
+		ticket, err := simapp.CreateJwtTicket(jwt.MapClaims{
+			"exp": time.Now().Add(time.Minute * 5).Unix(),
+			"iat": time.Now().Unix(),
+			"kyc_data": sgetypes.KycDataPayload{
+				Ignore:   false,
+				Approved: true,
+				ID:       val.Address.String(),
+			},
+			"depositor_address": val.Address.String(),
+		})
+		require.Nil(s.T(), err)
+
+		bz, err := clitestutil.ExecTestCLICmd(clientCtx, cli.CmdDeposit(), []string{
+			marketUID,
+			depositAmount.String(),
+			ticket,
+			fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address),
+			fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
+			fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
+			fmt.Sprintf("--%s=%s", flags.FlagGas, flags.GasFlagAuto),
+			fmt.Sprintf("--%s=%s", flags.FlagGasAdjustment, "1.15"),
+			fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(fees))).String()),
+		})
+		s.Require().NoError(err)
+
+		var respType sdk.TxResponse
+		s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), &respType), bz.String())
+		s.Require().Equal(uint32(0), respType.Code)
+
+		txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
+		s.Require().NoError(err)
+		s.Require().Equal(uint32(0), txResp.Code)
+		s.T().Logf("==== success deposit create test case finished")
+	}
+
+	depositFeeAmount := sdk.NewDecFromInt(depositAmount).Mul(genesis.Params.HouseParticipationFee).TruncateInt()
+
+	expectedValBalance := valBalance.Sub(depositAmount).Sub(depositFeeAmount).Sub(sdkmath.NewInt(fees))
+	valBalance = e2esdk.GetSGEBalance(clientCtx, val.Address.String())
+	s.Require().Equal(expectedValBalance, valBalance)
+	s.T().Logf("==== bank val balance checked after deposit to the market: %s", valBalance)
+
+	depositsBz, err := clitestutil.ExecTestCLICmd(clientCtx, cli.GetCmdQueryDeposits(), []string{
+		fmt.Sprintf("--%s=json", flags.FlagOutput),
+	})
+	require.NoError(s.T(), err)
+	deposits := types.QueryDepositsResponse{}
+	err = clientCtx.Codec.UnmarshalJSON(depositsBz.Bytes(), &deposits)
+	require.NoError(s.T(), err)
+
+	require.Equal(s.T(), 6, len(deposits.Deposits))
+
+	depositBz, err := clitestutil.ExecTestCLICmd(clientCtx, cli.GetCmdQueryDepositsByAccount(), []string{
+		val.Address.String(),
+		fmt.Sprintf("--%s=json", flags.FlagOutput),
+	})
+	require.NoError(s.T(), err)
+	deposit := types.QueryDepositsByAccountResponse{}
+	err = clientCtx.Codec.UnmarshalJSON(depositBz.Bytes(), &deposit)
+	require.NoError(s.T(), err)
+
+	require.Equal(s.T(), val.Address.String(), deposit.Deposits[0].DepositorAddress)
+	s.T().Log("==== state modifications checked after deposit to the market")
+
+	firstWithdrawAmount := depositAmount.Sub(sdkmath.NewInt(10))
+	testCases := []struct {
+		name               string
+		marketUID          string
+		participationIndex uint64
+		ticketClaims       jwt.MapClaims
+		mode               types.WithdrawalMode
+		amount             sdkmath.Int
+		args               []string
+		expectErr          bool
+		expectedCode       uint32
+		expectedErrMsg     string
+		respType           proto.Message
+	}{
+		{
+			"valid transaction for acc2",
+			marketUID,
+			5,
+			jwt.MapClaims{
+				"exp": time.Now().Add(time.Minute * 5).Unix(),
+				"iat": time.Now().Unix(),
+				"kyc_data": sgetypes.KycDataPayload{
+					Ignore:   false,
+					Approved: true,
+					ID:       val.Address.String(),
+				},
+				"depositor_address": val.Address.String(),
+			},
+			types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL,
+			firstWithdrawAmount,
+			[]string{
+				fmt.Sprintf("--%s=%s", flags.FlagFrom, "acc2"),
+				fmt.Sprintf("--%s=true", flags.FlagSkipConfirmation),
+				fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastSync),
+				fmt.Sprintf("--%s=%s", flags.FlagGas, flags.GasFlagAuto),
+				fmt.Sprintf("--%s=%s", flags.FlagGasAdjustment, "1.15"),
+				fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdkmath.NewInt(fees))).String()),
+			},
+			false,
+			0,
+			"",
+			&sdk.TxResponse{},
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+
+		s.Require().NoError(s.network.WaitForNextBlock())
+		s.Run(tc.name, func() {
+			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)
+			require.Nil(s.T(), err)
+
+			tc.args = append([]string{
+				tc.marketUID,
+				cast.ToString(tc.participationIndex),
+				ticket,
+				cast.ToString(int32(tc.mode)),
+				tc.amount.String(),
+			}, tc.args...)
+			bz, err := clitestutil.ExecTestCLICmd(clientCtx, cli.CmdWithdraw(), tc.args)
+
+			if tc.expectErr {
+				s.Require().Error(err)
+				s.T().Logf("error captured: %s", tc.name)
+			} else {
+				s.Require().NoError(err)
+
+				s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), tc.respType), bz.String())
+				respType, ok := tc.respType.(*sdk.TxResponse)
+				s.Require().True(ok)
+				s.Require().Equal(tc.expectedCode, respType.Code)
+
+				txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
+				s.Require().NoError(err)
+				s.Require().Equal(tc.expectedCode, txResp.Code)
+				if tc.expectedErrMsg != "" {
+					s.Require().Contains(txResp.RawLog, tc.expectedErrMsg)
+				}
+				s.T().Logf("==== success deposit create test case finished: %s", tc.name)
+			}
+		})
+	}
+
+	expectedAcc2Balance := acc2Balance.Sub(sdkmath.NewInt(fees))
+	acc2Balance = e2esdk.GetSGEBalance(clientCtx, acc2.String())
+	s.Require().Equal(expectedAcc2Balance, acc2Balance)
 
 	s.T().Log("==== new deposit test passed successfully")
 }
