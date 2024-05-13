@@ -123,7 +123,7 @@ func WriteKeyringFile(name string, dir string, contents []byte) error {
 	}
 
 	//#nosec
-	if err := os.WriteFile(file, contents, 0o644); err != nil { //nolint: gosec
+	if err := os.WriteFile(file, contents, 0o644); err != nil {
 		return err
 	}
 
