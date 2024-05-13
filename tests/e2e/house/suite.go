@@ -814,7 +814,8 @@ func (s *E2ETestSuite) TestWithdrawTxCmd() {
 				s.Require().NoError(err)
 
 				s.Require().NoError(clientCtx.Codec.UnmarshalJSON(bz.Bytes(), tc.respType), bz.String())
-				respType := tc.respType.(*sdk.TxResponse)
+				respType, ok := tc.respType.(*sdk.TxResponse)
+				s.Require().True(ok)
 				s.Require().Equal(tc.expectedCode, respType.Code)
 
 				txResp, err := clitestutil.GetTxResponse(s.network, clientCtx, respType.TxHash)
