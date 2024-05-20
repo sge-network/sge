@@ -52,8 +52,6 @@ var (
 	wagerDate   = time.Now().Add(time.Minute * time.Duration(180)).Unix()
 	wagerAmount = sdkmath.NewInt(100)
 
-	valBalance = sdkmath.NewInt(400000000)
-
 	acc1        = sdk.AccAddress{}
 	acc1Balance = sdkmath.ZeroInt()
 
