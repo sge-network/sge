@@ -176,7 +176,7 @@ func (s *E2ETestSuite) SetupSuite() {
 	s.Require().NoError(s.network.WaitForNextBlock())
 }
 
-func (s *E2ETestSuite) TestWithdrawWithAuthzTxCmd() {
+func (s *E2ETestSuite) TestWagerTxCmd() {
 	val := s.network.Validators[0]
 
 	clientCtx := val.ClientCtx
