@@ -18,6 +18,8 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+
 	"github.com/sge-network/sge/app"
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/testutil/simapp"
@@ -197,6 +199,7 @@ func DefaultConfig() network.Config {
 				0,
 				encoding,
 				simtestutil.EmptyAppOptions{},
+				[]wasmkeeper.Option{},
 				baseapp.SetPruning(pruningtypes.NewPruningOptionsFromString(val.GetAppConfig().Pruning)),
 				baseapp.SetMinGasPrices(val.GetAppConfig().MinGasPrices),
 				baseapp.SetChainID(chainID),

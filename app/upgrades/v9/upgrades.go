@@ -1,6 +1,8 @@
 package v9
 
 import (
+	"fmt"
+
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -16,10 +18,13 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 
+	ibcwasmtypes "github.com/cosmos/ibc-go/modules/light-clients/08-wasm/types"
 	icacontrollertypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/controller/types"
 	icahosttypes "github.com/cosmos/ibc-go/v7/modules/apps/27-interchain-accounts/host/types"
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	exported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+
+	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
 
 	"github.com/sge-network/sge/app/keepers"
 	betmoduletypes "github.com/sge-network/sge/x/bet/types"
@@ -72,6 +77,10 @@ func CreateUpgradeHandler(
 			case icacontrollertypes.SubModuleName:
 				keyTable = icacontrollertypes.ParamKeyTable()
 
+			// wasm
+			case wasmtypes.ModuleName:
+				keyTable = wasmtypes.ParamKeyTable() //nolint:staticcheck
+
 			// sge modules
 			case betmoduletypes.ModuleName:
 				keyTable = betmoduletypes.ParamKeyTable()
@@ -92,6 +101,7 @@ func CreateUpgradeHandler(
 			}
 
 			if !subspace.HasKeyTable() {
+				fmt.Println(subspace.Name())
 				subspace.WithKeyTable(keyTable)
 			}
 		}
@@ -105,6 +115,7 @@ func CreateUpgradeHandler(
 		// explicitly update the IBC 02-client params, adding the localhost client type
 		params := k.IBCKeeper.ClientKeeper.GetParams(ctx)
 		params.AllowedClients = append(params.AllowedClients, exported.Localhost)
+		params.AllowedClients = append(params.AllowedClients, ibcwasmtypes.Wasm)
 		k.IBCKeeper.ClientKeeper.SetParams(ctx, params)
 
 		// update gov params to use a 20% initial deposit ratio, allowing us to remote the ante handler

@@ -27,10 +27,17 @@ jobs:
           key: ${{ runner.os }}-go-tparse-binary
 
   build:
+    name: sged-${{ matrix.targetos }}-${{ matrix.arch }}
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        go-arch: ["amd64", "arm", "arm64"]
+        arch: [amd64, arm64]
+        targetos: [darwin, linux]
+        include:
+          - targetos: darwin
+            arch: arm64
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -40,11 +47,34 @@ jobs:
         id: git_diff
         with:
           PATTERNS: |
-            **/**.go
+            **/**.wasm
+            !tests/**
+            **/**.go !**/*_test.go
             go.mod
             go.sum
-      - name: Build
-        run: GOARCH=${{ matrix.go-arch }} LEDGER_ENABLED=false make build
+            Makefile
+            .github/workflows/build.yml
+      - name: 🐿 Setup Golang
+        uses: actions/setup-go@v5
+        if: env.GIT_DIFF
+        with:
+          go-version-file: go.mod
+        env:
+          GOOS: ${{ matrix.targetos }}
+          GOARCH: ${{ matrix.arch }}
+      - name: Download Dependencies
+        if: env.GIT_DIFF
+        run: go mod download
+      - name: Build sged
+        if: env.GIT_DIFF
+        run: |
+          GOWRK=off go build cmd/sged/main.go
+      - name: Upload sged artifact
+        if: env.GIT_DIFF
+        uses: actions/upload-artifact@v3
+        with:
+          name: sged-${{ matrix.targetos }}-${{ matrix.arch }}
+          path: cmd/sged/sged
 
   split-test-files:
     runs-on: ubuntu-latest

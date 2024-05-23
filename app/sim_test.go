@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	dbm "github.com/cometbft/cometbft-db"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cometbft/cometbft/libs/rand"
@@ -61,6 +62,7 @@ func BenchmarkFullAppSimulation(b *testing.B) {
 		simcli.FlagPeriodValue,
 		app.MakeEncodingConfig(),
 		simtestutil.EmptyAppOptions{},
+		[]wasmkeeper.Option{},
 		interBlockCacheOpt(),
 	)
 
@@ -139,6 +141,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				simcli.FlagPeriodValue,
 				app.MakeEncodingConfig(),
 				simtestutil.EmptyAppOptions{},
+				[]wasmkeeper.Option{},
 				interBlockCacheOpt(),
 			)
 
