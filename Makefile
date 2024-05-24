@@ -136,7 +136,7 @@ build-reproducible: build-reproducible-amd64 build-reproducible-arm64
 
 build-reproducible-amd64: go.sum
 	mkdir -p $(BUILDDIR)
-	$(DOCKER) buildx create --name sgebuilder --node sgebinary || true
+	$(DOCKER) buildx create --name sgebuilder || true
 	$(DOCKER) buildx use sgebuilder
 	$(DOCKER) buildx build \
 		--build-arg GO_VERSION=$(GO_VERSION) \
