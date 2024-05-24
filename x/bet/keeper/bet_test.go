@@ -32,7 +32,7 @@ func createNBet(
 		items[i].Amount = sdkmath.NewInt(10)
 		items[i].Fee = sdkmath.NewInt(1)
 		items[i].MarketUID = testMarketUID
-		items[i].MaxLossMultiplier = sdk.NewDec(10)
+		items[i].MaxLossMultiplier = sdkmath.LegacyNewDec(10)
 
 		id := uint64(i + 1)
 		keeper.SetBet(ctx, items[i], id)

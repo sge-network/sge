@@ -12,10 +12,11 @@ ifeq (,$(VERSION))
   endif
 endif
 
+GO_VERSION := $(shell cat go.mod | grep -E 'go [0-9].[0-9]+' | cut -d ' ' -f 2)
 PACKAGES_SIMTEST=$(shell go list ./... | grep '/simulation')
 LEDGER_ENABLED ?= true
 SDK_PACK := $(shell go list -m github.com/cosmos/cosmos-sdk | sed  's/ /\@/g')
-TM_VERSION := $(shell go list -m github.com/tendermint/tendermint | sed 's:.* ::') # grab everything after the space in "github.com/tendermint/tendermint v0.34.7"
+TM_VERSION := $(shell go list -m github.com/cometbft/cometbft | sed 's:.* ::') # grab everything after the space in "github.com/cometbft/cometbft v0.34.7"
 HTTPS_GIT := https://github.com/sge-network/sge.git
 DOCKER := $(shell which docker)
 DOCKER_BUF := $(DOCKER) run --rm -v $(CURDIR)/proto:/workspace --workdir /workspace bufbuild/buf
@@ -72,7 +73,7 @@ ldflags = -X github.com/cosmos/cosmos-sdk/version.Name=sge \
 		  -X github.com/cosmos/cosmos-sdk/version.Version=$(VERSION) \
 		  -X github.com/cosmos/cosmos-sdk/version.Commit=$(COMMIT) \
 		  -X "github.com/cosmos/cosmos-sdk/version.BuildTags=$(build_tags_comma_sep)" \
-			-X github.com/tendermint/tendermint/version.TMCoreSemVer=$(TM_VERSION)
+			-X github.com/cometbft/cometbft/version.TMCoreSemVer=$(TM_VERSION)
 
 # DB backend selection
 ifeq (cleveldb,$(findstring cleveldb,$(SGE_BUILD_OPTIONS)))
@@ -114,8 +115,8 @@ endif
 ###############################################################################
 
 check_version:
-ifneq ($(GO_MINOR_VERSION),21)
-	@echo "ERROR: Go version 1.21 is required for this version of SGE. Go 1.21 has changes that are believed to break consensus."
+ifneq ($(GO_MINOR_VERSION),22)
+	@echo "ERROR: Go version 1.22 is required for this version of SGE."
 	exit 1
 endif
 
@@ -130,6 +131,44 @@ $(BUILD_TARGETS): check_version go.sum $(BUILDDIR)/
 
 $(BUILDDIR)/:
 	mkdir -p $(BUILDDIR)/
+
+build-reproducible: build-reproducible-amd64 build-reproducible-arm64
+
+build-reproducible-amd64: go.sum
+	mkdir -p $(BUILDDIR)
+	$(DOCKER) buildx create --name sgebuilder || true
+	$(DOCKER) buildx use sgebuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.18 \
+		--platform linux/amd64 \
+		-t sge:local-amd64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f sgebinary || true
+	$(DOCKER) create -ti --name sgebinary sge:local-amd64
+	$(DOCKER) cp sgebinary:/bin/sged $(BUILDDIR)/sged-linux-amd64
+	$(DOCKER) rm -f sgebinary
+
+build-reproducible-arm64: go.sum
+	mkdir -p $(BUILDDIR)
+	$(DOCKER) buildx create --name sgebuilder || true
+	$(DOCKER) buildx use sgebuilder
+	$(DOCKER) buildx build \
+		--build-arg GO_VERSION=$(GO_VERSION) \
+		--build-arg GIT_VERSION=$(VERSION) \
+		--build-arg GIT_COMMIT=$(COMMIT) \
+		--build-arg RUNNER_IMAGE=alpine:3.18 \
+		--platform linux/arm64 \
+		-t sge:local-arm64 \
+		--load \
+		-f Dockerfile .
+	$(DOCKER) rm -f sgebinary || true
+	$(DOCKER) create -ti --name sgebinary sge:local-arm64
+	$(DOCKER) cp sgebinary:/bin/sged $(BUILDDIR)/sged-linux-arm64
+	$(DOCKER) rm -f sgebinary
 
 build-linux: go.sum
 	LEDGER_ENABLED=false GOOS=linux GOARCH=amd64 $(MAKE) build
@@ -157,7 +196,7 @@ distclean: clean
 ###                                  Proto                                  ###
 ###############################################################################
 
-proto-all: proto-format proto-gen
+proto-all: proto-format proto-lint proto-gen
 
 docs:
 	@echo
@@ -177,36 +216,33 @@ docs:
 	@echo
 .PHONY: docs
 
-protoVer=v0.8
-protoImageName=sgenetwork/sge-proto-gen:$(protoVer)
-containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
-containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
-
-# this can be used to regenrate the proto image
-proto-image:
-	cd proto; docker build -t $(protoImageName) -f Dockerfile .
+protoVer=0.13.1
+protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
+protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
+# containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
+# containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
 
 proto-gen:
 	@echo "Generating Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGen}$$"; then docker start -a $(containerProtoGen); else docker run --name $(containerProtoGen) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
-		sh ./scripts/protocgen.sh; fi
+	@$(protoImage) sh ./scripts/protocgen.sh
+
+proto-swagger-gen:
+	@echo "Generating Protobuf Swagger"
+	@$(protoImage) sh ./scripts/protoc-swagger-gen.sh
+	$(MAKE) update-swagger-docs
 
 proto-format:
 	@echo "Formatting Protobuf files"
-	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
-		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+	@$(protoImage) find ./ -name "*.proto" -exec clang-format -i {} \;
 
 proto-image-build:
 	@DOCKER_BUILDKIT=1 docker build -t $(protoImageName) -f ./proto/Dockerfile ./proto
 
-proto-image-push:
-	docker push $(protoImageName)
-
 proto-lint:
-	@$(DOCKER_BUF) lint --error-format=json
+	@$(protoImage) buf lint --error-format=json
 
 proto-check-breaking:
-	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=master
+	@$(protoImage) buf breaking --against $(HTTPS_GIT)#branch=master
 
 
 ###############################################################################

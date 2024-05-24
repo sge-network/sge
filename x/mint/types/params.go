@@ -59,44 +59,44 @@ var (
 	// DefaultPhases is the default value for inflation phases
 	DefaultPhases = []Phase{
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.229787234042553191"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.229787234042553191"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.286259541984732824"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.286259541984732824"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.150250417362270451"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.150250417362270451"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.116459627329192547"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.116459627329192547"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.088041085840058694"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.088041085840058694"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.063246661981728742"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.063246661981728742"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.040871934604904632"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.040871934604904632"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.032042723631508678"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.032042723631508678"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.019710906701708279"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.019710906701708279"),
 		},
 		{
-			YearCoefficient: sdk.MustNewDecFromStr("0.5"),
-			Inflation:       sdk.MustNewDecFromStr("0.003903708523096942"),
+			YearCoefficient: sdkmath.LegacyMustNewDecFromStr("0.5"),
+			Inflation:       sdkmath.LegacyMustNewDecFromStr("0.003903708523096942"),
 		},
 	}
 )
@@ -187,15 +187,15 @@ func (p Params) IsEndPhaseByStep(phaseStep int) bool {
 // NonePhase returns none phase object
 // none phase is the initial phase of inflation with height 1
 func NonePhase() Phase {
-	return Phase{Inflation: sdk.MustNewDecFromStr("0"), YearCoefficient: sdk.ZeroDec()}
+	return Phase{Inflation: sdkmath.LegacyMustNewDecFromStr("0"), YearCoefficient: sdkmath.LegacyZeroDec()}
 }
 
 // EndPhase returns end phase which there is no phase item with remaining blocks
 func EndPhase() Phase {
 	maxUInt64 := new(big.Int).SetUint64(math.MaxUint64)
 	return Phase{
-		Inflation:       sdk.MustNewDecFromStr("0"),
-		YearCoefficient: sdk.NewDecFromBigInt(maxUInt64),
+		Inflation:       sdkmath.LegacyMustNewDecFromStr("0"),
+		YearCoefficient: sdkmath.LegacyNewDecFromBigInt(maxUInt64),
 	}
 }
 
@@ -210,7 +210,7 @@ func IsEndPhase(phase Phase) bool {
 }
 
 // getPhaseBlocks returns the total blocks of a certain phase step
-func (p Params) getPhaseBlocks(phaseStep int) sdk.Dec {
+func (p Params) getPhaseBlocks(phaseStep int) sdkmath.LegacyDec {
 	// get the phase year coefficient
 	yearCoefficient := p.Phases[phaseStep-1].YearCoefficient
 
@@ -222,7 +222,7 @@ func (p Params) getPhaseBlocks(phaseStep int) sdk.Dec {
 	//    current block = 50
 	//    so the changing point of the phase is in block number 50.5 which is not applicable
 	//    the 0.5 provisions will be calculated in the BlockProvisions method of Minter
-	phaseBlocks := yearCoefficient.Mul(sdk.NewDec(p.BlocksPerYear)).TruncateDec()
+	phaseBlocks := yearCoefficient.Mul(sdkmath.LegacyNewDec(p.BlocksPerYear)).TruncateDec()
 
 	return phaseBlocks
 }
@@ -276,7 +276,7 @@ func validatePhases(i interface{}) error {
 	}
 
 	for _, p := range v {
-		if !p.YearCoefficient.GT(sdk.ZeroDec()) {
+		if !p.YearCoefficient.GT(sdkmath.LegacyZeroDec()) {
 			return fmt.Errorf(ErrTextYearCoefficientMustBePositive)
 		}
 		if IsEndPhase(p) {

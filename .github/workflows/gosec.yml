@@ -1,28 +1,39 @@
 name: Run Gosec
 on:
   push:
+    paths:
+      - "**/*.go"
+      - "go.mod"
+      - "go.sum"
     branches:
       - master
   pull_request:
+    paths:
+        - "**/*.go"
+        - "go.mod"
+        - "go.sum"
     branches:
       - master
 jobs:
   tests:
+    permissions:
+      security-events: write
+
     runs-on: ubuntu-latest
     env:
       GO111MODULE: on
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          path: /usr/local/go/bin
-          go-version: '1.18.10'
       - name: Checkout Source
-        uses: actions/checkout@v2
-      - name: Set env vars
-        run: |
-            echo "${HOME}/goroot/bin" >> $GITHUB_PATH
+        uses: actions/checkout@v3
+
       - name: Run Gosec Security Scanner
-        uses: cosmos/gosec@master
+        uses: securego/gosec@master
         with:
-          args: ./...
+          # we let the report trigger content trigger a failure using the GitHub Security features.
+          args: "-no-fail -fmt sarif -out results.sarif ./..."
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: results.sarif

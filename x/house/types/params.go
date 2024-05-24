@@ -6,7 +6,6 @@ import (
 	yaml "gopkg.in/yaml.v2"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -34,7 +33,7 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams(minDeposit sdkmath.Int, houseParticipationFee sdk.Dec, maxWithdrawalCount uint64) Params {
+func NewParams(minDeposit sdkmath.Int, houseParticipationFee sdkmath.LegacyDec, maxWithdrawalCount uint64) Params {
 	return Params{
 		MinDeposit:            minDeposit,
 		HouseParticipationFee: houseParticipationFee,
@@ -67,7 +66,7 @@ func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
 func DefaultParams() Params {
 	return NewParams(
 		sdkmath.NewInt(DefaultMinDeposit),
-		sdk.MustNewDecFromStr(DefaultHouseParticipationFee),
+		sdkmath.LegacyMustNewDecFromStr(DefaultHouseParticipationFee),
 		DefaultMaxWithdrawalCount,
 	)
 }
@@ -106,12 +105,12 @@ func validateMinimumDeposit(i interface{}) error {
 
 // validateHouseParticipationFee performs validation of house participation fee
 func validateHouseParticipationFee(i interface{}) error {
-	v, ok := i.(sdk.Dec)
+	v, ok := i.(sdkmath.LegacyDec)
 	if !ok {
 		return fmt.Errorf("invalid parameter type: %T", i)
 	}
 
-	if v.LT(sdk.ZeroDec()) {
+	if v.LT(sdkmath.LegacyZeroDec()) {
 		return fmt.Errorf("house participation fee cannot be lower than 0: %d", v)
 	}
 

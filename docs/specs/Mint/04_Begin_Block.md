@@ -13,7 +13,7 @@ func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
   return params.GetPhaseAtStep(1), 1
  }
 
- cumulativeBlock := sdk.NewDec(0)
+ cumulativeBlock := sdkmath.LegacyNewDec(0)
  var currentStep int
  var found bool
 
@@ -26,7 +26,7 @@ func (m Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
   // if the current block is less than or equal to cummulative blocks
   // this means that we are in the i+1 step which is set in above line
-  if sdk.NewDec(currentBlock).LTE(cumulativeBlock) {
+  if sdkmath.LegacyNewDec(currentBlock).LTE(cumulativeBlock) {
    found = true
    // it is the current phase
    // so there is no need for furthur phase blocks check
@@ -77,7 +77,7 @@ Given that the SGE-Network chain heavily relies on phases for its inflation mode
 ```go
 // NextPhaseProvisions returns the phase provisions based on current total
 // supply and inflation rate.
-func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkmath.Int, phase Phase) sdk.Dec {
+func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkmath.Int, phase Phase) sdkmath.LegacyDec {
  // calculate annual provisions as normal
  annualProvisions := m.Inflation.MulInt(totalSupply.Sub(excludeAmount))
 
@@ -113,7 +113,7 @@ func (m Minter) NextPhaseProvisions(totalSupply sdkmath.Int, excludeAmount sdkma
 ```go
 // BlockProvisions returns the provisions for a block based on the phase
 // provisions rate.
-func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec) {
+func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdkmath.LegacyDec) {
 
  // get total blocks in this phase
  blocksPerPhase := params.getPhaseBlocks(phaseStep).TruncateDec()

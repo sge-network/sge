@@ -34,7 +34,7 @@ At launch, the SGE Network will be optimized to deploy an inaugural application:
 
 ## Installation Steps
 >
->Prerequisite: go1.21+ required. [ref](https://golang.org/doc/install)
+>Prerequisite: go1.22+ required. [ref](https://golang.org/doc/install)
 
 Sge could be installed by two ways - downloading binary from releases page or build from source.
 
@@ -138,7 +138,7 @@ sged start
 
 | Version | Mainnet | Testnet | SDK Version |
 |:-------:|:-------:|:-------:|:-----------:|
-|  v1.1.0 |    ✓    |    ✓    |   v0.46.14  |
+|  v1.7.0 |    ✓    |    ✓    |   v0.47.10  |
 
 ## Active Networks
 
@@ -146,7 +146,7 @@ sged start
 
 - [sgenet-1](https://github.com/sge-network/networks/tree/master/mainnet/sgenet-1)
 
-- Place the genesis file  with the genesis file of the chain.
+- Place the genesis file with the genesis file of the chain.
 
 ```shell
 wget https://github.com/sge-network/networks/blob/master/mainnet/sgenet-1/genesis.json -O ~/.sge/config/genesis.json
@@ -174,12 +174,12 @@ sged start --minimum-gas-prices [desired-gas-price(ex. 0.001usge)]
 
 ### Testnet
 
-- [sge-network-3](https://github.com/sge-network/networks/tree/master/testnet/sge-network-3)
+- [sge-network-4](https://github.com/sge-network/networks/tree/master/testnet/sge-network-4)
 
 - Place the genesis file  with the genesis file of the chain.
 
 ```shell
-wget https://github.com/sge-network/networks/blob/master/testnet/sge-network-3/genesis.json -O ~/.sge/config/genesis.json
+wget https://github.com/sge-network/networks/blob/master/testnet/sge-network-4/genesis.json -O ~/.sge/config/genesis.json
 ```
 
 Verify genesis hash sum
@@ -188,7 +188,7 @@ Verify genesis hash sum
 sha256sum ~/.sge/config/genesis.json
 ```
 
-Correct sha256 sum for sge-network-3 genesis file is caa7f15bab24a87718bff96ffeee058373154f7701a1e8977fff46d2f620dbcb
+Correct sha256 sum for sge-network-4 genesis file is caa7f15bab24a87718bff96ffeee058373154f7701a1e8977fff46d2f620dbcb
 
 - Add `persistent_peers` or `seeds` in `${HOME}/.sge/config/config.toml`
 
@@ -231,4 +231,4 @@ sged version
 
 ### Documentations
 
-For the most up to date documentation please visit [Gitbook](https://sgenetwork.gitbook.io/documentation-1/)
+For the most up-to-date documentation please visit [Gitbook](https://sgenetwork.gitbook.io/documentation-1/)

@@ -6,18 +6,15 @@ import (
 	"testing"
 	"time"
 
+	sdkmath "cosmossdk.io/math"
+	tmcli "github.com/cometbft/cometbft/libs/cli"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	"github.com/google/uuid"
 	"github.com/spf13/cast"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-
-	sdkmath "cosmossdk.io/math"
-	"github.com/cosmos/cosmos-sdk/client/flags"
-	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
@@ -68,7 +65,7 @@ func networkWithBetObjects(t *testing.T, n int) (*network.Network, []types.Bet) 
 			OddsValue:         "10",
 			Amount:            sdkmath.NewInt(10),
 			Fee:               sdkmath.NewInt(1),
-			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 		}
 		nullify.Fill(&bet)
 

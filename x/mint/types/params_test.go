@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint/types"
@@ -18,7 +17,7 @@ func TestParamsYML(t *testing.T) {
 		MintDenom:     params.DefaultBondDenom,
 		BlocksPerYear: 10,
 		Phases: []types.Phase{
-			{Inflation: sdk.NewDec(10), YearCoefficient: sdk.NewDec(1)},
+			{Inflation: sdkmath.LegacyNewDec(10), YearCoefficient: sdkmath.LegacyNewDec(1)},
 		},
 		ExcludeAmount: sdkmath.NewInt(100),
 	}
@@ -90,5 +89,5 @@ func TestNonPhase(t *testing.T) {
 	params := types.DefaultParams()
 
 	phase := params.GetPhaseAtStep(0)
-	require.Equal(t, sdk.NewDec(0), phase.YearCoefficient)
+	require.Equal(t, sdkmath.LegacyNewDec(0), phase.YearCoefficient)
 }

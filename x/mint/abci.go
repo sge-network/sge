@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cast"
 
+	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/telemetry"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/mint/types"
@@ -52,7 +53,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 	}
 
 	// if the inflation rate is zero, means that we have no minting, so the rest of the code should not be called
-	if minter.Inflation.Equal(sdk.ZeroDec()) {
+	if minter.Inflation.Equal(sdkmath.LegacyZeroDec()) {
 		return
 	}
 

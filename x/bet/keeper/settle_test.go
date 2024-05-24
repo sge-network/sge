@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 
 	sdkmath "cosmossdk.io/math"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrtypes "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/sge-network/sge/testutil/simapp"
@@ -245,7 +244,7 @@ func TestBatchSettleBet(t *testing.T) {
 					UID:               testOddsUID1,
 					MarketUID:         marketUID,
 					Value:             "4.20",
-					MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+					MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 				},
 			)
 		}

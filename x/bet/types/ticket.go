@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	sdkerrors "cosmossdk.io/errors"
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkmath "cosmossdk.io/math"
 
 	"github.com/sge-network/sge/utils"
 )
@@ -50,11 +50,11 @@ func (payload *WagerTicketPayload) ValidateOdds() error {
 		return ErrEmptyOddsValue
 	}
 
-	if payload.SelectedOdds.MaxLossMultiplier.IsNil() || payload.SelectedOdds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+	if payload.SelectedOdds.MaxLossMultiplier.IsNil() || payload.SelectedOdds.MaxLossMultiplier.LTE(sdkmath.LegacyZeroDec()) {
 		return ErrMaxLossMultiplierCanNotBeZero
 	}
 
-	if payload.SelectedOdds.MaxLossMultiplier.GT(sdk.OneDec()) {
+	if payload.SelectedOdds.MaxLossMultiplier.GT(sdkmath.LegacyOneDec()) {
 		return ErrMaxLossMultiplierCanNotBeMoreThanOne
 	}
 
@@ -66,11 +66,11 @@ func (payload *WagerTicketPayload) ValidateCompactOdds(odds BetOddsCompact) erro
 		return ErrInvalidOddsUID
 	}
 
-	if odds.MaxLossMultiplier.IsNil() || odds.MaxLossMultiplier.LTE(sdk.ZeroDec()) {
+	if odds.MaxLossMultiplier.IsNil() || odds.MaxLossMultiplier.LTE(sdkmath.LegacyZeroDec()) {
 		return ErrMaxLossMultiplierCanNotBeZero
 	}
 
-	if odds.MaxLossMultiplier.GT(sdk.OneDec()) {
+	if odds.MaxLossMultiplier.GT(sdkmath.LegacyOneDec()) {
 		return ErrMaxLossMultiplierCanNotBeMoreThanOne
 	}
 

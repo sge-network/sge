@@ -9,7 +9,7 @@ import (
 
 // NewMinter returns a new Minter object with the given inflation and phase
 // provisions values.
-func NewMinter(inflation, phaseProvisions sdk.Dec, phaseStep int32, truncatedTokens sdk.Dec) Minter {
+func NewMinter(inflation, phaseProvisions sdkmath.LegacyDec, phaseStep int32, truncatedTokens sdkmath.LegacyDec) Minter {
 	return Minter{
 		Inflation:       inflation,
 		PhaseProvisions: phaseProvisions,
@@ -19,12 +19,12 @@ func NewMinter(inflation, phaseProvisions sdk.Dec, phaseStep int32, truncatedTok
 }
 
 // InitialMinter returns an initial Minter object with a given inflation value.
-func InitialMinter(inflation sdk.Dec) Minter {
+func InitialMinter(inflation sdkmath.LegacyDec) Minter {
 	return NewMinter(
 		inflation,
-		sdk.NewDec(initialPhaseProvision),
+		sdkmath.LegacyNewDec(initialPhaseProvision),
 		initialPhaseStep,
-		sdk.NewDec(initialTruncatedTokens),
+		sdkmath.LegacyNewDec(initialTruncatedTokens),
 	)
 }
 
@@ -32,7 +32,7 @@ func InitialMinter(inflation sdk.Dec) Minter {
 // which uses an inflation rate of 10%.
 func DefaultInitialMinter() Minter {
 	return InitialMinter(
-		sdk.NewDec(initialInflation),
+		sdkmath.LegacyNewDec(initialInflation),
 	)
 }
 
@@ -51,7 +51,7 @@ func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 		return params.GetPhaseAtStep(1), 1
 	}
 
-	cumulativeBlock := sdk.NewDec(0)
+	cumulativeBlock := sdkmath.LegacyNewDec(0)
 	var currentStep int
 	var found bool
 
@@ -64,7 +64,7 @@ func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
 		// if the current block is less than or equal to cumulative blocks
 		// this means that we are in the i+1 step which is set in above line
-		if sdk.NewDec(currentBlock).LTE(cumulativeBlock) {
+		if sdkmath.LegacyNewDec(currentBlock).LTE(cumulativeBlock) {
 			found = true
 			// it is the current phase
 			// so there is no need for further phase blocks check
@@ -84,7 +84,7 @@ func (Minter) CurrentPhase(params Params, currentBlock int64) (Phase, int) {
 
 // NextPhaseProvisions returns the phase provisions based on current total
 // supply and inflation rate.
-func (m Minter) NextPhaseProvisions(totalSupply, excludeAmount sdkmath.Int, phase Phase) sdk.Dec {
+func (m Minter) NextPhaseProvisions(totalSupply, excludeAmount sdkmath.Int, phase Phase) sdkmath.LegacyDec {
 	// calculate annual provisions as normal
 	annualProvisions := m.Inflation.MulInt(totalSupply.Sub(excludeAmount))
 
@@ -98,7 +98,7 @@ func (m Minter) NextPhaseProvisions(totalSupply, excludeAmount sdkmath.Int, phas
 
 // BlockProvisions returns the provisions for a block based on the phase
 // provisions rate.
-func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec) {
+func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdkmath.LegacyDec) {
 	// get total blocks in this phase
 	blocksPerPhase := params.getPhaseBlocks(phaseStep).TruncateDec()
 
@@ -115,6 +115,6 @@ func (m Minter) BlockProvisions(params Params, phaseStep int) (sdk.Coin, sdk.Dec
 }
 
 // AnnualProvisions returns annual provisions for the phase.
-func (m Minter) AnnualProvisions(phase Phase) sdk.Dec {
+func (m Minter) AnnualProvisions(phase Phase) sdkmath.LegacyDec {
 	return m.PhaseProvisions.Quo(phase.YearCoefficient)
 }

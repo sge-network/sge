@@ -14,9 +14,9 @@ import (
 func (k Keeper) ProcessWager(
 	ctx sdk.Context,
 	betUID, bookUID, oddsUID string,
-	maxLossMultiplier sdk.Dec,
+	maxLossMultiplier sdkmath.LegacyDec,
 	betAmount sdkmath.Int,
-	payoutProfit sdk.Dec,
+	payoutProfit sdkmath.LegacyDec,
 	bettorAddress sdk.AccAddress,
 	betFee sdkmath.Int,
 	oddsVal string, betID uint64,
@@ -83,7 +83,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 	fInfo.updatedfulfillmentQueue = fulfillmentQueue
 
 	// the decimal amount that is being lost in the bet amount calculation from payout profit
-	truncatedBetAmount := sdk.NewDec(0)
+	truncatedBetAmount := sdkmath.LegacyNewDec(0)
 	requeThreshold := sdkmath.NewIntFromUint64(k.GetRequeueThreshold(ctx))
 	// continue until updatedFulfillmentQueue gets empty
 	for fInfo.hasUnfulfilledQueueItem() {
@@ -102,7 +102,7 @@ func (k Keeper) fulfillBetByParticipationQueue(
 			var betAmountToFulfill sdkmath.Int
 			betAmountToFulfill, truncatedBetAmount, err = bettypes.CalculateBetAmountInt(
 				fInfo.oddsVal,
-				sdk.NewDecFromInt(fInfo.inProcessItem.availableLiquidity),
+				sdkmath.LegacyNewDecFromInt(fInfo.inProcessItem.availableLiquidity),
 				truncatedBetAmount,
 			)
 			if err != nil {
@@ -167,12 +167,12 @@ func (k Keeper) fulfillBetByParticipationQueue(
 func (k Keeper) initFulfillmentInfo(
 	ctx sdk.Context,
 	betAmount sdkmath.Int,
-	payoutProfit sdk.Dec,
+	payoutProfit sdkmath.LegacyDec,
 	betUID string,
 	betID uint64,
 	oddsUID string,
 	oddsVal string,
-	maxLossMultiplier sdk.Dec,
+	maxLossMultiplier sdkmath.LegacyDec,
 	book *types.OrderBook,
 	odds map[string]*bettypes.BetOddsCompact,
 	oddUIDS []string,
@@ -306,7 +306,7 @@ func (k Keeper) fulfill(
 
 	// subtract the payout profit that is fulfilled from the initial payout profit
 	// to prevent being calculated multiple times
-	fInfo.payoutProfit = fInfo.payoutProfit.Sub(sdk.NewDecFromInt(payoutProfitToFulfill))
+	fInfo.payoutProfit = fInfo.payoutProfit.Sub(sdkmath.LegacyNewDecFromInt(payoutProfitToFulfill))
 
 	// store the bet pair in the state
 	participationBetPair := types.NewParticipationBetPair(
@@ -418,9 +418,9 @@ type fulfillmentInfo struct {
 	betID              uint64
 	oddsUID            string
 	oddsVal            string
-	maxLossMultiplier  sdk.Dec
+	maxLossMultiplier  sdkmath.LegacyDec
 	betAmount          sdkmath.Int
-	payoutProfit       sdk.Dec
+	payoutProfit       sdkmath.LegacyDec
 	fulfilledBetAmount sdkmath.Int
 
 	fulfillmentQueue        []uint64
@@ -488,12 +488,12 @@ func (fInfo *fulfillmentInfo) hasUnfulfilledQueueItem() bool {
 
 func (fInfo *fulfillmentInfo) IsFulfilled() bool {
 	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return fInfo.payoutProfit.LT(sdk.OneDec()) || len(fInfo.fulfillmentQueue) == 0
+	return fInfo.payoutProfit.LT(sdkmath.LegacyOneDec()) || len(fInfo.fulfillmentQueue) == 0
 }
 
 func (fInfo *fulfillmentInfo) NoMoreLiquidityAvailable() bool {
 	// if the remaining payout is less than 1.00, means that the decimal part will be ignored
-	return fInfo.payoutProfit.GTE(sdk.OneDec())
+	return fInfo.payoutProfit.GTE(sdkmath.LegacyOneDec())
 }
 
 func (fInfo *fulfillmentInfo) notEnoughLiquidityAvailable() bool {
@@ -526,14 +526,14 @@ func (fItem *fulfillmentItem) setFulfilledSecondary(sItem *fulfillmentItem) {
 	fItem.participation.ExposuresNotFilled--
 }
 
-func (fItem *fulfillmentItem) setAvailableLiquidity(maxLossMultiplier sdk.Dec) {
+func (fItem *fulfillmentItem) setAvailableLiquidity(maxLossMultiplier sdkmath.LegacyDec) {
 	fItem.availableLiquidity = fItem.calcAvailableLiquidity(maxLossMultiplier)
 }
 
-func (fItem *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdk.Dec) sdkmath.Int {
+func (fItem *fulfillmentItem) calcAvailableLiquidity(maxLossMultiplier sdkmath.LegacyDec) sdkmath.Int {
 	return maxLossMultiplier.
 		MulInt(fItem.participation.CurrentRoundLiquidity).
-		Sub(sdk.NewDecFromInt(fItem.participationExposure.Exposure)).TruncateInt()
+		Sub(sdkmath.LegacyNewDecFromInt(fItem.participationExposure.Exposure)).TruncateInt()
 }
 
 func (fItem *fulfillmentItem) allExposureFulfilled() bool {

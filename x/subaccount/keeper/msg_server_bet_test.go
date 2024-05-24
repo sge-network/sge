@@ -35,20 +35,20 @@ var (
 		UID:               testOddsUID1,
 		MarketUID:         testMarketUID,
 		Value:             "4.20",
-		MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+		MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 	}
 	testBetOdds = &[]bettypes.BetOdds{
 		{
 			UID:               testOddsUID1,
-			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 		},
 		{
 			UID:               testOddsUID2,
-			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 		},
 		{
 			UID:               testOddsUID3,
-			MaxLossMultiplier: sdk.MustNewDecFromStr("0.1"),
+			MaxLossMultiplier: sdkmath.LegacyMustNewDecFromStr("0.1"),
 		},
 	}
 	testCreator string

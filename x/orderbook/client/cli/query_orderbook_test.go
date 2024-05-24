@@ -10,13 +10,12 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	tmcli "github.com/tendermint/tendermint/libs/cli"
-
+	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
+
 	"github.com/sge-network/sge/testutil/network"
 	"github.com/sge-network/sge/testutil/nullify"
-
 	"github.com/sge-network/sge/x/orderbook/client/cli"
 	"github.com/sge-network/sge/x/orderbook/types"
 )

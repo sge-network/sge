@@ -3,14 +3,12 @@ package app_test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/tendermint/tendermint/libs/log"
-	tmdb "github.com/tendermint/tm-db"
-
-	sdksimapp "github.com/cosmos/cosmos-sdk/simapp"
-
+	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
+	tmdb "github.com/cometbft/cometbft-db"
+	"github.com/cometbft/cometbft/libs/log"
+	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
 	"github.com/sge-network/sge/app"
+	"github.com/stretchr/testify/require"
 )
 
 func TestApp(t *testing.T) {
@@ -26,7 +24,8 @@ func TestApp(t *testing.T) {
 			"",
 			0,
 			encCdc,
-			sdksimapp.EmptyAppOptions{},
+			simtestutil.EmptyAppOptions{},
+			[]wasmkeeper.Option{},
 		)
 	}
 	require.NotPanics(t, panicFunc)
