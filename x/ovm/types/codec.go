@@ -13,6 +13,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgSubmitPubkeysChangeProposalRequest{}, "ovm/SubmitPubkeysChangeProposal")
 	legacy.RegisterAminoMsg(cdc, &MsgVotePubkeysChangeRequest{}, "ovm/VotePubkeysChange")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "ovm/MsgUpdateParams")
 }
 
 // RegisterInterfaces registers the module interface types
@@ -20,6 +21,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgSubmitPubkeysChangeProposalRequest{},
 		&MsgVotePubkeysChangeRequest{},
+		&MsgUpdateParams{},
 	)
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }

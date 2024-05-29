@@ -12,7 +12,7 @@ import (
 func (k msgServer) TopUp(goCtx context.Context, msg *types.MsgTopUp) (*types.MsgTopUpResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	subAccAddr, err := k.keeper.TopUp(ctx, msg.Creator, msg.Address, msg.LockedBalances)
+	subAccAddr, err := k.Keeper.TopUp(ctx, msg.Creator, msg.Address, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
@@ -27,12 +27,12 @@ func (k msgServer) WithdrawUnlockedBalances(goCtx context.Context, msg *types.Ms
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	ownerAddr := sdk.MustAccAddressFromBech32(msg.Creator)
-	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, ownerAddr)
+	subAccAddr, exists := k.Keeper.GetSubaccountByOwner(ctx, ownerAddr)
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	err := k.keeper.withdrawUnlocked(ctx, subAccAddr, ownerAddr)
+	err := k.Keeper.withdrawUnlocked(ctx, subAccAddr, ownerAddr)
 	if err != nil {
 		return nil, err
 	}

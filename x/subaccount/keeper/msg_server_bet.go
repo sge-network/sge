@@ -18,19 +18,19 @@ import (
 func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.MsgWagerResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if !k.keeper.GetWagerEnabled(ctx) {
+	if !k.Keeper.GetWagerEnabled(ctx) {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "currently the subacount wager tx is not enabled")
 	}
 
 	subAccOwner := sdk.MustAccAddressFromBech32(msg.Creator)
 	// find subaccount
-	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, subAccOwner)
+	subAccAddr, exists := k.Keeper.GetSubaccountByOwner(ctx, subAccOwner)
 	if !exists {
 		return nil, status.Error(codes.NotFound, "subaccount not found")
 	}
 
 	payload := &types.SubAccWagerTicketPayload{}
-	err := k.keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload)
+	err := k.Keeper.ovmKeeper.VerifyTicketUnmarshal(sdk.WrapSDKContext(ctx), msg.Ticket, &payload)
 	if err != nil {
 		return nil, sdkerrors.Wrapf(types.ErrInTicketVerification, "%s", err)
 	}
@@ -39,7 +39,7 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "message creator should be the same as the sub message creator%s", msg.Creator)
 	}
 
-	bet, oddsMap, err := k.keeper.betKeeper.PrepareBetObject(ctx, payload.Msg.Creator, payload.Msg.Props)
+	bet, oddsMap, err := k.Keeper.betKeeper.PrepareBetObject(ctx, payload.Msg.Creator, payload.Msg.Props)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(types.ErrInTicketPayloadValidation, "%s", err)
 	}
 
-	mainAccBalance := k.keeper.bankKeeper.GetBalance(
+	mainAccBalance := k.Keeper.bankKeeper.GetBalance(
 		ctx,
 		sdk.MustAccAddressFromBech32(bet.Creator),
 		params.DefaultBondDenom)
@@ -56,11 +56,11 @@ func (k msgServer) Wager(goCtx context.Context, msg *types.MsgWager) (*types.Msg
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "not enough balance in main account")
 	}
 
-	if err := k.keeper.withdrawLockedAndUnlocked(ctx, subAccAddr, subAccOwner, payload.SubaccDeductAmount); err != nil {
+	if err := k.Keeper.withdrawLockedAndUnlocked(ctx, subAccAddr, subAccOwner, payload.SubaccDeductAmount); err != nil {
 		return nil, err
 	}
 
-	if err := k.keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
+	if err := k.Keeper.betKeeper.Wager(ctx, bet, oddsMap); err != nil {
 		return nil, err
 	}
 

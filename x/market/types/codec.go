@@ -14,6 +14,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgAdd{}, "market/Add")
 	legacy.RegisterAminoMsg(cdc, &MsgResolve{}, "market/Resolve")
 	legacy.RegisterAminoMsg(cdc, &MsgUpdate{}, "market/Update")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "market/MsgUpdateParams")
 }
 
 // RegisterInterfaces registers the module interface types
@@ -21,12 +22,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil))
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgAdd{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgResolve{},
-	)
-	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgUpdate{},
+		&MsgUpdateParams{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

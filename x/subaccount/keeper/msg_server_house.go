@@ -14,24 +14,24 @@ import (
 func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposit) (*types.MsgHouseDepositResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if !k.keeper.GetDepositEnabled(ctx) {
+	if !k.Keeper.GetDepositEnabled(ctx) {
 		return nil, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, "currently the subacount deposit tx is not enabled")
 	}
 
 	// check if subaccount exists
-	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccAddr, exists := k.Keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
 	// get subaccount balance, and check if it can spend
-	balance, exists := k.keeper.GetAccountSummary(ctx, subAccAddr)
+	balance, exists := k.Keeper.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount balance not found")
 	}
 
 	// parse the ticket payload and create deposit, setting the authz allowed as false
-	_, err := k.keeper.houseKeeper.ParseDepositTicketAndValidate(goCtx, ctx, msg.Msg, false)
+	_, err := k.Keeper.houseKeeper.ParseDepositTicketAndValidate(goCtx, ctx, msg.Msg, false)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to deposit")
 	}
@@ -41,7 +41,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// send house deposit from subaccount on behalf of the owner
-	participationIndex, feeAmount, err := k.keeper.houseKeeper.Deposit(
+	participationIndex, feeAmount, err := k.Keeper.houseKeeper.Deposit(
 		ctx,
 		msg.Msg.Creator,
 		subAccAddr.String(),
@@ -53,7 +53,7 @@ func (k msgServer) HouseDeposit(goCtx context.Context, msg *types.MsgHouseDeposi
 	}
 
 	// update subaccount balance
-	k.keeper.SetAccountSummary(ctx, subAccAddr, balance)
+	k.Keeper.SetAccountSummary(ctx, subAccAddr, balance)
 
 	// emit event
 	msg.EmitEvent(&ctx, subAccAddr.String(), participationIndex, feeAmount)
@@ -70,22 +70,22 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// check if subaccount exists
-	subAccAddr, exists := k.keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
+	subAccAddr, exists := k.Keeper.GetSubaccountByOwner(ctx, sdk.MustAccAddressFromBech32(msg.Msg.Creator))
 	if !exists {
 		return nil, types.ErrSubaccountDoesNotExist
 	}
 
-	subAccountBalance, exists := k.keeper.GetAccountSummary(ctx, subAccAddr)
+	subAccountBalance, exists := k.Keeper.GetAccountSummary(ctx, subAccAddr)
 	if !exists {
 		panic("data corruption: subaccount balance not found")
 	}
 
-	_, _, err := k.keeper.houseKeeper.ParseWithdrawTicketAndValidate(goCtx, msg.Msg, true)
+	_, _, err := k.Keeper.houseKeeper.ParseWithdrawTicketAndValidate(goCtx, msg.Msg, true)
 	if err != nil {
 		return nil, err
 	}
 
-	id, err := k.keeper.houseKeeper.CalcAndWithdraw(ctx, msg.Msg, subAccAddr.String(), false)
+	id, err := k.Keeper.houseKeeper.CalcAndWithdraw(ctx, msg.Msg, subAccAddr.String(), false)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (k msgServer) HouseWithdraw(goCtx context.Context, msg *types.MsgHouseWithd
 		panic("data corruption: it must be possible to unspend an house withdrawal")
 	}
 
-	k.keeper.SetAccountSummary(ctx, subAccAddr, subAccountBalance)
+	k.Keeper.SetAccountSummary(ctx, subAccAddr, subAccountBalance)
 
 	msg.Msg.EmitEvent(&ctx, subAccAddr.String(), id)
 

@@ -12,7 +12,7 @@ import (
 	"github.com/sge-network/sge/x/subaccount/keeper"
 )
 
-func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.Keeper, sdk.Context) {
+func setupKeeperAndApp(t testing.TB) (*simapp.TestApp, *keeper.KeeperTest, sdk.Context) {
 	tApp, ctx, err := simapp.GetTestObjects()
 	require.NoError(t, err)
 
