@@ -19,6 +19,7 @@ import (
 func TestProposalMsgs(t *testing.T) {
 	// initialize parameters
 	s := rand.NewSource(1)
+	//#nosec
 	r := rand.New(s)
 
 	ctx := sdk.NewContext(nil, tmproto.Header{}, true, nil)

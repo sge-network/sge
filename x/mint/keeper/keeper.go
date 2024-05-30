@@ -21,6 +21,9 @@ type Keeper struct {
 	stakingKeeper    types.StakingKeeper
 	bankKeeper       types.BankKeeper
 	feeCollectorName string
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
 }
 
 // ExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -37,6 +40,7 @@ func NewKeeper(
 	ak types.AccountKeeper,
 	expectedKeepers ExpectedKeepers,
 	feeCollectorName string,
+	authority string,
 ) *Keeper {
 	// ensure mint module account is set
 	if addr := ak.GetModuleAddress(types.ModuleName); addr == nil {
@@ -55,6 +59,7 @@ func NewKeeper(
 		stakingKeeper:    expectedKeepers.StakingKeeper,
 		bankKeeper:       expectedKeepers.BankKeeper,
 		feeCollectorName: feeCollectorName,
+		authority:        authority,
 	}
 }
 

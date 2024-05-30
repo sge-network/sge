@@ -290,6 +290,7 @@ func NewAppKeeper(
 			BankKeeper:    appKeepers.BankKeeper,
 		},
 		authtypes.FeeCollectorName,
+		govModAddress,
 	)
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
@@ -475,7 +476,6 @@ func NewAppKeeper(
 	appKeepers.ContractKeeper = wasmkeeper.NewDefaultPermissionKeeper(&appKeepers.WasmKeeper)
 	appKeepers.Ics20WasmHooks.ContractKeeper = &appKeepers.WasmKeeper
 
-	authority := authtypes.NewModuleAddress(govtypes.ModuleName).String()
 	// // SGE keepers \\\\
 
 	appKeepers.OrderbookKeeper = orderbookmodulekeeper.NewKeeper(
@@ -487,7 +487,7 @@ func NewAppKeeper(
 			AccountKeeper:  appKeepers.AccountKeeper,
 			FeeGrantKeeper: appKeepers.FeeGrantKeeper,
 		},
-		authority,
+		govModAddress,
 	)
 
 	appKeepers.OVMKeeper = ovmmodulekeeper.NewKeeper(
@@ -495,7 +495,7 @@ func NewAppKeeper(
 		appKeepers.keys[ovmmoduletypes.StoreKey],
 		appKeepers.keys[ovmmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(ovmmoduletypes.ModuleName),
-		authority,
+		govModAddress,
 	)
 
 	appKeepers.MarketKeeper = marketmodulekeeper.NewKeeper(
@@ -503,7 +503,7 @@ func NewAppKeeper(
 		appKeepers.keys[marketmoduletypes.StoreKey],
 		appKeepers.keys[marketmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
-		authority,
+		govModAddress,
 	)
 	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
@@ -513,7 +513,7 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.StoreKey],
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
-		authority,
+		govModAddress,
 	)
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.BetKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
@@ -532,7 +532,7 @@ func NewAppKeeper(
 		housemodulekeeper.SdkExpectedKeepers{
 			AuthzKeeper: appKeepers.AuthzKeeper,
 		},
-		authority,
+		govModAddress,
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
@@ -546,7 +546,7 @@ func NewAppKeeper(
 		appKeepers.BetKeeper,
 		appKeepers.OrderbookKeeper,
 		appKeepers.HouseKeeper,
-		authority,
+		govModAddress,
 	)
 
 	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
@@ -562,7 +562,7 @@ func NewAppKeeper(
 			BankKeeper:    appKeepers.BankKeeper,
 			AccountKeeper: appKeepers.AccountKeeper,
 		},
-		authority,
+		govModAddress,
 	)
 
 	// ** Hooks ** \\

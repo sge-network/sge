@@ -15,7 +15,7 @@ import (
 const (
 	DefaultWeightMsgUpdateParams int = 100
 
-	OpWeightMsgUpdateParams = "op_weight_msg_update_params" //nolint:gosec
+	OpWeightMsgUpdateParams = "op_weight_msg_update_params" //#nosec
 )
 
 // ProposalMsgs defines the module weighted proposals' contents
@@ -30,7 +30,7 @@ func ProposalMsgs() []simtypes.WeightedProposalMsg {
 }
 
 // SimulateMsgUpdateParams returns a random MsgUpdateParams
-func SimulateMsgUpdateParams(r *rand.Rand, _ sdk.Context, _ []simtypes.Account) sdk.Msg {
+func SimulateMsgUpdateParams(_ *rand.Rand, _ sdk.Context, _ []simtypes.Account) sdk.Msg {
 	// use the default gov module account address as authority
 	var authority sdk.AccAddress = address.Module("gov")
 
