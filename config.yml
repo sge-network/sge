@@ -19,7 +19,7 @@ genesis:
     bank:
       balances:
         - address: "sge12m8k4n37tcqt5fk0s90jk3t8gz8rkgl33cu407"
-          coins: [{"denom": "usge", "amount": "10000000000"}]
+          coins: [{ "denom": "usge", "amount": "10000000000" }]
       supply:
         - denom: "usge"
           amount: "10000000000"
@@ -32,16 +32,20 @@ genesis:
         amount: "1000"
     ovm:
       key_vault:
-        public_keys: [
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdUWfzVUf4BqsHvErsJoXIaIpO60CHXfaaef+xKU3bbY=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA58w+676YVp61kjXDrteK8hDxulq5zbF6sNHQt3Lt5Ng=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5iPKVbSvyF1A1HDFaWMGlhBp/xTU70i8lMgOml79WM=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAueEgZMdKn6Bp0mcG04HrNAt1a0o7+0eNliQCNmbxkOQ=\n-----END PUBLIC KEY-----",
-          "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAkMnWRwXXVlQqhpHq7LNVGwqA/E2LQY/6remOtilPKpI=\n-----END PUBLIC KEY-----",
-        ]
+        public_keys:
+          [
+            "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdUWfzVUf4BqsHvErsJoXIaIpO60CHXfaaef+xKU3bbY=\n-----END PUBLIC KEY-----",
+            "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA58w+676YVp61kjXDrteK8hDxulq5zbF6sNHQt3Lt5Ng=\n-----END PUBLIC KEY-----",
+            "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5iPKVbSvyF1A1HDFaWMGlhBp/xTU70i8lMgOml79WM=\n-----END PUBLIC KEY-----",
+            "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAueEgZMdKn6Bp0mcG04HrNAt1a0o7+0eNliQCNmbxkOQ=\n-----END PUBLIC KEY-----",
+            "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAkMnWRwXXVlQqhpHq7LNVGwqA/E2LQY/6remOtilPKpI=\n-----END PUBLIC KEY-----",
+          ]
     gov:
-      deposit_params:
+      params:
+        expedited_min_deposit: [{ amount: "2", denom: "usge" }]
         min_deposit: [{ amount: "1", denom: "usge" }]
+        voting_period: "40s"
+        expedited_voting_period: "30s"
     bet:
       params:
         constraints:
@@ -56,10 +60,7 @@ genesis:
       params:
         mint_denom: "usge"
         blocks_per_year: "100"
-        phases:
-          [
-            { inflation: "0.100000000000000000", year_coefficient: "1" },
-          ]
+        phases: [{ inflation: "0.100000000000000000", year_coefficient: "1" }]
         exclude_amount: "500000000000"
     orderbook:
       params:

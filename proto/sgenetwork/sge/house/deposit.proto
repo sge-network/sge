@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
@@ -15,8 +16,10 @@ message Deposit {
   string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
 
   // creator is the bech32-encoded address of the depositor.
-  string depositor_address = 2
-      [ (gogoproto.moretags) = "yaml:\"depositor_address\"" ];
+  string depositor_address = 2 [
+    (gogoproto.moretags) = "yaml:\"depositor_address\"",
+    (cosmos_proto.scalar) = "cosmos.AddressString"
+  ];
 
   // market_uid is the uid of market/order book against which deposit is being
   // made.

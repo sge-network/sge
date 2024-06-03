@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.type;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/sge-network/sge/types";
 
@@ -13,6 +14,7 @@ message KycDataPayload {
   bool approved = 2;
   // id is the id of the KYC user.
   string id = 3 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
     (gogoproto.customname) = "ID",
     (gogoproto.jsontag) = "id",
     json_name = "id"

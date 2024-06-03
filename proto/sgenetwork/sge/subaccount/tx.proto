@@ -44,11 +44,13 @@ service Msg {
 
 // MsgCreate defines the Msg/Create request type.
 message MsgCreate {
+  option (cosmos.msg.v1.signer) = "creator";
+
   // creator is the msg signer.
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // owner is the owner of the subaccount.
-  string owner = 2;
+  string owner = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // locked_balances is the list of balance locks.
   // Fixme: why this attribute needs to be repeated?
@@ -60,11 +62,13 @@ message MsgCreateResponse {}
 
 // MsgTopUp defines the Msg/TopUp request type.
 message MsgTopUp {
+  option (cosmos.msg.v1.signer) = "creator";
+
   // creator is the msg signer.
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // address is the subaccount address.
-  string address = 2;
+  string address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // locked_balances is the list of balance locks.
   // Fixme: Are we sending multiple balance update together? If not, then only
@@ -78,8 +82,10 @@ message MsgTopUpResponse {}
 // MsgWithdrawUnlockedBalances defines the Msg/WithdrawUnlockedBalances request
 // type.
 message MsgWithdrawUnlockedBalances {
+  option (cosmos.msg.v1.signer) = "creator";
+
   // creator is the subaccount owner.
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // MsgWithdrawUnlockedBalancesResponse defines the Msg/WithdrawUnlockedBalances
@@ -89,8 +95,10 @@ message MsgWithdrawUnlockedBalancesResponse {}
 // MsgWager wraps the MsgWager message. We need it in order not to have
 // double interface registration conflicts.
 message MsgWager {
+  option (cosmos.msg.v1.signer) = "creator";
+
   // creator is the subaccount owner.
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   // ticket is the jwt ticket data.
   string ticket = 2;
 }

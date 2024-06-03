@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.orderbook;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/sge-network/sge/x/orderbook/types";
 
@@ -22,8 +23,10 @@ message OrderBookParticipation {
   ];
 
   // participant_address is the bech32-encoded address of the participant.
-  string participant_address = 3
-      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
+  string participant_address = 3 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (gogoproto.moretags) = "yaml:\"participant_address\""
+  ];
 
   // liquidity is the total initial liquidity provided.
   string liquidity = 4 [
@@ -153,6 +156,8 @@ message SettledOrderbookParticipation {
   ];
 
   // participant_address is the bech32-encoded address of the participant.
-  string participant_address = 3
-      [ (gogoproto.moretags) = "yaml:\"participant_address\"" ];
+  string participant_address = 3 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (gogoproto.moretags) = "yaml:\"participant_address\""
+  ];
 }

@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
@@ -12,7 +13,10 @@ message Withdrawal {
   option (gogoproto.goproto_stringer) = false;
 
   // creator is the bech32-encoded address of the depositor.
-  string creator = 1 [ (gogoproto.moretags) = "yaml:\"creator\"" ];
+  string creator = 1 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (gogoproto.moretags) = "yaml:\"creator\""
+  ];
 
   // withdrawal is the withdrawal attempt id.
   uint64 id = 2 [
@@ -23,7 +27,10 @@ message Withdrawal {
   ];
 
   // address is the bech32-encoded address of the depositor.
-  string address = 3 [ (gogoproto.moretags) = "yaml:\"address\"" ];
+  string address = 3 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (gogoproto.moretags) = "yaml:\"address\""
+  ];
 
   // market_uid is the uid of market against which the deposit is
   // being made.
