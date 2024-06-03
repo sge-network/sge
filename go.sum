@@ -1368,8 +1368,8 @@ github.com/segmentio/fasthash v1.0.3/go.mod h1:waKX8l2N8yckOgmSsXJi7x1ZfdKZ4x7KR
 github.com/segmentio/kafka-go v0.1.0/go.mod h1:X6itGqS9L4jDletMsxZ7Dz+JFWxM6JHfPOCvTvk+EJo=
 github.com/segmentio/kafka-go v0.2.0/go.mod h1:X6itGqS9L4jDletMsxZ7Dz+JFWxM6JHfPOCvTvk+EJo=
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
-github.com/sge-network/cosmos-sdk v0.47.9-0.20240409081440-054c8c413d45 h1:gdXKc/Y7QTsuDsoC/S3R/LdXAxazOFzjxNoiJmpFaYE=
-github.com/sge-network/cosmos-sdk v0.47.9-0.20240409081440-054c8c413d45/go.mod h1:WjqTUUHJnaRjkgJbP2aQ1F+9pxDpLsOBpfuP2S0W+Ck=
+github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54 h1:ay0zjDwGHb6sZG82anuyBU1HxJeB7XByqFuYhPx+j0U=
+github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54/go.mod h1:WjqTUUHJnaRjkgJbP2aQ1F+9pxDpLsOBpfuP2S0W+Ck=
 github.com/sge-network/wasmd v0.0.0-20240506113624-5ccb26abde7a h1:cg3upuH1sZBjFKY2p7qgE9LTtGt2ccH8vucTGMWquSo=
 github.com/sge-network/wasmd v0.0.0-20240506113624-5ccb26abde7a/go.mod h1:uQOWQUhJrZpsroGkmunpIJfj4tY9NIZWDVw1f42hjtI=
 github.com/shazow/go-diff v0.0.0-20160112020656-b6b7b6733b8c h1:W65qqJCIOVP4jpqPQ0YvHYKwcMEMVWIzWC5iNQQfBTU=

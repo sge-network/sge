@@ -351,7 +351,7 @@ replace (
 
 	github.com/CosmWasm/wasmd => github.com/sge-network/wasmd v0.0.0-20240506113624-5ccb26abde7a
 
-	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240409081440-054c8c413d45
+	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54
 
 	// support concurrency for iavl
 	github.com/cosmos/iavl => github.com/cosmos/iavl v0.20.1
