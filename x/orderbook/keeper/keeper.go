@@ -25,6 +25,9 @@ type Keeper struct {
 	ovmKeeper      types.OVMKeeper
 	feeGrantKeeper types.FeeGrantKeeper
 	hooks          types.OrderBookHooks
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -40,6 +43,7 @@ func NewKeeper(
 	key storetypes.StoreKey,
 	ps paramtypes.Subspace,
 	expectedKeepers SdkExpectedKeepers,
+	authority string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -53,6 +57,7 @@ func NewKeeper(
 		bankKeeper:     expectedKeepers.BankKeeper,
 		accountKeeper:  expectedKeepers.AccountKeeper,
 		feeGrantKeeper: expectedKeepers.FeeGrantKeeper,
+		authority:      authority,
 	}
 }
 
@@ -90,4 +95,9 @@ func (k *Keeper) SetHooks(gh types.OrderBookHooks) *Keeper {
 // Logger returns the logger of the keeper
 func (Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetAuthority returns the x/orderbook module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

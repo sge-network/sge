@@ -14,6 +14,7 @@ import (
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgDeposit{}, "house/Deposit")
 	legacy.RegisterAminoMsg(cdc, &MsgWithdraw{}, "house/Withdraw")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "house/MsgUpdateParams")
 }
 
 // RegisterInterfaces registers the x/house interfaces types with the interface registry
@@ -21,6 +22,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgDeposit{},
 		&MsgWithdraw{},
+		&MsgUpdateParams{},
 	)
 	registry.RegisterImplementations(
 		(*authz.Authorization)(nil),

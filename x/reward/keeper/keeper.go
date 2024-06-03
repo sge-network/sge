@@ -26,6 +26,9 @@ type (
 		betKeeper        types.BetKeeper
 		ovmKeeper        types.OVMKeeper
 		subaccountKeeper types.SubaccountKeeper
+		// the address capable of executing a MsgUpdateParams message. Typically, this
+		// should be the x/gov module account.
+		authority string
 	}
 )
 
@@ -45,6 +48,7 @@ func NewKeeper(
 	ovmKeeper types.OVMKeeper,
 	subaccountKeeper types.SubaccountKeeper,
 	expectedKeepers SdkExpectedKeepers,
+	authority string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -66,9 +70,15 @@ func NewKeeper(
 		ovmKeeper:        ovmKeeper,
 		subaccountKeeper: subaccountKeeper,
 		authzKeeper:      expectedKeepers.AuthzKeeper,
+		authority:        authority,
 	}
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetAuthority returns the x/reward module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

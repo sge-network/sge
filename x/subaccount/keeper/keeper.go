@@ -20,6 +20,9 @@ type Keeper struct {
 	betKeeper     types.BetKeeper
 	houseKeeper   types.HouseKeeper
 	obKeeper      types.OrderBookKeeper
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
 }
 
 func NewKeeper(
@@ -32,6 +35,7 @@ func NewKeeper(
 	betKeeper types.BetKeeper,
 	obKeeper types.OrderBookKeeper,
 	hk types.HouseKeeper,
+	authority string,
 ) *Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
@@ -48,6 +52,12 @@ func NewKeeper(
 		betKeeper:     betKeeper,
 		houseKeeper:   hk,
 		obKeeper:      obKeeper,
+		authority:     authority,
 	}
 	return k
+}
+
+// GetAuthority returns the x/subaccount module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

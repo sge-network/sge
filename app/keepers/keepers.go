@@ -290,6 +290,7 @@ func NewAppKeeper(
 			BankKeeper:    appKeepers.BankKeeper,
 		},
 		authtypes.FeeCollectorName,
+		govModAddress,
 	)
 
 	appKeepers.DistrKeeper = distrkeeper.NewKeeper(
@@ -486,6 +487,7 @@ func NewAppKeeper(
 			AccountKeeper:  appKeepers.AccountKeeper,
 			FeeGrantKeeper: appKeepers.FeeGrantKeeper,
 		},
+		govModAddress,
 	)
 
 	appKeepers.OVMKeeper = ovmmodulekeeper.NewKeeper(
@@ -493,6 +495,7 @@ func NewAppKeeper(
 		appKeepers.keys[ovmmoduletypes.StoreKey],
 		appKeepers.keys[ovmmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(ovmmoduletypes.ModuleName),
+		govModAddress,
 	)
 
 	appKeepers.MarketKeeper = marketmodulekeeper.NewKeeper(
@@ -500,6 +503,7 @@ func NewAppKeeper(
 		appKeepers.keys[marketmoduletypes.StoreKey],
 		appKeepers.keys[marketmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(marketmoduletypes.ModuleName),
+		govModAddress,
 	)
 	appKeepers.MarketKeeper.SetOVMKeeper(appKeepers.OVMKeeper)
 	appKeepers.MarketKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
@@ -509,6 +513,7 @@ func NewAppKeeper(
 		appKeepers.keys[betmoduletypes.StoreKey],
 		appKeepers.keys[betmoduletypes.MemStoreKey],
 		appKeepers.GetSubspace(betmoduletypes.ModuleName),
+		govModAddress,
 	)
 	appKeepers.BetKeeper.SetMarketKeeper(appKeepers.MarketKeeper)
 	appKeepers.BetKeeper.SetOrderbookKeeper(appKeepers.OrderbookKeeper)
@@ -527,6 +532,7 @@ func NewAppKeeper(
 		housemodulekeeper.SdkExpectedKeepers{
 			AuthzKeeper: appKeepers.AuthzKeeper,
 		},
+		govModAddress,
 	)
 	appKeepers.OrderbookKeeper.SetHouseKeeper(appKeepers.HouseKeeper)
 
@@ -540,6 +546,7 @@ func NewAppKeeper(
 		appKeepers.BetKeeper,
 		appKeepers.OrderbookKeeper,
 		appKeepers.HouseKeeper,
+		govModAddress,
 	)
 
 	appKeepers.RewardKeeper = rewardmodulekeeper.NewKeeper(
@@ -555,6 +562,7 @@ func NewAppKeeper(
 			BankKeeper:    appKeepers.BankKeeper,
 			AccountKeeper: appKeepers.AccountKeeper,
 		},
+		govModAddress,
 	)
 
 	// ** Hooks ** \\

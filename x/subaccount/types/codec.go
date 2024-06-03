@@ -17,6 +17,7 @@ func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	legacy.RegisterAminoMsg(cdc, &MsgWager{}, "subaccount/BetWager")
 	legacy.RegisterAminoMsg(cdc, &MsgHouseDeposit{}, "subaccount/HouseDeposit")
 	legacy.RegisterAminoMsg(cdc, &MsgHouseWithdraw{}, "subaccount/HouseWithdraw")
+	legacy.RegisterAminoMsg(cdc, &MsgUpdateParams{}, "subaccount/MsgUpdateParams")
 }
 
 // RegisterInterfaces registers the module interface types
@@ -28,6 +29,7 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgWager{},
 		&MsgHouseDeposit{},
 		&MsgHouseWithdraw{},
+		&MsgUpdateParams{},
 	)
 
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)

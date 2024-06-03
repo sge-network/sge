@@ -14,5 +14,5 @@ func setupMsgServerAndApp(
 	t testing.TB,
 ) (*simapp.TestApp, *keeper.Keeper, types.MsgServer, sdk.Context) {
 	tApp, k, ctx := setupKeeperAndApp(t)
-	return tApp, k, keeper.NewMsgServerImpl(k), ctx
+	return tApp, k, keeper.NewMsgServerImpl(*k), ctx
 }

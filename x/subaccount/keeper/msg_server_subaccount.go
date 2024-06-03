@@ -20,7 +20,7 @@ func (k msgServer) Create(
 		return nil, sdkerrors.Wrap(err, "invalid request")
 	}
 
-	subAccAddr, err := k.keeper.CreateSubaccount(ctx, msg.Creator, msg.Owner, msg.LockedBalances)
+	subAccAddr, err := k.Keeper.CreateSubaccount(ctx, msg.Creator, msg.Owner, msg.LockedBalances)
 	if err != nil {
 		return nil, err
 	}
