@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.bet;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "sgenetwork/sge/bet/params.proto";
@@ -64,7 +65,7 @@ message QueryParamsResponse {
 // QueryBetRequest is the request type for a single bet query
 // Query/Bet RPC method.
 message QueryBetRequest {
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
   string uid = 2 [ (gogoproto.jsontag) = "uid", json_name = "uid" ];
 }
 

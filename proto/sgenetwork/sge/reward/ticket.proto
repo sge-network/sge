@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 import "sgenetwork/sge/type/kyc.proto";
 import "sgenetwork/sge/reward/campaign.proto";
 import "sgenetwork/sge/reward/reward.proto";
@@ -13,7 +14,7 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 message CreateCampaignPayload {
   // promoter is the address of campaign promoter.
   // Funds for the campaign would be deducted from this account.
-  string promoter = 1;
+  string promoter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // start_ts is the start timestamp of the campaign.
   uint64 start_ts = 2;
@@ -61,13 +62,13 @@ message UpdateCampaignPayload {
 message WithdrawFundsPayload {
   // promoter is the address of campaign promoter.
   // Funds would be transferred to this account.
-  string promoter = 1;
+  string promoter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // RewardPayloadCommon
 message RewardPayloadCommon {
   // receiver is the address of the account that receives the reward.
-  string receiver = 1;
+  string receiver = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // source_uid is the address of the source.
   // It is used to identify the source of the reward.
@@ -101,7 +102,7 @@ message GrantSignupReferrerRewardPayload {
 
   // referee is the address of the account that used this referrer address as
   // source_uid
-  string referee = 2;
+  string referee = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // GrantSignupAffiliatorRewardPayload is the type for signup affiliator reward
@@ -112,7 +113,7 @@ message GrantSignupAffiliatorRewardPayload {
 
   // affiliatee is the address of the account that used this affiliator's
   // address as source_uid
-  string affiliatee = 2;
+  string affiliatee = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // GrantBetBonusRewardPayload is the type for bet bonus reward
