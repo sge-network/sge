@@ -8,11 +8,10 @@ import (
 	"github.com/sge-network/sge/app/keepers"
 )
 
-//nolint:staticcheck
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
-	k *keepers.AppKeepers,
+	_ *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		return mm.RunMigrations(ctx, configurator, fromVM)
