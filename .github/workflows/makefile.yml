@@ -95,7 +95,5 @@ jobs:
     - name: Publish NPM Package
       run: |
         echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > sgejs/.npmrc
-        cat sgejs/.npmrc
         cd sgejs
-        ls -la
-        npm publish --access=restricted --force
+        npm publish --access=public --force
