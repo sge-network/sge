@@ -7,6 +7,8 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math"
+	"os"
+	"path/filepath"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/spf13/cast"
@@ -110,4 +112,20 @@ func RandomString(length int) string {
 	}
 	str := base64.RawURLEncoding.EncodeToString(buff)
 	return str[:length] // strip 1 extra character we get from odd length results
+}
+
+func WriteKeyringFile(name string, dir string, contents []byte) error {
+	file := filepath.Join(dir, name)
+
+	//#nosec
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("could not create directory %q: %w", dir, err)
+	}
+
+	//#nosec
+	if err := os.WriteFile(file, contents, 0o644); err != nil {
+		return err
+	}
+
+	return nil
 }
