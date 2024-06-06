@@ -29,11 +29,9 @@ var (
 	dummyMarket    = types.Market{}
 	dummyMarketUID = uuid.NewString()
 
-	oddsUID1   = "9991c60f-2025-48ce-ae79-1dc110f16900"
-	oddsValue1 = sdkmath.LegacyNewDecWithPrec(14, 1) // 1.4
-	oddsUID2   = "9991c60f-2025-48ce-ae79-1dc110f16901"
-	oddsValue2 = sdkmath.LegacyNewDecWithPrec(13, 1) // 1.3
-	oddsUID3   = "9991c60f-2025-48ce-ae79-1dc110f16902"
+	oddsUID1 = "9991c60f-2025-48ce-ae79-1dc110f16900"
+	oddsUID2 = "9991c60f-2025-48ce-ae79-1dc110f16901"
+	oddsUID3 = "9991c60f-2025-48ce-ae79-1dc110f16902"
 
 	fees            = int64(10)
 	marketUID       = uuid.NewString()
