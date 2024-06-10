@@ -48,6 +48,7 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	ibc "github.com/cosmos/ibc-go/v7/modules/core"
 	ibcexported "github.com/cosmos/ibc-go/v7/modules/core/exported"
+	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 
 	wasm "github.com/CosmWasm/wasmd/x/wasm"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
@@ -120,12 +121,13 @@ var ModuleBasics = module.NewBasicManager(
 	vesting.AppModuleBasic{},
 	groupmodule.AppModuleBasic{},
 
-	wasm.AppModuleBasic{},
 	ibc.AppModuleBasic{},
+	wasm.AppModuleBasic{},
 	transfer.AppModuleBasic{},
 	ica.AppModuleBasic{},
 	ibcfee.AppModuleBasic{},
 	ibcwasmmodule.AppModuleBasic{},
+	ibctm.AppModuleBasic{},
 
 	// sge
 	betmodule.AppModuleBasic{},
