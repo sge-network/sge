@@ -54,14 +54,7 @@ import (
 	"github.com/sge-network/sge/app/keepers"
 	sgeappparams "github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/app/upgrades"
-	v1 "github.com/sge-network/sge/app/upgrades/v1"
-	v2 "github.com/sge-network/sge/app/upgrades/v2"
-	v3 "github.com/sge-network/sge/app/upgrades/v3"
-	v4 "github.com/sge-network/sge/app/upgrades/v4"
-	v5 "github.com/sge-network/sge/app/upgrades/v5"
-	v6 "github.com/sge-network/sge/app/upgrades/v6"
-	v7 "github.com/sge-network/sge/app/upgrades/v7"
-	v8 "github.com/sge-network/sge/app/upgrades/v8"
+	v10 "github.com/sge-network/sge/app/upgrades/v10"
 	v9 "github.com/sge-network/sge/app/upgrades/v9"
 
 	// unnamed import of statik for swagger UI support
@@ -86,15 +79,8 @@ var (
 	// DefaultNodeHome default home directories for the application daemon
 	DefaultNodeHome string
 	Upgrades        = []upgrades.Upgrade{
-		v1.Upgrade,
-		v2.Upgrade,
-		v3.Upgrade,
-		v4.Upgrade,
-		v5.Upgrade,
-		v6.Upgrade,
-		v7.Upgrade,
-		v8.Upgrade,
 		v9.Upgrade,
+		v10.Upgrade,
 	}
 )
 

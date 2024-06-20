@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.bet;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 import "sgenetwork/sge/bet/odds_type.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
@@ -53,7 +54,7 @@ message Bet {
   Result result = 9;
 
   // creator is the bettor address.
-  string creator = 10;
+  string creator = 10 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // created_at is the bet placement timestamp.
   int64 created_at = 11;
@@ -132,7 +133,7 @@ message PendingBet {
     json_name = "uid"
   ];
   // creator is the bettor address.
-  string creator = 2;
+  string creator = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // SettledBet is the type for a settled bet.
@@ -144,7 +145,7 @@ message SettledBet {
     json_name = "uid"
   ];
   // bettor_address is the bech32 address of the bettor account.
-  string bettor_address = 2;
+  string bettor_address = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 }
 
 // BetFulfillment: A bet can be fulfilled by multiple users participating as a

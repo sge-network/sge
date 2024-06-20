@@ -16,6 +16,9 @@ type Keeper struct {
 	authzKeeper     types.AuthzKeeper
 	orderbookKeeper types.OrderbookKeeper
 	ovmKeeper       types.OVMKeeper
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
 }
 
 // SdkExpectedKeepers contains expected keepers parameter needed by NewKeeper
@@ -31,6 +34,7 @@ func NewKeeper(
 	ovmKeeper types.OVMKeeper,
 	ps paramtypes.Subspace,
 	expectedKeepers SdkExpectedKeepers,
+	authority string,
 ) *Keeper {
 	// set KeyTable if it is not already set
 	if !ps.HasKeyTable() {
@@ -44,5 +48,11 @@ func NewKeeper(
 		ovmKeeper:       ovmKeeper,
 		paramstore:      ps,
 		authzKeeper:     expectedKeepers.AuthzKeeper,
+		authority:       authority,
 	}
+}
+
+// GetAuthority returns the x/house module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

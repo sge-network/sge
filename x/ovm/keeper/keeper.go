@@ -19,6 +19,9 @@ type Keeper struct {
 	storeKey   storetypes.StoreKey
 	memKey     storetypes.StoreKey
 	paramStore paramtypes.Subspace
+	// the address capable of executing a MsgUpdateParams message. Typically, this
+	// should be the x/gov module account.
+	authority string
 }
 
 // NewKeeper creates new keeper object
@@ -27,6 +30,7 @@ func NewKeeper(
 	storeKey,
 	memKey storetypes.StoreKey,
 	ps paramtypes.Subspace,
+	authority string,
 ) *Keeper {
 	// set KeyTable if it has not already been set
 	if !ps.HasKeyTable() {
@@ -38,10 +42,16 @@ func NewKeeper(
 		storeKey:   storeKey,
 		memKey:     memKey,
 		paramStore: ps,
+		authority:  authority,
 	}
 }
 
 // Logger returns the logger object of this module
 func (Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetAuthority returns the x/ovm module's authority.
+func (k Keeper) GetAuthority() string {
+	return k.authority
 }

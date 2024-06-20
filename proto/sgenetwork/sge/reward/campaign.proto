@@ -2,6 +2,7 @@ syntax = "proto3";
 package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
 import "sgenetwork/sge/reward/reward.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
@@ -9,7 +10,7 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 // Campaign is type for defining the campaign properties.
 message Campaign {
   // creator is the address of campaign creator.
-  string creator = 1;
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // uid is the unique identifier of a campaign.
   string uid = 2 [
@@ -20,7 +21,7 @@ message Campaign {
 
   // promoter is the address of campaign promoter.
   // Funds for the campaign would be deducted from this account.
-  string promoter = 3;
+  string promoter = 3 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
 
   // start_ts is the start timestamp of a campaign.
   uint64 start_ts = 4 [
