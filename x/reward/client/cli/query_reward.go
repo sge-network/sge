@@ -77,15 +77,16 @@ func CmdGetReward() *cobra.Command {
 
 func CmdGetRewardsByUser() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "rewards-by-address [address]",
-		Short: "shows a list of rewards by address",
-		Args:  cobra.ExactArgs(1),
+		Use:   "rewards-by-address [promoter_uid] [address]",
+		Short: "shows a list of rewards by promoter and address",
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argAddress := args[0]
+			argPromoterUID := args[0]
+			argAddress := args[1]
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())
 			if err != nil {
@@ -93,8 +94,9 @@ func CmdGetRewardsByUser() *cobra.Command {
 			}
 
 			params := &types.QueryRewardsByAddressRequest{
-				Address:    argAddress,
-				Pagination: pageReq,
+				PromoterUid: argPromoterUID,
+				Address:     argAddress,
+				Pagination:  pageReq,
 			}
 
 			res, err := queryClient.RewardsByAddress(context.Background(), params)
@@ -150,17 +152,17 @@ func CmdGetRewardsByCampaign() *cobra.Command {
 
 func CmdGetRewardByUserAndCategory() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "rewards-by-user-category [address] [category]",
-		Short: "shows a list of rewards by user and category",
-		Args:  cobra.ExactArgs(2),
+		Use:   "rewards-by-user-category [promoter_uid] [address] [category]",
+		Short: "shows a list of rewards by promoter, user, and category",
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			argUser := args[0]
-			argRewCategory := args[1]
-			argRewCategoryint32, err := cast.ToInt32E(argRewCategory)
+			argPromoterUID := args[0]
+			argUser := args[1]
+			argRewCategoryInt32, err := cast.ToInt32E(args[2])
 			if err != nil {
 				return err
 			}
@@ -171,9 +173,10 @@ func CmdGetRewardByUserAndCategory() *cobra.Command {
 			}
 
 			params := &types.QueryRewardsByAddressAndCategoryRequest{
-				Address:    argUser,
-				Category:   types.RewardCategory(argRewCategoryint32),
-				Pagination: pageReq,
+				PromoterUid: argPromoterUID,
+				Address:     argUser,
+				Category:    types.RewardCategory(argRewCategoryInt32),
+				Pagination:  pageReq,
 			}
 
 			res, err := queryClient.RewardsByAddressAndCategory(context.Background(), params)
