@@ -10,6 +10,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
 	"github.com/sge-network/sge/testutil/nullify"
+	"github.com/sge-network/sge/testutil/sample"
 	"github.com/sge-network/sge/testutil/simapp"
 	"github.com/sge-network/sge/x/bet/keeper"
 	"github.com/sge-network/sge/x/bet/types"
@@ -103,4 +104,17 @@ func TestSortBetGetAll(t *testing.T) {
 		nullify.Fill(items),
 		nullify.Fill(bets),
 	)
+}
+
+func TestBetIsAnyBetForAccount(t *testing.T) {
+	tApp, k, ctx := setupKeeperAndApp(t)
+	items := createNBet(tApp, k, ctx, 10)
+
+	thereIs, err := k.IsAnyBetForAccount(ctx, items[0].Creator)
+	require.NoError(t, err)
+	require.True(t, thereIs)
+
+	thereIs, err = k.IsAnyBetForAccount(ctx, sample.AccAddress())
+	require.NoError(t, err)
+	require.False(t, thereIs)
 }

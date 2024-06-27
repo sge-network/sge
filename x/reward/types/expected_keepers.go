@@ -34,6 +34,7 @@ type BankKeeper interface {
 type BetKeeper interface {
 	GetBet(ctx sdk.Context, creator string, id uint64) (val bettypes.Bet, found bool)
 	GetBetID(ctx sdk.Context, uid string) (val bettypes.UID2ID, found bool)
+	IsAnyBetForAccount(ctx sdk.Context, creator string) (thereIs bool, err error)
 }
 
 // BetKeeper defines the expected interface needed to access market state.
