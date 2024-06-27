@@ -66,6 +66,14 @@ func (sur SignUpReferrerReward) Calculate(goCtx context.Context, ctx sdk.Context
 		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrInvalidAddress, "%s", err)
 	}
 
+	hasBet, err := keepers.BetKeeper.IsAnyBetForAccount(ctx, payload.Common.Receiver)
+	if err != nil {
+		return RewardFactoryData{}, sdkerrors.Wrapf(sdkerrtypes.ErrPanic, "%s", err)
+	}
+	if !hasBet {
+		return RewardFactoryData{}, ErrNoBetForReceiverFound
+	}
+
 	return NewRewardFactoryData(
 		NewReceiver(
 			payload.Common.Receiver,

@@ -86,6 +86,14 @@ func TestMsgApplySignupReward(t *testing.T) {
 	promoter := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdkmath.ZeroInt(),
@@ -163,6 +171,14 @@ func TestMsgApplySignupRewardWithCap(t *testing.T) {
 	promoter := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdkmath.ZeroInt(),
@@ -220,6 +236,14 @@ func TestMsgApplySignupRefereeReward(t *testing.T) {
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
 
 	referrer := simapp.TestParamUsers["user3"].Address.String()
+
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
@@ -313,6 +337,26 @@ func TestMsgApplySignupReferrerReward(t *testing.T) {
 
 	referee := simapp.TestParamUsers["user3"].Address.String()
 	referrer := simapp.TestParamUsers["user4"].Address.String()
+
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		referrer,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		referee,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
@@ -453,6 +497,14 @@ func TestMsgApplySignupAffiliateReward(t *testing.T) {
 
 	leadGen := simapp.TestParamUsers["user3"].Address.String()
 
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
 			Amount:   sdkmath.ZeroInt(),
@@ -545,6 +597,26 @@ func TestMsgApplySignupAffiliateeReward(t *testing.T) {
 
 	affiliatee := simapp.TestParamUsers["user3"].Address.String()
 	affiliator := simapp.TestParamUsers["user4"].Address.String()
+
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		affiliatee,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		affiliator,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
 
 	_, err := tApp.SubaccountKeeper.CreateSubaccount(ctx, receiverAddr, receiverAddr, []subaccounttypes.LockedBalance{
 		{
@@ -845,6 +917,21 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	noSubaccountAddr := sample.AccAddress()
+	// dummy bet to pass at least one bet condition
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		noSubaccountAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
+
 	for _, tc := range []struct {
 		desc   string
 		claims jwt.MapClaims
@@ -883,7 +970,7 @@ func TestMsgApplySignupRewardSubaccount(t *testing.T) {
 				"exp": time.Now().Add(time.Minute * 5).Unix(),
 				"iat": time.Now().Unix(),
 				"common": types.RewardPayloadCommon{
-					Receiver:  sample.AccAddress(),
+					Receiver:  noSubaccountAddr,
 					SourceUID: "source id",
 					Meta:      "signup reward for sample user",
 					KycData: &sgetypes.KycDataPayload{
@@ -938,6 +1025,13 @@ func TestMsgApplySubaccountFunds(t *testing.T) {
 
 	promoter := simapp.TestParamUsers["user1"].Address.String()
 	receiverAddr := simapp.TestParamUsers["user2"].Address.String()
+
+	tApp.BetKeeper.SetBet(ctx, *bettypes.NewBet(
+		receiverAddr,
+		&bettypes.WagerProps{UID: uuid.NewString()},
+		&bettypes.BetOdds{},
+		bettypes.MetaData{},
+	), 1)
 
 	rewardAmount := int64(100)
 

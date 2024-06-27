@@ -51,6 +51,22 @@ func (k Keeper) GetBets(ctx sdk.Context) (list []types.Bet, err error) {
 	return
 }
 
+// IsAnyBetForAccount checks if there is any bet for the account
+func (k Keeper) IsAnyBetForAccount(ctx sdk.Context, creator string) (thereIs bool, err error) {
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.BetListByCreatorPrefix(creator))
+
+	// create iterator for all existing records
+	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	defer func() {
+		err = iterator.Close()
+	}()
+
+	// check if the iterator has any records
+	thereIs = iterator.Valid()
+
+	return
+}
+
 // SetBetID sets a specific bet id map in the store
 func (k Keeper) SetBetID(ctx sdk.Context, uid2ID types.UID2ID) {
 	store := k.getBetIDStore(ctx)
