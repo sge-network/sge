@@ -82,6 +82,8 @@ var (
 		v9.Upgrade,
 		v10.Upgrade,
 	}
+	// default wasmd binary maximum allowed size
+	defaultMaxWasmSize = 1500 * 1024 // 1.5 MB
 )
 
 var (
@@ -172,6 +174,8 @@ func NewSgeApp(
 		// https://github.com/CosmWasm/wasmd#compile-time-parameters
 		val, _ := strconv.ParseInt(maxSize, 10, 32)
 		wasmtypes.MaxWasmSize = int(val)
+	} else {
+		wasmtypes.MaxWasmSize = defaultMaxWasmSize
 	}
 
 	// NOTE: we may consider parsing `appOpts` inside module constructors. For the moment
