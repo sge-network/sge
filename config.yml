@@ -65,3 +65,9 @@ genesis:
     orderbook:
       params:
         requeue_threshold: "1000"
+    wasm:
+      params:
+        code_upload_access:
+          addresses: ["sge1rk85ptmy3gkphlp6wyvuee3lyvz88q6x59jelc"]
+          permission: AnyOfAddresses
+        instantiate_default_permission: AnyOfAddresses
