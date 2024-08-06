@@ -347,7 +347,7 @@ replace (
 	// cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 
-	github.com/CosmWasm/wasmd => github.com/sge-network/wasmd v0.0.0-20240506113624-5ccb26abde7a
+	github.com/CosmWasm/wasmd => github.com/sge-network/wasmd v0.0.0-20240506114152-e622a42e556d
 
 	github.com/cosmos/cosmos-sdk => github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54
 
