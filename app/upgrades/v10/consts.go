@@ -6,8 +6,8 @@ import (
 	"github.com/sge-network/sge/app/upgrades"
 )
 
-// UpgradeName defines the on-chain upgrade name for the v1.7.3 upgrade.
-const UpgradeName = "v1.7.3"
+// UpgradeName defines the on-chain upgrade name for the v1.7.4 upgrade.
+const UpgradeName = "v1.7.4"
 
 var Upgrade = upgrades.Upgrade{
 	UpgradeName:          UpgradeName,
