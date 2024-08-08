@@ -233,8 +233,8 @@ github.com/BurntSushi/toml v1.3.2 h1:o7IhLm0Msx3BaB+n3Ag7L8EVlByGnpq14C4YWiu/gL8
 github.com/BurntSushi/toml v1.3.2/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
 github.com/ChainSafe/go-schnorrkel v1.0.0 h1:3aDA67lAykLaG1y3AOjs88dMxC88PgUuHRrLeDnvGIM=
 github.com/ChainSafe/go-schnorrkel v1.0.0/go.mod h1:dpzHYVxLZcp8pjlV+O+UR8K0Hp/z7vcchBSbMBEhCw4=
-github.com/CosmWasm/wasmvm v1.5.2 h1:+pKB1Mz9GZVt1vadxB+EDdD1FOz3dMNjIKq/58/lrag=
-github.com/CosmWasm/wasmvm v1.5.2/go.mod h1:Q0bSEtlktzh7W2hhEaifrFp1Erx11ckQZmjq8FLCyys=
+github.com/CosmWasm/wasmvm v1.5.3 h1:wcmkey/WkTGwCTHGBD+fRS3cbhhipR9q34kbCZUQSsc=
+github.com/CosmWasm/wasmvm v1.5.3/go.mod h1:Q0bSEtlktzh7W2hhEaifrFp1Erx11ckQZmjq8FLCyys=
 github.com/DATA-DOG/go-sqlmock v1.3.3/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
 github.com/DataDog/datadog-go v3.2.0+incompatible/go.mod h1:LButxg5PwREeZtORoXG3tL4fMGNddJ+vMq1mwgfaqoQ=
 github.com/DataDog/zstd v1.5.0/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
@@ -1364,8 +1364,8 @@ github.com/segmentio/kafka-go v0.2.0/go.mod h1:X6itGqS9L4jDletMsxZ7Dz+JFWxM6JHfP
 github.com/sergi/go-diff v1.0.0/go.mod h1:0CfEIISq7TuYL3j771MWULgwwjU+GofnZX9QAmXWZgo=
 github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54 h1:ay0zjDwGHb6sZG82anuyBU1HxJeB7XByqFuYhPx+j0U=
 github.com/sge-network/cosmos-sdk v0.47.9-0.20240603081943-72560a0c8a54/go.mod h1:WjqTUUHJnaRjkgJbP2aQ1F+9pxDpLsOBpfuP2S0W+Ck=
-github.com/sge-network/wasmd v0.0.0-20240506114152-e622a42e556d h1:xyeassbgJsZ8tDt688ybNxLfZZ/QJERxRJFNWJlyTEw=
-github.com/sge-network/wasmd v0.0.0-20240506114152-e622a42e556d/go.mod h1:uQOWQUhJrZpsroGkmunpIJfj4tY9NIZWDVw1f42hjtI=
+github.com/sge-network/wasmd v0.0.0-20240808134006-9c1fe3139530 h1:P4EOdEihX0dfYaCe4poU5Rd3fnxRlWovMTrbhPhel54=
+github.com/sge-network/wasmd v0.0.0-20240808134006-9c1fe3139530/go.mod h1:8aeIM3ApAtsCdmN0Hoky87Gy3o234iIu9lQ+N7P42Ls=
 github.com/shazow/go-diff v0.0.0-20160112020656-b6b7b6733b8c h1:W65qqJCIOVP4jpqPQ0YvHYKwcMEMVWIzWC5iNQQfBTU=
 github.com/shazow/go-diff v0.0.0-20160112020656-b6b7b6733b8c/go.mod h1:/PevMnwAxekIXwN8qQyfc5gl2NlkB3CQlkizAbOkeBs=
 github.com/shirou/gopsutil v3.21.4-0.20210419000835-c7a38de76ee5+incompatible/go.mod h1:5b4v6he4MtMOwMlS0TUMTu2PcXUg8+E1lC7eC3UO/RA=
