@@ -440,7 +440,7 @@ func NewAppKeeper(
 		ContractDebugMode:     false,
 	}
 
-	wasmCapabilities := "iterator,staking,stargate"
+	wasmCapabilities := "iterator,staking,stargate,cosmwasm_1_1"
 
 	appKeepers.WasmKeeper = wasmkeeper.NewKeeper(
 		appCodec,
