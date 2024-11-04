@@ -81,9 +81,8 @@ func (a AppModuleBasic) GetTxCmd() *cobra.Command {
 	// transactions deprecated in favor of v2
 	if testing.Testing() {
 		return cli.GetTxCmd()
-	} else {
-		return nil
 	}
+	return nil
 }
 
 // GetQueryCmd returns the root query command for the module. The subcommands of this root command are used by end-users to generate new queries to the subset of the state defined by the module
