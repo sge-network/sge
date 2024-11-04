@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/address"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/house/types"
 )
@@ -36,9 +37,9 @@ func SimulateMsgUpdateParams(r *rand.Rand, _ sdk.Context, _ []simtypes.Account) 
 	var authority sdk.AccAddress = address.Module("gov")
 
 	params := types.DefaultParams()
-	params.MaxWithdrawalCount = uint64(r.Intn(10000))
-	params.HouseParticipationFee = sdkmath.LegacyNewDecFromIntWithPrec(sdkmath.NewInt(int64(r.Intn(1000))), 2)
-	params.MinDeposit = sdkmath.NewInt(int64(r.Intn(1000)))
+	params.MaxWithdrawalCount = cast.ToUint64(r.Intn(10000))
+	params.HouseParticipationFee = sdkmath.LegacyNewDecFromIntWithPrec(sdkmath.NewInt(cast.ToInt64(r.Intn(1000))), 2)
+	params.MinDeposit = sdkmath.NewInt(cast.ToInt64(r.Intn(1000)))
 
 	return &types.MsgUpdateParams{
 		Authority: authority.String(),

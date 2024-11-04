@@ -67,7 +67,7 @@ func (f *ModuleAccFunder) Refund(
 	// Transfer funds
 	err := f.bk.SendCoinsFromModuleToAccount(ctx, mAcc, receiverAcc, amt)
 	if err != nil {
-		return sdkerrors.Wrapf(f.bankError, err.Error())
+		return sdkerrors.Wrap(f.bankError, err.Error())
 	}
 
 	return nil

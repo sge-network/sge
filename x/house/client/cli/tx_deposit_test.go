@@ -65,7 +65,6 @@ func TestTXDepositCLI(t *testing.T) {
 				err:  fmt.Errorf("any error"),
 			},
 		} {
-			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
 					tc.marketUID,

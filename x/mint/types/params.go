@@ -277,10 +277,10 @@ func validatePhases(i interface{}) error {
 
 	for _, p := range v {
 		if !p.YearCoefficient.GT(sdkmath.LegacyZeroDec()) {
-			return fmt.Errorf(ErrTextYearCoefficientMustBePositive)
+			return fmt.Errorf(ErrTextYearCoefficientMustBePositive, p.YearCoefficient)
 		}
 		if IsEndPhase(p) {
-			return fmt.Errorf(ErrTextEndPhaseParamNotAllowed)
+			return fmt.Errorf(ErrTextEndPhaseParamNotAllowed, p.Inflation)
 		}
 	}
 

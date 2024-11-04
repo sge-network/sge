@@ -16,7 +16,7 @@ func CmdListReward() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "rewards",
 		Short: "list all rewards",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

@@ -51,7 +51,7 @@ func (k Keeper) PublicKeysChangeProposals(
 	marketStore := k.getPubKeysChangeProposalStore(ctx)
 	proposalStore := prefix.NewStore(marketStore, types.PubkeysChangeProposalPrefix(req.Status))
 
-	pageRes, err := query.Paginate(proposalStore, req.Pagination, func(key, value []byte) error {
+	pageRes, err := query.Paginate(proposalStore, req.Pagination, func(_, value []byte) error {
 		var proposal types.PublicKeysChangeProposal
 		if err := k.cdc.Unmarshal(value, &proposal); err != nil {
 			return err

@@ -17,7 +17,7 @@ const (
 	ErrTextExcludeAmountMustBePositive        = "exclude amount must be positive: %s"
 	ErrTextPhasesShouldHaveValue              = "phases should have value: %v"
 	ErrTextMintParamInflationShouldBePositive = "mint parameter Inflation should be positive, is %s"
-	ErrTextYearCoefficientMustBePositive      = "year coefficient should be non-zero and positive value"
-	ErrTextEndPhaseParamNotAllowed            = "adding phase with equal values with end phase is not allowed"
+	ErrTextYearCoefficientMustBePositive      = "year coefficient should be non-zero and positive value %s"
+	ErrTextEndPhaseParamNotAllowed            = "adding phase with equal values with end phase is not allowed %s"
 	ErrTextNilMinter                          = "stored minter should not be nil"
 )

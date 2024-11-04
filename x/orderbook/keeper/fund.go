@@ -62,7 +62,7 @@ func (k *Keeper) refund(
 
 	// If module account has insufficient balance, return error
 	if balance.Amount.LT(amt.AmountOf(params.DefaultBondDenom)) {
-		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount,
+		return sdkerrors.Wrapf(types.ErrInsufficientBalanceInModuleAccount, "%s",
 			mAcc)
 	}
 
@@ -70,7 +70,7 @@ func (k *Keeper) refund(
 	err := k.bankKeeper.SendCoinsFromModuleToAccount(ctx, mAcc,
 		receiverAcc, amt)
 	if err != nil {
-		return sdkerrors.Wrapf(types.ErrFromBankModule, err.Error())
+		return sdkerrors.Wrapf(types.ErrFromBankModule, ": %s", err)
 	}
 
 	return nil

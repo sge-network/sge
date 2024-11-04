@@ -129,7 +129,7 @@ func (t *jwtTicket) verifyJwtKey(key string) (bool, error) {
 	parser := jwt.NewParser(
 		jwt.WithoutClaimsValidation(),
 	)
-	parsedToken, err := parser.Parse(token, func(t *jwt.Token) (interface{}, error) {
+	parsedToken, err := parser.Parse(token, func(_ *jwt.Token) (interface{}, error) {
 		parsedPubKey, err := jwt.ParseEdPublicKeyFromPEM([]byte(key))
 		if err != nil {
 			return nil, err

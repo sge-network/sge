@@ -293,8 +293,6 @@ func (s *E2ETestSuite) TestDepositTxCmd() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-
 		s.Require().NoError(s.network.WaitForNextBlock())
 		s.Run(tc.name, func() {
 			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)
@@ -472,8 +470,6 @@ func (s *E2ETestSuite) TestDepositWithAuthzTxCmd() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-
 		s.Require().NoError(s.network.WaitForNextBlock())
 		s.Run(tc.name, func() {
 			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)
@@ -791,8 +787,6 @@ func (s *E2ETestSuite) TestWithdrawTxCmd() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-
 		s.Require().NoError(s.network.WaitForNextBlock())
 		s.Run(tc.name, func() {
 			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)
@@ -1000,8 +994,6 @@ func (s *E2ETestSuite) TestWithdrawWithAuthzTxCmd() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-
 		s.Require().NoError(s.network.WaitForNextBlock())
 		s.Run(tc.name, func() {
 			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)

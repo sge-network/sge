@@ -1,12 +1,12 @@
 syntax = "proto3";
 package sgenetwork.sge.house;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
-import "sgenetwork/sge/house/withdraw.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/house/params.proto";
+import "sgenetwork/sge/house/withdraw.proto";
 
 option go_package = "github.com/sge-network/sge/x/house/types";
 
@@ -15,16 +15,21 @@ service Msg {
   // Deposit defines a method for performing a deposit of tokens to become part
   // of the order book or be the house for an order book corresponding to a
   // market.
-  rpc Deposit(MsgDeposit) returns (MsgDepositResponse);
+  rpc Deposit(MsgDeposit) returns (MsgDepositResponse) {
+    option deprecated = true;
+  }
 
   // Withdraw defines a method for performing a withdrawal of tokens of unused
   // amount corresponding to a deposit.
-  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse);
+  rpc Withdraw(MsgWithdraw) returns (MsgWithdrawResponse) {
+    option deprecated = true;
+  }
 
   // UpdateParams defines a governance operation for updating the x/house module
   // parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

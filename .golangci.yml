@@ -3,7 +3,6 @@ run:
   timeout: 15m
   sort-results: true
   allow-parallel-runners: true
-  exclude-dir: testutil/testdata_pulsar
   concurrency: 4
 
 linters:
@@ -16,7 +15,7 @@ linters:
     - durationcheck
     - errcheck
     - errname
-    - exportloopref
+    - copyloopvar
     - forcetypeassert
     - goconst
     - gofmt
@@ -48,7 +47,16 @@ linters:
     - revive
 
 issues:
-  exclude-rules: []
+  exclude-rules: 
+    - path: (.+)_test.go
+      linters: 
+        - gosec
+    - path: suite.go
+      linters: 
+        - gosec
+    - path: testutil
+      linters: 
+        - gosec
   max-issues-per-linter: 10000
   max-same-issues: 10000
 

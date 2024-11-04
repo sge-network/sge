@@ -7,6 +7,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/address"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/orderbook/types"
 )
@@ -35,9 +36,9 @@ func SimulateMsgUpdateParams(r *rand.Rand, _ sdk.Context, _ []simtypes.Account) 
 	var authority sdk.AccAddress = address.Module("gov")
 
 	params := types.DefaultParams()
-	params.BatchSettlementCount = uint64(r.Intn(10000))
-	params.MaxOrderBookParticipations = uint64(r.Intn(1000))
-	params.RequeueThreshold = uint64(r.Intn(1000))
+	params.BatchSettlementCount = cast.ToUint64(r.Intn(10000))
+	params.MaxOrderBookParticipations = cast.ToUint64(r.Intn(1000))
+	params.RequeueThreshold = cast.ToUint64(r.Intn(1000))
 
 	return &types.MsgUpdateParams{
 		Authority: authority.String(),
