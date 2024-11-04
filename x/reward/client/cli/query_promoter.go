@@ -15,7 +15,7 @@ func CmdListPromoters() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "promoters",
 		Short: "list all promoters",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

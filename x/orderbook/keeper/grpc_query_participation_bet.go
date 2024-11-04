@@ -42,7 +42,7 @@ func (k Keeper) ParticipationFulfilledBets(
 	pageRes, err := query.FilteredPaginate(
 		betsStore,
 		req.Pagination,
-		func(key, value []byte, accumulate bool) (bool, error) {
+		func(_, value []byte, accumulate bool) (bool, error) {
 			var participationBet types.ParticipationBetPair
 			if err := k.cdc.Unmarshal(value, &participationBet); err != nil {
 				return false, err

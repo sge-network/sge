@@ -153,7 +153,7 @@ func TxWithdraw() *cobra.Command {
 		Long:    `Withdraw unlocked funds from a subaccount.`,
 		Example: fmt.Sprintf(`$ %s tx subaccount withdraw --from subaccount-owner-key`, version.AppName),
 		Args:    cobra.NoArgs,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
@@ -270,13 +270,13 @@ func TxHouseWithdraw() *cobra.Command {
 
 			argTicket := args[2]
 
-			mode, err := cast.ToInt64E(args[3])
+			mode, err := cast.ToInt32E(args[3])
 			if err != nil {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
 			var argAmountCosmosInt sdkmath.Int
-			if mode == int64(housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
+			if mode == int32(housetypes.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")
 				}

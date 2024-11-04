@@ -22,7 +22,7 @@ func (k Keeper) Rewards(goCtx context.Context, req *types.QueryRewardsRequest) (
 	store := ctx.KVStore(k.storeKey)
 	rewardStore := prefix.NewStore(store, types.RewardKeyPrefix)
 
-	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(_ []byte, value []byte) error {
 		var reward types.Reward
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
@@ -66,7 +66,7 @@ func (k Keeper) RewardsByAddress(goCtx context.Context, req *types.QueryRewardsB
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	rewardStore := prefix.NewStore(store, types.GetRewardsOfReceiverByPromoterPrefix(req.PromoterUid, req.Address))
 
-	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(_ []byte, value []byte) error {
 		var reward types.RewardByCategory
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
@@ -93,7 +93,7 @@ func (k Keeper) RewardsByAddressAndCategory(goCtx context.Context, req *types.Qu
 	store := k.getRewardByReceiverAndCategoryStore(ctx)
 	rewardStore := prefix.NewStore(store, types.GetRewardsOfReceiverByPromoterAndCategoryPrefix(req.PromoterUid, req.Address, req.Category))
 
-	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(_ []byte, value []byte) error {
 		var reward types.RewardByCategory
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err
@@ -120,7 +120,7 @@ func (k Keeper) RewardsByCampaign(goCtx context.Context, req *types.QueryRewards
 	store := k.getRewardsByCampaignStore(ctx)
 	rewardStore := prefix.NewStore(store, types.GetRewardsByCampaignPrefix(req.CampaignUid))
 
-	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(rewardStore, req.Pagination, func(_ []byte, value []byte) error {
 		var reward types.RewardByCampaign
 		if err := k.cdc.Unmarshal(value, &reward); err != nil {
 			return err

@@ -94,7 +94,7 @@ func TestMsgServer_CreateSubaccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
+			prepare:     func(_ sdk.Context, _ *keeper.Keeper) {},
 			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
@@ -126,13 +126,12 @@ func TestMsgServer_CreateSubaccount_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, k *keeper.Keeper) {},
+			prepare:     func(_ sdk.Context, _ *keeper.Keeper) {},
 			expectedErr: "invalid request",
 		},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			_, k, msgServer, ctx := setupMsgServerAndApp(t)
 

@@ -28,7 +28,6 @@ func TestGetTxCmd(t *testing.T) {
 			args: []string{},
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			var args []string
 

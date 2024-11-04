@@ -125,7 +125,6 @@ func TestQueryBet(t *testing.T) {
 				err:  status.Error(codes.NotFound, "not found"),
 			},
 		} {
-			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
 					tc.creator,
@@ -371,7 +370,6 @@ func TestQueryBet(t *testing.T) {
 				obj:  objs,
 			},
 		} {
-			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
 					strings.Join(tc.items, ","),

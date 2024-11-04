@@ -45,13 +45,13 @@ func CmdWithdraw() *cobra.Command {
 
 			argTicket := args[2]
 
-			mode, err := cast.ToInt64E(args[3])
+			mode, err := cast.ToInt32E(args[3])
 			if err != nil {
 				return fmt.Errorf("mode provided must be a non-negative-integer: %v", mode)
 			}
 
 			var argAmountCosmosInt sdkmath.Int
-			if mode == int64(types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
+			if mode == int32(types.WithdrawalMode_WITHDRAWAL_MODE_PARTIAL) {
 				if len(args) != 5 {
 					return fmt.Errorf("amount is mandatory for partial mode")
 				}

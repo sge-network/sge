@@ -13,7 +13,7 @@ func CreateUpgradeHandler(
 	configurator module.Configurator,
 	_ *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		return mm.RunMigrations(ctx, configurator, fromVM)
 	}
 }
