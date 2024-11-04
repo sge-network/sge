@@ -1,24 +1,25 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
-import "sgenetwork/sge/bet/wager.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/bet/params.proto";
+import "sgenetwork/sge/bet/wager.proto";
 
 option go_package = "github.com/sge-network/sge/x/bet/types";
 
 // Msg defines the Msg service.
 service Msg {
   // Wager defines a method to place a bet with the given data.
-  rpc Wager(MsgWager) returns (MsgWagerResponse);
+  rpc Wager(MsgWager) returns (MsgWagerResponse) { option deprecated = true; }
 
   // UpdateParams defines a governance operation for updating the x/bet module
   // parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

@@ -1,10 +1,10 @@
 syntax = "proto3";
 package sgenetwork.sge.market;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/market/market.proto";
 import "sgenetwork/sge/market/params.proto";
 
@@ -13,15 +13,20 @@ option go_package = "github.com/sge-network/sge/x/market/types";
 // Msg defines the Msg service.
 service Msg {
   // Add defines a method to add the market with the given data.
-  rpc Add(MsgAdd) returns (MsgAddResponse);
+  rpc Add(MsgAdd) returns (MsgAddResponse) { option deprecated = true; }
   // Resolve defines a method to resolve the market.
-  rpc Resolve(MsgResolve) returns (MsgResolveResponse);
+  rpc Resolve(MsgResolve) returns (MsgResolveResponse) {
+    option deprecated = true;
+  }
   // Update defines a method to update a market.
-  rpc Update(MsgUpdate) returns (MsgUpdateResponse);
+  rpc Update(MsgUpdate) returns (MsgUpdateResponse) {
+    option deprecated = true;
+  }
   // UpdateParams defines a governance operation for updating the x/market
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

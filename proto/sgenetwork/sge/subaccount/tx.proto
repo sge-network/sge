@@ -1,44 +1,53 @@
 syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "sgenetwork/sge/bet/tx.proto";
+import "sgenetwork/sge/house/tx.proto";
 import "sgenetwork/sge/subaccount/balance.proto";
 import "sgenetwork/sge/subaccount/params.proto";
-import "sgenetwork/sge/house/tx.proto";
-import "sgenetwork/sge/bet/tx.proto";
 
 option go_package = "github.com/sge-network/sge/x/subaccount/types";
 
 // Msg defines the Msg service.
 service Msg {
   // Create defines a method for creating a subaccount.
-  rpc Create(MsgCreate) returns (MsgCreateResponse);
+  rpc Create(MsgCreate) returns (MsgCreateResponse) {
+    option deprecated = true;
+  }
 
   // TopUp defines a method for topping up a subaccount.
-  rpc TopUp(MsgTopUp) returns (MsgTopUpResponse);
+  rpc TopUp(MsgTopUp) returns (MsgTopUpResponse) { option deprecated = true; }
 
   // WithdrawUnlockedBalances defines a method for withdrawing unlocked
   // balances.
   rpc WithdrawUnlockedBalances(MsgWithdrawUnlockedBalances)
-      returns (MsgWithdrawUnlockedBalancesResponse);
+      returns (MsgWithdrawUnlockedBalancesResponse) {
+    option deprecated = true;
+  }
 
   // PlaceBet defines a method for placing a bet using a subaccount.
-  rpc Wager(MsgWager) returns (MsgWagerResponse);
+  rpc Wager(MsgWager) returns (MsgWagerResponse) { option deprecated = true; }
 
   // HouseDeposit defines a method for depositing funds to provide liquidity to
   // a market.
-  rpc HouseDeposit(MsgHouseDeposit) returns (MsgHouseDepositResponse);
+  rpc HouseDeposit(MsgHouseDeposit) returns (MsgHouseDepositResponse) {
+    option deprecated = true;
+  }
 
   // HouseWithdraw defines a method for withdrawing funds from a market.
-  rpc HouseWithdraw(MsgHouseWithdraw) returns (MsgHouseWithdrawResponse);
+  rpc HouseWithdraw(MsgHouseWithdraw) returns (MsgHouseWithdrawResponse) {
+    option deprecated = true;
+  }
 
   // UpdateParams defines a governance operation for updating the x/subaccount
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

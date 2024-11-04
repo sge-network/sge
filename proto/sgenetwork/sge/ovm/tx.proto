@@ -1,10 +1,10 @@
 syntax = "proto3";
 package sgenetwork.sge.ovm;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/ovm/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/ovm/types";
@@ -14,15 +14,20 @@ service Msg {
   // PubkeysChangeProposal defines a method to submit a proposal for changing
   // the allowed public keys.
   rpc SubmitPubkeysChangeProposal(MsgSubmitPubkeysChangeProposalRequest)
-      returns (MsgSubmitPubkeysChangeProposalResponse);
+      returns (MsgSubmitPubkeysChangeProposalResponse) {
+    option deprecated = true;
+  }
   // VotePubkeysChange defines a method to vote for a proposal for changing the
   // allowed public keys.
   rpc VotePubkeysChange(MsgVotePubkeysChangeRequest)
-      returns (MsgVotePubkeysChangeResponse);
+      returns (MsgVotePubkeysChangeResponse) {
+    option deprecated = true;
+  }
   // UpdateParams defines a governance operation for updating the x/ovm module
   // parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 
