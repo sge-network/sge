@@ -90,7 +90,7 @@ var mAccPerms = map[string][]string{
 	icatypes.ModuleName:         nil,
 
 	// cosmwasm
-	wasmtypes.ModuleName: {},
+	wasmtypes.ModuleName: {authtypes.Burner},
 
 	// sge
 	betmoduletypes.BetFeeCollectorFunder{}.GetModuleAcc():          nil,
@@ -199,7 +199,15 @@ func appModules(
 			app.BankKeeper,
 			app.interfaceRegistry,
 		),
-		wasm.NewAppModule(appCodec, &app.AppKeepers.WasmKeeper, app.AppKeepers.StakingKeeper, app.AppKeepers.AccountKeeper, app.AppKeepers.BankKeeper, app.MsgServiceRouter(), app.GetSubspace(wasmtypes.ModuleName)),
+		wasm.NewAppModule(
+			appCodec,
+			&app.AppKeepers.WasmKeeper,
+			app.AppKeepers.StakingKeeper,
+			app.AppKeepers.AccountKeeper,
+			app.AppKeepers.BankKeeper,
+			app.MsgServiceRouter(),
+			app.GetSubspace(wasmtypes.ModuleName),
+		),
 		app.IBCModule,
 		params.NewAppModule(app.ParamsKeeper),
 		app.TransferModule,
