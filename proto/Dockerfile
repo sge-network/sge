@@ -3,8 +3,7 @@
 
 FROM bufbuild/buf:1.9.0 as BUILDER
 
-FROM golang:1.23-alpine3.18
-
+FROM golang:1.23-alpine3.20
 
 RUN apk add --no-cache \
   nodejs \

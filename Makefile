@@ -115,8 +115,8 @@ endif
 ###############################################################################
 
 check_version:
-ifneq ($(GO_MINOR_VERSION),23)
-	@echo "ERROR: Go version 1.23 is required for this version of SGE."
+ifeq ($(shell expr $(GO_MINOR_VERSION) \< 23), 1)
+	@echo "ERROR: Go version 1.23+ is required for this version of SGE."
 	exit 1
 endif
 
