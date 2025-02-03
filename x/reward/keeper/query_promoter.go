@@ -22,7 +22,7 @@ func (k Keeper) Promoters(goCtx context.Context, req *types.QueryPromotersReques
 	store := ctx.KVStore(k.storeKey)
 	promoterStore := prefix.NewStore(store, types.PromoterKeyPrefix)
 
-	pageRes, err := query.Paginate(promoterStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(promoterStore, req.Pagination, func(_ []byte, value []byte) error {
 		var promoter types.Promoter
 		if err := k.cdc.Unmarshal(value, &promoter); err != nil {
 			return err

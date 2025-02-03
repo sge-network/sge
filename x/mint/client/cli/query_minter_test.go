@@ -40,7 +40,6 @@ func TestQueryInflation(t *testing.T) {
 			err:  errors.New("rpc error: code = Unknown desc = cannot query with height in the future; please provide a valid height: invalid height"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := append([]string(nil), tc.args...)
 			res, err := clitestutil.ExecTestCLICmd(ctx, cli.GetCmdQueryInflation(), args)
@@ -81,7 +80,6 @@ func TestQueryPhaseStep(t *testing.T) {
 			err:  errors.New("rpc error: code = Unknown desc = cannot query with height in the future; please provide a valid height: invalid height"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := append([]string(nil), tc.args...)
 			res, err := clitestutil.ExecTestCLICmd(ctx, cli.GetCmdQueryPhaseStep(), args)
@@ -122,7 +120,6 @@ func TestQueryPhaseProvision(t *testing.T) {
 			err:  errors.New("rpc error: code = Unknown desc = cannot query with height in the future; please provide a valid height: invalid height"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := append([]string(nil), tc.args...)
 			res, err := clitestutil.ExecTestCLICmd(ctx, cli.GetCmdQueryPhaseProvisions(), args)
@@ -163,7 +160,6 @@ func TestQueryEndPhaseStatus(t *testing.T) {
 			err:  errors.New("rpc error: code = Unknown desc = cannot query with height in the future; please provide a valid height: invalid height"),
 		},
 	} {
-		tc := tc
 		t.Run(tc.desc, func(t *testing.T) {
 			args := append([]string(nil), tc.args...)
 			res, err := clitestutil.ExecTestCLICmd(ctx, cli.GetCmdQueryEndPhaseStatus(), args)

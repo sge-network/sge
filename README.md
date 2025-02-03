@@ -34,7 +34,7 @@ At launch, the SGE Network will be optimized to deploy an inaugural application:
 
 ## Installation Steps
 >
->Prerequisite: go1.22+ required. [ref](https://golang.org/doc/install)
+>Prerequisite: go1.23+ required. [ref](https://golang.org/doc/install)
 
 Sge could be installed by two ways - downloading binary from releases page or build from source.
 

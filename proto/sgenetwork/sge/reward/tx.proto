@@ -2,10 +2,10 @@ syntax = "proto3";
 
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/reward/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/reward/types";
@@ -13,21 +13,34 @@ option go_package = "github.com/sge-network/sge/x/reward/types";
 // Msg defines the Msg service.
 service Msg {
   // SetPromoterConf is a method to set the configurations of a promoter.
-  rpc SetPromoterConf(MsgSetPromoterConf) returns (MsgSetPromoterConfResponse);
+  rpc SetPromoterConf(MsgSetPromoterConf) returns (MsgSetPromoterConfResponse) {
+    option deprecated = true;
+  }
   // CreatePromoter is a method to create a promoter
-  rpc CreatePromoter(MsgCreatePromoter) returns (MsgCreatePromoterResponse);
+  rpc CreatePromoter(MsgCreatePromoter) returns (MsgCreatePromoterResponse) {
+    option deprecated = true;
+  }
   // CreateCampaign is a method to create a campaign
-  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse);
+  rpc CreateCampaign(MsgCreateCampaign) returns (MsgCreateCampaignResponse) {
+    option deprecated = true;
+  }
   // UpdateCampaign is a method to update campaign
-  rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse);
+  rpc UpdateCampaign(MsgUpdateCampaign) returns (MsgUpdateCampaignResponse) {
+    option deprecated = true;
+  }
   // WithdrawCampaignFunds is method to withdraw funds from the campaign
-  rpc WithdrawFunds(MsgWithdrawFunds) returns (MsgWithdrawFundsResponse);
+  rpc WithdrawFunds(MsgWithdrawFunds) returns (MsgWithdrawFundsResponse) {
+    option deprecated = true;
+  }
   // GrantReward is method to allocate rewards
-  rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse);
+  rpc GrantReward(MsgGrantReward) returns (MsgGrantRewardResponse) {
+    option deprecated = true;
+  }
   // UpdateParams defines a governance operation for updating the x/ovm module
   // parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

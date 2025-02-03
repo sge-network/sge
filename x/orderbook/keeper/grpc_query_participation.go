@@ -71,7 +71,7 @@ func (k Keeper) OrderBookParticipations(
 	pageRes, err := query.FilteredPaginate(
 		participationStore,
 		req.Pagination,
-		func(key, value []byte, accumulate bool) (bool, error) {
+		func(_, value []byte, accumulate bool) (bool, error) {
 			var bookParticipation types.OrderBookParticipation
 			if err := k.cdc.Unmarshal(value, &bookParticipation); err != nil {
 				return false, err
@@ -113,7 +113,7 @@ func (k Keeper) SettledOrderBookParticipationsOfHeight(
 	pageRes, err := query.Paginate(
 		settledOrderbookParticipationStore,
 		req.Pagination,
-		func(key []byte, value []byte) error {
+		func(_ []byte, value []byte) error {
 			var settledOrderbookParticipation types.SettledOrderbookParticipation
 			if err := k.cdc.Unmarshal(value, &settledOrderbookParticipation); err != nil {
 				return err

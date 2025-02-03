@@ -43,12 +43,10 @@ func CreateUpgradeHandler(
 	configurator module.Configurator,
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, plan upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
 		// https://github.com/cosmos/cosmos-sdk/pull/12363/files
 		// Set param key table for params module migration
 		for _, subspace := range k.ParamsKeeper.GetSubspaces() {
-			subspace := subspace
-
 			var keyTable paramstypes.KeyTable
 			switch subspace.Name() {
 			case authtypes.ModuleName:

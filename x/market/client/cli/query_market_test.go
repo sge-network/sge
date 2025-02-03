@@ -69,7 +69,6 @@ func TestQueryMarketCLI(t *testing.T) {
 				err:  status.Error(codes.NotFound, "not found"),
 			},
 		} {
-			tc := tc
 			t.Run(tc.desc, func(t *testing.T) {
 				args := []string{
 					tc.idUID,

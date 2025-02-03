@@ -141,13 +141,12 @@ func TestMsgServer_WithdrawUnlockedBalances_Errors(t *testing.T) {
 			msg: types.MsgWithdrawUnlockedBalances{
 				Creator: creatorAddr,
 			},
-			prepare:     func(ctx sdk.Context, keeper keeper.Keeper) {},
+			prepare:     func(_ sdk.Context, _ keeper.Keeper) {},
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
 		},
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			_, k, msgServer, ctx := setupMsgServerAndApp(t)
 
@@ -235,7 +234,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
+			prepare:     func(_ sdk.Context, _ types.MsgServer) {},
 			expectedErr: types.ErrUnlockTokenTimeExpired.Error(),
 		},
 		{
@@ -250,7 +249,7 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 					},
 				},
 			},
-			prepare:     func(ctx sdk.Context, msgServer types.MsgServer) {},
+			prepare:     func(_ sdk.Context, _ types.MsgServer) {},
 			expectedErr: types.ErrSubaccountDoesNotExist.Error(),
 		},
 		{
@@ -280,7 +279,6 @@ func TestNewMsgServerTopUp_Errors(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			_, _, msgServer, ctx := setupMsgServerAndApp(t)
 

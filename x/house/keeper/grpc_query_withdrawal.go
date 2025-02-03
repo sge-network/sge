@@ -26,7 +26,7 @@ func (k Keeper) WithdrawalsByAccount(c context.Context,
 	ctx := sdk.UnwrapSDKContext(c)
 
 	store := prefix.NewStore(k.getWithdrawalStore(ctx), types.GetWithdrawalListPrefix(req.Address))
-	pageRes, err := query.Paginate(store, req.Pagination, func(key, value []byte) error {
+	pageRes, err := query.Paginate(store, req.Pagination, func(_, value []byte) error {
 		var withdrawal types.Withdrawal
 		if err := k.cdc.Unmarshal(value, &withdrawal); err != nil {
 			return err

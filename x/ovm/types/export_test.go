@@ -5,8 +5,6 @@ package types
 type JwtTestToken = jwtTicket
 
 // NewTestJwtToken create new jwt token object
-//
-//nolint:revive
 func NewTestJwtToken(header, payload, signature string) *JwtTestToken {
 	return &jwtTicket{
 		header:    header,

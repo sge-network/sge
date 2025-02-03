@@ -18,7 +18,7 @@ func CmdListBet() *cobra.Command {
 		Use:   "bets",
 		Short: "get list of bets",
 		Long:  "Get list of bets in paginated response.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

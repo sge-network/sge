@@ -18,7 +18,7 @@ func CmdListMarkets() *cobra.Command {
 		Use:   "markets",
 		Short: "list markets",
 		Long:  "Get list of markets in paginated response.",
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
 			pageReq, err := client.ReadPageRequest(cmd.Flags())

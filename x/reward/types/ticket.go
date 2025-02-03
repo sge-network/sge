@@ -27,7 +27,7 @@ func (payload *CreateCampaignPayload) Validate(blockTime uint64) error {
 	}
 
 	if err := payload.validateRewardCategory(); err != nil {
-		return sdkerrors.Wrapf(sdkerrtypes.ErrInvalidRequest, err.Error())
+		return sdkerrors.Wrap(sdkerrtypes.ErrInvalidRequest, err.Error())
 	}
 
 	switch payload.RewardAmountType {

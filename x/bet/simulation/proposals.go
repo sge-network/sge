@@ -8,6 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/address"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 	"github.com/cosmos/cosmos-sdk/x/simulation"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/x/bet/types"
 )
@@ -36,11 +37,11 @@ func SimulateMsgUpdateParams(r *rand.Rand, _ sdk.Context, _ []simtypes.Account) 
 	var authority sdk.AccAddress = address.Module("gov")
 
 	params := types.DefaultParams()
-	params.BatchSettlementCount = uint32(r.Intn(10000))
-	params.MaxBetByUidQueryCount = uint32(r.Intn(1000))
+	params.BatchSettlementCount = cast.ToUint32(r.Intn(10000))
+	params.MaxBetByUidQueryCount = cast.ToUint32(r.Intn(1000))
 	params.Constraints = types.Constraints{
-		MinAmount: sdkmath.NewInt(int64(r.Intn(1000))),
-		Fee:       sdkmath.NewInt(int64(r.Intn(99))),
+		MinAmount: sdkmath.NewInt(cast.ToInt64(r.Intn(1000))),
+		Fee:       sdkmath.NewInt(cast.ToInt64(r.Intn(99))),
 	}
 
 	return &types.MsgUpdateParams{

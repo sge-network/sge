@@ -1,10 +1,10 @@
 syntax = "proto3";
 package sgenetwork.sge.orderbook;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "cosmos/msg/v1/msg.proto";
 import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/orderbook/params.proto";
 
 option go_package = "github.com/sge-network/sge/x/orderbook/types";
@@ -15,6 +15,7 @@ service Msg {
   // module parameters. The authority is defined in the keeper.
   rpc UpdateParams(MsgUpdateParams) returns (MsgUpdateParamsResponse) {
     option (cosmos_proto.method_added_in) = "sge-network 1.7.1";
+    option deprecated = true;
   }
 }
 

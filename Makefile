@@ -115,8 +115,8 @@ endif
 ###############################################################################
 
 check_version:
-ifneq ($(GO_MINOR_VERSION),22)
-	@echo "ERROR: Go version 1.22 is required for this version of SGE."
+ifeq ($(shell expr $(GO_MINOR_VERSION) \< 23), 1)
+	@echo "ERROR: Go version 1.23+ is required for this version of SGE."
 	exit 1
 endif
 
@@ -142,7 +142,7 @@ build-reproducible-amd64: go.sum
 		--build-arg GO_VERSION=$(GO_VERSION) \
 		--build-arg GIT_VERSION=$(VERSION) \
 		--build-arg GIT_COMMIT=$(COMMIT) \
-		--build-arg RUNNER_IMAGE=alpine:3.18 \
+		--build-arg RUNNER_IMAGE=alpine:3.20 \
 		--platform linux/amd64 \
 		-t sge:local-amd64 \
 		--load \
@@ -160,7 +160,7 @@ build-reproducible-arm64: go.sum
 		--build-arg GO_VERSION=$(GO_VERSION) \
 		--build-arg GIT_VERSION=$(VERSION) \
 		--build-arg GIT_COMMIT=$(COMMIT) \
-		--build-arg RUNNER_IMAGE=alpine:3.18 \
+		--build-arg RUNNER_IMAGE=alpine:3.20 \
 		--platform linux/arm64 \
 		-t sge:local-arm64 \
 		--load \

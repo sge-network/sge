@@ -181,8 +181,6 @@ func (s *E2ETestSuite) TestMarketAddTxCmd() {
 	}
 
 	for _, tc := range testCases {
-		tc := tc
-
 		s.Require().NoError(s.network.WaitForNextBlock())
 		s.Run(tc.name, func() {
 			ticket, err := simapp.CreateJwtTicket(tc.ticketClaims)

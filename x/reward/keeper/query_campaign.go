@@ -23,7 +23,7 @@ func (k Keeper) Campaigns(goCtx context.Context, req *types.QueryCampaignsReques
 	store := ctx.KVStore(k.storeKey)
 	campaignStore := prefix.NewStore(store, types.CampaignKeyPrefix)
 
-	pageRes, err := query.Paginate(campaignStore, req.Pagination, func(key []byte, value []byte) error {
+	pageRes, err := query.Paginate(campaignStore, req.Pagination, func(_ []byte, value []byte) error {
 		var campaign types.Campaign
 		if err := k.cdc.Unmarshal(value, &campaign); err != nil {
 			return err

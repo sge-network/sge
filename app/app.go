@@ -255,7 +255,8 @@ func NewSgeApp(
 			IBCKeeper:         app.AppKeepers.IBCKeeper,
 			BankKeeper:        app.AppKeepers.BankKeeper,
 			TxCounterStoreKey: app.AppKeepers.GetKey(wasmtypes.StoreKey),
-			WasmConfig:        wasmConfig,
+			WasmConfig:        &wasmConfig,
+			WasmKeeper:        &app.WasmKeeper,
 			Cdc:               appCodec,
 
 			StakingKeeper: *app.AppKeepers.StakingKeeper,
