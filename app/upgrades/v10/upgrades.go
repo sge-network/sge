@@ -3,6 +3,7 @@ package v10
 import (
 	"strings"
 
+	sdkmath "cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
@@ -37,33 +38,45 @@ func CreateUpgradeHandler(
 			k.AccountKeeper.GetModuleAddress(orderbooktypes.OrderBookLiquidityFunder{}.GetModuleAcc()),
 			params.DefaultBondDenom,
 		)
-		k.BankKeeper.SendCoinsFromModuleToAccount(
-			ctx,
-			orderbooktypes.OrderBookLiquidityFunder{}.GetModuleAcc(),
-			recAddress, sdk.NewCoins(orderBookBalance),
-		)
+		if orderBookBalance.Amount.GT(sdkmath.ZeroInt()) {
+			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
+				ctx,
+				orderbooktypes.OrderBookLiquidityFunder{}.GetModuleAcc(),
+				recAddress, sdk.NewCoins(orderBookBalance),
+			); err != nil {
+				return nil, err
+			}
+		}
 
 		houseFeeBalance := k.BankKeeper.GetBalance(
 			ctx,
 			k.AccountKeeper.GetModuleAddress(housetypes.HouseFeeCollectorFunder{}.GetModuleAcc()),
 			params.DefaultBondDenom,
 		)
-		k.BankKeeper.SendCoinsFromModuleToAccount(
-			ctx,
-			housetypes.HouseFeeCollectorFunder{}.GetModuleAcc(),
-			recAddress, sdk.NewCoins(houseFeeBalance),
-		)
+		if houseFeeBalance.Amount.GT(sdkmath.ZeroInt()) {
+			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
+				ctx,
+				housetypes.HouseFeeCollectorFunder{}.GetModuleAcc(),
+				recAddress, sdk.NewCoins(houseFeeBalance),
+			); err != nil {
+				return nil, err
+			}
+		}
 
 		rewardPoolBalance := k.BankKeeper.GetBalance(
 			ctx,
 			k.AccountKeeper.GetModuleAddress(rewardtypes.RewardPoolFunder{}.GetModuleAcc()),
 			params.DefaultBondDenom,
 		)
-		k.BankKeeper.SendCoinsFromModuleToAccount(
-			ctx,
-			rewardtypes.RewardPoolFunder{}.GetModuleAcc(),
-			recAddress, sdk.NewCoins(rewardPoolBalance),
-		)
+		if rewardPoolBalance.Amount.GT(sdkmath.ZeroInt()) {
+			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
+				ctx,
+				rewardtypes.RewardPoolFunder{}.GetModuleAcc(),
+				recAddress, sdk.NewCoins(rewardPoolBalance),
+			); err != nil {
+				return nil, err
+			}
+		}
 
 		return mm.RunMigrations(ctx, configurator, fromVM)
 	}
