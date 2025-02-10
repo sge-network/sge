@@ -192,6 +192,11 @@ clean:
 distclean: clean
 	rm -rf vendor/
 
+mocks: $(MOCKS_DIR)
+	@go install github.com/golang/mock/mockgen@v1.6.0
+	sh ./scripts/mockgen.sh
+.PHONY: mocks
+
 ###############################################################################
 ###                                  Proto                                  ###
 ###############################################################################
@@ -216,14 +221,12 @@ docs:
 	@echo
 .PHONY: docs
 
-protoVer=0.13.1
+protoVer=0.15.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
-# containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
-# containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
 
 proto-gen:
-	@echo "Generating Protobuf files"
+	@echo "Generating protobuf files..."
 	@$(protoImage) sh ./scripts/protocgen.sh
 
 proto-swagger-gen:
