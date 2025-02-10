@@ -11,19 +11,20 @@ func NewGenesisState(minter Minter, params Params) *GenesisState {
 	}
 }
 
-// DefaultGenesis returns the default  genesis state
-func DefaultGenesis() *GenesisState {
+// DefaultGenesisState creates a default GenesisState object
+func DefaultGenesisState() *GenesisState {
 	return &GenesisState{
 		Minter: DefaultInitialMinter(),
 		Params: DefaultParams(),
 	}
 }
 
-// Validate performs basic genesis state validation returning an error upon any
-// failure.
-func (gs GenesisState) Validate() error {
-	if err := gs.Params.Validate(); err != nil {
+// ValidateGenesis validates the provided genesis state to ensure the
+// expected invariants holds.
+func ValidateGenesis(data GenesisState) error {
+	if err := data.Params.Validate(); err != nil {
 		return err
 	}
-	return ValidateMinter(gs.Minter)
+
+	return ValidateMinter(data.Minter)
 }

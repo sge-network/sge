@@ -1,6 +1,7 @@
 package mint
 
 import (
+	"context"
 	"time"
 
 	"github.com/spf13/cast"
@@ -17,15 +18,23 @@ import (
 var gaugeKeys = []string{"minted_tokens"}
 
 // BeginBlocker mints new tokens for the previous block.
-func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
+func BeginBlocker(ctx context.Context, k keeper.Keeper) error {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), telemetry.MetricKeyBeginBlocker)
 
-	// fetch stored minter
-	minter := k.GetMinter(ctx)
-
+	// fetch stored minter & params
+	minter, err := k.Minter.Get(ctx)
+	if err != nil {
+		return err
+	}
 	// fetch stored params
-	params := k.GetParams(ctx)
-	currentBlock := ctx.BlockHeight()
+	params, err := k.Params.Get(ctx)
+	if err != nil {
+		return err
+	}
+
+	sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+	currentBlock := sdkCtx.BlockHeight()
 
 	// detect current phase according to current block
 	currentPhase, currentPhaseStep := minter.CurrentPhase(params, currentBlock)
@@ -49,31 +58,37 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 		)
 
 		// store minter
-		k.SetMinter(ctx, minter)
+		err = k.Minter.Set(ctx, minter)
+		if err != nil {
+			return err
+		}
 	}
 
 	// if the inflation rate is zero, means that we have no minting, so the rest of the code should not be called
 	if minter.Inflation.Equal(sdkmath.LegacyZeroDec()) {
-		return
+		return nil
 	}
 
 	// mint coins, update supply
 	mintedCoin, truncatedTokens := minter.BlockProvisions(params, currentPhaseStep)
 	mintedCoins := sdk.NewCoins(mintedCoin)
 
-	err := k.MintCoins(ctx, mintedCoins)
+	err = k.MintCoins(ctx, mintedCoins)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// set truncated value in this block to be added to provision calculation in the next block
 	minter.TruncatedTokens = truncatedTokens
-	k.SetMinter(ctx, minter)
+	err = k.Minter.Set(ctx, minter)
+	if err != nil {
+		return err
+	}
 
 	// send the minted coins to the fee collector account
 	err = k.AddCollectedFees(ctx, mintedCoins)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	if mintedCoin.Amount.IsInt64() {
@@ -83,7 +98,7 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 			gaugeKeys...)
 	}
 
-	ctx.EventManager().EmitEvent(
+	sdkCtx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			types.EventTypeMint,
 			sdk.NewAttribute(types.AttributeKeyInflation, minter.Inflation.String()),
@@ -91,4 +106,6 @@ func BeginBlocker(ctx sdk.Context, k keeper.Keeper) {
 			sdk.NewAttribute(sdk.AttributeKeyAmount, mintedCoin.Amount.String()),
 		),
 	)
+
+	return nil
 }
