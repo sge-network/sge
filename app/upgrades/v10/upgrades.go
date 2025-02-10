@@ -1,18 +1,18 @@
 package v10
 
 import (
-	"strings"
+	"context"
+	"time"
 
 	sdkmath "cosmossdk.io/math"
+	upgradetypes "cosmossdk.io/x/upgrade/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
 
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/params"
-	housetypes "github.com/sge-network/sge/x/house/types"
-	orderbooktypes "github.com/sge-network/sge/x/orderbook/types"
-	rewardtypes "github.com/sge-network/sge/x/reward/types"
+	minttypes "github.com/sge-network/sge/x/mint/types"
 )
 
 func CreateUpgradeHandler(
@@ -20,64 +20,44 @@ func CreateUpgradeHandler(
 	configurator module.Configurator,
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
-	return func(ctx sdk.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		var recAddress sdk.AccAddress
-		switch strings.ToLower(ctx.ChainID()) {
-		case "sgenet-1":
-			recAddress = sdk.MustAccAddressFromBech32("sge10gtzxh97gvgt6s58w5gagsacrwddhmgzn5ksk6")
-		case "sge-network-4":
-			recAddress = sdk.MustAccAddressFromBech32("sge19dkag3dkzcmjzhctz8ysfws443yq0nyyu0r8c0")
-		case "stage-sgenetwork":
-			recAddress = sdk.MustAccAddressFromBech32("sge1wkzh54s97m4cr70wfq9j7e4u42mkt2a7hak84c")
-		default:
-			return mm.RunMigrations(ctx, configurator, fromVM)
-		}
+	return func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
+		// https://github.com/cosmos/cosmos-sdk/pull/12363/files
+		// Set param key table for params module migration
+		for _, subspace := range k.ParamsKeeper.GetSubspaces() {
+			var keyTable paramstypes.KeyTable
+			switch subspace.Name() {
+			// sdk
+			case minttypes.ModuleName:
+				keyTable = minttypes.ParamKeyTable()
+			default:
+				continue
+			}
 
-		orderBookBalance := k.BankKeeper.GetBalance(
-			ctx,
-			k.AccountKeeper.GetModuleAddress(orderbooktypes.OrderBookLiquidityFunder{}.GetModuleAcc()),
-			params.DefaultBondDenom,
-		)
-		if orderBookBalance.Amount.GT(sdkmath.ZeroInt()) {
-			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
-				ctx,
-				orderbooktypes.OrderBookLiquidityFunder{}.GetModuleAcc(),
-				recAddress, sdk.NewCoins(orderBookBalance),
-			); err != nil {
-				return nil, err
+			if !subspace.HasKeyTable() {
+				subspace.WithKeyTable(keyTable)
 			}
 		}
 
-		houseFeeBalance := k.BankKeeper.GetBalance(
-			ctx,
-			k.AccountKeeper.GetModuleAddress(housetypes.HouseFeeCollectorFunder{}.GetModuleAcc()),
-			params.DefaultBondDenom,
-		)
-		if houseFeeBalance.Amount.GT(sdkmath.ZeroInt()) {
-			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
-				ctx,
-				housetypes.HouseFeeCollectorFunder{}.GetModuleAcc(),
-				recAddress, sdk.NewCoins(houseFeeBalance),
-			); err != nil {
-				return nil, err
-			}
+		migrations, err := mm.RunMigrations(ctx, configurator, fromVM)
+		if err != nil {
+			return nil, err
 		}
 
-		rewardPoolBalance := k.BankKeeper.GetBalance(
-			ctx,
-			k.AccountKeeper.GetModuleAddress(rewardtypes.RewardPoolFunder{}.GetModuleAcc()),
-			params.DefaultBondDenom,
-		)
-		if rewardPoolBalance.Amount.GT(sdkmath.ZeroInt()) {
-			if err := k.BankKeeper.SendCoinsFromModuleToAccount(
-				ctx,
-				rewardtypes.RewardPoolFunder{}.GetModuleAcc(),
-				recAddress, sdk.NewCoins(rewardPoolBalance),
-			); err != nil {
-				return nil, err
-			}
+		// Set expedited proposal param:
+		govParams, err := k.GovKeeper.Params.Get(ctx)
+		if err != nil {
+			return nil, err
+		}
+		govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(50000000000)))
+		govParams.MinInitialDepositRatio = "0.000000000000000000"
+		govParams.ExpeditedThreshold = "0.750000000000000000"
+		expediteVotingPeriod := 86400 * time.Second
+		govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
+		err = k.GovKeeper.Params.Set(ctx, govParams)
+		if err != nil {
+			return nil, err
 		}
 
-		return mm.RunMigrations(ctx, configurator, fromVM)
+		return migrations, nil
 	}
 }
