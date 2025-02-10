@@ -1,0 +1,10 @@
+syntax = "proto3";
+package sge.legacy.ovm.v1beta;
+
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
+
+// KeyVault is the information of important keys stored in ovm state.
+message KeyVault {
+  // public_keys contains allowed public keys.
+  repeated string public_keys = 1;
+}

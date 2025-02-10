@@ -1,0 +1,21 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// Constraints is the bet constrains type for the bets
+message Constraints {
+  // min_amount is the minimum allowed bet amount.
+  string min_amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // fee is the fee that the bettor needs to pay to bet.
+  string fee = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

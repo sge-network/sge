@@ -1,0 +1,10 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// BetStats is the type of statistics of the betting in the blockchain state.
+message BetStats {
+  // count is the total count of bets.
+  uint64 count = 1;
+}

@@ -1,0 +1,49 @@
+syntax = "proto3";
+package sge.legacy.subaccount.v1beta;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sge/legacy/subaccount/v1beta/balance.proto";
+import "sge/legacy/subaccount/v1beta/params.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Subaccount fetches a subaccount given the owner.
+  rpc Subaccount(QuerySubaccountRequest) returns (QuerySubaccountResponse) {
+    option (google.api.http).get = "/sge/subaccount/subaccount/{address}";
+  }
+  // Params returns the subaccount module parameters.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/subaccount/params";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method
+message QueryParamsResponse {
+  sge.legacy.subaccount.v1beta.Params params = 1
+      [ (gogoproto.nullable) = false ];
+}
+
+// QuerySubaccountRequest is the request type for the Query/Subaccount RPC
+message QuerySubaccountRequest { string address = 1; }
+
+// QuerySubaccountResponse is the response type for the Query/Subaccount RPC
+message QuerySubaccountResponse {
+  string address = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  sge.legacy.subaccount.v1beta.AccountSummary balance = 2
+      [ (gogoproto.nullable) = false ];
+  repeated sge.legacy.subaccount.v1beta.LockedBalance locked_balance = 3
+      [ (gogoproto.nullable) = false ];
+  repeated sge.legacy.subaccount.v1beta.LockedBalance unlocked_balance = 4
+      [ (gogoproto.nullable) = false ];
+  string withdrawable_unlocked_balance = 5 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}

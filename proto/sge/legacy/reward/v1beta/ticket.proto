@@ -1,0 +1,146 @@
+syntax = "proto3";
+package sge.legacy.reward.v1beta;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "sge/legacy/reward/v1beta/campaign.proto";
+import "sge/legacy/reward/v1beta/promoter.proto";
+import "sge/legacy/reward/v1beta/reward.proto";
+import "sge/legacy/type/v1beta/kyc.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
+
+// CreateCampaignPayload is the type for campaign creation payload.
+message CreateCampaignPayload {
+  // promoter is the address of campaign promoter.
+  // Funds for the campaign would be deducted from this account.
+  string promoter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // start_ts is the start timestamp of the campaign.
+  uint64 start_ts = 2;
+
+  // end_ts is the end timestamp of the campaign.
+  uint64 end_ts = 3;
+
+  // category is the category of the campaign.
+  RewardCategory category = 4;
+
+  // reward_type is the type of reward.
+  RewardType reward_type = 5;
+
+  // Reward amount
+  RewardAmountType reward_amount_type = 6;
+
+  // reward_amount is the amount of reward.
+  RewardAmount reward_amount = 7;
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 8;
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 10;
+
+  // cap_count is the maximum allowed grant for a certain account.
+  uint64 cap_count = 11;
+
+  // constraints is the constrains of a campaign.
+  CampaignConstraints constraints = 12;
+}
+
+// UpdateCampaignPayload is the type for campaign update payload.
+message UpdateCampaignPayload {
+  // end_ts is the end timestamp of the campaign.
+  uint64 end_ts = 1;
+
+  // is_active is the flag to check if the campaign is active or not.
+  bool is_active = 2;
+}
+
+// WithdrawFundsPayload is the type for campaign withdraw funds payload.
+message WithdrawFundsPayload {
+  // promoter is the address of campaign promoter.
+  // Funds would be transferred to this account.
+  string promoter = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// RewardPayloadCommon
+message RewardPayloadCommon {
+  // receiver is the address of the account that receives the reward.
+  string receiver = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+
+  // source_uid is the address of the source.
+  // It is used to identify the source of the reward.
+  // For example, the source uid of a referral signup reward is the address of
+  // the referer.
+  string source_uid = 2 [
+    (gogoproto.customname) = "SourceUID",
+    (gogoproto.jsontag) = "source_uid",
+    json_name = "source_uid"
+  ];
+
+  // meta is the metadata of the campaign.
+  // It is a stringified base64 encoded json.
+  string meta = 3;
+
+  // kyc_data contains the details of user kyc.
+  sge.legacy.type.v1beta.KycDataPayload kyc_data = 4;
+}
+
+// GrantSignupRewardPayload is the type for signup reward grant payload.
+message GrantSignupRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 2 [ (gogoproto.nullable) = false ];
+}
+
+// GrantSignupReferrerRewardPayload is the type for signup referrer reward grant
+// payload.
+message GrantSignupReferrerRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // referee is the address of the account that used this referrer address as
+  // source_uid
+  string referee = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// GrantSignupAffiliatorRewardPayload is the type for signup affiliator reward
+// grant payload.
+message GrantSignupAffiliatorRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // affiliatee is the address of the account that used this affiliator's
+  // address as source_uid
+  string affiliatee = 2 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+}
+
+// GrantBetBonusRewardPayload is the type for bet bonus reward
+// grant payload.
+message GrantBetBonusRewardPayload {
+  // common is the common properties of a reward
+  RewardPayloadCommon common = 1 [ (gogoproto.nullable) = false ];
+
+  // bet_uid is the list of uids
+  string bet_uid = 2 [
+    (gogoproto.customname) = "BetUID",
+    (gogoproto.jsontag) = "bet_uid",
+    json_name = "bet_uid"
+  ];
+}
+
+// CreatePromoterPayload is the payload for the promoter create.
+message CreatePromoterPayload {
+  // uid is the uid of the promoter to be created
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  PromoterConf conf = 2 [ (gogoproto.nullable) = false ];
+}
+
+// SetPromoterConfPayload is the payload for the promoter configuration change.
+message SetPromoterConfPayload {
+  PromoterConf conf = 1 [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,30 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+import "gogoproto/gogo.proto";
+import "sge/legacy/bet/v1beta/bet.proto";
+import "sge/legacy/bet/v1beta/params.proto";
+import "sge/legacy/bet/v1beta/stats.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// GenesisState defines the bet module's genesis state.
+message GenesisState {
+  // params contains parameters of bet module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+
+  // bet_list contains the bet list in the genesis init.
+  repeated Bet bet_list = 2 [ (gogoproto.nullable) = false ];
+
+  // pending_bet_list contains the pending bet list in the genesis init.
+  repeated PendingBet pending_bet_list = 3 [ (gogoproto.nullable) = false ];
+
+  // settled_bet_list contains the settled bet list in the genesis init.
+  repeated SettledBet settled_bet_list = 4 [ (gogoproto.nullable) = false ];
+
+  // uid2id_list contains bet to id list in the genesis init.
+  repeated UID2ID uid2id_list = 5 [ (gogoproto.nullable) = false ];
+
+  // stats contains statistics in the genesis init.
+  BetStats stats = 6 [ (gogoproto.nullable) = false ];
+}

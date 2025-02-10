@@ -1,0 +1,22 @@
+syntax = "proto3";
+package sge.legacy.type.v1beta;
+
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/types/legacy";
+
+// KycDataPayload is the KYC info.
+message KycDataPayload {
+  // ignore is true if KYC validation is not required.
+  bool ignore = 1;
+  // approved represent if KYC validation is approved or not.
+  bool approved = 2;
+  // id is the id of the KYC user.
+  string id = 3 [
+    (cosmos_proto.scalar) = "cosmos.AddressString",
+    (gogoproto.customname) = "ID",
+    (gogoproto.jsontag) = "id",
+    json_name = "id"
+  ];
+}

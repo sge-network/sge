@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package sge.legacy.reward.v1beta;
+
+import "gogoproto/gogo.proto";
+import "sge/legacy/reward/v1beta/campaign.proto";
+import "sge/legacy/reward/v1beta/params.proto";
+import "sge/legacy/reward/v1beta/promoter.proto";
+import "sge/legacy/reward/v1beta/reward.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
+
+// GenesisState defines the reward module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated Campaign campaign_list = 2 [ (gogoproto.nullable) = false ];
+  repeated Reward reward_list = 3 [ (gogoproto.nullable) = false ];
+  repeated RewardByCategory reward_by_category_list = 4
+      [ (gogoproto.nullable) = false ];
+  repeated RewardByCampaign reward_by_campaign_list = 5
+      [ (gogoproto.nullable) = false ];
+  repeated Promoter promoter_list = 6 [ (gogoproto.nullable) = false ];
+  repeated PromoterByAddress promoter_by_address_list = 7
+      [ (gogoproto.nullable) = false ];
+}

@@ -1,0 +1,24 @@
+syntax = "proto3";
+package sge.legacy.ovm.v1beta;
+
+import "gogoproto/gogo.proto";
+import "sge/legacy/ovm/v1beta/key_vault.proto";
+import "sge/legacy/ovm/v1beta/params.proto";
+import "sge/legacy/ovm/v1beta/proposal.proto";
+import "sge/legacy/ovm/v1beta/stats.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
+
+// GenesisState defines the ovm module's genesis state.
+message GenesisState {
+  // params contains parameters of ovm module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  // key_vault trusted keys from genesis file.
+  KeyVault key_vault = 2 [ (gogoproto.nullable) = false ];
+  // pubkeys_change_proposals is the finished proposal list for the
+  // public keys change.
+  repeated PublicKeysChangeProposal pubkeys_change_proposals = 3
+      [ (gogoproto.nullable) = false ];
+  // proposal_stats holds the proposal statistics.
+  ProposalStats proposal_stats = 4 [ (gogoproto.nullable) = false ];
+}
