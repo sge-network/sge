@@ -2,6 +2,7 @@ package v10
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	sdkmath "cosmossdk.io/math"
@@ -48,11 +49,32 @@ func CreateUpgradeHandler(
 		if err != nil {
 			return nil, err
 		}
-		govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(50000000000)))
-		govParams.MinInitialDepositRatio = "0.000000000000000000"
-		govParams.ExpeditedThreshold = "0.750000000000000000"
-		expediteVotingPeriod := 86400 * time.Second
-		govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
+
+		sdkCtx := sdk.UnwrapSDKContext(ctx)
+
+		switch strings.ToLower(sdkCtx.ChainID()) {
+
+		case "stage-sgenetwork":
+			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(20000000)))
+			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.ExpeditedThreshold = "0.667000000000000000"
+			expediteVotingPeriod := 600 * time.Second
+			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
+		case "sge-network-4":
+			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(6000000000)))
+			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.ExpeditedThreshold = "0.667000000000000000"
+			expediteVotingPeriod := 86400 * time.Second
+			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
+		default:
+			// mainnet
+			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(50000000000)))
+			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.ExpeditedThreshold = "0.750000000000000000"
+			expediteVotingPeriod := 86400 * time.Second
+			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
+		}
+
 		err = k.GovKeeper.Params.Set(ctx, govParams)
 		if err != nil {
 			return nil, err
