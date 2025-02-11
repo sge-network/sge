@@ -37,7 +37,7 @@ func (msg *MsgAdd) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes return the marshalled bytes of the msg
 func (msg *MsgAdd) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -94,7 +94,7 @@ func (msg *MsgUpdate) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes return the marshalled bytes of the msg
 func (msg *MsgUpdate) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

@@ -30,15 +30,11 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 
-var (
-	// amino is the legacy amino codec
-	amino = codec.NewLegacyAmino()
-	// ModuleCdc is the codec of the module
-	ModuleCdc = codec.NewAminoCodec(amino)
-)
+// Amino is the legacy Amino codec
+var Amino = codec.NewLegacyAmino()
 
 func init() {
-	RegisterLegacyAminoCodec(amino)
+	RegisterLegacyAminoCodec(Amino)
 	// cryptocodec.RegisterCrypto(amino)
-	sdk.RegisterLegacyAminoCodec(amino)
+	sdk.RegisterLegacyAminoCodec(Amino)
 }

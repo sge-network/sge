@@ -36,7 +36,7 @@ func (msg *MsgHouseDeposit) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes returns sortJson form of its message
 func (msg *MsgHouseDeposit) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -73,7 +73,7 @@ func (msg *MsgHouseWithdraw) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes returns sortJson form of its message
 func (msg *MsgHouseWithdraw) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

@@ -39,7 +39,7 @@ func (msg *MsgWager) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes returns sortJson form of its message
 func (msg *MsgWager) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

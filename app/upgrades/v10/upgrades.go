@@ -16,6 +16,8 @@ import (
 	minttypes "github.com/sge-network/sge/x/mint/types"
 )
 
+const minDepositRatio = "0.000000000000000000"
+
 func CreateUpgradeHandler(
 	mm *module.Manager,
 	configurator module.Configurator,
@@ -53,23 +55,22 @@ func CreateUpgradeHandler(
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
 
 		switch strings.ToLower(sdkCtx.ChainID()) {
-
 		case "stage-sgenetwork":
 			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(20000000)))
-			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.MinInitialDepositRatio = minDepositRatio
 			govParams.ExpeditedThreshold = "0.667000000000000000"
 			expediteVotingPeriod := 600 * time.Second
 			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
 		case "sge-network-4":
 			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(6000000000)))
-			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.MinInitialDepositRatio = minDepositRatio
 			govParams.ExpeditedThreshold = "0.667000000000000000"
 			expediteVotingPeriod := 86400 * time.Second
 			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
 		default:
 			// mainnet
 			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(50000000000)))
-			govParams.MinInitialDepositRatio = "0.000000000000000000"
+			govParams.MinInitialDepositRatio = minDepositRatio
 			govParams.ExpeditedThreshold = "0.750000000000000000"
 			expediteVotingPeriod := 86400 * time.Second
 			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod

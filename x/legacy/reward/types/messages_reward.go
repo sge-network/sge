@@ -47,7 +47,7 @@ func (msg *MsgGrantReward) GetSigners() []sdk.AccAddress {
 }
 
 func (msg *MsgGrantReward) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

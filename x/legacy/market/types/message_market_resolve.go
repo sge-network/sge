@@ -37,7 +37,7 @@ func (msg *MsgResolve) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes return the marshalled bytes of the msg
 func (msg *MsgResolve) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

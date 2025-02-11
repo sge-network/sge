@@ -26,7 +26,7 @@ func (msg *MsgUpdateParams) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes implements the LegacyMsg interface.
 func (msg MsgUpdateParams) GetSignBytes() []byte {
-	return sdk.MustSortJSON(ModuleCdc.MustMarshalJSON(&msg))
+	return sdk.MustSortJSON(Amino.MustMarshalJSON(&msg))
 }
 
 // ValidateBasic does a sanity check on the provided data.

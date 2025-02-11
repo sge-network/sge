@@ -44,7 +44,7 @@ func (msg *MsgVotePubkeysChangeRequest) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes returns sortJson form of its message
 func (msg *MsgVotePubkeysChangeRequest) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

@@ -47,7 +47,7 @@ func (msg *MsgWithdraw) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes return the marshalled bytes of the msg
 func (msg *MsgWithdraw) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

@@ -47,7 +47,7 @@ func (msg *MsgCreateCampaign) GetSigners() []sdk.AccAddress {
 }
 
 func (msg *MsgCreateCampaign) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -114,7 +114,7 @@ func (msg *MsgUpdateCampaign) GetSigners() []sdk.AccAddress {
 }
 
 func (msg *MsgUpdateCampaign) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
@@ -177,7 +177,7 @@ func (msg *MsgWithdrawFunds) GetSigners() []sdk.AccAddress {
 }
 
 func (msg *MsgWithdrawFunds) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 

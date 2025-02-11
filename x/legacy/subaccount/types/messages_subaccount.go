@@ -31,7 +31,7 @@ func (msg *MsgCreate) GetSigners() []sdk.AccAddress {
 
 // GetSignBytes returns sortJson form of its message
 func (msg *MsgCreate) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
+	bz := Amino.MustMarshalJSON(msg)
 	return sdk.MustSortJSON(bz)
 }
 
