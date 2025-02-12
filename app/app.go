@@ -63,8 +63,6 @@ import (
 	_ "github.com/cosmos/ibc-go/v8/modules/apps/29-fee"                 // import for side-effects
 	ibckeeper "github.com/cosmos/ibc-go/v8/modules/core/keeper"
 
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/upgrades"
 	v10 "github.com/sge-network/sge/app/upgrades/v10"
@@ -85,8 +83,6 @@ var (
 	Upgrades = []upgrades.Upgrade{
 		v10.Upgrade,
 	}
-	// default wasmd binary maximum allowed size
-	defaultMaxWasmSize = 1500 * 1024 // 1.5 MB
 )
 
 var (
@@ -164,8 +160,6 @@ func NewApp(
 	appOpts servertypes.AppOptions,
 	baseAppOptions ...func(*baseapp.BaseApp),
 ) (*App, error) {
-	overrideWasmVariables()
-
 	var (
 		app        = &App{AppKeepers: &keepers.AppKeepers{ScopedKeepers: make(map[string]capabilitykeeper.ScopedKeeper)}}
 		appBuilder *runtime.AppBuilder
@@ -420,12 +414,4 @@ func (app *App) setupUpgradeHandlers() {
 			),
 		)
 	}
-}
-
-// overrideWasmVariables overrides the wasm variables to:
-//   - allow for larger wasm files
-func overrideWasmVariables() {
-	// Override Wasm size limitation from WASMD.
-	wasmtypes.MaxWasmSize = defaultMaxWasmSize
-	wasmtypes.MaxProposalWasmSize = wasmtypes.MaxWasmSize
 }

@@ -22,11 +22,16 @@ import (
 	porttypes "github.com/cosmos/ibc-go/v8/modules/core/05-port/types"
 )
 
+// default wasmd binary maximum allowed size
+var defaultMaxWasmSize = 1500 * 1024 // 1.5 MB
+
 // registerWasmModules register CosmWasm keepers and non dependency inject modules.
 func (app *App) registerWasmModules(
 	appOpts servertypes.AppOptions,
 	wasmOpts ...wasmkeeper.Option,
 ) (porttypes.IBCModule, error) {
+	overrideWasmVariables()
+
 	// set up non depinject support modules store keys
 	if err := app.RegisterStores(
 		storetypes.NewKVStoreKey(wasmtypes.StoreKey),
@@ -152,4 +157,12 @@ func (app *App) setAnteHandler(txConfig client.TxConfig, wasmConfig wasmtypes.Wa
 	// Set the AnteHandler for the app
 	app.SetAnteHandler(anteHandler)
 	return nil
+}
+
+// overrideWasmVariables overrides the wasm variables to:
+//   - allow for larger wasm files
+func overrideWasmVariables() {
+	// Override Wasm size limitation from WASMD.
+	wasmtypes.MaxWasmSize = defaultMaxWasmSize
+	wasmtypes.MaxProposalWasmSize = wasmtypes.MaxWasmSize
 }
