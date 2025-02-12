@@ -9,6 +9,7 @@ import (
 
 	sdkmath "cosmossdk.io/math"
 	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/spf13/cast"
 
 	"github.com/sge-network/sge/app/params"
 	"github.com/sge-network/sge/x/mint/types"
@@ -26,7 +27,7 @@ func GenInflation(r *rand.Rand) sdkmath.LegacyDec {
 
 // GenBlocksPerYear randomized BlocksPerYear
 func GenBlocksPerYear(_ *rand.Rand) sdkmath.LegacyDec {
-	return sdkmath.LegacyNewDec(types.BlocksPerYear)
+	return sdkmath.LegacyMustNewDecFromStr(cast.ToString(types.BlocksPerYear))
 }
 
 // RandomizedGenState generates a random GenesisState for mint
@@ -34,7 +35,7 @@ func RandomizedGenState(simState *module.SimulationState) {
 	// minter
 	var inflation sdkmath.LegacyDec
 	simState.AppParams.GetOrGenerate(
-		simState.Cdc, Inflation, &inflation, simState.Rand,
+		Inflation, &inflation, simState.Rand,
 		func(r *rand.Rand) { inflation = GenInflation(r) },
 	)
 

@@ -8,7 +8,7 @@ ARG BUILD_TAGS="netgo,ledger,muslc"
 # Builder
 # --------------------------------------------------------
 
-FROM golang:${GO_VERSION}-alpine3.20 as builder
+FROM golang:${GO_VERSION}-alpine3.20 AS builder
 
 ARG GIT_VERSION
 ARG GIT_COMMIT
@@ -27,12 +27,12 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     go mod download
 
 # Cosmwasm - Download correct libwasmvm version
-RUN ARCH=$(uname -m) && WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm | sed 's/.* //') && \
+RUN ARCH=$(uname -m) && WASMVM_VERSION=$(go list -m github.com/CosmWasm/wasmvm/v2 | sed 's/.* //') && \
     wget https://github.com/CosmWasm/wasmvm/releases/download/$WASMVM_VERSION/libwasmvm_muslc.$ARCH.a \
-    -O /lib/libwasmvm_muslc.a && \
+    -O /lib/libwasmvm_muslc.$ARCH.a && \
     # verify checksum
     wget https://github.com/CosmWasm/wasmvm/releases/download/$WASMVM_VERSION/checksums.txt -O /tmp/checksums.txt && \
-    sha256sum /lib/libwasmvm_muslc.a | grep $(cat /tmp/checksums.txt | grep libwasmvm_muslc.$ARCH | cut -d ' ' -f 1)
+    sha256sum /lib/libwasmvm_muslc.$ARCH.a | grep $(cat /tmp/checksums.txt | grep libwasmvm_muslc.$ARCH | cut -d ' ' -f 1) 
 
 # Copy the remaining files
 COPY . .
@@ -62,7 +62,7 @@ FROM ${RUNNER_IMAGE}
 
 COPY --from=builder /sge/build/sged /bin/sged
 
-ENV HOME /sge
+ENV HOME=/sge
 WORKDIR $HOME
 
 EXPOSE 26656

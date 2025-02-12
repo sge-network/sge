@@ -1,0 +1,148 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sge/legacy/bet/v1beta/bet.proto";
+import "sge/legacy/bet/v1beta/params.proto";
+import "sge/legacy/market/v1beta/market.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/bet/params";
+  }
+
+  // Queries a Bet by uid.
+  rpc Bet(QueryBetRequest) returns (QueryBetResponse) {
+    option (google.api.http).get = "/sge/bet/{creator}/{uid}";
+  }
+
+  // Queries list of Bet items of a certain creator sorted by timestamp.
+  rpc BetsByCreator(QueryBetsByCreatorRequest)
+      returns (QueryBetsByCreatorResponse) {
+    option (google.api.http).get = "/sge/bet/creator/{creator}/bets";
+  }
+
+  // Queries list of Bet items.
+  rpc Bets(QueryBetsRequest) returns (QueryBetsResponse) {
+    option (google.api.http).get = "/sge/bet/bets";
+  }
+
+  // Queries list of pending Bet items.
+  rpc PendingBets(QueryPendingBetsRequest) returns (QueryPendingBetsResponse) {
+    option (google.api.http).get = "/sge/bet/bets/pending/{market_uid}";
+  }
+
+  // Queries list of settled Bet items of a certain height.
+  rpc SettledBetsOfHeight(QuerySettledBetsOfHeightRequest)
+      returns (QuerySettledBetsOfHeightResponse) {
+    option (google.api.http).get = "/sge/bet/bets/settled/{block_height}";
+  }
+
+  // Queries a list of Bet items filtered by uid list.
+  rpc BetsByUIDs(QueryBetsByUIDsRequest) returns (QueryBetsByUIDsResponse) {
+    option (google.api.http).get = "/sge/bet/bets-by-uids/{items}";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryBetRequest is the request type for a single bet query
+// Query/Bet RPC method.
+message QueryBetRequest {
+  string creator = 1 [ (cosmos_proto.scalar) = "cosmos.AddressString" ];
+  string uid = 2 [ (gogoproto.jsontag) = "uid", json_name = "uid" ];
+}
+
+// QueryBetResponse is the response type for single bet query
+// Query/Bet RPC method.
+message QueryBetResponse {
+  Bet bet = 1 [ (gogoproto.nullable) = false ];
+  sge.legacy.market.v1beta.Market market = 2 [ (gogoproto.nullable) = false ];
+}
+
+// QueryBetsRequest is the request type for the bets list query
+// Query/Bets RPC method.
+message QueryBetsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryBetsResponse is the response type for the bets list query
+// Query/Bets RPC method.
+message QueryBetsResponse {
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryBetsByUIDsResponse is the request type for bets list of all bets of a
+// bettor Query/BetsByCreator RPC method.
+message QueryBetsByCreatorRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string creator = 2;
+}
+
+// QueryBetsByCreatorResponse is the response type for the bets list of all bets
+// of a bettor Query/BetsByCreator RPC method.
+message QueryBetsByCreatorResponse {
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryBetsByUIDsRequest is the request type for a bets list of a certain UID
+// list input Query/BetsByUIDs RPC method.
+message QueryBetsByUIDsRequest {
+  repeated string items = 1
+      [ (gogoproto.jsontag) = "items", json_name = "items" ];
+}
+
+// QueryBetsByUIDsResponse is the response type for the bets list of a certain
+// UID list input Query/BetsByUIDs RPC method.
+message QueryBetsByUIDsResponse {
+  repeated Bet bets = 1 [ (gogoproto.nullable) = false ];
+  repeated string not_found_bet_uids = 2;
+}
+
+// QueryPendingBetsRequest is the request type for the active bets list query
+// for a market
+// Query/ActiveBets RPC method.
+message QueryPendingBetsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  string market_uid = 2;
+}
+
+// QueryPendingBetsResponse is the response type for the active bets list query
+// Query/PendingBets RPC method.
+message QueryPendingBetsResponse {
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QuerySettledBetsOfHeightRequest is the request type for the settled bets of a
+// certain height list query.
+// Query/ActiveBets RPC method.
+message QuerySettledBetsOfHeightRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+  int64 block_height = 2;
+}
+
+// QuerySettledBetsOfHeightResponse is the response type for the settled bets of
+// a certain height list query Query/ActiveBets RPC method.
+message QuerySettledBetsOfHeightResponse {
+  repeated Bet bet = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}

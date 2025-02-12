@@ -64,10 +64,10 @@ func TestNextPhase(t *testing.T) {
 	minter := types.DefaultInitialMinter()
 	params := types.DefaultParams()
 
-	blocksPerYear := int64(100)
+	blocksPerYear := uint64(100)
 	tests := []struct {
 		currentBlock, currentPhase int64
-		blocksYear                 int64
+		blocksYear                 uint64
 		expPhase                   int
 	}{
 		{1, 0, blocksPerYear, 1},
@@ -231,7 +231,7 @@ func TestBlockProvisions(t *testing.T) {
 	minter := types.DefaultInitialMinter()
 	params := types.DefaultParams()
 
-	blocksPerYear := int64(51480)
+	blocksPerYear := uint64(51480)
 	totalSupply := sdkmath.NewIntFromUint64(1150000000000000)
 	params.ExcludeAmount = sdkmath.NewInt(445000000000025)
 	tests := []struct {

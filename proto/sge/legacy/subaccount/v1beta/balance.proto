@@ -1,0 +1,60 @@
+syntax = "proto3";
+package sge.legacy.subaccount.v1beta;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
+
+// AccountSummary defines the balance of a subaccount.
+message AccountSummary {
+  // deposited_amount keeps track of how much was deposited so far in the
+  // subaccount.
+  string deposited_amount = 1 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // spent_amount keeps track of how much was spent in the account in betting,
+  // house, staking, etc.
+  string spent_amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // withdrawn_amount keeps track of how much was withdrawn in the account after
+  // locked coins become unlocked.
+  string withdrawn_amount = 3 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+
+  // lost_amount keeps track of the amounts that were lost due to betting
+  // losses, slashing etc.
+  string lost_amount = 4 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// LockedBalance defines a balance which is locked.
+message LockedBalance {
+  uint64 unlock_ts = 1 [
+    (gogoproto.customname) = "UnlockTS",
+    (gogoproto.jsontag) = "unlock_ts",
+    json_name = "unlock_ts"
+  ];
+  string amount = 2 [
+    (gogoproto.customtype) = "cosmossdk.io/math.Int",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// LockedBalanceStatus type.
+enum LockedBalanceStatus {
+  // the invalid or unknown
+  LOCKED_BALANCE_STATUS_UNSPECIFIED = 0;
+  // locked
+  LOCKED_BALANCE_STATUS_LOCKED = 1;
+  // unlocked
+  LOCKED_BALANCE_STATUS_UNLOCKED = 2;
+}

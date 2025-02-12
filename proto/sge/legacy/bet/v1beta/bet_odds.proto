@@ -1,0 +1,55 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// BetOdds is the type to store odds of a market.
+message BetOdds {
+  // uid is universal unique identifier of odds.
+  // Required | Unique | uuid-v4 or code
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+  // market_uid is the parent, used for fast retrieving.
+  // Required | NonUnique | -
+  string market_uid = 2 [
+    (gogoproto.customname) = "MarketUID",
+    (gogoproto.jsontag) = "market_uid",
+    json_name = "market_uid"
+  ];
+  // value of the odds in corresponding odds type proposed in bet placement
+  // message. Required | NonUnique | "1.286" or "2/7" or "+500"
+  string value = 3;
+  // max_loss_multiplier is the factor for calculating max loss for given odds
+  string max_loss_multiplier = 4 [
+    (gogoproto.customname) = "MaxLossMultiplier",
+    (gogoproto.jsontag) = "max_loss_multiplier",
+    json_name = "max_loss_multiplier",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}
+
+// BetOddsCompact is the compact bet odd type for all odds.
+message BetOddsCompact {
+  // uid is universal unique identifier of odds.
+  // Required | Unique | uuid-v4 or code
+  string uid = 1 [
+    (gogoproto.customname) = "UID",
+    (gogoproto.jsontag) = "uid",
+    json_name = "uid"
+  ];
+
+  // max_loss_multiplier is the factor for calculating max loss for given odds
+  string max_loss_multiplier = 2 [
+    (gogoproto.customname) = "MaxLossMultiplier",
+    (gogoproto.jsontag) = "max_loss_multiplier",
+    json_name = "max_loss_multiplier",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
+    (gogoproto.nullable) = false
+  ];
+}

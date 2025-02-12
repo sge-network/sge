@@ -1,0 +1,24 @@
+syntax = "proto3";
+package sge.legacy.bet.v1beta;
+
+import "gogoproto/gogo.proto";
+import "sge/legacy/bet/v1beta/bet.proto";
+import "sge/legacy/bet/v1beta/bet_odds.proto";
+import "sge/legacy/type/v1beta/kyc.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
+
+// WagerTicketPayload indicates data of bet placement ticket.
+message WagerTicketPayload {
+  // selected_odds is the user-selected odds to place bet.
+  BetOdds selected_odds = 1;
+  // kyc_data contains the details of user kyc.
+  sge.legacy.type.v1beta.KycDataPayload kyc_data = 2
+      [ (gogoproto.nullable) = false ];
+  // all odds for the selected market.
+  repeated BetOddsCompact all_odds = 4;
+  // meta is metadata for bet placement
+  MetaData meta = 5 [ (gogoproto.nullable) = false ];
+  // context contains the data from services and just for processing purpose.
+  string context = 6;
+}

@@ -21,7 +21,7 @@ import (
 var params = types.Params{
 	MintDenom:     "usge",
 	BlocksPerYear: 100,
-	Phases:        types.DefaultGenesis().Params.Phases,
+	Phases:        types.DefaultGenesisState().Params.Phases,
 }
 
 // TestRandomizedGenState tests the normal scenario of applying RandomizedGenState.
@@ -49,7 +49,7 @@ func TestRandomizedGenState(t *testing.T) {
 	var mintGenesis types.GenesisState
 	simState.Cdc.MustUnmarshalJSON(simState.GenState[types.ModuleName], &mintGenesis)
 
-	require.Equal(t, int64(6311520), mintGenesis.Params.BlocksPerYear)
+	require.Equal(t, uint64(6311520), mintGenesis.Params.BlocksPerYear)
 	require.Equal(t, "usge", mintGenesis.Params.MintDenom)
 	bp, _ := mintGenesis.Minter.BlockProvisions(mintGenesis.Params, 1)
 	require.Equal(t, "0usge", bp.String())

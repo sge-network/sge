@@ -11,9 +11,9 @@ import (
 )
 
 func TestNewGenesisState(t *testing.T) {
-	defaultGs := types.DefaultGenesis()
+	defaultGs := types.DefaultGenesisState()
 	gs := types.NewGenesisState(defaultGs.Minter, defaultGs.Params)
-	require.NoError(t, gs.Validate())
+	require.NoError(t, types.ValidateGenesis(*gs))
 }
 
 func TestGenesisStateValidate(t *testing.T) {
@@ -24,7 +24,7 @@ func TestGenesisStateValidate(t *testing.T) {
 	}{
 		{
 			desc:     "default is valid",
-			genState: types.DefaultGenesis(),
+			genState: types.DefaultGenesisState(),
 			valid:    true,
 		},
 		{
@@ -157,7 +157,7 @@ func TestGenesisStateValidate(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			err := tc.genState.Validate()
+			err := types.ValidateGenesis(*tc.genState)
 			if tc.valid {
 				require.NoError(t, err)
 			} else {

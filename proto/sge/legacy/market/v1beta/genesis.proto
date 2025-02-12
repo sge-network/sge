@@ -1,0 +1,20 @@
+syntax = "proto3";
+package sge.legacy.market.v1beta;
+
+import "gogoproto/gogo.proto";
+import "sge/legacy/market/v1beta/market.proto";
+import "sge/legacy/market/v1beta/params.proto";
+import "sge/legacy/market/v1beta/stats.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
+
+// GenesisState defines the market module's genesis state.
+message GenesisState {
+  // params are the parameters of the market module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  // market_list is the list of markets that are available in the
+  // chain init.
+  repeated Market market_list = 2 [ (gogoproto.nullable) = false ];
+  // stats is the statistics of the markets
+  MarketStats stats = 3 [ (gogoproto.nullable) = false ];
+}
