@@ -41,7 +41,7 @@ func (app *App) registerWasmModules(
 
 	scopedWasmKeeper := app.CapabilityKeeper.ScopeToModule(wasmtypes.ModuleName)
 
-	wasmDir := filepath.Join(DefaultNodeHome, "wasm")
+	wasmDir := filepath.Join(DefaultNodeHome, "cwvm")
 
 	wasmConfig, err := wasm.ReadWasmConfig(appOpts)
 	if err != nil {
