@@ -49,6 +49,7 @@ import (
 	ibctransfertypes "github.com/cosmos/ibc-go/v8/modules/apps/transfer/types"
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	mintmodulev1 "github.com/sge-network/sge/api/sge/mint/module/v1"
+	_ "github.com/sge-network/sge/x/mint" // import for side-effects
 	minttypes "github.com/sge-network/sge/x/mint/types"
 	"google.golang.org/protobuf/types/known/durationpb"
 )
