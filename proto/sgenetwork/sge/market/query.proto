@@ -1,0 +1,83 @@
+syntax = "proto3";
+package sgenetwork.sge.market;
+
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "sgenetwork/sge/market/market.proto";
+import "sgenetwork/sge/market/params.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Params queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sge/market/params";
+  }
+
+  // Queries a market by uid.
+  rpc Market(QueryMarketRequest) returns (QueryMarketResponse) {
+    option (google.api.http).get = "/sge/market/{uid}";
+  }
+
+  // Queries a list of all the markets
+  rpc Markets(QueryMarketsRequest) returns (QueryMarketsResponse) {
+    option (google.api.http).get = "/sge/market/markets";
+  }
+
+  // Queries a list of markets by UIDs.
+  rpc MarketsByUIDs(QueryMarketsByUIDsRequest)
+      returns (QueryMarketsByUIDsResponse) {
+    option (google.api.http).get = "/sge/market/markets_by_uids/{uids}";
+  }
+}
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+// Query/Params RPC method.
+message QueryParamsResponse {
+  // params hold all the parameters of this module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryMarketRequest is the request type for the Query/{uid} RPC method.
+// Query/Market RPC method.
+message QueryMarketRequest { string uid = 1; }
+
+// QueryMarketRequest is the response type for the Query/{uid} RPC method.
+// Query/Market RPC method.
+message QueryMarketResponse {
+  Market market = 1 [ (gogoproto.nullable) = false ];
+}
+
+// QueryMarketsRequest is the request type for the Query/markets RPC
+// method.
+// Query/Markets RPC method.
+message QueryMarketsRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+// QueryMarketsResponse is the response type for the Query/markets RPC
+// method.
+// Query/Markets RPC method.
+message QueryMarketsResponse {
+  repeated Market market = 1 [ (gogoproto.nullable) = false ];
+  cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// QueryMarketsByUIDsRequest is the request type for the
+// Query/MarketsByUIDs RPC method.
+message QueryMarketsByUIDsRequest {
+  repeated string uids = 1 [ (gogoproto.jsontag) = "uids", json_name = "uids" ];
+}
+
+// QueryMarketsByUIDsResponse is the response type for the
+// Query/MarketsByUIDs RPC method.
+message QueryMarketsByUIDsResponse {
+  repeated Market markets = 1 [ (gogoproto.nullable) = false ];
+  repeated string failed_markets = 2;
+}

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sgenetwork.sge.subaccount;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+
+  // wager_enabled is enable/disable status of wager feature.
+  bool wager_enabled = 1;
+  // deposit_enabled is enable/disable status of deposit feature.
+  bool deposit_enabled = 2;
+}

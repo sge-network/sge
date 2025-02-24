@@ -20,7 +20,7 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 
-	mintmodulev1 "github.com/sge-network/sge/api/sge/mint/module/v1"
+	mintmodulev1 "github.com/sge-network/sge/api/sgenetwork/sge/mint/module/v1"
 	"github.com/sge-network/sge/x/mint/exported"
 	"github.com/sge-network/sge/x/mint/keeper"
 	mintsimulation "github.com/sge-network/sge/x/mint/simulation"

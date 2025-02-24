@@ -2,7 +2,7 @@ package mint
 
 import (
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
-	mintv1beta1 "github.com/sge-network/sge/api/sge/mint/v1beta"
+	mintv1beta1 "github.com/sge-network/sge/api/sgenetwork/sge/mint"
 )
 
 func (am AppModule) AutoCLIOptions() *autocliv1.ModuleOptions {
