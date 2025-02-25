@@ -66,7 +66,6 @@ import (
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/upgrades"
 	v10 "github.com/sge-network/sge/app/upgrades/v10"
-	v11 "github.com/sge-network/sge/app/upgrades/v11"
 	"github.com/sge-network/sge/docs"
 )
 
@@ -83,7 +82,6 @@ var (
 
 	Upgrades = []upgrades.Upgrade{
 		v10.Upgrade,
-		v11.Upgrade,
 	}
 )
 
