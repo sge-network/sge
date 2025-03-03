@@ -128,7 +128,10 @@ func initAppForTestnet(app *app.App, args valArgs) *app.App {
 	for ; iterator.Valid(); iterator.Next() {
 		stakingStore.Delete(iterator.Key())
 	}
-	iterator.Close()
+	err = iterator.Close()
+	if err != nil {
+		tmos.Exit(err.Error())
+	}
 
 	// Remove all valdiators from last validators store
 	iterator, err = app.StakingKeeper.LastValidatorsIterator(ctx)
@@ -138,21 +141,30 @@ func initAppForTestnet(app *app.App, args valArgs) *app.App {
 	for ; iterator.Valid(); iterator.Next() {
 		stakingStore.Delete(iterator.Key())
 	}
-	iterator.Close()
+	err = iterator.Close()
+	if err != nil {
+		tmos.Exit(err.Error())
+	}
 
 	// Remove all validators from validators store
 	iterator = stakingStore.Iterator(stakingtypes.ValidatorsKey, storetypes.PrefixEndBytes(stakingtypes.ValidatorsKey))
 	for ; iterator.Valid(); iterator.Next() {
 		stakingStore.Delete(iterator.Key())
 	}
-	iterator.Close()
+	err = iterator.Close()
+	if err != nil {
+		tmos.Exit(err.Error())
+	}
 
 	// Remove all validators from unbonding queue
 	iterator = stakingStore.Iterator(stakingtypes.ValidatorQueueKey, storetypes.PrefixEndBytes(stakingtypes.ValidatorQueueKey))
 	for ; iterator.Valid(); iterator.Next() {
 		stakingStore.Delete(iterator.Key())
 	}
-	iterator.Close()
+	err = iterator.Close()
+	if err != nil {
+		tmos.Exit(err.Error())
+	}
 
 	// Add our validator to power and last validators store
 	err = app.StakingKeeper.SetValidator(ctx, newVal)

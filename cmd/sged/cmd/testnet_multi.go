@@ -48,7 +48,7 @@ var (
 	flagStartingIPAddress     = "starting-ip-address"
 )
 
-const nodeDirPerm = 0o755
+const nodeDirPerm = 0o750
 
 type initArgs struct {
 	algo                   string
@@ -346,12 +346,11 @@ func initTestnetFiles(
 }
 
 func writeFile(file, dir string, contents []byte) error {
-	if err := os.MkdirAll(dir, 0o755); err != nil {
+	if err := os.MkdirAll(dir, 0o750); err != nil {
 		return fmt.Errorf("could not create directory %q: %w", dir, err)
 	}
 
-	//nolint:gosec
-	if err := os.WriteFile(file, contents, 0o644); err != nil {
+	if err := os.WriteFile(file, contents, 0o600); err != nil {
 		return err
 	}
 
@@ -476,14 +475,14 @@ func copyFile(src, dstDir string) (int64, error) {
 	dst := filepath.Join(dstDir, fileName)
 
 	// Open the source file
-	sourceFile, err := os.Open(src)
+	sourceFile, err := os.Open(src) // #nosec G304
 	if err != nil {
 		return 0, err
 	}
 	defer sourceFile.Close()
 
 	// Create the destination file
-	destinationFile, err := os.Create(dst)
+	destinationFile, err := os.Create(dst) // #nosec G304
 	if err != nil {
 		return 0, err
 	}
@@ -531,7 +530,7 @@ func isSubDir(src, dstDir string) (bool, error) {
 func generateRandomString(length int) string {
 	const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
 	//nolint:all
-	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+	var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano())) // #nosec G404
 
 	b := make([]byte, length)
 	for i := range b {

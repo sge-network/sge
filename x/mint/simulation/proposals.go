@@ -17,8 +17,7 @@ import (
 const (
 	DefaultWeightMsgUpdateParams int = 100
 
-	//nolint:gosec
-	OpWeightMsgUpdateParams = "op_weight_msg_update_params"
+	OpWeightMsgUpdateParams = "op_weight_msg_update_params" // #nosec G101
 )
 
 // ProposalMsgs defines the module weighted proposals' contents
