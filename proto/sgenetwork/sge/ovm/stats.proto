@@ -1,7 +1,7 @@
 syntax = "proto3";
 package sgenetwork.sge.ovm;
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // ProposalStats is the type for the proposal statistics.
 message ProposalStats {

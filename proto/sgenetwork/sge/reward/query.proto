@@ -2,20 +2,19 @@ syntax = "proto3";
 
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "sgenetwork/sge/reward/params.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
 import "sgenetwork/sge/reward/campaign.proto";
-import "sgenetwork/sge/reward/reward.proto";
+import "sgenetwork/sge/reward/params.proto";
 import "sgenetwork/sge/reward/promoter.proto";
+import "sgenetwork/sge/reward/reward.proto";
 
-option go_package = "github.com/sge-network/sge/x/reward/types";
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
 
 // Query defines the gRPC querier service.
 service Query {
-
   // Parameters queries the parameters of the module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/sge-network/sge/reward/params";
@@ -75,12 +74,12 @@ service Query {
         "/sge-network/sge/reward/rewards/campaign/{campaign_uid}";
   }
 }
+
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
-
   // params holds all the parameters of this module.
   Params params = 1 [ (gogoproto.nullable) = false ];
 }

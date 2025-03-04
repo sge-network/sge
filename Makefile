@@ -192,6 +192,11 @@ clean:
 distclean: clean
 	rm -rf vendor/
 
+mocks: $(MOCKS_DIR)
+	@go install github.com/golang/mock/mockgen@v1.6.0
+	sh ./scripts/mockgen.sh
+.PHONY: mocks
+
 ###############################################################################
 ###                                  Proto                                  ###
 ###############################################################################
@@ -216,14 +221,12 @@ docs:
 	@echo
 .PHONY: docs
 
-protoVer=0.13.1
+protoVer=0.15.1
 protoImageName=ghcr.io/cosmos/proto-builder:$(protoVer)
 protoImage=$(DOCKER) run --rm -v $(CURDIR):/workspace --workdir /workspace $(protoImageName)
-# containerProtoGen=cosmos-sdk-proto-gen-$(protoVer)
-# containerProtoFmt=cosmos-sdk-proto-fmt-$(protoVer)
 
 proto-gen:
-	@echo "Generating Protobuf files"
+	@echo "Generating protobuf files..."
 	@$(protoImage) sh ./scripts/protocgen.sh
 
 proto-swagger-gen:
@@ -329,28 +332,3 @@ sync-docs:
 	aws s3 sync . s3://${WEBSITE_BUCKET} --profile terraform --delete ; \
 	aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --profile terraform --path "/*" ;
 .PHONY: sync-docs
-
-###############################################################################
-###                              SONARQUBE                                  ###
-###############################################################################
-
-analyze: ## analyze the project for code quality
-	@$(MAKE) .sonar-scanner
-
-SONAR_TOKEN ?= "SonarScannerToken"
-SONAR_HOST_URL ?=http://localhost:9000
-SONAR_PROJECT_KEY ?= $(PROJECT_KEY)
-
-SONAR_WDR ?= /usr/src
-SONAR_PROJECT_KEY := $(subst $(subst ,, ),:,$(subst /,--,$(SONAR_PROJECT_KEY)))
-.sonar-scanner:
-	$(DOCKER) run \
-		--rm \
-		-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
-		-e SONAR_LOGIN="$(SONAR_TOKEN)" \
-		-e SONAR_PROJECTKEY="$(SONAR_PROJECT_KEY)" \
-		-v "${CURDIR}:$(SONAR_WDR)" \
-		-w $(SONAR_WDR) \
-		sonarsource/sonar-scanner-cli \
-		-D"sonar.projectKey=$(SONAR_PROJECT_KEY)" \
-		-Dproject.settings=sonar-project.properties

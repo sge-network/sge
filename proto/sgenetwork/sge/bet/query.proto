@@ -1,15 +1,15 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/cosmos.proto";
-import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
-import "sgenetwork/sge/bet/params.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
 import "sgenetwork/sge/bet/bet.proto";
+import "sgenetwork/sge/bet/params.proto";
 import "sgenetwork/sge/market/market.proto";
 
-option go_package = "github.com/sge-network/sge/x/bet/types";
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
 
 // Query defines the gRPC querier service.
 service Query {

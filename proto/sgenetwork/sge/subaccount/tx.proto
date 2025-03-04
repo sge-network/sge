@@ -10,7 +10,7 @@ import "sgenetwork/sge/house/tx.proto";
 import "sgenetwork/sge/subaccount/balance.proto";
 import "sgenetwork/sge/subaccount/params.proto";
 
-option go_package = "github.com/sge-network/sge/x/subaccount/types";
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
 
 // Msg defines the Msg service.
 service Msg {
@@ -118,19 +118,23 @@ message MsgWagerResponse { sgenetwork.sge.bet.MsgWagerResponse response = 1; }
 
 // MsgHouseDeposit wraps the MsgHouseDeposit message. We need it in order not to
 // have double interface registration conflicts.
-message MsgHouseDeposit { sge.house.MsgDeposit msg = 1; }
+message MsgHouseDeposit { sgenetwork.sge.house.MsgDeposit msg = 1; }
 
 // MsgHouseDepositResponse wraps the MsgHouseDepositResponse message. We need it
 // in order not to have double interface registration conflicts.
-message MsgHouseDepositResponse { sge.house.MsgDepositResponse response = 1; }
+message MsgHouseDepositResponse {
+  sgenetwork.sge.house.MsgDepositResponse response = 1;
+}
 
 // MsgHouseWithdraw wraps the MsgHouseWithdraw message. We need it in order not
 // to have double interface registration conflicts.
-message MsgHouseWithdraw { sge.house.MsgWithdraw msg = 1; }
+message MsgHouseWithdraw { sgenetwork.sge.house.MsgWithdraw msg = 1; }
 
 // MsgHouseWithdrawResponse wraps the MsgHouseWithdrawResponse message. We need
 // it in order not to have double interface registration conflicts.
-message MsgHouseWithdrawResponse { sge.house.MsgWithdrawResponse response = 1; }
+message MsgHouseWithdrawResponse {
+  sgenetwork.sge.house.MsgWithdrawResponse response = 1;
+}
 
 // MsgUpdateParams is the Msg/UpdateParams request type.
 message MsgUpdateParams {

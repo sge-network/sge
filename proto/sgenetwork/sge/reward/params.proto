@@ -3,7 +3,7 @@ package sgenetwork.sge.reward;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/reward/types";
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
 
 // Params defines the parameters for the module.
 message Params { option (gogoproto.goproto_stringer) = false; }

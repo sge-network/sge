@@ -3,10 +3,10 @@ package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
 import "sgenetwork/sge/house/deposit.proto";
-import "sgenetwork/sge/house/withdraw.proto";
 import "sgenetwork/sge/house/params.proto";
+import "sgenetwork/sge/house/withdraw.proto";
 
-option go_package = "github.com/sge-network/sge/x/house/types";
+option go_package = "github.com/sge-network/sge/x/legacy/house/types";
 
 // GenesisState defines the house module's genesis state.
 message GenesisState {

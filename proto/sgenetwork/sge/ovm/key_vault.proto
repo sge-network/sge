@@ -1,7 +1,7 @@
 syntax = "proto3";
 package sgenetwork.sge.ovm;
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // KeyVault is the information of important keys stored in ovm state.
 message KeyVault {

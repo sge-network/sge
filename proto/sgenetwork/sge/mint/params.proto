@@ -13,7 +13,7 @@ message Params {
   // mint_denom is the type of coin to mint.
   string mint_denom = 1;
   // blocks_per_year is expected blocks per year.
-  int64 blocks_per_year = 2
+  uint64 blocks_per_year = 2
       [ (gogoproto.moretags) = "yaml:\"blocks_per_year\"" ];
 
   // phases contains phases of inflation.

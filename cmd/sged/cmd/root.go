@@ -1,318 +1,147 @@
 package cmd
 
 import (
-	"io"
 	"os"
-	"path/filepath"
+	"strings"
 
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/spf13/cast"
-	"github.com/spf13/cobra"
-
-	dbm "github.com/cometbft/cometbft-db"
-	tmcfg "github.com/cometbft/cometbft/config"
-	tmcli "github.com/cometbft/cometbft/libs/cli"
-	"github.com/cometbft/cometbft/libs/log"
-	tmtypes "github.com/cometbft/cometbft/types"
-
-	"github.com/cosmos/cosmos-sdk/baseapp"
+	"cosmossdk.io/client/v2/autocli"
+	"cosmossdk.io/depinject"
+	"cosmossdk.io/log"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/config"
-	"github.com/cosmos/cosmos-sdk/client/debug"
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/client/keys"
-	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/server"
-	serverconfig "github.com/cosmos/cosmos-sdk/server/config"
-	servertypes "github.com/cosmos/cosmos-sdk/server/types"
-	"github.com/cosmos/cosmos-sdk/snapshots"
-	snapshottypes "github.com/cosmos/cosmos-sdk/snapshots/types"
-	"github.com/cosmos/cosmos-sdk/store"
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	authcmd "github.com/cosmos/cosmos-sdk/x/auth/client/cli"
+	"github.com/cosmos/cosmos-sdk/types/module"
+	"github.com/cosmos/cosmos-sdk/x/auth/tx"
+	authtxconfig "github.com/cosmos/cosmos-sdk/x/auth/tx/config"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/crisis"
-	"github.com/cosmos/cosmos-sdk/x/genutil"
-	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-
-	wasm "github.com/CosmWasm/wasmd/x/wasm"
-	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
-	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
 	"github.com/sge-network/sge/app"
-	"github.com/sge-network/sge/app/params"
 )
 
-// NewRootCmd creates a new root command for simd. It is called once in the
-// main function.
-func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
-	// Set config for prefixes
-	app.SetConfig()
+// NewRootCmd creates a new root command for sged. It is called once in the main function.
+func NewRootCmd() *cobra.Command {
+	var (
+		autoCliOpts        autocli.AppOptions
+		moduleBasicManager module.BasicManager
+		clientCtx          client.Context
+	)
 
-	encodingConfig := app.MakeEncodingConfig()
-	initClientCtx := client.Context{}.
-		WithCodec(encodingConfig.Marshaler).
-		WithInterfaceRegistry(encodingConfig.InterfaceRegistry).
-		WithTxConfig(encodingConfig.TxConfig).
-		WithLegacyAmino(encodingConfig.Amino).
-		WithInput(os.Stdin).
-		WithAccountRetriever(types.AccountRetriever{}).
-		WithHomeDir(app.DefaultNodeHome).
-		WithViper("")
+	if err := depinject.Inject(
+		depinject.Configs(app.Config(),
+			depinject.Supply(
+				log.NewNopLogger(),
+			),
+			depinject.Provide(
+				ProvideClientContext,
+			),
+		),
+		&autoCliOpts,
+		&moduleBasicManager,
+		&clientCtx,
+	); err != nil {
+		panic(err)
+	}
 
 	rootCmd := &cobra.Command{
-		Use:   "sged",
-		Short: "SGE-Network App",
+		Use:           app.Name + "d",
+		Short:         "Start sge node",
+		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
-			initClientCtx, err := client.ReadPersistentCommandFlags(initClientCtx, cmd.Flags())
+			// set the default command outputs
+			cmd.SetOut(cmd.OutOrStdout())
+			cmd.SetErr(cmd.ErrOrStderr())
+
+			clientCtx = clientCtx.WithCmdContext(cmd.Context())
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
 
-			initClientCtx, err = config.ReadFromClientConfig(initClientCtx)
+			clientCtx, err = config.ReadFromClientConfig(clientCtx)
 			if err != nil {
 				return err
 			}
 
-			if err = client.SetCmdClientContextHandler(initClientCtx, cmd); err != nil {
+			if err := client.SetCmdClientContextHandler(clientCtx, cmd); err != nil {
 				return err
 			}
 
 			customAppTemplate, customAppConfig := initAppConfig()
+			customCMTConfig := initCometBFTConfig()
 
-			return server.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, tmcfg.DefaultConfig())
+			return server.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, customCMTConfig)
 		},
 	}
 
-	initRootCmd(rootCmd, encodingConfig)
-
-	return rootCmd, encodingConfig
-}
-
-// initAppConfig helps to override default appConfig template and configs.
-// return "", nil if no custom configuration is required for the application.
-func initAppConfig() (string, interface{}) {
-	type CustomAppConfig struct {
-		serverconfig.Config
-
-		Wasm wasmtypes.WasmConfig `mapstructure:"wasm"`
+	// Since the IBC modules don't support dependency injection, we need to
+	// manually register the modules on the client side.
+	// This needs to be removed after IBC supports App Wiring.
+	ibcModules := app.RegisterIBC(clientCtx.InterfaceRegistry)
+	for name, mod := range ibcModules {
+		moduleBasicManager[name] = module.CoreAppModuleBasicAdaptor(name, mod)
+		autoCliOpts.Modules[name] = mod
 	}
 
-	// Optionally allow the chain developer to overwrite the SDK's default
-	// server config.
-	srvCfg := serverconfig.DefaultConfig()
+	initRootCmd(rootCmd, clientCtx.TxConfig, moduleBasicManager)
 
-	customAppConfig := CustomAppConfig{
-		Config: *srvCfg,
-		Wasm:   wasmtypes.DefaultWasmConfig(),
-	}
+	overwriteFlagDefaults(rootCmd, map[string]string{
+		flags.FlagChainID:        strings.ReplaceAll(app.Name, "-", ""),
+		flags.FlagKeyringBackend: "test",
+	})
 
-	customAppTemplate := serverconfig.DefaultConfigTemplate + wasmtypes.DefaultConfigTemplate()
-
-	return customAppTemplate, customAppConfig
-}
-
-func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
-	cfg := sdk.GetConfig()
-	cfg.Seal()
-
-	gentxModule, ok := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
-	if !ok {
-		panic("genutil AppModuleBasic assertion failed")
-	}
-
-	rootCmd.AddCommand(
-		genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
-		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome, gentxModule.GenTxValidator),
-		genutilcli.GenTxCmd(
-			app.ModuleBasics,
-			encodingConfig.TxConfig,
-			banktypes.GenesisBalancesIterator{},
-			app.DefaultNodeHome,
-		),
-		genutilcli.ValidateGenesisCmd(app.ModuleBasics),
-		AddGenesisAccountCmd(app.DefaultNodeHome),
-		tmcli.NewCompletionCmd(rootCmd, true),
-		debug.Cmd(),
-		config.Cmd(),
-	)
-
-	server.AddCommands(rootCmd, app.DefaultNodeHome, newApp, createSimappAndExport, addModuleInitFlags)
-
-	// add keybase, auxiliary RPC, query, and tx child commands
-	rootCmd.AddCommand(
-		rpc.StatusCommand(),
-		queryCommand(),
-		txCommand(),
-		keys.Commands(app.DefaultNodeHome),
-	)
-}
-
-func addModuleInitFlags(startCmd *cobra.Command) {
-	crisis.AddModuleInitFlags(startCmd)
-	wasm.AddModuleInitFlags(startCmd)
-}
-
-func queryCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:                        "query",
-		Aliases:                    []string{"q"},
-		Short:                      "Querying subcommands",
-		DisableFlagParsing:         true,
-		SuggestionsMinimumDistance: 2,
-		RunE:                       client.ValidateCmd,
-	}
-
-	cmd.AddCommand(
-		authcmd.GetAccountCmd(),
-		rpc.ValidatorCommand(),
-		rpc.BlockCommand(),
-		authcmd.QueryTxsByEventsCmd(),
-		authcmd.QueryTxCmd(),
-	)
-
-	app.ModuleBasics.AddQueryCommands(cmd)
-	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
-
-	return cmd
-}
-
-func txCommand() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:                        "tx",
-		Short:                      "Transactions subcommands",
-		DisableFlagParsing:         true,
-		SuggestionsMinimumDistance: 2,
-		RunE:                       client.ValidateCmd,
-	}
-
-	cmd.AddCommand(
-		authcmd.GetSignCommand(),
-		authcmd.GetSignBatchCommand(),
-		authcmd.GetMultiSignCommand(),
-		authcmd.GetMultiSignBatchCmd(),
-		authcmd.GetValidateSignaturesCommand(),
-		flags.LineBreak,
-		authcmd.GetBroadcastCommand(),
-		authcmd.GetEncodeCommand(),
-		authcmd.GetDecodeCommand(),
-	)
-
-	app.ModuleBasics.AddTxCommands(cmd)
-	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
-
-	return cmd
-}
-
-// newApp is an AppCreator
-func newApp(
-	logger log.Logger,
-	db dbm.DB,
-	traceStore io.Writer,
-	appOpts servertypes.AppOptions,
-) servertypes.Application {
-	var cache sdk.MultiStorePersistentCache
-
-	if cast.ToBool(appOpts.Get(server.FlagInterBlockCache)) {
-		cache = store.NewCommitKVStoreCacheManager()
-	}
-
-	skipUpgradeHeights := make(map[int64]bool)
-	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
-		skipUpgradeHeights[int64(h)] = true
-	}
-
-	pruningOpts, err := server.GetPruningOptionsFromFlags(appOpts)
-	if err != nil {
+	if err := autoCliOpts.EnhanceRootCommand(rootCmd); err != nil {
 		panic(err)
 	}
 
-	homeDir := cast.ToString(appOpts.Get(flags.FlagHome))
-	chainID := cast.ToString(appOpts.Get(flags.FlagChainID))
-	if chainID == "" {
-		// fallback to genesis chain-id
-		appGenesis, err := tmtypes.GenesisDocFromFile(filepath.Join(homeDir, "config", "genesis.json"))
-		if err != nil {
-			panic(err)
+	return rootCmd
+}
+
+func overwriteFlagDefaults(c *cobra.Command, defaults map[string]string) {
+	set := func(s *pflag.FlagSet, key, val string) {
+		if f := s.Lookup(key); f != nil {
+			f.DefValue = val
+			_ = f.Value.Set(val)
 		}
-
-		chainID = appGenesis.ChainID
 	}
-
-	snapshotDir := filepath.Join(cast.ToString(appOpts.Get(flags.FlagHome)), "data", "snapshots")
-	snapshotDB, err := dbm.NewGoLevelDB("metadata", snapshotDir)
-	if err != nil {
-		panic(err)
+	for key, val := range defaults {
+		set(c.Flags(), key, val)
+		set(c.PersistentFlags(), key, val)
 	}
-	snapshotStore, err := snapshots.NewStore(snapshotDB, snapshotDir)
-	if err != nil {
-		panic(err)
+	for _, c := range c.Commands() {
+		overwriteFlagDefaults(c, defaults)
 	}
-
-	var wasmOpts []wasmkeeper.Option
-	if cast.ToBool(appOpts.Get("telemetry.enabled")) {
-		wasmOpts = append(wasmOpts, wasmkeeper.WithVMCacheMetrics(prometheus.DefaultRegisterer))
-	}
-
-	return app.NewSgeApp(
-		logger,
-		db,
-		traceStore,
-		true,
-		skipUpgradeHeights,
-		cast.ToString(appOpts.Get(flags.FlagHome)),
-		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
-		app.MakeEncodingConfig(), // Ideally, we would reuse the one created by NewRootCmd.
-		appOpts,
-		wasmOpts,
-		baseapp.SetPruning(pruningOpts),
-		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
-		baseapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),
-		baseapp.SetHaltTime(cast.ToUint64(appOpts.Get(server.FlagHaltTime))),
-		baseapp.SetMinRetainBlocks(cast.ToUint64(appOpts.Get(server.FlagMinRetainBlocks))),
-		baseapp.SetInterBlockCache(cache),
-		baseapp.SetTrace(cast.ToBool(appOpts.Get(server.FlagTrace))),
-		baseapp.SetIndexEvents(cast.ToStringSlice(appOpts.Get(server.FlagIndexEvents))),
-		baseapp.SetSnapshot(snapshotStore, snapshottypes.SnapshotOptions{
-			Interval:   cast.ToUint64(appOpts.Get(server.FlagStateSyncSnapshotInterval)),
-			KeepRecent: cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
-		}),
-		baseapp.SetIAVLCacheSize(cast.ToInt(appOpts.Get(server.FlagIAVLCacheSize))),
-		baseapp.SetIAVLDisableFastNode(cast.ToBool(appOpts.Get(server.FlagDisableIAVLFastNode))),
-		baseapp.SetChainID(chainID),
-	)
 }
 
-func createSimappAndExport(
-	logger log.Logger,
-	db dbm.DB,
-	traceStore io.Writer,
-	height int64,
-	forZeroHeight bool,
-	jailAllowedAddrs []string,
-	appOpts servertypes.AppOptions,
-	modulesToExport []string,
-) (servertypes.ExportedApp, error) {
-	encCfg := app.MakeEncodingConfig() // Ideally, we would reuse the one created by NewRootCmd.
-	encCfg.Marshaler = codec.NewProtoCodec(encCfg.InterfaceRegistry)
-	var sgeApp *app.SgeApp
-	var emptyWasmOpts []wasmkeeper.Option
-	loadLatest := height == -1
-	sgeApp = app.NewSgeApp(
-		logger,
-		db,
-		traceStore,
-		loadLatest,
-		map[int64]bool{},
-		cast.ToString(appOpts.Get(flags.FlagHome)),
-		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
-		encCfg,
-		appOpts,
-		emptyWasmOpts,
-	)
+func ProvideClientContext(
+	appCodec codec.Codec,
+	interfaceRegistry codectypes.InterfaceRegistry,
+	txConfigOpts tx.ConfigOptions,
+	legacyAmino *codec.LegacyAmino,
+) client.Context {
+	clientCtx := client.Context{}.
+		WithCodec(appCodec).
+		WithInterfaceRegistry(interfaceRegistry).
+		WithLegacyAmino(legacyAmino).
+		WithInput(os.Stdin).
+		WithAccountRetriever(types.AccountRetriever{}).
+		WithHomeDir(app.DefaultNodeHome).
+		WithViper(app.Name) // env variable prefix
 
-	return sgeApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
+	// Read the config again to overwrite the default values with the values from the config file
+	clientCtx, _ = config.ReadFromClientConfig(clientCtx)
+
+	// textual is enabled by default, we need to re-create the tx config grpc instead of bank keeper.
+	txConfigOpts.TextualCoinMetadataQueryFn = authtxconfig.NewGRPCCoinMetadataQueryFn(clientCtx)
+	txConfig, err := tx.NewTxConfigWithOptions(clientCtx.Codec, txConfigOpts)
+	if err != nil {
+		panic(err)
+	}
+	clientCtx = clientCtx.WithTxConfig(txConfig)
+
+	return clientCtx
 }

@@ -1,11 +1,11 @@
 syntax = "proto3";
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/reward/reward.proto";
 
-option go_package = "github.com/sge-network/sge/x/reward/types";
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
 
 // Campaign is type for defining the campaign properties.
 message Campaign {

@@ -1,10 +1,10 @@
 syntax = "proto3";
 package sgenetwork.sge.type;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/types";
+option go_package = "github.com/sge-network/sge/types/legacy";
 
 // KycDataPayload is the KYC info.
 message KycDataPayload {

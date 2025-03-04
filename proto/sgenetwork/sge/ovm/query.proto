@@ -1,13 +1,13 @@
 syntax = "proto3";
 package sgenetwork.sge.ovm;
 
-import "gogoproto/gogo.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
+import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "sgenetwork/sge/ovm/params.proto";
 import "sgenetwork/sge/ovm/proposal.proto";
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // Query defines the gRPC querier service.
 service Query {

@@ -4,6 +4,11 @@
 *.dll
 *.so
 *.dylib
+*.dot
+*.log
+*.ign
+
+.DS_Store
 
 # IDE Config files
 .idea/

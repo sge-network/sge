@@ -1,12 +1,11 @@
-
 syntax = "proto3";
 package sgenetwork.sge.market;
 
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/market/market.proto";
 import "sgenetwork/sge/market/odds.proto";
-import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/market/types";
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
 
 // MarketAddTicketPayload indicates data of add market ticket
 message MarketAddTicketPayload {

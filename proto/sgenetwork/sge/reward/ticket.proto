@@ -1,14 +1,14 @@
 syntax = "proto3";
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
-import "sgenetwork/sge/type/kyc.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/reward/campaign.proto";
-import "sgenetwork/sge/reward/reward.proto";
 import "sgenetwork/sge/reward/promoter.proto";
+import "sgenetwork/sge/reward/reward.proto";
+import "sgenetwork/sge/type/kyc.proto";
 
-option go_package = "github.com/sge-network/sge/x/reward/types";
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
 
 // CreateCampaignPayload is the type for campaign creation payload.
 message CreateCampaignPayload {
@@ -50,7 +50,6 @@ message CreateCampaignPayload {
 
 // UpdateCampaignPayload is the type for campaign update payload.
 message UpdateCampaignPayload {
-
   // end_ts is the end timestamp of the campaign.
   uint64 end_ts = 1;
 

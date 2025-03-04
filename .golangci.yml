@@ -57,6 +57,9 @@ issues:
     - path: testutil
       linters: 
         - gosec
+    - path: api
+      linters: 
+        - gosec
   max-issues-per-linter: 10000
   max-same-issues: 10000
 

@@ -2,10 +2,9 @@ syntax = "proto3";
 package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
-
 import "sgenetwork/sge/bet/tx.proto";
 
-option go_package = "github.com/sge-network/sge/x/subaccount/types";
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
 
 // SubAccWagerTicketPayload indicates data of subaccount wager ticket.
 message SubAccWagerTicketPayload {

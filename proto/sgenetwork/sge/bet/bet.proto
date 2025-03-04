@@ -1,11 +1,11 @@
 syntax = "proto3";
 package sgenetwork.sge.bet;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/bet/odds_type.proto";
 
-option go_package = "github.com/sge-network/sge/x/bet/types";
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
 
 // Bet is the transaction order placed by a bettor on a specific event and odd
 message Bet {

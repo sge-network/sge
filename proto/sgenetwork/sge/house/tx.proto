@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 import "sgenetwork/sge/house/params.proto";
 import "sgenetwork/sge/house/withdraw.proto";
 
-option go_package = "github.com/sge-network/sge/x/house/types";
+option go_package = "github.com/sge-network/sge/x/legacy/house/types";
 
 // Msg defines the house Msg service.
 service Msg {

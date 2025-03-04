@@ -3,7 +3,7 @@ package sgenetwork.sge.orderbook;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/orderbook/types";
+option go_package = "github.com/sge-network/sge/x/legacy/orderbook/types";
 
 // OrderBook represents the order book maintained against a market.
 message OrderBook {

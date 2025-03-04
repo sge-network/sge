@@ -8,7 +8,7 @@ import "gogoproto/gogo.proto";
 import "sgenetwork/sge/bet/params.proto";
 import "sgenetwork/sge/bet/wager.proto";
 
-option go_package = "github.com/sge-network/sge/x/bet/types";
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
 
 // Msg defines the Msg service.
 service Msg {

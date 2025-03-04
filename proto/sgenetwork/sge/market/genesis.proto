@@ -2,11 +2,11 @@ syntax = "proto3";
 package sgenetwork.sge.market;
 
 import "gogoproto/gogo.proto";
-import "sgenetwork/sge/market/params.proto";
 import "sgenetwork/sge/market/market.proto";
+import "sgenetwork/sge/market/params.proto";
 import "sgenetwork/sge/market/stats.proto";
 
-option go_package = "github.com/sge-network/sge/x/market/types";
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
 
 // GenesisState defines the market module's genesis state.
 message GenesisState {

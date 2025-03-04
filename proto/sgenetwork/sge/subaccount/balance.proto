@@ -3,7 +3,7 @@ package sgenetwork.sge.subaccount;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/subaccount/types";
+option go_package = "github.com/sge-network/sge/x/legacy/subaccount/types";
 
 // AccountSummary defines the balance of a subaccount.
 message AccountSummary {

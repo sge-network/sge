@@ -3,7 +3,7 @@ package sgenetwork.sge.bet;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/bet/types";
+option go_package = "github.com/sge-network/sge/x/legacy/bet/types";
 
 // BetOdds is the type to store odds of a market.
 message BetOdds {

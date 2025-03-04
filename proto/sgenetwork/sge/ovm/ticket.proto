@@ -3,7 +3,7 @@ package sgenetwork.sge.ovm;
 
 import "sgenetwork/sge/ovm/vote.proto";
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // PubkeysChangeProposalPayload indicates data of public keys changes proposal
 // ticket.

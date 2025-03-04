@@ -3,7 +3,7 @@ package sgenetwork.sge.house;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/house/types";
+option go_package = "github.com/sge-network/sge/x/legacy/house/types";
 
 // Params define the parameters for the house module.
 message Params {

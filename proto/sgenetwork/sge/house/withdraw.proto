@@ -4,7 +4,7 @@ package sgenetwork.sge.house;
 import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
 
-option go_package = "github.com/sge-network/sge/x/house/types";
+option go_package = "github.com/sge-network/sge/x/legacy/house/types";
 
 // Withdrawal represents the withdrawal against a deposit.
 message Withdrawal {

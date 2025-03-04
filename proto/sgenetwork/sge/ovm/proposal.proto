@@ -1,12 +1,12 @@
 syntax = "proto3";
 package sgenetwork.sge.ovm;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/ovm/ticket.proto";
 import "sgenetwork/sge/ovm/vote.proto";
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // PublicKeysChangeProposal is the type for the proposal for additions and
 // removals of pub keys.

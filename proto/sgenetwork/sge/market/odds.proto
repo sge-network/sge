@@ -3,7 +3,7 @@ package sgenetwork.sge.market;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/market/types";
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
 
 // Odds is a representation of market odds.
 message Odds {

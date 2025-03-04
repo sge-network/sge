@@ -4,12 +4,12 @@ package sgenetwork.sge.orderbook;
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
-import "sgenetwork/sge/orderbook/params.proto";
-import "sgenetwork/sge/orderbook/orderbook.proto";
-import "sgenetwork/sge/orderbook/participation.proto";
 import "sgenetwork/sge/orderbook/exposure.proto";
+import "sgenetwork/sge/orderbook/orderbook.proto";
+import "sgenetwork/sge/orderbook/params.proto";
+import "sgenetwork/sge/orderbook/participation.proto";
 
-option go_package = "github.com/sge-network/sge/x/orderbook/types";
+option go_package = "github.com/sge-network/sge/x/legacy/orderbook/types";
 
 // Query defines the gRPC querier service.
 service Query {

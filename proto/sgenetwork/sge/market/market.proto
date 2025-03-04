@@ -1,11 +1,11 @@
 syntax = "proto3";
 package sgenetwork.sge.market;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 import "sgenetwork/sge/market/odds.proto";
 
-option go_package = "github.com/sge-network/sge/x/market/types";
+option go_package = "github.com/sge-network/sge/x/legacy/market/types";
 
 // Market is the representation of the market to be stored in
 // the market state.

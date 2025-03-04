@@ -3,7 +3,7 @@ package sgenetwork.sge.ovm;
 
 import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/ovm/types";
+option go_package = "github.com/sge-network/sge/x/legacy/ovm/types";
 
 // Params defines the parameters for the module.
 message Params { option (gogoproto.goproto_stringer) = false; }

@@ -1,15 +1,14 @@
 syntax = "proto3";
 package sgenetwork.sge.reward;
 
-import "gogoproto/gogo.proto";
 import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
 
-option go_package = "github.com/sge-network/sge/x/reward/types";
+option go_package = "github.com/sge-network/sge/x/legacy/reward/types";
 
 // Reward is the type for transaction made to reward a user
 // based on users eligibility.
 message Reward {
-
   // uid is the unique identifier for a reward.
   string uid = 1 [
     (gogoproto.customname) = "UID",
@@ -77,14 +76,14 @@ message RewardAmount {
 
   // main_account_percentage transferred to main account address
   string main_account_percentage = 4 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"main_account_percentage\""
   ];
 
   // subaccount_percentage amount transferred to subaccount address
   string subaccount_percentage = 5 [
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
+    (gogoproto.customtype) = "cosmossdk.io/math.LegacyDec",
     (gogoproto.nullable) = false,
     (gogoproto.moretags) = "yaml:\"subaccount_percentage\""
   ];
