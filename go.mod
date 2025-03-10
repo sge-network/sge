@@ -1,14 +1,13 @@
 module github.com/sge-network/sge
 
 go 1.23.1
-
 toolchain go1.23.5
 
 require (
 	cosmossdk.io/api v0.7.6
 	cosmossdk.io/client/v2 v2.0.0-beta.5
-	cosmossdk.io/collections v0.4.0
-	cosmossdk.io/core v0.11.1
+	cosmossdk.io/collections v1.1.0
+	cosmossdk.io/core v1.0.0
 	cosmossdk.io/depinject v1.1.0
 	cosmossdk.io/errors v1.0.1
 	cosmossdk.io/log v1.5.0
@@ -87,6 +86,7 @@ require (
 	cloud.google.com/go/storage v1.43.0 // indirect
 	connectrpc.com/connect v1.18.1 // indirect
 	connectrpc.com/otelconnect v0.7.1 // indirect
+	cosmossdk.io/schema v1.0.0 // indirect
 	cosmossdk.io/x/tx v0.13.7 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/4meepo/tagalign v1.4.1 // indirect
