@@ -1,13 +1,12 @@
 module github.com/sge-network/sge
 
 go 1.23.1
-
-toolchain go1.23.5
+toolchain go1.24.1
 
 require (
 	cosmossdk.io/api v0.7.6
 	cosmossdk.io/client/v2 v2.0.0-beta.5
-	cosmossdk.io/collections v0.4.0
+	cosmossdk.io/collections v1.2.0
 	cosmossdk.io/core v0.11.1
 	cosmossdk.io/depinject v1.1.0
 	cosmossdk.io/errors v1.0.1
@@ -47,7 +46,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20250204164813-702378808489
 	google.golang.org/grpc v1.70.0
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.5.1
-	google.golang.org/protobuf v1.36.5
+	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v2 v2.4.0
 	gotest.tools/v3 v3.5.2
 	mvdan.cc/gofumpt v0.7.0
@@ -87,6 +86,7 @@ require (
 	cloud.google.com/go/storage v1.43.0 // indirect
 	connectrpc.com/connect v1.18.1 // indirect
 	connectrpc.com/otelconnect v0.7.1 // indirect
+	cosmossdk.io/schema v1.0.0 // indirect
 	cosmossdk.io/x/tx v0.13.7 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/4meepo/tagalign v1.4.1 // indirect
@@ -414,7 +414,7 @@ require (
 	honnef.co/go/tools v0.5.1 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 	nhooyr.io/websocket v1.8.11 // indirect
-	pgregory.net/rapid v1.1.0 // indirect
+	pgregory.net/rapid v1.2.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
