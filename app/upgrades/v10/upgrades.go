@@ -2,21 +2,16 @@ package v10
 
 import (
 	"context"
-	"strings"
-	"time"
 
 	sdkmath "cosmossdk.io/math"
 	upgradetypes "cosmossdk.io/x/upgrade/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
-	paramstypes "github.com/cosmos/cosmos-sdk/x/params/types"
+	vestingtypes "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 
 	"github.com/sge-network/sge/app/keepers"
 	"github.com/sge-network/sge/app/params"
-	minttypes "github.com/sge-network/sge/x/mint/types"
 )
-
-const minDepositRatio = "0.000000000000000000"
 
 func CreateUpgradeHandler(
 	mm *module.Manager,
@@ -24,63 +19,52 @@ func CreateUpgradeHandler(
 	k *keepers.AppKeepers,
 ) upgradetypes.UpgradeHandler {
 	return func(ctx context.Context, _ upgradetypes.Plan, fromVM module.VersionMap) (module.VersionMap, error) {
-		// https://github.com/cosmos/cosmos-sdk/pull/12363/files
-		// Set param key table for params module migration
-		for _, subspace := range k.ParamsKeeper.GetSubspaces() {
-			var keyTable paramstypes.KeyTable
-			switch subspace.Name() {
-			// sdk
-			case minttypes.ModuleName:
-				keyTable = minttypes.ParamKeyTable()
-			default:
-				continue
-			}
-
-			if !subspace.HasKeyTable() {
-				subspace.WithKeyTable(keyTable)
-			}
-		}
-
-		migrations, err := mm.RunMigrations(ctx, configurator, fromVM)
-		if err != nil {
-			return nil, err
-		}
-
-		// Set expedited proposal param:
-		govParams, err := k.GovKeeper.Params.Get(ctx)
-		if err != nil {
-			return nil, err
-		}
-
 		sdkCtx := sdk.UnwrapSDKContext(ctx)
+		k.AccountKeeper.IterateAccounts(ctx, func(acc sdk.AccountI) bool {
+			vestingAcc, ok := acc.(*vestingtypes.PeriodicVestingAccount)
+			if !ok {
+				return false
+			}
 
-		switch strings.ToLower(sdkCtx.ChainID()) {
-		case "stage-sgenetwork":
-			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(20000000)))
-			govParams.MinInitialDepositRatio = minDepositRatio
-			govParams.ExpeditedThreshold = "0.667000000000000000"
-			expediteVotingPeriod := 600 * time.Second
-			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
-		case "sge-network-4":
-			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(6000000000)))
-			govParams.MinInitialDepositRatio = minDepositRatio
-			govParams.ExpeditedThreshold = "0.667000000000000000"
-			expediteVotingPeriod := 86400 * time.Second
-			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
-		default:
-			// mainnet
-			govParams.ExpeditedMinDeposit = sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, sdkmath.NewInt(50000000000)))
-			govParams.MinInitialDepositRatio = minDepositRatio
-			govParams.ExpeditedThreshold = "0.750000000000000000"
-			expediteVotingPeriod := 86400 * time.Second
-			govParams.ExpeditedVotingPeriod = &expediteVotingPeriod
-		}
+			currentTime := sdkCtx.BlockTime().Unix()
 
-		err = k.GovKeeper.Params.Set(ctx, govParams)
-		if err != nil {
-			return nil, err
-		}
+			originalVesting := vestingAcc.OriginalVesting.AmountOf(params.DefaultBondDenom)
 
-		return migrations, nil
+			var refinedPeriods vestingtypes.Periods
+			endTime := vestingAcc.StartTime
+			vestedBalance := sdkmath.ZeroInt()
+			for _, period := range vestingAcc.VestingPeriods {
+				endTime += period.Length
+				if currentTime > endTime {
+					// past periods
+					vestedBalance = vestedBalance.Add(period.Amount.AmountOf(params.DefaultBondDenom))
+					refinedPeriods = append(refinedPeriods, period)
+				} else {
+					break
+				}
+			}
+
+			if originalVesting.GT(vestedBalance) {
+				// add the remaining balance to the last period
+				refinedPeriods = append(refinedPeriods, vestingtypes.Period{
+					Length: 2592000 * 24, // 24 months
+					Amount: sdk.NewCoins(sdk.NewCoin(params.DefaultBondDenom, originalVesting.Sub(vestedBalance))),
+				})
+
+				refinedEndTime := vestingAcc.StartTime
+				for _, period := range refinedPeriods {
+					refinedEndTime += period.Length
+				}
+
+				vestingAcc.VestingPeriods = refinedPeriods
+				vestingAcc.EndTime = refinedEndTime
+
+				k.AccountKeeper.SetAccount(ctx, vestingAcc)
+			}
+
+			return false
+		})
+
+		return mm.RunMigrations(ctx, configurator, fromVM)
 	}
 }
