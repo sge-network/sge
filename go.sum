@@ -259,8 +259,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c h1:pxW6RcqyfI9/kWtOwnv/G+AzdKuy2ZrqINhenH4HyNs=
 github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
-github.com/CosmWasm/wasmd v0.53.2 h1:c3MQjeQq+r+Zj2rPeW+c9kJmTevuNnZOIkiiCP/3bg4=
-github.com/CosmWasm/wasmd v0.53.2/go.mod h1:gP10E56tuToU5rsZR7vZLBL5ssW2mie6KN/WrQLG7/I=
+github.com/CosmWasm/wasmd v0.53.3 h1:kZkkSM2hf0Le7iJPLLNm0QTi2j+wiuLMMn7SyOqBiYw=
+github.com/CosmWasm/wasmd v0.53.3/go.mod h1:gP10E56tuToU5rsZR7vZLBL5ssW2mie6KN/WrQLG7/I=
 github.com/CosmWasm/wasmvm/v2 v2.2.2 h1:MaQMtaZN8L08N0uAlBlOICP+GWolibJsajHGo3fQ03w=
 github.com/CosmWasm/wasmvm/v2 v2.2.2/go.mod h1:bMhLQL4Yp9CzJi9A83aR7VO9wockOsSlZbT4ztOl6bg=
 github.com/Crocmagnon/fatcontext v0.5.3 h1:zCh/wjc9oyeF+Gmp+V60wetm8ph2tlsxocgg/J0hOps=
